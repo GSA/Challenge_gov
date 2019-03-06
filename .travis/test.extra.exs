@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :ex_venture, Data.Repo,
+config :idea_portal, IdeaPortal.Repo,
   username: "idea_portal",
   password: "password",
   database: "idea_portal_test",
