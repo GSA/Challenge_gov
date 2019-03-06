@@ -1,0 +1,3 @@
+- [ ] README is up to date
+- [ ] Docs are up to date with changes (modules and functions)
+- [ ] Tests are included for changes
