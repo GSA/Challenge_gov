@@ -10,12 +10,11 @@ addons:
 env:
   global:
   - PGPORT=5433
+  - MIX_ENV=test
 elixir:
   - 1.8.0
 otp_release:
   - 21.2
-env:
-  - MIX_ENV=test
 cache:
   directories:
     - deps
