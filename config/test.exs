@@ -16,3 +16,7 @@ config :idea_portal, IdeaPortal.Repo,
   database: "idea_portal_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+if File.exists?("config/test.extra.exs") do
+  import_config("test.extra.exs")
+end
