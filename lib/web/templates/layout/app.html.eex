@@ -4,27 +4,64 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>IdeaPortal · Phoenix Framework</title>
+    <link rel="icon" type="image/png" href="<%= Routes.static_path(@conn, "/images/favicon.png") %>" />
+    <title>City Backlog</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
   <body>
-    <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
-          </ul>
-        </nav>
-        <a href="http://phoenixframework.org/" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
-        </a>
-      </section>
-    </header>
-    <main role="main" class="container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= render @view_module, @view_template, assigns %>
-    </main>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <div class="main-wrapper">
+      <div class="header">
+        <div class="container-fluid">
+          <div class="header-inner">
+            <div class="mobile-icon">
+              <a href="javascript:;">
+                <i class="icon-menu ipad-icon"></i>
+                <i class="icon-mobile-menu mob-icon"></i>
+              </a>
+            </div>
+            <div class="logo">
+              <%= link(to: Routes.page_path(@conn, :index)) do %>
+                <img src="<%= Routes.static_path(@conn, "/images/logo.png") %>" alt="City Backlog Logo" title="City Backlog">
+              <% end %>
+            </div>
+            <div class="top-nav">
+              <ul class="mp-none">
+                <li>
+                  <a href="#" class="menu-profile"><img src="images/icon-profile.png" alt=""></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <div class="content-area">
+          <div class="content-left left-menu-wrapper">
+            <div class="menu-close"><a href="javascript:;"><i class="icon-close-custom"></i></a></div>
+            <div class="logo side-nav-logo">
+              <img src="images/logo.png" alt="City Backlog Logo" title="City Backlog">
+            </div>
+            <div class="side-nav font-semibold">
+              <ul class="mp-none">
+                <li class="active">
+                  <%= link(to: Routes.page_path(@conn, :index)) do %>
+                    <i class="icon-dashboard"></i><span>Dashboard</span>
+                  <% end %>
+                </li>
+                <li>
+                  <a href="#"><i class="icon-Challenges"></i><span>Challenges</span></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="content-right">
+            <%= render @view_module, @view_template, assigns %>
+          </div>
+        </div>
+      </div>
+      <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    </div>
   </body>
 </html>
