@@ -1,5 +1,7 @@
 # IdeaPortal
 
+[![Build Status](https://travis-ci.org/BaltimoreCity/IdeaPortal.svg?branch=master)](https://travis-ci.org/BaltimoreCity/IdeaPortal)
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
