@@ -63,7 +63,7 @@
   </div>
 </div>
 
-<%= if recaptcha_key = recaptcha_key() do %>
+<%= if recaptcha_key = Recaptcha.recaptcha_key() do %>
 <script type="application/javascript">
 grecaptcha.ready(function() {
   grecaptcha.execute('<%= recaptcha_key %>', {action: 'register'}).then(function(token) {

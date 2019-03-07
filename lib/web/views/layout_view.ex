@@ -1,12 +1,14 @@
 defmodule Web.LayoutView do
   use Web, :view
 
+  alias IdeaPortal.Recaptcha
+
   def user_signed_in?(conn) do
     Map.has_key?(conn.assigns, :current_user)
   end
 
   def recaptcha_script() do
-    recaptcha_key = Application.get_env(:idea_portal, :recaptcha)[:key]
+    recaptcha_key = Recaptcha.recaptcha_key()
 
     case is_nil(recaptcha_key) do
       true ->
