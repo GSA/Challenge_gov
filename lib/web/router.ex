@@ -17,10 +17,9 @@ defmodule Web.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-  end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", Web do
-  #   pipe_through :api
-  # end
+    resources("/register", RegistrationController, only: [:new, :create])
+
+    resources("/sign-in", SessionController, only: [:new, :create, :delete], singleton: true)
+  end
 end

@@ -17,6 +17,8 @@ config :idea_portal, IdeaPortal.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
+config :bcrypt_elixir, :log_rounds, 4
+
 if File.exists?("config/test.extra.exs") do
   import_config("test.extra.exs")
 end

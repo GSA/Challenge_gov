@@ -7,6 +7,13 @@ defmodule IdeaPortal.Accounts do
   alias IdeaPortal.Repo
 
   @doc """
+  Changeset for sign in and registration
+  """
+  def new() do
+    User.create_changeset(%User{}, %{})
+  end
+
+  @doc """
   Register an account
   """
   def register(params) do

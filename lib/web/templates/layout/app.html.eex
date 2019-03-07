@@ -8,32 +8,10 @@
     <title>City Backlog</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
+
   <body>
     <div class="main-wrapper">
-      <div class="header">
-        <div class="container-fluid">
-          <div class="header-inner">
-            <div class="mobile-icon">
-              <a href="javascript:;">
-                <i class="icon-menu ipad-icon"></i>
-                <i class="icon-mobile-menu mob-icon"></i>
-              </a>
-            </div>
-            <div class="logo">
-              <%= link(to: Routes.page_path(@conn, :index)) do %>
-                <img src="<%= Routes.static_path(@conn, "/images/logo.png") %>" alt="City Backlog Logo" title="City Backlog">
-              <% end %>
-            </div>
-            <div class="top-nav">
-              <ul class="mp-none">
-                <li>
-                  <a href="#" class="menu-profile"><img src="images/icon-profile.png" alt=""></a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      <%= render("_header.html", assigns) %>
 
       <div class="container-fluid">
         <div class="content-area">
@@ -61,6 +39,7 @@
           </div>
         </div>
       </div>
+
       <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
     </div>
   </body>

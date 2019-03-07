@@ -14,6 +14,7 @@ defmodule IdeaPortal.Accounts.User do
     field(:password_hash, :string)
     field(:password, :string, virtual: true)
     field(:password_confirmation, :string, virtual: true)
+    field(:token, Ecto.UUID)
 
     field(:first_name, :string)
     field(:last_name, :string)
@@ -24,12 +25,20 @@ defmodule IdeaPortal.Accounts.User do
 
   def create_changeset(struct, params) do
     struct
-    |> cast(params, [:email, :password, :password_confirmation, :first_name, :last_name, :phone_number])
+    |> cast(params, [
+      :email,
+      :password,
+      :password_confirmation,
+      :first_name,
+      :last_name,
+      :phone_number
+    ])
     |> validate_required([:email, :first_name, :last_name])
     |> validate_confirmation(:password)
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> Stein.Accounts.hash_password()
     |> validate_required([:password_hash])
+    |> put_change(:token, UUID.uuid4())
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
 end

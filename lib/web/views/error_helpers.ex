@@ -9,9 +9,11 @@ defmodule Web.ErrorHelpers do
   Generates tag for inlined form input errors.
   """
   def error_tag(form, field) do
-    Enum.map(Keyword.get_values(form.errors, field), fn error ->
-      content_tag(:span, translate_error(error), class: "help-block")
-    end)
+    errors = Enum.map(Keyword.get_values(form.errors, field), &translate_error/1)
+
+    content_tag(:span, class: "help-block invalid-feedback") do
+      [String.capitalize(to_string(field)), " ", errors]
+    end
   end
 
   @doc """
