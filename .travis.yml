@@ -31,6 +31,7 @@ install:
   - mix compile
   - mix do ecto.create, ecto.migrate
 script:
+  - mix compile --force --warnings-as-errors
   - mix format --check-formatted
   - mix credo
   - mix test

@@ -1,0 +1,33 @@
+<div class="header">
+  <div class="container-fluid">
+    <div class="header-inner">
+      <div class="mobile-icon">
+        <a href="javascript:;">
+          <i class="icon-menu ipad-icon"></i>
+          <i class="icon-mobile-menu mob-icon"></i>
+        </a>
+      </div>
+      <div class="logo">
+        <%= link(to: Routes.page_path(@conn, :index)) do %>
+          <img src="<%= Routes.static_path(@conn, "/images/logo.png") %>" alt="City Backlog Logo" title="City Backlog">
+        <% end %>
+      </div>
+      <div class="top-nav">
+        <ul class="mp-none">
+          <%= if user_signed_in?(@conn) do %>
+            <li>
+              <a href="#" class="menu-profile"><img src="images/icon-profile.png" alt=""></a>
+            </li>
+            <li>
+              <%= link("Sign Out", to: Routes.session_path(@conn, :delete), method: :delete) %>
+            </li>
+          <% else %>
+            <li>
+              <%= link("Sign In", to: Routes.session_path(@conn, :new)) %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

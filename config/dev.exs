@@ -74,6 +74,8 @@ config :idea_portal, IdeaPortal.Repo,
   hostname: "localhost",
   pool_size: 10
 
+config :idea_portal, :recaptcha, module: IdeaPortal.Recaptcha.Mock
+
 if File.exists?("config/dev.local.exs") do
   import_config("dev.local.exs")
 end

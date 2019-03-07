@@ -80,6 +80,17 @@ Once the database is setup, you can run the server.
 mix phx.server
 ```
 
+### reCAPTCHA
+
+Keys need to be set up to properly verify reCAPTCHA tokens. You will need a secret key and site key to properly verify. In development and test this is disabled.
+
+```elixir
+config :idea_portal, :recaptcha,
+  module: IdeaPortal.Recaptcha.Implementation,
+  secret_key: "...",
+  key: "..."
+```
+
 ## Testing
 
 The IdeaPortal runs each pull request (and every commit on the `master` branch) through CI. Make sure to add tests as you extend the application. We also run [Credo](https://github.com/rrrene/credo) and the built in formatter in CI to ensure code quality. 

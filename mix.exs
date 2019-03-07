@@ -35,7 +35,9 @@ defmodule IdeaPortal.MixProject do
     [
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.0"},
+      {:elixir_uuid, "~> 1.2"},
       {:gettext, "~> 0.11"},
+      {:httpoison, "~> 1.5"},
       {:jason, "~> 1.0"},
       {:phoenix, "~> 1.4.0"},
       {:phoenix_ecto, "~> 4.0"},
@@ -43,7 +45,8 @@ defmodule IdeaPortal.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:stein, git: "https://github.com/smartlogic/stein.git"}
     ]
   end
 

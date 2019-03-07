@@ -37,6 +37,11 @@ config :logger, level: :info
 # Note you can't rely on `System.get_env/1` when using releases.
 # See the releases documentation accordingly.
 
+config :idea_portal, :recaptcha,
+  module: IdeaPortal.Recaptcha.Implementation,
+  secret_key: {:system, "RECAPTCHA_SECRET_KEY"},
+  key: {:system, "RECAPTCHA_SITE_KEY"}
+
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
 end
