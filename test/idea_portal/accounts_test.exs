@@ -1,7 +1,9 @@
 defmodule IdeaPortal.AccountsTest do
   use IdeaPortal.DataCase
+  use Bamboo.Test
 
   alias IdeaPortal.Accounts
+  alias IdeaPortal.Emails
   alias IdeaPortal.Recaptcha.Mock, as: Recaptcha
 
   describe "registering an account" do
@@ -18,6 +20,21 @@ defmodule IdeaPortal.AccountsTest do
 
       assert account.email == "user@example.com"
       assert account.password_hash
+    end
+
+    test "sends a verification email" do
+      {:ok, account} =
+        Accounts.register(%{
+          email: "user@example.com",
+          first_name: "John",
+          last_name: "Smith",
+          phone_number: "123-123-1234",
+          password: "password",
+          password_confirmation: "password"
+        })
+
+      assert account.email_verification_token
+      assert_delivered_email(Emails.verification_email(account))
     end
 
     test "unique emails" do

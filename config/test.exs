@@ -17,6 +17,10 @@ config :idea_portal, IdeaPortal.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
+config :idea_portal, IdeaPortal.Mailer,
+  adapter: Bamboo.TestAdapter,
+  from: "idea-portal@example.com"
+
 config :bcrypt_elixir, :log_rounds, 4
 
 config :idea_portal, :recaptcha, module: IdeaPortal.Recaptcha.Mock

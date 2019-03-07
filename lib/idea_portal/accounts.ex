@@ -4,6 +4,8 @@ defmodule IdeaPortal.Accounts do
   """
 
   alias IdeaPortal.Accounts.User
+  alias IdeaPortal.Emails
+  alias IdeaPortal.Mailer
   alias IdeaPortal.Recaptcha
   alias IdeaPortal.Repo
 
@@ -25,6 +27,7 @@ defmodule IdeaPortal.Accounts do
         %User{}
         |> User.create_changeset(params)
         |> Repo.insert()
+        |> maybe_send_email_verification()
 
       false ->
         %User{}
@@ -33,6 +36,16 @@ defmodule IdeaPortal.Accounts do
         |> Ecto.Changeset.apply_action(:insert)
     end
   end
+
+  defp maybe_send_email_verification({:ok, user}) do
+    user
+    |> Emails.verification_email()
+    |> Mailer.deliver_later()
+
+    {:ok, user}
+  end
+
+  defp maybe_send_email_verification(result), do: result
 
   @doc """
   Validate a user's login information

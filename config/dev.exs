@@ -74,6 +74,10 @@ config :idea_portal, IdeaPortal.Repo,
   hostname: "localhost",
   pool_size: 10
 
+config :idea_portal, IdeaPortal.Mailer,
+  adapter: Bamboo.LocalAdapter,
+  from: "idea-portal@example.com"
+
 config :idea_portal, :recaptcha, module: IdeaPortal.Recaptcha.Mock
 
 if File.exists?("config/dev.local.exs") do
