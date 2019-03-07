@@ -54,4 +54,22 @@ defmodule IdeaPortal.AccountsTest do
       assert changeset.errors[:first_name]
     end
   end
+
+  describe "finding via token" do
+    test "user exists" do
+      user = TestHelpers.create_user()
+
+      {:ok, found_user} = Accounts.get_by_token(user.token)
+
+      assert found_user.id == user.id
+    end
+
+    test "does not exist" do
+      {:error, :not_found} = Accounts.get_by_token(UUID.uuid4())
+    end
+
+    test "invalid UUID" do
+      {:error, :not_found} = Accounts.get_by_token("not a uuid")
+    end
+  end
 end

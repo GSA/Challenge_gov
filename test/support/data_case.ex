@@ -22,6 +22,8 @@ defmodule IdeaPortal.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import IdeaPortal.DataCase
+
+      alias IdeaPortal.TestHelpers
     end
   end
 

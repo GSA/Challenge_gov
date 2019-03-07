@@ -18,7 +18,10 @@
             <li>
               <a href="#" class="menu-profile"><img src="images/icon-profile.png" alt=""></a>
             </li>
-          <% else %> 
+            <li>
+              <%= link("Sign Out", to: Routes.session_path(@conn, :delete), method: :delete) %>
+            </li>
+          <% else %>
             <li>
               <%= link("Sign In", to: Routes.session_path(@conn, :new)) %>
             </li>
