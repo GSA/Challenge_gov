@@ -73,3 +73,7 @@ config :idea_portal, IdeaPortal.Repo,
   database: "idea_portal_dev",
   hostname: "localhost",
   pool_size: 10
+
+if File.exists?("config/dev.local.exs") do
+  import_config("dev.local.exs")
+end
