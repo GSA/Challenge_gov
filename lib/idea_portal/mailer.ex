@@ -1,4 +1,6 @@
 defmodule IdeaPortal.Mailer do
+  @moduledoc false
+
   use Bamboo.Mailer, otp_app: :idea_portal
 
   @doc """
