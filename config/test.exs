@@ -19,6 +19,8 @@ config :idea_portal, IdeaPortal.Repo,
 
 config :bcrypt_elixir, :log_rounds, 4
 
+config :idea_portal, :recaptcha, module: IdeaPortal.Recaptcha.Mock
+
 if File.exists?("config/test.extra.exs") do
   import_config("test.extra.exs")
 end

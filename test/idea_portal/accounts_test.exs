@@ -2,6 +2,7 @@ defmodule IdeaPortal.AccountsTest do
   use IdeaPortal.DataCase
 
   alias IdeaPortal.Accounts
+  alias IdeaPortal.Recaptcha.Mock, as: Recaptcha
 
   describe "registering an account" do
     test "creating successfully" do
@@ -52,6 +53,23 @@ defmodule IdeaPortal.AccountsTest do
         })
 
       assert changeset.errors[:first_name]
+    end
+
+    test "recaptcha token is invalid" do
+      Recaptcha.set_valid_token_response(false)
+
+      {:error, changeset} =
+        Accounts.register(%{
+          email: "user@example.com",
+          first_name: "John",
+          last_name: "Smith",
+          phone_number: "123-123-1234",
+          password: "password",
+          password_confirmation: "password",
+          recaptcha_token: "invalid"
+        })
+
+      assert changeset.errors[:recaptcha_token]
     end
   end
 

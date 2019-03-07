@@ -4,6 +4,13 @@
       <h2 class="title-bar font-semibold">Register</h2>
 
       <%= form_for(@changeset, Routes.registration_path(@conn, :create), [method: :post], fn f -> %>
+        <%= if Keyword.has_key?(f.errors, :recaptcha_token) do %>
+          <div class="alert alert-danger">
+            The reCAPTCHA token was invalid. Please try again.
+          </div>
+        <% end %>
+        <%= hidden_input(f, :recaptcha_token) %>
+
         <div class="row mx-md-n4">
           <div class="col-12 col-md-6 px-md-4">
             <div class="form-group form-control-material">
@@ -50,8 +57,18 @@
           </div>
         </div>
 
-        <%= submit("Register", class: "btn btn-primary") %>
+        <%= submit("Sign In", class: "btn btn-primary") %>
       <% end) %>
     </div>
   </div>
 </div>
+
+<%= if recaptcha_key = recaptcha_key() do %>
+<script type="application/javascript">
+grecaptcha.ready(function() {
+  grecaptcha.execute('<%= recaptcha_key %>', {action: 'register'}).then(function(token) {
+    document.getElementById("user_recaptcha_token").value = token;
+  });
+});
+</script>
+<% end %>

@@ -4,6 +4,7 @@ defmodule IdeaPortal.Accounts do
   """
 
   alias IdeaPortal.Accounts.User
+  alias IdeaPortal.Recaptcha
   alias IdeaPortal.Repo
 
   @doc """
@@ -17,9 +18,20 @@ defmodule IdeaPortal.Accounts do
   Register an account
   """
   def register(params) do
-    %User{}
-    |> User.create_changeset(params)
-    |> Repo.insert()
+    recaptcha_token = Map.get(params, "recaptcha_token")
+
+    case Recaptcha.valid_token?(recaptcha_token) do
+      true ->
+        %User{}
+        |> User.create_changeset(params)
+        |> Repo.insert()
+
+      false ->
+        %User{}
+        |> User.create_changeset(params)
+        |> Ecto.Changeset.add_error(:recaptcha_token, "is invalid")
+        |> Ecto.Changeset.apply_action(:insert)
+    end
   end
 
   @doc """
