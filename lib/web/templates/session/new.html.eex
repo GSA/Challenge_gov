@@ -20,7 +20,7 @@
           </div>
         </div>
 
-        <%= submit("Register", class: "btn btn-primary") %>
+        <%= submit("Sign In", class: "btn btn-primary") %>
       <% end) %>
 
       <%= link("Create an Account", to: Routes.registration_path(@conn, :new)) %>

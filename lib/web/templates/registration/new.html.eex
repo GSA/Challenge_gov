@@ -57,7 +57,7 @@
           </div>
         </div>
 
-        <%= submit("Sign In", class: "btn btn-primary") %>
+        <%= submit("Register", class: "btn btn-primary") %>
       <% end) %>
     </div>
   </div>
