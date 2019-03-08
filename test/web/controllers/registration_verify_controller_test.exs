@@ -7,7 +7,8 @@ defmodule Web.RegistrationVerifyControllerTest do
     test "a real token", %{conn: conn} do
       user = TestHelpers.create_user()
 
-      conn = get(conn, Routes.registration_verify_path(conn, :show, token: user.email_verification_token))
+      url = Routes.registration_verify_path(conn, :show, token: user.email_verification_token)
+      conn = get(conn, url)
 
       assert redirected_to(conn) == Routes.page_path(conn, :index)
 
