@@ -79,4 +79,19 @@ defmodule IdeaPortal.Accounts do
   def verify_email(token) do
     Stein.Accounts.verify_email(Repo, User, token)
   end
+
+  @doc """
+  Check if a user is an admin
+
+      iex> Accounts.is_admin?(%User{role: "admin"})
+      true
+
+      iex> Accounts.is_admin?(%User{role: "user"})
+      false
+  """
+  def is_admin?(user)
+
+  def is_admin?(%{role: "admin"}), do: true
+
+  def is_admin?(_), do: false
 end

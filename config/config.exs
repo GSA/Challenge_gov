@@ -8,6 +8,7 @@
 use Mix.Config
 
 config :idea_portal,
+  namespace: Web,
   ecto_repos: [IdeaPortal.Repo]
 
 # Configures the endpoint

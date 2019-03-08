@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/png" href="<%= Routes.static_path(@conn, "/images/favicon.png") %>" />
+
+    <title>City Backlog Admin</title>
+
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/admin.css") %>"/>
+  </head>
+
+  <body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+      <header class="main-header">
+        <a href="/admin" class="logo">
+          <span class="logo-mini">CB</span>
+          <span class="logo-lg">City Backlog</span>
+        </a>
+
+        <nav class="navbar navbar-static-top">
+          <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+        </nav>
+      </header>
+
+      <aside class="main-sidebar">
+        <section class="sidebar">
+          <ul class="sidebar-menu" data-widget="tree">
+            <li class="<%= tab_selected(@conn, "dashboard") %>">
+              <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
+                <i class="fa fa-dashboard"></i>
+                <span>Dashboard</span>
+              <% end %>
+            </li>
+          </ul>
+        </section>
+      </aside>
+
+      <div class="content-wrapper">
+        <%= if get_flash(@conn, :info) do %>
+          <section class="content-header">
+            <div class="callout callout-success">
+              <i class="fa fa-info-circle"></i> <%= get_flash(@conn, :info) %>
+            </div>
+          </section>
+        <% end %>
+
+        <%= if get_flash(@conn, :error) do %>
+          <section class="content-header">
+            <div class="callout callout-danger">
+              <i class="fa fa-exclamation-circle"></i> <%= get_flash(@conn, :error) %>
+            </div>
+          </section>
+        <% end %>
+
+        <%= render @view_module, @view_template, assigns %>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/admin.js") %>"></script>
+  </body>
+</html>

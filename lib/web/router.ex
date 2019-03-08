@@ -10,6 +10,11 @@ defmodule Web.Router do
     plug Web.Plugs.FetchUser
   end
 
+  pipeline(:admin) do
+    plug(Web.Plugs.VerifyAdmin)
+    plug(:put_layout, {Web.LayoutView, "admin.html"})
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -24,6 +29,12 @@ defmodule Web.Router do
     get("/register/verify", RegistrationVerifyController, :show)
 
     resources("/sign-in", SessionController, only: [:new, :create, :delete], singleton: true)
+  end
+
+  scope "/admin", Web.Admin, as: :admin do
+    pipe_through([:browser, :admin])
+
+    get("/", DashboardController, :index)
   end
 
   if Mix.env() == :dev do

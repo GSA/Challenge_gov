@@ -3,8 +3,11 @@ defmodule IdeaPortal.AccountsTest do
   use Bamboo.Test
 
   alias IdeaPortal.Accounts
+  alias IdeaPortal.Accounts.User
   alias IdeaPortal.Emails
   alias IdeaPortal.Recaptcha.Mock, as: Recaptcha
+
+  doctest Accounts
 
   describe "registering an account" do
     test "creating successfully" do
