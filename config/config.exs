@@ -24,6 +24,7 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+config :bamboo, :json_library, Jason
 
 config :idea_portal, :recaptcha, module: IdeaPortal.Recaptcha.Implementation
 
