@@ -75,8 +75,8 @@ config :idea_portal, IdeaPortal.Repo,
   pool_size: 10
 
 config :idea_portal, IdeaPortal.Mailer,
-  adapter: Bamboo.LocalAdapter,
-  from: "idea-portal@example.com"
+  from: "idea-portal@example.com",
+  adapter: Bamboo.LocalAdapter
 
 config :idea_portal, :recaptcha, module: IdeaPortal.Recaptcha.Mock
 

@@ -18,8 +18,8 @@ config :idea_portal, IdeaPortal.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :idea_portal, IdeaPortal.Mailer,
-  adapter: Bamboo.TestAdapter,
-  from: "idea-portal@example.com"
+  from: "idea-portal@example.com",
+  adapter: Bamboo.TestAdapter
 
 config :bcrypt_elixir, :log_rounds, 4
 
