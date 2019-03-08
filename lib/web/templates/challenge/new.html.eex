@@ -1,0 +1,71 @@
+<div class="page-titles">
+  <h1>Submit Your Challenge</h1>
+  <p>Solve your city’s problem by submiting your Challenge. <%= link("Learn more!", to: "#") %></p>
+</div>
+
+<%= form_for(@changeset, Routes.challenge_path(@conn, :create), [method: :post], fn f -> %>
+  <div class="card card-form custom-card">
+    <div class="card-body">
+      <div class="form-titles">
+        <h2 class="title-bar font-semibold">Basics</h2>
+
+        <%= if Keyword.has_key?(f.errors, :recaptcha_token) do %>
+          <div class="alert alert-danger">
+            The reCAPTCHA token was invalid. Please try again.
+          </div>
+        <% end %>
+        <%= hidden_input(f, :recaptcha_token) %>
+
+        <div class="form-group form-control-material">
+          <%= select(f, :focus_area, Challenges.focus_areas(), required: true, prompt: "Focus Area", class: "form-control #{FormView.error_class(f, :name)}") %>
+          <%= error_tag(f, :focus_area) %>
+        </div>
+
+        <div class="form-group form-control-material">
+          <%= text_input(f, :name, required: true, placeholder: "Name", class: "form-control #{FormView.error_class(f, :name)}") %>
+          <%= error_tag(f, :name) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-form custom-card">
+    <div class="card-body">
+      <div class="form-titles">
+        <h2 class="title-bar font-semibold">What is the problem?</h2>
+      </div>
+      <div class="form-group">
+        <%= textarea(f, :description, class: "form-control #{FormView.error_class(f, :description)}", rows: 4) %>
+        <%= error_tag(f, :description) %>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-form custom-card">
+    <div class="card-body">
+      <div class="form-titles">
+        <h2 class="title-bar font-semibold">Why is a problem?</h2>
+      </div>
+      <div class="form-group">
+        <%= textarea(f, :why, class: "form-control #{FormView.error_class(f, :why)}", rows: 4) %>
+        <%= error_tag(f, :why) %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group submit-section text-right">
+    <div class="draft-save-btns">
+      <%= submit("Submit", class: "btn btn-primary") %>
+    </div>
+  </div>
+<% end) %>
+
+<%= if recaptcha_key = Recaptcha.recaptcha_key() do %>
+  <script type="application/javascript">
+grecaptcha.ready(function() {
+  grecaptcha.execute('<%= recaptcha_key %>', {action: 'register'}).then(function(token) {
+    document.getElementById("user_recaptcha_token").value = token;
+  });
+});
+  </script>
+<% end %>

@@ -10,6 +10,10 @@ defmodule Web.Router do
     plug Web.Plugs.FetchUser
   end
 
+  pipeline(:signed_in) do
+    plug(Web.Plugs.VerifyUser)
+  end
+
   pipeline(:admin) do
     plug(Web.Plugs.VerifyAdmin)
     plug(:put_layout, {Web.LayoutView, "admin.html"})
@@ -29,6 +33,12 @@ defmodule Web.Router do
     get("/register/verify", RegistrationVerifyController, :show)
 
     resources("/sign-in", SessionController, only: [:new, :create, :delete], singleton: true)
+  end
+
+  scope "/", Web do
+    pipe_through([:browser, :signed_in])
+
+    resources("/challenges", ChallengeController, only: [:new, :create])
   end
 
   scope "/admin", Web.Admin, as: :admin do
