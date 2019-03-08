@@ -1,6 +1,6 @@
 defmodule Web.Plugs.VerifyAdmin do
   @moduledoc """
-  Verify a user is in the session
+  Verify a _admin_ user is in the session
   """
 
   import Plug.Conn
