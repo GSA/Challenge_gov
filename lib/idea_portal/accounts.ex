@@ -46,7 +46,7 @@ defmodule IdeaPortal.Accounts do
   Update an account
   """
   def update(user, params) do
-  changeset = User.update_changeset(user, params)
+    changeset = User.update_changeset(user, params)
 
     case Repo.update(changeset) do
       {:ok, user} ->

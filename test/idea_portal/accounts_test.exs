@@ -111,6 +111,7 @@ defmodule IdeaPortal.AccountsTest do
   describe "editing an account" do
     test "updated successfully" do
       user = TestHelpers.create_user()
+
       params = %{
         first_name: "Jonathan",
         last_name: "Smyth",

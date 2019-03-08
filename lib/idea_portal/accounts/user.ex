@@ -66,13 +66,14 @@ defmodule IdeaPortal.Accounts.User do
     struct
     |> changeset(params)
     |> password_changeset(params)
-    |> maybe_reset_verification(params)
+    |> maybe_reset_verification()
   end
 
-  def maybe_reset_verification(struct, params) do
+  def maybe_reset_verification(struct) do
     case get_change(struct, :email) do
       nil ->
         struct
+
       _ ->
         struct
         |> put_change(:email_verification_token, UUID.uuid4())
