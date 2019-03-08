@@ -20,4 +20,14 @@ defmodule Web.LayoutView do
         )
     end
   end
+
+  def tab_selected(conn, "dashboard") do
+    case conn.path_info == ["admin"] do
+      true ->
+        "active"
+
+      false ->
+        ""
+    end
+  end
 end

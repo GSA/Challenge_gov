@@ -10,6 +10,8 @@ defmodule IdeaPortal.Accounts.User do
   @type t :: %__MODULE__{}
 
   schema "users" do
+    field(:role, :string, read_after_writes: true)
+
     field(:email, :string)
     field(:password_hash, :string)
     field(:password, :string, virtual: true)
