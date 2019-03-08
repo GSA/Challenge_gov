@@ -33,6 +33,7 @@ defmodule IdeaPortal.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:bamboo, "~> 1.2"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.0"},
       {:elixir_uuid, "~> 1.2"},
@@ -60,6 +61,7 @@ defmodule IdeaPortal.MixProject do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
+      "ecto.migrate.reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end

@@ -42,6 +42,11 @@ config :idea_portal, :recaptcha,
   secret_key: {:system, "RECAPTCHA_SECRET_KEY"},
   key: {:system, "RECAPTCHA_SITE_KEY"}
 
+config :idea_portal, IdeaPortal.Mailer,
+  from: "idea-portal@example.com",
+  adapter: Bamboo.SendGridAdapter,
+  api_key: {:system, "SENDGRID_API_KEY"}
+
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
 end

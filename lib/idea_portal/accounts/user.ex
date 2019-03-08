@@ -16,6 +16,9 @@ defmodule IdeaPortal.Accounts.User do
     field(:password_confirmation, :string, virtual: true)
     field(:token, Ecto.UUID)
 
+    field(:email_verification_token, :string)
+    field(:email_verified_at, :utc_datetime)
+
     field(:first_name, :string)
     field(:last_name, :string)
     field(:phone_number, :string)
@@ -39,6 +42,7 @@ defmodule IdeaPortal.Accounts.User do
     |> Stein.Accounts.hash_password()
     |> validate_required([:password_hash])
     |> put_change(:token, UUID.uuid4())
+    |> put_change(:email_verification_token, UUID.uuid4())
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
 end

@@ -21,6 +21,12 @@ defmodule Web.Router do
 
     resources("/register", RegistrationController, only: [:new, :create])
 
+    get("/register/verify", RegistrationVerifyController, :show)
+
     resources("/sign-in", SessionController, only: [:new, :create, :delete], singleton: true)
+  end
+
+  if Mix.env() == :dev do
+    forward("/emails/sent", Bamboo.SentEmailViewerPlug)
   end
 end
