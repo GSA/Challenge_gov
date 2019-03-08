@@ -72,4 +72,11 @@ defmodule IdeaPortal.Accounts do
         {:error, :not_found}
     end
   end
+
+  @doc """
+  Find and verify a user by their verification token
+  """
+  def verify_email(token) do
+    Stein.Accounts.verify_email(Repo, User, token)
+  end
 end
