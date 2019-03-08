@@ -24,6 +24,8 @@ defmodule Web.Router do
     get("/register/verify", RegistrationVerifyController, :show)
 
     resources("/sign-in", SessionController, only: [:new, :create, :delete], singleton: true)
+
+    resources("/account", AccountController, only: [:edit, :update], singleton: true)
   end
 
   if Mix.env() == :dev do

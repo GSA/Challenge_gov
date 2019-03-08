@@ -1,0 +1,68 @@
+<div class="card card-form custom-card">
+  <div class="card-body">
+    <div class="form-titles">
+      <%= if flash = get_flash(@conn, :info) do %>
+        <div class="alert alert-primary" role="alert">
+          <%= flash %>
+        </div>
+      <% end %>
+      <%= if flash = get_flash(@conn, :error) do %>
+        <div class="alert alert-danger" role="alert">
+          <%= flash %>
+        </div>
+      <% end %>
+      
+      <h2 class="title-bar font-semibold">Edit Account</h2>
+
+      <%= form_for(@changeset, Routes.account_path(@conn, :update), [method: :put], fn f -> %>
+        <div class="row mx-md-n4">
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= text_input(f, :first_name, required: true, placeholder: "First Name", class: "form-control #{FormView.error_class(f, :first_name)}") %>
+              <%= error_tag(f, :first_name) %>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= text_input(f, :last_name, required: true, placeholder: "Last Name", class: "form-control #{FormView.error_class(f, :last_name)}") %>
+              <%= error_tag(f, :last_name) %>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mx-md-n4">
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= text_input(f, :email, required: true, placeholder: "Email", class: "form-control #{FormView.error_class(f, :email)}") %>
+              <%= error_tag(f, :email) %>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= text_input(f, :phone_number, placeholder: "Phone Number", class: "form-control") %>
+              <%= error_tag(f, :phone_number) %>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mx-md-n4">
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= password_input(f, :password, required: true, placeholder: "Password", class: "form-control #{FormView.error_class(f, :password)}") %>
+              <%= error_tag(f, :password) %>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= password_input(f, :password_confirmation, required: true, placeholder: "Password Confirmation", class: "form-control #{FormView.error_class(f, :password_confirmation)}") %>
+              <%= error_tag(f, :password_confirmation) %>
+            </div>
+          </div>
+        </div>
+
+        <%= submit("Update", class: "btn btn-primary") %>
+      <% end) %>
+    </div>
+  </div>
+</div>
