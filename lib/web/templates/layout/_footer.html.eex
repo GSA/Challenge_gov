@@ -1,0 +1,78 @@
+<footer class="footer">
+  <div class="footer__top">
+    <div class="footer__top_container container-fluid">
+      <div class="footer__item">
+        <h3 class="footer__h3">Background</h3>
+        <div class="footer__data">
+          <p class="footer__p">Baltimore is a unique and vibrant city, and though there are many reasons why we're called "Charm City", we tend to make the news for our flaws rather than our strengths. And hackathons are a great way to engage the broader community to explore technology as a way to help solve them.</p>
+        </div>
+      </div>
+      <div class="footer__item">
+        <h3 class="footer__h3">Communications</h3>
+        <div class="footer__data">
+          <p class="footer__p">Stay with us online:</p>
+          <ul class="footer__social">
+            <li class="footer__social_item">
+              <a href="https://www.facebook.com/HackBmore" class="footer__social_link" target="_blank" rel="noopener">
+                <svg class="footer__social_pic">
+                  <use xlink:href="<%= Routes.static_path(@conn, "/images/icons.svg#footer-facebook") %>"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="footer__social_item">
+              <a href="https://twitter.com/HackBaltimore" class="footer__social_link" target="_blank" rel="noopener">
+                <svg class="footer__social_pic">
+                  <use xlink:href="/images/icons.svg#footer-twitter"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="footer__social_item">
+              <a href="https://www.instagram.com/hackbaltimore/" class="footer__social_link" target="_blank" rel="noopener">
+                <svg class="footer__social_pic">
+                  <use xlink:href="/images/icons.svg#footer-instagram"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="footer__social_item">
+              <a href="https://www.youtube.com/channel/UCZ5ivPjkVYZT-AToSisShrA" class="footer__social_link" target="_blank" rel="noopener">
+                <svg class="footer__social_pic">
+                  <use xlink:href="/images/icons.svg#footer-youtube"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="footer__social_item">
+              <a href="https://vimeo.com/hackbaltimore" class="footer__social_link" target="_blank" rel="noopener">
+                <svg class="footer__social_pic">
+                  <use xlink:href="/images/icons.svg#footer-vimeo"></use>
+                </svg>
+              </a>
+            </li>
+          </ul>
+          <p class="footer__p footer__email">Leave your email, to receive fresh materials:</p>
+          <form action="https://hackbaltimore.us19.list-manage.com/subscribe/post" method="POST" class="footer__form">
+            <input type="hidden" name="u" value="006d88fcdbf6654ee1b449bfa">
+            <input type="hidden" name="id" value="8e27dbd85e">
+            <input type="text" class="footer__form_input" placeholder="Email" name="MERGE0" id="MERGE0" required="">
+            <button type="submit" class="footer__form_button button">Subscribe</button>
+          </form>
+          <a href="mailto:info@hackbaltimore.io" class="footer__contact_link footer__p footer__email-link" target="_blank" rel="noopener">
+            <svg class="footer__p_pic">
+              <use xlink:href="/images/icons.svg#footer-mail"></use>
+            </svg>
+            info@hackbaltimore.io
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <div class="footer__bottom_container container-fluid">
+      <div class="footer__bottom_links">
+        <a href="/privacy" class="footer__bottom_link" target="_blank" rel="noopener">Privacy</a>
+        <a href="/terms-and-conditions" class="footer__bottom_link" target="_blank" rel="noopener">Terms and Conditions</a>
+        <a href="/code-of-conduct" class="footer__bottom_link" target="_blank" rel="noopener">Code Of Conduct</a>
+      </div>
+      <h4 class="footer__bottom_h4">Copyright © 2018 Hack Baltimore, LLC.</h4>
+    </div>
+  </div>
+</footer>
