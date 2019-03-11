@@ -37,6 +37,27 @@ defmodule IdeaPortal.Accounts do
     end
   end
 
+  @doc """
+  Changeset for account editing
+  """
+  def edit(user), do: User.update_changeset(user, %{})
+
+  @doc """
+  Update an account
+  """
+  def update(user, params) do
+    changeset = User.update_changeset(user, params)
+
+    case Repo.update(changeset) do
+      {:ok, user} ->
+        maybe_send_email_verification(user, changeset)
+        {:ok, user}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
   defp maybe_send_email_verification({:ok, user}) do
     user
     |> Emails.verification_email()
@@ -46,6 +67,16 @@ defmodule IdeaPortal.Accounts do
   end
 
   defp maybe_send_email_verification(result), do: result
+
+  defp maybe_send_email_verification(user, changeset) do
+    if Map.has_key?(changeset.changes, :email) do
+      user
+      |> Emails.verification_email()
+      |> Mailer.deliver_later()
+    end
+
+    user
+  end
 
   @doc """
   Validate a user's login information

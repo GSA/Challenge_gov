@@ -110,4 +110,42 @@ defmodule IdeaPortal.AccountsTest do
       {:error, :not_found} = Accounts.get_by_token("not a uuid")
     end
   end
+
+  describe "editing an account" do
+    test "updated successfully" do
+      user = TestHelpers.create_user()
+
+      params = %{
+        first_name: "Jonathan",
+        last_name: "Smyth",
+        phone_number: "321-321-4321",
+        password: "password",
+        password_confirmation: "password"
+      }
+
+      {:ok, updated_user} = Accounts.update(user, params)
+
+      assert updated_user.first_name == "Jonathan"
+      assert updated_user.last_name == "Smyth"
+      assert updated_user.phone_number == "321-321-4321"
+    end
+
+    test "sends a verification email if email changed" do
+      user = TestHelpers.create_user()
+      {:ok, user} = Accounts.verify_email(user.email_verification_token)
+
+      params = %{
+        email: "updated_user@example.com",
+        password: "password",
+        password_confirmation: "password"
+      }
+
+      {:ok, updated_user} = Accounts.update(user, params)
+
+      assert updated_user.email_verification_token
+      assert updated_user.email_verification_token != user.email_verification_token
+      assert updated_user.email_verified_at == nil
+      assert_delivered_email(Emails.verification_email(updated_user))
+    end
+  end
 end

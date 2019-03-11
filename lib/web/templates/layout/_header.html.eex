@@ -16,7 +16,9 @@
         <ul class="mp-none">
           <%= if user_signed_in?(@conn) do %>
             <li>
-              <a href="#" class="menu-profile"><img src="images/icon-profile.png" alt=""></a>
+              <%= link to: Routes.account_path(@conn, :edit), class: "menu-profile" do %>
+                <img src="<%= Routes.static_path(@conn, "/images/icon-profile.png") %>" alt="">
+              <% end %>
             </li>
             <li>
               <%= link("Sign Out", to: Routes.session_path(@conn, :delete), method: :delete) %>
