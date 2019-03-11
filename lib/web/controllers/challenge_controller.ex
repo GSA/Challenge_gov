@@ -3,6 +3,10 @@ defmodule Web.ChallengeController do
 
   alias IdeaPortal.Challenges
 
+  def index(conn, _params) do
+    render(conn, "index.html")
+  end
+
   def new(conn, _params) do
     %{current_user: user} = conn.assigns
 

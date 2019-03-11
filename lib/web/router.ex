@@ -38,7 +38,7 @@ defmodule Web.Router do
   scope "/", Web do
     pipe_through([:browser, :signed_in])
 
-    resources("/challenges", ChallengeController, only: [:new, :create])
+    resources("/challenges", ChallengeController, only: [:index, :new, :create])
   end
 
   scope "/admin", Web.Admin, as: :admin do

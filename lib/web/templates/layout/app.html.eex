@@ -21,7 +21,9 @@
                   <% end %>
                 </li>
                 <li>
-                  <a href="#"><i class="icon-Challenges"></i><span>Challenges</span></a>
+                  <%= link(to: Routes.challenge_path(@conn, :index)) do %>
+                    <i class="icon-Challenges"></i><span>Challenges</span>
+                  <% end %>
                 </li>
               </ul>
             </div>
