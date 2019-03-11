@@ -79,6 +79,15 @@ defmodule IdeaPortal.Accounts do
   end
 
   @doc """
+  Update an account's password
+  """
+  def update_password(user, params) do
+    user
+    |> User.password_changeset(params)
+    |> Repo.update()
+  end
+
+  @doc """
   Validate a user's login information
   """
   def validate_login(email, password) do

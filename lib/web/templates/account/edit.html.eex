@@ -1,17 +1,17 @@
+<%= if flash = get_flash(@conn, :info) do %>
+  <div class="alert alert-primary" role="alert">
+    <%= flash %>
+  </div>
+<% end %>
+<%= if flash = get_flash(@conn, :error) do %>
+  <div class="alert alert-danger" role="alert">
+    <%= flash %>
+  </div>
+<% end %>
+
 <div class="card card-form custom-card">
   <div class="card-body">
     <div class="form-titles">
-      <%= if flash = get_flash(@conn, :info) do %>
-        <div class="alert alert-primary" role="alert">
-          <%= flash %>
-        </div>
-      <% end %>
-      <%= if flash = get_flash(@conn, :error) do %>
-        <div class="alert alert-danger" role="alert">
-          <%= flash %>
-        </div>
-      <% end %>
-      
       <h2 class="title-bar font-semibold">Edit Account</h2>
 
       <%= form_for(@changeset, Routes.account_path(@conn, :update), [method: :put], fn f -> %>
@@ -45,6 +45,18 @@
           </div>
         </div>
 
+        <%= submit("Update", class: "btn btn-primary") %>
+      <% end) %>
+    </div>
+  </div>
+</div>
+
+<div class="card card-form custom-card">
+  <div class="card-body">
+    <div class="form-titles">
+      <h2 class="title-bar font-semibold">Change Password</h2>
+
+      <%= form_for(@changeset, Routes.account_path(@conn, :update), [method: :put], fn f -> %>
         <div class="row mx-md-n4">
           <div class="col-12 col-md-6 px-md-4">
             <div class="form-group form-control-material">
