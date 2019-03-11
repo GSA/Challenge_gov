@@ -56,12 +56,6 @@ defmodule IdeaPortal.Accounts.User do
     |> put_change(:email_verification_token, UUID.uuid4())
   end
 
-  def edit_changeset(struct, params) do
-    struct
-    |> changeset(params)
-    |> password_changeset(params)
-  end
-
   def update_changeset(struct, params) do
     struct
     |> changeset(params)

@@ -4,7 +4,7 @@ defmodule Web.AccountController do
   alias IdeaPortal.Accounts
 
   def edit(conn, _params) do
-    user = conn.assigns.current_user
+    %{current_user: user} = conn.assigns
 
     conn
     |> assign(:changeset, Accounts.edit(user))
@@ -12,7 +12,7 @@ defmodule Web.AccountController do
   end
 
   def update(conn, %{"user" => params}) do
-    user = conn.assigns.current_user
+    %{current_user: user} = conn.assigns
 
     case Accounts.update(user, params) do
       {:ok, user} ->

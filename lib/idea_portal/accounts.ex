@@ -40,7 +40,7 @@ defmodule IdeaPortal.Accounts do
   @doc """
   Changeset for account editing
   """
-  def edit(user), do: User.edit_changeset(user, %{})
+  def edit(user), do: User.update_changeset(user, %{})
 
   @doc """
   Update an account
