@@ -7,6 +7,8 @@ defmodule IdeaPortal.Accounts.User do
 
   import Ecto.Changeset
 
+  alias IdeaPortal.Challenges.Challenge
+
   @type t :: %__MODULE__{}
 
   schema "users" do
@@ -24,6 +26,8 @@ defmodule IdeaPortal.Accounts.User do
     field(:first_name, :string)
     field(:last_name, :string)
     field(:phone_number, :string)
+
+    has_many(:challenges, Challenge)
 
     timestamps()
   end

@@ -1,0 +1,13 @@
+<div class="row filter-area">
+  <div class="col-md-4">
+  </div>
+  <div class="col-auto col-filter-items">
+    <div class="filter-items">
+      <ul class="mp-none">
+        <li>
+          <%= link("Submit a Challenge", to: Routes.challenge_path(@conn, :new), class: "btn btn-light btn-radius btn-submit-idea") %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

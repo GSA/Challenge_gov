@@ -11,8 +11,14 @@ defmodule Web.ErrorHelpers do
   def error_tag(form, field) do
     errors = Enum.map(Keyword.get_values(form.errors, field), &translate_error/1)
 
-    content_tag(:span, class: "help-block invalid-feedback") do
-      [String.capitalize(to_string(field)), " ", errors]
+    case Enum.empty?(errors) do
+      true ->
+        []
+
+      false ->
+        content_tag(:span, class: "help-block invalid-feedback") do
+          [String.capitalize(to_string(field)), " ", errors]
+        end
     end
   end
 
