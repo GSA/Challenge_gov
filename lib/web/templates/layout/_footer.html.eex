@@ -22,28 +22,28 @@
             <li class="footer__social_item">
               <a href="https://twitter.com/HackBaltimore" class="footer__social_link" target="_blank" rel="noopener">
                 <svg class="footer__social_pic">
-                  <use xlink:href="/images/icons.svg#footer-twitter"></use>
+                  <use xlink:href="<%= Routes.static_path(@conn, "/images/icons.svg#footer-twitter") %>"></use>
                 </svg>
               </a>
             </li>
             <li class="footer__social_item">
               <a href="https://www.instagram.com/hackbaltimore/" class="footer__social_link" target="_blank" rel="noopener">
                 <svg class="footer__social_pic">
-                  <use xlink:href="/images/icons.svg#footer-instagram"></use>
+                  <use xlink:href="<%= Routes.static_path(@conn, "/images/icons.svg#footer-instagram") %>"></use>
                 </svg>
               </a>
             </li>
             <li class="footer__social_item">
               <a href="https://www.youtube.com/channel/UCZ5ivPjkVYZT-AToSisShrA" class="footer__social_link" target="_blank" rel="noopener">
                 <svg class="footer__social_pic">
-                  <use xlink:href="/images/icons.svg#footer-youtube"></use>
+                  <use xlink:href="<%= Routes.static_path(@conn, "/images/icons.svg#footer-youtube") %>"></use>
                 </svg>
               </a>
             </li>
             <li class="footer__social_item">
               <a href="https://vimeo.com/hackbaltimore" class="footer__social_link" target="_blank" rel="noopener">
                 <svg class="footer__social_pic">
-                  <use xlink:href="/images/icons.svg#footer-vimeo"></use>
+                  <use xlink:href="<%= Routes.static_path(@conn, "/images/icons.svg#footer-vimeo") %>"></use>
                 </svg>
               </a>
             </li>
@@ -57,7 +57,7 @@
           </form>
           <a href="mailto:info@hackbaltimore.io" class="footer__contact_link footer__p footer__email-link" target="_blank" rel="noopener">
             <svg class="footer__p_pic">
-              <use xlink:href="/images/icons.svg#footer-mail"></use>
+              <use xlink:href="<%= Routes.static_path(@conn, "/images/icons.svg#footer-mail") %>"></use>
             </svg>
             info@hackbaltimore.io
           </a>
