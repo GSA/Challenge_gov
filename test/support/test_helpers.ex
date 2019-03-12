@@ -4,6 +4,8 @@ defmodule IdeaPortal.TestHelpers do
   """
 
   alias IdeaPortal.Accounts
+  alias IdeaPortal.Challenges
+  alias IdeaPortal.SupportingDocuments
 
   defp user_attributes(attributes) do
     Map.merge(
@@ -31,5 +33,40 @@ defmodule IdeaPortal.TestHelpers do
   def user_struct(attributes \\ %{}) do
     attributes = user_attributes(attributes)
     struct(Accounts.User, attributes)
+  end
+
+  defp challenge_attributes(attributes) do
+    Map.merge(
+      %{
+        focus_area: "Transportation",
+        name: "Bike lanes",
+        description: "We need more bike lanes",
+        why: "To bike around"
+      },
+      attributes
+    )
+  end
+
+  def create_challenge(user, attributes \\ %{}) do
+    attributes = challenge_attributes(attributes)
+    {:ok, challenge} = Challenges.submit(user, attributes)
+    challenge
+  end
+
+  @doc """
+  Generate a struct with challenge data
+  """
+  def challenge_struct(attributes \\ %{}) do
+    attributes = challenge_attributes(attributes)
+    struct(Challenges.Challenge, attributes)
+  end
+
+  def upload_document(user, file_path) do
+    {:ok, document} =
+      SupportingDocuments.upload(user, %{
+        "file" => %{path: file_path}
+      })
+
+    document
   end
 end

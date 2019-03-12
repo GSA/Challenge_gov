@@ -46,4 +46,33 @@ defmodule IdeaPortal.SupportingDocuments do
     |> Ecto.Changeset.add_error(:file, "can't be blank")
     |> Ecto.Changeset.apply_action(:insert)
   end
+
+  @doc """
+  Attach a document to a challenge
+
+  Must be:
+  - Not attached to a challenge
+  - Same user owns both the challenge and document
+  """
+  def attach_to_challenge(document = %{challenge_id: challenge_id}, _challenge) when challenge_id != nil do
+    document
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.add_error(:challenge_id, "already assigned")
+    |> Ecto.Changeset.apply_action(:update)
+  end
+
+  def attach_to_challenge(document, challenge) do
+    case document.user_id == challenge.user_id do
+      true ->
+        document
+        |> Document.challenge_changeset(challenge)
+        |> Repo.update()
+
+      false ->
+        document
+        |> Ecto.Changeset.change()
+        |> Ecto.Changeset.add_error(:challenge_id, "not yours")
+        |> Ecto.Changeset.apply_action(:update)
+    end
+  end
 end

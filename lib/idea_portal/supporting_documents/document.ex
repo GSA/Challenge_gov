@@ -8,6 +8,7 @@ defmodule IdeaPortal.SupportingDocuments.Document do
   import Ecto.Changeset
 
   alias IdeaPortal.Accounts.User
+  alias IdeaPortal.Challenges.Challenge
 
   @type t :: %__MODULE__{}
 
@@ -16,6 +17,7 @@ defmodule IdeaPortal.SupportingDocuments.Document do
     field(:extension, :string)
 
     belongs_to(:user, User)
+    belongs_to(:challenge, Challenge)
 
     timestamps()
   end
@@ -25,5 +27,12 @@ defmodule IdeaPortal.SupportingDocuments.Document do
     |> change()
     |> put_change(:key, key)
     |> put_change(:extension, extension)
+  end
+
+  def challenge_changeset(struct, challenge) do
+    struct
+    |> change()
+    |> put_change(:challenge_id, challenge.id)
+    |> foreign_key_constraint(:challenge_id)
   end
 end
