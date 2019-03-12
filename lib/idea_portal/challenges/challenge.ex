@@ -8,6 +8,7 @@ defmodule IdeaPortal.Challenges.Challenge do
   import Ecto.Changeset
 
   alias IdeaPortal.Accounts.User
+  alias IdeaPortal.SupportingDocuments.Document
 
   @type t :: %__MODULE__{}
 
@@ -27,6 +28,8 @@ defmodule IdeaPortal.Challenges.Challenge do
     field(:why, :string)
 
     belongs_to(:user, User)
+
+    has_many(:supporting_documents, Document)
 
     timestamps()
   end

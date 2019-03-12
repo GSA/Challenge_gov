@@ -13,6 +13,19 @@ defmodule IdeaPortal.SupportingDocuments do
   def document_path(key, extension), do: "/documents/#{key}#{extension}"
 
   @doc """
+  Get a supporting document
+  """
+  def get(id) do
+    case Repo.get(Document, id) do
+      nil ->
+        {:error, :not_found}
+
+      document ->
+        {:ok, document}
+    end
+  end
+
+  @doc """
   Upload a new supporting document
   """
   def upload(user, %{"file" => file}) do
@@ -54,7 +67,8 @@ defmodule IdeaPortal.SupportingDocuments do
   - Not attached to a challenge
   - Same user owns both the challenge and document
   """
-  def attach_to_challenge(document = %{challenge_id: challenge_id}, _challenge) when challenge_id != nil do
+  def attach_to_challenge(document = %{challenge_id: challenge_id}, _challenge)
+      when challenge_id != nil do
     document
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.add_error(:challenge_id, "already assigned")
