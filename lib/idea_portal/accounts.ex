@@ -86,6 +86,19 @@ defmodule IdeaPortal.Accounts do
   end
 
   @doc """
+  Find a user by their ID
+  """
+  def get(id) do
+    case Repo.get(User, id) do
+      nil ->
+        {:error, :not_found}
+
+      user ->
+        {:ok, user}
+    end
+  end
+
+  @doc """
   Find a user by a token
   """
   def get_by_token(token) do

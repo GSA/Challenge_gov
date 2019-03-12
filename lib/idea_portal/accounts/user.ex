@@ -8,6 +8,7 @@ defmodule IdeaPortal.Accounts.User do
   import Ecto.Changeset
 
   alias IdeaPortal.Challenges.Challenge
+  alias IdeaPortal.SupportingDocuments.Document
 
   @type t :: %__MODULE__{}
 
@@ -28,6 +29,7 @@ defmodule IdeaPortal.Accounts.User do
     field(:phone_number, :string)
 
     has_many(:challenges, Challenge)
+    has_many(:supporting_documents, Document)
 
     timestamps()
   end

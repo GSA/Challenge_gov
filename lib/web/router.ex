@@ -43,6 +43,12 @@ defmodule Web.Router do
     resources("/challenges", ChallengeController, only: [:index, :new, :create])
   end
 
+  scope "/", Web do
+    pipe_through([:api, :signed_in])
+
+    resources("/documents", DocumentController, only: [:create])
+  end
+
   scope "/admin", Web.Admin, as: :admin do
     pipe_through([:browser, :admin])
 
