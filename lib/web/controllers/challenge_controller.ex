@@ -3,8 +3,8 @@ defmodule Web.ChallengeController do
 
   alias IdeaPortal.Challenges
 
-  def index(conn, params) do
-    challenges = Challenges.all(params)
+  def index(conn, _params) do
+    challenges = Challenges.all()
 
     conn
     |> assign(:challenges, challenges)
