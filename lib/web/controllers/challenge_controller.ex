@@ -3,8 +3,24 @@ defmodule Web.ChallengeController do
 
   alias IdeaPortal.Challenges
 
-  def index(conn, _params) do
-    render(conn, "index.html")
+  def index(conn, params) do
+    challenges = Challenges.all(params)
+
+    conn
+    |> assign(:challenges, challenges)
+    |> render("index.html")
+  end
+
+  def show(conn, %{"id" => id}) do
+    case Challenges.get(id) do
+      nil ->
+        conn |> redirect(to: Routes.challenge_path(conn, :index))
+
+      challenge ->
+        conn
+        |> assign(:challenge, challenge)
+        |> render("show.html")
+    end
   end
 
   def new(conn, _params) do

@@ -10,6 +10,22 @@ defmodule IdeaPortal.Challenges do
   def focus_areas(), do: Challenge.focus_areas()
 
   @doc """
+  Get all challenges
+  """
+  def all(opts \\ []) do
+    Challenge
+    |> Repo.all()
+  end
+
+  @doc """
+  Get a challenge
+  """
+  def get(id) do
+    Challenge
+    |> Repo.get(id)
+  end
+
+  @doc """
   New changeset for a challenge
   """
   def new(user) do

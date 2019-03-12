@@ -1,13 +1,88 @@
 <div class="row filter-area">
   <div class="col-md-4">
+    <div class="search-form">
+      <form id="challenge-search-form" action="<%= Routes.challenge_path(@conn, :index) %>">
+        <div class="form-group form-control-radius form-search has-icon right-icon">
+          <i class="icon-magnifying-glass"></i>
+          <input name="filter[search]" type="text" class="form-control" placeholder="Search ideas">
+        </div>
+      </form>
+    </div>
   </div>
+
   <div class="col-auto col-filter-items">
     <div class="filter-items">
       <ul class="mp-none">
         <li>
           <%= link("Submit a Challenge", to: Routes.challenge_path(@conn, :new), class: "btn btn-light btn-radius btn-submit-idea") %>
         </li>
+        <li>
+          <div class="custom-dropdown">
+            <a href="javascript:;" class="btn btn-sm btn-date">Date <span>></span></a>
+            <div class="cdd-data">
+              <div class="inner">
+                22 Feb, 2019
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="custom-dropdown custom-dropdown-filter">
+            <a href="javascript:;" class="btn btn-sm btn-date">Filter <span>></span></a>
+            <div class="cdd-data">
+              <div class="inner">
+                <p class="font-semibold color-gray">Focus Area</p>
+                <div class="filter-checkboxes">
+                  <ul>
+                    <li><label class="custom-checkbox-btn text-center"><input name="area[]" id="education" type="checkbox" checked=""><span class="transition-2s">Education</span><strong class="transition-2s"></strong></label></li>
+                    <li><label class="custom-checkbox-btn text-center"><input name="area[]" id="workforce" type="checkbox" checked=""><span class="transition-2s">Workforce</span><strong class="transition-2s"></strong></label></li>
+                    <li><label class="custom-checkbox-btn text-center"><input name="area[]" id="transportation" type="checkbox"><span class="transition-2s">Transportation</span><strong class="transition-2s"></strong></label></li>
+                    <li><label class="custom-checkbox-btn text-center"><input name="area[]" id="public_safety" type="checkbox"><span class="transition-2s">Public Safety</span><strong class="transition-2s"></strong></label></li>
+                    <li><label class="custom-checkbox-btn text-center"><input name="area[]" id="housing" type="checkbox"><span class="transition-2s">Housing</span><strong class="transition-2s"></strong></label></li>
+                    <li><label class="custom-checkbox-btn text-center"><input name="area[]" id="health" type="checkbox" checked=""><span class="transition-2s">Health</span><strong class="transition-2s"></strong></label></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
+
+  <div class="col-12 col-md-12">
+    <div class="page-titles">
+      <h1>Challenges</h1>
+      <p>Solve your city’s problem by giving your time or money. <a href="javascript:;">Learn more!</a></p>
+    </div>
+  </div>
+</div>
+
+<div class="idea-panels">
+  <%= Enum.map(@challenges, fn (challenge) -> %>
+  <div class="card custom-card idea-card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <div class="idea-img">
+            <a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>"><img src="<%= Routes.static_path(@conn, "/images/idea-img.jpg") %>" alt="idea detail image"></a>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card-content-head">
+            <h2><a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>"><%= challenge.name %></a> <span class="font-semibold tag-list"><%= challenge.focus_area %></span></h2>
+            <p><a><%= challenge.description %></a></p>
+          </div>
+          <div class="card-content-footer">
+            <div class="row">
+              <div class="col-12">
+                <a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>" class="btn btn-grey-border btn-radius btn-sm">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end) %>
 </div>
