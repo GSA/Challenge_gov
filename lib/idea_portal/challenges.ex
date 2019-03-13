@@ -13,8 +13,10 @@ defmodule IdeaPortal.Challenges do
   Get all challenges
   """
   def all(opts \\ []) do
-    %{"page" => page} = opts
-    {page, ""} = Integer.parse(page)
+    page =
+      opts
+      |> Map.get("page", "1")
+      |> String.to_integer()
 
     Stein.Pagination.paginate(Repo, Challenge, %{page: page, per: 10})
   end
