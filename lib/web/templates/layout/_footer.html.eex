@@ -1,15 +1,8 @@
 <footer class="footer">
-  <div class="footer__top">
-    <div class="footer__top_container container-fluid">
-      <div class="footer__item">
-        <h3 class="footer__h3">Background</h3>
-        <div class="footer__data">
-          <p class="footer__p">Baltimore is a unique and vibrant city, and though there are many reasons why we're called "Charm City", we tend to make the news for our flaws rather than our strengths. And hackathons are a great way to engage the broader community to explore technology as a way to help solve them.</p>
-        </div>
-      </div>
-      <div class="footer__item">
-        <h3 class="footer__h3">Communications</h3>
-        <div class="footer__data">
+  <div class="container-fluid">
+    <div class="footer__top">
+      <div class="row mx-md-n4">
+        <div class="col-12 col-md-6 px-md-4">
           <p class="footer__p">Stay with us online:</p>
           <ul class="footer__social">
             <li class="footer__social_item">
@@ -48,6 +41,8 @@
               </a>
             </li>
           </ul>
+        </div>
+        <div class="col-12 col-md-6 px-md-4">
           <p class="footer__p footer__email">Leave your email, to receive fresh materials:</p>
           <form action="https://hackbaltimore.us19.list-manage.com/subscribe/post" method="POST" class="footer__form">
             <input type="hidden" name="u" value="006d88fcdbf6654ee1b449bfa">
@@ -64,15 +59,17 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="footer__bottom">
-    <div class="footer__bottom_container container-fluid">
-      <div class="footer__bottom_links">
-        <a href="/privacy" class="footer__bottom_link" target="_blank" rel="noopener">Privacy</a>
-        <a href="/terms-and-conditions" class="footer__bottom_link" target="_blank" rel="noopener">Terms and Conditions</a>
-        <a href="/code-of-conduct" class="footer__bottom_link" target="_blank" rel="noopener">Code Of Conduct</a>
+    <div class="footer__bottom">
+      <div class="row mx-md-n4">
+        <div class="col-12 col-md-6 px-md-4">
+          <a href="/privacy" class="footer__bottom_link" target="_blank" rel="noopener">Privacy</a>
+          <a href="/terms-and-conditions" class="footer__bottom_link" target="_blank" rel="noopener">Terms and Conditions</a>
+          <a href="/code-of-conduct" class="footer__bottom_link" target="_blank" rel="noopener">Code Of Conduct</a>
+        </div>
+        <div class="col-12 col-md-6 px-md-4 text-right">
+          <h4 class="footer__bottom_h4">Copyright © 2018 Hack Baltimore, LLC.</h4>
+        </div>
       </div>
-      <h4 class="footer__bottom_h4">Copyright © 2018 Hack Baltimore, LLC.</h4>
     </div>
   </div>
 </footer>
