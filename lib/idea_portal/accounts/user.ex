@@ -65,7 +65,6 @@ defmodule IdeaPortal.Accounts.User do
   def update_changeset(struct, params) do
     struct
     |> changeset(params)
-    |> password_changeset(params)
     |> maybe_reset_verification()
   end
 
