@@ -6,13 +6,15 @@
     <div class="main-wrapper">
       <%= render("_header.html", assigns) %>
 
-      <div class="container-fluid">
+      <div class="main container-fluid">
         <div class="content-area">
           <%= render @view_module, @view_template, assigns %>
         </div>
       </div>
 
       <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+
+      <%= render("_footer.html", assigns) %>
     </div>
   </body>
 </html>
