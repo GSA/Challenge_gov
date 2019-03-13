@@ -21,6 +21,8 @@ defmodule Web.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+    plug Web.Plugs.FetchUser
   end
 
   scope "/", Web do

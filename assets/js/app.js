@@ -1,10 +1,11 @@
 // We need to import the CSS so that webpack will load it.
 // The MiniCssExtractPlugin is used to separate it out into
 // its own CSS file.
-import "jquery";
+import jquery from  "jquery";
 import "popper.js";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
+import "font-awesome/css/font-awesome.css";
 import "../css/app.css";
 
 // webpack automatically bundles all modules in your
@@ -19,3 +20,5 @@ import "phoenix_html"
 //
 // Local files can be imported directly using relative paths, for example:
 // import socket from "./socket"
+
+window.$ = jquery;

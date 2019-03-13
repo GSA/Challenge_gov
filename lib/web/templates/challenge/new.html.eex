@@ -35,7 +35,7 @@
         <h2 class="title-bar font-semibold">What is the problem?</h2>
       </div>
       <div class="form-group">
-        <%= textarea(f, :description, class: "form-control #{FormView.error_class(f, :description)}", rows: 4) %>
+        <%= textarea(f, :description, required: true, class: "form-control #{FormView.error_class(f, :description)}", rows: 4) %>
         <%= error_tag(f, :description) %>
       </div>
     </div>
@@ -47,8 +47,27 @@
         <h2 class="title-bar font-semibold">Why is this a problem?</h2>
       </div>
       <div class="form-group">
-        <%= textarea(f, :why, class: "form-control #{FormView.error_class(f, :why)}", rows: 4) %>
+        <%= textarea(f, :why, required: true, class: "form-control #{FormView.error_class(f, :why)}", rows: 4) %>
         <%= error_tag(f, :why) %>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-form custom-card">
+    <div class="card-body">
+      <div class="form-titles">
+        <h2 class="title-bar font-semibold">Supporting Documents</h2>
+
+        <p class="documents empty">No documents</p>
+
+        <p id="upload-error" class="alert alert-danger" style="display: none;">There was an issue uploading. Please try again.</p>
+
+        <ul class="attached-documents">
+        </ul>
+
+        <div class="add-other-link float-right">
+          <%= link("+ Attach document", to: "#") %>
+        </div>
       </div>
     </div>
   </div>
@@ -59,6 +78,64 @@
     </div>
   </div>
 <% end) %>
+
+<%= form_for(@conn, Routes.document_path(@conn, :create), [id: "document-form", method: :post, as: :document, multipart: true], fn f -> %>
+  <%= file_input(f, :file, id: "document-file", style: "display: none;") %>
+<% end) %>
+
+<script type="application/javascript">
+document.addEventListener("DOMContentLoaded", function (e) {
+  $(".add-other-link").on("click", function (e) {
+    e.preventDefault();
+    $("#document-file").click();
+  });
+
+  $("#document-file").on("change", function (e) {
+    if (e.target.value === "") {
+      return;
+    }
+
+    $("#document-form").submit();
+  });
+
+  $("#document-form").on("submit", function (e) {
+    e.preventDefault();
+
+    $.ajax({
+      url: "<%= Routes.document_path(@conn, :create) %>",
+      type: "POST",
+      cache: false,
+      contentType: false,
+      processData: false,
+      data: new FormData(e.target),
+      success: function (data) {
+        $("#document-file").val("");
+
+        $(".documents.empty").hide();
+        $("#upload-error").hide();
+
+        var input = document.createElement("input");
+        input.name = "challenge[document_ids][]";
+        input.type = "hidden";
+        input.value = data.id;
+
+        var file = document.createElement("p");
+        file.innerHTML = '<i class="fa fa-paperclip"></i> ' + data.filename;
+
+        var li = document.createElement("li");
+        li.append(file);
+        li.append(input);
+
+        $(".attached-documents").append(li);
+      },
+      error: function (data, status, error) {
+        console.log(data.responseJSON);
+        $("#upload-error").show();
+      }
+    });
+  });
+});
+</script>
 
 <%= if recaptcha_key = Recaptcha.recaptcha_key() do %>
   <script type="application/javascript">

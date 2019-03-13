@@ -32,15 +32,13 @@ defmodule IdeaPortal.SupportingDocuments do
     file = Storage.prep_file(file)
 
     key = UUID.uuid4()
-    extension = Path.extname(file.path)
-
-    path = document_path(key, extension)
+    path = document_path(key, file.extension)
 
     case Storage.upload(file, path, extensions: [".doc", ".pdf"]) do
       :ok ->
         user
         |> Ecto.build_assoc(:supporting_documents)
-        |> Document.create_changeset(key, extension)
+        |> Document.create_changeset(file, key)
         |> Repo.insert()
 
       {:error, _reason} ->

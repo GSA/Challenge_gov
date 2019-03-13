@@ -13,6 +13,7 @@ defmodule IdeaPortal.SupportingDocuments.Document do
   @type t :: %__MODULE__{}
 
   schema "supporting_documents" do
+    field(:filename, :string)
     field(:key, Ecto.UUID)
     field(:extension, :string)
 
@@ -22,11 +23,12 @@ defmodule IdeaPortal.SupportingDocuments.Document do
     timestamps()
   end
 
-  def create_changeset(struct, key, extension) do
+  def create_changeset(struct, file, key) do
     struct
     |> change()
+    |> put_change(:filename, file.filename)
     |> put_change(:key, key)
-    |> put_change(:extension, extension)
+    |> put_change(:extension, file.extension)
   end
 
   def challenge_changeset(struct, challenge) do
