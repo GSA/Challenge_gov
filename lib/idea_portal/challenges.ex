@@ -12,9 +12,11 @@ defmodule IdeaPortal.Challenges do
   @doc """
   Get all challenges
   """
-  def all(_opts \\ []) do
-    Challenge
-    |> Repo.all()
+  def all(opts \\ []) do
+    %{"page" => page} = opts
+    {page, ""} = Integer.parse(page)
+
+    Stein.Pagination.paginate(Repo, Challenge, %{page: page, per: 10})
   end
 
   @doc """

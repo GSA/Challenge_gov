@@ -3,11 +3,12 @@ defmodule Web.ChallengeController do
 
   alias IdeaPortal.Challenges
 
-  def index(conn, _params) do
-    challenges = Challenges.all()
+  def index(conn, params) do
+    pagination = Challenges.all(params)
 
     conn
-    |> assign(:challenges, challenges)
+    |> assign(:challenges, pagination.page)
+    |> assign(:pagination, pagination.pagination)
     |> render("index.html")
   end
 

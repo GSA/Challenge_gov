@@ -85,4 +85,6 @@
     </div>
   </div>
   <% end) %>
+
+  <%= render SharedView, "_pagination.html", path: Routes.challenge_path(@conn, :index), pagination: @pagination %>
 </div>
