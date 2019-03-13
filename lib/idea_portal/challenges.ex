@@ -12,7 +12,7 @@ defmodule IdeaPortal.Challenges do
   @doc """
   Get all challenges
   """
-  def all(opts \\ []) do
+  def all(_opts \\ []) do
     Challenge
     |> Repo.all()
   end

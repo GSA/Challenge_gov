@@ -8,7 +8,7 @@
         </a>
       </div>
       <div class="logo">
-        <%= link(to: Routes.page_path(@conn, :index)) do %>
+        <%= link(to: Routes.challenge_path(@conn, :index)) do %>
           <img src="<%= Routes.static_path(@conn, "/images/logo.png") %>" alt="City Backlog Logo" title="City Backlog">
         <% end %>
       </div>

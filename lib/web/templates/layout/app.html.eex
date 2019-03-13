@@ -16,11 +16,6 @@
             <div class="side-nav font-semibold">
               <ul class="mp-none">
                 <li class="active">
-                  <%= link(to: Routes.page_path(@conn, :index)) do %>
-                    <i class="icon-dashboard"></i><span>Dashboard</span>
-                  <% end %>
-                </li>
-                <li>
                   <%= link(to: Routes.challenge_path(@conn, :index)) do %>
                     <i class="icon-Challenges"></i><span>Challenges</span>
                   <% end %>

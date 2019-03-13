@@ -38,7 +38,7 @@ defmodule Web.ChallengeController do
       {:ok, _challenge} ->
         conn
         |> put_flash(:info, "Challenge submitted!")
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> redirect(to: Routes.challenge_path(conn, :index))
 
       {:error, changeset} ->
         conn
