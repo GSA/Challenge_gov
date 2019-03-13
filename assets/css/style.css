@@ -3523,3 +3523,12 @@ body {
 
 
 }
+
+/* Custom Overrides */
+.page-item.active .page-link {
+  background: #46b3ba;
+  border-color: #46b3ba;
+}
+.page-item .page-link {
+  color: #46b3ba;
+}
