@@ -47,6 +47,14 @@ config :idea_portal, IdeaPortal.Mailer,
   adapter: Bamboo.SendGridAdapter,
   api_key: {:system, "SENDGRID_API_KEY"}
 
+config :stein, :storage,
+  backend: :s3,
+  bucket: {:system, "AWS_BUCKET"}
+
+config :ex_aws,
+  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
+
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
 end
