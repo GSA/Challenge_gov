@@ -98,7 +98,7 @@ defmodule IdeaPortal.Challenges do
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
-    where(query, [c], like(c.name, ^value) or like(c.description, ^value))
+    where(query, [c], ilike(c.name, ^value) or ilike(c.description, ^value))
   end
 
   def filter_on_attribute({"area", value}, query) do
