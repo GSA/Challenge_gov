@@ -3,6 +3,7 @@ defmodule Web.ChallengeView do
 
   alias IdeaPortal.Challenges
   alias IdeaPortal.Recaptcha
+  alias IdeaPortal.SupportingDocuments
   alias Web.FormView
   alias Web.SharedView
 end

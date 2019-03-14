@@ -72,7 +72,7 @@ defmodule IdeaPortal.ChallengesTest do
 
       {:ok, challenge} =
         Challenges.update(challenge, %{
-          name: "Bike lanes",
+          name: "Bike lanes"
         })
 
       assert challenge.name == "Bike lanes"
@@ -84,7 +84,7 @@ defmodule IdeaPortal.ChallengesTest do
 
       {:error, changeset} =
         Challenges.update(challenge, %{
-          focus_area: nil,
+          focus_area: nil
         })
 
       assert changeset.errors[:focus_area]

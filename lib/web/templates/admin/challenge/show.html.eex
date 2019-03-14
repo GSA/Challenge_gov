@@ -72,7 +72,7 @@
         <div class="box-body">
           <ul>
             <%= Enum.map(@supporting_documents, fn document -> %>
-              <li><%= link(document.filename, to: SupportingDocuments.download_document_url(document), target: "_blank") %></li>
+              <li><i class="fa fa-paperclip"></i><%= link(document.filename, to: SupportingDocuments.download_document_url(document), target: "_blank") %></li>
             <% end) %>
           <ul>
         </div>
