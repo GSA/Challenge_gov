@@ -14,6 +14,10 @@ defmodule Web.Router do
     plug(Web.Plugs.VerifyUser)
   end
 
+  pipeline(:not_signed_in) do
+    plug(Web.Plugs.VerifyNoUser)
+  end
+
   pipeline(:admin) do
     plug(Web.Plugs.VerifyAdmin)
     plug(:put_layout, {Web.LayoutView, "admin.html"})
@@ -26,23 +30,35 @@ defmodule Web.Router do
   end
 
   scope "/", Web do
-    pipe_through :browser
+    pipe_through([:browser])
 
     get "/", PageController, :index
 
+    resources("/account", AccountController, only: [:edit, :update], singleton: true)
+  end
+
+  scope "/", Web do
+    pipe_through([:browser, :not_signed_in])
+
     resources("/register", RegistrationController, only: [:new, :create])
+
+    get("/register/reset", RegistrationResetController, :new)
+    post("/register/reset", RegistrationResetController, :create)
+
+    get("/register/reset/verify", RegistrationResetController, :edit)
+    post("/register/reset/verify", RegistrationResetController, :update)
 
     get("/register/verify", RegistrationVerifyController, :show)
 
-    resources("/sign-in", SessionController, only: [:new, :create, :delete], singleton: true)
-
-    resources("/account", AccountController, only: [:edit, :update], singleton: true)
+    resources("/sign-in", SessionController, only: [:new, :create], singleton: true)
   end
 
   scope "/", Web do
     pipe_through([:browser, :signed_in])
 
     resources("/challenges", ChallengeController, only: [:index, :new, :create])
+
+    resources("/sign-in", SessionController, only: [:delete], singleton: true)
   end
 
   scope "/", Web do

@@ -6,7 +6,7 @@
     <div class="main-wrapper">
       <%= render("_header.html", assigns) %>
 
-      <div class="container-fluid">
+      <div class="main container-fluid">
         <div class="content-area">
           <div class="content-left left-menu-wrapper">
             <div class="menu-close"><a href="javascript:;"><i class="icon-close-custom"></i></a></div>
@@ -30,12 +30,25 @@
           </div>
 
           <div class="content-right">
+            <%= if flash = get_flash(@conn, :info) do %>
+              <div class="alert alert-primary" role="alert">
+                <%= flash %>
+              </div>
+            <% end %>
+            <%= if flash = get_flash(@conn, :error) do %>
+              <div class="alert alert-danger" role="alert">
+                <%= flash %>
+              </div>
+            <% end %>
+
             <%= render @view_module, @view_template, assigns %>
           </div>
         </div>
       </div>
 
       <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+
+      <%= render("_footer.html", assigns) %>
     </div>
   </body>
 </html>

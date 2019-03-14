@@ -24,6 +24,9 @@ defmodule IdeaPortal.Accounts.User do
     field(:email_verification_token, :string)
     field(:email_verified_at, :utc_datetime)
 
+    field(:password_reset_token, Ecto.UUID)
+    field(:password_reset_expires_at, :utc_datetime)
+
     field(:first_name, :string)
     field(:last_name, :string)
     field(:phone_number, :string)
@@ -67,7 +70,6 @@ defmodule IdeaPortal.Accounts.User do
   def update_changeset(struct, params) do
     struct
     |> changeset(params)
-    |> password_changeset(params)
     |> maybe_reset_verification()
   end
 
