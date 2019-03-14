@@ -34,7 +34,11 @@ defmodule IdeaPortal.SupportingDocuments do
     key = UUID.uuid4()
     path = document_path(key, file.extension)
 
-    case Storage.upload(file, path, extensions: [".doc", ".pdf"]) do
+    meta = [
+      {:content_disposition, ~s{attachment; filename="#{file.filename}"}}
+    ]
+
+    case Storage.upload(file, path, extensions: [".doc", ".pdf"], meta: meta) do
       :ok ->
         user
         |> Ecto.build_assoc(:supporting_documents)
