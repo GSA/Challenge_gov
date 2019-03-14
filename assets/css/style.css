@@ -200,11 +200,11 @@ ul{
  list-style: none;
 }
 a{
- text-decoration: none; 
- outline: 0; 
+ text-decoration: none;
+ outline: 0;
 }
 a:hover{
- text-decoration: none; 
+ text-decoration: none;
 }
 .text-primary{
     color: #5aa7d7 !important;
@@ -690,7 +690,6 @@ Form Material
     z-index: 999;
 }
 .custom-dropdown.custom-dropdown-filter .cdd-data {
-    padding: 50px;
     min-width: 330px;
 }
 .filter-checkboxes {
@@ -705,22 +704,16 @@ Form Material
 }
 .custom-checkbox-btn {
     position: relative;
-    border-radius: 50px;
     /*border: 2px solid #aeaeae;*/
     display: inline-block;
-    padding: 12px 25px;
-    box-shadow: 0 0 0px 2px #aeaeae;
-    -webkit-box-shadow: 0 0 0px 2px #aeaeae;
     line-height: 1;
 }
 .custom-checkbox-btn input[type="checkbox"] {
     position: absolute;
     left: 0;
     top: 0;
-    width: 100%;
     height: 100%;
     border-radius: 50px;
-    opacity: 0;
     cursor: pointer;
     z-index: 10;
 }
@@ -739,10 +732,6 @@ Form Material
 }
 .custom-checkbox-btn input[type="checkbox"]:checked + span {
     color: #51bfaf;
-}
-.custom-checkbox-btn input[type="checkbox"]:checked + span + strong{
-    box-shadow: 0 0 0px 2px #51bfaf;
-    -webkit-box-shadow: 0 0 0px 2px #51bfaf;
 }
 .filter-checkboxes .custom-checkbox-btn {
     display: block;
@@ -1148,10 +1137,10 @@ idea detail
     margin: 0;
     font-size: 24px;
     line-height: 24px;
-    
+
 }
 .idea-fund-detail .ul-grid-5 li:not(:last-child) {
-    
+
 }
 .idea-fund-detail .box-icon{
     padding-right: 20px;
@@ -1205,8 +1194,8 @@ idea detail
     background-color: #60c37c;
 }
 .timeline-hover-data {
-    opacity: 0; 
-    pointer-events: none; 
+    opacity: 0;
+    pointer-events: none;
     position: absolute;
     top: 30px;
     left: -55px;
@@ -1941,7 +1930,7 @@ Participants
     height: 270px;
     border-radius: 132px;
 }
-.image-circle img {    
+.image-circle img {
     width: 100%;
 }
 
@@ -2420,7 +2409,7 @@ body.show-menu{
 }
 .small-device-detected .btn {
 	padding-top: 13px;
-    padding-bottom: 8px;    
+    padding-bottom: 8px;
 }
 .small-device-detected .btn-sm {
     padding-top: 8px;
@@ -2640,7 +2629,7 @@ body.show-menu{
     padding: 10px 10px !important;
 }
 
-	
+
 }
 
 
@@ -2930,11 +2919,11 @@ body.show-menu{
 .participant-detail-body .image-circle-detail {
     width: 180px;
     height: 180px;
-}   
+}
 .participant-detail-btns .btn {
     margin-bottom: 22px;
     padding-left: 46px;
-    font-size: 11px;   
+    font-size: 11px;
     padding-top: 12px;
 }
 .participant-detail-btns i {
@@ -2944,7 +2933,7 @@ body.show-menu{
     margin-right: 22px;
     padding-right: 22px;
 }
-.participant-detail-certificate p, 
+.participant-detail-certificate p,
 .participant-detail-certificate span {
     font-size: 14px !important;
 }
@@ -3389,7 +3378,7 @@ body {
     width: 50px;
     font-size: 50px;
 }
-.participant-detail-certificate p, 
+.participant-detail-certificate p,
 .participant-detail-certificate span {
     font-size: 13px !important;
 }
