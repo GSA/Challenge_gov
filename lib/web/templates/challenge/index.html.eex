@@ -105,6 +105,8 @@
     </div>
     <% end) %>
 
-    <%= render SharedView, "_pagination.html", path: Routes.challenge_path(@conn, :index, filter: @filter), pagination: @pagination %>
+    <%= if @pagination.total > 1 do %>
+      <%= render SharedView, "_pagination.html", path: Routes.challenge_path(@conn, :index, filter: @filter), pagination: @pagination %>
+    <% end %>
   <% end %>
 </div>
