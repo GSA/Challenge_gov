@@ -1,8 +1,9 @@
 defmodule Web.ChallengeController do
   use Web, :controller
-  plug Web.Plugs.FetchPage when action in [:index]
 
   alias IdeaPortal.Challenges
+
+  plug Web.Plugs.FetchPage, [per: 6] when action in [:index]
 
   def index(conn, params) do
     %{page: page, per: per} = conn.assigns

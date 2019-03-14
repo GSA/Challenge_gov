@@ -30,9 +30,19 @@ defmodule Web.Router do
   end
 
   scope "/", Web do
+    pipe_through([:browser, :signed_in])
+
+    resources("/challenges", ChallengeController, only: [:new, :create])
+
+    resources("/sign-in", SessionController, only: [:delete], singleton: true)
+  end
+
+  scope "/", Web do
     pipe_through([:browser])
 
-    get "/", PageController, :index
+    get("/", PageController, :index)
+
+    resources("/challenges", ChallengeController, only: [:index, :show])
 
     resources("/account", AccountController, only: [:edit, :update], singleton: true)
   end
@@ -51,14 +61,6 @@ defmodule Web.Router do
     get("/register/verify", RegistrationVerifyController, :show)
 
     resources("/sign-in", SessionController, only: [:new, :create], singleton: true)
-  end
-
-  scope "/", Web do
-    pipe_through([:browser, :signed_in])
-
-    resources("/challenges", ChallengeController, only: [:index, :show, :new, :create])
-
-    resources("/sign-in", SessionController, only: [:delete], singleton: true)
   end
 
   scope "/", Web do
