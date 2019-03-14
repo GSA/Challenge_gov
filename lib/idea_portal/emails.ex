@@ -18,6 +18,17 @@ defmodule IdeaPortal.Emails do
     |> render("verify-email.html")
   end
 
+  @doc """
+  Send a email verification email
+  """
+  def password_reset(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("City Backlog - Password reset")
+    |> assign(:user, user)
+    |> render("password-reset.html")
+  end
+
   def base_email() do
     new_email()
     |> from(Mailer.from())

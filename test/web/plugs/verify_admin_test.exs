@@ -23,7 +23,7 @@ defmodule Web.Plugs.VerifyAdminTest do
       conn =
         conn
         |> assign(:current_user, user)
-        |> bypass_through()
+        |> bypass_through(Web.Router, [:browser])
         |> get("/admin")
         |> VerifyAdmin.call([])
 
@@ -33,7 +33,7 @@ defmodule Web.Plugs.VerifyAdminTest do
     test "halts as a 404 if no user", %{conn: conn} do
       conn =
         conn
-        |> bypass_through()
+        |> bypass_through(Web.Router, [:browser])
         |> get("/admin")
         |> VerifyAdmin.call([])
 
