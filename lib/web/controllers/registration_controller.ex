@@ -18,7 +18,7 @@ defmodule Web.RegistrationController do
         conn
         |> put_flash(:info, "You have registered! Please verify your email address.")
         |> put_session(:user_token, user.token)
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> redirect(to: Routes.challenge_path(conn, :index))
 
       {:error, changeset} ->
         conn

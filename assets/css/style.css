@@ -615,7 +615,7 @@ Form Material
     display: inline-block;
     vertical-align: middle;
 }
-.filter-items li a:not(.btn-submit-idea) {
+.filter-items li a:not(.btn-submit-challenge) {
     padding: 12px 18px;
     color: #fff !important;
     font-family: 'Galano Grotesque Medium';
@@ -630,20 +630,27 @@ Form Material
     -webkit-transform: rotate(90deg);
     margin-left: 5px;
 }
-.filter-items li:last-child a:not(.btn-submit-idea){
+.filter-items li:last-child a:not(.btn-submit-challenge){
     border-radius: 0 15px 0 0;
 }
-.filter-items li a.active:not(.btn-submit-idea){
+.filter-items li a.active:not(.btn-submit-challenge){
     background-color: rgba(255,255,255, 0.25);
 }
-.btn.btn-submit-idea {
+
+.btn.btn-search-challenge,
+.btn.btn-submit-challenge {
     box-shadow: 0 2px 20px 0 rgba(22, 53, 89, 0.30);
     -webkit-box-shadow: 0 2px 20px 0 rgba(22, 53, 89, 0.30);
-    padding-right: 40px;
-    padding-left: 40px;
     font-family: 'Galano Grotesque Bold';
-    margin-right: 25px;
 }
+.btn.btn-search-challenge {
+  margin-left: 25px;
+}
+.btn.btn-submit-challenge {
+  padding-right: 40px;
+  padding-left: 40px;
+}
+
 .filter-items li a.dropdown-item:not(.btn) {
     color: #000000 !important;
 }
@@ -2648,12 +2655,12 @@ body.show-menu{
 .filter-items {
     margin-left: 0;
 }
-.btn.btn-submit-idea {
+.btn.btn-submit-challenge {
     padding-right: 25px;
     padding-left: 25px;
     margin-right: 10px;
 }
-.filter-items li a:not(.btn-submit-idea) {
+.filter-items li a:not(.btn-submit-challenge) {
     padding: 10px 15px;
 }
 .header {
@@ -3055,7 +3062,7 @@ body {
     max-width: 385px;
     margin: 0 auto 10px;
 }
-.filter-items li:first-child a.btn.btn-submit-idea {
+.filter-items li:first-child a.btn.btn-submit-challenge {
     display: block;
     margin-right: 0;
 }
@@ -3219,7 +3226,7 @@ body {
 .submit-section {
     margin-bottom: 50px;
 }
-.filter-items li:nth-child(2) a:not(.btn-submit-idea){
+.filter-items li:nth-child(2) a:not(.btn-submit-challenge){
     border-radius: 15px 0 0 0;
 }
 .map-view-wrapper .map-holder img {
@@ -3503,7 +3510,7 @@ body {
     padding-left: 8px;
     margin-left: 8px;
 }
-.filter-items li a:not(.btn-submit-idea) {
+.filter-items li a:not(.btn-submit-challenge) {
     padding: 8px 10px;
 }
 .card.custom-card .card-body {
@@ -3522,4 +3529,13 @@ body {
 
 
 
+}
+
+/* Custom Overrides */
+.page-item.active .page-link {
+  background: #46b3ba;
+  border-color: #46b3ba;
+}
+.page-item .page-link {
+  color: #46b3ba;
 }

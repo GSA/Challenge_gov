@@ -15,7 +15,7 @@ defmodule Web.ChallangeControllerTest do
 
       conn = post(conn, Routes.challenge_path(conn, :create), challenge: params)
 
-      assert redirected_to(conn) == Routes.page_path(conn, :index)
+      assert redirected_to(conn) == Routes.challenge_path(conn, :index)
     end
 
     test "failure", %{conn: conn} do

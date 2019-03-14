@@ -1,0 +1,43 @@
+<div class="idea-detail-wrapper">
+  <div class="card custom-card idea-detail-card">
+    <div class="row m-md-0">
+      <div class="col-12 col-md-4 p-md-0 text-center">
+        <div class="idea-img">
+          <a><img src="<%= Routes.static_path(@conn, "/images/idea-img.jpg") %>" alt="idea detail image"></a>
+        </div>
+      </div>
+      <div class="col-12 col-md-8 p-md-0">
+        <div class="idea-description">
+          <span class="badge badge-pill badge-secondary font-semibold"><%= @challenge.focus_area %></span>
+          <h2><%= @challenge.name %></h2>
+          <p class="font-light"><%= @challenge.description %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="idea-detail-tabs-funding">
+    <div class="row mx-md-0">
+      <div class="col-12 col-md-12 col-lg-12 px-md-0">
+        <div class="id-tabs-wrapper tabs-style-1">
+          <ul class="nav nav-tabs flex-column flex-sm-row font-semibold" id="myTab" role="tablist">
+            <li class="nav-item flex-sm-fill text-sm-center">
+              <a class="nav-link active" id="matters-tab" data-toggle="tab" href="#matters" role="tab" aria-controls="matters" aria-selected="true">Why it matters</a>
+            </li>
+            <li class="nav-item flex-sm-fill text-sm-center">
+              <a class="nav-link" id="assets-tab" data-toggle="tab" href="#assets" role="tab" aria-controls="assets" aria-selected="false">Assets</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="matters" role="tabpanel" aria-labelledby="matters-tab">
+              <div class="col-md-12">
+                <p><%= @challenge.why %></p>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="assets" role="tabpanel" aria-labelledby="assets-tab">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

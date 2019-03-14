@@ -9,7 +9,7 @@ defmodule Web.SessionControllerTest do
 
       conn = post(conn, Routes.session_path(conn, :create), user: params)
 
-      assert redirected_to(conn) == Routes.page_path(conn, :index)
+      assert redirected_to(conn) == Routes.challenge_path(conn, :index)
     end
 
     test "invalid", %{conn: conn} do
@@ -31,7 +31,7 @@ defmodule Web.SessionControllerTest do
 
       conn = delete(conn, Routes.session_path(conn, :delete))
 
-      assert redirected_to(conn) == Routes.page_path(conn, :index)
+      assert redirected_to(conn) == Routes.challenge_path(conn, :index)
     end
   end
 end

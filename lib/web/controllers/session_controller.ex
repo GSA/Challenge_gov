@@ -16,7 +16,7 @@ defmodule Web.SessionController do
         conn
         |> put_flash(:info, "You have signed in.")
         |> put_session(:user_token, user.token)
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> redirect(to: Routes.challenge_path(conn, :index))
 
       {:error, :invalid} ->
         conn
@@ -28,6 +28,6 @@ defmodule Web.SessionController do
   def delete(conn, _params) do
     conn
     |> clear_session()
-    |> redirect(to: Routes.page_path(conn, :index))
+    |> redirect(to: Routes.challenge_path(conn, :index))
   end
 end

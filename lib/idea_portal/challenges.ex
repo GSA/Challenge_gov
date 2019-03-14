@@ -6,9 +6,31 @@ defmodule IdeaPortal.Challenges do
   alias IdeaPortal.Challenges.Challenge
   alias IdeaPortal.Repo
   alias IdeaPortal.SupportingDocuments
+  alias Stein.Filter
+
+  import Ecto.Query
+
+  @behaviour Stein.Filter
 
   @doc false
   def focus_areas(), do: Challenge.focus_areas()
+
+  @doc """
+  Get all challenges
+  """
+  def all(opts \\ []) do
+    query = Filter.filter(Challenge, opts[:filter], __MODULE__)
+
+    Stein.Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
+  @doc """
+  Get a challenge
+  """
+  def get(id) do
+    Challenge
+    |> Repo.get(id)
+  end
 
   @doc """
   New changeset for a challenge
@@ -72,4 +94,16 @@ defmodule IdeaPortal.Challenges do
   end
 
   defp attach_document(result, _challenge), do: result
+
+  @impl true
+  def filter_on_attribute({"search", value}, query) do
+    value = "%" <> value <> "%"
+    where(query, [c], ilike(c.name, ^value) or ilike(c.description, ^value))
+  end
+
+  def filter_on_attribute({"area", value}, query) do
+    where(query, [c], c.focus_area in ^value)
+  end
+
+  def filter_on_attribute(_, query), do: query
 end
