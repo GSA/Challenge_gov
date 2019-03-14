@@ -13,6 +13,13 @@ defmodule IdeaPortal.SupportingDocuments do
   def document_path(key, extension), do: "/documents/#{key}#{extension}"
 
   @doc """
+  Get a signed URL to view the document
+  """
+  def download_document_url(document) do
+    Storage.url(document_path(document.key, document.extension), signed: [expires_in: 3600])
+  end
+
+  @doc """
   Get a supporting document
   """
   def get(id) do
