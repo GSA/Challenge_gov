@@ -690,7 +690,6 @@ Form Material
     z-index: 999;
 }
 .custom-dropdown.custom-dropdown-filter .cdd-data {
-    padding: 50px;
     min-width: 330px;
 }
 .filter-checkboxes {
@@ -705,12 +704,8 @@ Form Material
 }
 .custom-checkbox-btn {
     position: relative;
-    border-radius: 50px;
     /*border: 2px solid #aeaeae;*/
     display: inline-block;
-    padding: 12px 25px;
-    box-shadow: 0 0 0px 2px #aeaeae;
-    -webkit-box-shadow: 0 0 0px 2px #aeaeae;
     line-height: 1;
 }
 .custom-checkbox-btn input[type="checkbox"] {
@@ -720,7 +715,6 @@ Form Material
     width: 100%;
     height: 100%;
     border-radius: 50px;
-    opacity: 0;
     cursor: pointer;
     z-index: 10;
 }
@@ -739,10 +733,6 @@ Form Material
 }
 .custom-checkbox-btn input[type="checkbox"]:checked + span {
     color: #51bfaf;
-}
-.custom-checkbox-btn input[type="checkbox"]:checked + span + strong{
-    box-shadow: 0 0 0px 2px #51bfaf;
-    -webkit-box-shadow: 0 0 0px 2px #51bfaf;
 }
 .filter-checkboxes .custom-checkbox-btn {
     display: block;
@@ -1148,10 +1138,10 @@ idea detail
     margin: 0;
     font-size: 24px;
     line-height: 24px;
-    
+
 }
 .idea-fund-detail .ul-grid-5 li:not(:last-child) {
-    
+
 }
 .idea-fund-detail .box-icon{
     padding-right: 20px;
