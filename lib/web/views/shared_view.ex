@@ -43,6 +43,14 @@ defmodule Web.SharedView do
   def more_next?(%{current: current, total: total}), do: total - current >= 4
 
   def pagination(opts) do
-    render("_pagination.html", opts)
+    pagination = opts[:pagination]
+
+    case pagination.total <= 1 do
+      true ->
+        []
+
+      false ->
+        render("_pagination.html", opts)
+    end
   end
 end

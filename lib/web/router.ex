@@ -73,6 +73,8 @@ defmodule Web.Router do
     pipe_through([:browser, :admin])
 
     get("/", DashboardController, :index)
+
+    resources("/challenges", ChallengeController, only: [:index, :show])
   end
 
   if Mix.env() == :dev do

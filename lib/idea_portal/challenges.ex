@@ -28,8 +28,13 @@ defmodule IdeaPortal.Challenges do
   Get a challenge
   """
   def get(id) do
-    Challenge
-    |> Repo.get(id)
+    case Repo.get(Challenge, id) do
+      nil ->
+        {:error, :not_found}
+
+      challenge ->
+        {:ok, challenge}
+    end
   end
 
   @doc """

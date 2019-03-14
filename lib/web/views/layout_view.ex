@@ -30,4 +30,17 @@ defmodule Web.LayoutView do
         ""
     end
   end
+
+  def tab_selected(conn, route) do
+    case conn.path_info do
+      ["admin", ^route] ->
+        "active"
+
+      ["admin", ^route, _] ->
+        "active"
+
+      _ ->
+        ""
+    end
+  end
 end

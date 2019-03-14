@@ -18,14 +18,10 @@ defmodule Web.ChallengeController do
   end
 
   def show(conn, %{"id" => id}) do
-    case Challenges.get(id) do
-      nil ->
-        conn |> redirect(to: Routes.challenge_path(conn, :index))
-
-      challenge ->
-        conn
-        |> assign(:challenge, challenge)
-        |> render("show.html")
+    with {:ok, challenge} <- Challenges.get(id) do
+      conn
+      |> assign(:challenge, challenge)
+      |> render("show.html")
     end
   end
 
