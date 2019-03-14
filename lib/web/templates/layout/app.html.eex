@@ -25,6 +25,17 @@
           </div>
 
           <div class="content-right">
+            <%= if flash = get_flash(@conn, :info) do %>
+              <div class="alert alert-primary" role="alert">
+                <%= flash %>
+              </div>
+            <% end %>
+            <%= if flash = get_flash(@conn, :error) do %>
+              <div class="alert alert-danger" role="alert">
+                <%= flash %>
+              </div>
+            <% end %>
+
             <%= render @view_module, @view_template, assigns %>
           </div>
         </div>

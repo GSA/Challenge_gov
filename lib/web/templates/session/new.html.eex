@@ -23,6 +23,7 @@
         <%= submit("Sign In", class: "btn btn-primary") %>
       <% end) %>
 
+      <%= link("Forgot your password?", to: Routes.registration_reset_path(@conn, :new)) %>
       <%= link("Create an Account", to: Routes.registration_path(@conn, :new)) %>
     </div>
   </div>

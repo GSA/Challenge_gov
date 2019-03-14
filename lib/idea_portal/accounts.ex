@@ -79,10 +79,32 @@ defmodule IdeaPortal.Accounts do
   end
 
   @doc """
+  Update an account's password
+  """
+  def update_password(user, params) do
+    user
+    |> User.password_changeset(params)
+    |> Repo.update()
+  end
+
+  @doc """
   Validate a user's login information
   """
   def validate_login(email, password) do
     Stein.Accounts.validate_login(Repo, User, email, password)
+  end
+
+  @doc """
+  Get a user by an ID
+  """
+  def get(id) do
+    case Repo.get(User, id) do
+      nil ->
+        {:error, :not_found}
+
+      user ->
+        {:ok, user}
+    end
   end
 
   @doc """
@@ -109,6 +131,26 @@ defmodule IdeaPortal.Accounts do
   """
   def verify_email(token) do
     Stein.Accounts.verify_email(Repo, User, token)
+  end
+
+  @doc """
+  Start password reset
+  """
+  @spec start_password_reset(String.t()) :: :ok
+  def start_password_reset(email) do
+    Stein.Accounts.start_password_reset(Repo, User, email, fn user ->
+      user
+      |> Emails.password_reset()
+      |> Mailer.deliver_later()
+    end)
+  end
+
+  @doc """
+  Reset a password
+  """
+  @spec reset_password(String.t(), map()) :: {:ok, User.t()} | :error
+  def reset_password(token, params) do
+    Stein.Accounts.reset_password(Repo, User, token, params)
   end
 
   @doc """

@@ -1,0 +1,29 @@
+<div class="card card-form custom-card">
+  <div class="card-body">
+    <div class="form-titles">
+      <h2 class="title-bar font-semibold">Password Reset</h2>
+
+      <%= form_for @changeset, Routes.registration_reset_path(@conn, :update), [method: :post], fn (f) -> %>
+        <input type="hidden" name="token" value="<%= @token %>" />
+
+        <div class="row mx-md-n4">
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= password_input(f, :password, required: true, placeholder: "Password", class: "form-control") %>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mx-md-n4">
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= password_input(f, :password_confirmation, required: true, placeholder: "Password Confirmation", class: "form-control") %>
+            </div>
+          </div>
+        </div>
+
+        <%= submit("Reset", class: "btn btn-primary") %>
+      <% end %>
+    </div>
+  </div>
+</div>
