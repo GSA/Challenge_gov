@@ -25,6 +25,8 @@ defmodule Web.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+    plug Web.Plugs.FetchUser
   end
 
   scope "/", Web do
@@ -57,6 +59,12 @@ defmodule Web.Router do
     resources("/challenges", ChallengeController, only: [:index, :new, :create])
 
     resources("/sign-in", SessionController, only: [:delete], singleton: true)
+  end
+
+  scope "/", Web do
+    pipe_through([:api, :signed_in])
+
+    resources("/documents", DocumentController, only: [:create])
   end
 
   scope "/admin", Web.Admin, as: :admin do

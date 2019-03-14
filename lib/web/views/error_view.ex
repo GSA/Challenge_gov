@@ -1,6 +1,17 @@
 defmodule Web.ErrorView do
   use Web, :view
 
+  def render("errors.json", %{changeset: changeset}) do
+    errors =
+      Enum.reduce(changeset.errors, %{}, fn {field, error}, errors ->
+        error = translate_error(error)
+        field_errors = Map.get(errors, field, [])
+        Map.put(errors, field, [error | field_errors])
+      end)
+
+    %{errors: errors}
+  end
+
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.
   # def render("500.html", _assigns) do
