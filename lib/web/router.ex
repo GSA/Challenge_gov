@@ -32,6 +32,8 @@ defmodule Web.Router do
   scope "/", Web do
     pipe_through([:browser, :signed_in])
 
+    resources("/account", AccountController, only: [:edit, :update], singleton: true)
+
     resources("/challenges", ChallengeController, only: [:new, :create])
 
     resources("/sign-in", SessionController, only: [:delete], singleton: true)
@@ -41,8 +43,6 @@ defmodule Web.Router do
     pipe_through([:browser])
 
     get("/", PageController, :index)
-
-    resources("/account", AccountController, only: [:edit, :update], singleton: true)
 
     resources("/challenges", ChallengeController, only: [:index, :show])
 
