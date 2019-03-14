@@ -47,6 +47,13 @@ defmodule IdeaPortal.Challenges do
   end
 
   @doc """
+  Changeset for editing a challenge (as an admin)
+  """
+  def edit(challenge) do
+    Challenge.update_changeset(challenge, %{})
+  end
+
+  @doc """
   Submit a new challenge for a user
   """
   def submit(user, params) do
@@ -99,6 +106,15 @@ defmodule IdeaPortal.Challenges do
   end
 
   defp attach_document(result, _challenge), do: result
+
+  @doc """
+  Update a challenge
+  """
+  def update(challenge, params) do
+    challenge
+    |> Challenge.update_changeset(params)
+    |> Repo.update()
+  end
 
   @impl true
   def filter_on_attribute({"search", value}, query) do

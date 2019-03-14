@@ -45,4 +45,8 @@ defmodule IdeaPortal.Challenges.Challenge do
     |> validate_required([:focus_area, :name, :description, :why])
     |> validate_inclusion(:focus_area, @focus_areas)
   end
+
+  def update_changeset(struct, params) do
+    create_changeset(struct, params)
+  end
 end

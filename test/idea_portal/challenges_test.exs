@@ -64,4 +64,30 @@ defmodule IdeaPortal.ChallengesTest do
         })
     end
   end
+
+  describe "updating a challenge" do
+    test "successfully" do
+      user = TestHelpers.create_user()
+      challenge = TestHelpers.create_challenge(user)
+
+      {:ok, challenge} =
+        Challenges.update(challenge, %{
+          name: "Bike lanes",
+        })
+
+      assert challenge.name == "Bike lanes"
+    end
+
+    test "with errors" do
+      user = TestHelpers.create_user()
+      challenge = TestHelpers.create_challenge(user)
+
+      {:error, changeset} =
+        Challenges.update(challenge, %{
+          focus_area: nil,
+        })
+
+      assert changeset.errors[:focus_area]
+    end
+  end
 end

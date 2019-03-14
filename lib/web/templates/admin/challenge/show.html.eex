@@ -20,6 +20,9 @@
       <div class="box box-primary">
         <div class="box-header">
           <h3 class="box-title">Basics</h3>
+          <div class="box-tools">
+            <%= link("Edit", to: Routes.admin_challenge_path(@conn, :edit, @challenge.id), class: "btn btn-flat btn-default") %>
+          </div>
         </div>
         <div class="box-body">
           <dl>
