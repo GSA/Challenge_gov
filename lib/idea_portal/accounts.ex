@@ -134,6 +134,13 @@ defmodule IdeaPortal.Accounts do
   end
 
   @doc """
+  Check if a user's email was verified
+  """
+  def email_verified?(user) do
+    Stein.Accounts.email_verified?(user)
+  end
+
+  @doc """
   Start password reset
   """
   @spec start_password_reset(String.t()) :: :ok
