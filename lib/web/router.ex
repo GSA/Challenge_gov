@@ -42,9 +42,11 @@ defmodule Web.Router do
 
     get("/", PageController, :index)
 
+    resources("/account", AccountController, only: [:edit, :update], singleton: true)
+
     resources("/challenges", ChallengeController, only: [:index, :show])
 
-    resources("/account", AccountController, only: [:edit, :update], singleton: true)
+    get("/register/verify", RegistrationVerifyController, :show)
   end
 
   scope "/", Web do
@@ -57,8 +59,6 @@ defmodule Web.Router do
 
     get("/register/reset/verify", RegistrationResetController, :edit)
     post("/register/reset/verify", RegistrationResetController, :update)
-
-    get("/register/verify", RegistrationVerifyController, :show)
 
     resources("/sign-in", SessionController, only: [:new, :create], singleton: true)
   end
