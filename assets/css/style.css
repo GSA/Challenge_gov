@@ -200,11 +200,11 @@ ul{
  list-style: none;
 }
 a{
- text-decoration: none; 
- outline: 0; 
+ text-decoration: none;
+ outline: 0;
 }
 a:hover{
- text-decoration: none; 
+ text-decoration: none;
 }
 .text-primary{
     color: #5aa7d7 !important;
@@ -712,7 +712,6 @@ Form Material
     position: absolute;
     left: 0;
     top: 0;
-    width: 100%;
     height: 100%;
     border-radius: 50px;
     cursor: pointer;
@@ -1195,8 +1194,8 @@ idea detail
     background-color: #60c37c;
 }
 .timeline-hover-data {
-    opacity: 0; 
-    pointer-events: none; 
+    opacity: 0;
+    pointer-events: none;
     position: absolute;
     top: 30px;
     left: -55px;
@@ -1931,7 +1930,7 @@ Participants
     height: 270px;
     border-radius: 132px;
 }
-.image-circle img {    
+.image-circle img {
     width: 100%;
 }
 
@@ -2410,7 +2409,7 @@ body.show-menu{
 }
 .small-device-detected .btn {
 	padding-top: 13px;
-    padding-bottom: 8px;    
+    padding-bottom: 8px;
 }
 .small-device-detected .btn-sm {
     padding-top: 8px;
@@ -2630,7 +2629,7 @@ body.show-menu{
     padding: 10px 10px !important;
 }
 
-	
+
 }
 
 
@@ -2920,11 +2919,11 @@ body.show-menu{
 .participant-detail-body .image-circle-detail {
     width: 180px;
     height: 180px;
-}   
+}
 .participant-detail-btns .btn {
     margin-bottom: 22px;
     padding-left: 46px;
-    font-size: 11px;   
+    font-size: 11px;
     padding-top: 12px;
 }
 .participant-detail-btns i {
@@ -2934,7 +2933,7 @@ body.show-menu{
     margin-right: 22px;
     padding-right: 22px;
 }
-.participant-detail-certificate p, 
+.participant-detail-certificate p,
 .participant-detail-certificate span {
     font-size: 14px !important;
 }
@@ -3379,7 +3378,7 @@ body {
     width: 50px;
     font-size: 50px;
 }
-.participant-detail-certificate p, 
+.participant-detail-certificate p,
 .participant-detail-certificate span {
     font-size: 13px !important;
 }
