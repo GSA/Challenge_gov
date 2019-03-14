@@ -9,7 +9,7 @@ defmodule IdeaPortal.Challenges do
 
   import Ecto.Query
 
-  @behavior Stein.Filter
+  @behaviour Stein.Filter
 
   @doc false
   def focus_areas(), do: Challenge.focus_areas()
@@ -55,5 +55,10 @@ defmodule IdeaPortal.Challenges do
     value = "%" <> value <> "%"
     where(query, [c], like(c.name, ^value) or like(c.description, ^value))
   end
+
+  def filter_on_attribute({"area", value}, query) do
+    where(query, [c], c.focus_area in ^value)
+  end
+
   def filter_on_attribute(_, query), do: query
 end
