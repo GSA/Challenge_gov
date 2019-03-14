@@ -1,14 +1,18 @@
 defmodule Web.ChallengeController do
   use Web, :controller
+  plug Web.Plugs.FetchPage when action in [:index]
 
   alias IdeaPortal.Challenges
 
   def index(conn, params) do
-    pagination = Challenges.all(params)
+    %{page: page, per: per} = conn.assigns
+    filter = Map.get(params, "filter", %{})
+    pagination = Challenges.all(filter: filter, page: page, per: per)
 
     conn
     |> assign(:challenges, pagination.page)
     |> assign(:pagination, pagination.pagination)
+    |> assign(:filter, filter)
     |> render("index.html")
   end
 

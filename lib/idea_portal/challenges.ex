@@ -5,6 +5,11 @@ defmodule IdeaPortal.Challenges do
 
   alias IdeaPortal.Challenges.Challenge
   alias IdeaPortal.Repo
+  alias Stein.Filter
+
+  import Ecto.Query
+
+  @behavior Stein.Filter
 
   @doc false
   def focus_areas(), do: Challenge.focus_areas()
@@ -13,12 +18,9 @@ defmodule IdeaPortal.Challenges do
   Get all challenges
   """
   def all(opts \\ []) do
-    page =
-      opts
-      |> Map.get("page", "1")
-      |> String.to_integer()
+    query = Filter.filter(Challenge, opts[:filter], __MODULE__)
 
-    Stein.Pagination.paginate(Repo, Challenge, %{page: page, per: 10})
+    Stein.Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
   end
 
   @doc """
@@ -47,4 +49,11 @@ defmodule IdeaPortal.Challenges do
     |> Challenge.create_changeset(params)
     |> Repo.insert()
   end
+
+  @impl true
+  def filter_on_attribute({"search", value}, query) do
+    value = "%" <> value <> "%"
+    where(query, [c], like(c.name, ^value) or like(c.description, ^value))
+  end
+  def filter_on_attribute(_, query), do: query
 end
