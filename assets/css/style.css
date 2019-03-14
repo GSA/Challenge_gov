@@ -2547,8 +2547,8 @@ body.show-menu{
     margin-top: 120px;
 }
 .custom-dropdown.custom-dropdown-filter .cdd-data {
+    width: 100%;
     left: auto;
-    right: 0;
     padding: 30px;
     top: 36px;
 }
@@ -3041,8 +3041,9 @@ body {
 .filter-items ul{
 	width:100%;
 	text-align: center;
+  margin-bottom: 20px;
 }
-.filter-items li:first-child {
+.btn-submit-challenge {
     display: block;
     width: 100%;
     max-width: 385px;
