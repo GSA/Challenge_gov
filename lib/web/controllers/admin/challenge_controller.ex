@@ -5,6 +5,8 @@ defmodule Web.Admin.ChallengeController do
 
   plug Web.Plugs.FetchPage when action in [:index]
 
+  action_fallback(Web.Admin.FallbackController)
+
   def index(conn, params) do
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
@@ -30,6 +32,7 @@ defmodule Web.Admin.ChallengeController do
     with {:ok, challenge} <- Challenges.get(id) do
       conn
       |> assign(:challenge, challenge)
+      |> assign(:supporting_documents, challenge.supporting_documents)
       |> assign(:changeset, Challenges.edit(challenge))
       |> render("edit.html")
     end

@@ -33,7 +33,7 @@ defmodule IdeaPortal.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge = Repo.preload(challenge, [:supporting_documents])
+        challenge = Repo.preload(challenge, [:supporting_documents, :user])
         {:ok, challenge}
     end
   end

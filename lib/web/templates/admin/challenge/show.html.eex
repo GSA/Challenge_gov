@@ -70,11 +70,31 @@
           <h3 class="box-title">Supporting Documents</h3>
         </div>
         <div class="box-body">
+          <%= if Enum.empty?(@supporting_documents) do %>
+            <p class="documents empty">No documents</p>
+          <% end %>
+
           <ul>
             <%= Enum.map(@supporting_documents, fn document -> %>
-              <li><i class="fa fa-paperclip"></i><%= link(document.filename, to: SupportingDocuments.download_document_url(document), target: "_blank") %></li>
+              <li>
+                <i class="fa fa-paperclip"></i> <%= link(document.filename, to: SupportingDocuments.download_document_url(document), target: "_blank") %>
+                <%= link(to: Routes.admin_document_path(@conn, :delete, document.id), method: :delete, data: [remote: true]) do %>
+                  <i class="fa fa-trash"></i>
+                <% end %>
+              </li>
             <% end) %>
-          <ul>
+          </ul>
+
+          <%= form_for(@conn, Routes.admin_challenge_document_path(@conn, :create, @challenge.id), [as: :document, multipart: true], fn f -> %>
+            <div class="row">
+              <%= label(f, :file, class: "col-md-4") %>
+              <div class="col-md-8">
+                <%= file_input(f, :file, class: "form-control") %>
+              </div>
+            </div>
+
+            <%= submit("Upload and attach", class: "btn btn-primary pull-right") %>
+          <% end) %>
         </div>
       </div>
     </div>

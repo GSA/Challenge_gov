@@ -74,7 +74,11 @@ defmodule Web.Router do
 
     get("/", DashboardController, :index)
 
-    resources("/challenges", ChallengeController, only: [:index, :show, :edit, :update])
+    resources("/documents", DocumentController, only: [:delete])
+
+    resources("/challenges", ChallengeController, only: [:index, :show, :edit, :update]) do
+      resources("/documents", DocumentController, only: [:create])
+    end
   end
 
   if Mix.env() == :dev do
