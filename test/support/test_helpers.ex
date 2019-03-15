@@ -35,6 +35,11 @@ defmodule IdeaPortal.TestHelpers do
     struct(Accounts.User, attributes)
   end
 
+  def verify_email(user) do
+    {:ok, user} = Accounts.verify_email(user.email_verification_token)
+    user
+  end
+
   defp challenge_attributes(attributes) do
     Map.merge(
       %{

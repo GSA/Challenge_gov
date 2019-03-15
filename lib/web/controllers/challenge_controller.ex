@@ -1,9 +1,11 @@
 defmodule Web.ChallengeController do
   use Web, :controller
 
+  alias IdeaPortal.Accounts
   alias IdeaPortal.Challenges
 
   plug Web.Plugs.FetchPage, [per: 6] when action in [:index]
+  plug :check_email_verification when action in [:new, :create]
 
   def index(conn, params) do
     %{page: page, per: per} = conn.assigns
@@ -51,6 +53,21 @@ defmodule Web.ChallengeController do
         |> assign(:changeset, changeset)
         |> put_status(422)
         |> render("new.html")
+    end
+  end
+
+  defp check_email_verification(conn, _opts) do
+    %{current_user: user} = conn.assigns
+
+    case Accounts.email_verified?(user) do
+      true ->
+        conn
+
+      false ->
+        conn
+        |> put_flash(:error, "You must verify your email address first.")
+        |> redirect(to: Routes.page_path(conn, :index))
+        |> halt()
     end
   end
 end
