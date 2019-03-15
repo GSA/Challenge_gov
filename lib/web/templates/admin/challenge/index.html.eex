@@ -56,6 +56,16 @@
         <%= form_for(@conn, Routes.admin_challenge_path(@conn, :index), [method: :get, as: :filter], fn f -> %>
           <div class="box-body">
             <div class="form-group">
+              <h4>Focus Areas</h4>
+              <%= Enum.map(Challenges.focus_areas(), fn focus_area -> %>
+                <div>
+                  <label>
+                    <%= FormView.multi_checkbox(focus_area, "area", focus_area, @filter)  %> <%= focus_area %>
+                  </label>
+                </div>
+              <% end) %>
+            </div>
+            <div class="form-group">
               <%= label f, :name %>
               <%= text_input f, :name, value: @filter["name"], class: "form-control" %>
             </div>

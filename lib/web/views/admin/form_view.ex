@@ -1,6 +1,9 @@
 defmodule Web.Admin.FormView do
   use Web, :view
 
+  def multi_checkbox(field, grouping, value, filter),
+    do: Web.FormView.multi_checkbox(field, grouping, value, filter)
+
   @doc """
   Generate a text field, styled properly
   """
