@@ -10,7 +10,7 @@ defmodule Web.Admin.ChallengeController do
   def index(conn, params) do
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
-    pagination = Challenges.all(filter: filter, page: page, per: per)
+    pagination = Challenges.admin_all(filter: filter, page: page, per: per)
 
     conn
     |> assign(:challenges, pagination.page)
@@ -52,6 +52,24 @@ defmodule Web.Admin.ChallengeController do
         |> assign(:challenge, challenge)
         |> assign(:changeset, changeset)
         |> render("edit.html")
+    end
+  end
+
+  def publish(conn, %{"id" => id}) do
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.publish(challenge) do
+      conn
+      |> put_flash(:info, "Challenge published")
+      |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+    end
+  end
+
+  def archive(conn, %{"id" => id}) do
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.archive(challenge) do
+      conn
+      |> put_flash(:info, "Challenge archived")
+      |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
     end
   end
 end

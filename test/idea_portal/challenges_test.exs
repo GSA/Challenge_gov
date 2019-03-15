@@ -2,6 +2,9 @@ defmodule IdeaPortal.ChallengesTest do
   use IdeaPortal.DataCase
 
   alias IdeaPortal.Challenges
+  alias IdeaPortal.Challenges.Challenge
+
+  doctest Challenges
 
   describe "submitting a new challenge" do
     test "successfully" do
@@ -88,6 +91,28 @@ defmodule IdeaPortal.ChallengesTest do
         })
 
       assert changeset.errors[:focus_area]
+    end
+  end
+
+  describe "publishing a challenge" do
+    test "successfully" do
+      user = TestHelpers.create_user()
+      challenge = TestHelpers.create_challenge(user)
+
+      {:ok, challenge} = Challenges.publish(challenge)
+
+      assert challenge.status == "published"
+    end
+  end
+
+  describe "archiving a challenge" do
+    test "successfully" do
+      user = TestHelpers.create_user()
+      challenge = TestHelpers.create_challenge(user)
+
+      {:ok, challenge} = Challenges.archive(challenge)
+
+      assert challenge.status == "archived"
     end
   end
 end

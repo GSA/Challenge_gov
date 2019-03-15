@@ -22,6 +22,7 @@ defmodule IdeaPortal.Challenges.Challenge do
   ]
 
   schema "challenges" do
+    field(:status, :string, default: "pending")
     field(:focus_area, :string)
     field(:name, :string)
     field(:description, :string)

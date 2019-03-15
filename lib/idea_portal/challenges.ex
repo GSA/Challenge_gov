@@ -7,6 +7,7 @@ defmodule IdeaPortal.Challenges do
   alias IdeaPortal.Repo
   alias IdeaPortal.SupportingDocuments
   alias Stein.Filter
+  alias Stein.Pagination
 
   import Ecto.Query
 
@@ -16,12 +17,43 @@ defmodule IdeaPortal.Challenges do
   def focus_areas(), do: Challenge.focus_areas()
 
   @doc """
+  New changeset for a challenge
+  """
+  def new(user) do
+    user
+    |> Ecto.build_assoc(:challenges)
+    |> Challenge.create_changeset(%{})
+  end
+
+  @doc """
+  Changeset for editing a challenge (as an admin)
+  """
+  def edit(challenge) do
+    Challenge.update_changeset(challenge, %{})
+  end
+
+  @doc """
   Get all challenges
   """
   def all(opts \\ []) do
-    query = Filter.filter(Challenge, opts[:filter], __MODULE__)
+    query =
+      Challenge
+      |> where([c], c.status == "published")
+      |> Filter.filter(opts[:filter], __MODULE__)
 
-    Stein.Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
+  @doc """
+  Get all challenges
+  """
+  def admin_all(opts \\ []) do
+    query =
+      Challenge
+      |> order_by([c], [c.status, desc: c.id])
+      |> Filter.filter(opts[:filter], __MODULE__)
+
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
   end
 
   @doc """
@@ -39,19 +71,25 @@ defmodule IdeaPortal.Challenges do
   end
 
   @doc """
-  New changeset for a challenge
-  """
-  def new(user) do
-    user
-    |> Ecto.build_assoc(:challenges)
-    |> Challenge.create_changeset(%{})
-  end
+  Filter a challenge for published state
 
-  @doc """
-  Changeset for editing a challenge (as an admin)
+  Returns `{:error, :not_found}` if the challenge is not published, to hit the same
+  fallback as if the challenge was a bad ID.
+
+      iex> Challenges.filter_for_published(%Challenge{status: "published"})
+      {:ok, %Challenge{status: "published"}}
+
+      iex> Challenges.filter_for_published(%Challenge{status: "pending"})
+      {:error, :not_found}
   """
-  def edit(challenge) do
-    Challenge.update_changeset(challenge, %{})
+  def filter_for_published(challenge) do
+    case published?(challenge) do
+      true ->
+        {:ok, challenge}
+
+      false ->
+        {:error, :not_found}
+    end
   end
 
   @doc """
@@ -114,6 +152,78 @@ defmodule IdeaPortal.Challenges do
   def update(challenge, params) do
     challenge
     |> Challenge.update_changeset(params)
+    |> Repo.update()
+  end
+
+  @doc """
+  Check if a challenge is published
+
+      iex> Challenges.published?(%Challenge{status: "pending"})
+      false
+
+      iex> Challenges.published?(%Challenge{status: "published"})
+      true
+
+      iex> Challenges.published?(%Challenge{status: "archived"})
+      false
+  """
+  def published?(challenge) do
+    challenge.status == "published"
+  end
+
+  @doc """
+  Check if a challenge is publishable
+
+      iex> Challenges.publishable?(%Challenge{status: "pending"})
+      true
+
+      iex> Challenges.publishable?(%Challenge{status: "published"})
+      false
+
+      iex> Challenges.publishable?(%Challenge{status: "archived"})
+      true
+  """
+  def publishable?(challenge) do
+    challenge.status != "published"
+  end
+
+  @doc """
+  Publish a challenge
+
+  Sets status to "published"
+  """
+  def publish(challenge) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:status, "published")
+    |> Repo.update()
+  end
+
+  @doc """
+  Check if a challenge is archivable
+
+      iex> Challenges.archivable?(%Challenge{status: "pending"})
+      true
+
+      iex> Challenges.archivable?(%Challenge{status: "published"})
+      true
+
+      iex> Challenges.archivable?(%Challenge{status: "archived"})
+      false
+  """
+  def archivable?(challenge) do
+    challenge.status != "archived"
+  end
+
+  @doc """
+  Archive a challenge
+
+  Sets status to "archived"
+  """
+  def archive(challenge) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:status, "archived")
     |> Repo.update()
   end
 

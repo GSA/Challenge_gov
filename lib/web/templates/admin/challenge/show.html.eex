@@ -21,7 +21,14 @@
         <div class="box-header">
           <h3 class="box-title">Basics</h3>
           <div class="box-tools">
-            <%= link("Edit", to: Routes.admin_challenge_path(@conn, :edit, @challenge.id), class: "btn btn-flat btn-default") %>
+            <%= if Challenges.publishable?(@challenge) do  %>
+              <%= link("Publish", to: Routes.admin_challenge_path(@conn, :publish, @challenge.id), method: :post, class: "btn btn-primary") %>
+            <% end %>
+            <%= if Challenges.archivable?(@challenge) do  %>
+              <%= link("Archive", to: Routes.admin_challenge_path(@conn, :archive, @challenge.id), method: :post, class: "btn btn-default") %>
+            <% end %>
+
+            <%= link("Edit", to: Routes.admin_challenge_path(@conn, :edit, @challenge.id), class: "btn btn-default") %>
           </div>
         </div>
         <div class="box-body">

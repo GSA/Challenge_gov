@@ -1,6 +1,8 @@
 defmodule Web.ChallangeControllerTest do
   use Web.ConnCase
 
+  alias IdeaPortal.Challenges
+
   describe "creating a new challenge" do
     test "success", %{conn: conn} do
       user = TestHelpers.create_user()
@@ -31,6 +33,27 @@ defmodule Web.ChallangeControllerTest do
       conn = post(conn, Routes.challenge_path(conn, :create), challenge: params)
 
       assert html_response(conn, 422)
+    end
+  end
+
+  describe "viewing challenges" do
+    test "a published challenge", %{conn: conn} do
+      user = TestHelpers.create_user()
+      challenge = TestHelpers.create_challenge(user)
+      {:ok, challenge} = Challenges.publish(challenge)
+
+      conn = get(conn, Routes.challenge_path(conn, :show, challenge.id))
+
+      assert html_response(conn, 200)
+    end
+
+    test "a pending/archived challenge", %{conn: conn} do
+      user = TestHelpers.create_user()
+      challenge = TestHelpers.create_challenge(user)
+
+      conn = get(conn, Routes.challenge_path(conn, :show, challenge.id))
+
+      assert html_response(conn, 404)
     end
   end
 end

@@ -5,6 +5,8 @@ defmodule Web.ChallengeController do
 
   plug Web.Plugs.FetchPage, [per: 6] when action in [:index]
 
+  action_fallback(Web.FallbackController)
+
   def index(conn, params) do
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
@@ -18,7 +20,8 @@ defmodule Web.ChallengeController do
   end
 
   def show(conn, %{"id" => id}) do
-    with {:ok, challenge} <- Challenges.get(id) do
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.filter_for_published(challenge) do
       conn
       |> assign(:challenge, challenge)
       |> assign(:supporting_documents, challenge.supporting_documents)
