@@ -12,6 +12,17 @@ defmodule IdeaPortal.SupportingDocuments do
   """
   def document_path(key, extension), do: "/documents/#{key}#{extension}"
 
+  def document_path(document = %Document{}) do
+    document_path(document.key, document.extension)
+  end
+
+  @doc """
+  Get a signed URL to view the document
+  """
+  def download_document_url(document) do
+    Storage.url(document_path(document.key, document.extension), signed: [expires_in: 3600])
+  end
+
   @doc """
   Get a supporting document
   """
@@ -60,6 +71,21 @@ defmodule IdeaPortal.SupportingDocuments do
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.add_error(:file, "can't be blank")
     |> Ecto.Changeset.apply_action(:insert)
+  end
+
+  @doc """
+  Delete a document
+
+  Also removes the file from remote storage
+  """
+  def delete(document) do
+    case Stein.Storage.delete(document_path(document)) do
+      :ok ->
+        Repo.delete(document)
+
+      {:error, error} ->
+        {:error, error}
+    end
   end
 
   @doc """

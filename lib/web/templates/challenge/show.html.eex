@@ -34,6 +34,11 @@
               </div>
             </div>
             <div class="tab-pane fade" id="assets" role="tabpanel" aria-labelledby="assets-tab">
+              <ul>
+                <%= Enum.map(@supporting_documents, fn document -> %>
+                  <li><i class="fa fa-paperclip"></i> <%= link(document.filename, to: SupportingDocuments.download_document_url(document), target: "_blank") %></li>
+                <% end) %>
+              </ul>
             </div>
           </div>
         </div>

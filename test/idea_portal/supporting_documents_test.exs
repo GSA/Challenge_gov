@@ -50,4 +50,13 @@ defmodule IdeaPortal.SupportingDocumentsTest do
       {:error, _changeset} = SupportingDocuments.attach_to_challenge(document, challenge)
     end
   end
+
+  describe "deleting a document" do
+    test "successfully" do
+      user = TestHelpers.create_user()
+      document = TestHelpers.upload_document(user, "test/fixtures/test.pdf")
+
+      {:ok, _document} = SupportingDocuments.delete(document)
+    end
+  end
 end

@@ -38,6 +38,13 @@
                 <span>Dashboard</span>
               <% end %>
             </li>
+            <li class="header"></li>
+            <li class="<%= tab_selected(@conn, "challenges") %>">
+              <%= link(to: Routes.admin_challenge_path(@conn, :index)) do %>
+                <i class="fa fa-dashboard"></i>
+                <span>Challenges</span>
+              <% end %>
+            </li>
           </ul>
         </section>
       </aside>

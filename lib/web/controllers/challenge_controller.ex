@@ -7,6 +7,8 @@ defmodule Web.ChallengeController do
   plug Web.Plugs.FetchPage, [per: 6] when action in [:index]
   plug :check_email_verification when action in [:new, :create]
 
+  action_fallback(Web.FallbackController)
+
   def index(conn, params) do
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
@@ -20,14 +22,12 @@ defmodule Web.ChallengeController do
   end
 
   def show(conn, %{"id" => id}) do
-    case Challenges.get(id) do
-      nil ->
-        conn |> redirect(to: Routes.challenge_path(conn, :index))
-
-      challenge ->
-        conn
-        |> assign(:challenge, challenge)
-        |> render("show.html")
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.filter_for_published(challenge) do
+      conn
+      |> assign(:challenge, challenge)
+      |> assign(:supporting_documents, challenge.supporting_documents)
+      |> render("show.html")
     end
   end
 

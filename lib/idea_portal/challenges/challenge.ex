@@ -22,6 +22,7 @@ defmodule IdeaPortal.Challenges.Challenge do
   ]
 
   schema "challenges" do
+    field(:status, :string, default: "pending")
     field(:focus_area, :string)
     field(:name, :string)
     field(:description, :string)
@@ -44,5 +45,9 @@ defmodule IdeaPortal.Challenges.Challenge do
     |> cast(params, [:focus_area, :name, :description, :why])
     |> validate_required([:focus_area, :name, :description, :why])
     |> validate_inclusion(:focus_area, @focus_areas)
+  end
+
+  def update_changeset(struct, params) do
+    create_changeset(struct, params)
   end
 end
