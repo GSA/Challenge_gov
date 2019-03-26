@@ -46,6 +46,7 @@ defmodule IdeaPortal.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
+      {:poison, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:stein, git: "https://github.com/smartlogic/stein.git"}
     ]

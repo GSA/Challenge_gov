@@ -17,7 +17,7 @@ config :idea_portal, Web.Endpoint,
 
 config :idea_portal, IdeaPortal.Repo,
   url: System.get_env("DATABASE_URL"),
-  pool_size: 15
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15")
 
 # Do not print debug messages in production
 config :logger, level: :info
