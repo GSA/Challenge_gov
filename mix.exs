@@ -33,7 +33,7 @@ defmodule IdeaPortal.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:bamboo, "~> 1.2"},
+      {:bamboo, git: "https://github.com/thoughtbot/bamboo.git"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.0"},
       {:elixir_uuid, "~> 1.2"},
