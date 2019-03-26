@@ -49,11 +49,11 @@ config :idea_portal, IdeaPortal.Mailer,
 
 config :stein, :storage,
   backend: :s3,
-  bucket: {:system, "AWS_BUCKET"}
+  bucket: {:system, "BUCKETEER_BUCKET_NAME"}
 
 config :ex_aws,
-  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
-  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
+  access_key_id: {:system, "BUCKETEER_AWS_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "BUCKETEER_AWS_SECRET_ACCESS_KEY"}
 
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
