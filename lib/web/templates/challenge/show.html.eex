@@ -6,6 +6,7 @@
           <a><img src="<%= Routes.static_path(@conn, "/images/idea-img.jpg") %>" alt="idea detail image"></a>
         </div>
       </div>
+
       <div class="col-12 col-md-8 p-md-0">
         <div class="idea-description">
           <span class="badge badge-pill badge-secondary font-semibold"><%= @challenge.focus_area %></span>
@@ -15,6 +16,7 @@
       </div>
     </div>
   </div>
+
   <div class="idea-detail-tabs-funding">
     <div class="row mx-md-0">
       <div class="col-12 col-md-12 col-lg-12 px-md-0">
@@ -27,12 +29,14 @@
               <a class="nav-link" id="assets-tab" data-toggle="tab" href="#assets" role="tab" aria-controls="assets" aria-selected="false">Assets</a>
             </li>
           </ul>
+
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="matters" role="tabpanel" aria-labelledby="matters-tab">
               <div class="col-md-12">
                 <p><%= @challenge.why %></p>
               </div>
             </div>
+
             <div class="tab-pane fade" id="assets" role="tabpanel" aria-labelledby="assets-tab">
               <ul>
                 <%= Enum.map(@supporting_documents, fn document -> %>
@@ -45,4 +49,20 @@
       </div>
     </div>
   </div>
+
+  <div id="disqus_thread"></div>
 </div>
+
+<script>
+var disqus_config = function () {
+  this.page.url = "<%= Routes.challenge_url(@conn, :show, @challenge.id) %>";
+  this.page.identifier = "challenges/<%= @challenge.id %>";
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://<%= disqus_domain() %>.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
