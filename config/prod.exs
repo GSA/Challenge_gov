@@ -43,7 +43,7 @@ config :idea_portal, :recaptcha,
   key: {:system, "RECAPTCHA_SITE_KEY"}
 
 config :idea_portal, IdeaPortal.Mailer,
-  from: "idea-portal@example.com",
+  from: {:system, "MAILER_FROM_ADDRESS"},
   adapter: Bamboo.MailgunAdapter,
   api_key: {:system, "MAILGUN_API_KEY"},
   domain: {:system, "MAILGUN_DOMAIN"}
