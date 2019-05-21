@@ -141,4 +141,40 @@
       </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Timeline</h3>
+
+          <div class="box-tools">
+            <%= link("Add Event", to: Routes.admin_challenge_event_path(@conn, :new, @challenge.id), class: "btn btn-default") %>
+          </div>
+        </div>
+        <div class="box-body">
+          <%= if Enum.empty?(@events) do %>
+            <p class="documents empty">No events</p>
+          <% end %>
+
+          <ul>
+            <%= Enum.map(@events, fn event -> %>
+              <li>
+                <b><%= event.title %></b> - <%= event.occurs_on %>
+                <%= if event.body do %>
+                  <p><%= event.body %></p>
+                <% end %>
+                <%= link(to: Routes.admin_event_path(@conn, :edit, event.id)) do %>
+                  <i class="fa fa-pencil"></i>
+                <% end %>
+                <%= link(to: Routes.admin_event_path(@conn, :delete, event.id), method: :delete) do %>
+                  <i class="fa fa-trash"></i>
+                <% end %>
+              </li>
+            <% end) %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

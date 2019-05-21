@@ -1,0 +1,15 @@
+<%= form_for(@changeset, @url, [class: "form-horizontal"], fn f -> %>
+  <div class="box-body">
+    <%= FormView.text_field(f, :title) %>
+
+    <%= FormView.text_field(f, :occurs_on) do %>
+      <span class="help-block">Format <code>YYYY-MM-DD</code></span>
+    <% end %>
+
+    <%= FormView.textarea_field(f, :body, rows: 10) %>
+  </div>
+
+  <div class="box-footer">
+    <%= submit(@save, class: "btn btn-primary pull-right") %>
+  </div>
+<% end) %>

@@ -12,6 +12,7 @@ defmodule IdeaPortal.Challenges do
   alias IdeaPortal.Repo
   alias IdeaPortal.SupportingDocuments
   alias IdeaPortal.Timeline
+  alias IdeaPortal.Timeline.Event
   alias Stein.Filter
   alias Stein.Pagination
 
@@ -75,6 +76,7 @@ defmodule IdeaPortal.Challenges do
 
       challenge ->
         challenge = Repo.preload(challenge, [:supporting_documents, :user])
+        challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
         {:ok, challenge}
     end
   end

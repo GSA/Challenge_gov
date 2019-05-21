@@ -7,6 +7,35 @@ defmodule IdeaPortal.Timeline do
   alias IdeaPortal.Repo
 
   @doc """
+  Changeset for a new event
+  """
+  def new_event(challenge) do
+    challenge
+    |> Ecto.build_assoc(:events)
+    |> Event.create_changeset(%{})
+  end
+
+  @doc """
+  Changeset for editing an event
+  """
+  def edit_event(event) do
+    Event.create_changeset(event, %{})
+  end
+
+  @doc """
+  Get an event by its ID
+  """
+  def get_event(id) do
+    case Repo.get(Event, id) do
+      nil ->
+        {:error, :not_found}
+
+      event ->
+        {:ok, event}
+    end
+  end
+
+  @doc """
   Create a new event on the challenge timeline
   """
   def create_event(challenge, params) do
