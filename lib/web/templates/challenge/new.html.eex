@@ -105,6 +105,11 @@
         <div class="add-other-link text-right">
           <%= link("+ Attach document", to: "#") %>
         </div>
+        <div class="form-group">
+          <i>
+            Files must be less than 8 MB
+          </i>
+        </div>
       </div>
 
       <div class="form-group submit-section text-right">
