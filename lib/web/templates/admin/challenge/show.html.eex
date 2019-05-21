@@ -38,6 +38,9 @@
 
             <dt>Focus Area</dd>
             <dd><%= @challenge.focus_area %></dd>
+
+            <dt>Location or Neighborhood</dd>
+            <dd><%= @challenge.neighborhood %></dd>
           </dl>
         </div>
       </div>
@@ -65,6 +68,32 @@
         </div>
         <div class="box-body">
           <p><%= @challenge.why %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">What does "fixed" look like?</h3>
+        </div>
+        <div class="box-body">
+          <p><%= @challenge.fixed_looks_like %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">How does technology help solve this problem?</h3>
+        </div>
+        <div class="box-body">
+          <p><%= @challenge.technology_example %></p>
         </div>
       </div>
     </div>
