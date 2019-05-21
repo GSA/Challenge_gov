@@ -23,6 +23,7 @@ defmodule Web.Admin.ChallengeController do
     with {:ok, challenge} <- Challenges.get(id) do
       conn
       |> assign(:challenge, challenge)
+      |> assign(:events, challenge.events)
       |> assign(:supporting_documents, challenge.supporting_documents)
       |> render("show.html")
     end

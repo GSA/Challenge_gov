@@ -103,6 +103,16 @@ defmodule IdeaPortal.ChallengesTest do
 
       assert challenge.status == "created"
     end
+
+    test "creates a timeline event" do
+      user = TestHelpers.create_user()
+      challenge = TestHelpers.create_challenge(user)
+
+      {:ok, challenge} = Challenges.publish(challenge)
+
+      challenge = Repo.preload(challenge, :events, force: true)
+      assert length(challenge.events) == 1
+    end
   end
 
   describe "archiving a challenge" do

@@ -9,6 +9,7 @@ defmodule IdeaPortal.Challenges.Challenge do
 
   alias IdeaPortal.Accounts.User
   alias IdeaPortal.SupportingDocuments.Document
+  alias IdeaPortal.Timeline.Event
 
   @type t :: %__MODULE__{}
 
@@ -43,6 +44,7 @@ defmodule IdeaPortal.Challenges.Challenge do
 
     belongs_to(:user, User)
 
+    has_many(:events, Event)
     has_many(:supporting_documents, Document)
 
     timestamps()

@@ -78,10 +78,14 @@ defmodule Web.Router do
 
     resources("/challenges", ChallengeController, only: [:index, :show, :edit, :update]) do
       resources("/documents", DocumentController, only: [:create])
+
+      resources("/events", EventController, only: [:new, :create])
     end
 
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
+
+    resources("/events", EventController, only: [:edit, :update, :delete])
   end
 
   if Mix.env() == :dev do
