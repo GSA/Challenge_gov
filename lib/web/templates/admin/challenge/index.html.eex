@@ -38,6 +38,7 @@
                     <td><%= link(challenge.name, to: Routes.admin_challenge_path(@conn, :show, challenge.id)) %></td>
                     <td>
                       <%= link("View", to: Routes.admin_challenge_path(@conn, :show, challenge.id), class: "btn btn-default btn-xs") %>
+                      <%= link("Edit", to: Routes.admin_challenge_path(@conn, :edit, challenge.id), class: "btn btn-default btn-xs") %>
                     </td>
                   </tr>
                 <% end %>
