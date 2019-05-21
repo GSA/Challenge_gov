@@ -32,6 +32,17 @@
               </div>
             </div>
 
+            <div class="<%= FormView.form_group_classes(f, :status) %>">
+              <%= label(f, :status, "Status", class: "col-md-4") %>
+              <div class="col-md-8">
+                <%= select(f, :status, Challenges.statuses(), class: "form-control") %>
+              </div>
+            </div>
+
+            <%= FormView.text_field(f, :captured_on) do %>
+              <span class="help-block">Format <code>YYYY-MM-DD</code></span>
+            <% end %>
+
             <%= FormView.text_field(f, :name) %>
 
             <%= FormView.textarea_field(f, :description, label: "What is the problem?", rows: 10) %>

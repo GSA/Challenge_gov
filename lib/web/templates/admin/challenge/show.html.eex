@@ -33,6 +33,12 @@
         </div>
         <div class="box-body">
           <dl>
+            <dt>Captured On</dd>
+            <dd><%= @challenge.captured_on %></dd>
+
+            <dt>Status</dd>
+            <dd><%= String.capitalize(@challenge.status) %></dd>
+
             <dt>Name</dd>
             <dd><%= @challenge.name %></dd>
 

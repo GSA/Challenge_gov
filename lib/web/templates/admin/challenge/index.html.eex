@@ -33,7 +33,7 @@
                 <%= Enum.map @challenges, fn (challenge) -> %>
                   <tr>
                     <td><%= challenge.id %></td>
-                    <td><%= challenge.status %></td>
+                    <td><%= String.capitalize(challenge.status) %></td>
                     <td><%= challenge.focus_area %></td>
                     <td><%= link(challenge.name, to: Routes.admin_challenge_path(@conn, :show, challenge.id)) %></td>
                     <td>
