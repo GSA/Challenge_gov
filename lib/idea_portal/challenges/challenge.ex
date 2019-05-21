@@ -21,6 +21,15 @@ defmodule IdeaPortal.Challenges.Challenge do
     "Workforce Development"
   ]
 
+  @statuses [
+    "pending",
+    "created",
+    "archived",
+    "champion assigned",
+    "design",
+    "vetted"
+  ]
+
   schema "challenges" do
     field(:status, :string, default: "pending")
     field(:captured_on, :date)
@@ -41,18 +50,25 @@ defmodule IdeaPortal.Challenges.Challenge do
   """
   def focus_areas(), do: @focus_areas
 
+  @doc """
+  List all available statuses
+  """
+  def statuses(), do: @statuses
+
   def create_changeset(struct, params) do
     struct
     |> cast(params, [:focus_area, :name, :description, :why])
     |> put_change(:captured_on, Date.utc_today())
     |> validate_required([:captured_on, :focus_area, :name, :description, :why])
     |> validate_inclusion(:focus_area, @focus_areas)
+    |> validate_inclusion(:status, @statuses)
   end
 
   def update_changeset(struct, params) do
     struct
-    |> cast(params, [:captured_on, :focus_area, :name, :description, :why])
-    |> validate_required([:captured_on, :focus_area, :name, :description, :why])
+    |> cast(params, [:status, :captured_on, :focus_area, :name, :description, :why])
+    |> validate_required([:status, :captured_on, :focus_area, :name, :description, :why])
     |> validate_inclusion(:focus_area, @focus_areas)
+    |> validate_inclusion(:status, @statuses)
   end
 end

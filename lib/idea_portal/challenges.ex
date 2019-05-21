@@ -21,6 +21,9 @@ defmodule IdeaPortal.Challenges do
   @doc false
   def focus_areas(), do: Challenge.focus_areas()
 
+  @doc false
+  def statuses(), do: Challenge.statuses()
+
   @doc """
   New changeset for a challenge
   """
