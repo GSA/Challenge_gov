@@ -7,8 +7,6 @@
   <div class="card card-form custom-card">
     <div class="card-body">
       <div class="form-titles">
-        <h2 class="title-bar font-semibold">Basics</h2>
-
         <%= if Keyword.has_key?(f.errors, :recaptcha_token) do %>
           <div class="alert alert-danger">
             The reCAPTCHA token was invalid. Please try again.
@@ -16,21 +14,19 @@
         <% end %>
         <%= hidden_input(f, :recaptcha_token) %>
 
-        <div class="form-group form-control-material">
-          <%= select(f, :focus_area, Challenges.focus_areas(), required: true, prompt: "Focus Area", class: "form-control #{FormView.error_class(f, :name)}") %>
-          <%= error_tag(f, :focus_area) %>
-        </div>
-
+        <h2 class="title-bar font-semibold">Choose a name for your challenge</h2>
         <div class="form-group form-control-material">
           <%= text_input(f, :name, required: true, placeholder: "Name", class: "form-control #{FormView.error_class(f, :name)}") %>
           <%= error_tag(f, :name) %>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="card card-form custom-card">
-    <div class="card-body">
+        <h2 class="title-bar font-semibold">Choose your focus area</h2>
+        <div class="form-group form-control-material">
+          <%= select(f, :focus_area, Challenges.focus_areas(), required: true, prompt: "Focus Area", class: "form-control #{FormView.error_class(f, :name)}") %>
+          <%= error_tag(f, :focus_area) %>
+        </div>
+      </div>
+
       <div class="form-titles">
         <h2 class="title-bar font-semibold">What is the problem?</h2>
       </div>
@@ -38,43 +34,31 @@
         <%= textarea(f, :description, required: true, class: "form-control #{FormView.error_class(f, :description)}", rows: 4) %>
         <%= error_tag(f, :description) %>
       </div>
-    </div>
-  </div>
 
-  <div class="card card-form custom-card">
-    <div class="card-body">
       <div class="form-titles">
-        <h2 class="title-bar font-semibold">Why is this a problem?</h2>
+        <h2 class="title-bar font-semibold">Why does this matter?</h2>
       </div>
       <div class="form-group">
         <%= textarea(f, :why, required: true, class: "form-control #{FormView.error_class(f, :why)}", rows: 4) %>
         <%= error_tag(f, :why) %>
       </div>
-    </div>
-  </div>
 
-  <div class="card card-form custom-card">
-    <div class="card-body">
       <div class="form-titles">
         <h2 class="title-bar font-semibold">Supporting Documents</h2>
-
         <p class="documents empty">No documents</p>
-
         <p id="upload-error" class="alert alert-danger" style="display: none;">There was an issue uploading. Please try again.</p>
-
         <ul class="attached-documents">
         </ul>
-
-        <div class="add-other-link float-right">
+        <div class="add-other-link text-right">
           <%= link("+ Attach document", to: "#") %>
         </div>
       </div>
-    </div>
-  </div>
 
-  <div class="form-group submit-section text-right">
-    <div class="draft-save-btns">
-      <%= submit("Submit", class: "btn btn-primary") %>
+      <div class="form-group submit-section text-right">
+        <div class="draft-save-btns">
+          <%= submit("Submit", class: "btn btn-primary") %>
+        </div>
+      </div>
     </div>
   </div>
 <% end) %>
