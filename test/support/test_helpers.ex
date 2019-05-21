@@ -6,6 +6,7 @@ defmodule IdeaPortal.TestHelpers do
   alias IdeaPortal.Accounts
   alias IdeaPortal.Challenges
   alias IdeaPortal.SupportingDocuments
+  alias IdeaPortal.Timeline
 
   defp user_attributes(attributes) do
     Map.merge(
@@ -73,5 +74,20 @@ defmodule IdeaPortal.TestHelpers do
       })
 
     document
+  end
+
+  def create_event(challenge, attributes \\ %{}) do
+    attributes =
+      Map.merge(
+        %{
+          title: "New event",
+          body: "The body",
+          occurs_on: "2019-05-01"
+        },
+        attributes
+      )
+
+    {:ok, event} = Timeline.create_event(challenge, attributes)
+    event
   end
 end

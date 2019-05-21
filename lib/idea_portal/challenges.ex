@@ -11,6 +11,7 @@ defmodule IdeaPortal.Challenges do
   alias IdeaPortal.Challenges.Challenge
   alias IdeaPortal.Repo
   alias IdeaPortal.SupportingDocuments
+  alias IdeaPortal.Timeline
   alias Stein.Filter
   alias Stein.Pagination
 
@@ -158,10 +159,68 @@ defmodule IdeaPortal.Challenges do
   Update a challenge
   """
   def update(challenge, params) do
-    challenge
-    |> Challenge.update_changeset(params)
-    |> Repo.update()
+    changeset = Challenge.update_changeset(challenge, params)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
+        maybe_create_event(challenge, changeset)
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
+
+  defp maybe_create_event(challenge, changeset) do
+    case is_nil(Ecto.Changeset.get_change(changeset, :status)) do
+      true ->
+        {:ok, challenge}
+
+      false ->
+        create_status_event(challenge)
+        {:ok, challenge}
+    end
+  end
+
+  @doc """
+  Create a new status event when the status changes
+  """
+  def create_status_event(challenge = %{status: "created"}) do
+    Timeline.create_event(challenge, %{
+      title: "Created",
+      occurs_on: Date.utc_today()
+    })
+  end
+
+  def create_status_event(challenge = %{status: "champion assigned"}) do
+    Timeline.create_event(challenge, %{
+      title: "Champion Assigned",
+      occurs_on: Date.utc_today()
+    })
+  end
+
+  def create_status_event(challenge = %{status: "design"}) do
+    Timeline.create_event(challenge, %{
+      title: "Design",
+      occurs_on: Date.utc_today()
+    })
+  end
+
+  def create_status_event(challenge = %{status: "vetted"}) do
+    Timeline.create_event(challenge, %{
+      title: "Vetted",
+      occurs_on: Date.utc_today()
+    })
+  end
+
+  def create_status_event(_), do: :ok
 
   @doc """
   Check if a challenge is created
@@ -201,10 +260,7 @@ defmodule IdeaPortal.Challenges do
   Sets status to "created"
   """
   def publish(challenge) do
-    challenge
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:status, "created")
-    |> Repo.update()
+    __MODULE__.update(challenge, %{status: "created"})
   end
 
   @doc """
