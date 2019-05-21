@@ -23,7 +23,7 @@ defmodule Web.ChallengeController do
 
   def show(conn, %{"id" => id}) do
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.filter_for_published(challenge) do
+         {:ok, challenge} <- Challenges.filter_for_created(challenge) do
       conn
       |> assign(:challenge, challenge)
       |> assign(:supporting_documents, challenge.supporting_documents)

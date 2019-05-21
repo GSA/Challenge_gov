@@ -101,7 +101,7 @@ defmodule IdeaPortal.ChallengesTest do
 
       {:ok, challenge} = Challenges.publish(challenge)
 
-      assert challenge.status == "published"
+      assert challenge.status == "created"
     end
   end
 

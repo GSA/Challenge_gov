@@ -1,6 +1,11 @@
 defmodule IdeaPortal.Challenges do
   @moduledoc """
   Context for Challenges
+
+  Statuses for challenges:
+  - pending: Awaiting review by an admin, hidden to the public
+  - created: Published by an admin, viewable to the public
+  - archived: Archived by an admin, hidden to the public
   """
 
   alias IdeaPortal.Challenges.Challenge
@@ -38,7 +43,7 @@ defmodule IdeaPortal.Challenges do
   def all(opts \\ []) do
     query =
       Challenge
-      |> where([c], c.status == "published")
+      |> where([c], c.status == "created")
       |> Filter.filter(opts[:filter], __MODULE__)
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
@@ -71,19 +76,19 @@ defmodule IdeaPortal.Challenges do
   end
 
   @doc """
-  Filter a challenge for published state
+  Filter a challenge for created state
 
-  Returns `{:error, :not_found}` if the challenge is not published, to hit the same
+  Returns `{:error, :not_found}` if the challenge is not created, to hit the same
   fallback as if the challenge was a bad ID.
 
-      iex> Challenges.filter_for_published(%Challenge{status: "published"})
-      {:ok, %Challenge{status: "published"}}
+      iex> Challenges.filter_for_created(%Challenge{status: "created"})
+      {:ok, %Challenge{status: "created"}}
 
-      iex> Challenges.filter_for_published(%Challenge{status: "pending"})
+      iex> Challenges.filter_for_created(%Challenge{status: "pending"})
       {:error, :not_found}
   """
-  def filter_for_published(challenge) do
-    case published?(challenge) do
+  def filter_for_created(challenge) do
+    case created?(challenge) do
       true ->
         {:ok, challenge}
 
@@ -156,19 +161,19 @@ defmodule IdeaPortal.Challenges do
   end
 
   @doc """
-  Check if a challenge is published
+  Check if a challenge is created
 
-      iex> Challenges.published?(%Challenge{status: "pending"})
+      iex> Challenges.created?(%Challenge{status: "pending"})
       false
 
-      iex> Challenges.published?(%Challenge{status: "published"})
+      iex> Challenges.created?(%Challenge{status: "created"})
       true
 
-      iex> Challenges.published?(%Challenge{status: "archived"})
+      iex> Challenges.created?(%Challenge{status: "archived"})
       false
   """
-  def published?(challenge) do
-    challenge.status == "published"
+  def created?(challenge) do
+    challenge.status == "created"
   end
 
   @doc """
@@ -177,25 +182,25 @@ defmodule IdeaPortal.Challenges do
       iex> Challenges.publishable?(%Challenge{status: "pending"})
       true
 
-      iex> Challenges.publishable?(%Challenge{status: "published"})
+      iex> Challenges.publishable?(%Challenge{status: "created"})
       false
 
       iex> Challenges.publishable?(%Challenge{status: "archived"})
       true
   """
   def publishable?(challenge) do
-    challenge.status != "published"
+    challenge.status != "created"
   end
 
   @doc """
   Publish a challenge
 
-  Sets status to "published"
+  Sets status to "created"
   """
   def publish(challenge) do
     challenge
     |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:status, "published")
+    |> Ecto.Changeset.put_change(:status, "created")
     |> Repo.update()
   end
 
@@ -205,7 +210,7 @@ defmodule IdeaPortal.Challenges do
       iex> Challenges.archivable?(%Challenge{status: "pending"})
       true
 
-      iex> Challenges.archivable?(%Challenge{status: "published"})
+      iex> Challenges.archivable?(%Challenge{status: "created"})
       true
 
       iex> Challenges.archivable?(%Challenge{status: "archived"})
