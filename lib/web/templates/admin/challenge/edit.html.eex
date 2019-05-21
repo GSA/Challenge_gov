@@ -48,6 +48,12 @@
             <%= FormView.textarea_field(f, :description, label: "What is the problem?", rows: 10) %>
 
             <%= FormView.textarea_field(f, :why, label: "Why is this a problem?", rows: 10) %>
+
+            <%= FormView.textarea_field(f, :fixed_looks_like, label: "What does \"fixed\" look like?", rows: 10) %>
+
+            <%= FormView.textarea_field(f, :technology_example, label: "How does technology help solve this problem?", rows: 10) %>
+
+            <%= FormView.text_field(f, :neighborhood, label: "Location or Neighborhood") %>
           </div>
 
           <div class="box-footer">

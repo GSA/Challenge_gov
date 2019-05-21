@@ -37,6 +37,9 @@ defmodule IdeaPortal.Challenges.Challenge do
     field(:name, :string)
     field(:description, :string)
     field(:why, :string)
+    field(:fixed_looks_like, :string)
+    field(:technology_example, :string)
+    field(:neighborhood, :string)
 
     belongs_to(:user, User)
 
@@ -57,7 +60,16 @@ defmodule IdeaPortal.Challenges.Challenge do
 
   def create_changeset(struct, params) do
     struct
-    |> cast(params, [:focus_area, :name, :description, :why])
+    |> cast(params, [
+      :captured_on,
+      :focus_area,
+      :name,
+      :description,
+      :why,
+      :fixed_looks_like,
+      :technology_example,
+      :neighborhood
+    ])
     |> put_change(:captured_on, Date.utc_today())
     |> validate_required([:captured_on, :focus_area, :name, :description, :why])
     |> validate_inclusion(:focus_area, @focus_areas)
