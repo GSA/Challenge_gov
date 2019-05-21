@@ -33,6 +33,9 @@
         </div>
         <div class="box-body">
           <dl>
+            <dt>Captured On</dd>
+            <dd><%= @challenge.captured_on %></dd>
+
             <dt>Name</dd>
             <dd><%= @challenge.name %></dd>
 

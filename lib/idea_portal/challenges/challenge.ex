@@ -23,6 +23,7 @@ defmodule IdeaPortal.Challenges.Challenge do
 
   schema "challenges" do
     field(:status, :string, default: "pending")
+    field(:captured_on, :date)
     field(:focus_area, :string)
     field(:name, :string)
     field(:description, :string)
@@ -43,11 +44,15 @@ defmodule IdeaPortal.Challenges.Challenge do
   def create_changeset(struct, params) do
     struct
     |> cast(params, [:focus_area, :name, :description, :why])
-    |> validate_required([:focus_area, :name, :description, :why])
+    |> put_change(:captured_on, Date.utc_today())
+    |> validate_required([:captured_on, :focus_area, :name, :description, :why])
     |> validate_inclusion(:focus_area, @focus_areas)
   end
 
   def update_changeset(struct, params) do
-    create_changeset(struct, params)
+    struct
+    |> cast(params, [:captured_on, :focus_area, :name, :description, :why])
+    |> validate_required([:captured_on, :focus_area, :name, :description, :why])
+    |> validate_inclusion(:focus_area, @focus_areas)
   end
 end

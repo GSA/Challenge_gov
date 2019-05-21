@@ -11,5 +11,17 @@ defmodule IdeaPortal.Challenges.ChallengeTest do
       changeset = Challenge.create_changeset(%Challenge{}, %{focus_area: "Other"})
       assert changeset.errors[:focus_area]
     end
+
+    test "sets captured_on automatically" do
+      changeset = Challenge.create_changeset(%Challenge{}, %{})
+      assert changeset.changes[:captured_on]
+    end
+  end
+
+  describe "update validations" do
+    test "does not set captured_on" do
+      changeset = Challenge.update_changeset(%Challenge{}, %{})
+      refute changeset.changes[:captured_on]
+    end
   end
 end

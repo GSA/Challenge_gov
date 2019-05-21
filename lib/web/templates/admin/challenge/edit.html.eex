@@ -32,6 +32,10 @@
               </div>
             </div>
 
+            <%= FormView.text_field(f, :captured_on) do %>
+              <span class="help-block">Format <code>YYYY-MM-DD</code></span>
+            <% end %>
+
             <%= FormView.text_field(f, :name) %>
 
             <%= FormView.textarea_field(f, :description, label: "What is the problem?", rows: 10) %>
