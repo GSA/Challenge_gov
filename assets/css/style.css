@@ -517,6 +517,11 @@ Form Material
 .form-group {
   margin-bottom: 25px;
 }
+.form-group i {
+  display: block;
+  margin-top: 25px;
+  color: #7f7f7f;
+}
 .form-group .form-control,
 .form-group textarea.form-control {
   border: 1px solid #bfbfbf;
