@@ -49,7 +49,7 @@ defmodule IdeaPortal.MixProject do
       {:poison, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:stein, git: "https://github.com/smartlogic/stein.git"},
-      {:timex, "~> 3.0"}
+      {:timex, "~> 3.5"}
     ]
   end
 

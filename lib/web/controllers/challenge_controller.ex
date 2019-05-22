@@ -46,7 +46,10 @@ defmodule Web.ChallengeController do
     case Challenges.submit(user, params) do
       {:ok, _challenge} ->
         conn
-        |> put_flash(:info, "Challenge submitted!")
+        |> put_flash(
+          :info,
+          "Thank you for submitting a challenge! Your challenge will show up here after review by the Hack Baltimore team."
+        )
         |> redirect(to: Routes.challenge_path(conn, :index))
 
       {:error, changeset} ->
