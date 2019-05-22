@@ -1157,8 +1157,13 @@ idea detail
   flex: 0 0 25%;
   max-width: 25%;
 }
+.card.custom-card.idea-detail-card.timeline-container {
+  overflow: unset;
+  padding-top: 20px;
+  padding-right: 20px;
+}
 .idea-timeline {
-  margin-bottom: 120px;
+  margin-bottom: 60px;
   position: relative;
 }
 .timeline-section h2 {
@@ -1180,6 +1185,7 @@ idea detail
   width: 20px;
   height: 20px;
   top: 0;
+  border: 1px solid rgba(67, 209, 107, 0.47);
   border-radius: 100%;
   background-color: #fff;
   cursor: pointer;
@@ -1188,6 +1194,14 @@ idea detail
 }
 .timeline-item:hover {
   background-color: #60c37c;
+}
+.timeline-item.timeline-item-today {
+  border: 1px solid rgb(106, 200, 207, 0.47);
+  box-shadow: 0 3px 20px 0 rgb(106, 200, 207, 0.47);
+  -webkit-box-shadow: 0 3px 20px 0 rgb(106, 200, 207, 0.47);
+}
+.timeline-item.timeline-item-today:hover {
+  border: 1px solid rgb(106, 200, 207, 0.47);
 }
 .timeline-hover-data {
   opacity: 0;
@@ -1237,6 +1251,9 @@ idea detail
 .timeline-item:hover .timeline-hover-data {
   opacity: 1;
   pointer-events: inherit;
+}
+.timeline-item.timeline-item-today:before {
+  background-color: rgb(106, 200, 207, 0.47);
 }
 .timeline-hover-data .tl-date {
   margin: 0;
