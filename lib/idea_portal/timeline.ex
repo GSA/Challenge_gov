@@ -7,6 +7,17 @@ defmodule IdeaPortal.Timeline do
   alias IdeaPortal.Repo
 
   @doc """
+  Get today, timezone shifted to Eastern
+  """
+  def today() do
+    new_york = Timex.Timezone.get("America/New_York", Timex.now())
+
+    Timex.now()
+    |> Timex.Timezone.convert(new_york)
+    |> Timex.to_date()
+  end
+
+  @doc """
   Changeset for a new event
   """
   def new_event(challenge) do

@@ -197,28 +197,28 @@ defmodule IdeaPortal.Challenges do
   def create_status_event(challenge = %{status: "created"}) do
     Timeline.create_event(challenge, %{
       title: "Created",
-      occurs_on: Date.utc_today()
+      occurs_on: Timeline.today()
     })
   end
 
   def create_status_event(challenge = %{status: "champion assigned"}) do
     Timeline.create_event(challenge, %{
       title: "Champion Assigned",
-      occurs_on: Date.utc_today()
+      occurs_on: Timeline.today()
     })
   end
 
   def create_status_event(challenge = %{status: "design"}) do
     Timeline.create_event(challenge, %{
       title: "Design",
-      occurs_on: Date.utc_today()
+      occurs_on: Timeline.today()
     })
   end
 
   def create_status_event(challenge = %{status: "vetted"}) do
     Timeline.create_event(challenge, %{
       title: "Vetted",
-      occurs_on: Date.utc_today()
+      occurs_on: Timeline.today()
     })
   end
 
