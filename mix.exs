@@ -20,7 +20,7 @@ defmodule IdeaPortal.MixProject do
   def application do
     [
       mod: {IdeaPortal.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :timex]
     ]
   end
 
@@ -48,7 +48,8 @@ defmodule IdeaPortal.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:poison, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
-      {:stein, git: "https://github.com/smartlogic/stein.git"}
+      {:stein, git: "https://github.com/smartlogic/stein.git"},
+      {:timex, "~> 3.0"}
     ]
   end
 
