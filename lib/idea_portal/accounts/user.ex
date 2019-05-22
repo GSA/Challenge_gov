@@ -14,6 +14,7 @@ defmodule IdeaPortal.Accounts.User do
 
   schema "users" do
     field(:role, :string, read_after_writes: true)
+    field(:finalized, :boolean, default: true)
 
     field(:email, :string)
     field(:password_hash, :string)
@@ -65,6 +66,31 @@ defmodule IdeaPortal.Accounts.User do
     |> password_changeset(params)
     |> put_change(:token, UUID.uuid4())
     |> put_change(:email_verification_token, UUID.uuid4())
+  end
+
+  def invite_changeset(struct, params) do
+    struct
+    |> cast(params, [:email])
+    |> validate_required([:email])
+    |> validate_format(:email, ~r/.+@.+\..+/)
+    |> unique_constraint(:email, name: :users_lower_email_index)
+    |> put_change(:finalized, false)
+    |> put_change(:token, UUID.uuid4())
+    |> put_change(:email_verification_token, UUID.uuid4())
+    |> put_change(:first_name, "")
+    |> put_change(:last_name, "")
+    |> put_change(:password, UUID.uuid4())
+    |> Stein.Accounts.hash_password()
+  end
+
+  def finalize_invite_changeset(struct, params) do
+    struct
+    |> cast(params, [:first_name, :last_name, :phone_number])
+    |> validate_required([:first_name, :last_name])
+    |> password_changeset(params)
+    |> put_change(:finalized, true)
+    |> put_change(:email_verified_at, DateTime.truncate(Timex.now(), :second))
+    |> put_change(:email_verification_token, nil)
   end
 
   def update_changeset(struct, params) do

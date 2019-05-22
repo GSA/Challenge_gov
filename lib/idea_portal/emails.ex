@@ -19,6 +19,18 @@ defmodule IdeaPortal.Emails do
   end
 
   @doc """
+  Send an invite to a new user
+  """
+  def invitation_email(invitee_user, inviter_user) do
+    base_email()
+    |> to(invitee_user.email)
+    |> subject("You've been invited to City Backlog")
+    |> assign(:invitee_user, invitee_user)
+    |> assign(:inviter_user, inviter_user)
+    |> render("invitation-email.html")
+  end
+
+  @doc """
   Send a email verification email
   """
   def password_reset(user) do
