@@ -195,6 +195,11 @@ defmodule IdeaPortal.Accounts do
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
-    where(query, [a], ilike(a.first_name, ^value) or ilike(a.last_name, ^value))
+
+    where(
+      query,
+      [a],
+      ilike(a.first_name, ^value) or ilike(a.last_name, ^value) or ilike(a.email, ^value)
+    )
   end
 end
