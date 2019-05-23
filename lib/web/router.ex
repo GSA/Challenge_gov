@@ -39,6 +39,8 @@ defmodule Web.Router do
 
     resources("/sign-in", SessionController, only: [:delete], singleton: true)
 
+    resources("/teams", TeamController, only: [:index, :show, :new, :create])
+
     resources("/users/invite", UserInviteController, only: [:new, :create])
   end
 

@@ -1,0 +1,13 @@
+<div class="card custom-card participant-rating participant-detail">
+  <div class="card-body participant-detail-body">
+    <div class="row">
+      <div class="col-md-4">
+      </div>
+      <div class="col-md-8">
+        <div class="card-content-head">
+          <h2 class="font-semibold"><%= @team.name %></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="row filter-area">
+  <div class="col-auto col-filter-items">
+    <div class="filter-items">
+      <ul class="mp-none">
+        <%= if @current_user && !Teams.member_of_team?(@current_user) do %>
+          <li>
+            <%= link(to: Routes.team_path(@conn, :new)) do %>
+              <span class="btn btn-light btn-radius btn-invite-member">Create Team</span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <ul>
+      <%= Enum.map(@teams, fn team -> %>
+        <li><%= link(team.name, to: Routes.team_path(@conn, :show, team.id)) %></li>
+      <% end) %>
+    </ul>
+  </div>
+</div>
