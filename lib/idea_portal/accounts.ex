@@ -21,6 +21,7 @@ defmodule IdeaPortal.Accounts do
   def all(opts \\ []) do
     query =
       User
+      |> where([u], u.finalized == true)
       |> Filter.filter(opts[:filter], __MODULE__)
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
