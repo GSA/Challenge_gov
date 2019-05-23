@@ -593,7 +593,6 @@ Form Material
 .form-group.right-icon i {
   position: absolute;
   right: 25px;
-  top: 50%;
   transform: translate(0, -50%);
   -webkit-transform: translate(0, -50%);
 }

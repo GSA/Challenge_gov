@@ -8,6 +8,24 @@ defmodule IdeaPortal.Accounts do
   alias IdeaPortal.Mailer
   alias IdeaPortal.Recaptcha
   alias IdeaPortal.Repo
+  alias Stein.Filter
+  alias Stein.Pagination
+
+  import Ecto.Query
+
+  @behaviour Stein.Filter
+
+  @doc """
+  Get all accounts
+  """
+  def all(opts \\ []) do
+    query =
+      User
+      |> where([u], u.finalized == true)
+      |> Filter.filter(opts[:filter], __MODULE__)
+
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
 
   @doc """
   Changeset for sign in and registration
@@ -241,4 +259,15 @@ defmodule IdeaPortal.Accounts do
   def is_admin?(%{role: "admin"}), do: true
 
   def is_admin?(_), do: false
+
+  @impl true
+  def filter_on_attribute({"search", value}, query) do
+    value = "%" <> value <> "%"
+
+    where(
+      query,
+      [a],
+      ilike(a.first_name, ^value) or ilike(a.last_name, ^value) or ilike(a.email, ^value)
+    )
+  end
 end
