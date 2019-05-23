@@ -13,7 +13,9 @@
       <div class="filter-items">
         <ul class="mp-none">
           <li>
-            <button class="btn btn-light btn-radius btn-invite-member">Invite Members</button>
+            <%= link(to: Routes.user_invite_path(@conn, :new)) do %>
+              <span class="btn btn-light btn-radius btn-invite-member">Invite Participant</span>
+            <% end %>
           </li>
         </ul>
       </div>
