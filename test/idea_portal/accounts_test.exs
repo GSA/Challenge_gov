@@ -93,6 +93,97 @@ defmodule IdeaPortal.AccountsTest do
     end
   end
 
+  describe "inviting a user" do
+    test "successfully" do
+      user = TestHelpers.create_user()
+
+      {:ok, invited_user} =
+        Accounts.invite(user, %{
+          email: "invitee@example.com"
+        })
+
+      assert invited_user.email == "invitee@example.com"
+      refute invited_user.finalized
+      assert_delivered_email(Emails.invitation_email(invited_user, user))
+    end
+
+    test "failure" do
+      user = TestHelpers.create_user()
+
+      {:error, changeset} = Accounts.invite(user, %{})
+
+      assert changeset.errors[:email]
+    end
+
+    test "recaptcha token is invalid" do
+      user = TestHelpers.create_user()
+
+      Recaptcha.set_valid_token_response(false)
+
+      {:error, changeset} =
+        Accounts.invite(user, %{
+          email: "user@example.com",
+          recaptcha_token: "invalid"
+        })
+
+      assert changeset.errors[:recaptcha_token]
+    end
+  end
+
+  describe "accepting an invite" do
+    test "successfully" do
+      user = TestHelpers.create_user()
+      {:ok, invited_user} = Accounts.invite(user, %{email: "invitee@example.com"})
+
+      {:ok, invited_user} =
+        Accounts.finalize_invitation(invited_user.email_verification_token, %{
+          first_name: "User",
+          last_name: "Example",
+          phone_number: "123-123-1234",
+          password: "password",
+          password_confirmation: "password"
+        })
+
+      assert invited_user.first_name == "User"
+      assert invited_user.finalized
+    end
+
+    test "failure" do
+      user = TestHelpers.create_user()
+      {:ok, invited_user} = Accounts.invite(user, %{email: "invitee@example.com"})
+
+      {:error, changeset} =
+        Accounts.finalize_invitation(invited_user.email_verification_token, %{
+          first_name: "User",
+          phone_number: "123-123-1234",
+          password: "password",
+          password_confirmation: "password"
+        })
+
+      assert changeset.errors[:last_name]
+    end
+  end
+
+  describe "starting password reset" do
+    test "starts reset" do
+      user = TestHelpers.create_user()
+
+      Accounts.start_password_reset(user.email)
+
+      user = Repo.get(Accounts.User, user.id)
+      assert_delivered_email(Emails.password_reset(user))
+    end
+
+    test "does not let you reset an invited user" do
+      user = TestHelpers.create_invited_user()
+
+      Accounts.start_password_reset(user.email)
+
+      user = Repo.get(Accounts.User, user.id)
+      refute_delivered_email(Emails.password_reset(user))
+    end
+  end
+
   describe "finding via token" do
     test "user exists" do
       user = TestHelpers.create_user()

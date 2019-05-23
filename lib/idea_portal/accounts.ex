@@ -55,6 +55,48 @@ defmodule IdeaPortal.Accounts do
   end
 
   @doc """
+  Invite a user to the portal
+  """
+  def invite(inviter_user, params) do
+    recaptcha_token = Map.get(params, "recaptcha_token")
+
+    case Recaptcha.valid_token?(recaptcha_token) do
+      true ->
+        %User{}
+        |> User.invite_changeset(params)
+        |> Repo.insert()
+        |> maybe_send_invite_email(inviter_user)
+
+      false ->
+        %User{}
+        |> User.create_changeset(params)
+        |> Ecto.Changeset.add_error(:recaptcha_token, "is invalid")
+        |> Ecto.Changeset.apply_action(:insert)
+    end
+  end
+
+  defp maybe_send_invite_email({:ok, invitee_user}, inviter_user) do
+    invitee_user
+    |> Emails.invitation_email(inviter_user)
+    |> Mailer.deliver_later()
+
+    {:ok, invitee_user}
+  end
+
+  defp maybe_send_invite_email(result, _inviter_user), do: result
+
+  @doc """
+  Finalize an invitation to the portal
+  """
+  def finalize_invitation(token, params) do
+    with {:ok, user} <- get_by_email_token(token) do
+      user
+      |> User.finalize_invite_changeset(params)
+      |> Repo.update()
+    end
+  end
+
+  @doc """
   Changeset for account editing
   """
   def edit(user), do: User.update_changeset(user, %{})
@@ -144,6 +186,25 @@ defmodule IdeaPortal.Accounts do
   end
 
   @doc """
+  Find a user by an email verification token
+  """
+  def get_by_email_token(token) do
+    case Ecto.UUID.cast(token) do
+      {:ok, token} ->
+        case Repo.get_by(User, email_verification_token: token) do
+          nil ->
+            {:error, :not_found}
+
+          user ->
+            {:ok, user}
+        end
+
+      :error ->
+        {:error, :not_found}
+    end
+  end
+
+  @doc """
   Find and verify a user by their verification token
   """
   def verify_email(token) do
@@ -162,11 +223,17 @@ defmodule IdeaPortal.Accounts do
   """
   @spec start_password_reset(String.t()) :: :ok
   def start_password_reset(email) do
-    Stein.Accounts.start_password_reset(Repo, User, email, fn user ->
-      user
-      |> Emails.password_reset()
-      |> Mailer.deliver_later()
-    end)
+    case Repo.get_by(User, email: email, finalized: true) do
+      nil ->
+        :ok
+
+      _user ->
+        Stein.Accounts.start_password_reset(Repo, User, email, fn user ->
+          user
+          |> Emails.password_reset()
+          |> Mailer.deliver_later()
+        end)
+    end
   end
 
   @doc """

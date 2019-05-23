@@ -5,6 +5,7 @@ defmodule IdeaPortal.TestHelpers do
 
   alias IdeaPortal.Accounts
   alias IdeaPortal.Challenges
+  alias IdeaPortal.Repo
   alias IdeaPortal.SupportingDocuments
   alias IdeaPortal.Timeline
 
@@ -25,6 +26,15 @@ defmodule IdeaPortal.TestHelpers do
   def create_user(attributes \\ %{}) do
     attributes = user_attributes(attributes)
     {:ok, user} = Accounts.register(attributes)
+    user
+  end
+
+  def create_invited_user(email \\ "invited@example.com") do
+    {:ok, user} =
+      %Accounts.User{}
+      |> Accounts.User.invite_changeset(%{email: email})
+      |> Repo.insert()
+
     user
   end
 

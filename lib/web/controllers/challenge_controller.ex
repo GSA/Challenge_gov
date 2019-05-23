@@ -26,6 +26,7 @@ defmodule Web.ChallengeController do
          {:ok, challenge} <- Challenges.filter_for_created(challenge) do
       conn
       |> assign(:challenge, challenge)
+      |> assign(:events, challenge.events)
       |> assign(:supporting_documents, challenge.supporting_documents)
       |> render("show.html")
     end

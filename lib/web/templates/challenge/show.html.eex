@@ -17,6 +17,43 @@
     </div>
   </div>
 
+  <%= if !Enum.empty?(@events) do %>
+    <div class="card custom-card idea-detail-card timeline-container">
+      <div class="row m-md-0">
+        <div class="col-12">
+          <div class="timeline-section">
+            <h2 class="color-gray font-semibold">Timeline</h2>
+            <div class="idea-timeline">
+              <div class="timeline-base"></div>
+              <div class="timeline-periods">
+                <div class="timeline-item timeline-item-today transition-3s" style="left: <%= timeline_position(Timex.today, @events) %>;">
+                  <span class="over" style="width: <%= timeline_position(Timex.today, @events) %>;"></span>
+                  <span class="tl-bullet transition-3s"></span>
+                  <div class="timeline-hover-data transition-3s">
+                    <span class="caret"></span>
+                    <p class="tl-date font-semibold"><%= timeline_date(Timex.today) %></p>
+                    <p class="tl-user-name font-medium">Today</p>
+                  </div>
+                </div>
+                <%= Enum.map(@events, fn (event) -> %>
+                  <div class="timeline-item transition-3s" style="left: <%= timeline_position(event.occurs_on, @events) %>;">
+                    <span class="over" style="width: <%= timeline_position(event.occurs_on, @events) %>;"></span>
+                    <span class="tl-bullet transition-3s"></span>
+                    <div class="timeline-hover-data transition-3s">
+                      <span class="caret"></span>
+                      <p class="tl-date font-semibold"><%= timeline_date(event.occurs_on) %></p>
+                      <p class="tl-user-name font-medium"><%= event.title %></p>
+                    </div>
+                  </div>
+                <% end) %>
+              </div>
+            </div><!--timeline end-->
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
   <div class="idea-detail-tabs-funding">
     <div class="row mx-md-0">
       <div class="col-12 col-md-12 col-lg-12 px-md-0">
