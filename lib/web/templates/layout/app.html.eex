@@ -20,6 +20,14 @@
                     <i class="icon-Challenges"></i><span>Challenges</span>
                   <% end %>
                 </li>
+
+                <%= if Map.has_key?(@conn.assigns, :current_user) do %>
+                  <li>
+                    <%= link(to: Routes.user_invite_path(@conn, :new)) do %>
+                      <span>Invite Participant</span>
+                    <% end %>
+                  </li>
+                <% end %>
               </ul>
             </div>
           </div>

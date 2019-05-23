@@ -37,6 +37,8 @@ defmodule Web.Router do
     resources("/challenges", ChallengeController, only: [:new, :create])
 
     resources("/sign-in", SessionController, only: [:delete], singleton: true)
+
+    resources("/users/invite", UserInviteController, only: [:new, :create])
   end
 
   scope "/", Web do
@@ -59,6 +61,8 @@ defmodule Web.Router do
 
     get("/register/reset/verify", RegistrationResetController, :edit)
     post("/register/reset/verify", RegistrationResetController, :update)
+
+    resources("/users/invite/accept", UserInviteAcceptController, only: [:new, :create])
 
     resources("/sign-in", SessionController, only: [:new, :create], singleton: true)
   end
