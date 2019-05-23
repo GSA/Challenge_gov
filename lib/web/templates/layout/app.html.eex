@@ -15,9 +15,14 @@
             </div>
             <div class="side-nav font-semibold">
               <ul class="mp-none">
-                <li class="active">
+                <li class='<%= tab_selected(@conn, "challenges") %>'>
                   <%= link(to: Routes.challenge_path(@conn, :index)) do %>
                     <i class="icon-Challenges"></i><span>Challenges</span>
+                  <% end %>
+                </li>
+                <li class='<%= tab_selected(@conn, "accounts") %>'>
+                  <%= link(to: Routes.account_path(@conn, :index)) do %>
+                    <i class="icon-Participants"></i><span>Participants</span>
                   <% end %>
                 </li>
               </ul>

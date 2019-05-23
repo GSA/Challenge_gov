@@ -39,6 +39,12 @@ defmodule Web.LayoutView do
       ["admin", ^route, _] ->
         "active"
 
+      [^route] ->
+        "active"
+
+      [^route, _] ->
+        "active"
+
       _ ->
         ""
     end

@@ -3,6 +3,30 @@ defmodule Web.AccountController do
 
   alias IdeaPortal.Accounts
 
+  plug Web.Plugs.FetchPage, [per: 12] when action in [:index]
+
+  action_fallback(Web.FallbackController)
+
+  def index(conn, params) do
+    %{page: page, per: per} = conn.assigns
+    filter = Map.get(params, "filter", %{})
+    pagination = Accounts.all(filter: filter, page: page, per: per)
+
+    conn
+    |> assign(:accounts, pagination.page)
+    |> assign(:pagination, pagination.pagination)
+    |> assign(:filter, filter)
+    |> render("index.html")
+  end
+
+  def show(conn, params) do
+    {:ok, account} = Accounts.get(params["id"])
+
+    conn
+    |> assign(:account, account)
+    |> render("show.html")
+  end
+
   def edit(conn, _params) do
     %{current_user: user} = conn.assigns
 

@@ -1,0 +1,59 @@
+<%= form_for @conn, Routes.account_path(@conn, :index), method: "get", id: "account-search-form" %>
+  <div class="row filter-area">
+    <div class="col-md-4">
+      <div class="search-form">
+        <div class="form-group form-control-radius form-search has-icon right-icon">
+          <i class="icon-magnifying-glass"></i>
+          <%= text_input :filter, :search, value: @filter["search"], class: "form-control", placeholder: "Search Participants" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-auto col-filter-items">
+      <div class="filter-items">
+        <ul class="mp-none">
+          <li>
+            <button class="btn btn-light btn-radius btn-invite-member">Invite Members</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-12">
+    <div class="page-titles">
+      <h1>Participants</h1>
+      <p>Creative minds on the platform to address the problems.<a href="javascript:;">Learn more!</a></p>
+    </div>
+  </div>
+
+  <div class="row participant-wrapper">
+    <%= if Enum.empty?(@accounts) do %>
+      <div class="col-12 col-md-12">
+        <div class="card">
+          <div class="card-body">
+            No users found
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <%= Enum.map(@accounts, fn account -> %>
+        <div class="col-12 col-md-4 col-lg-3">
+          <div class="card participant-item">
+            <div class="card-body">
+              <%= link(to: Routes.account_path(@conn, :show, account.id), class: "text-center") do %>
+                <span class="image-circle"><img src="images/participant.png" alt=""></span>
+                <h3 class="font-regular"><%= account.first_name %> <%= account.last_name %></h3>
+                <!-- <strong class="font-semibold">Manager</strong> -->
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end) %>
+    <% end %>
+  </div>
+
+  <%= if @pagination.total > 1 do %>
+    <%= render SharedView, "_pagination.html", path: Routes.account_path(@conn, :index, filter: @filter), pagination: @pagination %>
+  <% end %>
+</form>
