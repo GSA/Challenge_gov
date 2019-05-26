@@ -1,13 +1,65 @@
-<div class="card custom-card participant-rating participant-detail">
-  <div class="card-body participant-detail-body">
-    <div class="row">
-      <div class="col-md-4">
-      </div>
-      <div class="col-md-8">
-        <div class="card-content-head">
-          <h2 class="font-semibold"><%= @team.name %></h2>
+<!--profiles start-->
+<div class="create-team team-detail-wrapper">
+  <div class="card card-form custom-card team-detail-card">
+    <div class="card-body">
+      <div class="row">
+        <!-- Placeholder for team image -->
+        <%# <div class="col-12 col-md-2">
+          <div class="team-detail-img-left">
+            <img src="images/teams-detail-img-1.jpg" alt=""
+              class="rounded-circle">
+          </div>
+        </div> %>
+        <div class="col-12 col-md-6">
+          <div class="team-dt-card-desc">
+            <h2 class="font-semibold"><%= @team.name %></h2>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis
+              ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas
+              Accumsan lacus vel facilisis. Incididunt ut labore et dolore magna
+              aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo
+              viverra maecenas accumsan lacus vel facilisis. Poi Quis ipsum
+              suspendisse ultrices gravida. Risus commodo viverra maecenas.
+              accumsan lacus vel facilisis. 
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="team-member card">
+    <div class="card-body">
+      <h2 class="title-mb font-semibold">Team Members <a href="javascript:;"
+          data-toggle="modal" data-target="#exampleModalCenter"><span>Edit</span></a></h2>
+      <ul>
+        <%= Enum.map(@team.members, fn member -> %>
+          <li>
+            <div class="add-member text-center">
+              <div class="member-img border-non-team-detail-img">
+                <img src="images/teams-detail-img-3.jpg" alt=""
+                  class="rounded-circle">
+              </div>
+              <p><%= member.user.first_name %> <%= member.user.last_name %></p>
+              <strong class="font-bold">Remove</strong>
+            </div>
+          </li>
+        <% end) %>
+        <li>
+          <div class="add-member text-center">
+            <div class="member-img">
+              <a href="javascript:;" data-toggle="modal"
+                data-target="#exampleModalCenter">
+                <i class="icon-Participants"><span>+</span></i>
+              </a>
+            </div>
+            <p>Add Members</p>
+            <strong class="font-bold">Add</strong>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
+
+<%= render "_invite_member.html", assigns %>
