@@ -9,6 +9,7 @@ defmodule IdeaPortal.Accounts.User do
 
   alias IdeaPortal.Challenges.Challenge
   alias IdeaPortal.SupportingDocuments.Document
+  alias IdeaPortal.Teams.Member
 
   @type t :: %__MODULE__{}
 
@@ -33,6 +34,7 @@ defmodule IdeaPortal.Accounts.User do
     field(:phone_number, :string)
 
     has_many(:challenges, Challenge)
+    has_many(:members, Member)
     has_many(:supporting_documents, Document)
 
     timestamps()

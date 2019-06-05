@@ -1,0 +1,25 @@
+<div class="card card-form custom-card">
+  <div class="card-body">
+    <div class="form-titles">
+      <h2 class="title-bar font-semibold">Create a new Team</h2>
+
+      <%= form_for(@changeset, Routes.team_path(@conn, :create), [method: :post], fn f -> %>
+        <div class="row mx-md-n4">
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= text_input(f, :name, required: true, placeholder: "Team Name", class: "form-control #{FormView.error_class(f, :name)}") %>
+              <%= error_tag(f, :name) %>
+            </div>
+
+            <div class="form-group form-control-material">
+              <%= text_input(f, :description, placeholder: "Team Description", class: "form-control #{FormView.error_class(f, :description)}") %>
+              <%= error_tag(f, :description) %>
+            </div>
+          </div>
+        </div>
+
+        <%= submit("Create", class: "btn btn-primary") %>
+      <% end) %>
+    </div>
+  </div>
+</div>

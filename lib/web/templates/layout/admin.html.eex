@@ -45,6 +45,12 @@
                 <span>Challenges</span>
               <% end %>
             </li>
+            <li class="<%= tab_selected(@conn, "teams") %>">
+              <%= link(to: Routes.admin_team_path(@conn, :index)) do %>
+                <i class="fa fa-users"></i>
+                <span>Teams</span>
+              <% end %>
+            </li>
           </ul>
         </section>
       </aside>

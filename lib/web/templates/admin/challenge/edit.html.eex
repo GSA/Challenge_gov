@@ -9,7 +9,7 @@
         <i class="fa fa-dashboard"></i> Home
       <% end %>
     </li>
-    <li><%= link("Zones", to: Routes.admin_challenge_path(@conn, :index)) %></li>
+    <li><%= link("Challenges", to: Routes.admin_challenge_path(@conn, :index)) %></li>
     <li><%= link("Challenge ##{@challenge.id}", to: Routes.admin_challenge_path(@conn, :show, @challenge.id)) %></li>
     <li class="active">Edit</li>
   </ol>

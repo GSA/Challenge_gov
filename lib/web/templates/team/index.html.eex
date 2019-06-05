@@ -1,0 +1,69 @@
+<div class="row filter-area">
+  <div class="col-md-4">
+    <div class="search-form">
+      <form action="/">
+        <div class="form-group form-control-radius form-search has-icon
+          right-icon">
+          <i class="icon-magnifying-glass"></i>
+          <input type="text" class="form-control" placeholder="Search teams">
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-auto col-filter-items">
+    <div class="filter-items">
+      <ul class="mp-none">
+        <%= if Map.has_key?(assigns, :current_user) && !Teams.member_of_team?(@current_user) do %>
+          <li>
+            <%= link(to: Routes.team_path(@conn, :new)) do %>
+              <span class="btn btn-light btn-radius btn-invite-member">Create a team</span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-12">
+    <div class="page-titles">
+      <h1>Teams</h1>
+      <p>Creative minds on the platform to address the problems.<a
+          href="javascript:;">Learn more!</a></p>
+    </div>
+  </div>
+</div>
+<!--filter end-->
+
+<!--profiles start-->
+<div class="row teams-wrapper">
+  <%= Enum.map(@teams, fn team -> %>
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card teams-item">
+        <div class="card-body">
+          <%= link(to: Routes.team_path(@conn, :show, team.id)) do %>
+            <div class="text-center mrg-btm">
+              <span class="image-circle"><img src="images/teams-card-logo.jpg"
+                  alt=""></span>
+              <h3><%= team.name %></h3>
+            </div>
+            <div class="card-btm">
+              <ul class="team-list-img">
+                <%= Enum.map(team.members, fn _member -> %>
+                  <li>
+                    <img src="images/teams-card-img-4.jpg" alt="">
+                  </li>
+                <% end) %>
+              </ul>
+              <%= if length(team.members) > 4 do %>
+                <div class="right-more">
+                  <p class="font-medium text-center">+<%= length(team.members) - 4 %></p>
+                  <span class="font-light text-center">more</span>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end) %>
+</div>

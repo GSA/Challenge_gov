@@ -1,27 +1,26 @@
 <div class="card custom-card participant-rating participant-detail">
-    <div class="card-body participant-detail-body">
-      <div class="row">
-        <div class="col-md-4 text-center">
-          <div class="image-circle image-circle-detail">
-            <img src="images/participant-detail.png" alt="">
-          </div>
+  <div class="card-body participant-detail-body">
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <div class="image-circle image-circle-detail">
+          <img src="images/participant-detail.png" alt="">
         </div>
-        <div class="col-md-8">
-          <div class="card-content-head">
-            <h2 class="font-semibold"><%= @account.first_name %> <%= @account.last_name %></h2>
-          </div>
-          <div class="card-content-body">
-            <div>
-              <ul class="mp-none">
-                <li>
-                  <span class="font-semibold tag-list participant-detail-para
-                    color-gray">
-                    Email
-                  </span>
-                  <p class="participant-detail-para"><%= @account.email %></p>
-                </li>
-              </ul>
-            </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card-content-head">
+          <h2 class="font-semibold"><%= @account.first_name %> <%= @account.last_name %></h2>
+        </div>
+        <div class="card-content-body">
+          <div>
+            <ul class="mp-none">
+              <li>
+                <span class="font-semibold tag-list participant-detail-para
+                color-gray">
+                  Email
+                </span>
+                <p class="participant-detail-para"><%= @account.email %></p>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

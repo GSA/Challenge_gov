@@ -1,0 +1,40 @@
+<section class="content-header">
+  <h1>
+    Edit Team #<%= @team.id %>
+  </h1>
+
+  <ol class="breadcrumb">
+    <li>
+      <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
+        <i class="fa fa-dashboard"></i> Home
+      <% end %>
+    </li>
+    <li><%= link("Team", to: Routes.admin_team_path(@conn, :index)) %></li>
+    <li><%= link("Team ##{@team.id}", to: Routes.admin_team_path(@conn, :show, @team.id)) %></li>
+    <li class="active">Edit</li>
+  </ol>
+</section>
+
+<section class="content">
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Edit</h3>
+        </div>
+
+        <%= form_for(@changeset, Routes.admin_team_path(@conn, :update, @team.id), [class: "form-horizontal"], fn f -> %>
+          <div class="box-body">
+            <%= FormView.text_field(f, :name) %>
+
+            <%= FormView.textarea_field(f, :description) %>
+          </div>
+
+          <div class="box-footer">
+            <%= submit("Update", class: "btn btn-primary pull-right") %>
+          </div>
+        <% end) %>
+      </div>
+    </div>
+  </div>
+</section>

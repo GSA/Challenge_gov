@@ -7,6 +7,7 @@ defmodule IdeaPortal.TestHelpers do
   alias IdeaPortal.Challenges
   alias IdeaPortal.Repo
   alias IdeaPortal.SupportingDocuments
+  alias IdeaPortal.Teams
   alias IdeaPortal.Timeline
 
   defp user_attributes(attributes) do
@@ -99,5 +100,11 @@ defmodule IdeaPortal.TestHelpers do
 
     {:ok, event} = Timeline.create_event(challenge, attributes)
     event
+  end
+
+  def create_team(user, attributes \\ %{}) do
+    attributes = Map.merge(%{name: "New event"}, attributes)
+    {:ok, team} = Teams.create(user, attributes)
+    team
   end
 end
