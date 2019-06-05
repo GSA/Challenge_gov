@@ -8,6 +8,8 @@ defmodule IdeaPortal.Teams do
   alias IdeaPortal.Teams.Team
   alias Stein.Pagination
 
+  import Ecto.Query
+
   @doc """
   New team changeset
   """
@@ -18,7 +20,9 @@ defmodule IdeaPortal.Teams do
   """
   def all(opts \\ []) do
     opts = Enum.into(opts, %{})
-    Pagination.paginate(Repo, Team, opts)
+
+    query = preload(Team, :members)
+    Pagination.paginate(Repo, query, opts)
   end
 
   @doc """
