@@ -53,4 +53,13 @@ defmodule Web.Admin.TeamController do
         |> render("edit.html")
     end
   end
+
+  def delete(conn, %{"id" => id}) do
+    with {:ok, team} <- Teams.get(id),
+         {:ok, _team} <- Teams.delete(team) do
+      conn
+      |> put_flash(:info, "Team deleted!")
+      |> redirect(to: Routes.admin_team_path(conn, :index))
+    end
+  end
 end

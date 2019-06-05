@@ -96,7 +96,7 @@ defmodule Web.Router do
 
     resources("/events", EventController, only: [:edit, :update, :delete])
 
-    resources("/teams", TeamController, only: [:index, :show, :edit, :update])
+    resources("/teams", TeamController, only: [:index, :show, :edit, :update, :delete])
   end
 
   if Mix.env() == :dev do

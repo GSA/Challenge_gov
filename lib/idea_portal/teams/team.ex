@@ -14,6 +14,7 @@ defmodule IdeaPortal.Teams.Team do
   schema "teams" do
     field(:name, :string)
     field(:description, :string)
+    field(:deleted_at, :utc_datetime)
 
     has_many(:members, Member)
 

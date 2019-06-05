@@ -26,7 +26,11 @@ defmodule IdeaPortal.Teams do
   def all(opts \\ []) do
     opts = Enum.into(opts, %{})
 
-    query = preload(Team, :members)
+    query =
+      Team
+      |> where([t], is_nil(t.deleted_at))
+      |> preload(:members)
+
     Pagination.paginate(Repo, query, opts)
   end
 
@@ -34,7 +38,12 @@ defmodule IdeaPortal.Teams do
   Get an individual team
   """
   def get(id) do
-    case Repo.get(Team, id) do
+    team =
+      Team
+      |> where([t], t.id == ^id and is_nil(t.deleted_at))
+      |> Repo.one()
+
+    case team do
       nil ->
         {:error, :not_found}
 
@@ -57,6 +66,13 @@ defmodule IdeaPortal.Teams do
 
   Adds the user to the team, fails if the user is already part of a team
   """
+  def create(%{email_verified_at: nil}, _params) do
+    %Team{}
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.add_error(:base, "you must verify your email first")
+    |> Ecto.Changeset.apply_action(:insert)
+  end
+
   def create(user, params) do
     result =
       Ecto.Multi.new()
@@ -89,6 +105,20 @@ defmodule IdeaPortal.Teams do
   def update(team, params) do
     team
     |> Team.update_changeset(params)
+    |> Repo.update()
+  end
+
+  @doc """
+  Soft delete a team
+
+  Marks as deleted by setting the timestamp
+  """
+  def delete(team) do
+    now = DateTime.truncate(Timex.now(), :second)
+
+    team
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:deleted_at, now)
     |> Repo.update()
   end
 end

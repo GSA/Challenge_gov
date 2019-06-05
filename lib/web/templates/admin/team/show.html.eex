@@ -22,6 +22,7 @@
           <h3 class="box-title">Basics</h3>
           <div class="box-tools">
             <%= link("Edit", to: Routes.admin_team_path(@conn, :edit, @team.id), class: "btn btn-default") %>
+            <%= link("Delete", to: Routes.admin_team_path(@conn, :delete, @team.id), class: "btn btn-default", method: :delete, data: [confirm: "Are you sure?"]) %>
           </div>
         </div>
         <div class="box-body">

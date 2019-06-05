@@ -4,6 +4,7 @@ defmodule Web.TeamControllerTest do
   describe "creating a new team" do
     test "success", %{conn: conn} do
       user = TestHelpers.create_user()
+      user = TestHelpers.verify_email(user)
 
       conn =
         conn
