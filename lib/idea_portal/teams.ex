@@ -16,6 +16,11 @@ defmodule IdeaPortal.Teams do
   def new(), do: Team.create_changeset(%Team{}, %{})
 
   @doc """
+  Edit team changeset
+  """
+  def edit(team), do: Team.create_changeset(team, %{})
+
+  @doc """
   Get all accounts
   """
   def all(opts \\ []) do
@@ -76,5 +81,14 @@ defmodule IdeaPortal.Teams do
         |> Ecto.Changeset.add_error(:base, "already a member of a team")
         |> Ecto.Changeset.apply_action(:insert)
     end
+  end
+
+  @doc """
+  Update a team
+  """
+  def update(team, params) do
+    team
+    |> Team.update_changeset(params)
+    |> Repo.update()
   end
 end

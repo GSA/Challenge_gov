@@ -25,4 +25,10 @@ defmodule IdeaPortal.Teams.Team do
     |> cast(params, [:name, :description])
     |> validate_required([:name])
   end
+
+  def update_changeset(struct, params) do
+    struct
+    |> cast(params, [:name, :description])
+    |> validate_required([:name])
+  end
 end

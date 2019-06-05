@@ -28,6 +28,9 @@
           <dl>
             <dt>Name</dd>
             <dd><%= @team.name %></dd>
+
+            <dt>Description</dd>
+            <dd><%= @team.description %></dd>
           </dl>
 
           <h4>Members</h4>

@@ -25,4 +25,32 @@ defmodule Web.Admin.TeamController do
       |> render("show.html")
     end
   end
+
+  def edit(conn, %{"id" => id}) do
+    with {:ok, team} <- Teams.get(id) do
+      conn
+      |> assign(:team, team)
+      |> assign(:changeset, Teams.edit(team))
+      |> render("edit.html")
+    end
+  end
+
+  def update(conn, %{"id" => id, "team" => params}) do
+    {:ok, team} = Teams.get(id)
+
+    case Teams.update(team, params) do
+      {:ok, team} ->
+        conn
+        |> put_flash(:info, "Team updated!")
+        |> redirect(to: Routes.admin_team_path(conn, :show, team.id))
+
+      {:error, changeset} ->
+        conn
+        |> assign(:team, team)
+        |> assign(:changeset, changeset)
+        |> put_flash(:error, "Team could not be saved")
+        |> put_status(422)
+        |> render("edit.html")
+    end
+  end
 end
