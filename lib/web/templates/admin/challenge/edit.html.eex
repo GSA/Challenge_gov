@@ -54,6 +54,10 @@
             <%= FormView.textarea_field(f, :technology_example, label: "How does technology help solve this problem?", rows: 10) %>
 
             <%= FormView.text_field(f, :neighborhood, label: "Location or Neighborhood") %>
+
+            <%= FormView.text_field(f, :champion_name) %>
+
+            <%= FormView.text_field(f, :champion_email) %>
           </div>
 
           <div class="box-footer">
