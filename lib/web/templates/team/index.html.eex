@@ -2,7 +2,7 @@
   <div class="col-auto col-filter-items">
     <div class="filter-items">
       <ul class="mp-none">
-        <%= if @current_user && !Teams.member_of_team?(@current_user) do %>
+        <%= if Map.has_key?(assigns, :current_user) && !Teams.member_of_team?(@current_user) do %>
           <li>
             <%= link(to: Routes.team_path(@conn, :new)) do %>
               <span class="btn btn-light btn-radius btn-invite-member">Create Team</span>

@@ -39,7 +39,7 @@ defmodule Web.Router do
 
     resources("/sign-in", SessionController, only: [:delete], singleton: true)
 
-    resources("/teams", TeamController, only: [:index, :show, :new, :create])
+    resources("/teams", TeamController, only: [:new, :create])
 
     resources("/users/invite", UserInviteController, only: [:new, :create])
   end
@@ -52,6 +52,8 @@ defmodule Web.Router do
     resources("/challenges", ChallengeController, only: [:index, :show])
 
     get("/register/verify", RegistrationVerifyController, :show)
+
+    resources("/teams", TeamController, only: [:index, :show])
   end
 
   scope "/", Web do
@@ -93,6 +95,8 @@ defmodule Web.Router do
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
 
     resources("/events", EventController, only: [:edit, :update, :delete])
+
+    resources("/teams", TeamController, only: [:index, :show, :edit, :update])
   end
 
   if Mix.env() == :dev do
