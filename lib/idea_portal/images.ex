@@ -33,7 +33,8 @@ defmodule IdeaPortal.Images do
   defp opt_args([opt | opts]) do
     case opt do
       {:thumbnail, size} ->
-        ["-thumbnail", "#{size}^", "-auto-orient", "-gravity", "center", "-extent", size] ++ opt_args(opts)
+        ["-thumbnail", "#{size}^", "-auto-orient", "-gravity", "center", "-extent", size] ++
+          opt_args(opts)
 
       _ ->
         opt_args(opts)
