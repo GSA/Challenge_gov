@@ -2,6 +2,7 @@ defmodule Web.LayoutView do
   use Web, :view
 
   alias IdeaPortal.Recaptcha
+  alias Web.AccountView
 
   def user_signed_in?(conn) do
     Map.has_key?(conn.assigns, :current_user)
