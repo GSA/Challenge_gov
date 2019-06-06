@@ -116,6 +116,26 @@ defmodule Web.Admin.FormView do
     end
   end
 
+  @doc """
+  Generate a file field, styled properly
+  """
+  def file_field(form, field, opts \\ [], dopts \\ []) do
+    opts = Keyword.merge(opts, dopts)
+
+    content_tag(:div, class: form_group_classes(form, field)) do
+      [
+        label(form, field, class: "col-md-4"),
+        content_tag(:div, class: "col-md-8") do
+          [
+            file_input(form, field, class: "form-control"),
+            error_tag(form, field),
+            Keyword.get(opts, :do, "")
+          ]
+        end
+      ]
+    end
+  end
+
   def form_group_classes(form, field) do
     case Keyword.has_key?(form.errors, field) do
       true ->

@@ -14,7 +14,7 @@
     <div class="form-titles">
       <h2 class="title-bar font-semibold">Edit Account</h2>
 
-      <%= form_for(@changeset, Routes.account_path(@conn, :update), [method: :put], fn f -> %>
+      <%= form_for(@changeset, Routes.account_path(@conn, :update), [method: :put, multipart: true], fn f -> %>
         <div class="row mx-md-n4">
           <div class="col-12 col-md-6 px-md-4">
             <div class="form-group form-control-material">
@@ -41,6 +41,21 @@
             <div class="form-group form-control-material">
               <%= text_input(f, :phone_number, placeholder: "Phone Number", class: "form-control") %>
               <%= error_tag(f, :phone_number) %>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mx-md-n4">
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= label(f, :avatar) %>
+              <%= file_input(f, :avatar, class: "form-control #{FormView.error_class(f, :avatar)}") %>
+              <%= error_tag(f, :avatar) %>
+
+              <%= if @current_user.avatar_key do %>
+                <p>Current Avatar:</p>
+                <%= avatar_img(@current_user) %>
+              <% end %>
             </div>
           </div>
         </div>

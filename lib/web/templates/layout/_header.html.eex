@@ -17,7 +17,7 @@
           <%= if user_signed_in?(@conn) do %>
             <li>
               <%= link to: Routes.account_path(@conn, :edit), class: "menu-profile" do %>
-                <img src="<%= Routes.static_path(@conn, "/images/icon-profile.png") %>" alt="">
+                <%= AccountView.avatar_img(@current_user) %>
               <% end %>
             </li>
             <li>

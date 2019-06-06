@@ -3,6 +3,7 @@ defmodule IdeaPortal.Accounts do
   Context for user accounts
   """
 
+  alias IdeaPortal.Accounts.Avatar
   alias IdeaPortal.Accounts.User
   alias IdeaPortal.Emails
   alias IdeaPortal.Mailer
@@ -42,10 +43,7 @@ defmodule IdeaPortal.Accounts do
 
     case Recaptcha.valid_token?(recaptcha_token) do
       true ->
-        %User{}
-        |> User.create_changeset(params)
-        |> Repo.insert()
-        |> maybe_send_email_verification()
+        register_user(params)
 
       false ->
         %User{}
@@ -53,6 +51,34 @@ defmodule IdeaPortal.Accounts do
         |> Ecto.Changeset.add_error(:recaptcha_token, "is invalid")
         |> Ecto.Changeset.apply_action(:insert)
     end
+  end
+
+  defp register_user(params) do
+    changeset = User.create_changeset(%User{}, params)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(:user, changeset)
+      |> Ecto.Multi.run(:avatar, fn _repo, %{user: user} ->
+        Avatar.maybe_upload_avatar(user, params)
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{avatar: user}} ->
+        send_email_verification(user)
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  defp send_email_verification(user) do
+    user
+    |> Emails.verification_email()
+    |> Mailer.deliver_later()
+
+    {:ok, user}
   end
 
   @doc """
@@ -91,9 +117,23 @@ defmodule IdeaPortal.Accounts do
   """
   def finalize_invitation(token, params) do
     with {:ok, user} <- get_by_email_token(token) do
-      user
-      |> User.finalize_invite_changeset(params)
-      |> Repo.update()
+      changeset = User.finalize_invite_changeset(user, params)
+
+      result =
+        Ecto.Multi.new()
+        |> Ecto.Multi.update(:user, changeset)
+        |> Ecto.Multi.run(:avatar, fn _repo, %{user: user} ->
+          Avatar.maybe_upload_avatar(user, params)
+        end)
+        |> Repo.transaction()
+
+      case result do
+        {:ok, %{avatar: user}} ->
+          {:ok, user}
+
+        {:error, _type, changeset, _changes} ->
+          {:error, changeset}
+      end
     end
   end
 
@@ -108,25 +148,23 @@ defmodule IdeaPortal.Accounts do
   def update(user, params) do
     changeset = User.update_changeset(user, params)
 
-    case Repo.update(changeset) do
-      {:ok, user} ->
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.run(:avatar, fn _repo, %{user: user} ->
+        Avatar.maybe_upload_avatar(user, params)
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{avatar: user}} ->
         maybe_send_email_verification(user, changeset)
         {:ok, user}
 
-      {:error, changeset} ->
+      {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
   end
-
-  defp maybe_send_email_verification({:ok, user}) do
-    user
-    |> Emails.verification_email()
-    |> Mailer.deliver_later()
-
-    {:ok, user}
-  end
-
-  defp maybe_send_email_verification(result), do: result
 
   defp maybe_send_email_verification(user, changeset) do
     if Map.has_key?(changeset.changes, :email) do

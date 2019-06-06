@@ -33,6 +33,9 @@ defmodule IdeaPortal.Accounts.User do
     field(:last_name, :string)
     field(:phone_number, :string)
 
+    field(:avatar_key, Ecto.UUID)
+    field(:avatar_extension, :string)
+
     has_many(:challenges, Challenge)
     has_many(:members, Member)
     has_many(:supporting_documents, Document)
@@ -99,6 +102,13 @@ defmodule IdeaPortal.Accounts.User do
     struct
     |> changeset(params)
     |> maybe_reset_verification()
+  end
+
+  def avatar_changeset(struct, key, extension) do
+    struct
+    |> change()
+    |> put_change(:avatar_key, key)
+    |> put_change(:avatar_extension, extension)
   end
 
   def maybe_reset_verification(struct) do

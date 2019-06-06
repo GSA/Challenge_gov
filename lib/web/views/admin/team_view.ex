@@ -3,4 +3,5 @@ defmodule Web.Admin.TeamView do
 
   alias Web.Admin.FormView
   alias Web.SharedView
+  alias Web.TeamView
 end

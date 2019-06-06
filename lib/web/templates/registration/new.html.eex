@@ -3,7 +3,7 @@
     <div class="form-titles">
       <h2 class="title-bar font-semibold">Register</h2>
 
-      <%= form_for(@changeset, Routes.registration_path(@conn, :create), [method: :post], fn f -> %>
+      <%= form_for(@changeset, Routes.registration_path(@conn, :create), [method: :post, multipart: true], fn f -> %>
         <%= if Keyword.has_key?(f.errors, :recaptcha_token) do %>
           <div class="alert alert-danger">
             The reCAPTCHA token was invalid. Please try again.
@@ -53,6 +53,16 @@
             <div class="form-group form-control-material">
               <%= password_input(f, :password_confirmation, required: true, placeholder: "Password Confirmation", class: "form-control #{FormView.error_class(f, :password_confirmation)}") %>
               <%= error_tag(f, :password_confirmation) %>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mx-md-n4">
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= label(f, :avatar) %>
+              <%= file_input(f, :avatar, class: "form-control #{FormView.error_class(f, :avatar)}") %>
+              <%= error_tag(f, :avatar) %>
             </div>
           </div>
         </div>

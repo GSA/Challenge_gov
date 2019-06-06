@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-4 text-center">
         <div class="image-circle image-circle-detail">
-          <img src="images/participant-detail.png" alt="">
+          <%= avatar_img(@account) %>
         </div>
       </div>
       <div class="col-md-8">

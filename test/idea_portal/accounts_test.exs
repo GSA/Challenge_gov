@@ -40,6 +40,22 @@ defmodule IdeaPortal.AccountsTest do
       assert_delivered_email(Emails.verification_email(account))
     end
 
+    test "uploading an avatar" do
+      {:ok, account} =
+        Accounts.register(%{
+          email: "user@example.com",
+          first_name: "John",
+          last_name: "Smith",
+          phone_number: "123-123-1234",
+          avatar: %{path: "test/fixtures/test.png"},
+          password: "password",
+          password_confirmation: "password"
+        })
+
+      assert account.avatar_extension == ".png"
+      assert account.avatar_key
+    end
+
     test "unique emails" do
       {:ok, account} =
         Accounts.register(%{
@@ -148,6 +164,24 @@ defmodule IdeaPortal.AccountsTest do
       assert invited_user.finalized
     end
 
+    test "with an avatar" do
+      user = TestHelpers.create_user()
+      {:ok, invited_user} = Accounts.invite(user, %{email: "invitee@example.com"})
+
+      {:ok, invited_user} =
+        Accounts.finalize_invitation(invited_user.email_verification_token, %{
+          first_name: "User",
+          last_name: "Example",
+          phone_number: "123-123-1234",
+          avatar: %{path: "test/fixtures/test.png"},
+          password: "password",
+          password_confirmation: "password"
+        })
+
+      assert invited_user.avatar_extension == ".png"
+      assert invited_user.avatar_key
+    end
+
     test "failure" do
       user = TestHelpers.create_user()
       {:ok, invited_user} = Accounts.invite(user, %{email: "invitee@example.com"})
@@ -206,32 +240,42 @@ defmodule IdeaPortal.AccountsTest do
     test "updated successfully" do
       user = TestHelpers.create_user()
 
-      params = %{
-        first_name: "Jonathan",
-        last_name: "Smyth",
-        phone_number: "321-321-4321",
-        password: "password",
-        password_confirmation: "password"
-      }
-
-      {:ok, updated_user} = Accounts.update(user, params)
+      {:ok, updated_user} =
+        Accounts.update(user, %{
+          first_name: "Jonathan",
+          last_name: "Smyth",
+          phone_number: "321-321-4321",
+          password: "password",
+          password_confirmation: "password"
+        })
 
       assert updated_user.first_name == "Jonathan"
       assert updated_user.last_name == "Smyth"
       assert updated_user.phone_number == "321-321-4321"
     end
 
+    test "with an avatar" do
+      user = TestHelpers.create_user()
+
+      {:ok, updated_user} =
+        Accounts.update(user, %{
+          avatar: %{path: "test/fixtures/test.png"}
+        })
+
+      assert updated_user.avatar_extension == ".png"
+      assert updated_user.avatar_key
+    end
+
     test "sends a verification email if email changed" do
       user = TestHelpers.create_user()
       {:ok, user} = Accounts.verify_email(user.email_verification_token)
 
-      params = %{
-        email: "updated_user@example.com",
-        password: "password",
-        password_confirmation: "password"
-      }
-
-      {:ok, updated_user} = Accounts.update(user, params)
+      {:ok, updated_user} =
+        Accounts.update(user, %{
+          email: "updated_user@example.com",
+          password: "password",
+          password_confirmation: "password"
+        })
 
       assert updated_user.email_verification_token
       assert updated_user.email_verification_token != user.email_verification_token
