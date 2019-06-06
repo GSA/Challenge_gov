@@ -32,6 +32,9 @@
 
             <dt>Description</dd>
             <dd><%= @team.description %></dd>
+
+            <dt>Avatar</dd>
+            <dd><%= TeamView.avatar_img(@team, height: 150) %></dd>
           </dl>
 
           <h4>Members</h4>
