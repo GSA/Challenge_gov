@@ -4,6 +4,7 @@ defmodule IdeaPortal.Teams do
   """
 
   alias IdeaPortal.Repo
+  alias IdeaPortal.Teams.Avatar
   alias IdeaPortal.Teams.Member
   alias IdeaPortal.Teams.Team
   alias Stein.Pagination
@@ -29,7 +30,7 @@ defmodule IdeaPortal.Teams do
     query =
       Team
       |> where([t], is_nil(t.deleted_at))
-      |> preload(:members)
+      |> preload(members: [:user])
 
     Pagination.paginate(Repo, query, opts)
   end
@@ -77,7 +78,10 @@ defmodule IdeaPortal.Teams do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:team, Team.create_changeset(%Team{}, params))
-      |> Ecto.Multi.run(:member, fn _repo, %{team: team} ->
+      |> Ecto.Multi.run(:avatar, fn _repo, %{team: team} ->
+        Avatar.maybe_upload_avatar(team, params)
+      end)
+      |> Ecto.Multi.run(:member, fn _repo, %{avatar: team} ->
         %Member{}
         |> Member.create_changeset(user, team)
         |> Repo.insert()
@@ -85,7 +89,7 @@ defmodule IdeaPortal.Teams do
       |> Repo.transaction()
 
     case result do
-      {:ok, %{team: team}} ->
+      {:ok, %{avatar: team}} ->
         {:ok, team}
 
       {:error, :team, changeset, _changes} ->
@@ -103,9 +107,21 @@ defmodule IdeaPortal.Teams do
   Update a team
   """
   def update(team, params) do
-    team
-    |> Team.update_changeset(params)
-    |> Repo.update()
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:team, Team.update_changeset(team, params))
+      |> Ecto.Multi.run(:avatar, fn _repo, %{team: team} ->
+        Avatar.maybe_upload_avatar(team, params)
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{avatar: team}} ->
+        {:ok, team}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   @doc """

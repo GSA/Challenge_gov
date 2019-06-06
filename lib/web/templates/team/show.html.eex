@@ -3,13 +3,11 @@
   <div class="card card-form custom-card team-detail-card">
     <div class="card-body">
       <div class="row">
-        <!-- Placeholder for team image -->
-        <%# <div class="col-12 col-md-2">
+        <div class="col-12 col-md-2">
           <div class="team-detail-img-left">
-            <img src="images/teams-detail-img-1.jpg" alt=""
-              class="rounded-circle">
+            <%= avatar_img(@team) %>
           </div>
-        </div> %>
+        </div>
         <div class="col-12 col-md-6">
           <div class="team-dt-card-desc">
             <h2 class="font-semibold"><%= @team.name %></h2>
@@ -28,11 +26,9 @@
           <li>
             <div class="add-member text-center">
               <div class="member-img border-non-team-detail-img">
-                <img src="images/teams-detail-img-3.jpg" alt=""
-                  class="rounded-circle">
+                <%= AccountView.avatar_img(member.user) %>
               </div>
               <p><%= member.user.first_name %> <%= member.user.last_name %></p>
-              <strong class="font-bold">Remove</strong>
             </div>
           </li>
         <% end) %>

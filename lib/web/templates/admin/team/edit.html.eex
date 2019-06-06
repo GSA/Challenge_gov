@@ -23,11 +23,18 @@
           <h3 class="box-title">Edit</h3>
         </div>
 
-        <%= form_for(@changeset, Routes.admin_team_path(@conn, :update, @team.id), [class: "form-horizontal"], fn f -> %>
+        <%= form_for(@changeset, Routes.admin_team_path(@conn, :update, @team.id), [class: "form-horizontal", multipart: true], fn f -> %>
           <div class="box-body">
             <%= FormView.text_field(f, :name) %>
 
             <%= FormView.textarea_field(f, :description) %>
+
+            <%= FormView.file_field(f, :avatar) do %>
+              <%= if @team.avatar_key do %>
+                <p>Current avatar:</p>
+                <%= TeamView.avatar_img(@team, height: 100) %>
+              <% end %>
+            <% end %>
           </div>
 
           <div class="box-footer">

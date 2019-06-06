@@ -42,15 +42,14 @@
         <div class="card-body">
           <%= link(to: Routes.team_path(@conn, :show, team.id)) do %>
             <div class="text-center mrg-btm">
-              <span class="image-circle"><img src="images/teams-card-logo.jpg"
-                  alt=""></span>
+              <span class="image-circle"><%= avatar_img(team) %></span>
               <h3><%= team.name %></h3>
             </div>
             <div class="card-btm">
               <ul class="team-list-img">
-                <%= Enum.map(team.members, fn _member -> %>
+                <%= Enum.map(team.members, fn member -> %>
                   <li>
-                    <img src="images/teams-card-img-4.jpg" alt="">
+                    <%= AccountView.avatar_img(member.user) %>
                   </li>
                 <% end) %>
               </ul>

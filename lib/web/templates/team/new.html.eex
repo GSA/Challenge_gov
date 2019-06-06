@@ -3,7 +3,7 @@
     <div class="form-titles">
       <h2 class="title-bar font-semibold">Create a new Team</h2>
 
-      <%= form_for(@changeset, Routes.team_path(@conn, :create), [method: :post], fn f -> %>
+      <%= form_for(@changeset, Routes.team_path(@conn, :create), [method: :post, multipart: true], fn f -> %>
         <div class="row mx-md-n4">
           <div class="col-12 col-md-6 px-md-4">
             <div class="form-group form-control-material">
@@ -14,6 +14,16 @@
             <div class="form-group form-control-material">
               <%= text_input(f, :description, placeholder: "Team Description", class: "form-control #{FormView.error_class(f, :description)}") %>
               <%= error_tag(f, :description) %>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mx-md-n4">
+          <div class="col-12 col-md-6 px-md-4">
+            <div class="form-group form-control-material">
+              <%= label(f, :avatar) %>
+              <%= file_input(f, :avatar, class: "form-control #{FormView.error_class(f, :avatar)}") %>
+              <%= error_tag(f, :avatar) %>
             </div>
           </div>
         </div>
