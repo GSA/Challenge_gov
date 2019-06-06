@@ -42,6 +42,9 @@ defmodule IdeaPortal.Challenges.Challenge do
     field(:technology_example, :string)
     field(:neighborhood, :string)
 
+    field(:champion_name, :string)
+    field(:champion_email, :string)
+
     belongs_to(:user, User)
 
     has_many(:events, Event)
@@ -80,9 +83,19 @@ defmodule IdeaPortal.Challenges.Challenge do
 
   def update_changeset(struct, params) do
     struct
-    |> cast(params, [:status, :captured_on, :focus_area, :name, :description, :why])
+    |> cast(params, [
+      :status,
+      :captured_on,
+      :focus_area,
+      :name,
+      :description,
+      :why,
+      :champion_name,
+      :champion_email
+    ])
     |> validate_required([:status, :captured_on, :focus_area, :name, :description, :why])
     |> validate_inclusion(:focus_area, @focus_areas)
     |> validate_inclusion(:status, @statuses)
+    |> validate_format(:champion_email, ~r/.+@.+\..+/)
   end
 end

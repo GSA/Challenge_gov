@@ -50,6 +50,12 @@
 
             <dt>Location or Neighborhood</dd>
             <dd><%= @challenge.neighborhood %></dd>
+
+            <dt>Champion Name</dd>
+            <dd><%= @challenge.champion_name %></dd>
+
+            <dt>Champion Email</dd>
+            <dd><%= @challenge.champion_email %></dd>
           </dl>
         </div>
       </div>
