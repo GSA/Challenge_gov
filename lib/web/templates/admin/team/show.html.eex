@@ -40,7 +40,7 @@
           <h4>Members</h4>
           <ul>
             <%= Enum.map(@members, fn member -> %>
-              <li><%= member.user.email %></li>
+              <li><%= link(member.user.email, to: Routes.admin_user_path(@conn, :show, member.user_id)) %></li>
             <% end) %>
           <ul>
         </div>

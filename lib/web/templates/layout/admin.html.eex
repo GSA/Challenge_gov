@@ -51,6 +51,12 @@
                 <span>Teams</span>
               <% end %>
             </li>
+            <li class="<%= tab_selected(@conn, "users") %>">
+              <%= link(to: Routes.admin_user_path(@conn, :index)) do %>
+                <i class="fa fa-user"></i>
+                <span>Users</span>
+              <% end %>
+            </li>
           </ul>
         </section>
       </aside>
