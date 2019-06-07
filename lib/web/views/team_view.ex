@@ -14,8 +14,9 @@ defmodule Web.TeamView do
         img_tag(path, alt: "Team Avatar")
 
       false ->
+        url = Storage.url(Avatar.avatar_path(team, "thumbnail"), signed: [expires_in: 3600])
         opts = Keyword.merge([alt: "Team Avatar"], opts)
-        img_tag(Storage.url(Avatar.avatar_path(team, "thumbnail")), opts)
+        img_tag(url, opts)
     end
   end
 

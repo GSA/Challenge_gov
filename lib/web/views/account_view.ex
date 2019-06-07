@@ -12,7 +12,8 @@ defmodule Web.AccountView do
         img_tag(Routes.static_path(Web.Endpoint, "/images/icon-profile.png"), alt: "Avatar")
 
       false ->
-        img_tag(Storage.url(Avatar.avatar_path(user, "thumbnail")), alt: "Avatar")
+        url = Storage.url(Avatar.avatar_path(user, "thumbnail"), signed: [expires_in: 3600])
+        img_tag(url, alt: "Avatar")
     end
   end
 

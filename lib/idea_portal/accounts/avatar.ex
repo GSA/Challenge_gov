@@ -61,7 +61,7 @@ defmodule IdeaPortal.Accounts.Avatar do
   end
 
   defp upload(file, path) do
-    Storage.upload(file, path, extensions: [".jpg", ".jpeg", ".png", ".gif"], public: true)
+    Storage.upload(file, path, extensions: [".jpg", ".jpeg", ".png", ".gif"])
   end
 
   def generate_thumbnail(user, file) do
