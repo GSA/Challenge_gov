@@ -20,9 +20,23 @@ defmodule IdeaPortal.Accounts do
   Get all accounts
   """
   def all(opts \\ []) do
+    opts = Enum.into(opts, %{})
+
+    query = Filter.filter(User, opts[:filter], __MODULE__)
+
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
+  @doc """
+  Get all public accounts
+  """
+  def public(opts \\ []) do
+    opts = Enum.into(opts, %{})
+
     query =
       User
       |> where([u], u.finalized == true)
+      |> where([u], u.display == true)
       |> Filter.filter(opts[:filter], __MODULE__)
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
@@ -206,6 +220,19 @@ defmodule IdeaPortal.Accounts do
   end
 
   @doc """
+  Get a user by an ID, public view
+  """
+  def public_get(id) do
+    case Repo.get_by(User, id: id, display: true) do
+      nil ->
+        {:error, :not_found}
+
+      user ->
+        {:ok, user}
+    end
+  end
+
+  @doc """
   Find a user by a token
   """
   def get_by_token(token) do
@@ -307,5 +334,15 @@ defmodule IdeaPortal.Accounts do
       [a],
       ilike(a.first_name, ^value) or ilike(a.last_name, ^value) or ilike(a.email, ^value)
     )
+  end
+
+  @doc """
+  Toggle display status of a user
+  """
+  def toggle_display(user) do
+    user
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:display, !user.display)
+    |> Repo.update()
   end
 end

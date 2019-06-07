@@ -11,7 +11,7 @@
           <div class="content-left left-menu-wrapper">
             <div class="menu-close"><a href="javascript:;"><i class="icon-close-custom"></i></a></div>
             <div class="logo side-nav-logo">
-              <img src="images/logo.png" alt="City Backlog Logo" title="City Backlog">
+              <img src="<%= Routes.static_path(@conn, "/images/logo.png") %>" alt="City Backlog Logo" title="City Backlog">
             </div>
             <div class="side-nav font-semibold">
               <ul class="mp-none">

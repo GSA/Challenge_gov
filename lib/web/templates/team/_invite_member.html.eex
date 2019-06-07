@@ -29,7 +29,7 @@
             <div class="card participant-item">
               <div class="card-body">
                 <a href="javascript:;" class="text-center">
-                  <span class="image-circle"><img src="images/participant.png" alt=""></span>
+                  <span class="image-circle"><!-- <img src="images/participant.png" alt=""> --></span>
                   <h3 class="font-regular">Member Name</h3>
                 </a>
                 <div class="participant-close-icon-modal">

@@ -16,6 +16,7 @@ defmodule IdeaPortal.Accounts.User do
   schema "users" do
     field(:role, :string, read_after_writes: true)
     field(:finalized, :boolean, default: true)
+    field(:display, :boolean, default: true)
 
     field(:email, :string)
     field(:password_hash, :string)

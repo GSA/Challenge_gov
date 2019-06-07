@@ -1,6 +1,8 @@
 defmodule Web.AccountControllerTest do
   use Web.ConnCase
 
+  alias IdeaPortal.Accounts
+
   describe "updating your information" do
     test "success", %{conn: conn} do
       user = TestHelpers.create_user(%{first_name: "John"})
@@ -119,7 +121,9 @@ defmodule Web.AccountControllerTest do
 
       assert html_response(conn, 200)
     end
+  end
 
+  describe "viewing a participant" do
     test "viewing an account", %{conn: conn} do
       user = TestHelpers.create_user(%{email: "current_user@example.com"})
       viewed_user = TestHelpers.create_user(%{email: "viewed_user@example.com"})
@@ -130,6 +134,19 @@ defmodule Web.AccountControllerTest do
         |> get(Routes.account_path(conn, :show, viewed_user.id))
 
       assert html_response(conn, 200)
+    end
+
+    test "cannot view a hidden account", %{conn: conn} do
+      user = TestHelpers.create_user(%{email: "current_user@example.com"})
+      viewed_user = TestHelpers.create_user(%{email: "viewed_user@example.com"})
+      {:ok, viewed_user} = Accounts.toggle_display(viewed_user)
+
+      conn =
+        conn
+        |> assign(:current_user, user)
+        |> get(Routes.account_path(conn, :show, viewed_user.id))
+
+      assert html_response(conn, 404)
     end
   end
 end

@@ -40,7 +40,7 @@
             <dd><%= String.capitalize(@challenge.status) %></dd>
 
             <dt>Submitter</dt>
-            <dd><%= @challenge.user.email %></dd>
+            <dd><%= link(@challenge.user.email, to: Routes.admin_user_path(@conn, :show, @challenge.user_id)) %></dd>
 
             <dt>Name</dd>
             <dd><%= @challenge.name %></dd>

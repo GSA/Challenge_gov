@@ -97,6 +97,9 @@ defmodule Web.Router do
     resources("/events", EventController, only: [:edit, :update, :delete])
 
     resources("/teams", TeamController, only: [:index, :show, :edit, :update, :delete])
+
+    resources("/users", UserController, only: [:index, :show])
+    post("/users/:id/toggle", UserController, :toggle, as: :user)
   end
 
   if Mix.env() == :dev do

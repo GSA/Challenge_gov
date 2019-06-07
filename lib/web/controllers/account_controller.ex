@@ -10,7 +10,7 @@ defmodule Web.AccountController do
   def index(conn, params) do
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
-    pagination = Accounts.all(filter: filter, page: page, per: per)
+    pagination = Accounts.public(filter: filter, page: page, per: per)
 
     conn
     |> assign(:accounts, pagination.page)
@@ -19,12 +19,12 @@ defmodule Web.AccountController do
     |> render("index.html")
   end
 
-  def show(conn, params) do
-    {:ok, account} = Accounts.get(params["id"])
-
-    conn
-    |> assign(:account, account)
-    |> render("show.html")
+  def show(conn, %{"id" => id}) do
+    with {:ok, account} <- Accounts.public_get(id) do
+      conn
+      |> assign(:account, account)
+      |> render("show.html")
+    end
   end
 
   def edit(conn, _params) do

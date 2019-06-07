@@ -1,0 +1,52 @@
+<section class="content-header">
+  <h1>
+    <%= AccountView.full_name(@user) %>
+  </h1>
+
+  <ol class="breadcrumb">
+    <li>
+      <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
+        <i class="fa fa-dashboard"></i> Home
+      <% end %>
+    </li>
+    <li><%= link("Challenges", to: Routes.admin_user_path(@conn, :index)) %></li>
+    <li class="active"><%= AccountView.full_name(@user) %></li>
+  </ol>
+</section>
+
+<section class="content">
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Basics</h3>
+          <div class="box-tools">
+            <%= if @user.display do %>
+              <%= link("Hide participation", to: Routes.admin_user_path(@conn, :toggle, @user.id), method: :post, class: "btn btn-default") %>
+            <% else %>
+              <%= link("Show participation", to: Routes.admin_user_path(@conn, :toggle, @user.id), method: :post, class: "btn btn-default") %>
+            <% end %>
+          </div>
+        </div>
+        <div class="box-body">
+          <dl>
+            <dt>Name</dd>
+            <dd><%= AccountView.full_name(@user) %></dd>
+
+            <dt>Phone Number</dd>
+            <dd><%= phone_number(@user) %></dd>
+
+            <dt>Email</dd>
+            <dd><%= @user.email %></dd>
+
+            <dt>Role</dd>
+            <dd><%= @user.role %></dd>
+
+            <dt>Verified email?</dt>
+            <dd><%= email_verified?(@user) %></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
