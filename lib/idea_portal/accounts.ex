@@ -220,6 +220,19 @@ defmodule IdeaPortal.Accounts do
   end
 
   @doc """
+  Get a user by an ID, public view
+  """
+  def public_get(id) do
+    case Repo.get_by(User, id: id, display: true) do
+      nil ->
+        {:error, :not_found}
+
+      user ->
+        {:ok, user}
+    end
+  end
+
+  @doc """
   Find a user by a token
   """
   def get_by_token(token) do
