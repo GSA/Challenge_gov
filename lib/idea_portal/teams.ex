@@ -30,7 +30,7 @@ defmodule IdeaPortal.Teams do
     query =
       Team
       |> where([t], is_nil(t.deleted_at))
-      |> preload(members: [:user])
+      |> preload(members: ^member_query())
 
     Pagination.paginate(Repo, query, opts)
   end
@@ -42,6 +42,7 @@ defmodule IdeaPortal.Teams do
     team =
       Team
       |> where([t], t.id == ^id and is_nil(t.deleted_at))
+      |> preload(members: ^member_query())
       |> Repo.one()
 
     case team do
@@ -52,6 +53,13 @@ defmodule IdeaPortal.Teams do
         team = Repo.preload(team, members: :user)
         {:ok, team}
     end
+  end
+
+  defp member_query() do
+    from m in Member,
+      join: u in assoc(m, :user),
+      where: u.display == true,
+      preload: :user
   end
 
   @doc """

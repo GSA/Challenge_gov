@@ -10,7 +10,7 @@ defmodule Web.AccountController do
   def index(conn, params) do
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
-    pagination = Accounts.all(filter: filter, page: page, per: per)
+    pagination = Accounts.public(filter: filter, page: page, per: per)
 
     conn
     |> assign(:accounts, pagination.page)

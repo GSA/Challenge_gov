@@ -25,6 +25,7 @@
                   <th>ID</th>
                   <th>Name</th>
                   <th>Role</th>
+                  <th>Finalized?</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -34,6 +35,7 @@
                     <td><%= user.id %></td>
                     <td><%= link(user.first_name, to: Routes.admin_user_path(@conn, :show, user.id)) %></td>
                     <td><%= user.role %></td>
+                    <td><%= user.finalized %></td>
                     <td>
                       <%= link("View", to: Routes.admin_user_path(@conn, :show, user.id), class: "btn btn-default btn-xs") %>
                     </td>

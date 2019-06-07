@@ -22,4 +22,13 @@ defmodule Web.Admin.UserController do
       |> render("show.html")
     end
   end
+
+  def toggle(conn, %{"id" => id}) do
+    with {:ok, user} <- Accounts.get(id),
+         {:ok, user} <- Accounts.toggle_display(user) do
+      conn
+      |> put_flash(:info, "User display updated")
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
+    end
+  end
 end
