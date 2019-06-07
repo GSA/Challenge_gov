@@ -30,6 +30,12 @@ defmodule IdeaPortal.TestHelpers do
     user
   end
 
+  def create_verified_user(attributes \\ %{}) do
+    attributes
+    |> create_user()
+    |> verify_email()
+  end
+
   def create_invited_user(email \\ "invited@example.com") do
     {:ok, user} =
       %Accounts.User{}

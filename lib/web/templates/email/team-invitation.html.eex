@@ -1,0 +1,1 @@
+<p>You've been invited by <%= AccountView.full_name(@inviter_user) %> to join <%= @team.name %> on City Backlog.</p>
