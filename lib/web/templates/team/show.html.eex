@@ -19,8 +19,7 @@
   </div>
   <div class="team-member card">
     <div class="card-body">
-      <h2 class="title-mb font-semibold">Team Members <a href="javascript:;"
-          data-toggle="modal" data-target="#exampleModalCenter"><span>Edit</span></a></h2>
+      <h2 class="title-mb font-semibold">Team Members</h2>
       <ul>
         <%= Enum.map(@team.members, fn member -> %>
           <li>
@@ -32,21 +31,23 @@
             </div>
           </li>
         <% end) %>
-        <li>
-          <div class="add-member text-center">
-            <div class="member-img">
-              <a href="javascript:;" data-toggle="modal"
-                data-target="#exampleModalCenter">
-                <i class="icon-Participants"><span>+</span></i>
-              </a>
+        <%= if current_team_member?(@conn, @team) do %>
+          <li>
+            <div class="add-member text-center">
+              <div class="member-img">
+                <a href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter">
+                  <i class="icon-Participants"><span>+</span></i>
+                  <p>Add Members</p>
+                </a>
+              </div>
             </div>
-            <p>Add Members</p>
-            <strong class="font-bold">Add</strong>
-          </div>
-        </li>
+          </li>
+        <% end %>
       </ul>
     </div>
   </div>
 </div>
 
-<%= render "_invite_member.html", assigns %>
+<%= if current_team_member?(@conn, @team) do %>
+  <%= render "_invite_member.html", assigns %>
+<% end %>

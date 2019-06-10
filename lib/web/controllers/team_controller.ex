@@ -1,6 +1,7 @@
 defmodule Web.TeamController do
   use Web, :controller
 
+  alias IdeaPortal.Accounts
   alias IdeaPortal.Teams
 
   plug(Web.Plugs.FetchPage, [per: 12] when action in [:index])
@@ -21,6 +22,7 @@ defmodule Web.TeamController do
     with {:ok, team} <- Teams.get(id) do
       conn
       |> assign(:team, team)
+      |> assign(:accounts, Accounts.for_inviting_to())
       |> render("show.html")
     end
   end

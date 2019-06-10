@@ -16,7 +16,7 @@ defmodule Web.SessionController do
         conn
         |> put_flash(:info, "You have signed in.")
         |> put_session(:user_token, user.token)
-        |> redirect(to: Routes.challenge_path(conn, :index))
+        |> after_sign_in_redirect(Routes.challenge_path(conn, :index))
 
       {:error, :invalid} ->
         conn
@@ -29,5 +29,22 @@ defmodule Web.SessionController do
     conn
     |> clear_session()
     |> redirect(to: Routes.challenge_path(conn, :index))
+  end
+
+  @doc """
+  Redirect to the last seen page after being asked to sign in
+
+  Or the home page
+  """
+  def after_sign_in_redirect(conn, default_path) do
+    case get_session(conn, :last_path) do
+      nil ->
+        redirect(conn, to: default_path)
+
+      path ->
+        conn
+        |> put_session(:last_path, nil)
+        |> redirect(to: path)
+    end
   end
 end

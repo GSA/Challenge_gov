@@ -9,5 +9,7 @@
 
   <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
 
+  <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
+
   <%= recaptcha_script() %>
 </head>

@@ -25,4 +25,9 @@ defmodule Web.TeamView do
   def team_description(team) do
     text_to_html(team.description)
   end
+
+  def current_team_member?(conn, team) do
+    Map.has_key?(conn.assigns, :current_user) &&
+      Teams.member?(team, conn.assigns.current_user)
+  end
 end

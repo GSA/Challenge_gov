@@ -3,6 +3,8 @@ defmodule IdeaPortal.Teams do
   Teams context
   """
 
+  alias IdeaPortal.Emails
+  alias IdeaPortal.Mailer
   alias IdeaPortal.Repo
   alias IdeaPortal.Teams.Avatar
   alias IdeaPortal.Teams.Member
@@ -59,6 +61,7 @@ defmodule IdeaPortal.Teams do
     from m in Member,
       join: u in assoc(m, :user),
       where: u.display == true,
+      where: m.status == "accepted",
       preload: :user
   end
 
@@ -92,6 +95,7 @@ defmodule IdeaPortal.Teams do
       |> Ecto.Multi.run(:member, fn _repo, %{avatar: team} ->
         %Member{}
         |> Member.create_changeset(user, team)
+        |> Ecto.Changeset.put_change(:status, "accepted")
         |> Repo.insert()
       end)
       |> Repo.transaction()
@@ -140,9 +144,122 @@ defmodule IdeaPortal.Teams do
   def delete(team) do
     now = DateTime.truncate(Timex.now(), :second)
 
-    team
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:deleted_at, now)
-    |> Repo.update()
+    changeset =
+      team
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:deleted_at, now)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:team, changeset)
+      |> Ecto.Multi.run(:archive_members, &archive_members/2)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{team: team}} ->
+        {:ok, team}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  defp archive_members(repo, %{team: team}) do
+    result =
+      Member
+      |> where([m], m.team_id == ^team.id)
+      |> repo.update_all(set: [status: "archived"])
+
+    {:ok, result}
+  end
+
+  @doc """
+  Check if a user is a full member of the team
+  """
+  def member?(team, user) do
+    !is_nil(Repo.get_by(Member, team_id: team.id, user_id: user.id, status: "accepted"))
+  end
+
+  @doc """
+  Invite a new member to a team
+  """
+  def invite_member(team, inviter, invitee) do
+    changeset = Member.create_changeset(%Member{}, invitee, team)
+
+    case Repo.insert(changeset) do
+      {:ok, member} ->
+        invitee
+        |> Emails.team_invitation(team, inviter)
+        |> Mailer.deliver_later()
+
+        {:ok, member}
+
+      {:error, changeset} ->
+        better_invitation_error(changeset)
+    end
+  end
+
+  defp better_invitation_error(changeset) do
+    case Keyword.has_key?(changeset.errors, :user_id) do
+      true ->
+        {_message, validation} = changeset.errors[:user_id]
+
+        case validation[:constraint] == :unique do
+          true ->
+            {:error, :already_member}
+
+          false ->
+            {:error, changeset}
+        end
+
+      false ->
+        {:error, changeset}
+    end
+  end
+
+  defp find_invited_member(team, invitee) do
+    case Repo.get_by(Member, team_id: team.id, user_id: invitee.id, status: "invited") do
+      nil ->
+        {:error, :not_found}
+
+      member ->
+        {:ok, member}
+    end
+  end
+
+  @doc """
+  Accept an invite for a team
+  """
+  def accept_invite(team, invitee) do
+    with {:ok, member} <- find_invited_member(team, invitee) do
+      {:ok, %{member: member}} =
+        Ecto.Multi.new()
+        |> Ecto.Multi.update(:member, Member.accept_invite_changeset(member))
+        |> Ecto.Multi.run(:clear_invites, &clear_invites/2)
+        |> Repo.transaction()
+
+      {:ok, member}
+    end
+  end
+
+  defp clear_invites(repo, %{member: member}) do
+    result =
+      Member
+      |> where([m], m.user_id == ^member.user_id)
+      |> where([m], m.team_id != ^member.team_id)
+      |> repo.update_all(set: [status: "rejected"])
+
+    {:ok, result}
+  end
+
+  @doc """
+  Reject an invite
+  """
+  def reject_invite(team, invitee) do
+    with {:ok, member} <- find_invited_member(team, invitee) do
+      member
+      |> Member.reject_invite_changeset()
+      |> Repo.update()
+    end
   end
 end

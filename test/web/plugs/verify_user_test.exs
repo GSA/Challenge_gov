@@ -3,8 +3,8 @@ defmodule Web.Plugs.VerifyUserTest do
 
   alias Web.Plugs.VerifyUser
 
-  describe "checks for an admin" do
-    test "passes through if an admin", %{conn: conn} do
+  describe "checks for a user" do
+    test "passes through if a user", %{conn: conn} do
       user = TestHelpers.user_struct()
 
       conn =
@@ -20,7 +20,7 @@ defmodule Web.Plugs.VerifyUserTest do
     test "redirects to the session page", %{conn: conn} do
       conn =
         conn
-        |> bypass_through()
+        |> bypass_through(Web.Router, [:browser])
         |> get("/challenges/new")
         |> VerifyUser.call([])
 

@@ -43,6 +43,43 @@ defmodule IdeaPortal.Accounts do
   end
 
   @doc """
+  Find accounts that are OK to invite to this team
+
+  They don't already belong
+  """
+  def for_inviting_to(opts \\ []) do
+    opts = Enum.into(opts, %{})
+
+    User
+    |> where([u], u.finalized == true)
+    |> where([u], u.display == true)
+    |> where(
+      [u],
+      fragment(
+        "(select count(*) from team_members where user_id = ? and status = 'accepted') = 0",
+        u.id
+      )
+    )
+    |> filter_invite_users(opts)
+    |> limit(9)
+    |> Repo.all()
+  end
+
+  def filter_invite_users(query, %{search: search}) when search != nil and search != "" do
+    names = String.split(search, " ")
+
+    conditions =
+      Enum.reduce(names, false, fn name, query ->
+        name = "%#{name}%"
+        dynamic([u], ilike(u.first_name, ^name) or ilike(u.last_name, ^name) or ^query)
+      end)
+
+    where(query, ^conditions)
+  end
+
+  def filter_invite_users(query, _opts), do: query
+
+  @doc """
   Changeset for sign in and registration
   """
   def new() do

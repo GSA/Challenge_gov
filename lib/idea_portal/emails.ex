@@ -30,6 +30,16 @@ defmodule IdeaPortal.Emails do
     |> render("invitation-email.html")
   end
 
+  def team_invitation(invitee_user, team, inviter_user) do
+    base_email()
+    |> to(invitee_user.email)
+    |> subject("You've been invited to join #{team.name} on City Backlog")
+    |> assign(:team, team)
+    |> assign(:invitee_user, invitee_user)
+    |> assign(:inviter_user, inviter_user)
+    |> render("team-invitation.html")
+  end
+
   @doc """
   Send a email verification email
   """
