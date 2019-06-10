@@ -13,13 +13,6 @@
         <div class="card-content-body">
           <div>
             <ul class="mp-none">
-              <li>
-                <span class="font-semibold tag-list participant-detail-para
-                color-gray">
-                  Email
-                </span>
-                <p class="participant-detail-para"><%= @account.email %></p>
-              </li>
             </ul>
           </div>
         </div>
