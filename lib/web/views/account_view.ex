@@ -10,6 +10,7 @@ defmodule Web.AccountView do
     case is_nil(user.avatar_key) do
       true ->
         Routes.static_path(Web.Endpoint, "/images/icon-profile.png")
+
       false ->
         Storage.url(Avatar.avatar_path(user, "thumbnail"), signed: [expires_in: 3600])
     end

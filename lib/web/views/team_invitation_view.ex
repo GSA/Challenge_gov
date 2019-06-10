@@ -14,7 +14,7 @@ defmodule Web.TeamInvitationView do
     %{
       name: AccountView.full_name(account),
       avatar_url: AccountView.avatar_url(account),
-      invite_url: Routes.team_invitation_path(Endpoint, :create, team.id, user_id: account.id),
+      invite_url: Routes.team_invitation_path(Endpoint, :create, team.id, user_id: account.id)
     }
   end
 end
