@@ -6,6 +6,17 @@ defmodule Web.TeamInvitationController do
 
   action_fallback(Web.FallbackController)
 
+  def index(conn, params = %{"team_id" => team_id}) do
+    query = Map.get(params, "q", "")
+
+    with {:ok, team} <- Teams.get(team_id) do
+      conn
+      |> assign(:team, team)
+      |> assign(:accounts, Accounts.for_inviting_to(search: query))
+      |> render("index.json")
+    end
+  end
+
   def create(conn, %{"team_id" => team_id, "user_id" => user_id}) do
     %{current_user: user} = conn.assigns
 

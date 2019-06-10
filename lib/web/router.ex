@@ -81,6 +81,8 @@ defmodule Web.Router do
     pipe_through([:api, :signed_in])
 
     resources("/documents", DocumentController, only: [:create])
+
+    get("/teams/:team_id/invite", TeamInvitationController, :index)
   end
 
   scope "/admin", Web.Admin, as: :admin do

@@ -6,15 +6,17 @@ defmodule Web.AccountView do
   alias Web.FormView
   alias Web.SharedView
 
-  def avatar_img(user) do
+  def avatar_url(user) do
     case is_nil(user.avatar_key) do
       true ->
-        img_tag(Routes.static_path(Web.Endpoint, "/images/icon-profile.png"), alt: "Avatar")
-
+        Routes.static_path(Web.Endpoint, "/images/icon-profile.png")
       false ->
-        url = Storage.url(Avatar.avatar_path(user, "thumbnail"), signed: [expires_in: 3600])
-        img_tag(url, alt: "Avatar")
+        Storage.url(Avatar.avatar_path(user, "thumbnail"), signed: [expires_in: 3600])
     end
+  end
+
+  def avatar_img(user) do
+    img_tag(avatar_url(user), alt: "Avatar")
   end
 
   def full_name(user) do

@@ -10,10 +10,10 @@
         <div class="row">
           <div class="col-md-7">
             <div class="search-form">
-              <form action="/">
+              <form id="teams-invite" action="<%= Routes.team_invitation_path(@conn, :index, @team.id) %>">
                 <div class="form-group form-control-radius form-search has-icon right-icon add-team-icon">
                   <i class="icon-magnifying-glass"></i>
-                  <input type="text" class="form-control" placeholder="Search Participants">
+                  <input id="teams-invite-member" type="text" class="form-control" placeholder="Search Participants">
                 </div>
               </form>
             </div>
