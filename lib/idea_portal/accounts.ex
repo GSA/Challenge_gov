@@ -43,6 +43,26 @@ defmodule IdeaPortal.Accounts do
   end
 
   @doc """
+  Find accounts that are OK to invite to this team
+
+  They don't already belong
+  """
+  def for_inviting_to() do
+    User
+    |> where([u], u.finalized == true)
+    |> where([u], u.display == true)
+    |> where(
+      [u],
+      fragment(
+        "(select count(*) from team_members where user_id = ? and status = 'accepted') = 0",
+        u.id
+      )
+    )
+    |> limit(9)
+    |> Repo.all()
+  end
+
+  @doc """
   Changeset for sign in and registration
   """
   def new() do

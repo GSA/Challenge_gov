@@ -16,7 +16,11 @@ defmodule Web.Plugs.VerifyUser do
         conn
 
       false ->
+        uri = %URI{path: conn.request_path, query: conn.query_string}
+
         conn
+        |> put_flash(:info, "You must sign in first.")
+        |> put_session(:last_path, URI.to_string(uri))
         |> redirect(to: Routes.session_path(conn, :new))
         |> halt()
     end

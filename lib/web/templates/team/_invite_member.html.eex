@@ -1,13 +1,9 @@
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-  aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl modal-add-member"
-    role="document">
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-add-member" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title font-medium" id="exampleModalCenterTitle1">Add
-          Members</h2>
-        <a href="javascript:;" class="modal-close" data-dismiss="modal"><i
-            class="icon-close-custom"></i></a>
+        <h2 class="modal-title font-medium" id="exampleModalCenterTitle1">Add Members</h2>
+        <a href="javascript:;" class="modal-close" data-dismiss="modal"><i class="icon-close-custom"></i></a>
       </div>
 
       <div class="modal-body">
@@ -15,8 +11,7 @@
           <div class="col-md-7">
             <div class="search-form">
               <form action="/">
-                <div class="form-group form-control-radius form-search has-icon
-                  right-icon add-team-icon">
+                <div class="form-group form-control-radius form-search has-icon right-icon add-team-icon">
                   <i class="icon-magnifying-glass"></i>
                   <input type="text" class="form-control" placeholder="Search Participants">
                 </div>
@@ -24,27 +19,25 @@
             </div>
           </div>
         </div>
+
         <div class="row participant-wrapper">
-          <div class="col-12 col-md-4 col-lg-3">
-            <div class="card participant-item">
-              <div class="card-body">
-                <a href="javascript:;" class="text-center">
-                  <span class="image-circle"><!-- <img src="images/participant.png" alt=""> --></span>
-                  <h3 class="font-regular">Member Name</h3>
-                </a>
-                <div class="participant-close-icon-modal">
-                  <a href="javascript:;">
-                    <i class="icon-close-custom color-gray"></i>
-                  </a>
+          <%= Enum.map(@accounts, fn account -> %>
+            <div class="col-12 col-md-4 col-lg-3">
+              <div class="card participant-item">
+                <div class="card-body">
+                  <%= link(to: Routes.team_invitation_path(@conn, :create, @team.id, user_id: account.id), method: :post, class: "text-center") do %>
+                    <span class="image-circle"><%= AccountView.avatar_img(account) %></span>
+                    <h3 class="font-regular"><%= AccountView.full_name(account) %></h3>
+                  <% end %>
                 </div>
               </div>
             </div>
-          </div>
+          <% end) %>
         </div>
       </div>
+
       <div class="modal-footer">
-        <a href="javascript:;" class="btn btn-primary btn-radius btn-sm"
-          data-dismiss="modal">Done</a>
+        <a href="javascript:;" class="btn btn-primary btn-radius btn-sm" data-dismiss="modal">Done</a>
       </div>
     </div>
   </div>

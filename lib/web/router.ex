@@ -41,6 +41,11 @@ defmodule Web.Router do
 
     resources("/teams", TeamController, only: [:new, :create])
 
+    resources("/teams/:team_id/invite", TeamInvitationController, only: [:create])
+
+    get("/teams/:team_id/invite/accept", TeamInvitationController, :accept)
+    get("/teams/:team_id/invite/reject", TeamInvitationController, :reject)
+
     resources("/users/invite", UserInviteController, only: [:new, :create])
   end
 

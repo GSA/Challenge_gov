@@ -61,6 +61,7 @@ defmodule IdeaPortal.Teams do
     from m in Member,
       join: u in assoc(m, :user),
       where: u.display == true,
+      where: m.status == "accepted",
       preload: :user
   end
 
@@ -147,6 +148,13 @@ defmodule IdeaPortal.Teams do
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:deleted_at, now)
     |> Repo.update()
+  end
+
+  @doc """
+  Check if a user is a full member of the team
+  """
+  def member?(team, user) do
+    !is_nil(Repo.get_by(Member, team_id: team.id, user_id: user.id, status: "accepted"))
   end
 
   @doc """
