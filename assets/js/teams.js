@@ -1,7 +1,7 @@
 import _ from "underscore";
 import jquery from "jquery";
 
-let participantTemplate = (account) => {
+let participantTemplate = (account, csrfToken) => {
   let name = account.name;
   let avatarUrl = account.avatar_url;
   let inviteUrl = account.invite_url;
@@ -9,7 +9,7 @@ let participantTemplate = (account) => {
   return `<div class="col-12 col-md-4 col-lg-3">
     <div class="card participant-item">
       <div class="card-body">
-        <a href="${inviteUrl}" data-method="post" class="text-center">
+        <a href=${inviteUrl} data-csrf="${csrfToken}" data-to="${inviteUrl}" data-method="post" class="text-center">
           <span class="image-circle"><img src="${avatarUrl}" alt="Avatar" /></span>
           <h3 class="font-regular">${name}</h3>
         </a>
@@ -20,6 +20,7 @@ let participantTemplate = (account) => {
 
 $(() => {
   let searchUrl = $("#teams-invite").attr("action");
+  let csrfToken = document.querySelector("meta[name='csrf-token']").content
 
   let keydown = _.debounce((e) => {
     let value = e.target.value;
@@ -34,7 +35,7 @@ $(() => {
       success: (data) => {
         $(".participant-wrapper").empty();
         $(data.collection).each((i, account) => {
-          let html = $(participantTemplate(account));
+          let html = $(participantTemplate(account, csrfToken));
           $(".participant-wrapper").append(html);
         });
 
