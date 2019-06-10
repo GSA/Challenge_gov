@@ -69,7 +69,8 @@ defmodule IdeaPortal.Teams do
   Check if a user is the member of any team
   """
   def member_of_team?(user) do
-    user = Repo.preload(user, :members)
+    user = Repo.preload(user, members: from(m in Member, where: m.status == "accepted"))
+
     !Enum.empty?(user.members)
   end
 
