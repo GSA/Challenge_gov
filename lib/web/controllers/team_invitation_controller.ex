@@ -28,6 +28,11 @@ defmodule Web.TeamInvitationController do
       |> put_flash(:info, "User was invited")
       |> redirect(to: Routes.team_path(conn, :show, team.id))
     else
+      {:error, :already_member} ->
+        conn
+        |> put_flash(:error, "This user is already part of a team.")
+        |> redirect(to: Routes.team_path(conn, :show, team_id))
+
       _ ->
         conn
         |> put_flash(:error, "There was an error inviting the user")

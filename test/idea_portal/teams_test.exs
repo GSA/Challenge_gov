@@ -136,6 +136,18 @@ defmodule IdeaPortal.TeamsTest do
       assert member.status == "invited"
     end
 
+    test "returns a good error if already part of a team" do
+      inviter = TestHelpers.create_verified_user(%{email: "inviter@example.com"})
+      team = TestHelpers.create_team(inviter)
+
+      invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
+
+      {:ok, _member} = Teams.invite_member(team, inviter, invitee)
+      {:ok, _member} = Teams.accept_invite(team, invitee)
+
+      {:error, :already_member} = Teams.invite_member(team, inviter, invitee)
+    end
+
     test "allows sending multiple invites" do
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
 

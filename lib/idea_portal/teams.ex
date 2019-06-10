@@ -195,6 +195,24 @@ defmodule IdeaPortal.Teams do
         {:ok, member}
 
       {:error, changeset} ->
+        better_invitation_error(changeset)
+    end
+  end
+
+  defp better_invitation_error(changeset) do
+    case Keyword.has_key?(changeset.errors, :user_id) do
+      true ->
+        {_message, validation} = changeset.errors[:user_id]
+
+        case validation[:constraint] == :unique do
+          true ->
+            {:error, :already_member}
+
+          false ->
+            {:error, changeset}
+        end
+
+      false ->
         {:error, changeset}
     end
   end
