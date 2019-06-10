@@ -144,10 +144,33 @@ defmodule IdeaPortal.Teams do
   def delete(team) do
     now = DateTime.truncate(Timex.now(), :second)
 
-    team
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:deleted_at, now)
-    |> Repo.update()
+    changeset =
+      team
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:deleted_at, now)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:team, changeset)
+      |> Ecto.Multi.run(:archive_members, &archive_members/2)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{team: team}} ->
+        {:ok, team}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  defp archive_members(repo, %{team: team}) do
+    result =
+      Member
+      |> where([m], m.team_id == ^team.id)
+      |> repo.update_all(set: [status: "archived"])
+
+    {:ok, result}
   end
 
   @doc """

@@ -108,6 +108,20 @@ defmodule IdeaPortal.TeamsTest do
 
       assert team.deleted_at
     end
+
+    test "archives team members" do
+      user = TestHelpers.create_user()
+      user = TestHelpers.verify_email(user)
+
+      team = TestHelpers.create_team(user)
+
+      {:ok, team} = Teams.delete(team)
+
+      assert team.deleted_at
+
+      team = Repo.preload(team, :members, force: true)
+      assert Enum.map(team.members, & &1.status) == ["archived"]
+    end
   end
 
   describe "inviting a new member" do
