@@ -382,4 +382,21 @@ defmodule IdeaPortal.Accounts do
     |> Ecto.Changeset.put_change(:display, !user.display)
     |> Repo.update()
   end
+
+  @doc """
+  Toggle admin status of a user
+  """
+  def toggle_admin(user = %{role: "admin"}) do
+    user
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:role, "user")
+    |> Repo.update()
+  end
+
+  def toggle_admin(user = %{role: "user"}) do
+    user
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:role, "admin")
+    |> Repo.update()
+  end
 end
