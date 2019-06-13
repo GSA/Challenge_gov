@@ -82,7 +82,7 @@ defmodule IdeaPortal.Teams do
   def create(%{email_verified_at: nil}, _params) do
     %Team{}
     |> Ecto.Changeset.change()
-    |> Ecto.Changeset.add_error(:base, "you must verify your email first")
+    |> Ecto.Changeset.add_error(:base, "You must verify your email first")
     |> Ecto.Changeset.apply_action(:insert)
   end
 
@@ -111,7 +111,7 @@ defmodule IdeaPortal.Teams do
       {:error, :member, _changeset, _changes} ->
         %Team{}
         |> Ecto.Changeset.change()
-        |> Ecto.Changeset.add_error(:base, "already a member of a team")
+        |> Ecto.Changeset.add_error(:base, "You are already a member of a team")
         |> Ecto.Changeset.apply_action(:insert)
     end
   end

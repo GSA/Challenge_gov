@@ -4,6 +4,13 @@
       <h2 class="title-bar font-semibold">Create a new Team</h2>
 
       <%= form_for(@changeset, Routes.team_path(@conn, :create), [method: :post, multipart: true], fn f -> %>
+        <%= if Keyword.has_key?(f.errors, :base) do %>
+          <div class="was-validated">
+            <input type="hidden" class="form-control is-invalid" />
+            <%= error_tag(f, :base) %>
+          </div>
+        <% end %>
+
         <div class="row mx-md-n4">
           <div class="col-12 col-md-6 px-md-4">
             <div class="form-group form-control-material">
