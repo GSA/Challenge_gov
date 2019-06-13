@@ -5,12 +5,14 @@ defmodule Web.Admin.UserController do
 
   plug(Web.Plugs.FetchPage when action in [:index])
 
-  def index(conn, _params) do
+  def index(conn, params) do
     %{page: page, per: per} = conn.assigns
-    %{page: users, pagination: pagination} = Accounts.all(page: page, per: per)
+    filter = Map.get(params, "user", %{})
+    %{page: users, pagination: pagination} = Accounts.all(filter: filter, page: page, per: per)
 
     conn
     |> assign(:users, users)
+    |> assign(:filter, filter)
     |> assign(:pagination, pagination)
     |> render("index.html")
   end

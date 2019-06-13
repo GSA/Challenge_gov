@@ -33,7 +33,7 @@
                 <%= Enum.map @users, fn (user) -> %>
                   <tr>
                     <td><%= user.id %></td>
-                    <td><%= link(user.first_name, to: Routes.admin_user_path(@conn, :show, user.id)) %></td>
+                    <td><%= link(AccountView.full_name(user), to: Routes.admin_user_path(@conn, :show, user.id)) %></td>
                     <td><%= user.role %></td>
                     <td><%= user.finalized %></td>
                     <td>
@@ -47,6 +47,26 @@
 
           <%= SharedView.pagination(path: Routes.admin_user_path(@conn, :index), pagination: @pagination) %>
         </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Filter</h3>
+        </div>
+        <%= form_tag Routes.admin_user_path(@conn, :index), method: :get do %>
+          <div class="box-body">
+            <div class="form-group">
+              <%= label :user, :search, "Name" %>
+              <%= text_input :user, :search, value: @filter["search"], class: "form-control" %>
+            </div>
+          </div>
+          <div class="box-footer">
+            <%= submit "Filter", class: "btn btn-primary" %>
+            <%= link "Clear", to: Routes.admin_user_path(@conn, :index), class: "btn" %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
