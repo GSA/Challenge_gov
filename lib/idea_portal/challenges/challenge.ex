@@ -90,6 +90,9 @@ defmodule IdeaPortal.Challenges.Challenge do
       :name,
       :description,
       :why,
+      :fixed_looks_like,
+      :technology_example,
+      :neighborhood,
       :champion_name,
       :champion_email
     ])
