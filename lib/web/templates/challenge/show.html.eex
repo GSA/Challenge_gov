@@ -10,6 +10,7 @@
       <div class="col-12 col-md-8 p-md-0">
         <div class="idea-description">
           <span class="badge badge-pill badge-secondary font-semibold"><%= @challenge.focus_area %></span>
+          <span class="badge badge-pill badge-secondary font-semibold"><%= challenge_status(@challenge) %></span>
           <h2><%= @challenge.name %></h2>
           <p class="font-light"><%= @challenge.description %></p>
         </div>

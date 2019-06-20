@@ -34,4 +34,11 @@ defmodule Web.ChallengeView do
       time
     end
   end
+
+  def challenge_status(challenge) do
+    challenge.status
+    |> String.split(" ")
+    |> Enum.map(&String.capitalize/1)
+    |> Enum.join(" ")
+  end
 end
