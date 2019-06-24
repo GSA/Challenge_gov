@@ -30,7 +30,7 @@
 
         <h2 class="title-bar font-semibold">Where is this problem?</h2>
         <div class="form-group form-control-material">
-          <%= text_input(f, :neighborhood, required: true, placeholder: "Location / Neighborhood", class: "form-control #{FormView.error_class(f, :neighborhood)}") %>
+          <%= text_input(f, :neighborhood, placeholder: "Location / Neighborhood", class: "form-control #{FormView.error_class(f, :neighborhood)}") %>
           <%= error_tag(f, :neighborhood) %>
           <i>Ex. City-wide</i>
         </div>
