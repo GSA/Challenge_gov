@@ -8,5 +8,6 @@ import "admin-lte/dist/css/skins/skin-blue.css";
 import "admin-lte/dist/js/adminlte.js";
 import "font-awesome/css/font-awesome.css";
 import "phoenix_html"
+import "../css/admin.css";
 
 window.$ = jquery;

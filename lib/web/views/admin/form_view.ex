@@ -4,6 +4,33 @@ defmodule Web.Admin.FormView do
   def multi_checkbox(field, grouping, value, filter),
     do: Web.FormView.multi_checkbox(field, grouping, value, filter)
 
+  def label_text(field, opts) do
+    case Keyword.has_key?(opts, :label) do
+      true ->
+        opts[:label]
+
+      false ->
+        field
+        |> to_string()
+        |> String.replace("_", " ")
+        |> String.capitalize()
+    end
+  end
+
+  def label_field(form, field, opts) do
+    text = label_text(field, opts)
+
+    case Keyword.get(opts, :required, false) do
+      true ->
+        label(form, field, class: "col-md-4") do
+          [text, content_tag(:span, "*", class: "required")]
+        end
+
+      false ->
+        label(form, field, text, class: "col-md-4")
+    end
+  end
+
   @doc """
   Generate a text field, styled properly
   """
@@ -13,7 +40,7 @@ defmodule Web.Admin.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label(form, field, class: "col-md-4"),
+        label_field(form, field, opts),
         content_tag(:div, class: "col-md-8") do
           [
             text_input(form, field, Keyword.merge([class: "form-control"], text_opts)),
@@ -34,7 +61,7 @@ defmodule Web.Admin.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label(form, field, class: "col-md-4"),
+        label_field(form, field, opts),
         content_tag(:div, class: "col-md-8") do
           [
             password_input(form, field, Keyword.merge([class: "form-control"], text_opts)),
@@ -53,18 +80,9 @@ defmodule Web.Admin.FormView do
     opts = Keyword.merge(opts, dopts)
     number_opts = Keyword.take(opts, [:placeholder, :min, :max])
 
-    label =
-      case Keyword.get(opts, :label) do
-        nil ->
-          label(form, field, class: "col-md-4")
-
-        text ->
-          label(form, field, text, class: "col-md-4")
-      end
-
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label,
+        label_field(form, field, opts),
         content_tag(:div, class: "col-md-8") do
           [
             number_input(form, field, Keyword.merge([class: "form-control"], number_opts)),
@@ -85,7 +103,7 @@ defmodule Web.Admin.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label(form, field, class: "col-md-4"),
+        label_field(form, field, opts),
         content_tag(:div, class: "col-md-8") do
           [
             textarea(form, field, Keyword.merge([class: "form-control"], textarea_opts)),

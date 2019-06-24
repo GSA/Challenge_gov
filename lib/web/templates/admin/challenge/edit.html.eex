@@ -26,14 +26,18 @@
         <%= form_for(@changeset, Routes.admin_challenge_path(@conn, :update, @challenge.id), [class: "form-horizontal"], fn f -> %>
           <div class="box-body">
             <div class="<%= FormView.form_group_classes(f, :focus_area) %>">
-              <%= label(f, :focus_area, "Focus Area", class: "col-md-4") %>
+              <%= label(f, :focus_area, class: "col-md-4") do %>
+                Focus Area <span class="required">*</span>
+              <% end %>
               <div class="col-md-8">
                 <%= select(f, :focus_area, Challenges.focus_areas(), class: "form-control") %>
               </div>
             </div>
 
             <div class="<%= FormView.form_group_classes(f, :status) %>">
-              <%= label(f, :status, "Status", class: "col-md-4") %>
+              <%= label(f, :status, class: "col-md-4") do %>
+                Status <span class="required">*</span>
+              <% end %>
               <div class="col-md-8">
                 <%= select(f, :status, Challenges.statuses(), class: "form-control") %>
               </div>
@@ -43,15 +47,15 @@
               <span class="help-block">Format <code>YYYY-MM-DD</code></span>
             <% end %>
 
-            <%= FormView.text_field(f, :name) %>
+            <%= FormView.text_field(f, :name, required: true) %>
 
-            <%= FormView.textarea_field(f, :description, label: "What is the problem?", rows: 10) %>
+            <%= FormView.textarea_field(f, :description, label: "What is the problem?", rows: 10, required: true) %>
 
-            <%= FormView.textarea_field(f, :why, label: "Why is this a problem?", rows: 10) %>
+            <%= FormView.textarea_field(f, :why, label: "Why is this a problem?", rows: 10, required: true) %>
 
-            <%= FormView.textarea_field(f, :fixed_looks_like, label: "What does \"fixed\" look like?", rows: 10) %>
+            <%= FormView.textarea_field(f, :fixed_looks_like, label: "What does \"fixed\" look like?", rows: 10, required: true) %>
 
-            <%= FormView.textarea_field(f, :technology_example, label: "How does technology help solve this problem?", rows: 10) %>
+            <%= FormView.textarea_field(f, :technology_example, label: "How does technology help solve this problem?", rows: 10, required: true) %>
 
             <%= FormView.text_field(f, :neighborhood, label: "Location or Neighborhood") %>
 
