@@ -76,7 +76,15 @@ defmodule IdeaPortal.Challenges.Challenge do
       :neighborhood
     ])
     |> put_change(:captured_on, Date.utc_today())
-    |> validate_required([:captured_on, :focus_area, :name, :description, :why])
+    |> validate_required([
+      :captured_on,
+      :focus_area,
+      :name,
+      :description,
+      :why,
+      :fixed_looks_like,
+      :technology_example
+    ])
     |> validate_inclusion(:focus_area, @focus_areas)
     |> validate_inclusion(:status, @statuses)
   end
@@ -96,7 +104,16 @@ defmodule IdeaPortal.Challenges.Challenge do
       :champion_name,
       :champion_email
     ])
-    |> validate_required([:status, :captured_on, :focus_area, :name, :description, :why])
+    |> validate_required([
+      :status,
+      :captured_on,
+      :focus_area,
+      :name,
+      :description,
+      :why,
+      :fixed_looks_like,
+      :technology_example
+    ])
     |> validate_inclusion(:focus_area, @focus_areas)
     |> validate_inclusion(:status, @statuses)
     |> validate_format(:champion_email, ~r/.+@.+\..+/)

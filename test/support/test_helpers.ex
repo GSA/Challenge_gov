@@ -64,7 +64,9 @@ defmodule IdeaPortal.TestHelpers do
         focus_area: "Transportation",
         name: "Bike lanes",
         description: "We need more bike lanes",
-        why: "To bike around"
+        why: "To bike around",
+        fixed_looks_like: "We have more bike lanes",
+        technology_example: "We need computers"
       },
       attributes
     )

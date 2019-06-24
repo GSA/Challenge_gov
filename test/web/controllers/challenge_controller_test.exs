@@ -13,7 +13,9 @@ defmodule Web.ChallangeControllerTest do
         focus_area: "Transportation",
         name: "Bike lanes",
         description: "We need more bike lanes",
-        why: "To bike around"
+        why: "To bike around",
+        fixed_looks_like: "More bike lanes",
+        technology_example: "Using computers"
       }
 
       conn = post(conn, Routes.challenge_path(conn, :create), challenge: params)
@@ -29,7 +31,9 @@ defmodule Web.ChallangeControllerTest do
         focus_area: "Transportation",
         name: "Bike lanes",
         description: "We need more bike lanes",
-        why: "To bike around"
+        why: "To bike around",
+        fixed_looks_like: "More bike lanes",
+        technology_example: "Using computers"
       }
 
       conn = post(conn, Routes.challenge_path(conn, :create), challenge: params)

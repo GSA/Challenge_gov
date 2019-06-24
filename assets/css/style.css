@@ -919,6 +919,9 @@ Submit idea
   padding-bottom: 10px;
   line-height: 1;
 }
+.required {
+  color: #ff0000;
+}
 .tabs-style-1 .tab-content h2:after {
   content: "";
   position: absolute;

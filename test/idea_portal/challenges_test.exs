@@ -15,7 +15,9 @@ defmodule IdeaPortal.ChallengesTest do
           focus_area: "Transportation",
           name: "Bike lanes",
           description: "We need more bike lanes",
-          why: "To bike around"
+          why: "To bike around",
+          fixed_looks_like: "More bike lanes",
+          technology_example: "Using computers"
         })
 
       assert challenge.user_id
@@ -44,6 +46,8 @@ defmodule IdeaPortal.ChallengesTest do
           name: "Bike lanes",
           description: "We need more bike lanes",
           why: "To bike around",
+          fixed_looks_like: "More bike lanes",
+          technology_example: "Using computers",
           document_ids: [document.id]
         })
 
@@ -63,6 +67,8 @@ defmodule IdeaPortal.ChallengesTest do
           name: "Bike lanes",
           description: "We need more bike lanes",
           why: "To bike around",
+          fixed_looks_like: "More bike lanes",
+          technology_example: "Using computers",
           document_ids: [document.id]
         })
     end

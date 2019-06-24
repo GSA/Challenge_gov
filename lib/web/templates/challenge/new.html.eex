@@ -14,14 +14,14 @@
         <% end %>
         <%= hidden_input(f, :recaptcha_token) %>
 
-        <h2 class="title-bar font-semibold">Choose a name for your challenge</h2>
+        <h2 class="title-bar font-semibold">Choose a name for your challenge <span class="required">*</span></h2>
         <div class="form-group form-control-material">
           <%= text_input(f, :name, required: true, placeholder: "Name", class: "form-control #{FormView.error_class(f, :name)}") %>
           <%= error_tag(f, :name) %>
           <i>Ex. Environment / Infrastructure - Building Maintenance</i>
         </div>
 
-        <h2 class="title-bar font-semibold">Choose your focus area</h2>
+        <h2 class="title-bar font-semibold">Choose your focus area <span class="required">*</span></h2>
         <div class="form-group form-control-material">
           <%= select(f, :focus_area, Challenges.focus_areas(), required: true, prompt: "Focus Area", class: "form-control #{FormView.error_class(f, :name)}") %>
           <%= error_tag(f, :focus_area) %>
@@ -37,7 +37,7 @@
       </div>
 
       <div class="form-titles">
-        <h2 class="title-bar font-semibold">What is the problem?</h2>
+        <h2 class="title-bar font-semibold">What is the problem? <span class="required">*</span></h2>
       </div>
       <div class="form-group">
         <%= textarea(f, :description, required: true, class: "form-control #{FormView.error_class(f, :description)}", rows: 4) %>
@@ -50,7 +50,7 @@
       </div>
 
       <div class="form-titles">
-        <h2 class="title-bar font-semibold">Why does this matter?</h2>
+        <h2 class="title-bar font-semibold">Why does this matter? <span class="required">*</span></h2>
       </div>
       <div class="form-group">
         <%= textarea(f, :why, required: true, class: "form-control #{FormView.error_class(f, :why)}", rows: 4) %>
@@ -71,7 +71,7 @@
       </div>
 
       <div class="form-titles">
-        <h2 class="title-bar font-semibold">What does "good" look like?</h2>
+        <h2 class="title-bar font-semibold">What does "good" look like? <span class="required">*</span></h2>
       </div>
       <div class="form-group">
         <%= textarea(f, :fixed_looks_like, required: true, class: "form-control #{FormView.error_class(f, :fixed_looks_like)}", rows: 4) %>
@@ -83,7 +83,7 @@
       </div>
 
       <div class="form-titles">
-        <h2 class="title-bar font-semibold">How can technology help?</h2>
+        <h2 class="title-bar font-semibold">How can technology help? <span class="required">*</span></h2>
       </div>
       <div class="form-group">
         <%= textarea(f, :technology_example, class: "form-control #{FormView.error_class(f, :technology_example)}", rows: 4) %>
