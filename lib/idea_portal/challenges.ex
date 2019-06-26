@@ -262,7 +262,23 @@ defmodule IdeaPortal.Challenges do
   Sets status to "created"
   """
   def publish(challenge) do
-    __MODULE__.update(challenge, %{status: "created"})
+    changeset = Challenge.publish_changeset(challenge)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
+        maybe_create_event(challenge, changeset)
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   @doc """

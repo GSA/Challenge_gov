@@ -118,4 +118,10 @@ defmodule IdeaPortal.Challenges.Challenge do
     |> validate_inclusion(:status, @statuses)
     |> validate_format(:champion_email, ~r/.+@.+\..+/)
   end
+
+  def publish_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:status, "created")
+  end
 end
