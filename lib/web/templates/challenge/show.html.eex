@@ -37,7 +37,7 @@
                   </div>
                 </div>
                 <%= Enum.map(@events, fn (event) -> %>
-                  <div class="timeline-item transition-3s" style="left: <%= timeline_position(event.occurs_on, @events) %>;">
+                  <div class="timeline-item <%= timeline_class(event.occurs_on) %> transition-3s" style="left: <%= timeline_position(event.occurs_on, @events) %>;">
                     <span class="over" style="width: <%= timeline_position(event.occurs_on, @events) %>;"></span>
                     <span class="tl-bullet transition-3s"></span>
                     <div class="timeline-hover-data transition-3s">
