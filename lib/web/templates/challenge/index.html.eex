@@ -91,7 +91,7 @@
           </div>
           <div class="col-md-8">
             <div class="card-content-head">
-              <h2><a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>"><%= challenge.name %></a> <span class="font-semibold tag-list"><%= challenge.focus_area %></span></h2>
+              <h2><a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>">#<%= challenge.id %> <%= challenge.name %></a> <span class="font-semibold tag-list"><%= challenge.focus_area %></span></h2>
               <p><a><%= challenge.description %></a></p>
             </div>
             <div class="card-content-footer">
