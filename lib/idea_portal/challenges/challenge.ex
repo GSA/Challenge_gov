@@ -45,6 +45,13 @@ defmodule IdeaPortal.Challenges.Challenge do
     field(:champion_name, :string)
     field(:champion_email, :string)
 
+    field(:submitter_first_name, :string)
+    field(:submitter_last_name, :string)
+    field(:submitter_email, :string)
+    field(:submitter_phone, :string)
+
+    field(:notes, :string)
+
     belongs_to(:user, User)
 
     has_many(:events, Event)
@@ -63,10 +70,9 @@ defmodule IdeaPortal.Challenges.Challenge do
   """
   def statuses(), do: @statuses
 
-  def create_changeset(struct, params) do
+  def create_changeset(struct, params, user) do
     struct
     |> cast(params, [
-      :captured_on,
       :focus_area,
       :name,
       :description,
@@ -75,6 +81,10 @@ defmodule IdeaPortal.Challenges.Challenge do
       :technology_example,
       :neighborhood
     ])
+    |> put_change(:submitter_first_name, user.first_name)
+    |> put_change(:submitter_last_name, user.last_name)
+    |> put_change(:submitter_email, user.email)
+    |> put_change(:submitter_phone, user.phone_number)
     |> put_change(:captured_on, Date.utc_today())
     |> validate_required([
       :captured_on,
@@ -102,7 +112,12 @@ defmodule IdeaPortal.Challenges.Challenge do
       :technology_example,
       :neighborhood,
       :champion_name,
-      :champion_email
+      :champion_email,
+      :submitter_first_name,
+      :submitter_last_name,
+      :submitter_email,
+      :submitter_phone,
+      :notes
     ])
     |> validate_required([
       :status,
@@ -117,6 +132,19 @@ defmodule IdeaPortal.Challenges.Challenge do
     |> validate_inclusion(:focus_area, @focus_areas)
     |> validate_inclusion(:status, @statuses)
     |> validate_format(:champion_email, ~r/.+@.+\..+/)
+  end
+
+  def admin_changeset(struct, params, user) do
+    struct
+    |> create_changeset(params, user)
+    |> cast(params, [
+      :captured_on,
+      :submitter_first_name,
+      :submitter_last_name,
+      :submitter_email,
+      :submitter_phone,
+      :notes
+    ])
   end
 
   def publish_changeset(struct) do
