@@ -35,6 +35,14 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def timeline_class(event_time) do
+    case Timex.compare(event_time, Timex.today()) do
+      -1 -> "timeline-item-past"
+      0 -> "timeline-item-current"
+      1 -> "timeline-item-future"
+    end
+  end
+
   def challenge_status(challenge) do
     challenge.status
     |> String.split(" ")

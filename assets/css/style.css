@@ -1207,8 +1207,14 @@ idea detail
   box-shadow: 0 3px 20px 0 rgb(106, 200, 207, 0.47);
   -webkit-box-shadow: 0 3px 20px 0 rgb(106, 200, 207, 0.47);
 }
+.timeline-item.timeline-item-today .tl-bullet {
+  background-color: rgb(106, 200, 207)
+}
 .timeline-item.timeline-item-today:hover {
   border: 1px solid rgb(106, 200, 207, 0.47);
+}
+.timeline-item.timeline-item-past .tl-bullet {
+  background-color: rgba(67, 209, 107)
 }
 .timeline-hover-data {
   opacity: 0;
