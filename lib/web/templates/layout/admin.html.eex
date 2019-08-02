@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" type="image/png" href="<%= Routes.static_path(@conn, "/images/favicon.png") %>" />
 
-    <title>City Backlog Admin</title>
+    <title><%= page_title(@conn) %></title>
 
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/admin.css") %>"/>
   </head>

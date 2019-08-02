@@ -3,6 +3,19 @@ defmodule Web.LayoutView do
 
   alias IdeaPortal.Recaptcha
   alias Web.AccountView
+  alias Web.PageTitle
+
+  def page_title(conn) do
+    view = Phoenix.Controller.view_module(conn)
+
+    action =
+      case view do
+        Web.ErrorView -> nil
+        _ -> Phoenix.Controller.action_name(conn)
+      end
+
+    PageTitle.for({view, action, conn.assigns})
+  end
 
   def user_signed_in?(conn) do
     Map.has_key?(conn.assigns, :current_user)
@@ -50,4 +63,120 @@ defmodule Web.LayoutView do
         ""
     end
   end
+end
+
+defmodule Web.PageTitle do
+  alias Web.{
+    Admin,
+    SessionView,
+    RegistrationView,
+    RegistrationResetView,
+    UserInviteView,
+    ChallengeView,
+    AccountView,
+    TeamView,
+    ErrorView
+  }
+
+  @app_name "HackBaltimore.io Idea Portal"
+
+  def for({view, action, assigns}) do
+    {view, action, assigns}
+    |> get()
+    |> add_app_name()
+  end
+
+  defp get({Admin.DashboardView, :index, _}) do
+    "Admin - Dashbaord"
+  end
+
+  defp get({Admin.ChallengeView, :index, _}) do
+    "Admin - Challenges"
+  end
+
+  defp get({Admin.ChallengeView, :edit, assigns}) do
+    "Admin - Editing Challenge - #{assigns.challenge.name}"
+  end
+
+  defp get({Admin.ChallengeView, :show, assigns}) do
+    "Admin - Viewing Challenge - #{assigns.challenge.name}"
+  end
+
+  defp get({Admin.TeamView, :index, _}) do
+    "Admin - Teams"
+  end
+
+  defp get({Admin.TeamView, :show, assigns}) do
+    "Admin - Viewing Team - #{assigns.team.name}"
+  end
+
+  defp get({Admin.UserView, :index, _}) do
+    "Admin - Users"
+  end
+
+  defp get({Admin.UserView, :show, assigns}) do
+    user = Map.get(assigns, :user, %{})
+    "Admin - Viewing User - #{user.first_name} #{user.last_name}"
+  end
+
+  defp get({SessionView, :new, _}) do
+    "Sign In"
+  end
+
+  defp get({RegistrationView, :new, _}) do
+    "Register"
+  end
+
+  defp get({RegistrationResetView, _, _}) do
+    "Password Reset"
+  end
+
+  defp get({UserInviteView, _, _}) do
+    "Invite Someone"
+  end
+
+  defp get({ChallengeView, :index, _}) do
+    "Challenges"
+  end
+
+  defp get({ChallengeView, :new, _}) do
+    "Submit Your Challenge"
+  end
+
+  defp get({ChallengeView, :show, assigns}) do
+    "Challenge - #{assigns.challenge.name}"
+  end
+
+  defp get({AccountView, :index, _}) do
+    "Participants"
+  end
+
+  defp get({AccountView, :edit, _}) do
+    "Editing Account"
+  end
+
+  defp get({AccountView, :show, assigns}) do
+    "Participant - #{assigns.account.first_name} #{assigns.account.last_name}"
+  end
+
+  defp get({TeamView, :index, _}) do
+    "Teams"
+  end
+
+  defp get({TeamView, :new, _}) do
+    "Create a Team"
+  end
+
+  defp get({TeamView, :show, assigns}) do
+    "Team - #{assigns.team.name}"
+  end
+
+  defp get({ErrorView, _, _}) do
+    "Error"
+  end
+
+  defp get(_), do: nil
+
+  defp add_app_name(nil), do: @app_name
+  defp add_app_name(title), do: "#{title} | #{@app_name}"
 end
