@@ -1,18 +1,14 @@
 <div class="idea-detail-wrapper">
   <div class="card custom-card idea-detail-card">
     <div class="row m-md-0">
-      <div class="col-12 col-md-4 p-md-0 text-center">
-        <div class="idea-img">
-          <a><img src="<%= Routes.static_path(@conn, "/images/idea-img.jpg") %>" alt="idea detail image"></a>
-        </div>
-      </div>
-
       <div class="col-12 col-md-8 p-md-0">
         <div class="idea-description">
           <span class="badge badge-pill badge-secondary font-semibold"><%= @challenge.focus_area %></span>
           <span class="badge badge-pill badge-secondary font-semibold"><%= challenge_status(@challenge) %></span>
-          <h2><%= @challenge.name %></h2>
+          <h2>#<%= @challenge.id %> <%= @challenge.name %></h2>
           <p class="font-light"><%= @challenge.description %></p>
+          <%= champion_display(@challenge) %>
+          <%= neighborhood_display(@challenge) %>
         </div>
       </div>
     </div>
@@ -71,7 +67,16 @@
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="matters" role="tabpanel" aria-labelledby="matters-tab">
               <div class="col-md-12">
+                <h5>Why it matters</h5>
                 <p><%= @challenge.why %></p>
+              </div>
+              <div class="col-md-12">
+                <h5>What does "good" look like?</h5>
+                <p><%= @challenge.fixed_looks_like %></p>
+              </div>
+              <div class="col-md-12">
+                <h5>How could technology solve this?</h5>
+                <p><%= @challenge.technology_example %></p>
               </div>
             </div>
 

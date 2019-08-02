@@ -49,4 +49,28 @@ defmodule Web.ChallengeView do
     |> Enum.map(&String.capitalize/1)
     |> Enum.join(" ")
   end
+
+  def champion_display(challenge) do
+    case challenge.champion_name do
+      nil ->
+        nil
+
+      _ ->
+        content_tag :div, class: "mt-3" do
+          [content_tag(:h5, "Champion Name"), content_tag(:p, challenge.champion_name)]
+        end
+    end
+  end
+
+  def neighborhood_display(challenge) do
+    case challenge.neighborhood do
+      nil ->
+        nil
+
+      _ ->
+        content_tag :div, class: "mt-3" do
+          [content_tag(:h5, "Location"), content_tag(:p, challenge.neighborhood)]
+        end
+    end
+  end
 end
