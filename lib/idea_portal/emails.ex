@@ -51,6 +51,17 @@ defmodule IdeaPortal.Emails do
     |> render("password-reset.html")
   end
 
+  @doc """
+  Send an email about a new challenge being created
+  """
+  def new_challenge(challenge) do
+    base_email()
+    |> to("challenges@hackbaltimore.io")
+    |> subject("City Backlog - New Challenge")
+    |> assign(:challenge, challenge)
+    |> render("new-challenge.html")
+  end
+
   def base_email() do
     new_email()
     |> from(Mailer.from())

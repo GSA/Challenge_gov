@@ -1,8 +1,10 @@
 defmodule IdeaPortal.ChallengesTest do
   use IdeaPortal.DataCase
+  use Bamboo.Test
 
   alias IdeaPortal.Challenges
   alias IdeaPortal.Challenges.Challenge
+  alias IdeaPortal.Emails
 
   doctest Challenges
 
@@ -34,6 +36,13 @@ defmodule IdeaPortal.ChallengesTest do
         })
 
       assert changeset.errors[:focus_area]
+    end
+
+    test "sends an email" do
+      user = TestHelpers.create_verified_user()
+      challenge = TestHelpers.create_challenge(user)
+
+      assert_delivered_email(Emails.new_challenge(challenge))
     end
 
     test "attaching supporting documents" do

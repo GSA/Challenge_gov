@@ -9,6 +9,8 @@ defmodule IdeaPortal.Challenges do
   """
 
   alias IdeaPortal.Challenges.Challenge
+  alias IdeaPortal.Emails
+  alias IdeaPortal.Mailer
   alias IdeaPortal.Repo
   alias IdeaPortal.SupportingDocuments
   alias IdeaPortal.Timeline
@@ -32,7 +34,16 @@ defmodule IdeaPortal.Challenges do
   def new(user) do
     user
     |> Ecto.build_assoc(:challenges)
-    |> Challenge.create_changeset(%{})
+    |> Challenge.create_changeset(%{}, user)
+  end
+
+  @doc """
+  Changeset for adding a challenge (as an admin)
+  """
+  def admin_new(user) do
+    user
+    |> Ecto.build_assoc(:challenges)
+    |> Challenge.admin_changeset(%{}, user)
   end
 
   @doc """
@@ -115,7 +126,7 @@ defmodule IdeaPortal.Challenges do
 
     case result do
       {:ok, %{challenge: challenge}} ->
-        {:ok, challenge}
+        send_new_challenge_email(challenge)
 
       {:error, :challenge, changeset, _} ->
         {:error, changeset}
@@ -123,7 +134,7 @@ defmodule IdeaPortal.Challenges do
       {:error, {:document, _}, _, _} ->
         user
         |> Ecto.build_assoc(:challenges)
-        |> Challenge.create_changeset(params)
+        |> Challenge.create_changeset(params, user)
         |> Ecto.Changeset.add_error(:document_ids, "are invalid")
         |> Ecto.Changeset.apply_action(:insert)
     end
@@ -132,7 +143,47 @@ defmodule IdeaPortal.Challenges do
   defp submit_challenge(user, params) do
     user
     |> Ecto.build_assoc(:challenges)
-    |> Challenge.create_changeset(params)
+    |> Challenge.create_changeset(params, user)
+  end
+
+  @doc """
+  Submit a new challenge for a user
+  """
+  def create(user, params) do
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(:challenge, create_challenge(user, params))
+      |> attach_documents(params)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        send_new_challenge_email(challenge)
+
+      {:error, :challenge, changeset, _} ->
+        {:error, changeset}
+
+      {:error, {:document, _}, _, _} ->
+        user
+        |> Ecto.build_assoc(:challenges)
+        |> Challenge.admin_changeset(params, user)
+        |> Ecto.Changeset.add_error(:document_ids, "are invalid")
+        |> Ecto.Changeset.apply_action(:insert)
+    end
+  end
+
+  defp create_challenge(user, params) do
+    user
+    |> Ecto.build_assoc(:challenges)
+    |> Challenge.admin_changeset(params, user)
+  end
+
+  defp send_new_challenge_email(challenge) do
+    challenge
+    |> Emails.new_challenge()
+    |> Mailer.deliver_now()
+
+    {:ok, challenge}
   end
 
   defp attach_documents(multi, %{document_ids: ids}) do

@@ -1,0 +1,55 @@
+<%= form_for(@changeset, @path, [class: "form-horizontal"], fn f -> %>
+  <div class="box-body">
+    <div class="<%= FormView.form_group_classes(f, :focus_area) %>">
+      <%= label(f, :focus_area, class: "col-md-4") do %>
+        Focus Area <span class="required">*</span>
+      <% end %>
+      <div class="col-md-8">
+        <%= select(f, :focus_area, Challenges.focus_areas(), class: "form-control") %>
+      </div>
+    </div>
+
+    <div class="<%= FormView.form_group_classes(f, :status) %>">
+      <%= label(f, :status, class: "col-md-4") do %>
+        Status <span class="required">*</span>
+      <% end %>
+      <div class="col-md-8">
+        <%= select(f, :status, Challenges.statuses(), class: "form-control") %>
+      </div>
+    </div>
+
+    <%= FormView.text_field(f, :captured_on) do %>
+      <span class="help-block">Format <code>YYYY-MM-DD</code></span>
+    <% end %>
+
+    <%= FormView.text_field(f, :name, required: true) %>
+
+    <%= FormView.textarea_field(f, :description, label: "What is the problem?", rows: 10, required: true) %>
+
+    <%= FormView.textarea_field(f, :why, label: "Why is this a problem?", rows: 10, required: true) %>
+
+    <%= FormView.textarea_field(f, :fixed_looks_like, label: "What does \"fixed\" look like?", rows: 10, required: true) %>
+
+    <%= FormView.textarea_field(f, :technology_example, label: "How does technology help solve this problem?", rows: 10, required: true) %>
+
+    <%= FormView.text_field(f, :neighborhood, label: "Location or Neighborhood") %>
+
+    <%= FormView.text_field(f, :champion_name) %>
+
+    <%= FormView.text_field(f, :champion_email) %>
+
+    <%= FormView.text_field(f, :submitter_first_name) %>
+
+    <%= FormView.text_field(f, :submitter_last_name) %>
+
+    <%= FormView.text_field(f, :submitter_email) %>
+
+    <%= FormView.text_field(f, :submitter_phone) %>
+
+    <%= FormView.textarea_field(f, :notes, label: "Notes", rows: 10) %>
+  </div>
+
+  <div class="box-footer">
+    <%= submit("Submit", class: "btn btn-primary pull-right") %>
+  </div>
+<% end) %>

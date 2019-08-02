@@ -1,6 +1,7 @@
 <section class="content-header">
   <h1>
     Challenges
+    <%= link "New", to: Routes.admin_challenge_path(@conn, :new), class: "btn btn-primary" %>
   </h1>
 
   <ol class="breadcrumb">

@@ -1,6 +1,6 @@
 <section class="content-header">
   <h1>
-    Edit Challenge #<%= @challenge.id %>
+    New Challenge 
   </h1>
 
   <ol class="breadcrumb">
@@ -10,8 +10,7 @@
       <% end %>
     </li>
     <li><%= link("Challenges", to: Routes.admin_challenge_path(@conn, :index)) %></li>
-    <li><%= link("Challenge ##{@challenge.id}", to: Routes.admin_challenge_path(@conn, :show, @challenge.id)) %></li>
-    <li class="active">Edit</li>
+    <li class="active">New</li>
   </ol>
 </section>
 
@@ -23,7 +22,7 @@
           <h3 class="box-title">Edit</h3>
         </div>
 
-        <%= render Web.Admin.ChallengeView, "_form.html", changeset: @changeset, path: Routes.admin_challenge_path(@conn, :update, @challenge.id) %>
+        <%= render Web.Admin.ChallengeView, "_form.html", changeset: @changeset, path: Routes.admin_challenge_path(@conn, :create) %>
 
       </div>
     </div>

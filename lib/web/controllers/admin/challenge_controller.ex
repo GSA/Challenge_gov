@@ -29,6 +29,31 @@ defmodule Web.Admin.ChallengeController do
     end
   end
 
+  def new(conn, _params) do
+    %{current_user: user} = conn.assigns
+
+    conn
+    |> assign(:changeset, Challenges.admin_new(user))
+    |> render("new.html")
+  end
+
+  def create(conn, %{"challenge" => params}) do
+    %{current_user: user} = conn.assigns
+
+    case Challenges.create(user, params) do
+      {:ok, challenge} ->
+        conn
+        |> put_flash(:info, "Challenge created!")
+        |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+
+      {:error, changeset} ->
+        conn
+        |> assign(:changeset, changeset)
+        |> put_status(422)
+        |> render("new.html")
+    end
+  end
+
   def edit(conn, %{"id" => id}) do
     with {:ok, challenge} <- Challenges.get(id) do
       conn
