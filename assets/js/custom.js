@@ -78,7 +78,7 @@ $(document).ready(function(){
 		link = $(this).data("link")
 
     if (content.length > charLimit) {
-			content = content.substring(0, charLimit)
+			content = content.substring(0, charLimit).trim()
 			$(this).html(`${content}...`)
 		}
 
