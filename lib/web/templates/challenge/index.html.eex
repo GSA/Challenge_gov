@@ -87,14 +87,10 @@
           <div class="col-md-12">
             <div class="card-content-head">
               <h2><a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>">#<%= challenge.id %> <%= challenge.name %></a> <span class="font-semibold tag-list"><%= challenge.focus_area %></span></h2>
-              <p><a><%= challenge.description %></a></p>
-            </div>
-            <div class="card-content-footer">
-              <div class="row">
-                <div class="col-12">
-                  <a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>" class="btn btn-grey-border btn-radius btn-sm">View</a>
-                </div>
-              </div>
+              <p>
+                <a><%= challenge.description %></a>
+              </p>
+              <a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>">view more</a>
             </div>
           </div>
         </div>

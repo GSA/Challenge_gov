@@ -362,7 +362,7 @@ img {
 header start
 ============*/
 .header {
-  margin-bottom: 60px;
+  margin-bottom: 30px;
 }
 .header-inner {
   display: inline-block;
@@ -772,7 +772,7 @@ Idea page content
   border: 0;
 }
 .card.custom-card {
-  margin-bottom: 80px;
+  margin-bottom: 30px;
   border-radius: 15px;
 }
 .card.idea-card .card-body {
@@ -797,6 +797,13 @@ Idea page content
   color: #2d5759;
   font-size: 17px;
   padding: 8px 30px;
+}
+.card-content-head p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .badge.badge-secondary {
   background-color: #eff1f3;
@@ -904,6 +911,9 @@ Idea page content
 .card-content-footer .btn {
   min-width: 130px;
   margin-right: 20px;
+}
+.idea-card .card-content-head {
+  margin-bottom: 0;
 }
 
 /*=========
