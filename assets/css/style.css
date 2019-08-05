@@ -797,13 +797,6 @@ Idea page content
   font-size: 17px;
   padding: 8px 30px;
 }
-.card-content-head p {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
 .badge.badge-secondary {
   background-color: #eff1f3;
   color: #797979;
@@ -838,6 +831,12 @@ Idea page content
   font-size: 14px;
   line-height: 22px;
   margin-bottom: 0;
+  display: -webkit-box;
+  /* autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .card-content-head p a {
   color: inherit;
