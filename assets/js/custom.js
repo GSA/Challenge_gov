@@ -78,10 +78,8 @@ $(document).ready(function(){
 		link = $(this).data("link")
 
     if (content.length > charLimit) {
-			s = content.substring(0, charLimit)
-			$(this).html(s)
-			$(this).append("... ")
-			$(this).append(`<a href='${link}'>view more</a>`)
+			content = content.substring(0, charLimit)
 		}
+		$(this).html(`${content}... <a href='${link}'>view more<a>`)
   })
 });
