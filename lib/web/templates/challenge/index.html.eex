@@ -84,7 +84,7 @@
     <div class="card custom-card idea-card">
       <div class="card-body">
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-12">
             <div class="card-content-head">
               <h2><a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>">#<%= challenge.id %> <%= challenge.name %></a> <span class="font-semibold tag-list"><%= challenge.focus_area %></span></h2>
               <p><a><%= challenge.description %></a></p>
