@@ -831,12 +831,6 @@ Idea page content
   font-size: 14px;
   line-height: 22px;
   margin-bottom: 0;
-  display: -webkit-box;
-  /* autoprefixer: ignore next */
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 .card-content-head p a {
   color: inherit;
@@ -3532,4 +3526,8 @@ image-uploader-end
 }
 .page-item .page-link {
   color: #46b3ba;
+}
+.truncate a {
+  color: #46b3ba !important;
+  text-decoration: underline;
 }

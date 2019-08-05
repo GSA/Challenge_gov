@@ -1,7 +1,7 @@
 <div class="idea-detail-wrapper">
   <div class="card custom-card idea-detail-card">
     <div class="row m-md-0">
-      <div class="col-12 col-md-8 p-md-0">
+      <div class="col-12 col-md-12 p-md-0">
         <div class="idea-description">
           <span class="badge badge-pill badge-secondary font-semibold"><%= @challenge.focus_area %></span>
           <span class="badge badge-pill badge-secondary font-semibold"><%= challenge_status(@challenge) %></span>

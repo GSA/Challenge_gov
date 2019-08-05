@@ -70,6 +70,18 @@ $(document).ready(function(){
     $(".image-uploader").change(function(){
     	var $this = $(this);
     	readURL(this, $this);
-    });
+		});
+		
+  $(".truncate").each(function() {
+		charLimit = 400
+		content = $(this)[0].innerHTML.trim()
+		link = $(this).data("link")
 
+    if (content.length > charLimit) {
+			s = content.substring(0, charLimit)
+			$(this).html(s)
+			$(this).append("... ")
+			$(this).append(`<a href='${link}'>view more</a>`)
+		}
+  })
 });
