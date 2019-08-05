@@ -79,7 +79,9 @@ $(document).ready(function(){
 
     if (content.length > charLimit) {
 			content = content.substring(0, charLimit)
+			$(this).html(`${content}...`)
 		}
-		$(this).html(`${content}... <a href='${link}'>view more<a>`)
+
+		$(this).append(` <a href='${link}'>view more<a>`)
   })
 });
