@@ -181,7 +181,7 @@ defmodule IdeaPortal.Challenges do
   defp send_new_challenge_email(challenge) do
     challenge
     |> Emails.new_challenge()
-    |> Mailer.deliver_now()
+    |> Mailer.deliver_later()
 
     {:ok, challenge}
   end
