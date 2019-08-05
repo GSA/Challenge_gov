@@ -783,7 +783,6 @@ Idea page content
 }
 .card-content-head h2 {
   font-size: 23px;
-  padding-right: 130px;
   position: relative;
   margin-bottom: 15px;
 }
@@ -838,7 +837,6 @@ Idea page content
   color: #737373;
   font-size: 14px;
   line-height: 22px;
-  padding-right: 130px;
   margin-bottom: 0;
 }
 .card-content-head p a {
