@@ -4,6 +4,7 @@ defmodule IdeaPortal.Repo.Migrations.UpdateExistingChallengePublishedOn do
   def up do
     execute "update challenges set published_on = inserted_at"
   end
+
   def down do
   end
 end
