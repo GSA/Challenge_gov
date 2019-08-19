@@ -34,6 +34,7 @@ defmodule IdeaPortal.Challenges.Challenge do
   schema "challenges" do
     field(:status, :string, default: "pending")
     field(:captured_on, :date)
+    field(:published_on, :date)
     field(:focus_area, :string)
     field(:name, :string)
     field(:description, :string)
@@ -104,6 +105,7 @@ defmodule IdeaPortal.Challenges.Challenge do
     |> cast(params, [
       :status,
       :captured_on,
+      :published_on,
       :focus_area,
       :name,
       :description,
@@ -139,6 +141,7 @@ defmodule IdeaPortal.Challenges.Challenge do
     |> create_changeset(params, user)
     |> cast(params, [
       :captured_on,
+      :published_on,
       :submitter_first_name,
       :submitter_last_name,
       :submitter_email,
@@ -151,5 +154,6 @@ defmodule IdeaPortal.Challenges.Challenge do
     struct
     |> change()
     |> put_change(:status, "created")
+    |> put_change(:published_on, Date.utc_today())
   end
 end
