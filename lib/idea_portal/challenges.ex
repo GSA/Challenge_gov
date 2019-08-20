@@ -158,7 +158,7 @@ defmodule IdeaPortal.Challenges do
 
     case result do
       {:ok, %{challenge: challenge}} ->
-        send_new_challenge_email(challenge)
+        {:ok, challenge}
 
       {:error, :challenge, changeset, _} ->
         {:error, changeset}
