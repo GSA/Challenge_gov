@@ -140,4 +140,22 @@ defmodule IdeaPortal.ChallengesTest do
       assert challenge.status == "archived"
     end
   end
+
+  describe "getting challenge counts" do
+    test "successfully" do
+      user = TestHelpers.create_user()
+      _pending_challenge = TestHelpers.create_challenge(user)
+      created_challenge = TestHelpers.create_challenge(user)
+      archived_challenge = TestHelpers.create_challenge(user)
+
+      Challenges.publish(created_challenge)
+      Challenges.archive(archived_challenge)
+
+      counts = Challenges.admin_counts()
+
+      assert counts.pending === 1
+      assert counts.created === 1
+      assert counts.archived === 1
+    end
+  end
 end

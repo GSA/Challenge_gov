@@ -78,6 +78,21 @@ defmodule IdeaPortal.Challenges do
   end
 
   @doc """
+  Get all challenges
+  """
+  def admin_counts() do
+    challenges =
+      Challenge
+      |> Repo.all()
+
+    pending = Enum.count(challenges, &(&1.status === "pending"))
+    created = Enum.count(challenges, &(&1.status === "created"))
+    archived = Enum.count(challenges, &(&1.status === "archived"))
+
+    %{pending: pending, created: created, archived: archived}
+  end
+
+  @doc """
   Get a challenge
   """
   def get(id) do

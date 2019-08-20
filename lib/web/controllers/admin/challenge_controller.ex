@@ -12,10 +12,15 @@ defmodule Web.Admin.ChallengeController do
     filter = Map.get(params, "filter", %{})
     pagination = Challenges.admin_all(filter: filter, page: page, per: per)
 
+    counts = Challenges.admin_counts()
+
     conn
     |> assign(:challenges, pagination.page)
     |> assign(:pagination, pagination.pagination)
     |> assign(:filter, filter)
+    |> assign(:pending_count, counts.pending)
+    |> assign(:created_count, counts.created)
+    |> assign(:archived_count, counts.archived)
     |> render("index.html")
   end
 
