@@ -2,6 +2,9 @@
   <h1>
     Challenges
     <%= link "New", to: Routes.admin_challenge_path(@conn, :new), class: "btn btn-primary" %>
+    Pending: <%= @pending_count %>
+    Created: <%= @created_count %>
+    Archived: <%= @archived_count %>
   </h1>
 
   <ol class="breadcrumb">
