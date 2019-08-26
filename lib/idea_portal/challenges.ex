@@ -71,7 +71,7 @@ defmodule IdeaPortal.Challenges do
   def admin_all(opts \\ []) do
     query =
       Challenge
-      |> order_by([c], [c.status, desc: c.id])
+      |> order_by([c], desc: c.status, desc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
