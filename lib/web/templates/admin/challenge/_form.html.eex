@@ -22,6 +22,10 @@
       <span class="help-block">Format <code>YYYY-MM-DD</code></span>
     <% end %>
 
+    <%= FormView.text_field(f, :published_on) do %>
+      <span class="help-block">Format <code>YYYY-MM-DD</code></span>
+    <% end %>
+
     <%= FormView.text_field(f, :name, required: true) %>
 
     <%= FormView.textarea_field(f, :description, label: "What is the problem?", rows: 10, required: true) %>
