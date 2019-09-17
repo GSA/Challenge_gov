@@ -60,7 +60,7 @@ defmodule IdeaPortal.Challenges do
     query =
       Challenge
       |> where([c], c.status == "created")
-      |> order_by([c], desc: c.published_on)
+      |> order_by([c], desc: c.published_on, asc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
