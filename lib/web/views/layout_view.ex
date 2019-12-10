@@ -78,7 +78,7 @@ defmodule Web.PageTitle do
     ErrorView
   }
 
-  @app_name "HackBaltimore.io Idea Portal"
+  @app_name "Challenge.gov"
 
   def for({view, action, assigns}) do
     {view, action, assigns}
@@ -87,7 +87,7 @@ defmodule Web.PageTitle do
   end
 
   defp get({Admin.DashboardView, :index, _}) do
-    "Admin - Dashbaord"
+    "Admin - Dashboard"
   end
 
   defp get({Admin.ChallengeView, :index, _}) do
@@ -103,20 +103,20 @@ defmodule Web.PageTitle do
   end
 
   defp get({Admin.TeamView, :index, _}) do
-    "Admin - Teams"
+    "Admin - Agencies"
   end
 
   defp get({Admin.TeamView, :show, assigns}) do
-    "Admin - Viewing Team - #{assigns.team.name}"
+    "Admin - Viewing Agency - #{assigns.team.name}"
   end
 
   defp get({Admin.UserView, :index, _}) do
-    "Admin - Users"
+    "Admin - Challenge Owners"
   end
 
   defp get({Admin.UserView, :show, assigns}) do
     user = Map.get(assigns, :user, %{})
-    "Admin - Viewing User - #{user.first_name} #{user.last_name}"
+    "Admin - Viewing Challenge Owner - #{user.first_name} #{user.last_name}"
   end
 
   defp get({SessionView, :new, _}) do

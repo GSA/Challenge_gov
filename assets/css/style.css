@@ -1805,7 +1805,7 @@ team-detail
 .create-team .title-mb {
   font-size: 24px;
   color: #000000;
-  margin-bottom: 54px;
+  margin-bottom: 24px;
 }
 .create-team .title-mb span {
   font-size: 16px;
@@ -1819,7 +1819,7 @@ team-detail
   float: left;
   width: 20%;
   text-align: left;
-  margin: 58px 0 0 0;
+  margin: 28px 0 0 0;
 }
 .create-team .add-member {
   display: inline-block;
