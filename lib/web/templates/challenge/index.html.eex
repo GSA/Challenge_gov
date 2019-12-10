@@ -86,7 +86,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="card-content-head">
-              <h2><a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>">#<%= challenge.id %> <%= challenge.name %></a> <span class="font-semibold tag-list"><%= challenge.focus_area %></span></h2>
+              <h2><a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>"><%= challenge.name %></a> <span class="font-semibold tag-list"><%= challenge.focus_area %></span></h2>
               <p class="truncate" data-link="<%= Routes.challenge_path(@conn, :show, challenge.id) %>" >
                 <%= challenge.description %>
               </p>
