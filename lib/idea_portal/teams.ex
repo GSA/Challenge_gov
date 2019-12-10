@@ -62,7 +62,7 @@ defmodule IdeaPortal.Teams do
       join: u in assoc(m, :user),
       where: u.display == true,
       where: m.status == "accepted",
-      preload: :user
+      preload: [user: [:challenges]]
   end
 
   @doc """

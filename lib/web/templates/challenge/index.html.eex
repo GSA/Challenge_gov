@@ -58,7 +58,7 @@
     </div>
 
     <%= if Map.has_key?(assigns, :current_user) do %>
-      <div class="col-md-4 text-right">
+      <div class="col-md-5 text-right">
         <%= link("Submit a Challenge", to: Routes.challenge_path(@conn, :new), class: "btn btn-light btn-radius btn-submit-challenge") %>
       </div>
     <% end %>

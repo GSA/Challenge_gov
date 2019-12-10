@@ -19,7 +19,7 @@
   </div>
   <div class="team-member card">
     <div class="card-body">
-      <h2 class="title-mb font-semibold">Team Members</h2>
+      <h2 class="title-mb font-semibold">Agency Members</h2>
       <ul>
         <%= Enum.map(@team.members, fn member -> %>
           <li>
@@ -43,6 +43,22 @@
             </div>
           </li>
         <% end %>
+      </ul>
+    </div>
+  </div>
+  <div class="agency-challenges card">
+    <div class="card-body">
+      <h2 class="title-mb font-semibold">Agency Challenges</h2>
+      <ul>
+        <%= Enum.map(@team.members, fn member -> %>
+          <%= Enum.map(member.user.challenges, fn challenge -> %>
+            <li>
+              <div class="add-member text-center">
+                <p><%= link challenge.name, to: Routes.challenge_path(@conn, :show, challenge.id) %></p>
+              </div>
+            </li>
+          <% end) %>
+        <% end) %>
       </ul>
     </div>
   </div>

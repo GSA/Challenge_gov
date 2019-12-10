@@ -148,27 +148,27 @@ defmodule Web.PageTitle do
   end
 
   defp get({AccountView, :index, _}) do
-    "Participants"
+    "Challenge Owners"
   end
 
   defp get({AccountView, :edit, _}) do
-    "Editing Account"
+    "Editing Challenge Owner"
   end
 
   defp get({AccountView, :show, assigns}) do
-    "Participant - #{assigns.account.first_name} #{assigns.account.last_name}"
+    "Challenge Owner - #{assigns.account.first_name} #{assigns.account.last_name}"
   end
 
   defp get({TeamView, :index, _}) do
-    "Teams"
+    "Agencies"
   end
 
   defp get({TeamView, :new, _}) do
-    "Create a Team"
+    "Create an Agency"
   end
 
   defp get({TeamView, :show, assigns}) do
-    "Team - #{assigns.team.name}"
+    "Agency - #{assigns.team.name}"
   end
 
   defp get({ErrorView, _, _}) do
