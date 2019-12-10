@@ -25,15 +25,19 @@
           <dl>
             <dt>Name</dd>
             <dd><%= AccountView.full_name(@user) %></dd>
+            <br/>
 
             <dt>Phone Number</dd>
             <dd><%= phone_number(@user) %></dd>
+            <br/>
 
             <dt>Email</dd>
             <dd><%= @user.email %></dd>
+            <br/>
 
             <dt>Role</dd>
             <dd><%= @user.role %></dd>
+            <br/>
 
             <dt>Verified email?</dt>
             <dd><%= email_verified?(@user) %></dd>

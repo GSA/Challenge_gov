@@ -106,9 +106,9 @@ defmodule Web.Router do
 
     resources("/events", EventController, only: [:edit, :update, :delete])
 
-    resources("/teams", TeamController, only: [:index, :show, :edit, :update, :delete])
+    resources("/agencies", TeamController, only: [:index, :show, :edit, :update, :delete])
 
-    resources("/users", UserController, only: [:index, :show])
+    resources("/challenge_owners", UserController, only: [:index, :show])
     post("/users/:id/toggle", UserController, :toggle, as: :user)
   end
 

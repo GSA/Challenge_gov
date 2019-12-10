@@ -1,6 +1,6 @@
 <section class="content-header">
   <h1>
-    Edit Team #<%= @team.id %>
+    Edit Agency: <%= @team.name %>
   </h1>
 
   <ol class="breadcrumb">
@@ -9,8 +9,8 @@
         <i class="fa fa-dashboard"></i> Home
       <% end %>
     </li>
-    <li><%= link("Team", to: Routes.admin_team_path(@conn, :index)) %></li>
-    <li><%= link("Team ##{@team.id}", to: Routes.admin_team_path(@conn, :show, @team.id)) %></li>
+    <li><%= link("Agencies", to: Routes.admin_team_path(@conn, :index)) %></li>
+    <li><%= link(@team.name, to: Routes.admin_team_path(@conn, :show, @team.id)) %></li>
     <li class="active">Edit</li>
   </ol>
 </section>

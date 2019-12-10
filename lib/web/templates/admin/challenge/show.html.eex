@@ -35,36 +35,47 @@
           <dl>
             <dt>Captured On</dd>
             <dd><%= @challenge.captured_on %></dd>
+            <br/>
 
             <dt>Published On</dd>
             <dd><%= @challenge.published_on %></dd>
+            <br/>
 
             <dt>Status</dd>
             <dd><%= String.capitalize(@challenge.status) %></dd>
+            <br/>
 
             <dt>Submitter</dt>
             <dd><%= link(@challenge.user.email, to: Routes.admin_user_path(@conn, :show, @challenge.user_id)) %></dd>
+            <br/>
 
             <dt>Name</dd>
             <dd><%= @challenge.name %></dd>
+            <br/>
 
             <dt>Focus Area</dd>
             <dd><%= @challenge.focus_area %></dd>
+            <br/>
 
             <dt>Location or Neighborhood</dd>
             <dd><%= @challenge.neighborhood %></dd>
+            <br/>
 
             <dt>Champion Name</dd>
             <dd><%= @challenge.champion_name %></dd>
+            <br/>
 
             <dt>Champion Email</dd>
             <dd><%= @challenge.champion_email %></dd>
+            <br/>
 
             <dt>Submitter Name</dd>
             <dd><%= @challenge.submitter_first_name %> <%= @challenge.submitter_last_name %></dd>
+            <br/>
 
             <dt>Submitter Email</dd>
             <dd><%= @challenge.submitter_email %></dd>
+            <br/>
 
             <dt>Submitter Phone</dd>
             <dd><%= @challenge.submitter_phone %></dd>
