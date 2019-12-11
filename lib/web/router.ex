@@ -102,6 +102,7 @@ defmodule Web.Router do
     end
 
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)
+    post("/challenges/:id/reject", ChallengeController, :reject, as: :challenge)
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
 
     resources("/events", EventController, only: [:edit, :update, :delete])

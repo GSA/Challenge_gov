@@ -95,6 +95,15 @@ defmodule Web.Admin.ChallengeController do
     end
   end
 
+  def reject(conn, %{"id" => id}) do
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.reject(challenge) do
+      conn
+      |> put_flash(:info, "Challenge rejected")
+      |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+    end
+  end
+
   def archive(conn, %{"id" => id}) do
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.archive(challenge) do

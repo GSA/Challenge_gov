@@ -62,6 +62,17 @@ defmodule IdeaPortal.Emails do
     |> render("new-challenge.html")
   end
 
+  @doc """
+  Send an email about a new challenge being rejected
+  """
+  def rejected_challenge(challenge) do
+    base_email()
+    |> to(challenge.submitter_email)
+    |> subject("challenge.gov - Challenge Rejected")
+    |> assign(:challenge, challenge)
+    |> render("rejected-challenge.html")
+  end
+
   def base_email() do
     new_email()
     |> from(Mailer.from())

@@ -24,6 +24,9 @@
             <%= if Challenges.publishable?(@challenge) do  %>
               <%= link("Publish", to: Routes.admin_challenge_path(@conn, :publish, @challenge.id), method: :post, class: "btn btn-primary") %>
             <% end %>
+            <%= if Challenges.rejectable?(@challenge) do  %>
+              <%= link("Reject", to: Routes.admin_challenge_path(@conn, :reject, @challenge.id), method: :post, class: "btn btn-danger") %>
+            <% end %>
             <%= if Challenges.archivable?(@challenge) do  %>
               <%= link("Archive", to: Routes.admin_challenge_path(@conn, :archive, @challenge.id), method: :post, class: "btn btn-default") %>
             <% end %>
