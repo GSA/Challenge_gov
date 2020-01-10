@@ -1,6 +1,47 @@
 <%= form_for(@changeset, @path, [class: "form-horizontal"], fn f -> %>
   <div class="box-body">
-    <div class="<%= FormView.form_group_classes(f, :focus_area) %>">
+    <div class="accordion" id="accordionWrap">
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h2 class="mb-0">
+            <button class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+              General Information
+            </button>
+          </h2>
+        </div>
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+          <%= FormView.textarea_field(f, :why, label: "Challenge Manager of Record", rows: 1, required: true) %>
+
+          <%= FormView.textarea_field(f, :why, label: "Challenge Manager Email", rows: 1, required: true) %>
+
+          <%= FormView.textarea_field(f, :why, label: "Point of Contact", rows: 1, required: true) %>
+
+          <div class="<%= FormView.form_group_classes(f, :focus_area) %>">
+            <%= label(f, :focus_area, class: "col-md-4") do %>
+            Lead Agency Name <span class="required">*</span>
+            <% end %>
+            <div class="col-md-8">
+              <%= select(f, :focus_area, Challenges.focus_areas(), class: "form-control") %>
+            </div>
+          </div>
+
+          <div class="<%= FormView.form_group_classes(f, :focus_area) %>">
+            <%= label(f, :focus_area, class: "col-md-4") do %>
+            Federal Partner Agency
+            <% end %>
+            <div class="col-md-8">
+              <%= select(f, :focus_area, Challenges.focus_areas(), class: "form-control") %>
+            </div>
+          </div>
+
+          <%= FormView.textarea_field(f, :why, label: "Non-Federal Partners", rows: 1) %>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- <div class="<%= FormView.form_group_classes(f, :focus_area) %>">
       <%= label(f, :focus_area, class: "col-md-4") do %>
         Focus Area <span class="required">*</span>
       <% end %>
@@ -50,7 +91,7 @@
 
     <%= FormView.text_field(f, :submitter_phone) %>
 
-    <%= FormView.textarea_field(f, :notes, label: "Notes", rows: 10) %>
+    <%= FormView.textarea_field(f, :notes, label: "Notes", rows: 10) %> -->
   </div>
 
   <div class="box-footer">
