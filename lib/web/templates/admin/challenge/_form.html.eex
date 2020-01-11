@@ -9,7 +9,7 @@
             </button>
           </h2>
         </div>
-        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionWrap">
           <%= FormView.textarea_field(f, :why, label: "Challenge Manager of Record", rows: 1, required: true) %>
 
           <%= FormView.textarea_field(f, :why, label: "Challenge Manager Email", rows: 1, required: true) %>
@@ -36,6 +36,77 @@
 
           <%= FormView.textarea_field(f, :why, label: "Non-Federal Partners", rows: 1) %>
 
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <h2 class="mb-0">
+            <button class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Challenge Information
+            </button>
+          </h2>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionWrap">
+          <%= FormView.textarea_field(f, :why, label: "Challenge Title", rows: 1, required: true) %>
+
+          <%= FormView.textarea_field(f, :why, label: "Custom URL", rows: 1) %>
+
+          <%= FormView.textarea_field(f, :why, label: "External Challenge Link", rows: 1) %>
+
+          <%= FormView.textarea_field(f, :why, label: "Tagline", rows: 1, required: true) %>
+
+          <!-- Challenge Tile Image, req-->
+
+          <div class="<%= FormView.form_group_classes(f, :challenge_type) %>">
+            <%= label(f, :challenge_type, class: "col-md-4") do %>
+            Challenge Type
+            <% end %>
+            <div class="col-md-8">
+              <%= select(f, :challenge_type, Challenges.challenge_types(), class: "form-control") %>
+            </div>
+          </div>
+
+          <%= FormView.textarea_field(f, :why, label: "Challenge Description", rows: 6, required: true) %>
+
+          <!-- upload addl materials -->
+
+          <%= FormView.textarea_field(f, :why, label: "How to Enter", rows: 1, required: true) %>
+
+          <%= FormView.textarea_field(f, :why, label: "Fiscal Year", rows: 1, required: true) do %>
+            <span class="help-block">Format <code>FY00</code></span>
+          <% end %>
+
+          <%= FormView.text_field(f, :submission_start_date, required: true) do %>
+            <span class="help-block">Format <code>YYYY-MM-DD</code></span>
+          <% end %>
+
+          <!-- Submission Start Time, required: true -->
+
+          <!-- Submission End Date, required: true -->
+
+        <!--   Submission End Time, required: true -->
+
+           <div class="<%= FormView.form_group_classes(f, :multi_phase) %>">
+             <%= label(f, :multi_phase, class: "col-md-4") do %>
+             Does this Challenge have multiple Phases? <span class="required">*</span>
+             <% end %>
+           <div class="col-md-8">
+             <%= label f, :yes %>
+             <%= Phoenix.HTML.Form.checkbox(f, :yes_multi_phase) %>
+             <%= label f, :no %>
+             <%= Phoenix.HTML.Form.checkbox(f, :no_multi_phase) %>
+           </div>
+         </div>
+
+            <!-- Y: -->
+            <!-- Number of Phases -->
+            <!-- Phase Descriptions -->
+          <!--   Phase Dates -->
+
+          <!-- Timeline points -->
+
+          <%= FormView.textarea_field(f, :why, label: "Judging Criteria", rows: 1, required: true) %>
+          </nav>
         </div>
       </div>
     </div>

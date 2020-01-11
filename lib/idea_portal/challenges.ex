@@ -26,7 +26,7 @@ defmodule IdeaPortal.Challenges do
   def agencies(), do: Challenge.agencies()
 
   @doc false
-  def statuses(), do: Challenge.statuses()
+  def challenge_types(), do: Challenge.challenge_types()
 
   @doc """
   New changeset for a challenge
