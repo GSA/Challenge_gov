@@ -23,7 +23,7 @@ defmodule IdeaPortal.Challenges do
   @behaviour Stein.Filter
 
   @doc false
-  def focus_areas(), do: Challenge.focus_areas()
+  def agencies(), do: Challenge.agencies()
 
   @doc false
   def statuses(), do: Challenge.statuses()

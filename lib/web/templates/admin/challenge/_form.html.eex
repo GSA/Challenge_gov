@@ -16,21 +16,21 @@
 
           <%= FormView.textarea_field(f, :why, label: "Point of Contact", rows: 1, required: true) %>
 
-          <div class="<%= FormView.form_group_classes(f, :focus_area) %>">
-            <%= label(f, :focus_area, class: "col-md-4") do %>
+          <div class="<%= FormView.form_group_classes(f, :lead_agency_name) %>">
+            <%= label(f, :lead_agency_name, class: "col-md-4") do %>
             Lead Agency Name <span class="required">*</span>
             <% end %>
             <div class="col-md-8">
-              <%= select(f, :focus_area, Challenges.focus_areas(), class: "form-control") %>
+              <%= select(f, :lead_agency_name, Challenges.agencies(), class: "form-control") %>
             </div>
           </div>
 
-          <div class="<%= FormView.form_group_classes(f, :focus_area) %>">
-            <%= label(f, :focus_area, class: "col-md-4") do %>
+          <div class="<%= FormView.form_group_classes(f, :federal_partner_agency) %>">
+            <%= label(f, :federal_partner_agency, class: "col-md-4") do %>
             Federal Partner Agency
             <% end %>
             <div class="col-md-8">
-              <%= select(f, :focus_area, Challenges.focus_areas(), class: "form-control") %>
+              <%= multiple_select(f, :federal_partner_agency, Challenges.agencies(), class: "form-control") %>
             </div>
           </div>
 
@@ -40,58 +40,6 @@
       </div>
     </div>
 
-
-    <!-- <div class="<%= FormView.form_group_classes(f, :focus_area) %>">
-      <%= label(f, :focus_area, class: "col-md-4") do %>
-        Focus Area <span class="required">*</span>
-      <% end %>
-      <div class="col-md-8">
-        <%= select(f, :focus_area, Challenges.focus_areas(), class: "form-control") %>
-      </div>
-    </div>
-
-    <div class="<%= FormView.form_group_classes(f, :status) %>">
-      <%= label(f, :status, class: "col-md-4") do %>
-        Status <span class="required">*</span>
-      <% end %>
-      <div class="col-md-8">
-        <%= select(f, :status, Challenges.statuses(), class: "form-control") %>
-      </div>
-    </div>
-
-    <%= FormView.text_field(f, :captured_on) do %>
-      <span class="help-block">Format <code>YYYY-MM-DD</code></span>
-    <% end %>
-
-    <%= FormView.text_field(f, :published_on) do %>
-      <span class="help-block">Format <code>YYYY-MM-DD</code></span>
-    <% end %>
-
-    <%= FormView.text_field(f, :name, required: true) %>
-
-    <%= FormView.textarea_field(f, :description, label: "What is the problem?", rows: 10, required: true) %>
-
-    <%= FormView.textarea_field(f, :why, label: "Why does this matter?", rows: 10, required: true) %>
-
-    <%= FormView.textarea_field(f, :fixed_looks_like, label: "What does \"good\" look like?", rows: 10, required: true) %>
-
-    <%= FormView.textarea_field(f, :technology_example, label: "How can technology help?", rows: 10, required: true) %>
-
-    <%= FormView.text_field(f, :neighborhood, label: "Location or Neighborhood") %>
-
-    <%= FormView.text_field(f, :champion_name) %>
-
-    <%= FormView.text_field(f, :champion_email) %>
-
-    <%= FormView.text_field(f, :submitter_first_name) %>
-
-    <%= FormView.text_field(f, :submitter_last_name) %>
-
-    <%= FormView.text_field(f, :submitter_email) %>
-
-    <%= FormView.text_field(f, :submitter_phone) %>
-
-    <%= FormView.textarea_field(f, :notes, label: "Notes", rows: 10) %> -->
   </div>
 
   <div class="box-footer">
