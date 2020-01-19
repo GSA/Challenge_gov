@@ -17,46 +17,19 @@
       </div>
     </div>
   </div>
-  <div class="team-member card">
-    <div class="card-body">
-      <h2 class="title-mb font-semibold">Agency Members</h2>
-      <ul>
-        <%= Enum.map(@team.members, fn member -> %>
-          <li>
-            <div class="add-member text-center">
-              <div class="member-img border-non-team-detail-img">
-                <%= AccountView.avatar_img(member.user) %>
-              </div>
-              <p><%= member.user.first_name %> <%= member.user.last_name %></p>
-            </div>
-          </li>
-        <% end) %>
-        <%= if current_team_member?(@conn, @team) do %>
-          <li>
-            <div class="add-member text-center">
-              <div class="member-img">
-                <a href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter">
-                  <i class="icon-Participants"><span>+</span></i>
-                  <p>Add Members</p>
-                </a>
-              </div>
-            </div>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
   <div class="agency-challenges card">
     <div class="card-body">
       <h2 class="title-mb font-semibold">Agency Challenges</h2>
       <ul>
         <%= Enum.map(@team.members, fn member -> %>
           <%= Enum.map(member.user.challenges, fn challenge -> %>
-            <li>
-              <div class="add-member text-center">
-                <p><%= link challenge.name, to: Routes.challenge_path(@conn, :show, challenge.id) %></p>
-              </div>
-            </li>
+            <%= if challenge.status == "created" do %>
+              <li>
+                <div class="add-member text-center">
+                  <p><%= link challenge.name, to: Routes.challenge_path(@conn, :show, challenge.id) %></p>
+                </div>
+              </li>
+            <% end %>
           <% end) %>
         <% end) %>
       </ul>

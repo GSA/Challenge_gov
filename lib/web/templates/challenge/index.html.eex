@@ -21,28 +21,20 @@
                   <div class="filter-checkboxes">
                     <ul>
                       <li><label class="custom-checkbox-btn text-center">
-                        <%= FormView.multi_checkbox("education", "area", "Education", @filter) %>
-                        <span class="transition-2s">Education</span><strong class="transition-2s"></strong>
+                        <%= FormView.multi_checkbox("design", "area", "Design", @filter) %>
+                        <span class="transition-2s">Design</span><strong class="transition-2s"></strong>
                       </label></li>
                       <li><label class="custom-checkbox-btn text-center">
-                        <%= FormView.multi_checkbox("workforce", "area", "Workforce Development", @filter) %>
-                        <span class="transition-2s">Workforce</span><strong class="transition-2s"></strong>
+                        <%= FormView.multi_checkbox("software", "area", "Software", @filter) %>
+                        <span class="transition-2s">Software</span><strong class="transition-2s"></strong>
                       </label></li>
                       <li><label class="custom-checkbox-btn text-center">
-                        <%= FormView.multi_checkbox("transportation", "area", "Transportation", @filter) %>
-                        <span class="transition-2s">Transportation</span><strong class="transition-2s"></strong>
+                        <%= FormView.multi_checkbox("technology", "area", "Technology", @filter) %>
+                        <span class="transition-2s">Technology</span><strong class="transition-2s"></strong>
                       </label></li>
                       <li><label class="custom-checkbox-btn text-center">
-                        <%= FormView.multi_checkbox("public_safety", "area", "Public Safety", @filter) %>
-                        <span class="transition-2s">Public Safety</span><strong class="transition-2s"></strong>
-                      </label></li>
-                      <li><label class="custom-checkbox-btn text-center">
-                        <%= FormView.multi_checkbox("housing", "area", "Housing", @filter) %>
-                        <span class="transition-2s">Housing</span><strong class="transition-2s"></strong>
-                      </label></li>
-                      <li><label class="custom-checkbox-btn text-center">
-                        <%= FormView.multi_checkbox("health", "area", "Health & Wellness", @filter) %>
-                        <span class="transition-2s">Health</span><strong class="transition-2s"></strong>
+                        <%= FormView.multi_checkbox("scientific", "area", "Scientific", @filter) %>
+                        <span class="transition-2s">Scientific</span><strong class="transition-2s"></strong>
                       </label></li>
                     </ul>
                   </div>

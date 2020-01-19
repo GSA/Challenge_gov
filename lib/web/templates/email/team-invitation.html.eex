@@ -1,3 +1,3 @@
-<p>You've been invited by <%= AccountView.full_name(@inviter_user) %> to join <%= @team.name %> on City Backlog.</p>
+<p>You've been invited by <%= AccountView.full_name(@inviter_user) %> to join <%= @team.name %> on Challenge.gov.</p>
 
 <p><%= link("Accept the invite", to: Routes.team_invitation_url(Endpoint, :accept, @team.id)) %> or <%= link("reject the invite", to: Routes.team_invitation_url(Endpoint, :reject, @team.id)) %></p>

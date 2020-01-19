@@ -9,7 +9,7 @@
       </div>
       <div class="logo">
         <%= link(to: Routes.challenge_path(@conn, :index)) do %>
-          <img src="<%= Routes.static_path(@conn, "/images/challenge-logo.png") %>" alt="City Backlog Logo" title="City Backlog">
+          <img src="<%= Routes.static_path(@conn, "/images/challenge-logo.png") %>" alt="Challenge Gov Logo" title="Challenge Gov">
         <% end %>
       </div>
       <div class="top-nav">
@@ -25,7 +25,7 @@
             </li>
           <% else %>
             <li>
-              <%= link("Sign In", to: Routes.session_path(@conn, :new)) %>
+              <%= link("Challenge Owner Sign In", to: Routes.session_path(@conn, :new)) %>
             </li>
           <% end %>
         </ul>

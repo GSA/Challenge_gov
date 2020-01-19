@@ -2,7 +2,7 @@
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="icon" type="image/png" href="<%= Routes.static_path(@conn, "/images/favicon.png") %>" />
+  <link rel="icon" type="image/png" href="<%= Routes.static_path(@conn, "/images/favicon3.png") %>" />
   <link href="https://fonts.googleapis.com/css?family=Teko" rel="stylesheet">
 
   <title><%= page_title(@conn) %></title>

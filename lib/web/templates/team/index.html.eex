@@ -44,21 +44,6 @@
               <span class="image-circle"><%= avatar_img(team) %></span>
               <h3><%= team.name %></h3>
             </div>
-            <div class="card-btm">
-              <ul class="team-list-img">
-                <%= Enum.map(team.members, fn member -> %>
-                  <li>
-                    <%= AccountView.avatar_img(member.user) %>
-                  </li>
-                <% end) %>
-              </ul>
-              <%= if length(team.members) > 4 do %>
-                <div class="right-more">
-                  <p class="font-medium text-center">+<%= length(team.members) - 4 %></p>
-                  <span class="font-light text-center">more</span>
-                </div>
-              <% end %>
-            </div>
           <% end %>
         </div>
       </div>

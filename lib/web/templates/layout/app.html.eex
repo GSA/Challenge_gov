@@ -20,11 +20,6 @@
                     <i class="icon-Challenges"></i><span>Challenges</span>
                   <% end %>
                 </li>
-                <li class='<%= tab_selected(@conn, "accounts") %>'>
-                  <%= link(to: Routes.account_path(@conn, :index)) do %>
-                    <i class="icon-Participants"></i><span>Challenge Owners</span>
-                  <% end %>
-                </li>
                 <li class='<%= tab_selected(@conn, "teams") %>'>
                   <%= link(to: Routes.team_path(@conn, :index)) do %>
                     <i class="icon-Teams"></i><span>Agencies</span>

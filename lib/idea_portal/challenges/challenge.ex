@@ -14,12 +14,10 @@ defmodule IdeaPortal.Challenges.Challenge do
   @type t :: %__MODULE__{}
 
   @focus_areas [
-    "Housing",
-    "Education",
-    "Transportation",
-    "Public Safety",
-    "Health & Wellness",
-    "Workforce Development"
+    "Design",
+    "Software",
+    "Technology",
+    "Scientific"
   ]
 
   @statuses [
