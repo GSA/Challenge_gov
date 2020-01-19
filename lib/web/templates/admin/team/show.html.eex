@@ -1,6 +1,6 @@
 <section class="content-header">
   <h1>
-    Team #<%= @team.name %>
+    Agency: <%= @team.name %>
   </h1>
 
   <ol class="breadcrumb">
@@ -29,9 +29,11 @@
           <dl>
             <dt>Name</dd>
             <dd><%= @team.name %></dd>
+            <br/>
 
             <dt>Description</dd>
             <dd><%= @team.description %></dd>
+            <br/>
 
             <dt>Avatar</dd>
             <dd><%= TeamView.avatar_img(@team, height: 150) %></dd>

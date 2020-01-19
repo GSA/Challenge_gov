@@ -102,13 +102,14 @@ defmodule Web.Router do
     end
 
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)
+    post("/challenges/:id/reject", ChallengeController, :reject, as: :challenge)
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
 
     resources("/events", EventController, only: [:edit, :update, :delete])
 
-    resources("/teams", TeamController, only: [:index, :show, :edit, :update, :delete])
+    resources("/agencies", TeamController, only: [:index, :show, :edit, :update, :delete])
 
-    resources("/users", UserController, only: [:index, :show])
+    resources("/challenge_owners", UserController, only: [:index, :show])
     post("/users/:id/toggle", UserController, :toggle, as: :user)
   end
 

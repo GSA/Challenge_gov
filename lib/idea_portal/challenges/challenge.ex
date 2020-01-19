@@ -14,12 +14,10 @@ defmodule IdeaPortal.Challenges.Challenge do
   @type t :: %__MODULE__{}
 
   @focus_areas [
-    "Housing",
-    "Education",
-    "Transportation",
-    "Public Safety",
-    "Health & Wellness",
-    "Workforce Development"
+    "Design",
+    "Software",
+    "Technology",
+    "Scientific"
   ]
 
   @statuses [
@@ -28,7 +26,8 @@ defmodule IdeaPortal.Challenges.Challenge do
     "archived",
     "champion assigned",
     "design",
-    "vetted"
+    "vetted",
+    "rejected"
   ]
 
   schema "challenges" do
@@ -155,5 +154,11 @@ defmodule IdeaPortal.Challenges.Challenge do
     |> change()
     |> put_change(:status, "created")
     |> put_change(:published_on, Date.utc_today())
+  end
+
+  def reject_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:status, "rejected")
   end
 end

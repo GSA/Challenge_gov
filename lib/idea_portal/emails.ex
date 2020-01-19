@@ -13,7 +13,7 @@ defmodule IdeaPortal.Emails do
   def verification_email(user) do
     base_email()
     |> to(user.email)
-    |> subject("City Backlog - Please verify your email address")
+    |> subject("challenge.gov - Please verify your email address")
     |> assign(:user, user)
     |> render("verify-email.html")
   end
@@ -24,7 +24,7 @@ defmodule IdeaPortal.Emails do
   def invitation_email(invitee_user, inviter_user) do
     base_email()
     |> to(invitee_user.email)
-    |> subject("You've been invited to City Backlog")
+    |> subject("You've been invited to challenge.gov")
     |> assign(:invitee_user, invitee_user)
     |> assign(:inviter_user, inviter_user)
     |> render("invitation-email.html")
@@ -33,7 +33,7 @@ defmodule IdeaPortal.Emails do
   def team_invitation(invitee_user, team, inviter_user) do
     base_email()
     |> to(invitee_user.email)
-    |> subject("You've been invited to join #{team.name} on City Backlog")
+    |> subject("You've been invited to join #{team.name} on challenge.gov")
     |> assign(:team, team)
     |> assign(:invitee_user, invitee_user)
     |> assign(:inviter_user, inviter_user)
@@ -46,7 +46,7 @@ defmodule IdeaPortal.Emails do
   def password_reset(user) do
     base_email()
     |> to(user.email)
-    |> subject("City Backlog - Password reset")
+    |> subject("challenge.gov - Password reset")
     |> assign(:user, user)
     |> render("password-reset.html")
   end
@@ -56,10 +56,21 @@ defmodule IdeaPortal.Emails do
   """
   def new_challenge(challenge) do
     base_email()
-    |> to("challenges@hackbaltimore.io")
-    |> subject("City Backlog - New Challenge")
+    |> to("challenges@challenge.gov")
+    |> subject("challenge.gov - New Challenge")
     |> assign(:challenge, challenge)
     |> render("new-challenge.html")
+  end
+
+  @doc """
+  Send an email about a new challenge being rejected
+  """
+  def rejected_challenge(challenge) do
+    base_email()
+    |> to(challenge.submitter_email)
+    |> subject("challenge.gov - Challenge Rejected")
+    |> assign(:challenge, challenge)
+    |> render("rejected-challenge.html")
   end
 
   def base_email() do
