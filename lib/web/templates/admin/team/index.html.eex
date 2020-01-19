@@ -1,6 +1,6 @@
 <section class="content-header">
   <h1>
-    Teams
+    Agencies
   </h1>
 
   <ol class="breadcrumb">
@@ -9,7 +9,7 @@
         <i class="fa fa-dashboard"></i> Home
       <% end %>
     </li>
-    <li class="active">Teams</li>
+    <li class="active">Agencies</li>
   </ol>
 </section>
 

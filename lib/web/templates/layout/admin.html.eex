@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="icon" type="image/png" href="<%= Routes.static_path(@conn, "/images/favicon.png") %>" />
+    <link rel="icon" type="image/png" href="<%= Routes.static_path(@conn, "/images/favicon3.png") %>" />
 
     <title><%= page_title(@conn) %></title>
 
@@ -15,8 +15,8 @@
     <div class="wrapper">
       <header class="main-header">
         <a href="/admin" class="logo">
-          <span class="logo-mini">CB</span>
-          <span class="logo-lg">City Backlog</span>
+          <span class="logo-mini">CG</span>
+          <span class="logo-lg">challenge.gov</span>
         </a>
 
         <nav class="navbar navbar-static-top">
@@ -45,16 +45,16 @@
                 <span>Challenges</span>
               <% end %>
             </li>
-            <li class="<%= tab_selected(@conn, "teams") %>">
-              <%= link(to: Routes.admin_team_path(@conn, :index)) do %>
-                <i class="fa fa-users"></i>
-                <span>Teams</span>
-              <% end %>
-            </li>
-            <li class="<%= tab_selected(@conn, "users") %>">
+            <li class="<%= tab_selected(@conn, "challenge_owners") %>">
               <%= link(to: Routes.admin_user_path(@conn, :index)) do %>
                 <i class="fa fa-user"></i>
-                <span>Users</span>
+                <span>Challenge Owners</span>
+              <% end %>
+            </li>
+            <li class="<%= tab_selected(@conn, "agencies") %>">
+              <%= link(to: Routes.admin_team_path(@conn, :index)) do %>
+                <i class="fa fa-users"></i>
+                <span>Agencies</span>
               <% end %>
             </li>
           </ul>

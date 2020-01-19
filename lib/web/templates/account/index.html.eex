@@ -4,7 +4,7 @@
       <div class="search-form">
         <div class="form-group form-control-radius form-search has-icon right-icon">
           <i class="icon-magnifying-glass"></i>
-          <%= text_input :filter, :search, value: @filter["search"], class: "form-control", placeholder: "Search Participants" %>
+          <%= text_input :filter, :search, value: @filter["search"], class: "form-control", placeholder: "Search challenge owners" %>
         </div>
       </div>
     </div>
@@ -14,7 +14,7 @@
         <ul class="mp-none">
           <li>
             <%= link(to: Routes.user_invite_path(@conn, :new)) do %>
-              <span class="btn btn-light btn-radius btn-invite-member">Invite Participant</span>
+              <span class="btn btn-light btn-radius btn-invite-member">Invite Challenge Owner</span>
             <% end %>
           </li>
         </ul>
@@ -24,8 +24,8 @@
 
   <div class="col-12 col-md-12">
     <div class="page-titles">
-      <h1>Participants</h1>
-      <p>Creative minds on the platform to address the problems.<a href="javascript:;">Learn more!</a></p>
+      <h1>Challenge Owners</h1>
+      <p>Creative minds on the platform to address the problems. <a href="javascript:;">Learn more!</a></p>
     </div>
   </div>
 

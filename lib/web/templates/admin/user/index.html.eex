@@ -1,6 +1,6 @@
 <section class="content-header">
   <h1>
-    Users
+    Challenge Owners
   </h1>
 
   <ol class="breadcrumb">
@@ -9,7 +9,7 @@
         <i class="fa fa-dashboard"></i> Home
       <% end %>
     </li>
-    <li class="active">Users</li>
+    <li class="active">Challenge Owners</li>
   </ol>
 </section>
 

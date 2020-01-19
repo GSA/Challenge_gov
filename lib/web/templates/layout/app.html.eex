@@ -11,7 +11,7 @@
           <div class="content-left left-menu-wrapper">
             <div class="menu-close"><a href="javascript:;"><i class="icon-close-custom"></i></a></div>
             <div class="logo side-nav-logo">
-              <img src="<%= Routes.static_path(@conn, "/images/logo.png") %>" alt="City Backlog Logo" title="City Backlog">
+              <img src="<%= Routes.static_path(@conn, "/images/challenge-logo.png") %>" alt="Challenge.gov Logo" title="Challenge.gov">
             </div>
             <div class="side-nav font-semibold">
               <ul class="mp-none">
@@ -20,14 +20,9 @@
                     <i class="icon-Challenges"></i><span>Challenges</span>
                   <% end %>
                 </li>
-                <li class='<%= tab_selected(@conn, "accounts") %>'>
-                  <%= link(to: Routes.account_path(@conn, :index)) do %>
-                    <i class="icon-Participants"></i><span>Participants</span>
-                  <% end %>
-                </li>
                 <li class='<%= tab_selected(@conn, "teams") %>'>
                   <%= link(to: Routes.team_path(@conn, :index)) do %>
-                    <i class="icon-Teams"></i><span>Teams</span>
+                    <i class="icon-Teams"></i><span>Agencies</span>
                   <% end %>
                 </li>
               </ul>
@@ -52,8 +47,6 @@
       </div>
 
       <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
-
-      <%= render("_footer.html", assigns) %>
     </div>
   </body>
 </html>

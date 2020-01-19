@@ -5,7 +5,7 @@
         <div class="form-group form-control-radius form-search has-icon
           right-icon">
           <i class="icon-magnifying-glass"></i>
-          <input type="text" class="form-control" placeholder="Search teams">
+          <input type="text" id="filter_search" class="form-control" placeholder="Search agencies">
         </div>
       </form>
     </div>
@@ -16,7 +16,7 @@
         <%= if Map.has_key?(assigns, :current_user) && !Teams.member_of_team?(@current_user) do %>
           <li>
             <%= link(to: Routes.team_path(@conn, :new)) do %>
-              <span class="btn btn-light btn-radius btn-invite-member">Create a team</span>
+              <span class="btn btn-light btn-radius btn-invite-member">Create an agency</span>
             <% end %>
           </li>
         <% end %>
@@ -26,9 +26,8 @@
 
   <div class="col-12 col-md-12">
     <div class="page-titles">
-      <h1>Teams</h1>
-      <p>Creative minds on the platform to address the problems.<a
-          href="javascript:;">Learn more!</a></p>
+      <h1>Agencies</h1>
+      <p>Creative minds on the platform to address the problems. <a href="javascript:;">Learn more!</a></p>
     </div>
   </div>
 </div>
@@ -44,21 +43,6 @@
             <div class="text-center mrg-btm">
               <span class="image-circle"><%= avatar_img(team) %></span>
               <h3><%= team.name %></h3>
-            </div>
-            <div class="card-btm">
-              <ul class="team-list-img">
-                <%= Enum.map(team.members, fn member -> %>
-                  <li>
-                    <%= AccountView.avatar_img(member.user) %>
-                  </li>
-                <% end) %>
-              </ul>
-              <%= if length(team.members) > 4 do %>
-                <div class="right-more">
-                  <p class="font-medium text-center">+<%= length(team.members) - 4 %></p>
-                  <span class="font-light text-center">more</span>
-                </div>
-              <% end %>
             </div>
           <% end %>
         </div>

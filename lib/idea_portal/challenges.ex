@@ -349,6 +349,45 @@ defmodule IdeaPortal.Challenges do
   end
 
   @doc """
+  Reject a challenge
+
+  Sets status to "rejected"
+  """
+  def reject(challenge) do
+    changeset = Challenge.reject_changeset(challenge)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        send_challenge_rejection_email(challenge)
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  defp send_challenge_rejection_email(challenge) do
+    challenge
+    |> Emails.rejected_challenge()
+    |> Mailer.deliver_later()
+
+    {:ok, challenge}
+  end
+
+  @doc """
+  Check if a challenge is rejectable
+  """
+  def rejectable?(challenge) do
+    challenge.status != "rejected" &&
+      challenge.status != "created"
+  end
+
+  @doc """
   Check if a challenge is archivable
 
       iex> Challenges.archivable?(%Challenge{status: "pending"})

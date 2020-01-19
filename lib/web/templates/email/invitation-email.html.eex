@@ -1,4 +1,4 @@
-<p>You have been invited to City Backlog by <%= AccountView.full_name(@inviter_user) %></p>
+<p>You have been invited to challenge.gov by <%= AccountView.full_name(@inviter_user) %></p>
 
 <p><%= link("Please click this link to finalize your account.", to: invite_url(@invitee_user)) %></p>
 

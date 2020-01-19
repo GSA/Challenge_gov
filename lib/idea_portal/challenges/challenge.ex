@@ -176,4 +176,10 @@ defmodule IdeaPortal.Challenges.Challenge do
     |> put_change(:status, "created")
     |> put_change(:published_on, Date.utc_today())
   end
+
+  def reject_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:status, "rejected")
+  end
 end
