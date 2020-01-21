@@ -1,14 +1,14 @@
-defmodule IdeaPortal.Teams do
+defmodule ChallengeGov.Teams do
   @moduledoc """
   Teams context
   """
 
-  alias IdeaPortal.Emails
-  alias IdeaPortal.Mailer
-  alias IdeaPortal.Repo
-  alias IdeaPortal.Teams.Avatar
-  alias IdeaPortal.Teams.Member
-  alias IdeaPortal.Teams.Team
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
+  alias ChallengeGov.Repo
+  alias ChallengeGov.Teams.Avatar
+  alias ChallengeGov.Teams.Member
+  alias ChallengeGov.Teams.Team
   alias Stein.Pagination
 
   import Ecto.Query

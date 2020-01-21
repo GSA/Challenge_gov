@@ -1,7 +1,7 @@
-defmodule IdeaPortal.SupportingDocumentsTest do
-  use IdeaPortal.DataCase
+defmodule ChallengeGov.SupportingDocumentsTest do
+  use ChallengeGov.DataCase
 
-  alias IdeaPortal.SupportingDocuments
+  alias ChallengeGov.SupportingDocuments
 
   describe "uploading documents" do
     test "successfully" do

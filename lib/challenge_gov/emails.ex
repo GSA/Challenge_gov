@@ -1,11 +1,11 @@
-defmodule IdeaPortal.Emails do
+defmodule ChallengeGov.Emails do
   @moduledoc """
-  Container for emails that the IdeaPortal sends out
+  Container for emails that the ChallengeGov sends out
   """
 
   use Bamboo.Phoenix, view: Web.EmailView
 
-  alias IdeaPortal.Mailer
+  alias ChallengeGov.Mailer
 
   @doc """
   Send a email verification email

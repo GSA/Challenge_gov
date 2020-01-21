@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Application do
+defmodule ChallengeGov.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -9,16 +9,16 @@ defmodule IdeaPortal.Application do
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
-      IdeaPortal.Repo,
+      ChallengeGov.Repo,
       # Start the endpoint when the application starts
       Web.Endpoint
-      # Starts a worker by calling: IdeaPortal.Worker.start_link(arg)
-      # {IdeaPortal.Worker, arg},
+      # Starts a worker by calling: ChallengeGov.Worker.start_link(arg)
+      # {ChallengeGov.Worker, arg},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: IdeaPortal.Supervisor]
+    opts = [strategy: :one_for_one, name: ChallengeGov.Supervisor]
     Supervisor.start_link(children, opts)
   end
 

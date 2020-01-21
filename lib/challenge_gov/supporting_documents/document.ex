@@ -1,4 +1,4 @@
-defmodule IdeaPortal.SupportingDocuments.Document do
+defmodule ChallengeGov.SupportingDocuments.Document do
   @moduledoc """
   Document schema
   """
@@ -7,8 +7,8 @@ defmodule IdeaPortal.SupportingDocuments.Document do
 
   import Ecto.Changeset
 
-  alias IdeaPortal.Accounts.User
-  alias IdeaPortal.Challenges.Challenge
+  alias ChallengeGov.Accounts.User
+  alias ChallengeGov.Challenges.Challenge
 
   @type t :: %__MODULE__{}
 

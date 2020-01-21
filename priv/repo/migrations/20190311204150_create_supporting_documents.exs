@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.CreateSupportingDocuments do
+defmodule ChallengeGov.Repo.Migrations.CreateSupportingDocuments do
   use Ecto.Migration
 
   def change do

@@ -26,10 +26,10 @@ defmodule Web.ChannelCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(IdeaPortal.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ChallengeGov.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(IdeaPortal.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(ChallengeGov.Repo, {:shared, self()})
     end
 
     :ok

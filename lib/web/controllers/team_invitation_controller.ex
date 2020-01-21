@@ -1,8 +1,8 @@
 defmodule Web.TeamInvitationController do
   use Web, :controller
 
-  alias IdeaPortal.Accounts
-  alias IdeaPortal.Teams
+  alias ChallengeGov.Accounts
+  alias ChallengeGov.Teams
 
   action_fallback(Web.FallbackController)
 

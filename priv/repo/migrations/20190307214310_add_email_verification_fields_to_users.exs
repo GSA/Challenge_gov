@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.AddEmailVerificationFieldsToUsers do
+defmodule ChallengeGov.Repo.Migrations.AddEmailVerificationFieldsToUsers do
   use Ecto.Migration
 
   def change do

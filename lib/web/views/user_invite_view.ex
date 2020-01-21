@@ -1,6 +1,6 @@
 defmodule Web.UserInviteView do
   use Web, :view
 
-  alias IdeaPortal.Recaptcha
+  alias ChallengeGov.Recaptcha
   alias Web.FormView
 end

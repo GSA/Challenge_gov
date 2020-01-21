@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.CreateTeams do
+defmodule ChallengeGov.Repo.Migrations.CreateTeams do
   use Ecto.Migration
 
   def change do

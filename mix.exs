@@ -1,9 +1,9 @@
-defmodule IdeaPortal.MixProject do
+defmodule ChallengeGov.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :idea_portal,
+      app: :challenge_gov,
       version: "0.1.0",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule IdeaPortal.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {IdeaPortal.Application, []},
+      mod: {ChallengeGov.Application, []},
       extra_applications: [:logger, :runtime_tools, :timex]
     ]
   end

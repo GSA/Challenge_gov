@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Images do
+defmodule ChallengeGov.Images do
   @moduledoc """
   Common module for dealing with image conversion
   """

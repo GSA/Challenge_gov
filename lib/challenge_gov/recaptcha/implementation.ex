@@ -1,9 +1,9 @@
-defmodule IdeaPortal.Recaptcha.Implementation do
+defmodule ChallengeGov.Recaptcha.Implementation do
   @moduledoc """
   Implementation details for Recaptcha
   """
 
-  @behaviour IdeaPortal.Recaptcha
+  @behaviour ChallengeGov.Recaptcha
 
   @impl true
   def valid_token?(token) do
@@ -17,7 +17,7 @@ defmodule IdeaPortal.Recaptcha.Implementation do
   end
 
   defp recaptcha_request(token) do
-    key = IdeaPortal.config(Application.get_env(:idea_portal, :recaptcha)[:secret_key])
+    key = ChallengeGov.config(Application.get_env(:challenge_gov, :recaptcha)[:secret_key])
 
     body = {:form, [secret: key, response: token]}
 

@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Challenges do
+defmodule ChallengeGov.Challenges do
   @moduledoc """
   Context for Challenges
 
@@ -8,13 +8,13 @@ defmodule IdeaPortal.Challenges do
   - archived: Archived by an admin, hidden to the public
   """
 
-  alias IdeaPortal.Challenges.Challenge
-  alias IdeaPortal.Emails
-  alias IdeaPortal.Mailer
-  alias IdeaPortal.Repo
-  alias IdeaPortal.SupportingDocuments
-  alias IdeaPortal.Timeline
-  alias IdeaPortal.Timeline.Event
+  alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
+  alias ChallengeGov.Repo
+  alias ChallengeGov.SupportingDocuments
+  alias ChallengeGov.Timeline
+  alias ChallengeGov.Timeline.Event
   alias Stein.Filter
   alias Stein.Pagination
 

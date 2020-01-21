@@ -1,10 +1,10 @@
-defmodule IdeaPortal.Timeline do
+defmodule ChallengeGov.Timeline do
   @moduledoc """
   Timeline for challenges
   """
 
-  alias IdeaPortal.Timeline.Event
-  alias IdeaPortal.Repo
+  alias ChallengeGov.Timeline.Event
+  alias ChallengeGov.Repo
 
   @doc """
   Get today, timezone shifted to Eastern

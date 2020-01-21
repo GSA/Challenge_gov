@@ -1,10 +1,10 @@
-defmodule IdeaPortal.SupportingDocuments do
+defmodule ChallengeGov.SupportingDocuments do
   @moduledoc """
   Context for managing supporting documents on a challenge
   """
 
-  alias IdeaPortal.SupportingDocuments.Document
-  alias IdeaPortal.Repo
+  alias ChallengeGov.SupportingDocuments.Document
+  alias ChallengeGov.Repo
   alias Stein.Storage
 
   @doc """

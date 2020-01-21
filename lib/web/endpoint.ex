@@ -1,5 +1,5 @@
 defmodule Web.Endpoint do
-  use Phoenix.Endpoint, otp_app: :idea_portal
+  use Phoenix.Endpoint, otp_app: :challenge_gov
 
   socket "/socket", Web.UserSocket,
     websocket: true,
@@ -11,7 +11,7 @@ defmodule Web.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :idea_portal,
+    from: :challenge_gov,
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 
@@ -43,7 +43,7 @@ defmodule Web.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   plug Plug.Session,
     store: :cookie,
-    key: "_idea_portal_key",
+    key: "_challenge_gov_key",
     signing_salt: "+S7HWPoL"
 
   plug Web.Router

@@ -1,7 +1,7 @@
 defmodule Web.ErrorViewTest do
   use Web.ConnCase, async: true
 
-  alias IdeaPortal.Accounts
+  alias ChallengeGov.Accounts
   alias Web.ErrorView
 
   # Bring render/3 and render_to_string/3 for testing custom views

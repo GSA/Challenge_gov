@@ -1,10 +1,10 @@
-defmodule IdeaPortal.ChallengesTest do
-  use IdeaPortal.DataCase
+defmodule ChallengeGov.ChallengesTest do
+  use ChallengeGov.DataCase
   use Bamboo.Test
 
-  alias IdeaPortal.Challenges
-  alias IdeaPortal.Challenges.Challenge
-  alias IdeaPortal.Emails
+  alias ChallengeGov.Challenges
+  alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.Emails
 
   doctest Challenges
 

@@ -1,8 +1,8 @@
 defmodule Web.ChallengeController do
   use Web, :controller
 
-  alias IdeaPortal.Accounts
-  alias IdeaPortal.Challenges
+  alias ChallengeGov.Accounts
+  alias ChallengeGov.Challenges
 
   plug Web.Plugs.FetchPage, [per: 6] when action in [:index]
   plug :check_email_verification when action in [:new, :create]

@@ -1,7 +1,7 @@
 defmodule Web.UserInviteAcceptController do
   use Web, :controller
 
-  alias IdeaPortal.Accounts
+  alias ChallengeGov.Accounts
 
   def new(conn, %{"token" => token}) do
     conn

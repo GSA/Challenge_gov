@@ -1,9 +1,9 @@
-defmodule IdeaPortal.Recaptcha.Mock do
+defmodule ChallengeGov.Recaptcha.Mock do
   @moduledoc """
   Mock implementation details for Recaptcha
   """
 
-  @behaviour IdeaPortal.Recaptcha
+  @behaviour ChallengeGov.Recaptcha
 
   alias __MODULE__.FakeCaptcha
 

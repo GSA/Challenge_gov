@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.AddFilenameToDocuments do
+defmodule ChallengeGov.Repo.Migrations.AddFilenameToDocuments do
   use Ecto.Migration
 
   def change do

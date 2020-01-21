@@ -1,14 +1,14 @@
-defmodule IdeaPortal.TestHelpers do
+defmodule ChallengeGov.TestHelpers do
   @moduledoc """
   Helper factory functions
   """
 
-  alias IdeaPortal.Accounts
-  alias IdeaPortal.Challenges
-  alias IdeaPortal.Repo
-  alias IdeaPortal.SupportingDocuments
-  alias IdeaPortal.Teams
-  alias IdeaPortal.Timeline
+  alias ChallengeGov.Accounts
+  alias ChallengeGov.Challenges
+  alias ChallengeGov.Repo
+  alias ChallengeGov.SupportingDocuments
+  alias ChallengeGov.Teams
+  alias ChallengeGov.Timeline
 
   defp user_attributes(attributes) do
     Map.merge(

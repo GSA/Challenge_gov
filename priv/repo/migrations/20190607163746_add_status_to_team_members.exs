@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.AddStatusToTeamMembers do
+defmodule ChallengeGov.Repo.Migrations.AddStatusToTeamMembers do
   use Ecto.Migration
 
   def change do

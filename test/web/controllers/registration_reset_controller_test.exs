@@ -1,7 +1,7 @@
 defmodule Web.RegistrationResetControllerTest do
   use Web.ConnCase
 
-  alias IdeaPortal.Accounts
+  alias ChallengeGov.Accounts
 
   describe "resets the token" do
     test "a real token", %{conn: conn} do

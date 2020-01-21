@@ -6,7 +6,7 @@ defmodule Web.Plugs.VerifyAdmin do
   import Plug.Conn
   import Phoenix.Controller
 
-  alias IdeaPortal.Accounts
+  alias ChallengeGov.Accounts
   alias Web.ErrorView
   alias Web.LayoutView
 

@@ -1,8 +1,8 @@
 defmodule Web.Admin.DocumentController do
   use Web, :controller
 
-  alias IdeaPortal.Challenges
-  alias IdeaPortal.SupportingDocuments
+  alias ChallengeGov.Challenges
+  alias ChallengeGov.SupportingDocuments
 
   action_fallback(Web.Admin.FallbackController)
 

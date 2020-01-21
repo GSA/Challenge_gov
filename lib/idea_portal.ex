@@ -1,6 +1,6 @@
-defmodule IdeaPortal do
+defmodule ChallengeGov do
   @moduledoc """
-  IdeaPortal keeps the contexts that define your domain
+  ChallengeGov keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless
@@ -10,7 +10,7 @@ defmodule IdeaPortal do
   @doc """
   Pass-through function to optionally load config from the environment
 
-      iex> IdeaPortal.config({:system, "HOST"})
+      iex> ChallengeGov.config({:system, "HOST"})
       "example.com"
   """
   def config({:system, env}), do: System.get_env(env)

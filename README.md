@@ -1,8 +1,8 @@
-# IdeaPortal
+# ChallengeGov
 
-[![Build Status](https://travis-ci.org/BaltimoreCity/IdeaPortal.svg?branch=master)](https://travis-ci.org/BaltimoreCity/IdeaPortal)
+[![Build Status](https://travis-ci.org/BaltimoreCity/ChallengeGov.svg?branch=master)](https://travis-ci.org/BaltimoreCity/ChallengeGov)
 
-Welcome to the IdeaPortal for [HackBaltimore.io](https://hackbaltimore.io/)
+Welcome to the ChallengeGov for [HackBaltimore.io](https://hackbaltimore.io/)
 
 ## Requirements
 
@@ -43,7 +43,7 @@ bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
 asdf install nodejs 11.13.0
 ```
 
-### IdeaPortal Setup
+### ChallengeGov Setup
 
 Start with cloning the application. Once cloned, in your terminal run the following commands inside the cloned folder.
 
@@ -66,10 +66,10 @@ If required, you can create the file `config/dev.local.exs` and include local Po
 ```elixir
 use Mix.Config
 
-config :idea_portal, IdeaPortal.Repo,
+config :challenge_gov, ChallengeGov.Repo,
   username: "postgres",
   password: "postgres",
-  database: "idea_portal_dev",
+  database: "challenge_gov_dev",
   hostname: "localhost",
   pool_size: 10
 ```
@@ -85,8 +85,8 @@ mix phx.server
 Keys need to be set up to properly verify reCAPTCHA tokens. You will need a secret key and site key to properly verify. In development and test this is disabled.
 
 ```elixir
-config :idea_portal, :recaptcha,
-  module: IdeaPortal.Recaptcha.Implementation,
+config :challenge_gov, :recaptcha,
+  module: ChallengeGov.Recaptcha.Implementation,
   secret_key: "...",
   key: "..."
 ```
@@ -103,7 +103,7 @@ Environment variables required for upload on production:
 
 ## Testing
 
-The IdeaPortal runs each pull request (and every commit on the `master` branch) through CI. Make sure to add tests as you extend the application. We also run [Credo](https://github.com/rrrene/credo) and the built in formatter in CI to ensure code quality.
+The ChallengeGov runs each pull request (and every commit on the `master` branch) through CI. Make sure to add tests as you extend the application. We also run [Credo](https://github.com/rrrene/credo) and the built in formatter in CI to ensure code quality.
 
 ## Learn more about Phoenix
 

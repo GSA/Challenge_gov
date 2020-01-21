@@ -6,7 +6,7 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :idea_portal, Web.Endpoint,
+config :challenge_gov, Web.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -46,7 +46,7 @@ config :idea_portal, Web.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :idea_portal, Web.Endpoint,
+config :challenge_gov, Web.Endpoint,
   live_reload: [
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
@@ -67,18 +67,18 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 # Configure your database
-config :idea_portal, IdeaPortal.Repo,
+config :challenge_gov, ChallengeGov.Repo,
   username: "postgres",
   password: "postgres",
-  database: "idea_portal_dev",
+  database: "challenge_gov_dev",
   hostname: "localhost",
   pool_size: 10
 
-config :idea_portal, IdeaPortal.Mailer,
+config :challenge_gov, ChallengeGov.Mailer,
   from: "support@challenge.gov",
   adapter: Bamboo.LocalAdapter
 
-config :idea_portal, :recaptcha, module: IdeaPortal.Recaptcha.Mock
+config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
 
 if File.exists?("config/dev.local.exs") do
   import_config("dev.local.exs")

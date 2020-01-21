@@ -1,9 +1,9 @@
 use Mix.Config
 
-config :idea_portal, IdeaPortal.Repo,
-  username: "idea_portal",
+config :challenge_gov, ChallengeGov.Repo,
+  username: "challenge_gov",
   password: "password",
-  database: "idea_portal_test",
+  database: "challenge_gov_test",
   hostname: "localhost",
   port: 5433,
   pool: Ecto.Adapters.SQL.Sandbox

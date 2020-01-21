@@ -1,11 +1,11 @@
-defmodule IdeaPortal.Accounts.Avatar do
+defmodule ChallengeGov.Accounts.Avatar do
   @moduledoc """
   Handles uploading avatar's for a user
   """
 
-  alias IdeaPortal.Accounts.User
-  alias IdeaPortal.Images
-  alias IdeaPortal.Repo
+  alias ChallengeGov.Accounts.User
+  alias ChallengeGov.Images
+  alias ChallengeGov.Repo
   alias Stein.Storage
 
   @doc """

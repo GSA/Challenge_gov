@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Timeline.Event do
+defmodule ChallengeGov.Timeline.Event do
   @moduledoc """
   Timeline event schema
   """
@@ -7,7 +7,7 @@ defmodule IdeaPortal.Timeline.Event do
 
   import Ecto.Changeset
 
-  alias IdeaPortal.Challenges.Challenge
+  alias ChallengeGov.Challenges.Challenge
 
   @type t :: %__MODULE__{}
 

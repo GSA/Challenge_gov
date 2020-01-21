@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.AddDisplayToUsers do
+defmodule ChallengeGov.Repo.Migrations.AddDisplayToUsers do
   use Ecto.Migration
 
   def change do

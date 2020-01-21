@@ -1,7 +1,7 @@
 defmodule Web.TeamInvitationControllerTest do
   use Web.ConnCase
 
-  alias IdeaPortal.Teams
+  alias ChallengeGov.Teams
 
   describe "creating a new invitation" do
     test "successfully", %{conn: conn} do

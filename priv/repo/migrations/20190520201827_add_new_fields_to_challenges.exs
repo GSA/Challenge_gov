@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.AddNewFieldsToChallenges do
+defmodule ChallengeGov.Repo.Migrations.AddNewFieldsToChallenges do
   use Ecto.Migration
 
   def change do

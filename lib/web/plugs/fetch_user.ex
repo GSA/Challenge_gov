@@ -5,7 +5,7 @@ defmodule Web.Plugs.FetchUser do
 
   import Plug.Conn
 
-  alias IdeaPortal.Accounts
+  alias ChallengeGov.Accounts
 
   def init(default), do: default
 

@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.AddPasswordResetFieldsToUsers do
+defmodule ChallengeGov.Repo.Migrations.AddPasswordResetFieldsToUsers do
   use Ecto.Migration
 
   def change do

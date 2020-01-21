@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.AddDeletedAtToTeams do
+defmodule ChallengeGov.Repo.Migrations.AddDeletedAtToTeams do
   use Ecto.Migration
 
   def change do

@@ -1,8 +1,8 @@
 defmodule Web.TeamController do
   use Web, :controller
 
-  alias IdeaPortal.Accounts
-  alias IdeaPortal.Teams
+  alias ChallengeGov.Accounts
+  alias ChallengeGov.Teams
 
   plug(Web.Plugs.FetchPage, [per: 12] when action in [:index])
 

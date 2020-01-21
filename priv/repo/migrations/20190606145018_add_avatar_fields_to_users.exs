@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.AddAvatarFieldsToUsers do
+defmodule ChallengeGov.Repo.Migrations.AddAvatarFieldsToUsers do
   use Ecto.Migration
 
   def change do

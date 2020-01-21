@@ -1,14 +1,14 @@
-defmodule IdeaPortal.Accounts do
+defmodule ChallengeGov.Accounts do
   @moduledoc """
   Context for user accounts
   """
 
-  alias IdeaPortal.Accounts.Avatar
-  alias IdeaPortal.Accounts.User
-  alias IdeaPortal.Emails
-  alias IdeaPortal.Mailer
-  alias IdeaPortal.Recaptcha
-  alias IdeaPortal.Repo
+  alias ChallengeGov.Accounts.Avatar
+  alias ChallengeGov.Accounts.User
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
+  alias ChallengeGov.Recaptcha
+  alias ChallengeGov.Repo
   alias Stein.Filter
   alias Stein.Pagination
 
@@ -84,6 +84,16 @@ defmodule IdeaPortal.Accounts do
   """
   def new() do
     User.create_changeset(%User{}, %{})
+  end
+
+  @doc """
+  Create an account
+  """
+  def create(params) do
+    %User{}
+    |> User.create_changeset(params)
+    |> IO.inspect
+    |> Repo.insert
   end
 
   @doc """
@@ -304,6 +314,19 @@ defmodule IdeaPortal.Accounts do
 
       :error ->
         {:error, :not_found}
+    end
+  end  
+  
+  @doc """
+  Find a user by an email
+  """
+  def get_by_email(email) do
+    case Repo.get_by(User, email: email) do
+      nil ->
+        {:error, :not_found}
+
+      user ->
+        {:ok, user}
     end
   end
 

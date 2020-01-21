@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Teams.Member do
+defmodule ChallengeGov.Teams.Member do
   @moduledoc """
   Team member schema
   """
@@ -9,8 +9,8 @@ defmodule IdeaPortal.Teams.Member do
 
   @type t :: %__MODULE__{}
 
-  alias IdeaPortal.Accounts.User
-  alias IdeaPortal.Teams.Team
+  alias ChallengeGov.Accounts.User
+  alias ChallengeGov.Teams.Team
 
   schema "team_members" do
     field(:status, :string, default: "invited")

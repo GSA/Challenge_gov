@@ -1,7 +1,7 @@
 defmodule Web.ChallangeControllerTest do
   use Web.ConnCase
 
-  alias IdeaPortal.Challenges
+  alias ChallengeGov.Challenges
 
   describe "creating a new challenge" do
     test "success", %{conn: conn} do

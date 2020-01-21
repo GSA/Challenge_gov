@@ -20,7 +20,7 @@ defmodule Web.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
       alias Web.Router.Helpers, as: Routes
-      alias IdeaPortal.TestHelpers
+      alias ChallengeGov.TestHelpers
 
       # The default endpoint for testing
       @endpoint Web.Endpoint
@@ -28,10 +28,10 @@ defmodule Web.ConnCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(IdeaPortal.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ChallengeGov.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(IdeaPortal.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(ChallengeGov.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

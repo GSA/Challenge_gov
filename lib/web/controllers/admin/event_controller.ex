@@ -1,8 +1,8 @@
 defmodule Web.Admin.EventController do
   use Web, :controller
 
-  alias IdeaPortal.Challenges
-  alias IdeaPortal.Timeline
+  alias ChallengeGov.Challenges
+  alias ChallengeGov.Timeline
 
   action_fallback(Web.Admin.FallbackController)
 

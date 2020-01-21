@@ -1,7 +1,7 @@
 defmodule Web.RegistrationVerifyControllerTest do
   use Web.ConnCase
 
-  alias IdeaPortal.Accounts
+  alias ChallengeGov.Accounts
 
   describe "verifies the token" do
     test "a real token", %{conn: conn} do

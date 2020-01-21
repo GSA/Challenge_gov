@@ -1,7 +1,7 @@
 defmodule Web.Admin.ChallengeController do
   use Web, :controller
 
-  alias IdeaPortal.Challenges
+  alias ChallengeGov.Challenges
 
   plug Web.Plugs.FetchPage when action in [:index]
 

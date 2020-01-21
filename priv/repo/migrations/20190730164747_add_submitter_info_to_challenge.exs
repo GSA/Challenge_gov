@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.AddSubmitterInfoToChallenge do
+defmodule ChallengeGov.Repo.Migrations.AddSubmitterInfoToChallenge do
   use Ecto.Migration
 
   def change do

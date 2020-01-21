@@ -1,14 +1,14 @@
 defmodule Web.ChallengeView do
   use Web, :view
 
-  alias IdeaPortal.Challenges
-  alias IdeaPortal.Recaptcha
-  alias IdeaPortal.SupportingDocuments
+  alias ChallengeGov.Challenges
+  alias ChallengeGov.Recaptcha
+  alias ChallengeGov.SupportingDocuments
   alias Web.FormView
   alias Web.SharedView
 
   def disqus_domain() do
-    Application.get_env(:idea_portal, :disqus_domain)
+    Application.get_env(:challenge_gov, :disqus_domain)
   end
 
   def timeline_position(event_time, events) do

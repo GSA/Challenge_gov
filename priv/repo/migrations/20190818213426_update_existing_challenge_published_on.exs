@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.UpdateExistingChallengePublishedOn do
+defmodule ChallengeGov.Repo.Migrations.UpdateExistingChallengePublishedOn do
   use Ecto.Migration
 
   def up do

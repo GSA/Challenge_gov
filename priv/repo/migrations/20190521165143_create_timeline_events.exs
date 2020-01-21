@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.CreateTimelineEvents do
+defmodule ChallengeGov.Repo.Migrations.CreateTimelineEvents do
   use Ecto.Migration
 
   def change do

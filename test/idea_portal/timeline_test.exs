@@ -1,7 +1,7 @@
-defmodule IdeaPortal.TimelineTest do
-  use IdeaPortal.DataCase
+defmodule ChallengeGov.TimelineTest do
+  use ChallengeGov.DataCase
 
-  alias IdeaPortal.Timeline
+  alias ChallengeGov.Timeline
 
   describe "creating a new event" do
     test "successfully" do

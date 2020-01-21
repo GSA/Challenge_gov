@@ -1,11 +1,11 @@
-defmodule IdeaPortal.AccountsTest do
-  use IdeaPortal.DataCase
+defmodule ChallengeGov.AccountsTest do
+  use ChallengeGov.DataCase
   use Bamboo.Test
 
-  alias IdeaPortal.Accounts
-  alias IdeaPortal.Accounts.User
-  alias IdeaPortal.Emails
-  alias IdeaPortal.Recaptcha.Mock, as: Recaptcha
+  alias ChallengeGov.Accounts
+  alias ChallengeGov.Accounts.User
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Recaptcha.Mock, as: Recaptcha
 
   doctest Accounts
 

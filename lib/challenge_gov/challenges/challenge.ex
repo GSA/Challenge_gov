@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Challenges.Challenge do
+defmodule ChallengeGov.Challenges.Challenge do
   @moduledoc """
   User schema
   """
@@ -7,9 +7,9 @@ defmodule IdeaPortal.Challenges.Challenge do
 
   import Ecto.Changeset
 
-  alias IdeaPortal.Accounts.User
-  alias IdeaPortal.SupportingDocuments.Document
-  alias IdeaPortal.Timeline.Event
+  alias ChallengeGov.Accounts.User
+  alias ChallengeGov.SupportingDocuments.Document
+  alias ChallengeGov.Timeline.Event
 
   @type t :: %__MODULE__{}
 

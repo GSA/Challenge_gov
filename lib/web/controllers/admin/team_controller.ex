@@ -1,7 +1,7 @@
 defmodule Web.Admin.TeamController do
   use Web, :controller
 
-  alias IdeaPortal.Teams
+  alias ChallengeGov.Teams
 
   plug(Web.Plugs.FetchPage when action in [:index])
 

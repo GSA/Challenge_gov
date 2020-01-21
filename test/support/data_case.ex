@@ -1,4 +1,4 @@
-defmodule IdeaPortal.DataCase do
+defmodule ChallengeGov.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -16,22 +16,22 @@ defmodule IdeaPortal.DataCase do
 
   using do
     quote do
-      alias IdeaPortal.Repo
+      alias ChallengeGov.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import IdeaPortal.DataCase
+      import ChallengeGov.DataCase
 
-      alias IdeaPortal.TestHelpers
+      alias ChallengeGov.TestHelpers
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(IdeaPortal.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ChallengeGov.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(IdeaPortal.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(ChallengeGov.Repo, {:shared, self()})
     end
 
     :ok

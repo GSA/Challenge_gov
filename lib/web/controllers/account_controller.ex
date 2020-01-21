@@ -1,7 +1,7 @@
 defmodule Web.AccountController do
   use Web, :controller
 
-  alias IdeaPortal.Accounts
+  alias ChallengeGov.Accounts
 
   plug Web.Plugs.FetchPage, [per: 12] when action in [:index]
 

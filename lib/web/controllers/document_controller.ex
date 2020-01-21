@@ -1,7 +1,7 @@
 defmodule Web.DocumentController do
   use Web, :controller
 
-  alias IdeaPortal.SupportingDocuments
+  alias ChallengeGov.SupportingDocuments
   alias Web.ErrorView
 
   def create(conn, %{"document" => params}) do

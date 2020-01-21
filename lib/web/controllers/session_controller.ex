@@ -1,7 +1,7 @@
 defmodule Web.SessionController do
   use Web, :controller
 
-  alias IdeaPortal.Accounts
+  alias ChallengeGov.Accounts
 
   def new(conn, _params) do
     conn

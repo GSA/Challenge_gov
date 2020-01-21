@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Accounts.User do
+defmodule ChallengeGov.Accounts.User do
   @moduledoc """
   User schema
   """
@@ -7,9 +7,9 @@ defmodule IdeaPortal.Accounts.User do
 
   import Ecto.Changeset
 
-  alias IdeaPortal.Challenges.Challenge
-  alias IdeaPortal.SupportingDocuments.Document
-  alias IdeaPortal.Teams.Member
+  alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.SupportingDocuments.Document
+  alias ChallengeGov.Teams.Member
 
   @type t :: %__MODULE__{}
 
@@ -50,7 +50,8 @@ defmodule IdeaPortal.Accounts.User do
       :email,
       :first_name,
       :last_name,
-      :phone_number
+      :phone_number,
+      :role
     ])
     |> validate_required([:email, :first_name, :last_name])
     |> validate_format(:email, ~r/.+@.+\..+/)

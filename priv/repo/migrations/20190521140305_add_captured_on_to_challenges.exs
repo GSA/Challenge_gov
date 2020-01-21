@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.AddCapturedOnToChallenges do
+defmodule ChallengeGov.Repo.Migrations.AddCapturedOnToChallenges do
   use Ecto.Migration
 
   def change do

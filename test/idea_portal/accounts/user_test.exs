@@ -1,7 +1,7 @@
-defmodule IdeaPortal.Accounts.UserTest do
+defmodule ChallengeGov.Accounts.UserTest do
   use ExUnit.Case
 
-  alias IdeaPortal.Accounts.User
+  alias ChallengeGov.Accounts.User
 
   describe "validations" do
     test "email format" do

@@ -23,7 +23,7 @@ branches:
   only:
   - master
 install:
-  - sudo -u postgres psql -p 5433 -c "create user idea_portal with superuser password 'password';"
+  - sudo -u postgres psql -p 5433 -c "create user challenge_gov with superuser password 'password';"
   - cp .travis/test.extra.exs config/test.extra.exs
   - mix local.rebar --force
   - mix local.hex --force

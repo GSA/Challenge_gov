@@ -1,8 +1,8 @@
 defmodule Web.TeamView do
   use Web, :view
 
-  alias IdeaPortal.Teams
-  alias IdeaPortal.Teams.Avatar
+  alias ChallengeGov.Teams
+  alias ChallengeGov.Teams.Avatar
   alias Stein.Storage
   alias Web.AccountView
   alias Web.FormView

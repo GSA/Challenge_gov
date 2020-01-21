@@ -20,5 +20,5 @@ defmodule Web.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :idea_portal
+  use Gettext, otp_app: :challenge_gov
 end

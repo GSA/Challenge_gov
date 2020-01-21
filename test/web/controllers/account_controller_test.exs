@@ -1,7 +1,7 @@
 defmodule Web.AccountControllerTest do
   use Web.ConnCase
 
-  alias IdeaPortal.Accounts
+  alias ChallengeGov.Accounts
 
   describe "updating your information" do
     test "success", %{conn: conn} do

@@ -1,7 +1,7 @@
 defmodule Web.AccountView do
   use Web, :view
 
-  alias IdeaPortal.Accounts.Avatar
+  alias ChallengeGov.Accounts.Avatar
   alias Stein.Storage
   alias Web.FormView
   alias Web.SharedView

@@ -1,8 +1,8 @@
-defmodule IdeaPortal.Challenges.ChallengeTest do
+defmodule ChallengeGov.Challenges.ChallengeTest do
   use ExUnit.Case
-  use IdeaPortal.DataCase
+  use ChallengeGov.DataCase
 
-  alias IdeaPortal.Challenges.Challenge
+  alias ChallengeGov.Challenges.Challenge
 
   describe "create validations" do
     test "focus area must be in the list" do

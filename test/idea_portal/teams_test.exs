@@ -1,7 +1,7 @@
-defmodule IdeaPortal.TeamsTest do
-  use IdeaPortal.DataCase
+defmodule ChallengeGov.TeamsTest do
+  use ChallengeGov.DataCase
 
-  alias IdeaPortal.Teams
+  alias ChallengeGov.Teams
 
   describe "creating a team" do
     test "successful" do

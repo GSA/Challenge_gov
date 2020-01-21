@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Repo.Migrations.AddAdminNotesToChallenges do
+defmodule ChallengeGov.Repo.Migrations.AddAdminNotesToChallenges do
   use Ecto.Migration
 
   def change do

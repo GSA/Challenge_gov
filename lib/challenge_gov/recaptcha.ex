@@ -1,4 +1,4 @@
-defmodule IdeaPortal.Recaptcha do
+defmodule ChallengeGov.Recaptcha do
   @moduledoc """
   Integration with reCAPTCHA
   """
@@ -7,13 +7,13 @@ defmodule IdeaPortal.Recaptcha do
 
   @callback valid_token?(token()) :: boolean()
 
-  @module Application.get_env(:idea_portal, :recaptcha)[:module]
+  @module Application.get_env(:challenge_gov, :recaptcha)[:module]
 
   @doc """
   Get the site key for recaptcha
   """
   def recaptcha_key() do
-    IdeaPortal.config(Application.get_env(:idea_portal, :recaptcha)[:key])
+    ChallengeGov.config(Application.get_env(:challenge_gov, :recaptcha)[:key])
   end
 
   @doc """
