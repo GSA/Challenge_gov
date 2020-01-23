@@ -50,6 +50,27 @@ defmodule Web.Admin.FormView do
         end
       ]
     end
+  end  
+  
+  @doc """
+  Generate a datetime field, styled properly
+  """
+  def datetime_field(form, field, opts \\ [], dopts \\ []) do
+    opts = Keyword.merge(opts, dopts)
+    text_opts = Keyword.take(opts, [:value, :rows])
+
+    content_tag(:div, class: form_group_classes(form, field)) do
+      [
+        label_field(form, field, opts),
+        content_tag(:div, class: "col-md-8") do
+          [
+            datetime_select(form, field, Keyword.merge([class: "form-control"], text_opts)),
+            error_tag(form, field),
+            Keyword.get(opts, :do, "")
+          ]
+        end
+      ]
+    end
   end
 
   @doc """

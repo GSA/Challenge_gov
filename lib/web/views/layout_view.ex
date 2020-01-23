@@ -95,11 +95,11 @@ defmodule Web.PageTitle do
   end
 
   defp get({Admin.ChallengeView, :edit, assigns}) do
-    "Admin - Editing Challenge - #{assigns.challenge.name}"
+    "Admin - Editing Challenge - #{assigns.challenge.title}"
   end
 
   defp get({Admin.ChallengeView, :show, assigns}) do
-    "Admin - Viewing Challenge - #{assigns.challenge.name}"
+    "Admin - Viewing Challenge - #{assigns.challenge.title}"
   end
 
   defp get({Admin.TeamView, :index, _}) do

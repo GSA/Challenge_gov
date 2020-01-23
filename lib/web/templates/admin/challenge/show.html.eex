@@ -10,7 +10,7 @@
       <% end %>
     </li>
     <li><%= link("Challenges", to: Routes.admin_challenge_path(@conn, :index)) %></li>
-    <li class="active"><%= @challenge.name %></li>
+    <li class="active"><%= @challenge.title %></li>
   </ol>
 </section>
 
@@ -52,36 +52,9 @@
             <dd><%= link(@challenge.user.email, to: Routes.admin_user_path(@conn, :show, @challenge.user_id)) %></dd>
             <br/>
 
-            <dt>Name</dd>
-            <dd><%= @challenge.name %></dd>
+            <dt>Title</dd>
+            <dd><%= @challenge.title %></dd>
             <br/>
-
-            <dt>Focus Area</dd>
-            <dd><%= @challenge.focus_area %></dd>
-            <br/>
-
-            <dt>Location or Neighborhood</dd>
-            <dd><%= @challenge.neighborhood %></dd>
-            <br/>
-
-            <dt>Champion Name</dd>
-            <dd><%= @challenge.champion_name %></dd>
-            <br/>
-
-            <dt>Champion Email</dd>
-            <dd><%= @challenge.champion_email %></dd>
-            <br/>
-
-            <dt>Submitter Name</dd>
-            <dd><%= @challenge.submitter_first_name %> <%= @challenge.submitter_last_name %></dd>
-            <br/>
-
-            <dt>Submitter Email</dd>
-            <dd><%= @challenge.submitter_email %></dd>
-            <br/>
-
-            <dt>Submitter Phone</dd>
-            <dd><%= @challenge.submitter_phone %></dd>
           </dl>
         </div>
       </div>
@@ -92,49 +65,10 @@
     <div class="col-md-offset-3 col-md-6">
       <div class="box box-primary">
         <div class="box-header">
-          <h3 class="box-title">What is the problem?</h3>
+          <h3 class="box-title">Challenge Description</h3>
         </div>
         <div class="box-body">
           <p><%= @challenge.description %></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-offset-3 col-md-6">
-      <div class="box box-primary">
-        <div class="box-header">
-          <h3 class="box-title">Why is this a problem?</h3>
-        </div>
-        <div class="box-body">
-          <p><%= @challenge.why %></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-offset-3 col-md-6">
-      <div class="box box-primary">
-        <div class="box-header">
-          <h3 class="box-title">What does "fixed" look like?</h3>
-        </div>
-        <div class="box-body">
-          <p><%= @challenge.fixed_looks_like %></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-offset-3 col-md-6">
-      <div class="box box-primary">
-        <div class="box-header">
-          <h3 class="box-title">How does technology help solve this problem?</h3>
-        </div>
-        <div class="box-body">
-          <p><%= @challenge.technology_example %></p>
         </div>
       </div>
     </div>
@@ -208,19 +142,6 @@
               </li>
             <% end) %>
           </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-offset-3 col-md-6">
-      <div class="box box-primary">
-        <div class="box-header">
-          <h3 class="box-title">Notes</h3>
-        </div>
-        <div class="box-body">
-          <p><%= @challenge.notes %></p>
         </div>
       </div>
     </div>

@@ -418,11 +418,11 @@ defmodule ChallengeGov.Challenges do
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
-    where(query, [c], ilike(c.name, ^value) or ilike(c.description, ^value))
+    where(query, [c], ilike(c.title, ^value) or ilike(c.description, ^value))
   end
 
-  def filter_on_attribute({"area", value}, query) do
-    where(query, [c], c.focus_area in ^value)
+  def filter_on_attribute({"type", value}, query) do
+    where(query, [c], c.type in ^value)
   end
 
   def filter_on_attribute(_, query), do: query
