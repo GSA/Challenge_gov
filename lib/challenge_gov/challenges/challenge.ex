@@ -104,7 +104,6 @@ defmodule ChallengeGov.Challenges.Challenge do
       :legal_authority,
       :terms_and_conditions,
       :non_monetary_prizes,
-      :federal_partners,
       :non_federal_partners
     ])
     |> put_change(:captured_on, Date.utc_today())
