@@ -17,7 +17,7 @@
               <a href="javascript:;" class="btn btn-sm btn-date">Filter <span>></span></a>
               <div class="cdd-data">
                 <div class="inner">
-                  <p class="font-semibold color-gray">Focus Area</p>
+                  <p class="font-semibold color-gray">Challenge Type</p>
                   <div class="filter-checkboxes">
                     <ul>
                       <li><label class="custom-checkbox-btn text-center">
@@ -78,7 +78,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="card-content-head">
-              <h2><a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>"><%= challenge.name %></a> <span class="font-semibold tag-list"><%= challenge.focus_area %></span></h2>
+              <h2><a href="<%= Routes.challenge_path(@conn, :show, challenge.id) %>"><%= challenge.title %></a> <span class="font-semibold tag-list"><%= challenge.type %></span></h2>
               <p class="truncate" data-link="<%= Routes.challenge_path(@conn, :show, challenge.id) %>" >
                 <%= challenge.description %>
               </p>

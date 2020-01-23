@@ -3,12 +3,10 @@
     <div class="row m-md-0">
       <div class="col-12 col-md-12 p-md-0">
         <div class="idea-description">
-          <span class="badge badge-pill badge-secondary font-semibold"><%= @challenge.focus_area %></span>
+          <span class="badge badge-pill badge-secondary font-semibold"><%= @challenge.type %></span>
           <span class="badge badge-pill badge-secondary font-semibold"><%= challenge_status(@challenge) %></span>
-          <h2><%= @challenge.name %></h2>
+          <h2><%= @challenge.title %></h2>
           <p class="font-light"><%= @challenge.description %></p>
-          <%= champion_display(@challenge) %>
-          <%= neighborhood_display(@challenge) %>
         </div>
       </div>
     </div>
@@ -67,13 +65,16 @@
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="matters" role="tabpanel" aria-labelledby="matters-tab">
               <div class="col-md-12">
-                <p><%= @challenge.why %></p>
+                <p><%= SharedView.parse_markdown(@challenge.description) %></p>
               </div>
               <div class="col-md-12">
-                <p><%= @challenge.fixed_looks_like %></p>
+                <p><%= SharedView.parse_markdown(@challenge.how_to_enter) %></p>
               </div>
               <div class="col-md-12">
-                <p><%= @challenge.technology_example %></p>
+                <p><%= SharedView.parse_markdown(@challenge.judging_criteria) %></p>
+              </div>
+              <div class="col-md-12">
+                <p><%= SharedView.parse_markdown(@challenge.non_monetary_prizes) %></p>
               </div>
             </div>
 
