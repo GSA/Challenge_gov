@@ -55,6 +55,54 @@
             <dt>Title</dd>
             <dd><%= @challenge.title %></dd>
             <br/>
+
+            <dt>Tagline</dd>
+            <dd><%= @challenge.tagline %></dd>
+            <br/>
+
+            <dt>Point of Contact Email</dd>
+            <dd><%= @challenge.poc_email %></dd>
+            <br/>
+
+            <dt>Agency Name</dd>
+            <dd><%= @challenge.agency_name %></dd>
+            <br/>
+
+            <dt>External URL</dd>
+            <dd><%= @challenge.external_url %></dd>
+            <br/>
+
+            <dt>Custom URL</dd>
+            <dd><%= @challenge.custom_url %></dd>
+            <br/>
+
+            <dt>Start Date</dd>
+            <dd><%= @challenge.start_date %></dd>
+            <br/>
+
+            <dt>End Date</dd>
+            <dd><%= @challenge.end_date %></dd>
+            <br/>
+            
+            <dt>Fiscal Year</dd>
+            <dd><%= @challenge.fiscal_year %></dd>
+            <br/>
+
+            <dt>Type</dd>
+            <dd><%= @challenge.type %></dd>
+            <br/>
+
+            <dt>Prize Total</dd>
+            <dd><%= @challenge.prize_total %></dd>
+            <br/>
+
+            <dt>Challenge Manager</dd>
+            <dd><%= @challenge.challenge_manager %></dd>
+            <br/>
+
+            <dt>Legal Authority</dd>
+            <dd><%= @challenge.legal_authority %></dd>
+            <br/>
           </dl>
         </div>
       </div>
@@ -69,6 +117,110 @@
         </div>
         <div class="box-body">
           <p><%= @challenge.description %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">How to Enter</h3>
+        </div>
+        <div class="box-body">
+          <p><%= @challenge.how_to_enter %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Rules</h3>
+        </div>
+        <div class="box-body">
+          <p><%= @challenge.rules %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Terms and Conditions</h3>
+        </div>
+        <div class="box-body">
+          <p><%= @challenge.terms_and_conditions %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Prize Description</h3>
+        </div>
+        <div class="box-body">
+          <p><%= @challenge.prize_description %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Non Monetary Prizes</h3>
+        </div>
+        <div class="box-body">
+          <p><%= @challenge.non_monetary_prizes %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Judging Criteria</h3>
+        </div>
+        <div class="box-body">
+          <p><%= @challenge.judging_criteria %></p>
+        </div>
+      </div>
+    </div>
+  </div>  
+  
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Federal Partners</h3>
+        </div>
+        <div class="box-body">
+          <p><%= @challenge.federal_partners %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">Non Federal Partners</h3>
+        </div>
+        <div class="box-body">
+          <p><%= @challenge.non_federal_partners %></p>
         </div>
       </div>
     </div>
