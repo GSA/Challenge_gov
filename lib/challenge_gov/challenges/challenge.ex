@@ -52,14 +52,14 @@ defmodule ChallengeGov.Challenges.Challenge do
     # field(:logo_extension, :string)
     field(:fiscal_year, :integer)
     field(:type, :string)
-    # Terms and conditions - Boolean or datetime for when they were accepted
+    field(:terms_and_conditions, :string)
     field(:prize_total, :integer)
     field(:prize_description, :string)
-    # Non monetary prizes
+    field(:non_monetary_prizes, :string)
     field(:judging_criteria, :string)
     # Judging criteria uploads
-    # Federal partners
-    # Non federal partners
+    field(:federal_partners, :string)
+    field(:non_federal_partners, :string)
     # Other field - Multiple with a title and text. Another relation
     field(:challenge_manager, :string) # Will probably be a relation
     field(:legal_authority, :string)
@@ -101,7 +101,11 @@ defmodule ChallengeGov.Challenges.Challenge do
       :prize_description,
       :judging_criteria,
       :challenge_manager,
-      :legal_authority
+      :legal_authority,
+      :terms_and_conditions,
+      :non_monetary_prizes,
+      :federal_partners,
+      :non_federal_partners
     ])
     |> put_change(:captured_on, Date.utc_today())
     |> validate_required([
@@ -122,8 +126,12 @@ defmodule ChallengeGov.Challenges.Challenge do
       :prize_description,
       :judging_criteria,
       :challenge_manager,
-      :legal_authority
+      :legal_authority,
+      :terms_and_conditions,
+      :non_monetary_prizes,
+      :non_federal_partners
     ])
+    |> parse_federal_partners(params)
     |> validate_inclusion(:agency_name, @agencies)
     |> validate_inclusion(:type, @challenge_types)
   end
@@ -149,7 +157,10 @@ defmodule ChallengeGov.Challenges.Challenge do
       :prize_description,
       :judging_criteria,
       :challenge_manager,
-      :legal_authority
+      :legal_authority,
+      :terms_and_conditions,
+      :non_monetary_prizes,
+      :non_federal_partners
     ])
     |> validate_required([
       :status,
@@ -170,8 +181,13 @@ defmodule ChallengeGov.Challenges.Challenge do
       :prize_description,
       :judging_criteria,
       :challenge_manager,
-      :legal_authority
+      :legal_authority,
+      :terms_and_conditions,
+      :non_monetary_prizes,
+      :federal_partners,
+      :non_federal_partners
     ])
+    |> parse_federal_partners(params)
     |> validate_inclusion(:agency_name, @agencies)
     |> validate_inclusion(:type, @challenge_types)
   end
@@ -193,5 +209,15 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
     |> change()
     |> put_change(:status, "rejected")
+  end
+
+  defp parse_federal_partners(struct, params) do
+    federal_partners = params["federal_partners"]
+
+    if is_list(federal_partners) do
+      put_change(struct, :federal_partners, Enum.join(federal_partners, ", "))
+    else
+      struct
+    end
   end
 end

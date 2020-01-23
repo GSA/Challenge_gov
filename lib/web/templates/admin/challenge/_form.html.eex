@@ -45,14 +45,19 @@
           <%= FormView.text_field(f, :challenge_manager, label: "Challenge Manager", required: true) %>
           <%= FormView.text_field(f, :legal_authority, label: "Legal Authority", required: true) %>
 
-          <div class="<%= FormView.form_group_classes(f, :federal_partner_agency) %>">
-            <%= label(f, :federal_partner_agency, class: "col-md-4") do %>
-            Federal Partner Agency
+          <%= FormView.textarea_field(f, :non_monetary_prizes, label: "Non Monetary Prizes", rows: 5, required: true) %>
+          <%= FormView.textarea_field(f, :terms_and_conditions, label: "Terms and Conditions", rows: 5, required: true) %>
+
+          <div class="<%= FormView.form_group_classes(f, :federal_partners) %>">
+            <%= label(f, :federal_partners, class: "col-md-4") do %>
+              Federal Partners
             <% end %>
             <div class="col-md-8">
-              <%= multiple_select(f, :federal_partner_agency, Challenges.agencies(), class: "form-control") %>
+              <%= multiple_select(f, :federal_partners, Challenges.agencies(), class: "form-control") %>
             </div>
           </div>
+
+          <%= FormView.textarea_field(f, :non_federal_partners, label: "Non Federal Partners", rows: 5, required: true) %>
         </div>
       </div>
       <div class="card">
