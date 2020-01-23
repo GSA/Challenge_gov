@@ -63,7 +63,7 @@
         <%= form_for(@conn, Routes.admin_challenge_path(@conn, :index), [method: :get, as: :filter], fn f -> %>
           <div class="box-body">
             <div class="form-group">
-              <h4>Focus Areas</h4>
+              <h4>Challenge Types</h4>
               <%= Enum.map(Challenges.challenge_types(), fn type -> %>
                 <div>
                   <label>
