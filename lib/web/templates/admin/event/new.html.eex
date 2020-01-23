@@ -1,6 +1,6 @@
 <section class="content-header">
   <h1>
-    New Event for <%= @challenge.name %>
+    New Event for <%= @challenge.title %>
   </h1>
 
   <ol class="breadcrumb">
