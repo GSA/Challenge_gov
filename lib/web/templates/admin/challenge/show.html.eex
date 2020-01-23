@@ -116,7 +116,7 @@
           <h3 class="box-title">Challenge Description</h3>
         </div>
         <div class="box-body">
-          <p><%= @challenge.description %></p>
+          <%= SharedView.parse_markdown(@challenge.description) %>
         </div>
       </div>
     </div>
@@ -129,7 +129,7 @@
           <h3 class="box-title">How to Enter</h3>
         </div>
         <div class="box-body">
-          <p><%= @challenge.how_to_enter %></p>
+          <%= SharedView.parse_markdown(@challenge.how_to_enter) %>
         </div>
       </div>
     </div>
@@ -142,7 +142,7 @@
           <h3 class="box-title">Rules</h3>
         </div>
         <div class="box-body">
-          <p><%= @challenge.rules %></p>
+          <%= SharedView.parse_markdown(@challenge.rules) %>
         </div>
       </div>
     </div>
@@ -155,7 +155,7 @@
           <h3 class="box-title">Terms and Conditions</h3>
         </div>
         <div class="box-body">
-          <p><%= @challenge.terms_and_conditions %></p>
+          <%= SharedView.parse_markdown(@challenge.terms_and_conditions) %>
         </div>
       </div>
     </div>
@@ -168,7 +168,7 @@
           <h3 class="box-title">Prize Description</h3>
         </div>
         <div class="box-body">
-          <p><%= @challenge.prize_description %></p>
+          <%= SharedView.parse_markdown(@challenge.prize_description) %>
         </div>
       </div>
     </div>
@@ -181,7 +181,7 @@
           <h3 class="box-title">Non Monetary Prizes</h3>
         </div>
         <div class="box-body">
-          <p><%= @challenge.non_monetary_prizes %></p>
+          <%= SharedView.parse_markdown(@challenge.non_monetary_prizes) %>
         </div>
       </div>
     </div>
@@ -194,7 +194,7 @@
           <h3 class="box-title">Judging Criteria</h3>
         </div>
         <div class="box-body">
-          <p><%= @challenge.judging_criteria %></p>
+          <%= SharedView.parse_markdown(@challenge.judging_criteria) %>
         </div>
       </div>
     </div>
@@ -220,7 +220,7 @@
           <h3 class="box-title">Non Federal Partners</h3>
         </div>
         <div class="box-body">
-          <p><%= @challenge.non_federal_partners %></p>
+          <%= SharedView.parse_markdown(@challenge.non_federal_partners) %>
         </div>
       </div>
     </div>

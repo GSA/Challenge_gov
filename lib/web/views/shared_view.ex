@@ -53,4 +53,13 @@ defmodule Web.SharedView do
         render("_pagination.html", opts)
     end
   end
+
+  def parse_markdown(value) do
+    case Earmark.as_html(value) do
+      {:ok, markdown, _} ->
+        raw(markdown)
+      _ -> 
+        value
+    end
+  end
 end

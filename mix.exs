@@ -35,6 +35,7 @@ defmodule ChallengeGov.MixProject do
     [
       {:bamboo, git: "https://github.com/thoughtbot/bamboo.git"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
+      {:earmark, "~> 1.4.3"},
       {:ecto_sql, "~> 3.0"},
       {:elixir_uuid, "~> 1.2"},
       {:gettext, "~> 0.11"},
