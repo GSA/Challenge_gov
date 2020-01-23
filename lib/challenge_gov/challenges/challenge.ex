@@ -162,6 +162,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :non_monetary_prizes,
       :non_federal_partners
     ])
+    |> parse_federal_partners(params)
     |> validate_required([
       :status,
       :title,
@@ -187,7 +188,6 @@ defmodule ChallengeGov.Challenges.Challenge do
       :federal_partners,
       :non_federal_partners
     ])
-    |> parse_federal_partners(params)
     |> validate_inclusion(:agency_name, @agencies)
     |> validate_inclusion(:type, @challenge_types)
   end
