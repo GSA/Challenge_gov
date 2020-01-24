@@ -156,6 +156,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       # Congressional Reporting
     ])
     |> put_change(:captured_on, Date.utc_today())
+    |> parse_federal_partners(params)
     |> validate_required([
       :challenge_manager,
       :challenge_manager_email,

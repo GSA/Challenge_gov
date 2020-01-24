@@ -144,7 +144,7 @@ defmodule Web.PageTitle do
   end
 
   defp get({ChallengeView, :show, assigns}) do
-    "Challenge - #{assigns.challenge.name}"
+    "Challenge - #{assigns.challenge.title}"
   end
 
   defp get({AccountView, :index, _}) do

@@ -66,7 +66,18 @@ defmodule ChallengeGov.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       "ecto.migrate.reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
-      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"],
+      validate: [
+        "deps.get",
+        "ecto.create --quiet",
+        "ecto.migrate",
+        "cmd mix compile --force --warnings-as-errors",
+        "format",
+        "format --check-formatted",
+        "credo",
+        "cmd mix test",
+        "cmd cd assets && yarn install && yarn fix && yarn test"
+      ]
     ]
   end
 end
