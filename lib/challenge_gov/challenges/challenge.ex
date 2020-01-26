@@ -31,40 +31,64 @@ defmodule ChallengeGov.Challenges.Challenge do
     "Design"
   ]
 
+  @legal_authority [
+    "America COMPETES", "Agency Prize Authority - DOT", "Direct Prize Authority",
+    "Direct Prize Authority - DOD", "Direct Prize Authority - DOE", "Direct Prize Authority - USAID",
+    "Space Act", "Grants and Cooperative Agreements", "Necessary Expense Doctrine",
+    "Authority to Provide Non-Monetary Support to Prize Competitions",
+    "Procurement Authority", "Other Transactions Authority", "Agency Partnership Authority",
+    "Public-Private Partnership Authority"
+  ]
+
   schema "challenges" do
     belongs_to(:user, User)
     has_many(:events, Event)
     has_many(:supporting_documents, Document)
 
     field(:status, :string, default: "pending")
-    field(:title, :string)
-    field(:tagline, :string)
+    field(:challenge_manager, :string) # Will probably be a relation
+    field(:challenge_manager_email, :string) # Will probably be a relation
     field(:poc_email, :string) # Might just be a point of contact relation
     field(:agency_name, :string)
-    field(:how_to_enter, :string)
-    field(:rules, :string)
-    field(:description, :string)
-    field(:external_url, :string)
+    # agency logo
+    field(:federal_partners, :string) # Federal partners # How does this need to be saved as multiple select?
+    field(:non_federal_partners, :string)
+    field(:title, :string)
     field(:custom_url, :string)
+    field(:external_url, :string)
+    field(:tagline, :string)
+    # Challenge tile image
+    field(:type, :string)
+    field(:description, :string)
+    # Upload Additional Description Materials
+    field(:brief_description, :string)
+    field(:how_to_enter, :string)
+    field(:fiscal_year, :integer)
     field(:start_date, :utc_datetime)
     field(:end_date, :utc_datetime)
-    # field(:logo_key, Ecto.UUID)
-    # field(:logo_extension, :string)
-    field(:fiscal_year, :integer)
-    field(:type, :string)
-    field(:terms_and_conditions, :string)
-    field(:prize_total, :integer)
-    field(:prize_description, :string)
-    field(:non_monetary_prizes, :string)
+    field(:multi_phase, :boolean)
+    field(:number_of_phases, :integer)
+    field(:phase_descriptions, :string)
+    field(:phase_dates, :string)
+    # timeline
     field(:judging_criteria, :string)
-    # Judging criteria uploads
-    field(:federal_partners, :string)
-    field(:non_federal_partners, :string)
-    # Other field - Multiple with a title and text. Another relation
-    field(:challenge_manager, :string) # Will probably be a relation
+    # Upload Additional Judging Criteria Documents
+    field(:prize_total, :integer)
+    field(:non_monetary_prizes, :string)
+    field(:prize_description, :string)
+    field(:eligibility_requirements, :string)
+    field(:rules, :string)
+    # Upload Additional Rules Documents
+    field(:terms_and_conditions, :string)
     field(:legal_authority, :string)
-    # Phases has_many relation probably
-    # Winning participant images
+    # Other field - Multiple with a title and text. Another relation
+    # upload supplemental documents
+    field(:faq, :string)
+    # upload faq materials
+    field(:winner_information, :string)
+    # Winner Image
+    # Congressional Reporting
+
     field(:captured_on, :date)
     field(:published_on, :date)
 
@@ -81,114 +105,202 @@ defmodule ChallengeGov.Challenges.Challenge do
   """
   def challenge_types(), do: @challenge_types
 
+  @doc """
+  List of all legal authority options
+  """
+  def legal_authority(), do: @legal_authority
+
   def create_changeset(struct, params, user) do
     struct
     |> cast(params, [
-      :title,
-      :tagline,
+      :challenge_manager,
+      :challenge_manager_email,
       :poc_email,
       :agency_name,
-      :how_to_enter,
-      :rules,
-      :description,
-      :external_url,
+      :federal_partners,
+      :non_federal_partners,
+      :title,
       :custom_url,
+      :external_url,
+      :tagline,
+      # Challenge tile image
+      :type,
+      :description,
+      # Upload Additional Description Materials
+      :brief_description,
+      :how_to_enter,
+      :fiscal_year,
       :start_date,
       :end_date,
-      :fiscal_year,
-      :type,
-      :prize_total,
-      :prize_description,
+      :multi_phase,
+      :number_of_phases,
+      :phase_descriptions,
+      :phase_dates,
+      # timeline
       :judging_criteria,
-      :challenge_manager,
-      :legal_authority,
-      :terms_and_conditions,
+      # Upload Additional Judging Criteria Documents
+      :prize_total,
       :non_monetary_prizes,
-      :non_federal_partners
+      :prize_description,
+      :eligibility_requirements,
+      :rules,
+      # Upload Additional Rules Documents
+      :terms_and_conditions,
+      :legal_authority,
+      # legal auth other
+      # upload supplemental documents
+      :faq,
+      # upload faq materials
+      :winner_information,
+      # Winner Image
+      # Congressional Reporting
     ])
     |> put_change(:captured_on, Date.utc_today())
     |> parse_federal_partners(params)
     |> validate_required([
-      :title,
-      :tagline,
+      :challenge_manager,
+      :challenge_manager_email,
       :poc_email,
       :agency_name,
-      :how_to_enter,
-      :rules,
-      :description,
-      :external_url,
+      :federal_partners,
+      :non_federal_partners,
+      :title,
       :custom_url,
+      :external_url,
+      :tagline,
+      # Challenge tile image
+      :type,
+      :description,
+      # Upload Additional Description Materials
+      :brief_description,
+      :how_to_enter,
+      :fiscal_year,
       :start_date,
       :end_date,
-      :fiscal_year,
-      :type,
-      :prize_total,
-      :prize_description,
+      :multi_phase,
+      :number_of_phases,
+      :phase_descriptions,
+      :phase_dates,
+      # timeline
       :judging_criteria,
-      :challenge_manager,
-      :legal_authority,
-      :terms_and_conditions,
+      # Upload Additional Judging Criteria Documents
+      :prize_total,
       :non_monetary_prizes,
-      :non_federal_partners
+      :prize_description,
+      :eligibility_requirements,
+      :rules,
+      # Upload Additional Rules Documents
+      :terms_and_conditions,
+      :legal_authority,
+      # legal auth other
+      # upload supplemental documents
+      :faq,
+      # upload faq materials
+      :winner_information,
+      # Winner Image
+      # Congressional Reporting
     ])
     |> validate_inclusion(:agency_name, @agencies)
+    |> validate_inclusion(:federal_partners, @agencies)
     |> validate_inclusion(:type, @challenge_types)
+    |> validate_inclusion(:type, @legal_authority)
   end
 
   def update_changeset(struct, params) do
     struct
     |> cast(params, [
       :status,
-      :title,
-      :tagline,
+      :challenge_manager,
+      :challenge_manager_email,
       :poc_email,
       :agency_name,
-      :how_to_enter,
-      :rules,
-      :description,
-      :external_url,
+      :federal_partners,
+      :non_federal_partners,
+      :title,
       :custom_url,
+      :external_url,
+      :tagline,
+      # Challenge tile image
+      :type,
+      :description,
+      # Upload Additional Description Materials
+      :brief_description,
+      :how_to_enter,
+      :fiscal_year,
       :start_date,
       :end_date,
-      :fiscal_year,
-      :type,
-      :prize_total,
-      :prize_description,
+      :multi_phase,
+      :number_of_phases,
+      :phase_descriptions,
+      :phase_dates,
+      # timeline
       :judging_criteria,
-      :challenge_manager,
-      :legal_authority,
-      :terms_and_conditions,
+      # Upload Additional Judging Criteria Documents
+      :prize_total,
       :non_monetary_prizes,
-      :non_federal_partners
+      :prize_description,
+      :eligibility_requirements,
+      :rules,
+      # Upload Additional Rules Documents
+      :terms_and_conditions,
+      :legal_authority,
+      # legal auth other
+      # upload supplemental documents
+      :faq,
+      # upload faq materials
+      :winner_information,
+      # Winner Image
+      # Congressional Reporting
     ])
     |> parse_federal_partners(params)
     |> validate_required([
       :status,
-      :title,
-      :tagline,
+      :challenge_manager,
+      :challenge_manager_email,
       :poc_email,
       :agency_name,
-      :how_to_enter,
-      :rules,
-      :description,
-      :external_url,
+      :federal_partners,
+      :non_federal_partners,
+      :title,
       :custom_url,
+      :external_url,
+      :tagline,
+      # Challenge tile image
+      :type,
+      :description,
+      # Upload Additional Description Materials
+      :brief_description,
+      :how_to_enter,
+      :fiscal_year,
       :start_date,
       :end_date,
-      :fiscal_year,
-      :type,
-      :prize_total,
-      :prize_description,
+      :multi_phase,
+      :number_of_phases,
+      :phase_descriptions,
+      :phase_dates,
+      # timeline
       :judging_criteria,
-      :challenge_manager,
-      :legal_authority,
-      :terms_and_conditions,
+      # Upload Additional Judging Criteria Documents
+      :prize_total,
       :non_monetary_prizes,
-      :federal_partners,
-      :non_federal_partners
+      :prize_description,
+      :eligibility_requirements,
+      :rules,
+      # Upload Additional Rules Documents
+      :terms_and_conditions,
+      :legal_authority,
+      # legal auth other
+      # upload supplemental documents
+      :faq,
+      # upload faq materials
+      :winner_information,
+      # Winner Image
+      # Congressional Reporting
     ])
     |> validate_inclusion(:agency_name, @agencies)
+    |> validate_inclusion(:federal_partners, @agencies)
     |> validate_inclusion(:type, @challenge_types)
+    |> validate_inclusion(:type, @legal_authority)
   end
 
 # to allow change to admin info?

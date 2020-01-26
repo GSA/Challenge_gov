@@ -28,6 +28,9 @@ defmodule ChallengeGov.Challenges do
   @doc false
   def challenge_types(), do: Challenge.challenge_types()
 
+  @doc false
+  def legal_authority(), do: Challenge.legal_authority()
+
   @doc """
   New changeset for a challenge
   """
