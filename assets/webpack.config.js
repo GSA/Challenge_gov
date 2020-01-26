@@ -15,7 +15,8 @@ module.exports = (env, options) => ({
   },
   entry: {
     app: ['./js/app.js'],
-    admin: ['./js/admin.js']
+    admin: ['./js/admin.js'],
+    client: ['./client/src/index.js']
   },
   output: {
     filename: '[name].js',
@@ -80,5 +81,8 @@ module.exports = (env, options) => ({
       $: 'jquery',
       jQuery: 'jquery'
     })
-  ]
+  ],
+  resolve: {
+    extensions: [".js", ".jsx", ".json"]
+  }
 });

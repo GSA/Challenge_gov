@@ -116,4 +116,10 @@ defmodule Web.Router do
   if Mix.env() == :dev do
     forward("/emails/sent", Bamboo.SentEmailViewerPlug)
   end
+
+  scope("/", Web) do
+    pipe_through([:browser])
+
+    get("/*path", PageController, :index)
+  end
 end

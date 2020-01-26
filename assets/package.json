@@ -7,20 +7,24 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-react": "^7.8.3",
     "admin-lte": "^2.4.9",
     "bootstrap": "^4.3.1",
+    "create-react-app": "^3.3.0",
     "file-loader": "^3.0.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "popper.js": "^1.14.7",
+    "react": "^16.12.0",
     "url-loader": "^1.1.2",
     "yarn": "^1.13.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
     "babel-loader": "^8.0.0",
     "copy-webpack-plugin": "^4.5.0",
     "css-loader": "^0.28.10",
