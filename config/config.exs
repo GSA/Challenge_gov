@@ -33,7 +33,7 @@ config :stein, :storage,
   backend: :file,
   file_backend_folder: "uploads/"
 
-config :challenge_gov, disqus_domain: "hackbalitmore"
+config :challenge_gov, disqus_domain: "na"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
