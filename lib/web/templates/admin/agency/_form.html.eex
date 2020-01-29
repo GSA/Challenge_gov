@@ -1,0 +1,18 @@
+<%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
+  <div class="box-body">
+    <%= FormView.text_field(f, :name, label: "Name", required: true) %>
+
+    <%= FormView.text_field(f, :description, label: "Description", required: true) %>
+
+    <%= FormView.file_field(f, :avatar, label: "Logo") do %>
+      <%= if @data.avatar_key do %>
+        <p>Current Logo:</p>
+        <%= AgencyView.avatar_img(@data, height: 100) %>
+      <% end %>
+    <% end %>
+  </div>            
+
+  <div class="box-footer">
+    <%= submit("Submit", class: "btn btn-primary pull-right") %>
+  </div>
+<% end) %>

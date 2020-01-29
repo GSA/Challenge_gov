@@ -1,7 +1,7 @@
-defmodule Web.TeamInvitationControllerTest do
+defmodule Web.AgencyInvittationControllerTest do
   use Web.ConnCase
 
-  alias ChallengeGov.Teams
+  alias ChallengeGov.Agencies
 
   describe "creating a new invitation" do
     test "successfully", %{conn: conn} do
@@ -23,7 +23,7 @@ defmodule Web.TeamInvitationControllerTest do
       team = TestHelpers.create_team(inviter)
 
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
-      {:ok, _member} = Teams.invite_member(team, inviter, invitee)
+      {:ok, _member} = Agencies.invite_member(team, inviter, invitee)
 
       conn =
         conn
@@ -61,7 +61,7 @@ defmodule Web.TeamInvitationControllerTest do
       team = TestHelpers.create_team(inviter)
 
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
-      {:ok, _member} = Teams.invite_member(team, inviter, invitee)
+      {:ok, _member} = Agencies.invite_member(team, inviter, invitee)
 
       conn =
         conn
@@ -96,8 +96,8 @@ defmodule Web.TeamInvitationControllerTest do
       team = TestHelpers.create_team(inviter)
 
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
-      {:ok, _member} = Teams.invite_member(team, inviter, invitee)
-      {:ok, _member} = Teams.accept_invite(team, invitee)
+      {:ok, _member} = Agencies.invite_member(team, inviter, invitee)
+      {:ok, _member} = Agencies.accept_invite(team, invitee)
 
       conn =
         conn
@@ -117,7 +117,7 @@ defmodule Web.TeamInvitationControllerTest do
       team = TestHelpers.create_team(inviter)
 
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
-      {:ok, _member} = Teams.invite_member(team, inviter, invitee)
+      {:ok, _member} = Agencies.invite_member(team, inviter, invitee)
 
       conn =
         conn
@@ -152,8 +152,8 @@ defmodule Web.TeamInvitationControllerTest do
       team = TestHelpers.create_team(inviter)
 
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
-      {:ok, _member} = Teams.invite_member(team, inviter, invitee)
-      {:ok, _member} = Teams.accept_invite(team, invitee)
+      {:ok, _member} = Agencies.invite_member(team, inviter, invitee)
+      {:ok, _member} = Agencies.accept_invite(team, invitee)
 
       conn =
         conn

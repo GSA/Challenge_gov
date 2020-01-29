@@ -1,13 +1,14 @@
-defmodule Web.TeamView do
+defmodule Web.AgencyView do
   use Web, :view
 
-  alias ChallengeGov.Teams
-  alias ChallengeGov.Teams.Avatar
+  alias ChallengeGov.Agencies
+  alias ChallengeGov.Agencies.Avatar
   alias Stein.Storage
   alias Web.AccountView
   alias Web.FormView
 
   def avatar_img(team, opts \\ []) do
+    IO.inspect team
     case is_nil(team.avatar_key) do
       true ->
         path = Routes.static_path(Web.Endpoint, "/images/teams-card-logo.jpg")
@@ -28,6 +29,6 @@ defmodule Web.TeamView do
 
   def current_team_member?(conn, team) do
     Map.has_key?(conn.assigns, :current_user) &&
-      Teams.member?(team, conn.assigns.current_user)
+      Agencies.member?(team, conn.assigns.current_user)
   end
 end

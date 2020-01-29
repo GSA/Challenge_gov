@@ -38,12 +38,12 @@ defmodule Web.Router do
 
     resources("/sign-in", SessionController, only: [:delete], singleton: true)
 
-    resources("/teams", TeamController, only: [:new, :create])
+    resources("/teams", AgencyController, only: [:new, :create])
 
-    resources("/teams/:team_id/invite", TeamInvitationController, only: [:create])
+    resources("/teams/:team_id/invite", AgencyInvittationController, only: [:create])
 
-    get("/teams/:team_id/invite/accept", TeamInvitationController, :accept)
-    get("/teams/:team_id/invite/reject", TeamInvitationController, :reject)
+    get("/teams/:team_id/invite/accept", AgencyInvittationController, :accept)
+    get("/teams/:team_id/invite/reject", AgencyInvittationController, :reject)
 
     resources("/users/invite", UserInviteController, only: [:new, :create])
   end
@@ -59,7 +59,7 @@ defmodule Web.Router do
 
     get("/register/verify", RegistrationVerifyController, :show)
 
-    resources("/teams", TeamController, only: [:index, :show])
+    resources("/teams", AgencyController, only: [:index, :show])
   end
 
   scope "/", Web do
@@ -83,7 +83,7 @@ defmodule Web.Router do
 
     resources("/documents", DocumentController, only: [:create])
 
-    get("/teams/:team_id/invite", TeamInvitationController, :index)
+    get("/teams/:team_id/invite", AgencyInvittationController, :index)
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -107,7 +107,7 @@ defmodule Web.Router do
 
     resources("/events", EventController, only: [:edit, :update, :delete])
 
-    resources("/agencies", TeamController, only: [:index, :show, :edit, :update, :delete])
+    resources("/agencies", AgencyController)
 
     resources("/challenge_owners", UserController, only: [:index, :show])
     post("/users/:id/toggle", UserController, :toggle, as: :user)

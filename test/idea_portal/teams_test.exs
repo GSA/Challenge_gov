@@ -1,7 +1,7 @@
-defmodule ChallengeGov.TeamsTest do
+defmodule ChallengeGov.AgenciesTest do
   use ChallengeGov.DataCase
 
-  alias ChallengeGov.Teams
+  alias ChallengeGov.Agencies
 
   describe "creating a team" do
     test "successful" do
@@ -9,7 +9,7 @@ defmodule ChallengeGov.TeamsTest do
       user = TestHelpers.verify_email(user)
 
       {:ok, team} =
-        Teams.create(user, %{
+        Agencies.create(user, %{
           name: "Team 1",
           description: "Working on a project"
         })
@@ -25,7 +25,7 @@ defmodule ChallengeGov.TeamsTest do
       user = TestHelpers.verify_email(user)
 
       {:ok, team} =
-        Teams.create(user, %{
+        Agencies.create(user, %{
           name: "Team 1",
           description: "Working on a project",
           avatar: %{path: "test/fixtures/test.png"}
@@ -39,14 +39,14 @@ defmodule ChallengeGov.TeamsTest do
       user = TestHelpers.create_user()
       user = TestHelpers.verify_email(user)
 
-      assert {:error, _changeset} = Teams.create(user, %{})
+      assert {:error, _changeset} = Agencies.create(user, %{})
     end
 
     test "email is not verified" do
       user = TestHelpers.create_user()
 
       assert {:error, _changeset} =
-               Teams.create(user, %{
+               Agencies.create(user, %{
                  name: "Team 1",
                  description: "Working on a project"
                })
@@ -56,10 +56,10 @@ defmodule ChallengeGov.TeamsTest do
       user = TestHelpers.create_user()
       user = TestHelpers.verify_email(user)
 
-      {:ok, _team} = Teams.create(user, %{name: "Team 1"})
+      {:ok, _team} = Agencies.create(user, %{name: "Team 1"})
 
-      {:error, changeset} = Teams.create(user, %{name: "Team 2"})
-      assert %Teams.Team{} = changeset.data
+      {:error, changeset} = Agencies.create(user, %{name: "Team 2"})
+      assert %Agencies.Team{} = changeset.data
     end
   end
 
@@ -69,7 +69,7 @@ defmodule ChallengeGov.TeamsTest do
       user = TestHelpers.verify_email(user)
       team = TestHelpers.create_team(user)
 
-      {:ok, team} = Teams.update(team, %{name: "Updated Name"})
+      {:ok, team} = Agencies.update(team, %{name: "Updated Name"})
 
       assert team.name == "Updated Name"
     end
@@ -80,7 +80,7 @@ defmodule ChallengeGov.TeamsTest do
       team = TestHelpers.create_team(user)
 
       {:ok, team} =
-        Teams.update(team, %{
+        Agencies.update(team, %{
           avatar: %{path: "test/fixtures/test.png"}
         })
 
@@ -93,7 +93,7 @@ defmodule ChallengeGov.TeamsTest do
       user = TestHelpers.verify_email(user)
       team = TestHelpers.create_team(user)
 
-      {:error, _changeset} = Teams.update(team, %{name: nil})
+      {:error, _changeset} = Agencies.update(team, %{name: nil})
     end
   end
 
@@ -104,7 +104,7 @@ defmodule ChallengeGov.TeamsTest do
 
       team = TestHelpers.create_team(user)
 
-      {:ok, team} = Teams.delete(team)
+      {:ok, team} = Agencies.delete(team)
 
       assert team.deleted_at
     end
@@ -115,7 +115,7 @@ defmodule ChallengeGov.TeamsTest do
 
       team = TestHelpers.create_team(user)
 
-      {:ok, team} = Teams.delete(team)
+      {:ok, team} = Agencies.delete(team)
 
       assert team.deleted_at
 
@@ -131,7 +131,7 @@ defmodule ChallengeGov.TeamsTest do
 
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
 
-      {:ok, member} = Teams.invite_member(team, inviter, invitee)
+      {:ok, member} = Agencies.invite_member(team, inviter, invitee)
 
       assert member.status == "invited"
     end
@@ -142,10 +142,10 @@ defmodule ChallengeGov.TeamsTest do
 
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
 
-      {:ok, _member} = Teams.invite_member(team, inviter, invitee)
-      {:ok, _member} = Teams.accept_invite(team, invitee)
+      {:ok, _member} = Agencies.invite_member(team, inviter, invitee)
+      {:ok, _member} = Agencies.accept_invite(team, invitee)
 
-      {:error, :already_member} = Teams.invite_member(team, inviter, invitee)
+      {:error, :already_member} = Agencies.invite_member(team, inviter, invitee)
     end
 
     test "allows sending multiple invites" do
@@ -153,12 +153,12 @@ defmodule ChallengeGov.TeamsTest do
 
       inviter = TestHelpers.create_verified_user(%{email: "inviter1@example.com"})
       team = TestHelpers.create_team(inviter)
-      {:ok, member} = Teams.invite_member(team, inviter, invitee)
+      {:ok, member} = Agencies.invite_member(team, inviter, invitee)
       assert member.status == "invited"
 
       inviter = TestHelpers.create_verified_user(%{email: "inviter2@example.com"})
       team = TestHelpers.create_team(inviter)
-      {:ok, member} = Teams.invite_member(team, inviter, invitee)
+      {:ok, member} = Agencies.invite_member(team, inviter, invitee)
       assert member.status == "invited"
     end
   end
@@ -170,8 +170,8 @@ defmodule ChallengeGov.TeamsTest do
 
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
 
-      {:ok, _member} = Teams.invite_member(team, inviter, invitee)
-      {:ok, member} = Teams.accept_invite(team, invitee)
+      {:ok, _member} = Agencies.invite_member(team, inviter, invitee)
+      {:ok, member} = Agencies.accept_invite(team, invitee)
 
       assert member.status == "accepted"
     end
@@ -182,7 +182,7 @@ defmodule ChallengeGov.TeamsTest do
 
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
 
-      {:error, :not_found} = Teams.accept_invite(team, invitee)
+      {:error, :not_found} = Agencies.accept_invite(team, invitee)
     end
 
     test "accepting an invite clears the rest of the pending invites" do
@@ -190,15 +190,15 @@ defmodule ChallengeGov.TeamsTest do
 
       inviter = TestHelpers.create_verified_user(%{email: "inviter1@example.com"})
       team1 = TestHelpers.create_team(inviter)
-      {:ok, _member} = Teams.invite_member(team1, inviter, invitee)
+      {:ok, _member} = Agencies.invite_member(team1, inviter, invitee)
 
       inviter = TestHelpers.create_verified_user(%{email: "inviter2@example.com"})
       team2 = TestHelpers.create_team(inviter)
-      {:ok, member2} = Teams.invite_member(team2, inviter, invitee)
+      {:ok, member2} = Agencies.invite_member(team2, inviter, invitee)
 
-      {:ok, _member} = Teams.accept_invite(team1, invitee)
+      {:ok, _member} = Agencies.accept_invite(team1, invitee)
 
-      member2 = Repo.get(Teams.Member, member2.id)
+      member2 = Repo.get(Agencies.Member, member2.id)
       assert member2.status == "rejected"
     end
   end
@@ -210,8 +210,8 @@ defmodule ChallengeGov.TeamsTest do
 
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
 
-      {:ok, _member} = Teams.invite_member(team, inviter, invitee)
-      {:ok, member} = Teams.reject_invite(team, invitee)
+      {:ok, _member} = Agencies.invite_member(team, inviter, invitee)
+      {:ok, member} = Agencies.reject_invite(team, invitee)
 
       assert member.status == "rejected"
     end
@@ -222,9 +222,9 @@ defmodule ChallengeGov.TeamsTest do
 
       invitee = TestHelpers.create_verified_user(%{email: "invitee@example.com"})
 
-      {:ok, _member} = Teams.invite_member(team, inviter, invitee)
-      {:ok, _member} = Teams.reject_invite(team, invitee)
-      {:error, _changeset} = Teams.invite_member(team, inviter, invitee)
+      {:ok, _member} = Agencies.invite_member(team, inviter, invitee)
+      {:ok, _member} = Agencies.reject_invite(team, invitee)
+      {:error, _changeset} = Agencies.invite_member(team, inviter, invitee)
     end
   end
 end

@@ -74,7 +74,7 @@ defmodule Web.PageTitle do
     UserInviteView,
     ChallengeView,
     AccountView,
-    TeamView,
+    AgencyView,
     ErrorView
   }
 
@@ -102,12 +102,12 @@ defmodule Web.PageTitle do
     "Admin - Viewing Challenge - #{assigns.challenge.title}"
   end
 
-  defp get({Admin.TeamView, :index, _}) do
+  defp get({Admin.AgencyView, :index, _}) do
     "Admin - Agencies"
   end
 
-  defp get({Admin.TeamView, :show, assigns}) do
-    "Admin - Viewing Agency - #{assigns.team.name}"
+  defp get({Admin.AgencyView, :show, assigns}) do
+    "Admin - Viewing Agency - #{assigns.agency.name}"
   end
 
   defp get({Admin.UserView, :index, _}) do
@@ -159,16 +159,16 @@ defmodule Web.PageTitle do
     "Challenge Owner - #{assigns.account.first_name} #{assigns.account.last_name}"
   end
 
-  defp get({TeamView, :index, _}) do
+  defp get({AgencyView, :index, _}) do
     "Agencies"
   end
 
-  defp get({TeamView, :new, _}) do
+  defp get({AgencyView, :new, _}) do
     "Create an Agency"
   end
 
-  defp get({TeamView, :show, assigns}) do
-    "Agency - #{assigns.team.name}"
+  defp get({AgencyView, :show, assigns}) do
+    "Agency - #{assigns.agency.name}"
   end
 
   defp get({ErrorView, _, _}) do

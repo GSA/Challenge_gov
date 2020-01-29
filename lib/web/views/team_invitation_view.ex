@@ -1,4 +1,4 @@
-defmodule Web.TeamInvitationView do
+defmodule Web.AgencyInvittationView do
   use Web, :view
 
   alias Web.AccountView

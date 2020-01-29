@@ -1,6 +1,7 @@
 <section class="content-header">
   <h1>
     Agencies
+    <%= link "New", to: Routes.admin_agency_path(@conn, :new), class: "btn btn-primary" %>
   </h1>
 
   <ol class="breadcrumb">
@@ -28,12 +29,13 @@
                 </tr>
               </thead>
               <tbody>
-                <%= Enum.map @teams, fn (team) -> %>
+                <%= Enum.map @agencies, fn (agency) -> %>
                   <tr>
-                    <td><%= team.id %></td>
-                    <td><%= link(team.name, to: Routes.admin_team_path(@conn, :show, team.id)) %></td>
+                    <td><%= agency.id %></td>
+                    <td><%= link(agency.name, to: Routes.admin_agency_path(@conn, :show, agency.id)) %></td>
                     <td>
-                      <%= link("View", to: Routes.admin_team_path(@conn, :show, team.id), class: "btn btn-default btn-xs") %>
+                      <%= link("View", to: Routes.admin_agency_path(@conn, :show, agency.id), class: "btn btn-default btn-xs") %>
+                      <%= link("Edit", to: Routes.admin_agency_path(@conn, :edit, agency.id), class: "btn btn-default btn-xs") %>
                     </td>
                   </tr>
                 <% end %>
@@ -41,7 +43,7 @@
             </table>
           </div>
 
-          <%= SharedView.pagination(path: Routes.admin_team_path(@conn, :index), pagination: @pagination) %>
+          <%= SharedView.pagination(path: Routes.admin_agency_path(@conn, :index), pagination: @pagination) %>
         </div>
       </div>
     </div>
