@@ -9,9 +9,12 @@ defmodule ChallengeGov.Agencies do
   alias ChallengeGov.Agencies.Avatar
   alias ChallengeGov.Agencies.Member
   alias ChallengeGov.Agencies.Agency
+  alias Stein.Filter
   alias Stein.Pagination
 
   import Ecto.Query
+
+  @behaviour Stein.Filter
 
   @doc """
   New agency changeset
@@ -32,6 +35,7 @@ defmodule ChallengeGov.Agencies do
     query =
       Agency
       |> where([t], is_nil(t.deleted_at))
+      |> Filter.filter(opts[:filter], __MODULE__)
       |> preload(members: ^member_query())
 
     Pagination.paginate(Repo, query, opts)
@@ -53,6 +57,16 @@ defmodule ChallengeGov.Agencies do
 
       agency ->
         agency = Repo.preload(agency, members: :user)
+        {:ok, agency}
+    end
+  end  
+  
+  def get_by_name(name) do
+    case Repo.get_by(Agency, name: name) do
+      nil ->
+        {:error, :not_found}
+
+      agency ->
         {:ok, agency}
     end
   end
@@ -107,6 +121,12 @@ defmodule ChallengeGov.Agencies do
         |> Ecto.Changeset.add_error(:base, "You are already a member of a agency")
         |> Ecto.Changeset.apply_action(:insert)
     end
+  end  
+  
+  def create(params) do
+    %Agency{}
+    |> Agency.create_changeset(params)
+    |> Repo.insert
   end
 
   @doc """
@@ -255,5 +275,11 @@ defmodule ChallengeGov.Agencies do
       |> Member.reject_invite_changeset()
       |> Repo.update()
     end
+  end  
+  
+  @impl true
+  def filter_on_attribute({"search", value}, query) do
+    value = "%" <> value <> "%"
+    where(query, [c], ilike(c.name, ^value) or ilike(c.description, ^value))
   end
 end

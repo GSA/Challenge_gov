@@ -11,6 +11,7 @@
 # and so on) as they will fail if something goes wrong.
 
 alias ChallengeGov.Accounts
+alias ChallengeGov.Agencies
 
 defmodule Helpers do
   def create_admin(email) do
@@ -29,6 +30,23 @@ defmodule Helpers do
         nil
     end
   end
+
+  def create_agencies(file) do
+    {:ok, binary} = File.read(file)
+    agencies = String.split(binary, ",")
+
+    Enum.each(agencies, fn agency ->
+      case Agencies.get_by_name(agency) do
+        {:error, :not_found} ->
+          Agencies.create(%{
+            name: agency
+          })
+
+        _ ->
+          nil
+      end
+    end)
+  end
 end
 
 defmodule Seeds do
@@ -36,6 +54,7 @@ defmodule Seeds do
 
   def run do
     create_admin("admin@example.com")
+    create_agencies("priv/repo/agencies.txt")
   end
 end
 
