@@ -1,6 +1,6 @@
-defmodule ChallengeGov.Teams.Member do
+defmodule ChallengeGov.Agencies.Member do
   @moduledoc """
-  Team member schema
+  Agency member schema
   """
 
   use Ecto.Schema
@@ -10,38 +10,34 @@ defmodule ChallengeGov.Teams.Member do
   @type t :: %__MODULE__{}
 
   alias ChallengeGov.Accounts.User
-  alias ChallengeGov.Teams.Team
+  alias ChallengeGov.Agencies.Agency
 
-  schema "team_members" do
-    field(:status, :string, default: "invited")
-
+  schema "agency_members" do
     belongs_to(:user, User)
-    belongs_to(:team, Team)
+    belongs_to(:agency, Agency)
 
     timestamps()
   end
 
-  def create_changeset(struct, user, team) do
+  def create_changeset(struct, user, agency) do
     struct
     |> change()
     |> put_change(:user_id, user.id)
-    |> put_change(:team_id, team.id)
+    |> put_change(:agency_id, agency.id)
     |> unique_constraint(:user_id)
-    |> unique_constraint(:user_id, name: :team_members_team_id_user_id_index)
+    |> unique_constraint(:user_id, name: :agency_members_agency_id_user_id_index)
   end
 
   def accept_invite_changeset(struct) do
     struct
     |> change()
-    |> put_change(:status, "accepted")
     |> unique_constraint(:user_id)
-    |> unique_constraint(:user_id, name: :team_members_team_id_user_id_index)
+    |> unique_constraint(:user_id, name: :agency_members_agency_id_user_id_index)
   end
 
   def reject_invite_changeset(struct) do
     struct
     |> change()
-    |> put_change(:status, "rejected")
     |> unique_constraint(:user_id)
     |> unique_constraint(:user_id, name: :team_members_team_id_user_id_index)
   end

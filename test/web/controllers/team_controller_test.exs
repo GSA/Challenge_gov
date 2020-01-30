@@ -1,4 +1,4 @@
-defmodule Web.TeamControllerTest do
+defmodule Web.AgencyControllerTest do
   use Web.ConnCase
 
   describe "creating a new team" do

@@ -1,6 +1,6 @@
 <section class="content-header">
   <h1>
-    Agency: <%= @team.name %>
+    Agency: <%= @agency.name %>
   </h1>
 
   <ol class="breadcrumb">
@@ -9,8 +9,8 @@
         <i class="fa fa-dashboard"></i> Home
       <% end %>
     </li>
-    <li><%= link("Challenges", to: Routes.admin_team_path(@conn, :index)) %></li>
-    <li class="active"><%= @team.name %></li>
+    <li><%= link("Challenges", to: Routes.admin_agency_path(@conn, :index)) %></li>
+    <li class="active"><%= @agency.name %></li>
   </ol>
 </section>
 
@@ -21,22 +21,22 @@
         <div class="box-header">
           <h3 class="box-title">Basics</h3>
           <div class="box-tools">
-            <%= link("Edit", to: Routes.admin_team_path(@conn, :edit, @team.id), class: "btn btn-default") %>
-            <%= link("Delete", to: Routes.admin_team_path(@conn, :delete, @team.id), class: "btn btn-default", method: :delete, data: [confirm: "Are you sure?"]) %>
+            <%= link("Edit", to: Routes.admin_agency_path(@conn, :edit, @agency.id), class: "btn btn-default") %>
+            <%= link("Delete", to: Routes.admin_agency_path(@conn, :delete, @agency.id), class: "btn btn-default", method: :delete, data: [confirm: "Are you sure?"]) %>
           </div>
         </div>
         <div class="box-body">
           <dl>
             <dt>Name</dd>
-            <dd><%= @team.name %></dd>
+            <dd><%= @agency.name %></dd>
             <br/>
 
             <dt>Description</dd>
-            <dd><%= @team.description %></dd>
+            <dd><%= @agency.description %></dd>
             <br/>
 
-            <dt>Avatar</dd>
-            <dd><%= TeamView.avatar_img(@team, height: 150) %></dd>
+            <dt>Logo</dd>
+            <dd><%= AgencyView.avatar_img(@agency, height: 150) %></dd>
           </dl>
 
           <h4>Members</h4>

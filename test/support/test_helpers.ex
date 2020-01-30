@@ -7,7 +7,7 @@ defmodule ChallengeGov.TestHelpers do
   alias ChallengeGov.Challenges
   alias ChallengeGov.Repo
   alias ChallengeGov.SupportingDocuments
-  alias ChallengeGov.Teams
+  alias ChallengeGov.Agencies
   alias ChallengeGov.Timeline
 
   defp user_attributes(attributes) do
@@ -112,7 +112,7 @@ defmodule ChallengeGov.TestHelpers do
 
   def create_team(user, attributes \\ %{}) do
     attributes = Map.merge(%{name: "New event"}, attributes)
-    {:ok, team} = Teams.create(user, attributes)
+    {:ok, team} = Agencies.create(user, attributes)
     team
   end
 end

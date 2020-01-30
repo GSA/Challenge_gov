@@ -9,7 +9,7 @@ defmodule ChallengeGov.Accounts.User do
 
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.SupportingDocuments.Document
-  alias ChallengeGov.Teams.Member
+  alias ChallengeGov.Agencies.Member
 
   @type t :: %__MODULE__{}
 

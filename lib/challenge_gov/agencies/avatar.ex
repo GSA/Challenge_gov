@@ -1,26 +1,26 @@
-defmodule ChallengeGov.Teams.Avatar do
+defmodule ChallengeGov.Agencies.Avatar do
   @moduledoc """
-  Handles uploading avatar's for a team
+  Handles uploading avatar's for an agency
   """
 
-  alias ChallengeGov.Teams.Team
+  alias ChallengeGov.Agencies.Agency
   alias ChallengeGov.Images
   alias ChallengeGov.Repo
   alias Stein.Storage
 
   @doc """
-  Get the storage path for a team's avatar
+  Get the storage path for a agency's avatar
   """
-  def avatar_path(size, key, extension), do: "/teams/#{size}-#{key}#{extension}"
+  def avatar_path(size, key, extension), do: "/agencys/#{size}-#{key}#{extension}"
 
-  def avatar_path(team = %Team{}, size) do
-    avatar_path(size, team.avatar_key, team.avatar_extension)
+  def avatar_path(agency = %Agency{}, size) do
+    avatar_path(size, agency.avatar_key, agency.avatar_extension)
   end
 
   @doc """
   Upload an avatar if the key is present
   """
-  def maybe_upload_avatar(team, params) do
+  def maybe_upload_avatar(agency, params) do
     params =
       Enum.into(params, %{}, fn {key, value} ->
         {to_string(key), value}
@@ -28,32 +28,32 @@ defmodule ChallengeGov.Teams.Avatar do
 
     case Map.has_key?(params, "avatar") do
       true ->
-        upload_avatar(team, Map.get(params, "avatar"))
+        upload_avatar(agency, Map.get(params, "avatar"))
 
       false ->
-        {:ok, team}
+        {:ok, agency}
     end
   end
 
-  def upload_avatar(team, file) do
+  def upload_avatar(agency, file) do
     file = Storage.prep_file(file)
 
     key = UUID.uuid4()
     path = avatar_path("original", key, file.extension)
-    changeset = Team.avatar_changeset(team, key, file.extension)
+    changeset = Agency.avatar_changeset(agency, key, file.extension)
 
     with :ok <- upload(file, path),
-         {:ok, team} <- Repo.update(changeset) do
-      generate_thumbnail(team, file)
+         {:ok, agency} <- Repo.update(changeset) do
+      generate_thumbnail(agency, file)
     else
       {:error, :invalid_extension} ->
-        team
+        agency
         |> Ecto.Changeset.change()
         |> Ecto.Changeset.add_error(:avatar, "must be a jpg, png, or gif")
         |> Ecto.Changeset.apply_action(:update)
 
       {:error, _reason} ->
-        team
+        agency
         |> Ecto.Changeset.change()
         |> Ecto.Changeset.add_error(:avatar, "had an issue uploading")
         |> Ecto.Changeset.apply_action(:update)
@@ -64,18 +64,18 @@ defmodule ChallengeGov.Teams.Avatar do
     Storage.upload(file, path, extensions: [".jpg", ".jpeg", ".png", ".gif"])
   end
 
-  def generate_thumbnail(team, file) do
-    path = avatar_path(team, "thumbnail")
+  def generate_thumbnail(agency, file) do
+    path = avatar_path(agency, "thumbnail")
 
     case Images.convert(file, extname: file.extension, thumbnail: "600x600") do
       {:ok, temp_path} ->
         upload(%{path: temp_path}, path)
         File.rm(temp_path)
 
-        {:ok, team}
+        {:ok, agency}
 
       {:error, :convert} ->
-        {:ok, team}
+        {:ok, agency}
     end
   end
 end

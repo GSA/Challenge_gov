@@ -1,4 +1,4 @@
-defmodule Web.Admin.TeamControllerTest do
+defmodule Web.Admin.AgencyControllerTest do
   use Web.ConnCase
 
   describe "updating a team" do
@@ -12,9 +12,9 @@ defmodule Web.Admin.TeamControllerTest do
       conn =
         conn
         |> assign(:current_user, %{user | role: "admin"})
-        |> put(Routes.admin_team_path(conn, :update, team.id), team: params)
+        |> put(Routes.admin_agency_path(conn, :update, team.id), team: params)
 
-      assert redirected_to(conn) == Routes.admin_team_path(conn, :show, team.id)
+      assert redirected_to(conn) == Routes.admin_agency_path(conn, :show, team.id)
     end
 
     test "failure", %{conn: conn} do
@@ -27,7 +27,7 @@ defmodule Web.Admin.TeamControllerTest do
       conn =
         conn
         |> assign(:current_user, %{user | role: "admin"})
-        |> put(Routes.admin_team_path(conn, :update, team.id), team: params)
+        |> put(Routes.admin_agency_path(conn, :update, team.id), team: params)
 
       assert html_response(conn, 422)
     end
@@ -42,9 +42,9 @@ defmodule Web.Admin.TeamControllerTest do
       conn =
         conn
         |> assign(:current_user, %{user | role: "admin"})
-        |> delete(Routes.admin_team_path(conn, :delete, team.id))
+        |> delete(Routes.admin_agency_path(conn, :delete, team.id))
 
-      assert redirected_to(conn) == Routes.admin_team_path(conn, :index)
+      assert redirected_to(conn) == Routes.admin_agency_path(conn, :index)
     end
   end
 end

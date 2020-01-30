@@ -1,7 +1,7 @@
-defmodule Web.Admin.TeamView do
+defmodule Web.Admin.AgencyView do
   use Web, :view
 
   alias Web.Admin.FormView
   alias Web.SharedView
-  alias Web.TeamView
+  alias Web.AgencyView
 end

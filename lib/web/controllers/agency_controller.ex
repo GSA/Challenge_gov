@@ -1,8 +1,8 @@
-defmodule Web.TeamController do
+defmodule Web.AgencyController do
   use Web, :controller
 
   alias ChallengeGov.Accounts
-  alias ChallengeGov.Teams
+  alias ChallengeGov.Agencies
 
   plug(Web.Plugs.FetchPage, [per: 12] when action in [:index])
 
@@ -10,7 +10,7 @@ defmodule Web.TeamController do
 
   def index(conn, _params) do
     %{page: page, per: per} = conn.assigns
-    %{page: teams, pagination: pagination} = Teams.all(page: page, per: per)
+    %{page: teams, pagination: pagination} = Agencies.all(page: page, per: per)
 
     conn
     |> assign(:teams, teams)
@@ -19,7 +19,7 @@ defmodule Web.TeamController do
   end
 
   def show(conn, %{"id" => id}) do
-    with {:ok, team} <- Teams.get(id) do
+    with {:ok, team} <- Agencies.get(id) do
       conn
       |> assign(:team, team)
       |> assign(:accounts, Accounts.for_inviting_to())
@@ -29,14 +29,14 @@ defmodule Web.TeamController do
 
   def new(conn, _params) do
     conn
-    |> assign(:changeset, Teams.new())
+    |> assign(:changeset, Agencies.new())
     |> render("new.html")
   end
 
   def create(conn, %{"team" => params}) do
     %{current_user: user} = conn.assigns
 
-    case Teams.create(user, params) do
+    case Agencies.create(user, params) do
       {:ok, team} ->
         conn
         |> put_flash(:info, "Team created!")

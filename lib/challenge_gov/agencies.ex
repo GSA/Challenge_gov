@@ -1,27 +1,30 @@
-defmodule ChallengeGov.Teams do
+defmodule ChallengeGov.Agencies do
   @moduledoc """
-  Teams context
+  Agencies context
   """
 
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
-  alias ChallengeGov.Teams.Avatar
-  alias ChallengeGov.Teams.Member
-  alias ChallengeGov.Teams.Team
+  alias ChallengeGov.Agencies.Avatar
+  alias ChallengeGov.Agencies.Member
+  alias ChallengeGov.Agencies.Agency
+  alias Stein.Filter
   alias Stein.Pagination
 
   import Ecto.Query
 
-  @doc """
-  New team changeset
-  """
-  def new(), do: Team.create_changeset(%Team{}, %{})
+  @behaviour Stein.Filter
 
   @doc """
-  Edit team changeset
+  New agency changeset
   """
-  def edit(team), do: Team.create_changeset(team, %{})
+  def new(), do: Agency.create_changeset(%Agency{}, %{})
+
+  @doc """
+  Edit agency changeset
+  """
+  def edit(agency), do: Agency.create_changeset(agency, %{})
 
   @doc """
   Get all accounts
@@ -30,30 +33,41 @@ defmodule ChallengeGov.Teams do
     opts = Enum.into(opts, %{})
 
     query =
-      Team
+      Agency
       |> where([t], is_nil(t.deleted_at))
+      |> Filter.filter(opts[:filter], __MODULE__)
       |> preload(members: ^member_query())
 
     Pagination.paginate(Repo, query, opts)
   end
 
   @doc """
-  Get an individual team
+  Get an individual agency
   """
   def get(id) do
-    team =
-      Team
+    agency =
+      Agency
       |> where([t], t.id == ^id and is_nil(t.deleted_at))
       |> preload(members: ^member_query())
       |> Repo.one()
 
-    case team do
+    case agency do
       nil ->
         {:error, :not_found}
 
-      team ->
-        team = Repo.preload(team, members: :user)
-        {:ok, team}
+      agency ->
+        agency = Repo.preload(agency, members: :user)
+        {:ok, agency}
+    end
+  end  
+  
+  def get_by_name(name) do
+    case Repo.get_by(Agency, name: name) do
+      nil ->
+        {:error, :not_found}
+
+      agency ->
+        {:ok, agency}
     end
   end
 
@@ -61,76 +75,75 @@ defmodule ChallengeGov.Teams do
     from m in Member,
       join: u in assoc(m, :user),
       where: u.display == true,
-      where: m.status == "accepted",
       preload: [user: [:challenges]]
   end
 
   @doc """
-  Check if a user is the member of any team
+  Check if a user is the member of any agency
   """
-  def member_of_team?(user) do
+  def member_of_agency?(user) do
     user = Repo.preload(user, members: from(m in Member, where: m.status == "accepted"))
 
     !Enum.empty?(user.members)
   end
 
   @doc """
-  Create a new team
+  Create a new agency
 
-  Adds the user to the team, fails if the user is already part of a team
+  Adds the user to the agency, fails if the user is already part of a agency
   """
-  def create(%{email_verified_at: nil}, _params) do
-    %Team{}
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.add_error(:base, "You must verify your email first")
-    |> Ecto.Changeset.apply_action(:insert)
-  end
+  # def create(%{email_verified_at: nil}, _params) do
+  #   %Agency{}
+  #   |> Ecto.Changeset.change()
+  #   |> Ecto.Changeset.add_error(:base, "You must verify your email first")
+  #   |> Ecto.Changeset.apply_action(:insert)
+  # end
 
   def create(user, params) do
     result =
       Ecto.Multi.new()
-      |> Ecto.Multi.insert(:team, Team.create_changeset(%Team{}, params))
-      |> Ecto.Multi.run(:avatar, fn _repo, %{team: team} ->
-        Avatar.maybe_upload_avatar(team, params)
-      end)
-      |> Ecto.Multi.run(:member, fn _repo, %{avatar: team} ->
-        %Member{}
-        |> Member.create_changeset(user, team)
-        |> Ecto.Changeset.put_change(:status, "accepted")
-        |> Repo.insert()
+      |> Ecto.Multi.insert(:agency, Agency.create_changeset(%Agency{}, params))
+      |> Ecto.Multi.run(:avatar, fn _repo, %{agency: agency} ->
+        Avatar.maybe_upload_avatar(agency, params)
       end)
       |> Repo.transaction()
 
     case result do
-      {:ok, %{avatar: team}} ->
-        {:ok, team}
+      {:ok, %{avatar: agency}} ->
+        {:ok, agency}
 
-      {:error, :team, changeset, _changes} ->
+      {:error, :agency, changeset, _changes} ->
         {:error, changeset}
 
       {:error, :member, _changeset, _changes} ->
-        %Team{}
+        %Agency{}
         |> Ecto.Changeset.change()
-        |> Ecto.Changeset.add_error(:base, "You are already a member of a team")
+        |> Ecto.Changeset.add_error(:base, "You are already a member of a agency")
         |> Ecto.Changeset.apply_action(:insert)
     end
+  end  
+  
+  def create(params) do
+    %Agency{}
+    |> Agency.create_changeset(params)
+    |> Repo.insert
   end
 
   @doc """
-  Update a team
+  Update a agency
   """
-  def update(team, params) do
+  def update(agency, params) do
     result =
       Ecto.Multi.new()
-      |> Ecto.Multi.update(:team, Team.update_changeset(team, params))
-      |> Ecto.Multi.run(:avatar, fn _repo, %{team: team} ->
-        Avatar.maybe_upload_avatar(team, params)
+      |> Ecto.Multi.update(:agency, Agency.update_changeset(agency, params))
+      |> Ecto.Multi.run(:avatar, fn _repo, %{agency: agency} ->
+        Avatar.maybe_upload_avatar(agency, params)
       end)
       |> Repo.transaction()
 
     case result do
-      {:ok, %{avatar: team}} ->
-        {:ok, team}
+      {:ok, %{avatar: agency}} ->
+        {:ok, agency}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
@@ -138,59 +151,59 @@ defmodule ChallengeGov.Teams do
   end
 
   @doc """
-  Soft delete a team
+  Soft delete a agency
 
   Marks as deleted by setting the timestamp
   """
-  def delete(team) do
+  def delete(agency) do
     now = DateTime.truncate(Timex.now(), :second)
 
     changeset =
-      team
+      agency
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:deleted_at, now)
 
     result =
       Ecto.Multi.new()
-      |> Ecto.Multi.update(:team, changeset)
+      |> Ecto.Multi.update(:agency, changeset)
       |> Ecto.Multi.run(:archive_members, &archive_members/2)
       |> Repo.transaction()
 
     case result do
-      {:ok, %{team: team}} ->
-        {:ok, team}
+      {:ok, %{agency: agency}} ->
+        {:ok, agency}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
   end
 
-  defp archive_members(repo, %{team: team}) do
+  defp archive_members(repo, %{agency: agency}) do
     result =
       Member
-      |> where([m], m.team_id == ^team.id)
+      |> where([m], m.agency_id == ^agency.id)
       |> repo.update_all(set: [status: "archived"])
 
     {:ok, result}
   end
 
   @doc """
-  Check if a user is a full member of the team
+  Check if a user is a full member of the agency
   """
-  def member?(team, user) do
-    !is_nil(Repo.get_by(Member, team_id: team.id, user_id: user.id, status: "accepted"))
+  def member?(agency, user) do
+    !is_nil(Repo.get_by(Member, agency_id: agency.id, user_id: user.id, status: "accepted"))
   end
 
   @doc """
-  Invite a new member to a team
+  Invite a new member to a agency
   """
-  def invite_member(team, inviter, invitee) do
-    changeset = Member.create_changeset(%Member{}, invitee, team)
+  def invite_member(agency, inviter, invitee) do
+    changeset = Member.create_changeset(%Member{}, invitee, agency)
 
     case Repo.insert(changeset) do
       {:ok, member} ->
         invitee
-        |> Emails.team_invitation(team, inviter)
+        |> Emails.agency_invitation(agency, inviter)
         |> Mailer.deliver_later()
 
         {:ok, member}
@@ -218,8 +231,8 @@ defmodule ChallengeGov.Teams do
     end
   end
 
-  defp find_invited_member(team, invitee) do
-    case Repo.get_by(Member, team_id: team.id, user_id: invitee.id, status: "invited") do
+  defp find_invited_member(agency, invitee) do
+    case Repo.get_by(Member, agency_id: agency.id, user_id: invitee.id, status: "invited") do
       nil ->
         {:error, :not_found}
 
@@ -229,10 +242,10 @@ defmodule ChallengeGov.Teams do
   end
 
   @doc """
-  Accept an invite for a team
+  Accept an invite for a agency
   """
-  def accept_invite(team, invitee) do
-    with {:ok, member} <- find_invited_member(team, invitee) do
+  def accept_invite(agency, invitee) do
+    with {:ok, member} <- find_invited_member(agency, invitee) do
       {:ok, %{member: member}} =
         Ecto.Multi.new()
         |> Ecto.Multi.update(:member, Member.accept_invite_changeset(member))
@@ -247,7 +260,7 @@ defmodule ChallengeGov.Teams do
     result =
       Member
       |> where([m], m.user_id == ^member.user_id)
-      |> where([m], m.team_id != ^member.team_id)
+      |> where([m], m.agency_id != ^member.agency_id)
       |> repo.update_all(set: [status: "rejected"])
 
     {:ok, result}
@@ -256,11 +269,17 @@ defmodule ChallengeGov.Teams do
   @doc """
   Reject an invite
   """
-  def reject_invite(team, invitee) do
-    with {:ok, member} <- find_invited_member(team, invitee) do
+  def reject_invite(agency, invitee) do
+    with {:ok, member} <- find_invited_member(agency, invitee) do
       member
       |> Member.reject_invite_changeset()
       |> Repo.update()
     end
+  end  
+  
+  @impl true
+  def filter_on_attribute({"search", value}, query) do
+    value = "%" <> value <> "%"
+    where(query, [c], ilike(c.name, ^value) or ilike(c.description, ^value))
   end
 end

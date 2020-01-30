@@ -1,6 +1,6 @@
-defmodule ChallengeGov.Teams.Team do
+defmodule ChallengeGov.Agencies.Agency do
   @moduledoc """
-  Team schema
+  Agency schema
   """
 
   use Ecto.Schema
@@ -9,9 +9,9 @@ defmodule ChallengeGov.Teams.Team do
 
   @type t :: %__MODULE__{}
 
-  alias ChallengeGov.Teams.Member
+  alias ChallengeGov.Agencies.Member
 
-  schema "teams" do
+  schema "agencies" do
     field(:name, :string)
     field(:description, :string)
     field(:deleted_at, :utc_datetime)

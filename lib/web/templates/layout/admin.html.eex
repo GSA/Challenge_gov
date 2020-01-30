@@ -52,7 +52,7 @@
               <% end %>
             </li>
             <li class="<%= tab_selected(@conn, "agencies") %>">
-              <%= link(to: Routes.admin_team_path(@conn, :index)) do %>
+              <%= link(to: Routes.admin_agency_path(@conn, :index)) do %>
                 <i class="fa fa-users"></i>
                 <span>Agencies</span>
               <% end %>
