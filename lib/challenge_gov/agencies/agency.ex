@@ -10,8 +10,15 @@ defmodule ChallengeGov.Agencies.Agency do
   @type t :: %__MODULE__{}
 
   alias ChallengeGov.Agencies.Member
+  alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.Challenges.FederalPartner
 
   schema "agencies" do
+    # Associations
+    has_many(:federal_partners, FederalPartner)
+    has_many(:federal_partner_challenges, through: [:federal_partners, :challenge])
+
+    # Fields
     field(:name, :string)
     field(:description, :string)
     field(:deleted_at, :utc_datetime)
@@ -20,6 +27,7 @@ defmodule ChallengeGov.Agencies.Agency do
     field(:avatar_extension, :string)
 
     has_many(:members, Member)
+    has_many(:challenges, Challenge)
 
     timestamps()
   end
