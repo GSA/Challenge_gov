@@ -15,7 +15,7 @@
       <ul class="mp-none">
         <%= if Map.has_key?(assigns, :current_user) && !Agencies.member_of_team?(@current_user) do %>
           <li>
-            <%= link(to: Routes.team_path(@conn, :new)) do %>
+            <%= link(to: Routes.admin_agency_path(@conn, :new)) do %>
               <span class="btn btn-light btn-radius btn-invite-member">Create an agency</span>
             <% end %>
           </li>
@@ -39,7 +39,7 @@
     <div class="col-12 col-md-6 col-lg-4">
       <div class="card teams-item">
         <div class="card-body">
-          <%= link(to: Routes.team_path(@conn, :show, team.id)) do %>
+          <%= link(to: Routes.admin_agency_path(@conn, :show, team.id)) do %>
             <div class="text-center mrg-btm">
               <span class="image-circle"><%= avatar_img(team) %></span>
               <h3><%= team.name %></h3>

@@ -3,7 +3,7 @@
     <div class="form-titles">
       <h2 class="title-bar font-semibold">Create a new Agency</h2>
 
-      <%= form_for(@changeset, Routes.team_path(@conn, :create), [method: :post, multipart: true], fn f -> %>
+      <%= form_for(@changeset, Routes.admin_agency_path(@conn, :create), [method: :post, multipart: true], fn f -> %>
         <%= if Keyword.has_key?(f.errors, :base) do %>
           <div class="was-validated">
             <input type="hidden" class="form-control is-invalid" />
