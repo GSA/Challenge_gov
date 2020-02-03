@@ -56,11 +56,11 @@ def get_user_info(userinfo_endpoint, access_token) do
   |> handle_response("Sorry, could not fetch userinfo")
 end
 
-def build_authorization_url(client_id, acr_values, redirect_uri, authorization_endpoint) do
+def build_authorization_url(client_id, acr_value, redirect_uri, authorization_endpoint) do
   query = [
     client_id: client_id,
     response_type: "code",
-    acr_values: acr_values,
+    acr_value: acr_value,
     scope:
       "openid email profile:name",
     redirect_uri: uri_join(redirect_uri, "/auth/result"),
