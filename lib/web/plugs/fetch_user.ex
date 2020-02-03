@@ -5,10 +5,14 @@ defmodule Web.Plugs.FetchUser do
 
   import Plug.Conn
 
+  @behaviour Plug
+
   alias ChallengeGov.Accounts
 
+  @impl Plug
   def init(default), do: default
 
+  @impl Plug
   def call(conn, _opts) do
     case conn |> get_session(:user_token) do
       nil ->

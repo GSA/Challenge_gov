@@ -71,11 +71,11 @@ config :challenge_gov, :cache, preload: true
 
 # authorize config
 config :challenge_gov, :oidc_config, %{
-  idp_authorize_url: "https://idp.int.identitysandbox.gov/openid_connect/authorize",
+  idp_authorize_url: "http://localhost:3000",
   acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
   redirect_uri: "http://localhost:4000/",
-  client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_test_app",
-  private_key_path: "priv/key.pem"
+  client_id: "urn:gov:gsa:openidconnect:sp:phoenix",
+  private_key_path: "demo_sp.key"
 }
 
 # Configure your database

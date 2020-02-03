@@ -1,5 +1,7 @@
-defmodule ChallengeGov.Cache do
+defmodule ChallengeGov.LoginGov.Cache do
   use Agent
+
+  alias ChallengeGov.LoginGov
 
   def start_link(_opts) do
     preload = Application.get_env(:challenge_gov, :cache)[:preload]
@@ -31,9 +33,9 @@ defmodule ChallengeGov.Cache do
       private_key_path: private_key_path
     } = Application.get_env(:challenge_gov, :oidc_config)
 
-    with {:ok, well_known_config} <- ChallengeGov.get_well_known_configuration(idp_authorize_url),
-         {:ok, public_key} <- ChallengeGov.get_public_key(well_known_config["jwks_uri"]),
-         private_key <- ChallengeGov.load_private_key(private_key_path) do
+    with {:ok, well_known_config} <- LoginGov.get_well_known_configuration(idp_authorize_url),
+         {:ok, public_key} <- LoginGov.get_public_key(well_known_config["jwks_uri"]),
+         private_key <- LoginGov.load_private_key(private_key_path) do
       well_known_config
       |> string_keys_to_atoms()
       |> Map.put(:public_key, public_key)

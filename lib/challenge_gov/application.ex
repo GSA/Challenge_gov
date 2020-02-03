@@ -8,12 +8,9 @@ defmodule ChallengeGov.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      # Start the Ecto repository
       ChallengeGov.Repo,
-      # Start the endpoint when the application starts
-      Web.Endpoint
-      # Starts a worker by calling: ChallengeGov.Worker.start_link(arg)
-      # {ChallengeGov.Worker, arg},
+      Web.Endpoint,
+      ChallengeGov.LoginGov.Cache
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
