@@ -7,7 +7,7 @@ defmodule Web.SessionController do
   def new(conn, _params) do
     %{client_id: client_id, redirect_uri: redirect_uri, acr_value: acr_value} = oidc_config()
 
-    case LoginGov.Cache.get_all() do
+    case LoginGov.Cache.all() do
       %{authorization_endpoint: authorization_endpoint} ->
         authorization_url =
           LoginGov.build_authorization_url(
@@ -35,7 +35,7 @@ defmodule Web.SessionController do
       token_endpoint: token_endpoint,
       private_key: private_key,
       public_key: public_key,
-    } = LoginGov.Cache.get_all()
+    } = LoginGov.Cache.all()
 
     with client_assertion <- LoginGov.build_client_assertion(client_id, token_endpoint, private_key),
          {:ok, %{"id_token" => id_token}} <- LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
