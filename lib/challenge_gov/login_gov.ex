@@ -43,7 +43,7 @@ defmodule ChallengeGov.LoginGov do
     |> handle_response("Sorry, could not fetch userinfo")
   end
 
-  def build_authorization_url(client_id, acr_values, redirect_uri, authorization_endpoint) do
+  def build_authorization_url(client_id, acr_values, redirect_uri, idp_authorize_url) do
     query = [
       client_id: client_id,
       response_type: "code",
@@ -55,7 +55,7 @@ defmodule ChallengeGov.LoginGov do
       prompt: "select_account"
     ]
 
-    authorization_endpoint <> "?" <> URI.encode_query(query)
+    idp_authorize_url <> "?" <> URI.encode_query(query)
   end
 
   def build_client_assertion(client_id, token_endpoint, private_key) do

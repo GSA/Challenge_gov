@@ -1,3 +1,14 @@
 .required {
   color: #ff0000;
 }
+
+.navbar-static-top a {
+  display: flex;
+}
+
+.sign-out {
+  justify-content: flex-end;
+  align-items: center;
+  color: #ffffff;
+  padding: 15px 15px;
+}

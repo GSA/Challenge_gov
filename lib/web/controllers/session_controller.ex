@@ -19,10 +19,11 @@ defmodule Web.SessionController do
 
         redirect(conn, external: authorization_url)
 
-      {:error, _changeset} ->
+      _ ->
         conn
-        |> put_flash(:error, "There was an issue logging in")
+        |> put_flash(:error, "There was an issue logging in. Please try again.")
         |> put_status(400)
+        |> render("new.html", error: "Something went wrong. Please try again.")
     end
   end
 
@@ -41,13 +42,28 @@ defmodule Web.SessionController do
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
 
       IO.inspect userinfo
+      {:ok, user} = case Accounts.get_by_email(userinfo["email"]) do
+        {:error, :not_found} ->
+          Accounts.create(%{
+            email: userinfo["email"],
+            password: "password",
+            password_confirmation: "password",
+            first_name: "Admin",
+            last_name: "User",
+            role: "admin",
+            token: userinfo["sub"]
+          })
+
+        {:ok, account_user} ->
+          {:ok, account_user}
+      end
 
       conn
       |> put_flash(:info, "Login successful")
       # after you create a user above from the userinfo,
       # then store them in the session as the current_user
-      # |> put_session(:user_token, user.token)
-      |> redirect(to: Routes.page_path(conn, :index))
+      |> put_session(:user_token, user.token)
+      |> after_sign_in_redirect(Routes.page_path(conn, :index), user)
     else
       {:error, err} ->
         IO.inspect err
@@ -60,30 +76,19 @@ defmodule Web.SessionController do
   end
 
   def result(conn, %{"error" => error}) do
-    render(conn, "errors.html", error: error)
+    conn
+    |> put_flash(:info, "Login was cancelled")
+    |> render("new.html")
   end
 
   def result(conn, _params) do
-    render(conn, "errors.html", error: "missing callback param: code and/or state")
+    conn
+    |> put_flash(:info, "Please try again")
+    |> render("new.html")
   end
 
   defp oidc_config do
     Application.get_env(:challenge_gov, :oidc_config)
-  end
-
-  def create(conn, %{"user" => %{"email" => email, "password" => password}}) do
-    case Accounts.validate_login(email, password) do
-      {:ok, user} ->
-        conn
-        |> put_flash(:info, "You have signed in.")
-        |> put_session(:user_token, user.token)
-        |> after_sign_in_redirect(Routes.challenge_path(conn, :index), user)
-
-      {:error, :invalid} ->
-        conn
-        |> put_flash(:error, "Your email or password is invalid")
-        |> redirect(to: Routes.session_path(conn, :new))
-    end
   end
 
   def delete(conn, _params) do

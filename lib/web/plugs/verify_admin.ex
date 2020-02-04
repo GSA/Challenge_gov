@@ -13,7 +13,7 @@ defmodule Web.Plugs.VerifyAdmin do
   def init(default), do: default
 
   def call(conn, _opts) do
-    case is_admin?(conn) do
+    case is_admin?(conn) or is_challenge_owner?(conn) do
       true ->
         conn
 
@@ -30,7 +30,17 @@ defmodule Web.Plugs.VerifyAdmin do
   defp is_admin?(conn) do
     case Map.fetch(conn.assigns, :current_user) do
       {:ok, user} ->
-        Accounts.is_admin?(user)
+        Accounts.is_admin?(user) # or is_CO?
+
+      :error ->
+        false
+    end
+  end
+
+  defp is_challenge_owner?(conn) do
+    case Map.fetch(conn.assigns, :current_user) do
+      {:ok, user} ->
+        Accounts.is_challenge_owner?(user)
 
       :error ->
         false
