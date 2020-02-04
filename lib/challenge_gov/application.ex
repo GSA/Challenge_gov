@@ -10,7 +10,7 @@ defmodule ChallengeGov.Application do
     children = [
       ChallengeGov.Repo,
       Web.Endpoint,
-      ChallengeGov.LoginGov.Cache
+      {ChallengeGov.LoginGov.Cache, [name: ChallengeGov.LoginGov.Cache]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -1,33 +1,57 @@
 defmodule ChallengeGov.LoginGov.Cache do
-  use Agent
+  use GenServer
+
+  require Logger
 
   alias ChallengeGov.LoginGov
 
-  def start_link(_opts) do
-    preload = Application.get_env(:challenge_gov, :cache)[:preload]
-
-    start_fn =
-      case preload do
-        true -> fn -> get_initial_state() end
-        _ -> fn -> %{} end
-      end
-
-    Agent.start_link(start_fn, name: __MODULE__)
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, [], opts)
   end
 
   def get(key) do
-    Agent.get(__MODULE__, &Map.get(&1, key))
+    GenServer.call(__MODULE__, {:get, key})
   end
 
-  def get_all do
-    Agent.get(__MODULE__, & &1)
+  def all() do
+    GenServer.call(__MODULE__, :get_all)
   end
 
   def init(state) do
-    Agent.update(__MODULE__, fn _ -> state end)
+    {:ok, %{}, {:continue, :warm_cache}}
   end
 
-  defp get_initial_state do
+  def handle_continue(:warm_cache, _state) do
+    case get_initial_state() do
+      {:error, error} ->
+        Process.send_after(self(), :warm_cache, 1_500)
+        {:noreply, {:error, error}}
+
+      state ->
+        {:noreply, state}
+    end
+  end
+
+  def handle_info(:warm_cache, state) do
+    Logger.debug("Attempting to warm the LoginGov OIDC cache again", labels: __MODULE__)
+    {:noreply, state, {:continue, :warm_cache}}
+  end
+
+  def handle_call({:get, key}, _from, state) do
+    case Map.has_key?(state, key) do
+      true ->
+        {:reply, {:ok, state[key]}, state}
+
+      false ->
+        {:reply, {:error, :no_key}, state}
+    end
+  end
+
+  def handle_call(:get_all, _from, state) do
+    {:reply, state, state}
+  end
+
+  defp get_initial_state() do
     %{
       idp_authorize_url: idp_authorize_url,
       private_key_path: private_key_path
@@ -40,14 +64,12 @@ defmodule ChallengeGov.LoginGov.Cache do
       |> string_keys_to_atoms()
       |> Map.put(:public_key, public_key)
       |> Map.put(:private_key, private_key)
-    else
-      {:error, error} -> %{error: error}
     end
   end
 
   defp string_keys_to_atoms(map) do
-    map
-    |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
-    |> Map.new()
+    Enum.into(map, %{}, fn {k, v} ->
+      {String.to_atom(k), v}
+    end)
   end
 end
