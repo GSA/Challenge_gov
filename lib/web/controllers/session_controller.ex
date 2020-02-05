@@ -28,7 +28,7 @@ defmodule Web.SessionController do
   end
 
   def result(conn, %{"code" => code, "state" => _state}) do
-    %{client_id: client_id, redirect_uri: redirect_uri} = oidc_config()
+    %{client_id: client_id} = oidc_config()
 
     %{
       end_session_endpoint: end_session_endpoint,
@@ -76,9 +76,16 @@ defmodule Web.SessionController do
   end
 
   def result(conn, %{"error" => error}) do
-    conn
-    |> put_flash(:info, "Login was cancelled")
-    |> render("new.html")
+    IO.inspect error
+    if error == "access_denied" do
+      conn
+      |> put_flash(:info, "Login cancelled")
+      |> render("new.html")
+    else
+      conn
+      |> put_flash(:info, "There was an issue with logging in. Please try  again.")
+      |> render("new.html")
+    end
   end
 
   def result(conn, _params) do
