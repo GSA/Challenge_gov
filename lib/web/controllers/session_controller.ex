@@ -5,43 +5,42 @@ defmodule Web.SessionController do
   alias ChallengeGov.LoginGov
 
   def new(conn, _params) do
-    %{client_id: client_id, redirect_uri: redirect_uri, acr_value: acr_value} = oidc_config()
+    %{
+      client_id: client_id,
+      redirect_uri: redirect_uri,
+      acr_value: acr_value,
+      idp_authorize_url: idp_authorize_url
+    } = oidc_config()
 
-    case LoginGov.Cache.all() do
-      %{authorization_endpoint: authorization_endpoint} ->
         authorization_url =
           LoginGov.build_authorization_url(
             client_id,
             acr_value,
             redirect_uri,
-            authorization_endpoint
+            idp_authorize_url
           )
 
         redirect(conn, external: authorization_url)
 
-      _ ->
-        conn
-        |> put_flash(:error, "There was an issue logging in. Please try again.")
-        |> put_status(400)
-        |> render("new.html", error: "Something went wrong. Please try again.")
-    end
   end
 
   def result(conn, %{"code" => code, "state" => _state}) do
-    %{client_id: client_id} = oidc_config()
-
     %{
-      end_session_endpoint: end_session_endpoint,
-      token_endpoint: token_endpoint,
-      private_key: private_key,
-      public_key: public_key,
-    } = LoginGov.Cache.all()
+      client_id: client_id,
+      private_key_path: private_key_path,
+      idp_authorize_url: idp_authorize_url
+    } = oidc_config()
+
+    {:ok, well_known_config} = LoginGov.get_well_known_configuration(idp_authorize_url)
+
+    private_key = LoginGov.load_private_key(private_key_path)
+    {:ok, public_key} = LoginGov.get_public_key(well_known_config["jwks_uri"])
+    token_endpoint = "https://idp.int.identitysandbox.gov/api/openid_connect/token"
 
     with client_assertion <- LoginGov.build_client_assertion(client_id, token_endpoint, private_key),
          {:ok, %{"id_token" => id_token}} <- LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
 
-      IO.inspect userinfo
       {:ok, user} = case Accounts.get_by_email(userinfo["email"]) do
         {:error, :not_found} ->
           Accounts.create(%{
@@ -66,8 +65,6 @@ defmodule Web.SessionController do
       |> after_sign_in_redirect(Routes.page_path(conn, :index), user)
     else
       {:error, err} ->
-        IO.inspect err
-
         conn
         |> put_flash(:error, "There was an issue logging in")
         |> put_status(400)
@@ -76,7 +73,6 @@ defmodule Web.SessionController do
   end
 
   def result(conn, %{"error" => error}) do
-    IO.inspect error
     if error == "access_denied" do
       conn
       |> put_flash(:info, "Login cancelled")
