@@ -1,0 +1,15 @@
+<section class="content-header">
+  <h1>
+    Terms and Conditions
+  </h1>
+</section>
+<section class="content">
+  <div class="row">
+    <div class="col-md-9">
+      <span>Terms Content</span>
+      <%= form_for(@changeset, Routes.account_path(@conn, :update), [method: :put, multipart: true], fn f -> %>
+    </div>
+  </div>
+</section>
+
+# make the form, post to create

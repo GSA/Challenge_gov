@@ -95,6 +95,8 @@ defmodule Web.Router do
 
     resources("/documents", DocumentController, only: [:delete])
 
+    resources("/terms", TermsController, only: [:new, :create])
+
     resources("/challenges", ChallengeController,
       only: [:index, :show, :new, :create, :edit, :update]
     ) do

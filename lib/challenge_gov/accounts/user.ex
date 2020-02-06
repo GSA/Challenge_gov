@@ -59,6 +59,16 @@ defmodule ChallengeGov.Accounts.User do
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
 
+  def terms_changeset(struct, params) do
+    struct
+    |> changeset(params)
+    |> cast(params, [
+      :terms_and_condition,
+      :privacy,
+      :agency_id,
+    ])
+  end
+
   def password_changeset(struct, params) do
     struct
     |> cast(params, [:password, :password_confirmation])
