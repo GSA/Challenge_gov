@@ -1,15 +1,52 @@
-<section class="content-header">
-  <h1>
-    Terms and Conditions
-  </h1>
+<section class="content-header text-center">
+  <h4>
+    To complete your registration please submit the following items
+  </h4>
 </section>
-<section class="content">
-  <div class="row">
-    <div class="col-md-9">
-      <span>Terms Content</span>
-      <%= form_for(@changeset, Routes.account_path(@conn, :update), [method: :put, multipart: true], fn f -> %>
-    </div>
+<section class="rules-of-behavior">
+  <h4 class="behavior-header">Rules of Engagement</h4>
+  <span>Rules of engagement (ROE), military directives meant to describe the circumstances under which ground, naval, and air forces will enter into and continue combat with opposing forces. Formally, rules of engagement refer to the orders issued by a competent military authority that delineate when, where, how, and against whom military force may be used, and they have implications for what actions soldiers may take on their own authority and what directives may be issued by a commanding officer. Rules of engagement are part of a general recognition that procedures and standards are essential to the conduct and effectiveness of civilized warfare.</span>
+</section>
+</section>
+<section class="content registration-content">
+  <div class="row col-md-9 registration-row">
+      <%= form_for(@changeset, Routes.admin_terms_path(@conn, :create), [method: :put], fn f -> %>
+        <div class="input">
+          <%= label(f, :first_name, class: "label-text") do %>
+            First Name*
+          <% end %>
+          <%= text_input(f, :first_name, required: true, placeholder: "First Name", class: "form-control fc-input is-invalid") %>
+        </div>
+        <div class="input">
+          <%= label(f, :first_name, class: "label-text") do %>
+            Last Name*
+          <% end %>
+          <%= text_input(f, :last_name, required: true, placeholder: "Last Name", class: "form-control fc-input") %>
+        </div>
+        <div class="input">
+          <%= label(f, :first_name, class: "label-text") do %>
+            Email*
+          <% end %>
+          <%= text_input(f, :email, required: true, placeholder: "Email Address", class: "form-control fc-input") %>
+        </div>
+        <div class="input">
+          <%= label(f, :first_name, class: "label-text") do %>
+            Agency Name*
+          <% end %>
+          <%= text_input(f, :avatar_key, required: true, placeholder: "Search for agency", class: "form-control fc-input") %>
+        </div>
+        <div class="checkbox-input">
+          <%= Phoenix.HTML.Form.checkbox(f, :accept_terms_and_conditions) %>
+          <%= label(f, :multi_phase, class: "label-text") do %>
+            I accept the <%= link "terms and conditions", to: "https://www.privacypolicies.com/blog/sample-terms-conditions-template/", target: "_blank" %>
+          <% end %>
+        </div>
+        <div class="checkbox-input">
+          <%= Phoenix.HTML.Form.checkbox(f, :accept_privacy_policy) %>
+          <%= label(f, :multi_phase, class: "label-text") do %>
+            I accept the <%= link "privacy policy", to: "https://www.fastcompany.com/privacy-policy", target: "_blank" %>
+          <% end %>
+        </div>
+      <% end) %>
   </div>
 </section>
-
-# make the form, post to create
