@@ -1,3 +1,6 @@
+# pem files
+*.pem
+
 # The directory Mix will write compiled artifacts to.
 /_build/
 

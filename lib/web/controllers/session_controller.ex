@@ -5,6 +5,13 @@ defmodule Web.SessionController do
   alias ChallengeGov.LoginGov
 
   def new(conn, _params) do
+    conn
+    |> assign(:changeset, Accounts.new())
+    |> put_layout("session.html")
+    |> render("new.html")
+  end
+
+  def create(conn, _params) do
     %{
       client_id: client_id,
       redirect_uri: redirect_uri,

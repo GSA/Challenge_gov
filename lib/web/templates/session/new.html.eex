@@ -1,7 +1,18 @@
-<div class="card card-form custom-card">
+<div class="card card-form custom-card col-md-6 rules-of-behavior">
   <div class="card-body">
-    <div class="form-titles">
-        <%= button("Sign In", to: Routes.session_path(@conn, :new), method: :get, class: "btn btn-primary") %>
+    <div class="rules-wrapper">
+      <h4 class="text-center">Rules of Behavior</h4>
+      <p class="text-center rules-text">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sed
+        maximus sapien. Mauris vehicula finibus lectus a luctus. Vivamus lectus
+        eros, mattis ac vestibulum vel, feugiat eu nulla. Nunc vitae quam
+        efficitur, molestie nibh eleifend, blandit magna. Fusce tincidunt eget
+        odio non feugiat. Orci varius natoque penatibus et magnis dis parturient
+        montes, nascetur ridiculus mus. Phasellus porttitor lectus auctor,
+        placerat ligula eu, finibus nisl. Suspendisse efficitur massa vitae arcu
+        efficitur volutpat.
+      </p>
+        <%= button("Accept and Sign-in", to: Routes.session_path(@conn, :create), method: :post, class: "btn btn-primary center-btn") %>
     </div>
   </div>
 </div>
