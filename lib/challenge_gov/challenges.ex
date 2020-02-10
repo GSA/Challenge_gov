@@ -45,20 +45,20 @@ defmodule ChallengeGov.Challenges do
   Changeset for adding a challenge (as an admin)
   """
   def admin_new(user) do
-    changeset = 
-      %Challenge{}
-      |> Map.put(:federal_partners, [])
-      |> Challenge.admin_changeset(%{}, user)
-
-    IO.inspect changeset.data
-    changeset
+    %Challenge{}
+    |> Repo.preload(:non_federal_partners)
+    |> Map.put(:federal_partners, [])
+    |> Map.put(:non_federal_partners, [])
+    |> Challenge.admin_changeset(%{}, user)
   end
 
   @doc """
   Changeset for editing a challenge (as an admin)
   """
   def edit(challenge) do
-    Challenge.update_changeset(challenge, %{})
+    challenge
+    |> Repo.preload([:non_federal_partners, :events])
+    |> Challenge.update_changeset(%{})
   end
 
   @doc """
@@ -110,7 +110,7 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge = Repo.preload(challenge, [:supporting_documents, :user, :federal_partner_agencies])
+        challenge = Repo.preload(challenge, [:supporting_documents, :user, :federal_partner_agencies, :non_federal_partners])
         challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
         {:ok, challenge}
     end
@@ -260,7 +260,16 @@ defmodule ChallengeGov.Challenges do
   Update a challenge
   """
   def update(challenge, params) do
-    changeset = Challenge.update_changeset(challenge, params)
+    challenge = Repo.preload(challenge, [:non_federal_partners, :events])
+
+    params =
+      params
+      |> Map.put_new("non_federal_partners", [])
+      |> Map.put_new("events", [])
+
+    changeset =
+      challenge
+      |> Challenge.update_changeset(params)
 
     result =
       Ecto.Multi.new()

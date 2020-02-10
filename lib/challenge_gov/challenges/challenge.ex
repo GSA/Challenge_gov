@@ -10,6 +10,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Agencies.Agency
   alias ChallengeGov.Challenges.FederalPartner
+  alias ChallengeGov.Challenges.NonFederalPartner
   alias ChallengeGov.SupportingDocuments.Document
   alias ChallengeGov.Timeline.Event
 
@@ -46,10 +47,11 @@ defmodule ChallengeGov.Challenges.Challenge do
     # Associations
     belongs_to(:user, User)
     belongs_to(:agency, Agency)
-    has_many(:events, Event)
+    has_many(:events, Event, on_replace: :delete)
     has_many(:supporting_documents, Document)
     has_many(:federal_partners, FederalPartner)
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
+    has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete)
 
     # Fields
     field(:status, :string, default: "pending")
@@ -59,7 +61,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:agency_name, :string)
     # agency logo
     # field(:federal_partners, :string) # Federal partners # How does this need to be saved as multiple select?
-    field(:non_federal_partners, :string)
+    # field(:non_federal_partners, :string)
     field(:title, :string)
     field(:custom_url, :string)
     field(:external_url, :string)
@@ -125,7 +127,6 @@ defmodule ChallengeGov.Challenges.Challenge do
       :challenge_manager_email,
       :poc_email,
       :agency_name,
-      :non_federal_partners,
       :title,
       :custom_url,
       :external_url,
@@ -161,6 +162,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       # Winner Image
       # Congressional Reporting
     ])
+    |> cast_assoc(:non_federal_partners)
+    |> cast_assoc(:events)
     |> put_change(:captured_on, Date.utc_today())
     |> validate_required([
       :challenge_manager,
@@ -211,7 +214,6 @@ defmodule ChallengeGov.Challenges.Challenge do
       :challenge_manager_email,
       :poc_email,
       :agency_name,
-      :non_federal_partners,
       :title,
       :custom_url,
       :external_url,
@@ -247,6 +249,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       # Winner Image
       # Congressional Reporting
     ])
+    |> cast_assoc(:non_federal_partners)
+    |> cast_assoc(:events)
     |> validate_required([
       :status,
       :challenge_manager,

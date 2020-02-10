@@ -224,7 +224,11 @@
           <h3 class="box-title">Non Federal Partners</h3>
         </div>
         <div class="box-body">
-          <%= SharedView.parse_markdown(@challenge.non_federal_partners) %>
+          <ul>
+            <%= Enum.map(@challenge.non_federal_partners, fn nfp -> %>
+              <li><%= nfp.name %></li>
+            <% end) %>
+          </ul>
         </div>
       </div>
     </div>

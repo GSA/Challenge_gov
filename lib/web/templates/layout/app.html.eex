@@ -21,7 +21,7 @@
                   <% end %>
                 </li>
                 <li class='<%= tab_selected(@conn, "teams") %>'>
-                  <%= link(to: Routes.team_path(@conn, :index)) do %>
+                  <%= link(to: Routes.agency_path(@conn, :index)) do %>
                     <i class="icon-Teams"></i><span>Agencies</span>
                   <% end %>
                 </li>
