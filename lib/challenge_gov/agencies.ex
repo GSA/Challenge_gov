@@ -39,6 +39,13 @@ defmodule ChallengeGov.Agencies do
       |> preload(members: ^member_query())
 
     Pagination.paginate(Repo, query, opts)
+  end  
+  
+  def all_for_select() do
+    query =
+      Agency
+      |> where([a], is_nil(a.deleted_at))
+      |> Repo.all()
   end
 
   @doc """
@@ -48,7 +55,7 @@ defmodule ChallengeGov.Agencies do
     agency =
       Agency
       |> where([t], t.id == ^id and is_nil(t.deleted_at))
-      |> preload(members: ^member_query())
+      |> preload([:federal_partner_challenges, :challenges, members: ^member_query()])
       |> Repo.one()
 
     case agency do

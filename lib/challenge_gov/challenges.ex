@@ -9,6 +9,7 @@ defmodule ChallengeGov.Challenges do
   """
 
   alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
@@ -44,9 +45,12 @@ defmodule ChallengeGov.Challenges do
   Changeset for adding a challenge (as an admin)
   """
   def admin_new(user) do
-    user
-    |> Ecto.build_assoc(:challenges)
-    |> Challenge.admin_changeset(%{}, user)
+    changeset = 
+      %Challenge{}
+      |> Map.put(:federal_partners, [])
+      |> Challenge.admin_changeset(%{}, user)
+
+    changeset
   end
 
   @doc """
@@ -105,7 +109,7 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge = Repo.preload(challenge, [:supporting_documents, :user])
+        challenge = Repo.preload(challenge, [:supporting_documents, :user, :federal_partner_agencies])
         challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
         {:ok, challenge}
     end
@@ -172,6 +176,7 @@ defmodule ChallengeGov.Challenges do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:challenge, create_challenge(user, params))
+      |> attach_federal_partners(params)
       |> attach_documents(params)
       |> Repo.transaction()
 
@@ -194,6 +199,7 @@ defmodule ChallengeGov.Challenges do
   defp create_challenge(user, params) do
     user
     |> Ecto.build_assoc(:challenges)
+    |> Map.put(:federal_partners, [])
     |> Challenge.admin_changeset(params, user)
   end
 
@@ -204,6 +210,28 @@ defmodule ChallengeGov.Challenges do
 
     {:ok, challenge}
   end
+
+  defp attach_federal_partners(multi, %{federal_partners: ids}) do
+    attach_federal_partners(multi, %{"federal_partners" => ids})
+  end
+
+  defp attach_federal_partners(multi, %{"federal_partners" => ids}) do
+    multi = Ecto.Multi.run(multi, :delete_agencies, fn _repo, changes -> 
+      {:ok, Repo.delete_all( from(fp in FederalPartner, where: fp.challenge_id == ^changes.challenge.id))}
+    end)
+    Enum.reduce(ids, multi, fn agency_id, multi ->
+      Ecto.Multi.run(multi, {:agency, agency_id}, fn _repo, changes ->
+        %FederalPartner{}
+        |> FederalPartner.changeset(%{
+          agency_id: agency_id,
+          challenge_id: changes.challenge.id
+        })
+        |> Repo.insert
+      end)
+    end)
+  end
+
+  defp attach_federal_partners(multi, _params), do: multi
 
   defp attach_documents(multi, %{document_ids: ids}) do
     attach_documents(multi, %{"document_ids" => ids})
@@ -236,6 +264,7 @@ defmodule ChallengeGov.Challenges do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
+      |> attach_federal_partners(params)
       |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
         maybe_create_event(challenge, changeset)
       end)

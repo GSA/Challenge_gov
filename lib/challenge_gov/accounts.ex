@@ -92,7 +92,6 @@ defmodule ChallengeGov.Accounts do
   def create(params) do
     %User{}
     |> User.create_changeset(params)
-    |> IO.inspect
     |> Repo.insert
   end
 

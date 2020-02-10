@@ -1,6 +1,6 @@
 defmodule ChallengeGov.Challenges.Challenge do
   @moduledoc """
-  User schema
+  Challenge schema
   """
 
   use Ecto.Schema
@@ -8,6 +8,8 @@ defmodule ChallengeGov.Challenges.Challenge do
   import Ecto.Changeset
 
   alias ChallengeGov.Accounts.User
+  alias ChallengeGov.Agencies.Agency
+  alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.SupportingDocuments.Document
   alias ChallengeGov.Timeline.Event
 
@@ -41,17 +43,22 @@ defmodule ChallengeGov.Challenges.Challenge do
   ]
 
   schema "challenges" do
+    # Associations
     belongs_to(:user, User)
+    belongs_to(:agency, Agency)
     has_many(:events, Event)
     has_many(:supporting_documents, Document)
+    has_many(:federal_partners, FederalPartner)
+    has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
 
+    # Fields
     field(:status, :string, default: "pending")
     field(:challenge_manager, :string) # Will probably be a relation
     field(:challenge_manager_email, :string) # Will probably be a relation
     field(:poc_email, :string) # Might just be a point of contact relation
     field(:agency_name, :string)
     # agency logo
-    field(:federal_partners, :string) # Federal partners # How does this need to be saved as multiple select?
+    # field(:federal_partners, :string) # Federal partners # How does this need to be saved as multiple select?
     field(:non_federal_partners, :string)
     field(:title, :string)
     field(:custom_url, :string)
@@ -67,7 +74,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:start_date, :utc_datetime)
     field(:end_date, :utc_datetime)
     field(:multi_phase, :boolean)
-    field(:number_of_phases, :integer)
+    field(:number_of_phases, :string)
     field(:phase_descriptions, :string)
     field(:phase_dates, :string)
     # timeline
@@ -113,18 +120,17 @@ defmodule ChallengeGov.Challenges.Challenge do
   def create_changeset(struct, params, user) do
     struct
     |> cast(params, [
+      :agency_id,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
       :agency_name,
-      :federal_partners,
       :non_federal_partners,
       :title,
       :custom_url,
       :external_url,
       :tagline,
       # Challenge tile image
-      :type,
       :description,
       # Upload Additional Description Materials
       :brief_description,
@@ -156,28 +162,22 @@ defmodule ChallengeGov.Challenges.Challenge do
       # Congressional Reporting
     ])
     |> put_change(:captured_on, Date.utc_today())
-    |> parse_federal_partners(params)
     |> validate_required([
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
-      :agency_name,
-      :federal_partners,
       :non_federal_partners,
       :title,
       :custom_url,
       :external_url,
       :tagline,
       # Challenge tile image
-      :type,
       :description,
       # Upload Additional Description Materials
       :brief_description,
       :how_to_enter,
-      :fiscal_year,
       :start_date,
       :end_date,
-      :multi_phase,
       :number_of_phases,
       :phase_descriptions,
       :phase_dates,
@@ -200,28 +200,23 @@ defmodule ChallengeGov.Challenges.Challenge do
       # Winner Image
       # Congressional Reporting
     ])
-    |> validate_inclusion(:agency_name, @agencies)
-    |> validate_inclusion(:federal_partners, @agencies)
-    |> validate_inclusion(:type, @challenge_types)
-    |> validate_inclusion(:type, @legal_authority)
   end
 
   def update_changeset(struct, params) do
     struct
-    |> cast(params, [
+    |> cast(params, [ 
+      :agency_id,
       :status,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
       :agency_name,
-      :federal_partners,
       :non_federal_partners,
       :title,
       :custom_url,
       :external_url,
       :tagline,
       # Challenge tile image
-      :type,
       :description,
       # Upload Additional Description Materials
       :brief_description,
@@ -252,29 +247,23 @@ defmodule ChallengeGov.Challenges.Challenge do
       # Winner Image
       # Congressional Reporting
     ])
-    |> parse_federal_partners(params)
     |> validate_required([
       :status,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
-      :agency_name,
-      :federal_partners,
       :non_federal_partners,
       :title,
       :custom_url,
       :external_url,
       :tagline,
       # Challenge tile image
-      :type,
       :description,
       # Upload Additional Description Materials
       :brief_description,
       :how_to_enter,
-      :fiscal_year,
       :start_date,
       :end_date,
-      :multi_phase,
       :number_of_phases,
       :phase_descriptions,
       :phase_dates,
@@ -297,10 +286,6 @@ defmodule ChallengeGov.Challenges.Challenge do
       # Winner Image
       # Congressional Reporting
     ])
-    |> validate_inclusion(:agency_name, @agencies)
-    |> validate_inclusion(:federal_partners, @agencies)
-    |> validate_inclusion(:type, @challenge_types)
-    |> validate_inclusion(:type, @legal_authority)
   end
 
 # to allow change to admin info?
@@ -320,15 +305,5 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
     |> change()
     |> put_change(:status, "rejected")
-  end
-
-  defp parse_federal_partners(struct, params) do
-    federal_partners = params["federal_partners"]
-
-    if is_list(federal_partners) do
-      put_change(struct, :federal_partners, Enum.join(federal_partners, ", "))
-    else
-      struct
-    end
   end
 end

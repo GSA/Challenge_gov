@@ -14,21 +14,21 @@
           <%= FormView.text_field(f, :challenge_manager, label: "Challenge Manager", required: true) %>
           <%= FormView.text_field(f, :challenge_manager_email, label: "Challenge Manager Email", required: true) %>
           <%= FormView.text_field(f, :poc_email, label: "Point of Contact Email", required: true) %>
-          <div class="<%= FormView.form_group_classes(f, :agency_name) %>">
-            <%= label(f, :agency_name, class: "col-md-4") do %>
-            Lead Agency Name <span class="required">*</span>
+          <div class="<%= FormView.form_group_classes(f, :agency_id) %>">
+            <%= label(f, :agency_id, class: "col-md-4") do %>
+              Lead Agency <span class="required">*</span>
             <% end %>
             <div class="col-md-8">
-              <%= select(f, :agency_name, Challenges.agencies(), class: "form-control") %>
+              <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), class: "form-control") %>
             </div>
           </div>
           <!-- agency logo? -->
           <div class="<%= FormView.form_group_classes(f, :federal_partners) %>">
             <%= label(f, :federal_partners, class: "col-md-4") do %>
-            Federal Partner Agency
+              Federal Partner Agency
             <% end %>
             <div class="col-md-8">
-              <%= multiple_select(f, :federal_partners, Challenges.agencies(), class: "form-control") %>
+              <%= multiple_select(f, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partners, &(&1.id)), class: "form-control") %>
             </div>
           </div>
           <%= FormView.textarea_field(f, :non_federal_partners, label: "Non-federal Partners") %>
