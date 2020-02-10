@@ -203,6 +203,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       # Winner Image
       # Congressional Reporting
     ])
+    |> foreign_key_constraint(:agency)
+    |> unique_constraint(:custom_url)
   end
 
   def update_changeset(struct, params) do
@@ -290,6 +292,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       # Winner Image
       # Congressional Reporting
     ])
+    |> foreign_key_constraint(:agency)
+    |> unique_constraint(:custom_url)
   end
 
 # to allow change to admin info?
