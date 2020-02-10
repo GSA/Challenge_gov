@@ -8,7 +8,6 @@ defmodule Web.AgencyView do
   alias Web.FormView
 
   def avatar_img(team, opts \\ []) do
-    IO.inspect team
     case is_nil(team.avatar_key) do
       true ->
         path = Routes.static_path(Web.Endpoint, "/images/teams-card-logo.jpg")

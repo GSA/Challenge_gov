@@ -50,7 +50,6 @@ defmodule ChallengeGov.Challenges do
       |> Map.put(:federal_partners, [])
       |> Challenge.admin_changeset(%{}, user)
 
-    IO.inspect changeset.data
     changeset
   end
 

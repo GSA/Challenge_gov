@@ -1,4 +1,3 @@
-<% IO.inspect @changeset %>
 <%= form_for(@changeset, @path, [class: "form-horizontal"], fn f -> %>
   <div class="box-body">
     <div class="accordion" id="accordionWrap">
