@@ -2,10 +2,25 @@ defmodule Web.ChallengeView do
   use Web, :view
 
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Recaptcha
   alias ChallengeGov.SupportingDocuments
+  alias Stein.Storage
+  alias Web.AgencyView
   alias Web.FormView
   alias Web.SharedView
+
+  def logo_img(challenge, opts \\ []) do
+    case is_nil(challenge.logo_key) do
+      true ->
+        AgencyView.avatar_img(challenge.agency, opts)
+
+      false ->
+        url = Storage.url(Logo.logo_path(challenge, "thumbnail"), signed: [expires_in: 3600])
+        opts = Keyword.merge([alt: "Challenge Logo"], opts)
+        img_tag(url, opts)
+    end
+  end
 
   def disqus_domain() do
     Application.get_env(:challenge_gov, :disqus_domain)

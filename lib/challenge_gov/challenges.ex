@@ -10,6 +10,7 @@ defmodule ChallengeGov.Challenges do
 
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.FederalPartner
+  alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
@@ -110,7 +111,7 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge = Repo.preload(challenge, [:supporting_documents, :user, :federal_partner_agencies, :non_federal_partners])
+        challenge = Repo.preload(challenge, [:supporting_documents, :user, :federal_partner_agencies, :non_federal_partners, :agency])
         challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
         {:ok, challenge}
     end
@@ -146,6 +147,9 @@ defmodule ChallengeGov.Challenges do
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:challenge, submit_challenge(user, params))
       |> attach_documents(params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, params)
+      end)
       |> Repo.transaction()
 
     case result do
@@ -179,6 +183,9 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.insert(:challenge, create_challenge(user, params))
       |> attach_federal_partners(params)
       |> attach_documents(params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, params)
+      end)
       |> Repo.transaction()
 
     case result do
@@ -277,6 +284,9 @@ defmodule ChallengeGov.Challenges do
       |> attach_federal_partners(params)
       |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
         maybe_create_event(challenge, changeset)
+      end)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, params)
       end)
       |> Repo.transaction()
 

@@ -53,6 +53,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
     has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete)
 
+    field(:logo_key, Ecto.UUID)
+    field(:logo_extension, :string)
+
     # Fields
     field(:status, :string, default: "pending")
     field(:challenge_manager, :string) # Will probably be a relation
@@ -313,5 +316,12 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
     |> change()
     |> put_change(:status, "rejected")
+  end
+
+  def logo_changeset(struct, key, extension) do
+    struct
+    |> change()
+    |> put_change(:logo_key, key)
+    |> put_change(:logo_extension, extension)
   end
 end

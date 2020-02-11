@@ -36,6 +36,22 @@
         </div>
         <div class="box-body">
           <dl>
+            <dt>Logo</dd>
+            <dd><%= ChallengeView.logo_img(@challenge, height: 150) %></dd>
+            <br/>
+
+            <dt>Title</dd>
+            <dd><%= @challenge.title %></dd>
+            <br/>
+
+            <dt>Tagline</dd>
+            <dd><%= @challenge.tagline %></dd>
+            <br/>
+
+            <dt>Agency Name</dd>
+            <dd><%= @challenge.agency.name %></dd>
+            <br/>
+
             <dt>Captured On</dd>
             <dd><%= @challenge.captured_on %></dd>
             <br/>
@@ -52,20 +68,8 @@
             <dd><%= link(@challenge.user.email, to: Routes.admin_user_path(@conn, :show, @challenge.user_id)) %></dd>
             <br/>
 
-            <dt>Title</dd>
-            <dd><%= @challenge.title %></dd>
-            <br/>
-
-            <dt>Tagline</dd>
-            <dd><%= @challenge.tagline %></dd>
-            <br/>
-
             <dt>Point of Contact Email</dd>
             <dd><%= @challenge.poc_email %></dd>
-            <br/>
-
-            <dt>Agency Name</dd>
-            <dd><%= @challenge.agency_name %></dd>
             <br/>
 
             <dt>External URL</dd>
