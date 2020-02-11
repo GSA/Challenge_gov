@@ -207,7 +207,11 @@
           <h3 class="box-title">Federal Partners</h3>
         </div>
         <div class="box-body">
-          <p><%= @challenge.federal_partners %></p>
+          <ul>
+            <%= Enum.map(@challenge.federal_partner_agencies, fn agency -> %>
+              <li><%= Web.Admin.AgencyView.name_link(@conn, agency) %></li>
+            <% end) %>
+          </ul>
         </div>
       </div>
     </div>

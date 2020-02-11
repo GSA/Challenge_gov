@@ -47,6 +47,40 @@
           <ul>
         </div>
       </div>
+    </div>  
+
+    <div class="row">
+      <div class="col-md-offset-3 col-md-6">
+        <div class="box box-primary">
+          <div class="box-header">
+            <h3 class="box-title">Is a lead agency for these challenges</h3>
+          </div>
+          <div class="box-body">
+            <ul>
+              <%= Enum.map(@agency.challenges, fn challenge -> %>
+                <li><%= Web.Admin.ChallengeView.name_link(@conn, challenge) %></li>
+              <% end) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-offset-3 col-md-6">
+        <div class="box box-primary">
+          <div class="box-header">
+            <h3 class="box-title">Is a federal partner for these challenges</h3>
+          </div>
+          <div class="box-body">
+            <ul>
+              <%= Enum.map(@agency.federal_partner_challenges, fn challenge -> %>
+                <li><%= Web.Admin.ChallengeView.name_link(@conn, challenge) %></li>
+              <% end) %>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
