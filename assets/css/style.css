@@ -3556,6 +3556,8 @@ image-uploader-end
   margin-top: 30px;
 }
 
+/* templates/session/new.html.eex */
+
 .rules-of-behavior {
   margin: 60px auto;
 }

@@ -63,3 +63,9 @@
   margin-bottom: 0;
   color: #4A5C6B;
 }
+
+.btn-wrapper {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
