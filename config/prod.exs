@@ -10,7 +10,7 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :challenge_gov, Web.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 4000],
+  http: [:inet4, port: System.get_env("PORT") || 4000],
   url: [host: System.get_env("HOST"), scheme: "https", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",

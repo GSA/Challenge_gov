@@ -1,0 +1,13 @@
+---
+defaults: &defaults
+  buildpacks:
+    - https://github.com/HashNuke/heroku-buildpack-elixir
+  memory: 512M
+  command: mix ecto.migrate && mix phx.server
+
+applications:
+- name: challenge-portal-dev
+  <<: *defaults
+  env:
+    MIX_ENV: prod
+    HOST: challenge-portal-dev.app.cloud.gov
