@@ -10,7 +10,7 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :challenge_gov, Web.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 4000],
+  http: [:inet4, port: System.get_env("PORT") || 4000],
   url: [host: System.get_env("HOST"), scheme: "https", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
@@ -51,11 +51,11 @@ config :challenge_gov, ChallengeGov.Mailer,
 
 config :stein, :storage,
   backend: :s3,
-  bucket: {:system, "BUCKETEER_BUCKET_NAME"}
+  bucket: {:system, "BUCKET_NAME"}
 
 config :ex_aws,
-  access_key_id: {:system, "BUCKETEER_AWS_ACCESS_KEY_ID"},
-  secret_access_key: {:system, "BUCKETEER_AWS_SECRET_ACCESS_KEY"}
+  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
 
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
