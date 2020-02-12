@@ -21,6 +21,13 @@ defmodule ChallengeGov.Timeline.Event do
     timestamps()
   end
 
+  def changeset(struct, params) do
+    struct
+    |> cast(params, [:title, :body, :occurs_on])
+    |> validate_required([:title, :occurs_on])
+    |> foreign_key_constraint(:challenge_id)
+  end
+
   def create_changeset(struct, params) do
     struct
     |> cast(params, [:title, :body, :occurs_on])

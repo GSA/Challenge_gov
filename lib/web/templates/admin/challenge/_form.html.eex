@@ -31,7 +31,16 @@
               <%= multiple_select(f, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partners, &(&1.id)), class: "form-control") %>
             </div>
           </div>
-          <%= FormView.textarea_field(f, :non_federal_partners, label: "Non-federal Partners") %>
+
+          <h4>Non Federal Partners</h4>
+          <br/>
+          <%= FormView.dynamic_nested_fields(f, :non_federal_partners, [:name]) %>
+
+          <br/>
+
+          <h4>Events</h4>
+          <br/>
+          <%= FormView.dynamic_nested_fields(f, :events, [:title, :body, :occurs_on]) %>
         </div>
       </div>
 
@@ -190,3 +199,17 @@
     <%= submit("Submit", class: "btn btn-primary pull-right") %>
   </div>
 <% end) %>
+
+<div id="non-federal-partners-template" class="hidden">
+  <div class="form-group nested-form-group">
+    <input id="nested_hidden_field" type="hidden">
+    <label class="col-md-4">Name</label>
+    <div class="col-md-6">
+      <input class="form-control" id="nested_value_field" type="text">
+    </div>
+    <div class="col-md-2">
+      <div class="remove-nested-section btn btn-danger">Remove</div>
+    </div>
+  </div>
+  <hr/>
+</div>
