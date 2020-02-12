@@ -10197,7 +10197,7 @@ performance-now@^2.1.0:
   version "1.4.1"
 
 "phoenix_html@file:../deps/phoenix_html":
-  version "2.13.1"
+  version "2.14.0"
 
 pify@^2.0.0, pify@^2.3.0:
   version "2.3.0"
@@ -12374,6 +12374,11 @@ select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
   integrity sha1-Yl2GWPhlr0Psliv8N2o3NZpJlMo=
+
+select2@^4.0.13:
+  version "4.0.13"
+  resolved "https://registry.yarnpkg.com/select2/-/select2-4.0.13.tgz#0dbe377df3f96167c4c1626033e924372d8ef44d"
+  integrity sha512-1JeB87s6oN/TDxQQYCvS5EFoQyvV6eYMZZ0AeA4tdFDYWN3BAGZ8npr17UBFddU0lgAt3H0yjX3X6/ekOj1yjw==
 
 select2@^4.0.3:
   version "4.0.5"

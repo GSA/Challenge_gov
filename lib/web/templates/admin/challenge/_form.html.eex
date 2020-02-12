@@ -40,7 +40,7 @@
               Federal Partner Agency
             <% end %>
             <div class="col-md-8">
-              <%= multiple_select(f, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partners, &(&1.id)), class: "form-control") %>
+              <%= multiple_select(f, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partners, &(&1.id)), class: "form-control js-multiselect") %>
             </div>
           </div>
 
