@@ -36,6 +36,26 @@
         </div>
         <div class="box-body">
           <dl>
+            <dt>Logo</dd>
+            <dd><%= ChallengeView.logo_img(@challenge, height: 150) %></dd>
+            <br/>
+
+            <dt>Winner Image</dd>
+            <dd><%= ChallengeView.winner_img(@challenge, height: 150) %></dd>
+            <br/>
+
+            <dt>Title</dd>
+            <dd><%= @challenge.title %></dd>
+            <br/>
+
+            <dt>Tagline</dd>
+            <dd><%= @challenge.tagline %></dd>
+            <br/>
+
+            <dt>Agency Name</dd>
+            <dd><%= @challenge.agency.name %></dd>
+            <br/>
+
             <dt>Captured On</dd>
             <dd><%= @challenge.captured_on %></dd>
             <br/>
@@ -52,20 +72,8 @@
             <dd><%= link(@challenge.user.email, to: Routes.admin_user_path(@conn, :show, @challenge.user_id)) %></dd>
             <br/>
 
-            <dt>Title</dd>
-            <dd><%= @challenge.title %></dd>
-            <br/>
-
-            <dt>Tagline</dd>
-            <dd><%= @challenge.tagline %></dd>
-            <br/>
-
             <dt>Point of Contact Email</dd>
             <dd><%= @challenge.poc_email %></dd>
-            <br/>
-
-            <dt>Agency Name</dd>
-            <dd><%= @challenge.agency_name %></dd>
             <br/>
 
             <dt>External URL</dd>
@@ -207,7 +215,11 @@
           <h3 class="box-title">Federal Partners</h3>
         </div>
         <div class="box-body">
-          <p><%= @challenge.federal_partners %></p>
+          <ul>
+            <%= Enum.map(@challenge.federal_partner_agencies, fn agency -> %>
+              <li><%= Web.Admin.AgencyView.name_link(@conn, agency) %></li>
+            <% end) %>
+          </ul>
         </div>
       </div>
     </div>
@@ -220,7 +232,11 @@
           <h3 class="box-title">Non Federal Partners</h3>
         </div>
         <div class="box-body">
-          <%= SharedView.parse_markdown(@challenge.non_federal_partners) %>
+          <ul>
+            <%= Enum.map(@challenge.non_federal_partners, fn nfp -> %>
+              <li><%= nfp.name %></li>
+            <% end) %>
+          </ul>
         </div>
       </div>
     </div>
