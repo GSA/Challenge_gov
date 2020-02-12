@@ -57,6 +57,15 @@ config :ex_aws,
   access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
   secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
 
+config :challenge_gov, :oidc_config, %{
+  idp_authorize_url: "https://idp.int.identitysandbox.gov/openid_connect/authorize",
+  acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
+  redirect_uri: "https://challenge-portal-dev.app.cloud.gov/auth/result",
+  client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_test_app",
+  private_key_path: "private.pem",
+  public_key_path: "cert.pem"
+}
+
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
 end

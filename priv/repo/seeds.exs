@@ -23,7 +23,8 @@ defmodule Helpers do
           password_confirmation: "password",
           first_name: "Admin",
           last_name: "User",
-          role: "admin"
+          role: "admin",
+          token: Ecto.UUID.generate()
         })
 
       _ ->
