@@ -40,6 +40,10 @@
             <dd><%= ChallengeView.logo_img(@challenge, height: 150) %></dd>
             <br/>
 
+            <dt>Winner Image</dd>
+            <dd><%= ChallengeView.winner_img(@challenge, height: 150) %></dd>
+            <br/>
+
             <dt>Title</dd>
             <dd><%= @challenge.title %></dd>
             <br/>

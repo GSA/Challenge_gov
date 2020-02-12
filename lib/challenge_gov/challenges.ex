@@ -11,6 +11,7 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
+  alias ChallengeGov.Challenges.WinnerImage
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
@@ -150,6 +151,9 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, params)
       end)
+      |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
+        WinnerImage.maybe_upload_winner_image(challenge, params)
+      end)
       |> Repo.transaction()
 
     case result do
@@ -185,6 +189,9 @@ defmodule ChallengeGov.Challenges do
       |> attach_documents(params)
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, params)
+      end)
+      |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
+        WinnerImage.maybe_upload_winner_image(challenge, params)
       end)
       |> Repo.transaction()
 
@@ -287,6 +294,9 @@ defmodule ChallengeGov.Challenges do
       end)
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, params)
+      end)
+      |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
+        WinnerImage.maybe_upload_winner_image(challenge, params)
       end)
       |> Repo.transaction()
 
