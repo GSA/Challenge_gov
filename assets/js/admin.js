@@ -10,5 +10,6 @@ import "font-awesome/css/font-awesome.css";
 import "phoenix_html"
 import "../css/admin.css";
 import "./dynamic_nested_fields.js";
+import "select2";
 
 window.$ = jquery;
