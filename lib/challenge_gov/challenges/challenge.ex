@@ -53,13 +53,19 @@ defmodule ChallengeGov.Challenges.Challenge do
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
     has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete)
 
+    # Images
+    field(:logo_key, Ecto.UUID)
+    field(:logo_extension, :string)
+
+    field(:winner_image_key, Ecto.UUID)
+    field(:winner_image_extension, :string)
+
     # Fields
     field(:status, :string, default: "pending")
     field(:challenge_manager, :string) # Will probably be a relation
     field(:challenge_manager_email, :string) # Will probably be a relation
     field(:poc_email, :string) # Might just be a point of contact relation
     field(:agency_name, :string)
-    # agency logo
     # field(:federal_partners, :string) # Federal partners # How does this need to be saved as multiple select?
     # field(:non_federal_partners, :string)
     field(:title, :string)
@@ -313,5 +319,19 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
     |> change()
     |> put_change(:status, "rejected")
+  end
+
+  def logo_changeset(struct, key, extension) do
+    struct
+    |> change()
+    |> put_change(:logo_key, key)
+    |> put_change(:logo_extension, extension)
+  end
+
+  def winner_image_changeset(struct, key, extension) do
+    struct
+    |> change()
+    |> put_change(:winner_image_key, key)
+    |> put_change(:winner_image_extension, extension)
   end
 end
