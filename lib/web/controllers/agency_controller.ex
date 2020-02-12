@@ -39,8 +39,8 @@ defmodule Web.AgencyController do
     case Agencies.create(user, params) do
       {:ok, team} ->
         conn
-        |> put_flash(:info, "Team created!")
-        |> redirect(to: Routes.team_path(conn, :show, team.id))
+        |> put_flash(:info, "Agency added!")
+        |> redirect(to: Routes.admin_agency_path(conn, :show, team.id))
 
       {:error, changeset} ->
         conn

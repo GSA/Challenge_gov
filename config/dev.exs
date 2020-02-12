@@ -66,6 +66,19 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
+# cache
+config :challenge_gov, :cache, preload: true
+
+# authorize config
+config :challenge_gov, :oidc_config, %{
+  idp_authorize_url: "https://idp.int.identitysandbox.gov/openid_connect/authorize",
+  acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
+  redirect_uri: "http://localhost:4000/auth/result",
+  client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_test_app",
+  private_key_path: "private.pem",
+  public_key_path: "cert.pem"
+}
+
 # Configure your database
 config :challenge_gov, ChallengeGov.Repo,
   username: "postgres",

@@ -41,6 +41,7 @@ defmodule ChallengeGov.MixProject do
       {:gettext, "~> 0.11"},
       {:httpoison, "~> 1.5"},
       {:jason, "~> 1.0"},
+      {:joken, "~> 2.0"},
       {:phoenix, "~> 1.4.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 2.14"},

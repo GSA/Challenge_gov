@@ -10,8 +10,8 @@ defmodule ChallengeGov do
   @doc """
   Pass-through function to optionally load config from the environment
 
-      iex> ChallengeGov.config({:system, "HOST"})
-      "example.com"
+  iex> ChallengeGov.config({:system, "HOST"})
+  "example.com"
   """
   def config({:system, env}), do: System.get_env(env)
 

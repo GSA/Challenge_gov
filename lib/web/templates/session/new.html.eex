@@ -1,30 +1,7 @@
 <div class="card card-form custom-card">
   <div class="card-body">
     <div class="form-titles">
-      <h2 class="title-bar font-semibold">Sign In</h2>
-
-      <%= form_for(@changeset, Routes.session_path(@conn, :create), [method: :post], fn f -> %>
-        <div class="row mx-md-n4">
-          <div class="col-12 col-md-6 px-md-4">
-            <div class="form-group form-control-material">
-              <%= text_input(f, :email, required: true, placeholder: "Email", class: "form-control") %>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mx-md-n4">
-          <div class="col-12 col-md-6 px-md-4">
-            <div class="form-group form-control-material">
-              <%= password_input(f, :password, required: true, placeholder: "Password", class: "form-control") %>
-            </div>
-          </div>
-        </div>
-
-        <%= submit("Sign In", class: "btn btn-primary") %>
-      <% end) %>
-
-      <%= link("Forgot your password?", to: Routes.registration_reset_path(@conn, :new)) %>
-      <%= link("Create an Account", to: Routes.registration_path(@conn, :new)) %>
+        <%= button("Sign In", to: Routes.session_path(@conn, :new), method: :get, class: "btn btn-primary") %>
     </div>
   </div>
 </div>

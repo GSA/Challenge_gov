@@ -76,6 +76,8 @@ defmodule Web.Router do
     resources("/users/invite/accept", UserInviteAcceptController, only: [:new, :create])
 
     resources("/sign-in", SessionController, only: [:new, :create], singleton: true)
+
+    get("/auth/result", SessionController, :result)
   end
 
   scope "/", Web do

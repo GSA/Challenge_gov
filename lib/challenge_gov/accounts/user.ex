@@ -51,7 +51,8 @@ defmodule ChallengeGov.Accounts.User do
       :first_name,
       :last_name,
       :phone_number,
-      :role
+      :role,
+      :token
     ])
     |> validate_required([:email, :first_name, :last_name])
     |> validate_format(:email, ~r/.+@.+\..+/)
@@ -71,7 +72,6 @@ defmodule ChallengeGov.Accounts.User do
     struct
     |> changeset(params)
     |> password_changeset(params)
-    |> put_change(:token, UUID.uuid4())
     |> put_change(:email_verification_token, UUID.uuid4())
   end
 
