@@ -45,3 +45,4 @@ npm-debug.log
 /config/*.secret.exs
 /config/dev.local.exs
 /uploads
+/*.pem

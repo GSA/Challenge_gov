@@ -10,7 +10,7 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :challenge_gov, Web.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 4000],
+  http: [:inet4, port: System.get_env("PORT") || 4000],
   url: [host: System.get_env("HOST"), scheme: "https", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
@@ -51,11 +51,21 @@ config :challenge_gov, ChallengeGov.Mailer,
 
 config :stein, :storage,
   backend: :s3,
-  bucket: {:system, "BUCKETEER_BUCKET_NAME"}
+  bucket: {:system, "BUCKET_NAME"}
 
 config :ex_aws,
-  access_key_id: {:system, "BUCKETEER_AWS_ACCESS_KEY_ID"},
-  secret_access_key: {:system, "BUCKETEER_AWS_SECRET_ACCESS_KEY"}
+  region: "us-gov-west-1",
+  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
+
+config :challenge_gov, :oidc_config, %{
+  idp_authorize_url: "https://idp.int.identitysandbox.gov/openid_connect/authorize",
+  acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
+  redirect_uri: "https://challenge-portal-dev.app.cloud.gov/auth/result",
+  client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_test_app",
+  private_key_path: "private.pem",
+  public_key_path: "cert.pem"
+}
 
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"

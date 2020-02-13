@@ -27,9 +27,9 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Status</th>
-                  <th>Focus Area</th>
                   <th>Name</th>
+                  <th>Agency</th>
+                  <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -37,9 +37,9 @@
                 <%= Enum.map @challenges, fn (challenge) -> %>
                   <tr>
                     <td><%= challenge.id %></td>
-                    <td><%= String.capitalize(challenge.status) %></td>
-                    <td><%= challenge.type %></td>
                     <td><%= link(challenge.title, to: Routes.admin_challenge_path(@conn, :show, challenge.id)) %></td>
+                    <td><%= Web.Admin.AgencyView.name_link(@conn, challenge.agency) %></td>
+                    <td><%= String.capitalize(challenge.status) %></td>
                     <td>
                       <%= link("View", to: Routes.admin_challenge_path(@conn, :show, challenge.id), class: "btn btn-default btn-xs") %>
                       <%= link("Edit", to: Routes.admin_challenge_path(@conn, :edit, challenge.id), class: "btn btn-default btn-xs") %>
@@ -63,6 +63,14 @@
         <%= form_for(@conn, Routes.admin_challenge_path(@conn, :index), [method: :get, as: :filter], fn f -> %>
           <div class="box-body">
             <div class="form-group">
+              <%= label f, :search %>
+              <%= text_input f, :search, value: @filter["search"], class: "form-control" %>
+            </div>
+            <div class="form-group">
+              <%= label f, :agency_id %>
+              <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), value: @filter["agency_id"], class: "form-control js-select") %>
+            </div>
+            <div class="form-group">
               <h4>Challenge Types</h4>
               <%= Enum.map(Challenges.challenge_types(), fn type -> %>
                 <div>
@@ -71,10 +79,6 @@
                   </label>
                 </div>
               <% end) %>
-            </div>
-            <div class="form-group">
-              <%= label f, :search %>
-              <%= text_input f, :search, value: @filter["search"], class: "form-control" %>
             </div>
           </div>
           <div class="box-footer">

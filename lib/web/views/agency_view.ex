@@ -7,15 +7,15 @@ defmodule Web.AgencyView do
   alias Web.AccountView
   alias Web.FormView
 
-  def avatar_img(team, opts \\ []) do
-    case is_nil(team.avatar_key) do
+  def avatar_img(agency, opts \\ []) do
+    case is_nil(agency.avatar_key) do
       true ->
         path = Routes.static_path(Web.Endpoint, "/images/teams-card-logo.jpg")
-        img_tag(path, alt: "Team Avatar")
+        img_tag(path, alt: "Agency Logo")
 
       false ->
-        url = Storage.url(Avatar.avatar_path(team, "thumbnail"), signed: [expires_in: 3600])
-        opts = Keyword.merge([alt: "Team Avatar"], opts)
+        url = Storage.url(Avatar.avatar_path(agency, "thumbnail"), signed: [expires_in: 3600])
+        opts = Keyword.merge([alt: "Agency Logo"], opts)
         img_tag(url, opts)
     end
   end

@@ -10,6 +10,8 @@ defmodule ChallengeGov.Challenges do
 
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.FederalPartner
+  alias ChallengeGov.Challenges.Logo
+  alias ChallengeGov.Challenges.WinnerImage
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
@@ -45,19 +47,20 @@ defmodule ChallengeGov.Challenges do
   Changeset for adding a challenge (as an admin)
   """
   def admin_new(user) do
-    changeset = 
-      %Challenge{}
-      |> Map.put(:federal_partners, [])
-      |> Challenge.admin_changeset(%{}, user)
-
-    changeset
+    %Challenge{}
+    |> Repo.preload(:non_federal_partners)
+    |> Map.put(:federal_partners, [])
+    |> Map.put(:non_federal_partners, [])
+    |> Challenge.admin_changeset(%{}, user)
   end
 
   @doc """
   Changeset for editing a challenge (as an admin)
   """
   def edit(challenge) do
-    Challenge.update_changeset(challenge, %{})
+    challenge
+    |> Repo.preload([:non_federal_partners, :events])
+    |> Challenge.update_changeset(%{})
   end
 
   @doc """
@@ -66,6 +69,7 @@ defmodule ChallengeGov.Challenges do
   def all(opts \\ []) do
     query =
       Challenge
+      |> preload([:agency])
       |> where([c], c.status == "created")
       |> order_by([c], desc: c.published_on, asc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
@@ -79,6 +83,7 @@ defmodule ChallengeGov.Challenges do
   def admin_all(opts \\ []) do
     query =
       Challenge
+      |> preload([:agency])
       |> order_by([c], desc: c.status, desc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
 
@@ -109,7 +114,7 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge = Repo.preload(challenge, [:supporting_documents, :user, :federal_partner_agencies])
+        challenge = Repo.preload(challenge, [:supporting_documents, :user, :federal_partner_agencies, :non_federal_partners, :agency])
         challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
         {:ok, challenge}
     end
@@ -145,6 +150,12 @@ defmodule ChallengeGov.Challenges do
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:challenge, submit_challenge(user, params))
       |> attach_documents(params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, params)
+      end)
+      |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
+        WinnerImage.maybe_upload_winner_image(challenge, params)
+      end)
       |> Repo.transaction()
 
     case result do
@@ -178,6 +189,12 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.insert(:challenge, create_challenge(user, params))
       |> attach_federal_partners(params)
       |> attach_documents(params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, params)
+      end)
+      |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
+        WinnerImage.maybe_upload_winner_image(challenge, params)
+      end)
       |> Repo.transaction()
 
     case result do
@@ -259,7 +276,16 @@ defmodule ChallengeGov.Challenges do
   Update a challenge
   """
   def update(challenge, params) do
-    changeset = Challenge.update_changeset(challenge, params)
+    challenge = Repo.preload(challenge, [:non_federal_partners, :events])
+
+    params =
+      params
+      |> Map.put_new("non_federal_partners", [])
+      |> Map.put_new("events", [])
+
+    changeset =
+      challenge
+      |> Challenge.update_changeset(params)
 
     result =
       Ecto.Multi.new()
@@ -267,6 +293,12 @@ defmodule ChallengeGov.Challenges do
       |> attach_federal_partners(params)
       |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
         maybe_create_event(challenge, changeset)
+      end)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, params)
+      end)
+      |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
+        WinnerImage.maybe_upload_winner_image(challenge, params)
       end)
       |> Repo.transaction()
 
@@ -455,6 +487,10 @@ defmodule ChallengeGov.Challenges do
 
   def filter_on_attribute({"type", value}, query) do
     where(query, [c], c.type in ^value)
+  end
+
+  def filter_on_attribute({"agency_id", value}, query) do
+    where(query, [c], c.agency_id == ^value)
   end
 
   def filter_on_attribute(_, query), do: query
