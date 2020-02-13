@@ -54,6 +54,7 @@ config :stein, :storage,
   bucket: {:system, "BUCKET_NAME"}
 
 config :ex_aws,
+  region: "us-gov-west-1",
   access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
   secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
 

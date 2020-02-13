@@ -1,6 +1,7 @@
 ---
 defaults: &defaults
   buildpacks:
+    - https://github.com/cloudfoundry/apt-buildpack
     - https://github.com/HashNuke/heroku-buildpack-elixir
   memory: 512M
   command: mix ecto.deploy && mix phx.server
