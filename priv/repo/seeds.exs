@@ -23,7 +23,10 @@ defmodule Helpers do
           password_confirmation: "password",
           first_name: "Admin",
           last_name: "User",
-          role: "admin"
+          role: "admin",
+          terms_of_user: nil,
+          privacy_guidelines: nil,
+          agency_id: nil
         })
 
       _ ->

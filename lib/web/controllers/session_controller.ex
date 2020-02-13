@@ -28,7 +28,6 @@ defmodule Web.SessionController do
           )
 
         redirect(conn, external: authorization_url)
-
   end
 
   def result(conn, %{"code" => code, "state" => _state}) do
@@ -69,9 +68,9 @@ defmodule Web.SessionController do
       # after you create a user above from the userinfo,
       # then store them in the session as the current_user
       |> put_session(:user_token, user.token)
-      |> after_sign_in_redirect(Routes.page_path(conn, :index), user)
+      |> after_sign_in_redirect(Routes.admin_terms_path(conn, :new))
     else
-      {:error, err} ->
+      {:error, _err} ->
         conn
         |> put_flash(:error, "There was an issue logging in")
         |> put_status(400)

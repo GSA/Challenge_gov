@@ -37,6 +37,10 @@ defmodule ChallengeGov.Accounts.User do
     field(:avatar_key, Ecto.UUID)
     field(:avatar_extension, :string)
 
+    field(:terms_of_use, :utc_datetime)
+    field(:privacy_guidelines, :utc_datetime)
+    field(:agency_id, :integer)
+
     has_many(:challenges, Challenge)
     has_many(:members, Member)
     has_many(:supporting_documents, Document)
@@ -52,21 +56,21 @@ defmodule ChallengeGov.Accounts.User do
       :last_name,
       :phone_number,
       :role,
-      :token
+      :token,
+      :terms_of_use,
+      :privacy_guidelines,
+      :agency_id
     ])
-    |> validate_required([:email, :first_name, :last_name])
+    |> put_terms(:terms_of_use)
+    |> put_terms(:privacy_guidelines)
+    |> validate_required([:email, :first_name, :last_name, :privacy_guidelines, :terms_of_use])
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
 
-  def terms_changeset(struct, params) do
-    struct
-    |> changeset(params)
-    |> cast(params, [
-      :terms_and_condition,
-      :privacy,
-      :agency_id,
-    ])
+  def put_terms(struct, params) do
+    utc_datetime = DateTime.utc_now()
+    put_change(struct, params, DateTime.truncate(utc_datetime, :second))
   end
 
   def password_changeset(struct, params) do

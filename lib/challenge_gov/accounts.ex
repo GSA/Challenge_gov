@@ -16,6 +16,9 @@ defmodule ChallengeGov.Accounts do
 
   @behaviour Stein.Filter
 
+  @doc false
+  def agencies(), do: Challenge.agencies()
+
   @doc """
   Get all accounts
   """
@@ -314,8 +317,8 @@ defmodule ChallengeGov.Accounts do
       :error ->
         {:error, :not_found}
     end
-  end  
-  
+  end
+
   @doc """
   Find a user by an email
   """
