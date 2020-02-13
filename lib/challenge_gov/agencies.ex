@@ -45,6 +45,7 @@ defmodule ChallengeGov.Agencies do
     query =
       Agency
       |> where([a], is_nil(a.deleted_at))
+      |> order_by(:name)
       |> Repo.all()
   end
 
