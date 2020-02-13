@@ -31,7 +31,7 @@
               Lead Agency <span class="required">*</span>
             <% end %>
             <div class="col-md-8">
-              <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), class: "form-control") %>
+              <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), class: "form-control js-select") %>
             </div>
           </div>
           <!-- agency logo? -->
@@ -75,7 +75,7 @@
             Challenge Type <span class="required">*</span>
             <% end %>
             <div class="col-md-8">
-              <%= multiple_select(f, :type, Challenges.challenge_types(), class: "form-control") %>
+              <%= select(f, :type, Challenges.challenge_types(), class: "form-control js-select") %>
             </div>
           </div>
           <%= FormView.textarea_field(f, :description, label: "Challenge Description", rows: 5, required: true) %>
@@ -168,10 +168,10 @@
             Legal Authority <span class="required">*</span>
             <% end %>
             <div class="col-md-8">
-              <%= select(f, :legal_authority, Challenges.legal_authority(), class: "form-control") %>
-              <%= FormView.text_field(f, :legal_authority, label: "Other") %>
+              <%= select(f, :legal_authority, Challenges.legal_authority(), class: "form-control js-select") %>
             </div>
           </div>
+          <%= FormView.text_field(f, :other, label: "Other") %>
         </div>
       </div>
 
