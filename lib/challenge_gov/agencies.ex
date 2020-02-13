@@ -284,6 +284,14 @@ defmodule ChallengeGov.Agencies do
       |> Repo.update()
     end
   end  
+
+  def remove_logo(agency) do
+    agency
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:avatar_key, nil)
+    |> Ecto.Changeset.put_change(:avatar_extension, nil)
+    |> Repo.update()
+  end
   
   @impl true
   def filter_on_attribute({"search", value}, query) do
