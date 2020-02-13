@@ -2,9 +2,10 @@ defmodule Web.Admin.TermsView do
   use Web, :view
 
   alias Web.Admin.FormView
+  alias ChallengeGov.Agencies
 
   def challenge_owner_fields(f, user) do
-    if user.data.role == "challenge_owner" do
+    if user.data.role == "admin" do
       [
         content_tag(:div, class: "input") do
           [
@@ -27,7 +28,7 @@ defmodule Web.Admin.TermsView do
         content_tag(:div, class: "input") do
           [
             label(f, :agency_id, "Agency Name*", class: "label-text"),
-            text_input(f, :agency_id, required: true, placeholder: "Agency Name", class: "form-control fc-input")
+            select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), required: true, placeholder: "Agency Name", class: "form-control fc-input")
           ]
         end,
       ]
