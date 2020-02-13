@@ -107,9 +107,13 @@ defmodule Web.Router do
     post("/challenges/:id/reject", ChallengeController, :reject, as: :challenge)
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
 
+    post("/challenges/:id/remove_logo", ChallengeController, :remove_logo, as: :challenge)
+    post("/challenges/:id/remove_winner_image", ChallengeController, :remove_winner_image, as: :challenge)
+
     resources("/events", EventController, only: [:edit, :update, :delete])
 
     resources("/agencies", AgencyController)
+    post("/agencies/:id/remove_winner_image", AgencyController, :remove_logo, as: :agency)
 
     resources("/challenge_owners", UserController, only: [:index, :show])
     post("/users/:id/toggle", UserController, :toggle, as: :user)

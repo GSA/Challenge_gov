@@ -112,4 +112,22 @@ defmodule Web.Admin.ChallengeController do
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
     end
   end
+
+  def remove_logo(conn, %{"id" => id}) do
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.remove_logo(challenge) do
+      conn
+      |> put_flash(:info, "Logo removed")
+      |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+    end
+  end
+
+  def remove_winner_image(conn, %{"id" => id}) do
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.remove_winner_image(challenge) do
+      conn
+      |> put_flash(:info, "Winner image removed")
+      |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+    end
+  end
 end

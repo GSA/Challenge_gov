@@ -38,10 +38,19 @@
           <dl>
             <dt>Logo</dd>
             <dd><%= ChallengeView.logo_img(@challenge, height: 150) %></dd>
+            <%= if @challenge.logo_key do %>
+              <br/>
+              <%= button("Remove Logo", to: Routes.admin_challenge_path(@conn, :remove_logo, @challenge.id), class: "btn btn-danger", data: [confirm: "Are you sure?"]) %>
+            <% end %>
             <br/>
 
             <dt>Winner Image</dd>
             <dd><%= ChallengeView.winner_img(@challenge, height: 150) %></dd>
+            <%= if @challenge.winner_image_key do %>
+              <br/>
+              <%= button("Remove Winner Image", to: Routes.admin_challenge_path(@conn, :remove_winner_image, @challenge.id), class: "btn btn-danger", data: [confirm: "Are you sure?"]) %>
+            <% end %>
+            <br/>
             <br/>
 
             <dt>Title</dd>

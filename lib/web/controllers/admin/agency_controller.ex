@@ -89,4 +89,13 @@ defmodule Web.Admin.AgencyController do
       |> redirect(to: Routes.admin_agency_path(conn, :index))
     end
   end
+
+  def remove_logo(conn, %{"id" => id}) do
+    with {:ok, agency} <- Agencies.get(id),
+         {:ok, agency} <- Agencies.remove_logo(agency) do
+      conn
+      |> put_flash(:info, "Logo removed")
+      |> redirect(to: Routes.admin_agency_path(conn, :show, agency.id))
+    end
+  end
 end

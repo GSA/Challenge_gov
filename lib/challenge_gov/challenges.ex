@@ -479,6 +479,22 @@ defmodule ChallengeGov.Challenges do
     |> Repo.update()
   end
 
+  def remove_logo(challenge) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:logo_key, nil)
+    |> Ecto.Changeset.put_change(:logo_extension, nil)
+    |> Repo.update()
+  end
+
+  def remove_winner_image(challenge) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:winner_image_key, nil)
+    |> Ecto.Changeset.put_change(:winner_image_extension, nil)
+    |> Repo.update()
+  end
+
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"

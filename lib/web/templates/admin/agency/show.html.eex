@@ -37,6 +37,11 @@
 
             <dt>Logo</dd>
             <dd><%= AgencyView.avatar_img(@agency, height: 150) %></dd>
+
+            <%= if @agency.avatar_key do %>
+              <br/>
+              <%= button("Remove Logo", to: Routes.admin_agency_path(@conn, :remove_logo, @agency.id), class: "btn btn-danger", data: [confirm: "Are you sure?"]) %>
+            <% end %>
           </dl>
 
           <h4>Members</h4>
