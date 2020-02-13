@@ -58,7 +58,7 @@
         <%= form_tag Routes.admin_user_path(@conn, :index), method: :get do %>
           <div class="box-body">
             <div class="form-group">
-              <%= label :user, :search, "Name" %>
+              <%= label :user, :search, "Search" %>
               <%= text_input :user, :search, value: @filter["search"], class: "form-control" %>
             </div>
           </div>
