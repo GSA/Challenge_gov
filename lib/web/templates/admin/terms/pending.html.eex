@@ -1,0 +1,8 @@
+<section class="content-header text-center">
+  <div class="page-center">
+    <h4>
+      Your account is pending approval
+    </h4>
+    <%= link "Review Agency Toolkit", to: "https://en.wiktionary.org/wiki/toolkit", target: "_blank" %>
+  </div>
+</section>

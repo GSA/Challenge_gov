@@ -69,3 +69,7 @@
   display: flex;
   justify-content: center;
 }
+
+.page-center {
+  margin-top: 50px;
+}

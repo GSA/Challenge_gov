@@ -19,7 +19,7 @@ defmodule Web.Admin.TermsController do
         {:ok, _user} ->
           conn
           |> put_flash(:info, "Your account has been updated")
-          |> redirect(to: Routes.admin_challenge_path(conn, :index))
+          |> redirect(to: Routes.admin_terms_path(conn, :pending))
 
         {:error, changeset} ->
           conn
@@ -33,6 +33,11 @@ defmodule Web.Admin.TermsController do
       |> put_flash(:info, "We encountered a problem submitting your information. Please try again.")
       |> render("index.html")
     end
+  end
+
+  def pending(conn, _params) do
+    conn
+    |> render("pending.html")
   end
 
 end
