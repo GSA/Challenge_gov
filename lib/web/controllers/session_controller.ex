@@ -5,6 +5,13 @@ defmodule Web.SessionController do
   alias ChallengeGov.LoginGov
 
   def new(conn, _params) do
+    conn
+    |> assign(:changeset, Accounts.new())
+    |> put_layout("session.html")
+    |> render("new.html")
+  end
+
+  def create(conn, _params) do
     %{
       client_id: client_id,
       redirect_uri: redirect_uri,
@@ -21,7 +28,6 @@ defmodule Web.SessionController do
           )
 
         redirect(conn, external: authorization_url)
-
   end
 
   def result(conn, %{"code" => code, "state" => _state}) do
@@ -62,9 +68,9 @@ defmodule Web.SessionController do
       # after you create a user above from the userinfo,
       # then store them in the session as the current_user
       |> put_session(:user_token, user.token)
-      |> after_sign_in_redirect(Routes.page_path(conn, :index), user)
+      |> after_sign_in_redirect(Routes.admin_terms_path(conn, :new))
     else
-      {:error, err} ->
+      {:error, _err} ->
         conn
         |> put_flash(:error, "There was an issue logging in")
         |> put_status(400)
@@ -105,19 +111,15 @@ defmodule Web.SessionController do
 
   Or the home page
   """
-  def after_sign_in_redirect(conn, default_path, user) do
-    if user.role == "admin" do
-      redirect(conn, to: Routes.admin_challenge_path(conn, :index))
-    else
-      case get_session(conn, :last_path) do
-        nil ->
-          redirect(conn, to: default_path)
+  def after_sign_in_redirect(conn, default_path) do
+    case get_session(conn, :last_path) do
+      nil ->
+        redirect(conn, to: default_path)
 
-        path ->
-          conn
-          |> put_session(:last_path, nil)
-          |> redirect(to: path)
-      end
+      path ->
+        conn
+        |> put_session(:last_path, nil)
+        |> redirect(to: path)
     end
   end
 end

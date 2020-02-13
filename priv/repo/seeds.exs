@@ -24,6 +24,9 @@ defmodule Helpers do
           first_name: "Admin",
           last_name: "User",
           role: "admin",
+          terms_of_user: nil,
+          privacy_guidelines: nil,
+          agency_id: nil
           token: Ecto.UUID.generate()
         })
 

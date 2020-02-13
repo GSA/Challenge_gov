@@ -95,6 +95,10 @@ defmodule Web.Router do
 
     resources("/documents", DocumentController, only: [:delete])
 
+    resources("/terms", TermsController, only: [:new, :create])
+
+    get("/pending", TermsController, :pending)
+
     resources("/challenges", ChallengeController,
       only: [:index, :show, :new, :create, :edit, :update]
     ) do

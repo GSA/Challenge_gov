@@ -12,3 +12,63 @@
   color: #ffffff;
   padding: 15px 15px;
 }
+
+/* post sign-in screen: lib/web/templates/admin/terms/index.html.eex */
+
+.rules-of-behavior {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 40px auto 20px;
+}
+
+.behavior-header {
+  align-self: start;
+}
+
+.registration-content {
+  display: flex;
+  justify-content: center;
+}
+
+.registration-row {
+  width: 75%;
+}
+
+.input {
+  width: 60%;
+  max-width: 300px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkbox-input {
+  width: 60%;
+  max-width: 300px;
+  margin: 20px auto;
+}
+
+.fc-input {
+  border-radius: 5px
+}
+
+.label-text {
+  align-self: start;
+  margin-bottom: 0;
+  color: #4A5C6B;
+}
+
+.btn-wrapper {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.page-center {
+  margin-top: 50px;
+}
