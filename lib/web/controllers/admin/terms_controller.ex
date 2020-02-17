@@ -14,12 +14,17 @@ defmodule Web.Admin.TermsController do
   def create(conn, params) do
     %{current_user: user} = conn.assigns
     data = Map.get(params, "user")
-    if Map.get(data, "accept_terms_of_use") === "true" and Map.get(data, "accept_privacy_guidelines") === "true" do
-      case Accounts.update(user, data) do
+    parsed_data = Map.put(
+      data,
+      "agency_id",
+      String.to_integer(Map.get(data, "agency_id"))
+    )
+    if Map.get(parsed_data, "accept_terms_of_use") === "true" and Map.get(parsed_data, "accept_privacy_guidelines") === "true" do
+      case Accounts.update(user, parsed_data) do
         {:ok, _user} ->
           conn
           |> put_flash(:info, "Your account has been updated")
-          |> redirect(to: Routes.admin_terms_path(conn, :pending))
+          |> redirect(to: Routes.admin_challenge_path(conn, :index))
 
         {:error, changeset} ->
           conn

@@ -387,6 +387,33 @@ defmodule ChallengeGov.Accounts do
 
   def is_admin?(_), do: false
 
+  @doc """
+  Check if a user is an challenge_owner
+  """
+
+  def is_challenge_owner?(user)
+
+  def is_challenge_owner?(%{role: "challenge_owner_pending"}), do: true
+
+  def is_challenge_owner?(%{role: "challenge_owner"}), do: true
+
+  def is_challenge_owner?(_), do: false
+
+  @doc """
+  Check if a user has accepted all terms
+  """
+
+  def has_accepted_terms?(user)
+
+  def has_accepted_terms?(%{terms_of_use: nil}), do: false
+
+  def has_accepted_terms?(%{privacy_guidelines: nil}), do: false
+
+  def has_accepted_terms?(%{terms_of_use: _timestamp}), do: true
+
+  def has_accepted_terms?(%{privacy_guidelines: _timestamp}), do: true
+
+
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
