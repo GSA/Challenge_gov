@@ -67,7 +67,6 @@ defmodule Web.SessionController do
         conn
         |> put_flash(:info, "Login successful")
         |> put_session(:user_token, user.token)
-        # |> after_sign_in_redirect(Routes.admin_terms_path(conn, :new))
         |> after_sign_in_redirect(get_default_path(conn, user))
 
     else

@@ -388,7 +388,7 @@ defmodule ChallengeGov.Accounts do
   def is_admin?(_), do: false
 
   @doc """
-  Check if a user is an challenge_owner
+  Check if a user is a challenge_owner
   """
 
   def is_challenge_owner?(user)
@@ -398,6 +398,18 @@ defmodule ChallengeGov.Accounts do
   def is_challenge_owner?(%{role: "challenge_owner"}), do: true
 
   def is_challenge_owner?(_), do: false
+  
+
+  @doc """
+  Check if a user is a pending challenge_owner
+  """
+
+  def is_challenge_owner_pending?(user)
+
+  def is_challenge_owner_pending?(%{role: "challenge_owner_pending"}), do: true
+
+  def is_challenge_owner_pending?(_), do: false
+
 
   @doc """
   Check if a user has accepted all terms
