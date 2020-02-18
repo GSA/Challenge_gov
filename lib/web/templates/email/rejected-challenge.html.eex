@@ -1,1 +1,0 @@
-<p>Your challenge was rejected: <%= link("#{@challenge.name}", to: Routes.admin_challenge_url(Endpoint, :show, @challenge.id)) %></p>

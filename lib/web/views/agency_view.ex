@@ -4,8 +4,6 @@ defmodule Web.AgencyView do
   alias ChallengeGov.Agencies
   alias ChallengeGov.Agencies.Avatar
   alias Stein.Storage
-  alias Web.AccountView
-  alias Web.FormView
 
   def avatar_img(agency, opts \\ []) do
     case is_nil(agency.avatar_key) do

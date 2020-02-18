@@ -50,8 +50,8 @@ defmodule Web.Admin.FormView do
         end
       ]
     end
-  end  
-  
+  end
+
   @doc """
   Generate a datetime field, styled properly
   """
@@ -205,18 +205,21 @@ defmodule Web.Admin.FormView do
                 [
                   Enum.map(Enum.with_index(fields), fn field_with_index ->
                     {field, index} = field_with_index
+
                     content_tag(:div, class: "form-group nested-form-group") do
                       [
                         Enum.map(child.hidden, fn {k, v} ->
-                          hidden_input child, k, value: v
+                          hidden_input(child, k, value: v)
                         end),
                         label(child, field, class: "col-md-4"),
                         content_tag(:div, class: "col-md-6") do
-                          text_input child, field, class: "form-control"
+                          text_input(child, field, class: "form-control")
                         end,
                         content_tag(:div, class: "col-md-2") do
-                          if (index < 1) do
-                            content_tag(:div, "Remove", class: "remove-nested-section btn btn-danger")
+                          if index < 1 do
+                            content_tag(:div, "Remove",
+                              class: "remove-nested-section btn btn-danger"
+                            )
                           end
                         end,
                         error_tag(child, field)
@@ -229,13 +232,17 @@ defmodule Web.Admin.FormView do
             ]
           end)
         end,
-        content_tag(:div, "Add #{capitalized_children_name}", class: "add-nested-section btn btn-primary", data: [parent: form.name, child: children_name]),
+        content_tag(:div, "Add #{capitalized_children_name}",
+          class: "add-nested-section btn btn-primary",
+          data: [parent: form.name, child: children_name]
+        ),
         content_tag(:div, class: "dynamic-nested-form-template hidden") do
           [
             content_tag(:div, class: "form-collection") do
               [
                 Enum.map(Enum.with_index(fields), fn field_with_index ->
                   {field, index} = field_with_index
+
                   content_tag(:div, class: "form-group nested-form-group", data: [field: field]) do
                     [
                       label(:template, field, class: "col-md-4 template-label"),
@@ -243,8 +250,10 @@ defmodule Web.Admin.FormView do
                         text_input(:template, field, class: "form-control template-input")
                       end,
                       content_tag(:div, class: "col-md-2") do
-                        if (index < 1) do
-                          content_tag(:div, "Remove", class: "remove-nested-section btn btn-danger")
+                        if index < 1 do
+                          content_tag(:div, "Remove",
+                            class: "remove-nested-section btn btn-danger"
+                          )
                         end
                       end
                     ]
