@@ -1,3 +1,0 @@
-<p><%= link("Please click this link to verify your email address.", to: verification_url(@user)) %></p>
-
-<p><pre><%= verification_url(@user) %></pre></p>

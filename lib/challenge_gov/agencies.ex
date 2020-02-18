@@ -3,8 +3,6 @@ defmodule ChallengeGov.Agencies do
   Agencies context
   """
 
-  alias ChallengeGov.Emails
-  alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
   alias ChallengeGov.Agencies.Avatar
   alias ChallengeGov.Agencies.Member
@@ -39,14 +37,13 @@ defmodule ChallengeGov.Agencies do
       |> preload(members: ^member_query())
 
     Pagination.paginate(Repo, query, opts)
-  end  
-  
+  end
+
   def all_for_select() do
-    query =
-      Agency
-      |> where([a], is_nil(a.deleted_at))
-      |> order_by(:name)
-      |> Repo.all()
+    Agency
+    |> where([a], is_nil(a.deleted_at))
+    |> order_by(:name)
+    |> Repo.all()
   end
 
   @doc """
@@ -67,8 +64,8 @@ defmodule ChallengeGov.Agencies do
         agency = Repo.preload(agency, members: :user)
         {:ok, agency}
     end
-  end  
-  
+  end
+
   def get_by_name(name) do
     case Repo.get_by(Agency, name: name) do
       nil ->
@@ -107,7 +104,8 @@ defmodule ChallengeGov.Agencies do
   #   |> Ecto.Changeset.apply_action(:insert)
   # end
 
-  def create(user, params) do
+  # TODO: Change this to use user again if needed
+  def create(_user, params) do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:agency, Agency.create_changeset(%Agency{}, params))
@@ -129,12 +127,12 @@ defmodule ChallengeGov.Agencies do
         |> Ecto.Changeset.add_error(:base, "You are already a member of a agency")
         |> Ecto.Changeset.apply_action(:insert)
     end
-  end  
-  
+  end
+
   def create(params) do
     %Agency{}
     |> Agency.create_changeset(params)
-    |> Repo.insert
+    |> Repo.insert()
   end
 
   @doc """
@@ -202,89 +200,6 @@ defmodule ChallengeGov.Agencies do
     !is_nil(Repo.get_by(Member, agency_id: agency.id, user_id: user.id, status: "accepted"))
   end
 
-  @doc """
-  Invite a new member to a agency
-  """
-  def invite_member(agency, inviter, invitee) do
-    changeset = Member.create_changeset(%Member{}, invitee, agency)
-
-    case Repo.insert(changeset) do
-      {:ok, member} ->
-        invitee
-        |> Emails.agency_invitation(agency, inviter)
-        |> Mailer.deliver_later()
-
-        {:ok, member}
-
-      {:error, changeset} ->
-        better_invitation_error(changeset)
-    end
-  end
-
-  defp better_invitation_error(changeset) do
-    case Keyword.has_key?(changeset.errors, :user_id) do
-      true ->
-        {_message, validation} = changeset.errors[:user_id]
-
-        case validation[:constraint] == :unique do
-          true ->
-            {:error, :already_member}
-
-          false ->
-            {:error, changeset}
-        end
-
-      false ->
-        {:error, changeset}
-    end
-  end
-
-  defp find_invited_member(agency, invitee) do
-    case Repo.get_by(Member, agency_id: agency.id, user_id: invitee.id, status: "invited") do
-      nil ->
-        {:error, :not_found}
-
-      member ->
-        {:ok, member}
-    end
-  end
-
-  @doc """
-  Accept an invite for a agency
-  """
-  def accept_invite(agency, invitee) do
-    with {:ok, member} <- find_invited_member(agency, invitee) do
-      {:ok, %{member: member}} =
-        Ecto.Multi.new()
-        |> Ecto.Multi.update(:member, Member.accept_invite_changeset(member))
-        |> Ecto.Multi.run(:clear_invites, &clear_invites/2)
-        |> Repo.transaction()
-
-      {:ok, member}
-    end
-  end
-
-  defp clear_invites(repo, %{member: member}) do
-    result =
-      Member
-      |> where([m], m.user_id == ^member.user_id)
-      |> where([m], m.agency_id != ^member.agency_id)
-      |> repo.update_all(set: [status: "rejected"])
-
-    {:ok, result}
-  end
-
-  @doc """
-  Reject an invite
-  """
-  def reject_invite(agency, invitee) do
-    with {:ok, member} <- find_invited_member(agency, invitee) do
-      member
-      |> Member.reject_invite_changeset()
-      |> Repo.update()
-    end
-  end  
-
   def remove_logo(agency) do
     agency
     |> Ecto.Changeset.change()
@@ -292,7 +207,7 @@ defmodule ChallengeGov.Agencies do
     |> Ecto.Changeset.put_change(:avatar_extension, nil)
     |> Repo.update()
   end
-  
+
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"

@@ -26,11 +26,9 @@ defmodule Web.Admin.AgencyController do
       |> assign(:members, agency.members)
       |> render("show.html")
     end
-  end  
-  
-  def new(conn, _params) do
-    %{current_user: user} = conn.assigns
+  end
 
+  def new(conn, _params) do
     conn
     |> assign(:changeset, Agencies.new())
     |> render("new.html")

@@ -14,13 +14,16 @@ defmodule Web.Admin.TermsController do
   def create(conn, params) do
     %{current_user: user} = conn.assigns
     data = Map.get(params, "user")
-    parsed_data = Map.put(
-      data,
-      "agency_id",
-      String.to_integer(Map.get(data, "agency_id"))
-    )
+
+    parsed_data =
+      Map.put(
+        data,
+        "agency_id",
+        String.to_integer(Map.get(data, "agency_id"))
+      )
+
     if Map.get(parsed_data, "accept_terms_of_use") === "true" and
-       Map.get(parsed_data, "accept_privacy_guidelines") === "true" do
+         Map.get(parsed_data, "accept_privacy_guidelines") === "true" do
       case Accounts.update(user, parsed_data) do
         {:ok, user} ->
           conn
@@ -36,7 +39,10 @@ defmodule Web.Admin.TermsController do
       end
     else
       conn
-      |> put_flash(:info, "We encountered a problem submitting your information. Please try again.")
+      |> put_flash(
+        :info,
+        "We encountered a problem submitting your information. Please try again."
+      )
       |> render("index.html")
     end
   end
@@ -53,5 +59,4 @@ defmodule Web.Admin.TermsController do
     conn
     |> render("pending.html")
   end
-
 end

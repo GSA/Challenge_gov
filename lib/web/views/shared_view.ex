@@ -55,11 +55,11 @@ defmodule Web.SharedView do
   end
 
   def parse_markdown(value) do
-    with false <- is_nil(value), 
-      {:ok, markdown, _} <- Earmark.as_html(value) do
+    with false <- is_nil(value),
+         {:ok, markdown, _} <- Earmark.as_html(value) do
       raw(markdown)
     else
-      _ -> 
+      _ ->
         value
     end
   end

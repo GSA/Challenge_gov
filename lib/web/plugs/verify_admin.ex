@@ -30,7 +30,8 @@ defmodule Web.Plugs.VerifyAdmin do
   defp is_admin?(conn) do
     case Map.fetch(conn.assigns, :current_user) do
       {:ok, user} ->
-        Accounts.is_admin?(user) # or is_CO?
+        # or is_CO?
+        Accounts.is_admin?(user)
 
       :error ->
         false

@@ -8,41 +8,23 @@
 
       <div class="main container-fluid">
         <div class="content-area">
-          <div class="content-left left-menu-wrapper">
-            <div class="menu-close"><a href="javascript:;"><i class="icon-close-custom"></i></a></div>
-            <div class="logo side-nav-logo">
-              <img src="<%= Routes.static_path(@conn, "/images/challenge-logo.png") %>" alt="Challenge.gov Logo" title="Challenge.gov">
-            </div>
-            <div class="side-nav font-semibold">
-              <ul class="mp-none">
-                <li class='<%= tab_selected(@conn, "challenges") %>'>
-                  <%= link(to: Routes.challenge_path(@conn, :index)) do %>
-                    <i class="icon-Challenges"></i><span>Challenges</span>
-                  <% end %>
-                </li>
-                <li class='<%= tab_selected(@conn, "teams") %>'>
-                  <%= link(to: Routes.agency_path(@conn, :index)) do %>
-                    <i class="icon-Teams"></i><span>Agencies</span>
-                  <% end %>
-                </li>
-              </ul>
-            </div>
+          <div class="menu-close"><a href="javascript:;"><i class="icon-close-custom"></i></a></div>
+          <div class="logo side-nav-logo">
+            <img src="<%= Routes.static_path(@conn, "/images/challenge-logo.png") %>" alt="Challenge.gov Logo" title="Challenge.gov">
           </div>
 
-          <div class="content-right">
-            <%= if flash = get_flash(@conn, :info) do %>
-              <div class="alert alert-primary" role="alert">
-                <%= flash %>
-              </div>
-            <% end %>
-            <%= if flash = get_flash(@conn, :error) do %>
-              <div class="alert alert-danger" role="alert">
-                <%= flash %>
-              </div>
-            <% end %>
+          <%= if flash = get_flash(@conn, :info) do %>
+            <div class="alert alert-primary" role="alert">
+              <%= flash %>
+            </div>
+          <% end %>
+          <%= if flash = get_flash(@conn, :error) do %>
+            <div class="alert alert-danger" role="alert">
+              <%= flash %>
+            </div>
+          <% end %>
 
-            <%= render @view_module, @view_template, assigns %>
-          </div>
+          <%= render @view_module, @view_template, assigns %>
         </div>
       </div>
 

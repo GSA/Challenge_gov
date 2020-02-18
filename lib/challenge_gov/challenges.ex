@@ -12,8 +12,6 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
-  alias ChallengeGov.Emails
-  alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
   alias ChallengeGov.SupportingDocuments
   alias ChallengeGov.Timeline
@@ -114,7 +112,15 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge = Repo.preload(challenge, [:supporting_documents, :user, :federal_partner_agencies, :non_federal_partners, :agency])
+        challenge =
+          Repo.preload(challenge, [
+            :supporting_documents,
+            :user,
+            :federal_partner_agencies,
+            :non_federal_partners,
+            :agency
+          ])
+
         challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
         {:ok, challenge}
     end
@@ -160,7 +166,7 @@ defmodule ChallengeGov.Challenges do
 
     case result do
       {:ok, %{challenge: challenge}} ->
-        send_new_challenge_email(challenge)
+        {:ok, challenge}
 
       {:error, :challenge, changeset, _} ->
         {:error, changeset}
@@ -220,22 +226,19 @@ defmodule ChallengeGov.Challenges do
     |> Challenge.admin_changeset(params, user)
   end
 
-  defp send_new_challenge_email(challenge) do
-    challenge
-    |> Emails.new_challenge()
-    |> Mailer.deliver_later()
-
-    {:ok, challenge}
-  end
-
   defp attach_federal_partners(multi, %{federal_partners: ids}) do
     attach_federal_partners(multi, %{"federal_partners" => ids})
   end
 
   defp attach_federal_partners(multi, %{"federal_partners" => ids}) do
-    multi = Ecto.Multi.run(multi, :delete_agencies, fn _repo, changes -> 
-      {:ok, Repo.delete_all( from(fp in FederalPartner, where: fp.challenge_id == ^changes.challenge.id))}
-    end)
+    multi =
+      Ecto.Multi.run(multi, :delete_agencies, fn _repo, changes ->
+        {:ok,
+         Repo.delete_all(
+           from(fp in FederalPartner, where: fp.challenge_id == ^changes.challenge.id)
+         )}
+      end)
+
     Enum.reduce(ids, multi, fn agency_id, multi ->
       Ecto.Multi.run(multi, {:agency, agency_id}, fn _repo, changes ->
         %FederalPartner{}
@@ -243,7 +246,7 @@ defmodule ChallengeGov.Challenges do
           agency_id: agency_id,
           challenge_id: changes.challenge.id
         })
-        |> Repo.insert
+        |> Repo.insert()
       end)
     end)
   end
@@ -427,20 +430,11 @@ defmodule ChallengeGov.Challenges do
 
     case result do
       {:ok, %{challenge: challenge}} ->
-        send_challenge_rejection_email(challenge)
         {:ok, challenge}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
-  end
-
-  defp send_challenge_rejection_email(challenge) do
-    challenge
-    |> Emails.rejected_challenge()
-    |> Mailer.deliver_later()
-
-    {:ok, challenge}
   end
 
   @doc """
