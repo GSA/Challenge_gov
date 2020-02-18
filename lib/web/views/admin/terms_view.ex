@@ -4,7 +4,7 @@ defmodule Web.Admin.TermsView do
   alias ChallengeGov.Agencies
 
   def challenge_owner_fields(f, user) do
-    if user.data.role == "admin" do
+    if user.data.role == "challenge_owner_pending" do
       [
         content_tag(:div, class: "input") do
           [

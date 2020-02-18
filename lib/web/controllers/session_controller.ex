@@ -67,10 +67,8 @@ defmodule Web.SessionController do
 
       conn
       |> put_flash(:info, "Login successful")
-      # after you create a user above from the userinfo,
-      # then store them in the session as the current_user
       |> put_session(:user_token, user.token)
-      |> after_sign_in_redirect(Routes.admin_terms_path(conn, :new))
+      |> after_sign_in_redirect(get_default_path(conn, user))
     else
       {:error, _err} ->
         conn
@@ -106,6 +104,18 @@ defmodule Web.SessionController do
     conn
     |> clear_session()
     |> redirect(to: Routes.page_path(conn, :index))
+  end
+
+  @doc """
+  Assign redirect path based acceptance of terms
+  """
+
+  def get_default_path(conn, user) do
+    if Accounts.has_accepted_terms?(user) do
+      Routes.admin_challenge_path(conn, :index)
+    else
+      Routes.admin_terms_path(conn, :new)
+    end
   end
 
   @doc """
