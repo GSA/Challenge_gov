@@ -14,12 +14,18 @@ defmodule Web.Admin.TermsController do
   def create(conn, params) do
     %{current_user: user} = conn.assigns
     data = Map.get(params, "user")
-    if Map.get(data, "accept_terms_of_use") === "true" and Map.get(data, "accept_privacy_guidelines") === "true" do
-      case Accounts.update(user, data) do
-        {:ok, _user} ->
+    parsed_data = Map.put(
+      data,
+      "agency_id",
+      String.to_integer(Map.get(data, "agency_id"))
+    )
+    if Map.get(parsed_data, "accept_terms_of_use") === "true" and
+       Map.get(parsed_data, "accept_privacy_guidelines") === "true" do
+      case Accounts.update(user, parsed_data) do
+        {:ok, user} ->
           conn
           |> put_flash(:info, "Your account has been updated")
-          |> redirect(to: Routes.admin_terms_path(conn, :pending))
+          |> redirect_based_on_user(user)
 
         {:error, changeset} ->
           conn
@@ -32,6 +38,14 @@ defmodule Web.Admin.TermsController do
       conn
       |> put_flash(:info, "We encountered a problem submitting your information. Please try again.")
       |> render("index.html")
+    end
+  end
+
+  def redirect_based_on_user(conn, user) do
+    if Accounts.is_challenge_owner_pending?(user) do
+      redirect(conn, to: Routes.admin_terms_path(conn, :pending))
+    else
+      redirect(conn, to: Routes.admin_challenge_path(conn, :index))
     end
   end
 
