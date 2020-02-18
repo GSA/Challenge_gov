@@ -1,16 +1,12 @@
 <div class="card card-form custom-card col-md-6 rules-of-behavior">
   <div class="card-body">
     <div class="rules-wrapper">
-      <h4 class="text-center">Rules of Behavior</h4>
+      <h4 class="text-center">You must accept the U.S. Government System terms to sign into this website</h4>
       <p class="text-center rules-text">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sed
-        maximus sapien. Mauris vehicula finibus lectus a luctus. Vivamus lectus
-        eros, mattis ac vestibulum vel, feugiat eu nulla. Nunc vitae quam
-        efficitur, molestie nibh eleifend, blandit magna. Fusce tincidunt eget
-        odio non feugiat. Orci varius natoque penatibus et magnis dis parturient
-        montes, nascetur ridiculus mus. Phasellus porttitor lectus auctor,
-        placerat ligula eu, finibus nisl. Suspendisse efficitur massa vitae arcu
-        efficitur volutpat.
+        This is a U.S. General Services Administration Federal Government
+        computer system that is "FOR OFFICIAL USE ONLY." This System is subject
+        to monitoring. Individuals found performing unauthorized activities are
+        subject to disciplinary action including criminal prosecution.
       </p>
         <%= button("Accept and Sign-in", to: Routes.session_path(@conn, :create), method: :post, class: "btn btn-primary center-btn") %>
     </div>
