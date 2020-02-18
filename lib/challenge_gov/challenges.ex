@@ -24,9 +24,6 @@ defmodule ChallengeGov.Challenges do
   @behaviour Stein.Filter
 
   @doc false
-  def agencies(), do: Challenge.agencies()
-
-  @doc false
   def challenge_types(), do: Challenge.challenge_types()
 
   @doc false
@@ -36,21 +33,21 @@ defmodule ChallengeGov.Challenges do
   New changeset for a challenge
   """
   def new(user) do
-    user
-    |> Ecto.build_assoc(:challenges)
+    %Challenge{}
+    |> Repo.preload([:federal_partners, :non_federal_partners])
     |> Challenge.create_changeset(%{}, user)
   end
 
-  @doc """
-  Changeset for adding a challenge (as an admin)
-  """
-  def admin_new(user) do
-    %Challenge{}
-    |> Repo.preload(:non_federal_partners)
-    |> Map.put(:federal_partners, [])
-    |> Map.put(:non_federal_partners, [])
-    |> Challenge.admin_changeset(%{}, user)
-  end
+  # @doc """
+  # Changeset for adding a challenge (as an admin)
+  # """
+  # def admin_new(user) do
+  #   %Challenge{}
+  #   |> Repo.preload(:non_federal_partners)
+  #   |> Map.put(:federal_partners, [])
+  #   |> Map.put(:non_federal_partners, [])
+  #   |> Challenge.admin_changeset(%{}, user)
+  # end
 
   @doc """
   Changeset for editing a challenge (as an admin)
