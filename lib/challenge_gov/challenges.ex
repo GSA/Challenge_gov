@@ -267,7 +267,7 @@ defmodule ChallengeGov.Challenges do
   defp attach_documents(multi, _params), do: multi
 
   defp attach_document({:ok, document}, challenge) do
-    SupportingDocuments.attach_to_challenge(document, challenge)
+    SupportingDocuments.attach_to_challenge(document, challenge, "resources")
   end
 
   defp attach_document(result, _challenge), do: result

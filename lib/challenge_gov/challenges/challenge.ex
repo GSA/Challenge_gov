@@ -152,7 +152,6 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_assoc(:events)
   end
 
-
   # TODO: Add user usage back in if needing to track submitter
   def create_changeset(struct, params, _user) do
     struct
