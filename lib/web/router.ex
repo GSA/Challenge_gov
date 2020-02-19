@@ -12,6 +12,7 @@ defmodule Web.Router do
 
   pipeline(:signed_in) do
     plug(Web.Plugs.VerifyUser)
+    plug(Web.Plugs.SessionTimeout)
   end
 
   pipeline(:not_signed_in) do
