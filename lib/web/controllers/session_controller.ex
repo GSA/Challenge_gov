@@ -19,15 +19,15 @@ defmodule Web.SessionController do
       idp_authorize_url: idp_authorize_url
     } = oidc_config()
 
-        authorization_url =
-          LoginGov.build_authorization_url(
-            client_id,
-            acr_value,
-            redirect_uri,
-            idp_authorize_url
-          )
+    authorization_url =
+      LoginGov.build_authorization_url(
+        client_id,
+        acr_value,
+        redirect_uri,
+        idp_authorize_url
+      )
 
-        redirect(conn, external: authorization_url)
+    redirect(conn, external: authorization_url)
   end
 
   def result(conn, %{"code" => code, "state" => _state}) do
@@ -43,32 +43,32 @@ defmodule Web.SessionController do
     {:ok, public_key} = LoginGov.get_public_key(well_known_config["jwks_uri"])
     token_endpoint = "https://idp.int.identitysandbox.gov/api/openid_connect/token"
 
-    with client_assertion <- LoginGov.build_client_assertion(client_id, token_endpoint, private_key),
-         {:ok, %{"id_token" => id_token}} <- LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
+    with client_assertion <-
+           LoginGov.build_client_assertion(client_id, token_endpoint, private_key),
+         {:ok, %{"id_token" => id_token}} <-
+           LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
+      {:ok, user} =
+        case Accounts.get_by_email(userinfo["email"]) do
+          {:error, :not_found} ->
+            Accounts.create(%{
+              email: userinfo["email"],
+              password: "password",
+              password_confirmation: "password",
+              first_name: "Admin",
+              last_name: "User",
+              role: "admin",
+              token: userinfo["sub"]
+            })
 
-      {:ok, user} = case Accounts.get_by_email(userinfo["email"]) do
-        {:error, :not_found} ->
-          Accounts.create(%{
-            email: userinfo["email"],
-            password: "password",
-            password_confirmation: "password",
-            first_name: "Admin",
-            last_name: "User",
-            role: "admin",
-            token: userinfo["sub"]
-          })
-
-        {:ok, account_user} ->
-          {:ok, account_user}
-      end
+          {:ok, account_user} ->
+            {:ok, account_user}
+        end
 
       conn
       |> put_flash(:info, "Login successful")
-      # after you create a user above from the userinfo,
-      # then store them in the session as the current_user
       |> put_session(:user_token, user.token)
-      |> after_sign_in_redirect(Routes.admin_terms_path(conn, :new))
+      |> after_sign_in_redirect(get_default_path(conn, user))
     else
       {:error, _err} ->
         conn
@@ -103,7 +103,19 @@ defmodule Web.SessionController do
   def delete(conn, _params) do
     conn
     |> clear_session()
-    |> redirect(to: Routes.challenge_path(conn, :index))
+    |> redirect(to: Routes.page_path(conn, :index))
+  end
+
+  @doc """
+  Assign redirect path based acceptance of terms
+  """
+
+  def get_default_path(conn, user) do
+    if Accounts.has_accepted_terms?(user) do
+      Routes.admin_challenge_path(conn, :index)
+    else
+      Routes.admin_terms_path(conn, :new)
+    end
   end
 
   @doc """

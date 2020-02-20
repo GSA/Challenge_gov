@@ -82,11 +82,11 @@ defmodule ChallengeGov.LoginGov do
   def build_logout_uri(id_token, end_session_endpoint, redirect_uri) do
     end_session_endpoint <>
       "?" <>
-        URI.encode_query(
-          id_token_hint: id_token,
-          post_logout_redirect_uri: redirect_uri,
-          state: random_value()
-        )
+      URI.encode_query(
+        id_token_hint: id_token,
+        post_logout_redirect_uri: redirect_uri,
+        state: random_value()
+      )
   end
 
   defp handle_response(response, msg) do
@@ -108,7 +108,9 @@ defmodule ChallengeGov.LoginGov do
   end
 
   defp uri_join(uri, path) do
-    URI.merge(uri, path) |> URI.to_string()
+    uri
+    |> URI.merge(path)
+    |> URI.to_string()
   end
 
   def process_request_body(body) do

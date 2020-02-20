@@ -4,13 +4,11 @@ defmodule Web.Plugs.SessionTimeout do
   """
   import Plug.Conn
 
-  # def init(default), do: default
   def init(opts \\ []) do
     Keyword.merge([timeout_after_seconds: 3600], opts)
   end
 
   def call(conn, opts) do
-    IO.puts("<><><><><><><><><><><><>")
     timeout_at = get_session(conn, :session_timeout_at)
     if timeout_at && now() > timeout_at do
       logout_user(conn)

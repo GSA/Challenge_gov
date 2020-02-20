@@ -38,7 +38,7 @@ defmodule Web.Admin.ChallengeController do
     %{current_user: user} = conn.assigns
 
     conn
-    |> assign(:changeset, Challenges.admin_new(user))
+    |> assign(:changeset, Challenges.new(user))
     |> render("new.html")
   end
 

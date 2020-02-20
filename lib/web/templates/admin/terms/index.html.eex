@@ -9,13 +9,13 @@
       <%= form_for(@changeset, Routes.admin_terms_path(@conn, :create), [method: :post], fn f -> %>
         <%= challenge_owner_fields(f, @changeset) %>
         <div class="checkbox-input">
-          <%= Phoenix.HTML.Form.checkbox(f, :accept_terms_of_use, required: true,) %>
+          <%= Phoenix.HTML.Form.checkbox(f, :accept_terms_of_use, required: true) %>
           <%= label(f, :accept_terms_of_use, class: "label-text") do %>
             I accept the <%= link "terms of use", to: "https://www.challenge.gov/terms/", target: "_blank" %>
           <% end %>
         </div>
         <div class="checkbox-input">
-          <%= Phoenix.HTML.Form.checkbox(f, :accept_privacy_guidelines, required: true,) %>
+          <%= Phoenix.HTML.Form.checkbox(f, :accept_privacy_guidelines, required: true) %>
           <%= label(f, :accept_privacy_guidelines, class: "label-text") do %>
             I accept the <%= link "privacy guidelines", to: "https://www.fastcompany.com/privacy-policy", target: "_blank" %>
           <% end %>

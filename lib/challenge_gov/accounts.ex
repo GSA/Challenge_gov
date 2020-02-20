@@ -5,8 +5,7 @@ defmodule ChallengeGov.Accounts do
 
   alias ChallengeGov.Accounts.Avatar
   alias ChallengeGov.Accounts.User
-  alias ChallengeGov.Emails
-  alias ChallengeGov.Mailer
+  alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Recaptcha
   alias ChallengeGov.Repo
   alias Stein.Filter
@@ -95,7 +94,7 @@ defmodule ChallengeGov.Accounts do
   def create(params) do
     %User{}
     |> User.create_changeset(params)
-    |> Repo.insert
+    |> Repo.insert()
   end
 
   @doc """
@@ -129,74 +128,10 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, %{avatar: user}} ->
-        send_email_verification(user)
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
-    end
-  end
-
-  defp send_email_verification(user) do
-    user
-    |> Emails.verification_email()
-    |> Mailer.deliver_later()
-
-    {:ok, user}
-  end
-
-  @doc """
-  Invite a user to the portal
-  """
-  def invite(inviter_user, params) do
-    recaptcha_token = Map.get(params, "recaptcha_token")
-
-    case Recaptcha.valid_token?(recaptcha_token) do
-      true ->
-        %User{}
-        |> User.invite_changeset(params)
-        |> Repo.insert()
-        |> maybe_send_invite_email(inviter_user)
-
-      false ->
-        %User{}
-        |> User.create_changeset(params)
-        |> Ecto.Changeset.add_error(:recaptcha_token, "is invalid")
-        |> Ecto.Changeset.apply_action(:insert)
-    end
-  end
-
-  defp maybe_send_invite_email({:ok, invitee_user}, inviter_user) do
-    invitee_user
-    |> Emails.invitation_email(inviter_user)
-    |> Mailer.deliver_later()
-
-    {:ok, invitee_user}
-  end
-
-  defp maybe_send_invite_email(result, _inviter_user), do: result
-
-  @doc """
-  Finalize an invitation to the portal
-  """
-  def finalize_invitation(token, params) do
-    with {:ok, user} <- get_by_email_token(token) do
-      changeset = User.finalize_invite_changeset(user, params)
-
-      result =
-        Ecto.Multi.new()
-        |> Ecto.Multi.update(:user, changeset)
-        |> Ecto.Multi.run(:avatar, fn _repo, %{user: user} ->
-          Avatar.maybe_upload_avatar(user, params)
-        end)
-        |> Repo.transaction()
-
-      case result do
-        {:ok, %{avatar: user}} ->
-          {:ok, user}
-
-        {:error, _type, changeset, _changes} ->
-          {:error, changeset}
-      end
     end
   end
 
@@ -221,22 +156,11 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, %{avatar: user}} ->
-        maybe_send_email_verification(user, changeset)
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
-  end
-
-  defp maybe_send_email_verification(user, changeset) do
-    if Map.has_key?(changeset.changes, :email) do
-      user
-      |> Emails.verification_email()
-      |> Mailer.deliver_later()
-    end
-
-    user
   end
 
   @doc """
@@ -347,32 +271,6 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
-  Start password reset
-  """
-  @spec start_password_reset(String.t()) :: :ok
-  def start_password_reset(email) do
-    case Repo.get_by(User, email: email, finalized: true) do
-      nil ->
-        :ok
-
-      _user ->
-        Stein.Accounts.start_password_reset(Repo, User, email, fn user ->
-          user
-          |> Emails.password_reset()
-          |> Mailer.deliver_later()
-        end)
-    end
-  end
-
-  @doc """
-  Reset a password
-  """
-  @spec reset_password(String.t(), map()) :: {:ok, User.t()} | :error
-  def reset_password(token, params) do
-    Stein.Accounts.reset_password(Repo, User, token, params)
-  end
-
-  @doc """
   Check if a user is an admin
 
       iex> Accounts.is_admin?(%User{role: "admin"})
@@ -386,6 +284,45 @@ defmodule ChallengeGov.Accounts do
   def is_admin?(%{role: "admin"}), do: true
 
   def is_admin?(_), do: false
+
+  @doc """
+  Check if a user is a challenge owner
+
+      iex> Accounts.is_admin?(%User{role: "challenge_owner"})
+      true
+
+      iex> Accounts.is_admin?(%User{role: "challenge_owner"})
+      false
+  """
+  def is_challenge_owner?(user)
+
+  def is_challenge_owner?(%{role: "challenge_owner"}), do: true
+
+  def is_challenge_owner?(_), do: false
+
+  @doc """
+  Check if a user is a pending challenge_owner
+  """
+
+  def is_challenge_owner_pending?(user)
+
+  def is_challenge_owner_pending?(%{role: "challenge_owner_pending"}), do: true
+
+  def is_challenge_owner_pending?(_), do: false
+
+  @doc """
+  Check if a user has accepted all terms
+  """
+
+  def has_accepted_terms?(user)
+
+  def has_accepted_terms?(%{terms_of_use: nil}), do: false
+
+  def has_accepted_terms?(%{privacy_guidelines: nil}), do: false
+
+  def has_accepted_terms?(%{terms_of_use: _timestamp}), do: true
+
+  def has_accepted_terms?(%{privacy_guidelines: _timestamp}), do: true
 
   @impl true
   def filter_on_attribute({"search", value}, query) do

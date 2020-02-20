@@ -8,6 +8,7 @@ defmodule Web.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug Web.Plugs.FetchUser
+    plug(Web.Plugs.SessionTimeout)
   end
 
   pipeline(:signed_in) do
@@ -28,65 +29,6 @@ defmodule Web.Router do
     plug :accepts, ["json"]
     plug :fetch_session
     plug Web.Plugs.FetchUser
-  end
-
-  scope "/", Web do
-    pipe_through([:browser, :signed_in])
-
-    resources("/account", AccountController, only: [:edit, :update], singleton: true)
-
-    resources("/challenges", ChallengeController, only: [:new, :create])
-
-    resources("/sign-in", SessionController, only: [:delete], singleton: true)
-
-    resources("/teams", AgencyController, only: [:new, :create])
-
-    resources("/teams/:team_id/invite", AgencyInvittationController, only: [:create])
-
-    get("/teams/:team_id/invite/accept", AgencyInvittationController, :accept)
-    get("/teams/:team_id/invite/reject", AgencyInvittationController, :reject)
-
-    resources("/users/invite", UserInviteController, only: [:new, :create])
-  end
-
-  scope "/", Web do
-    pipe_through([:browser])
-
-    get("/", PageController, :index)
-
-    resources("/accounts", AccountController, only: [:index, :show])
-
-    resources("/challenges", ChallengeController, only: [:index, :show])
-
-    get("/register/verify", RegistrationVerifyController, :show)
-
-    resources("/teams", AgencyController, only: [:index, :show])
-  end
-
-  scope "/", Web do
-    pipe_through([:browser, :not_signed_in])
-
-    resources("/register", RegistrationController, only: [:new, :create])
-
-    get("/register/reset", RegistrationResetController, :new)
-    post("/register/reset", RegistrationResetController, :create)
-
-    get("/register/reset/verify", RegistrationResetController, :edit)
-    post("/register/reset/verify", RegistrationResetController, :update)
-
-    resources("/users/invite/accept", UserInviteAcceptController, only: [:new, :create])
-
-    resources("/sign-in", SessionController, only: [:new, :create], singleton: true)
-
-    get("/auth/result", SessionController, :result)
-  end
-
-  scope "/", Web do
-    pipe_through([:api, :signed_in])
-
-    resources("/documents", DocumentController, only: [:create])
-
-    get("/teams/:team_id/invite", AgencyInvittationController, :index)
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -113,7 +55,10 @@ defmodule Web.Router do
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
 
     post("/challenges/:id/remove_logo", ChallengeController, :remove_logo, as: :challenge)
-    post("/challenges/:id/remove_winner_image", ChallengeController, :remove_winner_image, as: :challenge)
+
+    post("/challenges/:id/remove_winner_image", ChallengeController, :remove_winner_image,
+      as: :challenge
+    )
 
     resources("/events", EventController, only: [:edit, :update, :delete])
 
@@ -121,7 +66,19 @@ defmodule Web.Router do
     post("/agencies/:id/remove_winner_image", AgencyController, :remove_logo, as: :agency)
 
     resources("/challenge_owners", UserController, only: [:index, :show])
-    post("/users/:id/toggle", UserController, :toggle, as: :user)
+  end
+
+  scope "/", Web do
+    pipe_through([:browser, :signed_in])
+
+    resources("/sign-in", SessionController, only: [:delete], singleton: true)
+  end
+
+  scope "/", Web do
+    pipe_through([:browser, :not_signed_in])
+
+    resources("/sign-in", SessionController, only: [:new, :create], singleton: true)
+    get("/auth/result", SessionController, :result)
   end
 
   if Mix.env() == :dev do
@@ -131,6 +88,7 @@ defmodule Web.Router do
   scope("/", Web) do
     pipe_through([:browser])
 
+    get("/", PageController, :index)
     get("/*path", PageController, :index)
   end
 end

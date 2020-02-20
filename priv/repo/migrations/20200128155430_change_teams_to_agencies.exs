@@ -25,7 +25,7 @@ defmodule ChallengeGov.Repo.Migrations.ChangeTeamsToAgencies do
     create index(:agency_members, :user_id, unique: true)
   end
 
-  def down do    
+  def down do
     drop table("agency_members")
     drop table("agencies")
 
