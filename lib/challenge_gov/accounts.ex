@@ -31,9 +31,8 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Get all accounts
   """
-  def all_for_select(opts \\ []) do
-    User
-    |> Repo.all()
+  def all_for_select() do
+    Repo.all(User)
   end
 
   @doc """

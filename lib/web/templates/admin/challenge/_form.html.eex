@@ -11,14 +11,7 @@
           </h2>
         </div>
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionWrap">
-          <div class="<%= FormView.form_group_classes(f, :user_id) %>">
-            <%= label(f, :user_id, class: "col-md-4") do %>
-              Owner <span class="required">*</span>
-            <% end %>
-            <div class="col-md-8">
-              <%= select(f, :user_id, Enum.map(Accounts.all_for_select(), &{"#{&1.first_name} #{&1.last_name}", &1.id}), class: "form-control js-select") %>
-            </div>
-          </div>
+          <%= challenge_owner_field(f, @user, @action) %>
           <%= FormView.file_field(f, :logo, label: "Logo") do %>
             <%= if @data.logo_key do %>
               <p>Current Logo:</p>
