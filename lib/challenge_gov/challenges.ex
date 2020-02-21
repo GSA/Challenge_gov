@@ -35,7 +35,7 @@ defmodule ChallengeGov.Challenges do
   """
   def new(user) do
     %Challenge{}
-    |> Repo.preload([:federal_partners, :non_federal_partners])
+    |> Repo.preload([:federal_partners, :non_federal_partners, :user])
     |> Challenge.create_changeset(%{}, user)
   end
 
@@ -55,7 +55,7 @@ defmodule ChallengeGov.Challenges do
   """
   def edit(challenge) do
     challenge
-    |> Repo.preload([:non_federal_partners, :events])
+    |> Repo.preload([:non_federal_partners, :events, :user])
     |> Challenge.update_changeset(%{})
   end
 
@@ -65,7 +65,7 @@ defmodule ChallengeGov.Challenges do
   def all(opts \\ []) do
     query =
       Challenge
-      |> preload([:agency])
+      |> preload([:agency, :user])
       |> where([c], c.status == "created")
       |> order_by([c], desc: c.published_on, asc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
@@ -79,7 +79,7 @@ defmodule ChallengeGov.Challenges do
   def admin_all(opts \\ []) do
     query =
       Challenge
-      |> preload([:agency])
+      |> preload([:agency, :user])
       |> order_by([c], desc: c.status, desc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
 
@@ -288,7 +288,7 @@ defmodule ChallengeGov.Challenges do
   defp attach_documents(multi, _params), do: multi
 
   defp attach_document({:ok, document}, challenge) do
-    SupportingDocuments.attach_to_challenge(document, challenge)
+    SupportingDocuments.attach_to_challenge(document, challenge, "resources")
   end
 
   defp attach_document(result, _challenge), do: result
@@ -531,6 +531,10 @@ defmodule ChallengeGov.Challenges do
 
   def filter_on_attribute({"agency_id", value}, query) do
     where(query, [c], c.agency_id == ^value)
+  end
+
+  def filter_on_attribute({"user_id", value}, query) do
+    where(query, [c], c.user_id == ^value)
   end
 
   def filter_on_attribute(_, query), do: query

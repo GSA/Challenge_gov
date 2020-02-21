@@ -118,6 +118,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   def changeset(struct, params) do
     struct
     |> cast(params, [
+      :user_id,
       :agency_id,
       :challenge_manager,
       :challenge_manager_email,
@@ -158,6 +159,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> changeset(params)
     |> put_change(:captured_on, Date.utc_today())
     |> validate_required([
+      :user_id,
+      :agency_id,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
@@ -194,6 +197,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
     |> changeset(params)
     |> validate_required([
+      :user_id,
+      :agency_id,
       :status,
       :challenge_manager,
       :challenge_manager_email,

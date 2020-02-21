@@ -29,6 +29,14 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Get all accounts
+  """
+  def all_for_select(opts \\ []) do
+    User
+    |> Repo.all()
+  end
+
+  @doc """
   Get all public accounts
   """
   def public(opts \\ []) do

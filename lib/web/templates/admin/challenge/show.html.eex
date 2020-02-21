@@ -266,6 +266,7 @@
             <%= Enum.map(@supporting_documents, fn document -> %>
               <li>
                 <i class="fa fa-paperclip"></i> <%= link(document.filename, to: SupportingDocuments.download_document_url(document), target: "_blank") %>
+                <span>(<%= document.section %>)</span>
                 <%= link(to: Routes.admin_document_path(@conn, :delete, document.id), method: :delete, data: [remote: true]) do %>
                   <i class="fa fa-trash"></i>
                 <% end %>
@@ -278,6 +279,7 @@
               <%= label(f, :file, class: "col-md-4") %>
               <div class="col-md-8">
                 <%= file_input(f, :file, class: "form-control") %>
+                <%= select(f, :section, SupportingDocuments.sections(), class: "form-control js-select") %>
               </div>
             </div>
 

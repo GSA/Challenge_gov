@@ -8,6 +8,11 @@ defmodule ChallengeGov.SupportingDocuments do
   alias Stein.Storage
 
   @doc """
+  Get available sections for a document
+  """
+  def sections, do: Document.sections()
+
+  @doc """
   Get the storage path for a document
   """
   def document_path(key, extension), do: "/documents/#{key}#{extension}"
@@ -95,7 +100,7 @@ defmodule ChallengeGov.SupportingDocuments do
   - Not attached to a challenge
   - Same user owns both the challenge and document
   """
-  def attach_to_challenge(document = %{challenge_id: challenge_id}, _challenge)
+  def attach_to_challenge(document = %{challenge_id: challenge_id}, _challenge, _section)
       when challenge_id != nil do
     document
     |> Ecto.Changeset.change()
@@ -103,11 +108,11 @@ defmodule ChallengeGov.SupportingDocuments do
     |> Ecto.Changeset.apply_action(:update)
   end
 
-  def attach_to_challenge(document, challenge) do
+  def attach_to_challenge(document, challenge, section) do
     case document.user_id == challenge.user_id do
       true ->
         document
-        |> Document.challenge_changeset(challenge)
+        |> Document.challenge_changeset(challenge, section)
         |> Repo.update()
 
       false ->

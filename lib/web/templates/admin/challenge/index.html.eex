@@ -28,6 +28,7 @@
                 <tr>
                   <th>ID</th>
                   <th>Name</th>
+                  <th>Owner</th>
                   <th>Agency</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -38,6 +39,7 @@
                   <tr>
                     <td><%= challenge.id %></td>
                     <td><%= link(challenge.title, to: Routes.admin_challenge_path(@conn, :show, challenge.id)) %></td>
+                    <td><%= Web.Admin.UserView.name_link(@conn, challenge.user) %></td>
                     <td><%= Web.Admin.AgencyView.name_link(@conn, challenge.agency) %></td>
                     <td><%= String.capitalize(challenge.status) %></td>
                     <td>
@@ -67,8 +69,12 @@
               <%= text_input f, :search, value: @filter["search"], class: "form-control" %>
             </div>
             <div class="form-group">
+              <%= label f, :user_id %>
+              <%= select(f, :user_id, Enum.map(Accounts.all_for_select(), &{"#{&1.first_name} #{&1.last_name}", &1.id}), value: @filter["user_id"], prompt: "Choose a user", class: "form-control js-select") %>
+            </div>
+            <div class="form-group">
               <%= label f, :agency_id %>
-              <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), value: @filter["agency_id"], class: "form-control js-select") %>
+              <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), value: @filter["agency_id"], prompt: "Choose an agency", class: "form-control js-select") %>
             </div>
             <div class="form-group">
               <h4>Challenge Types</h4>
