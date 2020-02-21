@@ -13,6 +13,12 @@ defmodule ChallengeGov.Accounts.User do
 
   @type t :: %__MODULE__{}
 
+  @roles [
+    "super_admin",
+    "admin",
+    "challenge_owner"
+  ]
+
   schema "users" do
     field(:role, :string, read_after_writes: true)
     field(:finalized, :boolean, default: true)
@@ -138,4 +144,6 @@ defmodule ChallengeGov.Accounts.User do
         |> put_change(:email_verified_at, nil)
     end
   end
+
+  def roles, do: @roles
 end

@@ -8,6 +8,7 @@ defmodule ChallengeGov.Challenges do
   - archived: Archived by an admin, hidden to the public
   """
 
+  alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
@@ -81,6 +82,26 @@ defmodule ChallengeGov.Challenges do
       |> preload([:agency, :user])
       |> order_by([c], desc: c.status, desc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
+
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
+  @doc """
+  Get all challenges for a user
+  """
+  def all_for_user(user, opts \\ []) do
+    query =
+      Challenge
+      |> preload([:agency])
+      |> order_by([c], desc: c.status, desc: c.id)
+      |> Filter.filter(opts[:filter], __MODULE__)
+
+    query =
+      if user.role == "challenge_owner" do
+        where(query, [c], c.user_id == ^user.id)
+      else
+        query
+      end
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
   end
@@ -308,6 +329,18 @@ defmodule ChallengeGov.Challenges do
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
+    end
+  end
+
+  @doc """
+  Checks if a user is allowed to edit a challenge
+  """
+  def allowed_to_edit(user, challenge) do
+    if user.id == challenge.user_id or
+         Accounts.is_admin?(user) or Accounts.is_super_admin?(user) do
+      {:ok, challenge}
+    else
+      {:error, :not_permitted}
     end
   end
 

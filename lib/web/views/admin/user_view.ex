@@ -1,8 +1,10 @@
 defmodule Web.Admin.UserView do
   use Web, :view
 
+  alias ChallengeGov.Accounts
   alias Web.AccountView
   alias Web.SharedView
+  alias Web.Admin.FormView
 
   def name_link(conn, user) do
     link("#{user.first_name} #{user.last_name}", to: Routes.admin_user_path(conn, :show, user.id))
