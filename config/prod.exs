@@ -49,7 +49,7 @@ config :challenge_gov, ChallengeGov.Mailer,
   api_key: {:system, "MAILGUN_API_KEY"},
   domain: {:system, "MAILGUN_DOMAIN"}
 
-config :stein, :storage,
+config :stein_storage,
   backend: :s3,
   bucket: {:system, "BUCKET_NAME"}
 

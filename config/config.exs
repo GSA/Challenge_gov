@@ -29,7 +29,7 @@ config :bamboo, :json_library, Jason
 
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Implementation
 
-config :stein, :storage,
+config :stein_storage,
   backend: :file,
   file_backend_folder: "uploads/"
 

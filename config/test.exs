@@ -25,7 +25,7 @@ config :bcrypt_elixir, :log_rounds, 4
 
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
 
-config :stein, :storage, backend: :test
+config :stein_storage, backend: :test
 
 if File.exists?("config/test.extra.exs") do
   import_config("test.extra.exs")
