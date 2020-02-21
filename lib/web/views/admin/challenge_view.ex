@@ -1,6 +1,7 @@
 defmodule Web.Admin.ChallengeView do
   use Web, :view
 
+  alias ChallengeGov.Accounts
   alias ChallengeGov.Agencies
   alias ChallengeGov.Challenges
   alias ChallengeGov.SupportingDocuments

@@ -4,6 +4,10 @@ defmodule Web.Admin.UserView do
   alias Web.AccountView
   alias Web.SharedView
 
+  def name_link(conn, user) do
+    link("#{user.first_name} #{user.last_name}", to: Routes.admin_user_path(conn, :show, user.id))
+  end
+
   def phone_number(%{phone_number: nil}), do: "Not Provided"
 
   def phone_number(user), do: user.phone_number
