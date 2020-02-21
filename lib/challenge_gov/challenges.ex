@@ -86,6 +86,26 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
+  Get all challenges for a user
+  """
+  def all_for_user(user, opts \\ []) do
+    query =
+      Challenge
+      |> preload([:agency])
+      |> order_by([c], desc: c.status, desc: c.id)
+      |> Filter.filter(opts[:filter], __MODULE__)
+
+    query =
+      if user.role == "challenge_owner" do
+        where(query, [c], c.user_id == ^user.id)
+      else
+        query
+      end
+
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
+  @doc """
   Get all challenges
   """
   def admin_counts() do

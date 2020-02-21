@@ -25,6 +25,32 @@ defmodule Web.Admin.UserController do
     end
   end
 
+  def edit(conn, %{"id" => id}) do
+    with {:ok, user} <- Accounts.get(id) do
+      conn
+      |> assign(:user, user)
+      |> assign(:changeset, Accounts.edit(user))
+      |> render("edit.html")
+    end
+  end
+
+  def update(conn, %{"id" => id, "user" => params}) do
+    {:ok, user} = Accounts.get(id)
+
+    case Accounts.update(user, params) do
+      {:ok, user} ->
+        conn
+        |> assign(:user, user)
+        |> render("show.html")
+
+      {:error, changeset} ->
+        conn
+        |> assign(:user, user)
+        |> assign(:changeset, changeset)
+        |> render("edit.html")
+    end
+  end
+
   def toggle(conn, %{"id" => id, "action" => "participation"}) do
     with {:ok, user} <- Accounts.get(id),
          {:ok, user} <- Accounts.toggle_display(user) do

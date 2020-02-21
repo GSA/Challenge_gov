@@ -9,7 +9,7 @@
         <i class="fa fa-dashboard"></i> Home
       <% end %>
     </li>
-    <li class="active">Challenge Owners</li>
+    <li class="active">Users</li>
   </ol>
 </section>
 
@@ -38,6 +38,7 @@
                     <td><%= user.finalized %></td>
                     <td>
                       <%= link("View", to: Routes.admin_user_path(@conn, :show, user.id), class: "btn btn-default btn-xs") %>
+                      <%= link("Edit", to: Routes.admin_user_path(@conn, :edit, user.id), class: "btn btn-default btn-xs") %>
                     </td>
                   </tr>
                 <% end %>

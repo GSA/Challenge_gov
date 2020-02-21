@@ -47,10 +47,10 @@
                 <span>Challenges</span>
               <% end %>
             </li>
-            <li class="<%= tab_selected(@conn, "challenge_owners") %>">
+            <li class="<%= tab_selected(@conn, "users") %>">
               <%= link(to: Routes.admin_user_path(@conn, :index)) do %>
                 <i class="fa fa-user"></i>
-                <span>Challenge Owners</span>
+                <span>Users</span>
               <% end %>
             </li>
             <li class="<%= tab_selected(@conn, "agencies") %>">

@@ -5,7 +5,6 @@ defmodule ChallengeGov.Accounts do
 
   alias ChallengeGov.Accounts.Avatar
   alias ChallengeGov.Accounts.User
-  alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Recaptcha
   alias ChallengeGov.Repo
   alias Stein.Filter
@@ -16,7 +15,7 @@ defmodule ChallengeGov.Accounts do
   @behaviour Stein.Filter
 
   @doc false
-  def agencies(), do: Challenge.agencies()
+  def roles(), do: User.roles()
 
   @doc """
   Get all accounts
@@ -269,6 +268,21 @@ defmodule ChallengeGov.Accounts do
   def email_verified?(user) do
     Stein.Accounts.email_verified?(user)
   end
+
+  @doc """
+  Check if a user is an super_admin
+
+      iex> Accounts.is_super_admin?(%User{role: "super_admin"})
+      true
+
+      iex> Accounts.is_super_admin?(%User{role: "user"})
+      false
+  """
+  def is_super_admin?(user)
+
+  def is_super_admin?(%{role: "super_admin"}), do: true
+
+  def is_super_admin?(_), do: false
 
   @doc """
   Check if a user is an admin

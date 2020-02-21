@@ -8,9 +8,11 @@ defmodule Web.Admin.ChallengeController do
   action_fallback(Web.Admin.FallbackController)
 
   def index(conn, params) do
+    %{current_user: user} = conn.assigns
+
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
-    pagination = Challenges.admin_all(filter: filter, page: page, per: per)
+    pagination = Challenges.all_for_user(user, filter: filter, page: page, per: per)
 
     counts = Challenges.admin_counts()
 
