@@ -8,6 +8,7 @@ defmodule ChallengeGov.Challenges do
   - archived: Archived by an admin, hidden to the public
   """
 
+  alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
@@ -328,6 +329,18 @@ defmodule ChallengeGov.Challenges do
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
+    end
+  end
+
+  @doc """
+  Checks if a user is allowed to edit a challenge
+  """
+  def allowed_to_edit(user, challenge) do
+    if user.id == challenge.user_id or
+         Accounts.is_admin?(user) or Accounts.is_super_admin?(user) do
+      {:ok, challenge}
+    else
+      {:error, :not_permitted}
     end
   end
 

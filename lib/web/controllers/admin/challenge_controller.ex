@@ -62,29 +62,43 @@ defmodule Web.Admin.ChallengeController do
   end
 
   def edit(conn, %{"id" => id}) do
-    with {:ok, challenge} <- Challenges.get(id) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       conn
       |> assign(:challenge, challenge)
       |> assign(:supporting_documents, challenge.supporting_documents)
       |> assign(:changeset, Challenges.edit(challenge))
       |> render("edit.html")
+    else
+      {:error, :not_permitted} ->
+        conn
+        |> put_flash(:error, "You are not allowed to edit this challenge")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
     end
   end
 
   def update(conn, %{"id" => id, "challenge" => params}) do
+    %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(id)
 
-    case Challenges.update(challenge, params) do
-      {:ok, challenge} ->
-        conn
-        |> put_flash(:info, "Challenge updated!")
-        |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
-
+    with {:ok, challenge} <- Challenges.update(challenge, params),
+         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
+      conn
+      |> put_flash(:info, "Challenge updated!")
+      |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+    else
       {:error, changeset} ->
         conn
         |> assign(:challenge, challenge)
         |> assign(:changeset, changeset)
         |> render("edit.html")
+
+      {:error, :not_permitted} ->
+        conn
+        |> put_flash(:error, "You are not allowed to edit this challenge")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
     end
   end
 
