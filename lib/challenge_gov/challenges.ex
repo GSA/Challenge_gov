@@ -92,7 +92,7 @@ defmodule ChallengeGov.Challenges do
   def all_for_user(user, opts \\ []) do
     query =
       Challenge
-      |> preload([:agency])
+      |> preload([:agency, :user])
       |> order_by([c], desc: c.status, desc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
 
