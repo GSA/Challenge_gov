@@ -5,7 +5,6 @@ defmodule ChallengeGov.Accounts do
 
   alias ChallengeGov.Accounts.Avatar
   alias ChallengeGov.Accounts.User
-  alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Recaptcha
   alias ChallengeGov.Repo
   alias Stein.Filter
@@ -14,9 +13,6 @@ defmodule ChallengeGov.Accounts do
   import Ecto.Query
 
   @behaviour Stein.Filter
-
-  @doc false
-  def agencies(), do: Challenge.agencies()
 
   @doc """
   Get all accounts

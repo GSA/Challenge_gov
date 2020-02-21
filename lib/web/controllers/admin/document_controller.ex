@@ -9,7 +9,12 @@ defmodule Web.Admin.DocumentController do
   def create(conn, %{"challenge_id" => challenge_id, "document" => params}) do
     with {:ok, challenge} <- Challenges.get(challenge_id),
          {:ok, document} <- SupportingDocuments.upload(challenge.user, params),
-         {:ok, document} <- SupportingDocuments.attach_to_challenge(document, challenge) do
+         {:ok, document} <-
+           SupportingDocuments.attach_to_challenge(
+             document,
+             challenge,
+             Map.get(params, "section")
+           ) do
       conn
       |> put_flash(:info, "Document uploaded and attached")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, document.challenge_id))
