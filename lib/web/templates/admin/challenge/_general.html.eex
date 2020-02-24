@@ -1,0 +1,2 @@
+<h4>General Info</h4>
+<%= FormView.text_field(@form, :title, label: "Challenge Title", required: true) %>

@@ -30,6 +30,40 @@ defmodule ChallengeGov.Challenges do
   @doc false
   def legal_authority(), do: Challenge.legal_authority()
 
+  @doc false
+  def sections(), do: Challenge.sections()
+
+  @doc false
+  def next_section(section) do
+    sections = sections()
+
+    curr_index = Enum.find_index(sections, fn s -> s.id == section end)
+
+    if curr_index < length(sections) do
+      Enum.at(sections, curr_index + 1)
+    end
+  end
+
+  @doc false
+  def prev_section(section) do
+    sections = sections()
+
+    curr_index = Enum.find_index(sections, fn s -> s.id == section end)
+
+    if curr_index > 0 do
+      Enum.at(sections, curr_index - 1)
+    end
+  end
+
+  @doc false
+  def to_section(section, action) do
+    case action do
+      "next" -> next_section(section)
+      "back" -> prev_section(section)
+      _ -> nil
+    end
+  end
+
   @doc """
   New changeset for a challenge
   """
@@ -37,6 +71,28 @@ defmodule ChallengeGov.Challenges do
     %Challenge{}
     |> Repo.preload([:federal_partners, :non_federal_partners, :user])
     |> Challenge.create_changeset(%{}, user)
+  end
+
+  def create(%{"action" => action, "challenge" => challenge_params}) do
+    %Challenge{}
+    |> changeset_for_action(challenge_params, action)
+    |> Repo.insert()
+  end
+
+  def update(challenge, %{"action" => action, "challenge" => challenge_params}) do
+    challenge
+    |> changeset_for_action(challenge_params, action)
+    |> Repo.update()
+  end
+
+  defp changeset_for_action(struct, params, action) do
+    case action do
+      "save_draft" ->
+        Challenge.draft_changeset(struct, params)
+
+      _ ->
+        Challenge.section_changeset(struct, params)
+    end
   end
 
   @doc """
@@ -47,6 +103,19 @@ defmodule ChallengeGov.Challenges do
     |> Repo.preload([:non_federal_partners, :events, :user])
     |> Challenge.update_changeset(%{})
   end
+
+  # def save_draft(challenge, user, params) do
+  #   Ecto.Multi.new()
+  #   |> Ecto.Multi.insert(:challenge, Challenge.changeset(challenge, params))
+  #   |> attach_documents(params)
+  #   |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+  #     Logo.maybe_upload_logo(challenge, params)
+  #   end)
+  #   |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
+  #     WinnerImage.maybe_upload_winner_image(challenge, params)
+  #   end)
+  #   |> Repo.transaction()
+  # end
 
   @doc """
   Get all challenges

@@ -44,7 +44,7 @@
                     <td><%= String.capitalize(challenge.status) %></td>
                     <td>
                       <%= link("View", to: Routes.admin_challenge_path(@conn, :show, challenge.id), class: "btn btn-default btn-xs") %>
-                      <%= link("Edit", to: Routes.admin_challenge_path(@conn, :edit, challenge.id), class: "btn btn-default btn-xs") %>
+                      <%= challenge_edit_link(@conn, challenge) %>
                     </td>
                   </tr>
                 <% end %>
