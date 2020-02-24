@@ -118,7 +118,6 @@ defmodule ChallengeGov.Challenges.Challenge do
   def changeset(struct, params) do
     struct
     |> cast(params, [
-      :user_id,
       :agency_id,
       :challenge_manager,
       :challenge_manager_email,
@@ -233,9 +232,10 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   # to allow change to admin info?
-  def admin_changeset(struct, params, user) do
+  def admin_update_changeset(struct, params) do
     struct
-    |> create_changeset(params, user)
+    |> cast(params, [:user_id])
+    |> update_changeset(params)
   end
 
   def publish_changeset(struct) do

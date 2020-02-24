@@ -40,7 +40,9 @@ defmodule Web.Admin.ChallengeController do
     %{current_user: user} = conn.assigns
 
     conn
+    |> assign(:user, user)
     |> assign(:changeset, Challenges.new(user))
+    |> assign(:action, action_name(conn))
     |> render("new.html")
   end
 
@@ -68,8 +70,10 @@ defmodule Web.Admin.ChallengeController do
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       conn
       |> assign(:challenge, challenge)
+      |> assign(:user, user)
       |> assign(:supporting_documents, challenge.supporting_documents)
       |> assign(:changeset, Challenges.edit(challenge))
+      |> assign(:action, action_name(conn))
       |> render("edit.html")
     else
       {:error, :not_permitted} ->
@@ -83,7 +87,7 @@ defmodule Web.Admin.ChallengeController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(id)
 
-    with {:ok, challenge} <- Challenges.update(challenge, params),
+    with {:ok, challenge} <- Challenges.update(challenge, params, user),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       conn
       |> put_flash(:info, "Challenge updated!")

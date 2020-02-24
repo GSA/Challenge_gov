@@ -39,17 +39,6 @@ defmodule ChallengeGov.Challenges do
     |> Challenge.create_changeset(%{}, user)
   end
 
-  # @doc """
-  # Changeset for adding a challenge (as an admin)
-  # """
-  # def admin_new(user) do
-  #   %Challenge{}
-  #   |> Repo.preload(:non_federal_partners)
-  #   |> Map.put(:federal_partners, [])
-  #   |> Map.put(:non_federal_partners, [])
-  #   |> Challenge.admin_changeset(%{}, user)
-  # end
-
   @doc """
   Changeset for editing a challenge (as an admin)
   """
@@ -231,7 +220,7 @@ defmodule ChallengeGov.Challenges do
       {:error, {:document, _}, _, _} ->
         user
         |> Ecto.build_assoc(:challenges)
-        |> Challenge.admin_changeset(params, user)
+        |> Challenge.create_changeset(params, user)
         |> Ecto.Changeset.add_error(:document_ids, "are invalid")
         |> Ecto.Changeset.apply_action(:insert)
     end
@@ -241,7 +230,7 @@ defmodule ChallengeGov.Challenges do
     user
     |> Ecto.build_assoc(:challenges)
     |> Map.put(:federal_partners, [])
-    |> Challenge.admin_changeset(params, user)
+    |> Challenge.create_changeset(params, user)
   end
 
   defp attach_federal_partners(multi, %{federal_partners: ids}) do
@@ -296,7 +285,8 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Update a challenge
   """
-  def update(challenge, params) do
+  def update(challenge, params, current_user) do
+    # TODO: Refactor the current_user permissions checking for updating challenge owner
     challenge = Repo.preload(challenge, [:non_federal_partners, :events])
 
     params =
@@ -305,8 +295,11 @@ defmodule ChallengeGov.Challenges do
       |> Map.put_new("events", [])
 
     changeset =
-      challenge
-      |> Challenge.update_changeset(params)
+      if Accounts.is_admin?(current_user) or Accounts.is_super_admin?(current_user) do
+        Challenge.admin_update_changeset(challenge, params)
+      else
+        Challenge.update_changeset(challenge, params)
+      end
 
     result =
       Ecto.Multi.new()
