@@ -1,15 +1,15 @@
 # ChallengeGov
 
-[![Build Status](https://travis-ci.org/BaltimoreCity/ChallengeGov.svg?branch=master)](https://travis-ci.org/BaltimoreCity/ChallengeGov)
+[![Build Status](https://drone.smartlogic.io/api/badges/smartlogic/Challenge.gov/status.svg)](https://drone.smartlogic.io/smartlogic/Challenge.gov)
 
-Welcome to the ChallengeGov for [HackBaltimore.io](https://hackbaltimore.io/)
+Welcome to the ChallengeGov Data Portal
 
 ## Requirements
 
 - [PostgreSQL 10](https://www.postgresql.org/) - database
-- [Elixir 1.8](https://elixir-lang.org) - server language
+- [Elixir 1.9](https://elixir-lang.org) - server language
 - [Erlang 21.2](https://www.erlang.org/) - server language
-- [node.js 11.13](https://nodejs.org/en/) - front end language
+- [node.js 11.10](https://nodejs.org/en/) - front end language
 
 ## Install & Setup
 
@@ -80,16 +80,6 @@ Once the database is setup, you can run the server.
 mix phx.server
 ```
 
-### reCAPTCHA
-
-Keys need to be set up to properly verify reCAPTCHA tokens. You will need a secret key and site key to properly verify. In development and test this is disabled.
-
-```elixir
-config :challenge_gov, :recaptcha,
-  module: ChallengeGov.Recaptcha.Implementation,
-  secret_key: "...",
-  key: "..."
-```
 
 ### File Uploads
 
@@ -104,6 +94,10 @@ Environment variables required for upload on production:
 ## Testing
 
 The ChallengeGov runs each pull request (and every commit on the `master` branch) through CI. Make sure to add tests as you extend the application. We also run [Credo](https://github.com/rrrene/credo) and the built in formatter in CI to ensure code quality.
+
+## Deployment
+
+Passing CI on master deploys to the dev environment via Cloud Foundry as part of the Drone build.
 
 ## Learn more about Phoenix
 

@@ -3,6 +3,9 @@
 /deps
 /*.ez
 erl_crash.dump
+/.drone.yml
+/config/test.drone.exs
 /node_modules
 /rel
 /assets/node_modules/
+/assets/client/node_modules/
