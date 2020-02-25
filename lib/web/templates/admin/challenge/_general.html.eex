@@ -1,4 +1,5 @@
-<h4>General Information</h4>
+<h3>General Information</h3>
+<br/>
 <%= FormView.text_field(@form, :challenge_manager, label: "Challenge manager of record (does not appear on public listing)", required: true) %>
 <%= FormView.email_field(@form, :challenge_manager_email, label: "Challenge manager email (does not appear on public listing)", placeholder: "challenge_manager@example.com", required: true) %>
 <%= FormView.text_field(@form, :poc_email, label: "Point of contact") %>          
