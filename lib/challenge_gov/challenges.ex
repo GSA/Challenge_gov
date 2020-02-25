@@ -34,10 +34,16 @@ defmodule ChallengeGov.Challenges do
   def sections(), do: Challenge.sections()
 
   @doc false
+  def section_index(section) do
+    sections = sections()
+    Enum.find_index(sections, fn s -> s.id == section end)
+  end
+
+  @doc false
   def next_section(section) do
     sections = sections()
 
-    curr_index = Enum.find_index(sections, fn s -> s.id == section end)
+    curr_index = section_index(section)
 
     if curr_index < length(sections) do
       Enum.at(sections, curr_index + 1)
@@ -48,7 +54,7 @@ defmodule ChallengeGov.Challenges do
   def prev_section(section) do
     sections = sections()
 
-    curr_index = Enum.find_index(sections, fn s -> s.id == section end)
+    curr_index = section_index(section)
 
     if curr_index > 0 do
       Enum.at(sections, curr_index - 1)

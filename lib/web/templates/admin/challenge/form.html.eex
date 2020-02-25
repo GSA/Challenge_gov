@@ -18,6 +18,7 @@
   <div class="row">
     <div class="col-md-12">
       <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
+        <%= default_enter_action("next") %>
         <%= progress_bar(@conn, @section, @changeset.data, @action) %>
 
         <div class="box box-primary">

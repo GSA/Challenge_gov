@@ -202,6 +202,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     ])
     |> cast_assoc(:non_federal_partners)
     |> validate_format(:challenge_manager_email, ~r/.+@.+\..+/)
+    |> validate_format(:fiscal_year, ~r/\bFY[0-9]{2}\b/)
   end
 
   def details_changeset(struct, _params) do

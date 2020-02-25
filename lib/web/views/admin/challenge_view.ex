@@ -55,17 +55,36 @@ defmodule Web.Admin.ChallengeView do
     end
   end
 
-  def progress_bar(conn, _current_section, challenge, action) do
-    Enum.map(Challenges.sections(), fn section ->
-      if action == :new || action == :create do
-        content_tag(:span, section.label, class: "btn btn-link btn-xs")
-      else
-        link(section.label,
-          to: Routes.admin_challenge_path(conn, :edit, challenge.id, section.id),
-          class: "btn btn-link btn-xs"
-        )
-      end
-    end)
+  def progress_bar(conn, current_section, challenge, action) do
+    sections = Challenges.sections()
+    current_section_index = Challenges.section_index(current_section)
+
+    base_classes = "btn btn-link"
+
+    content_tag :div, class: "challenge-progressbar" do
+      Enum.map(sections, fn section ->
+        cond do
+          section.id == current_section ->
+            content_tag(:span, section.label, class: base_classes <> " current-section")
+
+          Challenges.section_index(section.id) < current_section_index ->
+            link(section.label,
+              to: Routes.admin_challenge_path(conn, :edit, challenge.id, section.id),
+              class: base_classes <> " completed-section"
+            )
+
+          action == :new || action == :create ->
+            content_tag(:span, section.label, class: base_classes)
+
+          true ->
+            content_tag(:span, section.label,
+              class: base_classes,
+              disabled: true,
+              aria: [disabled: true]
+            )
+        end
+      end)
+    end
   end
 
   def back_button(conn, challenge) do
@@ -86,6 +105,16 @@ defmodule Web.Admin.ChallengeView do
     else
       submit("Next", name: "action", value: "next", class: "btn btn-primary pull-right")
     end
+  end
+
+  def default_enter_action(action) do
+    submit("",
+      name: "action",
+      value: action,
+      tabindex: -1,
+      style:
+        "overflow: visible !important; height: 0 !important; width: 0 !important; margin: 0 !important; border: 0 !important; padding: 0 !important; display: block !important;"
+    )
   end
 
   def next_section(section), do: Challenges.next_section(section)
