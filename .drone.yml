@@ -116,6 +116,15 @@ steps:
 
 - name: deploy
   image: cheslip/drone-cloudfoundry
+  settings:
+    api: api.fr.cloud.gov
+    org: sandbox-gsa
+    space: daniel.ivovich
+    user:
+      from_secret: CF_USER
+    password:
+      from_secret: CF_PASSWORD
+
 
 trigger:
   branch:
