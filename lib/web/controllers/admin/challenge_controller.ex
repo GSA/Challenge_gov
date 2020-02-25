@@ -36,6 +36,16 @@ defmodule Web.Admin.ChallengeController do
     end
   end
 
+  def new(conn, %{"non_wizard" => _value}) do
+    %{current_user: user} = conn.assigns
+
+    conn
+    |> assign(:user, user)
+    |> assign(:action, action_name(conn))
+    |> assign(:changeset, Challenges.new(user))
+    |> render("new.html")
+  end
+
   # TODO: Make an old "new" to keep access to old challenge form for now
   def new(conn, _params) do
     %{current_user: user} = conn.assigns
