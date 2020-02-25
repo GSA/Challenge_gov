@@ -206,6 +206,19 @@ defmodule Web.Admin.FormView do
     end
   end
 
+  def nested_form_group_classes(form, children, field, index) do
+    fields_data = Map.get(form.source.changes, children)
+    current_field = if fields_data, do: Enum.at(fields_data, index), else: nil
+
+    case !is_nil(current_field) and Keyword.has_key?(current_field.errors, field) and index != -1 do
+      true ->
+        "form-group nested-form-group has-error"
+
+      false ->
+        "form-group nested-form-group"
+    end
+  end
+
   def dynamic_nested_fields(form, children, fields) do
     children_name = Atom.to_string(children)
 
@@ -227,14 +240,19 @@ defmodule Web.Admin.FormView do
                   Enum.map(Enum.with_index(fields), fn field_with_index ->
                     {field, index} = field_with_index
 
-                    content_tag(:div, class: "form-group nested-form-group") do
+                    content_tag(:div,
+                      class: nested_form_group_classes(form, children, field, child.index)
+                    ) do
                       [
                         Enum.map(child.hidden, fn {k, v} ->
                           hidden_input(child, k, value: v)
                         end),
                         label(child, field, class: "col-md-4"),
                         content_tag(:div, class: "col-md-6") do
-                          text_input(child, field, class: "form-control")
+                          [
+                            text_input(child, field, class: "form-control"),
+                            error_tag(child, field)
+                          ]
                         end,
                         content_tag(:div, class: "col-md-2") do
                           if index < 1 do
@@ -242,8 +260,7 @@ defmodule Web.Admin.FormView do
                               class: "remove-nested-section btn btn-danger"
                             )
                           end
-                        end,
-                        error_tag(child, field)
+                        end
                       ]
                     end
                   end),
@@ -264,7 +281,10 @@ defmodule Web.Admin.FormView do
                 Enum.map(Enum.with_index(fields), fn field_with_index ->
                   {field, index} = field_with_index
 
-                  content_tag(:div, class: "form-group nested-form-group", data: [field: field]) do
+                  content_tag(:div,
+                    class: nested_form_group_classes(form, children, field, -1),
+                    data: [field: field]
+                  ) do
                     [
                       label(:template, field, class: "col-md-4 template-label"),
                       content_tag(:div, class: "col-md-6") do

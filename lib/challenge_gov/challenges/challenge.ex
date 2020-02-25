@@ -168,7 +168,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :faq,
       :winner_information
     ])
-    |> cast_assoc(:non_federal_partners)
+    |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
   end
 
@@ -200,6 +200,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :agency_id,
       :fiscal_year
     ])
+    |> cast_assoc(:non_federal_partners)
     |> validate_format(:challenge_manager_email, ~r/.+@.+\..+/)
   end
 
