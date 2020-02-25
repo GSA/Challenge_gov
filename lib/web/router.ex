@@ -48,6 +48,8 @@ defmodule Web.Router do
       resources("/events", EventController, only: [:new, :create])
     end
 
+    get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
+
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)
     post("/challenges/:id/reject", ChallengeController, :reject, as: :challenge)
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)

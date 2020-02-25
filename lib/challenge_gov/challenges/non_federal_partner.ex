@@ -26,4 +26,12 @@ defmodule ChallengeGov.Challenges.NonFederalPartner do
     ])
     |> foreign_key_constraint(:challenge_id)
   end
+
+  def draft_changeset(struct, params) do
+    struct
+    |> cast(params, [
+      :name
+    ])
+    |> foreign_key_constraint(:challenge_id)
+  end
 end

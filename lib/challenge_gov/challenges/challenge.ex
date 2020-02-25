@@ -17,6 +17,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   @type t :: %__MODULE__{}
 
   @statuses [
+    "draft",
     "pending",
     "created",
     "rejected",
@@ -51,6 +52,18 @@ defmodule ChallengeGov.Challenges.Challenge do
     "Public-Private Partnership Authority"
   ]
 
+  @sections [
+    %{id: "general", label: "General Info"},
+    %{id: "details", label: "Details"},
+    %{id: "timeline", label: "Timeline"},
+    %{id: "prizes", label: "Prizes"},
+    %{id: "rules", label: "Rules"},
+    %{id: "judging", label: "Judging"},
+    %{id: "how_to_enter", label: "How to enter"},
+    %{id: "resources", label: "Resources"},
+    %{id: "review", label: "Review and submit"}
+  ]
+
   schema "challenges" do
     # Associations
     belongs_to(:user, User)
@@ -70,6 +83,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
     # Fields
     field(:status, :string, default: "draft")
+    field(:last_section, :string)
     field(:challenge_manager, :string)
     field(:challenge_manager_email, :string)
     field(:poc_email, :string)
@@ -82,7 +96,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:description, :string)
     field(:brief_description, :string)
     field(:how_to_enter, :string)
-    field(:fiscal_year, :integer)
+    field(:fiscal_year, :string)
     field(:start_date, :utc_datetime)
     field(:end_date, :utc_datetime)
     field(:multi_phase, :boolean)
@@ -115,9 +129,15 @@ defmodule ChallengeGov.Challenges.Challenge do
   """
   def legal_authority(), do: @legal_authority
 
+  @doc """
+  List of all valid sections
+  """
+  def sections(), do: @sections
+
   def changeset(struct, params) do
     struct
     |> cast(params, [
+      :user_id,
       :agency_id,
       :challenge_manager,
       :challenge_manager_email,
@@ -148,8 +168,74 @@ defmodule ChallengeGov.Challenges.Challenge do
       :faq,
       :winner_information
     ])
-    |> cast_assoc(:non_federal_partners)
+    |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
+  end
+
+  def draft_changeset(struct, params = %{"section" => section}) do
+    struct
+    |> changeset(params)
+    |> put_change(:status, "draft")
+    |> put_change(:last_section, section)
+  end
+
+  def section_changeset(struct, params = %{"section" => section}) do
+    struct =
+      struct
+      |> changeset(params)
+      |> put_change(:last_section, section)
+
+    if section do
+      apply(__MODULE__, String.to_atom("#{section}_changeset"), [struct, params])
+    else
+      struct
+    end
+  end
+
+  def general_changeset(struct, _params) do
+    struct
+    |> validate_required([
+      :challenge_manager,
+      :challenge_manager_email,
+      :agency_id,
+      :fiscal_year
+    ])
+    |> cast_assoc(:non_federal_partners)
+    |> validate_format(:challenge_manager_email, ~r/.+@.+\..+/)
+    |> validate_format(:fiscal_year, ~r/\bFY[0-9]{2}\b/)
+  end
+
+  def details_changeset(struct, _params) do
+    struct
+    |> validate_required([:title])
+  end
+
+  def timeline_changeset(struct, _params) do
+    struct
+  end
+
+  def prizes_changeset(struct, _params) do
+    struct
+  end
+
+  def rules_changeset(struct, _params) do
+    struct
+  end
+
+  def judging_changeset(struct, _params) do
+    struct
+  end
+
+  def how_to_enter_changeset(struct, _params) do
+    struct
+  end
+
+  def resources_changeset(struct, _params) do
+    struct
+  end
+
+  def review_changeset(struct, _params) do
+    struct
   end
 
   # TODO: Add user usage back in if needing to track submitter

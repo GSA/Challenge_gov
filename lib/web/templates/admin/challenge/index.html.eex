@@ -2,6 +2,7 @@
   <h1>
     Challenges
     <%= link "New", to: Routes.admin_challenge_path(@conn, :new), class: "btn btn-primary" %>
+    <%= link "New (Non Wizard)", to: Routes.admin_challenge_path(@conn, :new, non_wizard: true), class: "btn btn-primary", style: "margin-left: 1rem" %>
     Pending: <%= @pending_count %>
     Created: <%= @created_count %>
     Archived: <%= @archived_count %>
@@ -44,7 +45,7 @@
                     <td><%= String.capitalize(challenge.status) %></td>
                     <td>
                       <%= link("View", to: Routes.admin_challenge_path(@conn, :show, challenge.id), class: "btn btn-default btn-xs") %>
-                      <%= link("Edit", to: Routes.admin_challenge_path(@conn, :edit, challenge.id), class: "btn btn-default btn-xs") %>
+                      <%= challenge_edit_link(@conn, challenge) %>
                     </td>
                   </tr>
                 <% end %>

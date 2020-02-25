@@ -13,6 +13,22 @@ defmodule Web.Admin.ChallengeView do
     link(challenge.title, to: Routes.admin_challenge_path(conn, :show, challenge.id))
   end
 
+  def challenge_edit_link(conn, challenge) do
+    route =
+      if challenge.status == "draft" do
+        Routes.admin_challenge_path(
+          conn,
+          :edit,
+          challenge.id,
+          challenge.last_section || Enum.at(Challenges.sections(), 0).id
+        )
+      else
+        Routes.admin_challenge_path(conn, :edit, challenge.id)
+      end
+
+    link("Edit", to: route, class: "btn btn-default btn-xs")
+  end
+
   @doc """
   Only shows challenge owner field if the person is an admin and a challenge is being edited
   """
@@ -38,4 +54,69 @@ defmodule Web.Admin.ChallengeView do
       end
     end
   end
+
+  def progress_bar(conn, current_section, challenge, action) do
+    sections = Challenges.sections()
+    current_section_index = Challenges.section_index(current_section)
+
+    base_classes = "btn btn-link"
+
+    content_tag :div, class: "challenge-progressbar" do
+      Enum.map(sections, fn section ->
+        cond do
+          section.id == current_section ->
+            content_tag(:span, section.label, class: base_classes <> " current-section")
+
+          Challenges.section_index(section.id) < current_section_index ->
+            link(section.label,
+              to: Routes.admin_challenge_path(conn, :edit, challenge.id, section.id),
+              class: base_classes <> " completed-section"
+            )
+
+          action == :new || action == :create ->
+            content_tag(:span, section.label, class: base_classes)
+
+          true ->
+            content_tag(:span, section.label,
+              class: base_classes,
+              disabled: true,
+              aria: [disabled: true]
+            )
+        end
+      end)
+    end
+  end
+
+  def back_button(conn, challenge) do
+    if challenge.id do
+      submit("Back", name: "action", value: "back", class: "btn btn-primary")
+    else
+      link("Back", to: Routes.admin_challenge_path(conn, :index), class: "btn btn-primary")
+    end
+  end
+
+  def save_draft_button() do
+    submit("Save Draft", name: "action", value: "save_draft", class: "btn btn-primary pull-right")
+  end
+
+  def submit_button(section) do
+    if section == Enum.at(Challenges.sections(), -1).id do
+      submit("Submit", name: "action", value: "next", class: "btn btn-primary pull-right")
+    else
+      submit("Next", name: "action", value: "next", class: "btn btn-primary pull-right")
+    end
+  end
+
+  def default_enter_action(action) do
+    submit("",
+      name: "action",
+      value: action,
+      tabindex: -1,
+      style:
+        "overflow: visible !important; height: 0 !important; width: 0 !important; margin: 0 !important; border: 0 !important; padding: 0 !important; display: block !important;"
+    )
+  end
+
+  def next_section(section), do: Challenges.next_section(section)
+  def prev_section(section), do: Challenges.prev_section(section)
 end
