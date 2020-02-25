@@ -1,0 +1,139 @@
+---
+kind: pipeline
+name: challenge_gov_portal
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: install
+  image: elixir:1.9
+  volumes:
+  - name: mix
+    path: /root/.mix
+  commands:
+  - mix local.rebar --force
+  - mix local.hex --force
+  - mix deps.get
+  - export MIX_ENV=test
+  - mix compile --force --warnings-as-errors
+
+- name: lint
+  image: elixir:1.9
+  volumes:
+  - name: mix
+    path: /root/.mix
+  commands:
+  - export MIX_ENV=test
+  - mix format --check-formatted
+  - mix credo --all --format=oneline
+
+- name: test
+  image: elixir:1.9
+  volumes:
+  - name: mix
+    path: /root/.mix
+  commands:
+  - cp config/test.drone.exs config/test.extra.exs
+  - export MIX_ENV=test
+  - sleep 15
+  - mix ecto.migrate
+  - mix run priv/repo/seeds.exs
+  - mix test
+
+trigger:
+  event:
+  - pull_request
+
+services:
+- name: database
+  image: mdillon/postgis:10
+  environment:
+    POSTGRES_DB: challenge_gov_test
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+  ports:
+  - 5432
+
+volumes:
+- name: mix
+  temp: {}
+
+---
+kind: pipeline
+name: challenge_web_client
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: install
+  image: node:11.10.1
+  commands:
+  - cd assets
+  - yarn
+
+- name: build
+  image: node:11.10.1
+  commands:
+  - cd assets
+  - yarn run build
+
+trigger:
+  event:
+  - pull_request
+
+---
+kind: pipeline
+name: challenge_gov_publish
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: install
+  image: node:11.10.1
+  commands:
+  - cd assets
+  - yarn
+
+- name: build
+  image: node:11.10.1
+  commands:
+  - cd assets
+  - yarn run deploy
+
+- name: install
+  image: elixir:1.9
+  volumes:
+  - name: mix
+    path: /root/.mix
+  commands:
+  - mix local.rebar --force
+  - mix local.hex --force
+  - mix deps.get
+
+- name: assets
+  image: elixir:1.9
+  volumes:
+  - name: mix
+    path: /root/.mix
+  commands:
+  - mix phx.digest
+
+- name: publish
+  image: cheslip/drone-cloudfoundry
+
+trigger:
+  branch:
+  - master
+  event:
+  - push
+
+volumes:
+- name: mix
+  temp: {}
+

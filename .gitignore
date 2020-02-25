@@ -44,5 +44,6 @@ npm-debug.log
 # variables.
 /config/*.secret.exs
 /config/dev.local.exs
+/config/test.local.exs
 /uploads
 /*.pem
