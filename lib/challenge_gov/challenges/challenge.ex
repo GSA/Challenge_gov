@@ -197,6 +197,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_required([
       :challenge_manager,
       :challenge_manager_email,
+      :agency_id,
       :fiscal_year
     ])
     |> validate_format(:challenge_manager_email, ~r/.+@.+\..+/)

@@ -7,7 +7,8 @@
     Lead agency name<span class="required">*</span>
   <% end %>
   <div class="col-md-8">
-    <%= select(@form, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), class: "form-control js-select") %>
+    <%= select(@form, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), prompt: "Choose an agency", class: "form-control js-select") %>
+    <%= error_tag(@form, :agency_id) %>
   </div>
 </div>          
 <div class="<%= FormView.form_group_classes(@form, :federal_partners) %>">
@@ -19,7 +20,7 @@
   </div>
 </div>
 <hr/>
-<h4>Non Federal Partners</h4>
+<div><strong>Non Federal Partners</strong></div>
 <br/>
 <%= FormView.dynamic_nested_fields(@form, :non_federal_partners, [:name]) %>
 <br/>

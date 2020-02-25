@@ -31,7 +31,7 @@ defmodule Web.ErrorHelpers do
 
       false ->
         content_tag(:span, class: "help-block invalid-feedback") do
-          [String.capitalize(to_string(field)), " ", errors]
+          [String.replace(String.capitalize(to_string(field)), "_", " "), " ", errors]
         end
     end
   end
