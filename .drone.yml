@@ -7,7 +7,7 @@ platform:
   arch: amd64
 
 steps:
-- name: install
+- name: elixir_install
   image: elixir:1.9
   volumes:
   - name: mix
@@ -69,7 +69,7 @@ platform:
   arch: amd64
 
 steps:
-- name: install
+- name: node_install
   image: node:11.10.1
   commands:
   - cd assets
@@ -106,25 +106,15 @@ steps:
   - cd assets
   - yarn run deploy
 
-- name: install
+- name: digest
   image: elixir:1.9
-  volumes:
-  - name: mix
-    path: /root/.mix
   commands:
   - mix local.rebar --force
   - mix local.hex --force
   - mix deps.get
-
-- name: assets
-  image: elixir:1.9
-  volumes:
-  - name: mix
-    path: /root/.mix
-  commands:
   - mix phx.digest
 
-- name: publish
+- name: deploy
   image: cheslip/drone-cloudfoundry
 
 trigger:
@@ -132,8 +122,3 @@ trigger:
   - master
   event:
   - push
-
-volumes:
-- name: mix
-  temp: {}
-
