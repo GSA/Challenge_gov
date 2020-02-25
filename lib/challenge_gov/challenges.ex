@@ -75,12 +75,14 @@ defmodule ChallengeGov.Challenges do
 
   def create(%{"action" => action, "challenge" => challenge_params}) do
     %Challenge{}
+    |> Repo.preload([:federal_partners, :non_federal_partners, :user])
     |> changeset_for_action(challenge_params, action)
     |> Repo.insert()
   end
 
   def update(challenge, %{"action" => action, "challenge" => challenge_params}) do
     challenge
+    |> Repo.preload([:federal_partners, :non_federal_partners, :user])
     |> changeset_for_action(challenge_params, action)
     |> Repo.update()
   end

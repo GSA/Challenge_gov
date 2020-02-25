@@ -96,7 +96,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:description, :string)
     field(:brief_description, :string)
     field(:how_to_enter, :string)
-    field(:fiscal_year, :integer)
+    field(:fiscal_year, :string)
     field(:start_date, :utc_datetime)
     field(:end_date, :utc_datetime)
     field(:multi_phase, :boolean)
@@ -194,11 +194,17 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   def general_changeset(struct, _params) do
     struct
-    |> validate_required([:title])
+    |> validate_required([
+      :challenge_manager,
+      :challenge_manager_email,
+      :fiscal_year
+    ])
+    |> validate_format(:challenge_manager_email, ~r/.+@.+\..+/)
   end
 
   def details_changeset(struct, _params) do
     struct
+    |> validate_required([:title])
   end
 
   def timeline_changeset(struct, _params) do

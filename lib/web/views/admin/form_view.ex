@@ -36,7 +36,7 @@ defmodule Web.Admin.FormView do
   """
   def text_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
-    text_opts = Keyword.take(opts, [:value, :rows])
+    text_opts = Keyword.take(opts, [:value, :rows, :placeholder])
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
@@ -44,6 +44,27 @@ defmodule Web.Admin.FormView do
         content_tag(:div, class: "col-md-8") do
           [
             text_input(form, field, Keyword.merge([class: "form-control"], text_opts)),
+            error_tag(form, field),
+            Keyword.get(opts, :do, "")
+          ]
+        end
+      ]
+    end
+  end
+
+  @doc """
+  Generate an email field, styled properly
+  """
+  def email_field(form, field, opts \\ [], dopts \\ []) do
+    opts = Keyword.merge(opts, dopts)
+    text_opts = Keyword.take(opts, [:value, :rows, :placeholder])
+
+    content_tag(:div, class: form_group_classes(form, field)) do
+      [
+        label_field(form, field, opts),
+        content_tag(:div, class: "col-md-8") do
+          [
+            email_input(form, field, Keyword.merge([class: "form-control"], text_opts)),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
           ]

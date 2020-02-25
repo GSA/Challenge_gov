@@ -1,1 +1,2 @@
-<div>Details Section</div>
+<div>Details</div>
+<%= FormView.text_field(@form, :title, label: "Challenge Title", required: true) %>
