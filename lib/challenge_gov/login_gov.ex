@@ -71,8 +71,12 @@ defmodule ChallengeGov.LoginGov do
     Token.generate_and_sign!(claims, Token.signer(private_key))
   end
 
-  def load_private_key(private_key_path) do
+  def load_private_key(nil, private_key_path) do
     JOSE.JWK.from_pem_file(private_key_path)
+  end
+
+  def load_private_key(password, private_key_path) do
+    JOSE.JWK.from_pem_file(password, private_key_path)
   end
 
   def decode_jwt(id_token, public_key) do
