@@ -68,6 +68,8 @@ config :challenge_gov, :oidc_config, %{
   public_key_path: "cert.pem"
 }
 
+config :challenge_gov, :session_timeout_in_minutes, 15
+
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
 end

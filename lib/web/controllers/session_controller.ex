@@ -135,4 +135,34 @@ defmodule Web.SessionController do
         |> redirect(to: path)
     end
   end
+
+  @doc """
+  session timeout and reset
+  """
+
+  def check_session_timeout(conn, opts) do
+    timeout_at = get_session(conn, :session_timeout_at)
+    if timeout_at && now() > timeout_at do
+      logout_user(conn)
+    else
+      put_session(conn, :session_timeout_at, new_session_timeout_at(opts[:timeout_after_minutes]))
+    end
+  end
+
+  defp logout_user(conn) do
+    conn
+    |> clear_session()
+    |> configure_session([:renew])
+    |> assign(:session_timeout, true)
+    |> redirect(to: Routes.session_path(conn, :new))
+  end
+
+  defp now do
+    DateTime.utc_now() |> DateTime.to_unix
+  end
+
+  defp new_session_timeout_at(timeout_after_minutes) do
+    now() + (timeout_after_minutes * 60)
+  end
+
 end
