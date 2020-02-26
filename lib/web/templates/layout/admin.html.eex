@@ -13,6 +13,10 @@
   </head>
 
   <body class="hold-transition skin-blue sidebar-mini">
+    <div class="session-timeout-div"
+      data-session_expiration="<%= Web.SharedView.session_timeout(@conn) %>"
+      id="session_timeout">
+    </div>
     <div class="wrapper">
       <header class="main-header">
         <a href="/admin" class="logo">
