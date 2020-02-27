@@ -34,6 +34,9 @@ defmodule ChallengeGov.Challenges do
   def sections(), do: Challenge.sections()
 
   @doc false
+  def statuses(), do: Challenge.statuses()
+
+  @doc false
   def section_index(section) do
     sections = sections()
     Enum.find_index(sections, fn s -> s.id == section end)
@@ -593,6 +596,10 @@ defmodule ChallengeGov.Challenges do
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
     where(query, [c], ilike(c.title, ^value) or ilike(c.description, ^value))
+  end
+
+  def filter_on_attribute({"status", value}, query) do
+    where(query, [c], c.status == ^value)
   end
 
   def filter_on_attribute({"types", values}, query) do

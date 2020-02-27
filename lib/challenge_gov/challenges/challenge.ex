@@ -124,6 +124,11 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   @doc """
+  List of all challenge statuses
+  """
+  def statuses(), do: @statuses
+
+  @doc """
   List of all challenge types
   """
   def challenge_types(), do: @challenge_types

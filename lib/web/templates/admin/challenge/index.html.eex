@@ -80,6 +80,10 @@
               <%= text_input f, :search, value: @filter["search"], class: "form-control" %>
             </div>
             <div class="form-group">
+              <%= label f, :status, "Status" %>
+              <%= select(f, :status, Challenges.statuses(), value: @filter["status"], prompt: "Choose a status", class: "form-control js-select") %>
+            </div>
+            <div class="form-group">
               <%= label f, :user_id, "Owner" %>
               <%= select(f, :user_id, Enum.map(Accounts.all_for_select(), &{"#{&1.first_name} #{&1.last_name}", &1.id}), value: @filter["user_id"], prompt: "Choose a user", class: "form-control js-select") %>
             </div>
