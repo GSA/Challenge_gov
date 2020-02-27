@@ -105,8 +105,8 @@
             <dd><%= @challenge.fiscal_year %></dd>
             <br/>
 
-            <dt>Type</dd>
-            <dd><%= @challenge.type %></dd>
+            <dt>Types</dd>
+            <dd><%= Enum.join(@challenge.types || [], ", ") %></dd>
             <br/>
 
             <dt>Prize Total</dd>

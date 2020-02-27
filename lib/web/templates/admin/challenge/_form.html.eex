@@ -76,7 +76,7 @@
             Challenge Type <span class="required">*</span>
             <% end %>
             <div class="col-md-8">
-              <%= select(f, :type, Challenges.challenge_types(), class: "form-control js-select") %>
+              <%= multiple_select(f, :types, Challenges.challenge_types(), selected: @changeset.data.types, class: "form-control js-multiselect") %>
             </div>
           </div>
           <%= FormView.textarea_field(f, :description, label: "Challenge Description", rows: 5, required: true) %>

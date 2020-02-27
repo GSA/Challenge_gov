@@ -13,6 +13,46 @@ defmodule Web.Admin.ChallengeView do
     link(challenge.title, to: Routes.admin_challenge_path(conn, :show, challenge.id))
   end
 
+  # TODO: Refactor to be more generic
+  # Example: Take a path with existing query params and append sort after and no longer need to pass filter
+  def sortable_header(conn, sort, filter, column, label) do
+    sort_icon =
+      case Map.get(sort, column) do
+        "asc" ->
+          "fa-sort-up"
+
+        "desc" ->
+          "fa-sort-down"
+
+        _ ->
+          "fa-sort"
+      end
+
+    sort_values =
+      case Map.get(sort, column) do
+        "asc" ->
+          Map.put(%{}, column, :desc)
+
+        "desc" ->
+          %{}
+
+        _ ->
+          Map.put(%{}, column, :asc)
+      end
+
+    content_tag :th do
+      content_tag :div do
+        [
+          link(label,
+            to: Routes.admin_challenge_path(conn, :index, filter: filter, sort: sort_values),
+            style: "margin-right: 1rem"
+          ),
+          content_tag(:i, "", class: "fa " <> sort_icon)
+        ]
+      end
+    end
+  end
+
   def challenge_edit_link(conn, challenge) do
     route =
       if challenge.status == "draft" do
@@ -67,14 +107,18 @@ defmodule Web.Admin.ChallengeView do
           section.id == current_section ->
             content_tag(:span, section.label, class: base_classes <> " current-section")
 
+          action == :new || action == :create ->
+            content_tag(:span, section.label,
+              class: base_classes,
+              disabled: true,
+              aria: [disabled: true]
+            )
+
           Challenges.section_index(section.id) < current_section_index ->
             link(section.label,
               to: Routes.admin_challenge_path(conn, :edit, challenge.id, section.id),
               class: base_classes <> " completed-section"
             )
-
-          action == :new || action == :create ->
-            content_tag(:span, section.label, class: base_classes)
 
           true ->
             content_tag(:span, section.label,

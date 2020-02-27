@@ -26,13 +26,14 @@ defmodule ChallengeGov.Challenges.Challenge do
   ]
 
   @challenge_types [
-    "Ideation",
-    "Scientific Discovery",
-    "Technology Development and hardware",
-    "Software and Apps",
-    "Data Analytics,Visualizations",
-    "Algorithms",
-    "Design"
+    "Software and apps",
+    "Creative (multimedia and design)",
+    "Ideas",
+    "Technology demonstration and hardware",
+    "Nominations",
+    "Business plans",
+    "Analytics, visualizations and algorithms",
+    "Scientific"
   ]
 
   @legal_authority [
@@ -73,6 +74,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     has_many(:federal_partners, FederalPartner)
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
     has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete)
+
+    # Array fields. Pseudo associations
+    field(:types, {:array, :string}, default: [])
 
     # Images
     field(:logo_key, Ecto.UUID)
@@ -166,7 +170,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :terms_and_conditions,
       :legal_authority,
       :faq,
-      :winner_information
+      :winner_information,
+      :types
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
@@ -339,6 +344,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_inclusion(:status, @statuses)
   end
 
+  # Image changesets
   def logo_changeset(struct, key, extension) do
     struct
     |> change()

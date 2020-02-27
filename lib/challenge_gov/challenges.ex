@@ -159,7 +159,7 @@ defmodule ChallengeGov.Challenges do
     query =
       Challenge
       |> preload([:agency, :user])
-      |> order_by([c], desc: c.status, desc: c.id)
+      |> order_on_attribute(opts[:sort])
       |> Filter.filter(opts[:filter], __MODULE__)
 
     query =
@@ -595,8 +595,10 @@ defmodule ChallengeGov.Challenges do
     where(query, [c], ilike(c.title, ^value) or ilike(c.description, ^value))
   end
 
-  def filter_on_attribute({"type", value}, query) do
-    where(query, [c], c.type in ^value)
+  def filter_on_attribute({"types", values}, query) do
+    Enum.reduce(values, query, fn value, query ->
+      or_where(query, [c], fragment("? @> ?::jsonb", c.types, ^[value]))
+    end)
   end
 
   def filter_on_attribute({"agency_id", value}, query) do
@@ -608,4 +610,54 @@ defmodule ChallengeGov.Challenges do
   end
 
   def filter_on_attribute(_, query), do: query
+
+  def order_on_attribute(query, %{"user" => direction}) do
+    query = join(query, :left, [c], a in assoc(c, :user))
+
+    case direction do
+      "asc" ->
+        order_by(query, [c, a], asc_nulls_last: a.first_name)
+
+      "desc" ->
+        order_by(query, [c, a], desc_nulls_last: a.first_name)
+
+      _ ->
+        query
+    end
+  end
+
+  def order_on_attribute(query, %{"agency" => direction}) do
+    query = join(query, :left, [c], a in assoc(c, :agency))
+
+    case direction do
+      "asc" ->
+        order_by(query, [c, a], asc_nulls_last: a.name)
+
+      "desc" ->
+        order_by(query, [c, a], desc_nulls_last: a.name)
+
+      _ ->
+        query
+    end
+  end
+
+  def order_on_attribute(query, sort_columns) do
+    columns_to_sort =
+      Enum.reduce(sort_columns, [], fn {column, direction}, acc ->
+        column = String.to_atom(column)
+
+        case direction do
+          "asc" ->
+            acc ++ [asc_nulls_last: column]
+
+          "desc" ->
+            acc ++ [desc_nulls_last: column]
+
+          _ ->
+            []
+        end
+      end)
+
+    order_by(query, [c], ^columns_to_sort)
+  end
 end

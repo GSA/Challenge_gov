@@ -12,14 +12,17 @@ defmodule Web.Admin.ChallengeController do
 
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
-    pagination = Challenges.all_for_user(user, filter: filter, page: page, per: per)
+    sort = Map.get(params, "sort", %{})
+    pagination = Challenges.all_for_user(user, filter: filter, sort: sort, page: page, per: per)
 
     counts = Challenges.admin_counts()
 
     conn
+    |> assign(:user, user)
     |> assign(:challenges, pagination.page)
     |> assign(:pagination, pagination.pagination)
     |> assign(:filter, filter)
+    |> assign(:sort, sort)
     |> assign(:pending_count, counts.pending)
     |> assign(:created_count, counts.created)
     |> assign(:archived_count, counts.archived)
@@ -205,6 +208,8 @@ defmodule Web.Admin.ChallengeController do
     else
       {:error, changeset} ->
         conn
+        |> assign(:user, user)
+        |> assign(:action, action_name(conn))
         |> assign(:challenge, challenge)
         |> assign(:changeset, changeset)
         |> render("edit.html")
