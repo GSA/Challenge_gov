@@ -93,6 +93,7 @@
           <% end %>
           <%= FormView.datetime_field(f, :start_date, required: true) %>
           <%= FormView.datetime_field(f, :end_date, required: true) %>
+          <%= FormView.datetime_field(f, :auto_publish_date, required: true) %>
           <div class="<%= FormView.form_group_classes(f, :multi_phase) %>">
             <%= label(f, :multi_phase, class: "col-md-4") do %>
             Does this Challenge have multiple Phases? <span class="required">*</span>

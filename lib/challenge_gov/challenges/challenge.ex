@@ -118,6 +118,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:faq, :string)
     field(:winner_information, :string)
     field(:captured_on, :date)
+    field(:auto_publish_date, :utc_datetime)
     field(:published_on, :date)
 
     timestamps()
@@ -178,7 +179,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :legal_authority,
       :faq,
       :winner_information,
-      :types
+      :types,
+      :auto_publish_date
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)

@@ -65,12 +65,24 @@
             <dd><%= @challenge.agency.name %></dd>
             <br/>
 
-            <dt>Captured On</dd>
-            <dd><%= @challenge.captured_on %></dd>
+            <dt>Start Date</dd>
+            <dd><%= SharedView.readable_date(@challenge.start_date) %></dd>
+            <br/>
+
+            <dt>End Date</dd>
+            <dd><%= SharedView.readable_date(@challenge.end_date) %></dd>
+            <br/>
+
+            <dt>Auto Publish Date</dd>
+            <dd><%= SharedView.readable_date(@challenge.auto_publish_date) %></dd>
             <br/>
 
             <dt>Published On</dd>
-            <dd><%= @challenge.published_on %></dd>
+            <dd><%= SharedView.readable_date(@challenge.published_on) %></dd>
+            <br/>
+
+            <dt>Captured On</dd>
+            <dd><%= SharedView.readable_date(@challenge.captured_on) %></dd>
             <br/>
 
             <dt>Status</dd>
@@ -93,14 +105,6 @@
             <dd><%= @challenge.custom_url %></dd>
             <br/>
 
-            <dt>Start Date</dd>
-            <dd><%= @challenge.start_date %></dd>
-            <br/>
-
-            <dt>End Date</dd>
-            <dd><%= @challenge.end_date %></dd>
-            <br/>
-            
             <dt>Fiscal Year</dd>
             <dd><%= @challenge.fiscal_year %></dd>
             <br/>
