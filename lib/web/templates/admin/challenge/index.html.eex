@@ -56,6 +56,7 @@
                     <td>
                       <%= link("View", to: Routes.admin_challenge_path(@conn, :show, challenge.id), class: "btn btn-default btn-xs") %>
                       <%= challenge_edit_link(@conn, challenge) %>
+                      <%= link("Delete", to: Routes.admin_challenge_path(@conn, :delete, challenge.id), method: :delete, class: "btn btn-danger btn-xs") %>
                     </td>
                   </tr>
                 <% end %>

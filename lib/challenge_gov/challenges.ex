@@ -406,6 +406,13 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
+  Delete a challenge
+  """
+  def delete(challenge) do
+    Repo.delete(challenge)
+  end
+
+  @doc """
   Checks if a user is allowed to edit a challenge
   """
   def allowed_to_edit(user, challenge) do

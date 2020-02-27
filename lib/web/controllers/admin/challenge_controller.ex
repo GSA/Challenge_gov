@@ -221,6 +221,22 @@ defmodule Web.Admin.ChallengeController do
     end
   end
 
+  def delete(conn, %{"id" => id}) do
+    {:ok, challenge} = Challenges.get(id)
+
+    case Challenges.delete(challenge) do
+      {:ok, _challenge} ->
+        conn
+        |> put_flash(:info, "Challenge deleted")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
+
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:info, "Something went wrong")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
+    end
+  end
+
   def publish(conn, %{"id" => id}) do
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.publish(challenge) do

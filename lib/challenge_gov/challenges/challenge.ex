@@ -73,7 +73,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     has_many(:supporting_documents, Document)
     has_many(:federal_partners, FederalPartner)
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
-    has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete)
+
+    has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete, on_delete: :delete_all)
 
     # Array fields. Pseudo associations
     field(:types, {:array, :string}, default: [])
