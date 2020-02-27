@@ -6,7 +6,7 @@ defmodule Web.AgencyView do
   alias Stein.Storage
 
   def avatar_img(agency, opts \\ []) do
-    case is_nil(agency.avatar_key) do
+    case is_nil(agency) or is_nil(agency.avatar_key) do
       true ->
         path = Routes.static_path(Web.Endpoint, "/images/teams-card-logo.jpg")
         img_tag(path, alt: "Agency Logo")

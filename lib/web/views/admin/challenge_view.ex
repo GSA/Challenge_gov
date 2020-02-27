@@ -13,6 +13,46 @@ defmodule Web.Admin.ChallengeView do
     link(challenge.title, to: Routes.admin_challenge_path(conn, :show, challenge.id))
   end
 
+  # TODO: Refactor to be more generic
+  # Example: Take a path with existing query params and append sort after and no longer need to pass filter
+  def sortable_header(conn, sort, filter, column, label) do
+    sort_icon =
+      case Map.get(sort, column) do
+        "asc" ->
+          "fa-sort-up"
+
+        "desc" ->
+          "fa-sort-down"
+
+        _ ->
+          "fa-sort"
+      end
+
+    sort_values =
+      case Map.get(sort, column) do
+        "asc" ->
+          Map.put(%{}, column, :desc)
+
+        "desc" ->
+          %{}
+
+        _ ->
+          Map.put(%{}, column, :asc)
+      end
+
+    content_tag :th do
+      content_tag :div do
+        [
+          link(label,
+            to: Routes.admin_challenge_path(conn, :index, filter: filter, sort: sort_values),
+            style: "margin-right: 1rem"
+          ),
+          content_tag(:i, "", class: "fa " <> sort_icon)
+        ]
+      end
+    end
+  end
+
   def challenge_edit_link(conn, challenge) do
     route =
       if challenge.status == "draft" do
@@ -33,7 +73,7 @@ defmodule Web.Admin.ChallengeView do
   Only shows challenge owner field if the person is an admin and a challenge is being edited
   """
   def challenge_owner_field(form, user, action) do
-    if action == :edit and (Accounts.is_admin?(user) or Accounts.is_super_admin?(user)) do
+    if action == :edit and Accounts.has_admin_access?(user) do
       content_tag :div, class: FormView.form_group_classes(form, :user_id) do
         [
           label(form, :user_id, class: "col-md-4") do
@@ -55,6 +95,32 @@ defmodule Web.Admin.ChallengeView do
     end
   end
 
+  @doc """
+  Only shows challenge status field if the person is an admin and a challenge is being edited
+  """
+  def challenge_status_field(form, user, action) do
+    if action == :edit and Accounts.has_admin_access?(user) do
+      content_tag :div, class: FormView.form_group_classes(form, :user_id) do
+        [
+          label(form, :status, class: "col-md-4") do
+            [
+              "Status ",
+              content_tag(:span, "*", class: "required")
+            ]
+          end,
+          content_tag(:div, class: "col-md-8") do
+            select(
+              form,
+              :status,
+              Challenges.statuses(),
+              class: "form-control js-select"
+            )
+          end
+        ]
+      end
+    end
+  end
+
   def progress_bar(conn, current_section, challenge, action) do
     sections = Challenges.sections()
     current_section_index = Challenges.section_index(current_section)
@@ -67,14 +133,18 @@ defmodule Web.Admin.ChallengeView do
           section.id == current_section ->
             content_tag(:span, section.label, class: base_classes <> " current-section")
 
+          action == :new || action == :create ->
+            content_tag(:span, section.label,
+              class: base_classes,
+              disabled: true,
+              aria: [disabled: true]
+            )
+
           Challenges.section_index(section.id) < current_section_index ->
             link(section.label,
               to: Routes.admin_challenge_path(conn, :edit, challenge.id, section.id),
               class: base_classes <> " completed-section"
             )
-
-          action == :new || action == :create ->
-            content_tag(:span, section.label, class: base_classes)
 
           true ->
             content_tag(:span, section.label,

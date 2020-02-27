@@ -276,6 +276,10 @@ defmodule ChallengeGov.Accounts do
     Stein.Accounts.email_verified?(user)
   end
 
+  def has_admin_access?(user) do
+    is_super_admin?(user) or is_admin?(user)
+  end
+
   @doc """
   Check if a user is an super_admin
 

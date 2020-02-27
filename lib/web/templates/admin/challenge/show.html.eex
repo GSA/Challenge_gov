@@ -62,15 +62,27 @@
             <br/>
 
             <dt>Agency Name</dd>
-            <dd><%= @challenge.agency.name %></dd>
+            <dd><%= Web.Admin.AgencyView.name_link(@conn, @challenge.agency) %></dd>
             <br/>
 
-            <dt>Captured On</dd>
-            <dd><%= @challenge.captured_on %></dd>
+            <dt>Start Date</dd>
+            <dd><%= SharedView.readable_date(@challenge.start_date) %></dd>
+            <br/>
+
+            <dt>End Date</dd>
+            <dd><%= SharedView.readable_date(@challenge.end_date) %></dd>
+            <br/>
+
+            <dt>Auto Publish Date</dd>
+            <dd><%= SharedView.readable_date(@challenge.auto_publish_date) %></dd>
             <br/>
 
             <dt>Published On</dd>
-            <dd><%= @challenge.published_on %></dd>
+            <dd><%= SharedView.readable_date(@challenge.published_on) %></dd>
+            <br/>
+
+            <dt>Captured On</dd>
+            <dd><%= SharedView.readable_date(@challenge.captured_on) %></dd>
             <br/>
 
             <dt>Status</dd>
@@ -93,20 +105,12 @@
             <dd><%= @challenge.custom_url %></dd>
             <br/>
 
-            <dt>Start Date</dd>
-            <dd><%= @challenge.start_date %></dd>
-            <br/>
-
-            <dt>End Date</dd>
-            <dd><%= @challenge.end_date %></dd>
-            <br/>
-            
             <dt>Fiscal Year</dd>
             <dd><%= @challenge.fiscal_year %></dd>
             <br/>
 
-            <dt>Type</dd>
-            <dd><%= @challenge.type %></dd>
+            <dt>Types</dd>
+            <dd><%= Enum.join(@challenge.types || [], ", ") %></dd>
             <br/>
 
             <dt>Prize Total</dd>
@@ -273,15 +277,24 @@
               </li>
             <% end) %>
           </ul>
+          <br/>
 
           <%= form_for(@conn, Routes.admin_challenge_document_path(@conn, :create, @challenge.id), [as: :document, multipart: true], fn f -> %>
             <div class="row">
               <%= label(f, :file, class: "col-md-4") %>
               <div class="col-md-8">
                 <%= file_input(f, :file, class: "form-control") %>
-                <%= select(f, :section, SupportingDocuments.sections(), class: "form-control js-select") %>
               </div>
             </div>
+            <br/>
+
+            <div class="row">
+              <%= label(f, :section, class: "col-md-4") %>
+              <div class="col-md-8">
+                <%= select(f, :section, Enum.concat(Enum.map(Challenges.sections(), &{&1.label, &1.id}), [{"Frequently Asked Questions", "faq"}]) , class: "form-control js-select") %>
+              </div>
+            </div>
+            <br/>
 
             <%= submit("Upload and attach", class: "btn btn-primary pull-right") %>
           <% end) %>

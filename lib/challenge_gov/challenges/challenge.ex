@@ -26,13 +26,14 @@ defmodule ChallengeGov.Challenges.Challenge do
   ]
 
   @challenge_types [
-    "Ideation",
-    "Scientific Discovery",
-    "Technology Development and hardware",
-    "Software and Apps",
-    "Data Analytics,Visualizations",
-    "Algorithms",
-    "Design"
+    "Software and apps",
+    "Creative (multimedia and design)",
+    "Ideas",
+    "Technology demonstration and hardware",
+    "Nominations",
+    "Business plans",
+    "Analytics, visualizations and algorithms",
+    "Scientific"
   ]
 
   @legal_authority [
@@ -72,7 +73,11 @@ defmodule ChallengeGov.Challenges.Challenge do
     has_many(:supporting_documents, Document)
     has_many(:federal_partners, FederalPartner)
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
-    has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete)
+
+    has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete, on_delete: :delete_all)
+
+    # Array fields. Pseudo associations
+    field(:types, {:array, :string}, default: [])
 
     # Images
     field(:logo_key, Ecto.UUID)
@@ -114,10 +119,16 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:faq, :string)
     field(:winner_information, :string)
     field(:captured_on, :date)
+    field(:auto_publish_date, :utc_datetime)
     field(:published_on, :date)
 
     timestamps()
   end
+
+  @doc """
+  List of all challenge statuses
+  """
+  def statuses(), do: @statuses
 
   @doc """
   List of all challenge types
@@ -134,11 +145,13 @@ defmodule ChallengeGov.Challenges.Challenge do
   """
   def sections(), do: @sections
 
+  # TODO: user_id, agency_id, and status should be locked behind admin only changeset
   def changeset(struct, params) do
     struct
     |> cast(params, [
       :user_id,
       :agency_id,
+      :status,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
@@ -166,7 +179,9 @@ defmodule ChallengeGov.Challenges.Challenge do
       :terms_and_conditions,
       :legal_authority,
       :faq,
-      :winner_information
+      :winner_information,
+      :types,
+      :auto_publish_date
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
@@ -339,6 +354,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_inclusion(:status, @statuses)
   end
 
+  # Image changesets
   def logo_changeset(struct, key, extension) do
     struct
     |> change()

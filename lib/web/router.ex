@@ -43,7 +43,7 @@ defmodule Web.Router do
     get("/pending", TermsController, :pending)
 
     resources("/challenges", ChallengeController,
-      only: [:index, :show, :new, :create, :edit, :update]
+      only: [:index, :show, :new, :create, :edit, :update, :delete]
     ) do
       resources("/documents", DocumentController, only: [:create])
 
