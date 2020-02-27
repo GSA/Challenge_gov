@@ -6,11 +6,14 @@ defmodule Web.Admin.UserController do
   plug(Web.Plugs.FetchPage when action in [:index])
 
   def index(conn, params) do
+    %{current_user: current_user} = conn.assigns
+
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "user", %{})
     %{page: users, pagination: pagination} = Accounts.all(filter: filter, page: page, per: per)
 
     conn
+    |> assign(:current_user, current_user)
     |> assign(:users, users)
     |> assign(:filter, filter)
     |> assign(:pagination, pagination)
@@ -18,16 +21,22 @@ defmodule Web.Admin.UserController do
   end
 
   def show(conn, %{"id" => id}) do
+    %{current_user: current_user} = conn.assigns
+
     with {:ok, user} <- Accounts.get(id) do
       conn
+      |> assign(:current_user, current_user)
       |> assign(:user, user)
       |> render("show.html")
     end
   end
 
   def edit(conn, %{"id" => id}) do
+    %{current_user: current_user} = conn.assigns
+
     with {:ok, user} <- Accounts.get(id) do
       conn
+      |> assign(:current_user, current_user)
       |> assign(:user, user)
       |> assign(:changeset, Accounts.edit(user))
       |> render("edit.html")

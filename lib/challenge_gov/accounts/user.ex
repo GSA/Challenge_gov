@@ -13,6 +13,7 @@ defmodule ChallengeGov.Accounts.User do
 
   @type t :: %__MODULE__{}
 
+  # TODO: Available roles to be able to change a user to need to differ by role attempting the change
   @roles [
     "super_admin",
     "admin",
