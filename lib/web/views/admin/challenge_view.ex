@@ -16,28 +16,16 @@ defmodule Web.Admin.ChallengeView do
   # TODO: Refactor to be more generic
   # Example: Take a path with existing query params and append sort after and no longer need to pass filter
   def sortable_header(conn, sort, filter, column, label) do
-    sort_icon =
+    {sort_icon, sort_values} =
       case Map.get(sort, column) do
         "asc" ->
-          "fa-sort-up"
+          {"fa-sort-up", Map.put(%{}, column, :desc)}
 
         "desc" ->
-          "fa-sort-down"
+          {"fa-sort-down", %{}}
 
         _ ->
-          "fa-sort"
-      end
-
-    sort_values =
-      case Map.get(sort, column) do
-        "asc" ->
-          Map.put(%{}, column, :desc)
-
-        "desc" ->
-          %{}
-
-        _ ->
-          Map.put(%{}, column, :asc)
+          {"fa-sort", Map.put(%{}, column, :asc)}
       end
 
     content_tag :th do
