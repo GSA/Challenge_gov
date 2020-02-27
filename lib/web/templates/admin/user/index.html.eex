@@ -24,6 +24,7 @@
                 <tr>
                   <th>ID</th>
                   <th>Name</th>
+                  <th>Email</th>
                   <th>Role</th>
                   <th>Finalized?</th>
                   <th>Actions</th>
@@ -34,6 +35,7 @@
                   <tr>
                     <td><%= user.id %></td>
                     <td><%= link(AccountView.full_name(user), to: Routes.admin_user_path(@conn, :show, user.id)) %></td>
+                    <td><%= user.email %></td>
                     <td><%= user.role %></td>
                     <td><%= user.finalized %></td>
                     <td>

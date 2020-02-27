@@ -2,7 +2,6 @@ defmodule Web.Plugs.SessionTimeout do
   @moduledoc """
   Manage session timeout
   """
-  import Plug.Conn
   alias Web.SessionController
 
   def init(opts \\ []) do
@@ -16,5 +15,4 @@ defmodule Web.Plugs.SessionTimeout do
   defp timeout_interval do
     Application.get_env(:challenge_gov, :session_timeout_in_minutes)
   end
-
 end

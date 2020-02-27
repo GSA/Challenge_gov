@@ -142,6 +142,7 @@ defmodule Web.SessionController do
 
   def check_session_timeout(conn, opts) do
     timeout_at = get_session(conn, :session_timeout_at)
+
     if timeout_at && now() > timeout_at do
       logout_user(conn)
     else
@@ -158,11 +159,10 @@ defmodule Web.SessionController do
   end
 
   defp now do
-    DateTime.utc_now() |> DateTime.to_unix
+    DateTime.utc_now() |> DateTime.to_unix()
   end
 
   defp new_session_timeout_at(timeout_after_minutes) do
-    now() + (timeout_after_minutes * 60)
+    now() + timeout_after_minutes * 60
   end
-
 end
