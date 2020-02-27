@@ -12,6 +12,7 @@
         </div>
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionWrap">
           <%= challenge_owner_field(f, @user, @action) %>
+          <%= challenge_status_field(f, @user, @action) %>
           <%= FormView.file_field(f, :logo, label: "Logo") do %>
             <%= if @data.logo_key do %>
               <p>Current Logo:</p>

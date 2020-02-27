@@ -143,11 +143,13 @@ defmodule ChallengeGov.Challenges.Challenge do
   """
   def sections(), do: @sections
 
+  # TODO: user_id, agency_id, and status should be locked behind admin only changeset
   def changeset(struct, params) do
     struct
     |> cast(params, [
       :user_id,
       :agency_id,
+      :status,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
