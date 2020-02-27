@@ -273,15 +273,24 @@
               </li>
             <% end) %>
           </ul>
+          <br/>
 
           <%= form_for(@conn, Routes.admin_challenge_document_path(@conn, :create, @challenge.id), [as: :document, multipart: true], fn f -> %>
             <div class="row">
               <%= label(f, :file, class: "col-md-4") %>
               <div class="col-md-8">
                 <%= file_input(f, :file, class: "form-control") %>
-                <%= select(f, :section, SupportingDocuments.sections(), class: "form-control js-select") %>
               </div>
             </div>
+            <br/>
+
+            <div class="row">
+              <%= label(f, :section, class: "col-md-4") %>
+              <div class="col-md-8">
+                <%= select(f, :section, Enum.concat(Enum.map(Challenges.sections(), &{&1.label, &1.id}), [{"Frequently Asked Questions", "faq"}]) , class: "form-control js-select") %>
+              </div>
+            </div>
+            <br/>
 
             <%= submit("Upload and attach", class: "btn btn-primary pull-right") %>
           <% end) %>
