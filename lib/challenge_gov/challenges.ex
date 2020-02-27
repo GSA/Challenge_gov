@@ -616,6 +616,26 @@ defmodule ChallengeGov.Challenges do
     where(query, [c], c.user_id == ^value)
   end
 
+  def filter_on_attribute({"start_date_start", value}, query) do
+    {:ok, datetime} = Timex.parse(value, "{YYYY}-{0M}-{0D}")
+    where(query, [c], c.start_date >= ^datetime)
+  end
+
+  def filter_on_attribute({"start_date_end", value}, query) do
+    {:ok, datetime} = Timex.parse(value, "{YYYY}-{0M}-{0D}")
+    where(query, [c], c.start_date <= ^datetime)
+  end
+
+  def filter_on_attribute({"end_date_start", value}, query) do
+    {:ok, datetime} = Timex.parse(value, "{YYYY}-{0M}-{0D}")
+    where(query, [c], c.end_date >= ^datetime)
+  end
+
+  def filter_on_attribute({"end_date_end", value}, query) do
+    {:ok, datetime} = Timex.parse(value, "{YYYY}-{0M}-{0D}")
+    where(query, [c], c.end_date <= ^datetime)
+  end
+
   def filter_on_attribute(_, query), do: query
 
   def order_on_attribute(query, %{"user" => direction}) do

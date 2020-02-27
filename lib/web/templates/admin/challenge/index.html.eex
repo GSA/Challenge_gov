@@ -95,6 +95,16 @@
               <%= label f, :types, "Challenge types" %>
               <%= multiple_select(f, :types, Challenges.challenge_types(), value: @filter["types"], class: "form-control js-multiselect") %>
             </div>
+            <div class="form-group">
+              <%= label f, :start_date_start, "Start date" %>
+              <%= date_input(f, :start_date_start, value: @filter["start_date_start"], class: "form-control") %>
+              <%= date_input(f, :start_date_end, value: @filter["start_date_end"], class: "form-control") %>
+            </div>
+            <div class="form-group">
+              <%= label f, :end_date_start, "End date" %>
+              <%= date_input(f, :end_date_start, value: @filter["end_date_start"], class: "form-control") %>
+              <%= date_input(f, :end_date_end, value: @filter["end_date_end"], class: "form-control") %>
+            </div>
           </div>
           <div class="box-footer">
             <%= submit "Filter", class: "btn btn-primary" %>
