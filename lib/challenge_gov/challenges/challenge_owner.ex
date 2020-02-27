@@ -1,31 +1,31 @@
-defmodule ChallengeGov.Challenges.FederalPartner do
+defmodule ChallengeGov.Challenges.ChallengeOwner do
   @moduledoc """
-  FederalPartner schema
+  ChallengeOwner schema
   """
 
   use Ecto.Schema
 
   import Ecto.Changeset
 
-  alias ChallengeGov.Agencies.Agency
+  alias ChallengeGov.Accounts.User
   alias ChallengeGov.Challenges.Challenge
 
   @type t :: %__MODULE__{}
 
-  schema "federal_partners" do
+  schema "challenge_owners" do
     belongs_to(:challenge, Challenge)
-    belongs_to(:agency, Agency)
+    belongs_to(:user, User)
   end
 
   def changeset(struct, params) do
     struct
     |> cast(params, [
-      :agency_id,
-      :challenge_id
+      :challenge_id,
+      :user_id
     ])
     |> validate_required([
-      :agency_id,
-      :challenge_id
+      :challenge_id,
+      :user_id
     ])
   end
 

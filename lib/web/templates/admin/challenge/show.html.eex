@@ -53,6 +53,16 @@
             <br/>
             <br/>
 
+            <dt>Owners</dd>
+            <dd>
+              <ul>
+                <%= Enum.map(@challenge.challenge_owner_users, fn owner -> %>
+                  <li><%= Web.Admin.UserView.name_link(@conn, owner) %></li>
+                <% end) %>
+              </ul>
+            </dd>
+            <br/>
+
             <dt>Title</dd>
             <dd><%= @challenge.title %></dd>
             <br/>

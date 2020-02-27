@@ -12,6 +12,7 @@
         </div>
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionWrap">
           <%= challenge_owner_field(f, @user, @action) %>
+          <%= challenge_owners_field(f, @user, @changeset, @action) %>
           <%= challenge_status_field(f, @user, @action) %>
           <%= FormView.file_field(f, :logo, label: "Logo") do %>
             <%= if @data.logo_key do %>
@@ -42,7 +43,7 @@
               Federal Partner Agency
             <% end %>
             <div class="col-md-8">
-              <%= multiple_select(f, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partners, &(&1.id)), class: "form-control js-multiselect") %>
+              <%= multiple_select(f, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partner_agencies, &(&1.id)), class: "form-control js-multiselect") %>
             </div>
           </div>
 

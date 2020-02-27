@@ -61,7 +61,7 @@ defmodule Web.Admin.ChallengeView do
   Only shows challenge owner field if the person is an admin and a challenge is being edited
   """
   def challenge_owner_field(form, user, action) do
-    if action == :edit and Accounts.has_admin_access?(user) do
+    if (action == :edit or action == :update) and Accounts.has_admin_access?(user) do
       content_tag :div, class: FormView.form_group_classes(form, :user_id) do
         [
           label(form, :user_id, class: "col-md-4") do
@@ -84,10 +84,43 @@ defmodule Web.Admin.ChallengeView do
   end
 
   @doc """
+  Only shows challenge owners multiselect if the person is an admin and a challenge is being edited
+  """
+  def challenge_owners_field(form, user, changeset, action) do
+    if (action == :edit or action == :update) and Accounts.has_admin_access?(user) do
+      content_tag :div, class: FormView.form_group_classes(form, :challenge_owners) do
+        [
+          label(form, :challenge_owners, class: "col-md-4") do
+            [
+              "Challenge Owners ",
+              content_tag(:span, "*", class: "required")
+            ]
+          end,
+          content_tag(:div, class: "col-md-8") do
+            [
+              multiple_select(
+                form,
+                :challenge_owners,
+                Enum.map(
+                  Accounts.all_for_select(),
+                  &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}
+                ),
+                selected: Enum.map(changeset.data.challenge_owner_users, & &1.id),
+                class: "form-control js-multiselect"
+              ),
+              error_tag(form, :challenge_owners)
+            ]
+          end
+        ]
+      end
+    end
+  end
+
+  @doc """
   Only shows challenge status field if the person is an admin and a challenge is being edited
   """
   def challenge_status_field(form, user, action) do
-    if action == :edit and Accounts.has_admin_access?(user) do
+    if (action == :edit or action == :update) and Accounts.has_admin_access?(user) do
       content_tag :div, class: FormView.form_group_classes(form, :user_id) do
         [
           label(form, :status, class: "col-md-4") do

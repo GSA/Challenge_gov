@@ -10,6 +10,7 @@ defmodule ChallengeGov.Challenges do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
@@ -83,17 +84,69 @@ defmodule ChallengeGov.Challenges do
   end
 
   def create(%{"action" => action, "challenge" => challenge_params}) do
-    %Challenge{}
-    |> Repo.preload([:federal_partners, :non_federal_partners, :user])
-    |> changeset_for_action(challenge_params, action)
-    |> Repo.insert()
+    # %Challenge{}
+    # |> Repo.preload([:federal_partners, :non_federal_partners, :user])
+    # |> changeset_for_action(challenge_params, action)
+    # |> attach_federal_partners(challenge_params)
+    # |> attach_challenge_owners(challenge_params)
+    # |> Repo.insert()
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(
+        :challenge,
+        changeset_for_action(%Challenge{}, challenge_params, action)
+      )
+      |> attach_federal_partners(challenge_params)
+      |> attach_challenge_owners(challenge_params)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, :challenge, changeset, _} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Changeset for editing a challenge (as an admin)
+  """
+  def edit(challenge) do
+    challenge
+    |> Repo.preload([
+      :federal_partners,
+      :non_federal_partners,
+      :events,
+      :user,
+      :challenge_owner_users
+    ])
+    |> Challenge.update_changeset(%{})
   end
 
   def update(challenge, %{"action" => action, "challenge" => challenge_params}) do
-    challenge
-    |> Repo.preload([:federal_partners, :non_federal_partners, :user])
-    |> changeset_for_action(challenge_params, action)
-    |> Repo.update()
+    # challenge
+    # |> Repo.preload([:federal_partners, :non_federal_partners, :user])
+    # |> changeset_for_action(challenge_params, action)
+    # |> attach_federal_partners(challenge_params)
+    # |> attach_challenge_owners(challenge_params)
+    # |> Repo.update()
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset_for_action(challenge, challenge_params, action))
+      |> attach_federal_partners(challenge_params)
+      |> attach_challenge_owners(challenge_params)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   defp changeset_for_action(struct, params, action) do
@@ -105,28 +158,6 @@ defmodule ChallengeGov.Challenges do
         Challenge.section_changeset(struct, params)
     end
   end
-
-  @doc """
-  Changeset for editing a challenge (as an admin)
-  """
-  def edit(challenge) do
-    challenge
-    |> Repo.preload([:non_federal_partners, :events, :user])
-    |> Challenge.update_changeset(%{})
-  end
-
-  # def save_draft(challenge, user, params) do
-  #   Ecto.Multi.new()
-  #   |> Ecto.Multi.insert(:challenge, Challenge.changeset(challenge, params))
-  #   |> attach_documents(params)
-  #   |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
-  #     Logo.maybe_upload_logo(challenge, params)
-  #   end)
-  #   |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
-  #     WinnerImage.maybe_upload_winner_image(challenge, params)
-  #   end)
-  #   |> Repo.transaction()
-  # end
 
   @doc """
   Get all challenges
@@ -161,7 +192,7 @@ defmodule ChallengeGov.Challenges do
   def all_for_user(user, opts \\ []) do
     query =
       Challenge
-      |> preload([:agency, :user])
+      |> preload([:agency, :user, :challenge_owners])
       |> order_on_attribute(opts[:sort])
       |> Filter.filter(opts[:filter], __MODULE__)
 
@@ -205,7 +236,8 @@ defmodule ChallengeGov.Challenges do
             :user,
             :federal_partner_agencies,
             :non_federal_partners,
-            :agency
+            :agency,
+            :challenge_owner_users
           ])
 
         challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
@@ -281,6 +313,7 @@ defmodule ChallengeGov.Challenges do
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:challenge, create_challenge(user, params))
       |> attach_federal_partners(params)
+      |> attach_challenge_owners(params)
       |> attach_documents(params)
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, params)
@@ -340,6 +373,33 @@ defmodule ChallengeGov.Challenges do
 
   defp attach_federal_partners(multi, _params), do: multi
 
+  defp attach_challenge_owners(multi, %{challenge_owners: ids}) do
+    attach_challenge_owners(multi, %{"challenge_owners" => ids})
+  end
+
+  defp attach_challenge_owners(multi, %{"challenge_owners" => ids}) do
+    multi =
+      Ecto.Multi.run(multi, :delete_owners, fn _repo, changes ->
+        {:ok,
+         Repo.delete_all(
+           from(co in ChallengeOwner, where: co.challenge_id == ^changes.challenge.id)
+         )}
+      end)
+
+    Enum.reduce(ids, multi, fn user_id, multi ->
+      Ecto.Multi.run(multi, {:user, user_id}, fn _repo, changes ->
+        %ChallengeOwner{}
+        |> ChallengeOwner.changeset(%{
+          user_id: user_id,
+          challenge_id: changes.challenge.id
+        })
+        |> Repo.insert()
+      end)
+    end)
+  end
+
+  defp attach_challenge_owners(multi, _params), do: multi
+
   defp attach_documents(multi, %{document_ids: ids}) do
     attach_documents(multi, %{"document_ids" => ids})
   end
@@ -385,6 +445,7 @@ defmodule ChallengeGov.Challenges do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
       |> attach_federal_partners(params)
+      |> attach_challenge_owners(params)
       |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
         maybe_create_event(challenge, changeset)
       end)

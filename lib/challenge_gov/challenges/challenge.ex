@@ -9,6 +9,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Agencies.Agency
+  alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.NonFederalPartner
   alias ChallengeGov.SupportingDocuments.Document
@@ -71,6 +72,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     belongs_to(:agency, Agency)
     has_many(:events, Event, on_replace: :delete)
     has_many(:supporting_documents, Document)
+    has_many(:challenge_owners, ChallengeOwner)
+    has_many(:challenge_owner_users, through: [:challenge_owners, :user])
     has_many(:federal_partners, FederalPartner)
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
 
@@ -215,6 +218,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :agency_id,
       :fiscal_year
     ])
+    |> cast_assoc(:federal_partners)
     |> cast_assoc(:non_federal_partners)
     |> validate_format(:challenge_manager_email, ~r/.+@.+\..+/)
     |> validate_format(:fiscal_year, ~r/\bFY[0-9]{2}\b/)
@@ -257,6 +261,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   def create_changeset(struct, params, _user) do
     struct
     |> changeset(params)
+    |> cast_assoc(:non_federal_partners)
     |> put_change(:captured_on, Date.utc_today())
     |> validate_required([
       :user_id,
@@ -296,6 +301,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   def update_changeset(struct, params) do
     struct
     |> changeset(params)
+    |> cast_assoc(:non_federal_partners)
     |> validate_required([
       :user_id,
       :agency_id,
