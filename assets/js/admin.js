@@ -18,7 +18,7 @@ window.$ = jquery;
 setInterval(() => {
   const session_expiration = $("#session_timeout").data("session_expiration")
   const now = Math.floor(new Date().getTime()/1000)
-  if (now === (session_expiration - 20)) {
+  if (now === (session_expiration - 120)) {
     $(".navbar").prepend(
       `<div id="renew-modal" class="timeout-modal">
         <div class="modal-content">
