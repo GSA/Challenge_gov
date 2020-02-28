@@ -206,7 +206,7 @@ defmodule ChallengeGov.Challenges do
 
     query =
       start_query
-      |> preload([:agency, :user, :challenge_owners])
+      |> preload([:agency, :user, :challenge_owner_users])
       |> order_on_attribute(opts[:sort])
       |> Filter.filter(opts[:filter], __MODULE__)
 
@@ -667,9 +667,10 @@ defmodule ChallengeGov.Challenges do
     where(query, [c], c.status == ^value)
   end
 
+  # TODO: Refactor this to use jsonb column more elegantly
   def filter_on_attribute({"types", values}, query) do
     Enum.reduce(values, query, fn value, query ->
-      or_where(query, [c], fragment("? @> ?::jsonb", c.types, ^[value]))
+      where(query, [c], fragment("? @> ?::jsonb", c.types, ^[value]))
     end)
   end
 
@@ -679,6 +680,12 @@ defmodule ChallengeGov.Challenges do
 
   def filter_on_attribute({"user_id", value}, query) do
     where(query, [c], c.user_id == ^value)
+  end
+
+  def filter_on_attribute({"user_ids", ids}, query) do
+    query
+    |> join(:inner, [c], co in assoc(c, :challenge_owners))
+    |> where([co], co.user_id in ^ids)
   end
 
   def filter_on_attribute({"start_date_start", value}, query) do
