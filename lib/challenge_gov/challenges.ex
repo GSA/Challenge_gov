@@ -84,8 +84,6 @@ defmodule ChallengeGov.Challenges do
   end
 
   def create(%{"action" => action, "challenge" => challenge_params}, user) do
-    challenge_params = add_blank_assoc_params(challenge_params)
-
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(
@@ -323,6 +321,8 @@ defmodule ChallengeGov.Challenges do
   end
 
   defp attach_federal_partners(multi, %{"federal_partners" => ids}) do
+    ids = Enum.uniq(ids)
+
     multi =
       Ecto.Multi.run(multi, :delete_agencies, fn _repo, changes ->
         {:ok,

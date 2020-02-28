@@ -166,8 +166,8 @@ defmodule Web.Admin.ChallengeController do
     {:ok, challenge} = Challenges.get(id)
     to_section = Challenges.to_section(section, action)
 
-    with {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
-         {:ok, challenge} <- Challenges.update(challenge, params) do
+    with {:ok, challenge} <- Challenges.update(challenge, params),
+         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       if action == "save_draft" do
         conn
         |> put_flash(:info, "Challenge saved as draft")
@@ -202,8 +202,8 @@ defmodule Web.Admin.ChallengeController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(id)
 
-    with {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
-         {:ok, challenge} <- Challenges.update(challenge, params, user) do
+    with {:ok, challenge} <- Challenges.update(challenge, params, user),
+         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       conn
       |> put_flash(:info, "Challenge updated!")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))

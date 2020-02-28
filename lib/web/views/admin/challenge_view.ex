@@ -118,7 +118,7 @@ defmodule Web.Admin.ChallengeView do
     end
   end
 
-  # TODO: Change how challenge owner association works when no owners are passed
+  # TODO: Change how these three associations work when no params are passed
   @doc """
   Hidden challenge owner field to keep existing challenge owners from being wiped if none are passed
   """
@@ -133,6 +133,28 @@ defmodule Web.Admin.ChallengeView do
       selected: Enum.map(changeset.data.challenge_owner_users, & &1.id),
       style: "display: none;"
     )
+  end
+
+  @doc """
+  Hidden federal partners field to keep existing federal partners from being wiped if none are passed
+  """
+  def hidden_federal_partners_field(form, changeset) do
+    multiple_select(
+      form,
+      :federal_partners,
+      Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}),
+      selected: Enum.map(changeset.data.federal_partner_agencies, & &1.id),
+      style: "display: none;"
+    )
+  end
+
+  @doc """
+  Hidden non federal partners field to keep existing non federal partnerss from being wiped if none are passed
+  """
+  def hidden_non_federal_partners_field(form, _changeset) do
+    content_tag :div, style: "display: none;" do
+      Web.Admin.FormView.dynamic_nested_fields(form, :non_federal_partners, [:name])
+    end
   end
 
   @doc """
