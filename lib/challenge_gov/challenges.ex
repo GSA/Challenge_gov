@@ -79,7 +79,7 @@ defmodule ChallengeGov.Challenges do
   """
   def new(user) do
     %Challenge{}
-    |> Repo.preload([:federal_partners, :non_federal_partners, :user])
+    |> Repo.preload([:federal_partner_agencies, :non_federal_partners, :user])
     |> Challenge.create_changeset(%{}, user)
   end
 
