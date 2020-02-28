@@ -19,10 +19,27 @@ setInterval(() => {
   const session_expiration = $("#session_timeout").data("session_expiration")
   const now = Math.floor(new Date().getTime()/1000)
   if (now === (session_expiration - 120)) {
+    let seconds = 60
+    let minutes = 1
+    let countdown = setInterval(function() {
+        seconds--;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        if (minutes == 1 && seconds == 0) {
+          seconds = 60
+          minutes = 0
+          time = seconds
+        }
+        if (minutes == 0 && seconds == 0) {
+          clearInterval(countdown);
+        }
+        let time = `${minutes}:${seconds}`
+        document.getElementById("countdown").textContent = time;
+        if (seconds <= 0) clearInterval(countdown);
+    }, 1000);
     $(".navbar").prepend(
       `<div id="renew-modal" class="timeout-modal">
         <div class="modal-content">
-          <p>Your session is about to expire.</p>
+          <p>Your session will expire in <span id="countdown"></span></p>
           <p>Please click below if you would like to continue.</p>
           <button class="btn btn-primary modal-btn" id="renew" type="button">Renew Session</button>
         </div>
