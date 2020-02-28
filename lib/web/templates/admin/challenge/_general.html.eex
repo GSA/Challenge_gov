@@ -2,7 +2,7 @@
 <br/>
 <%= FormView.text_field(@form, :challenge_manager, label: "Challenge manager of record (does not appear on public listing)", required: true) %>
 <%= FormView.email_field(@form, :challenge_manager_email, label: "Challenge manager email (does not appear on public listing)", placeholder: "challenge_manager@example.com", required: true) %>
-<%= FormView.text_field(@form, :poc_email, label: "Point of contact") %>          
+<%= FormView.text_field(@form, :poc_email, label: "Point of contact email", placeholder: "point_of_contact@example.com", required: true) %>          
 <div class="<%= FormView.form_group_classes(@form, :agency_id) %>">
   <%= label(@form, :agency_id, class: "col-md-4") do %>
     Lead agency name<span class="required">*</span>
@@ -14,7 +14,7 @@
 </div>          
 <div class="<%= FormView.form_group_classes(@form, :federal_partners) %>">
   <%= label(@form, :federal_partners, class: "col-md-4") do %>
-    Federal partner agency (optional)
+    Federal partner agencies (optional)
   <% end %>
   <div class="col-md-8">
     <%= multiple_select(@form, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partner_agencies, &(&1.id)), class: "form-control js-multiselect") %>
@@ -22,7 +22,7 @@
   </div>
 </div>
 <hr/>
-<div><strong>Non Federal Partners</strong></div>
+<div><strong>Non federal partners (optional)</strong></div>
 <br/>
 <%= FormView.dynamic_nested_fields(@form, :non_federal_partners, [:name]) %>
 <br/>

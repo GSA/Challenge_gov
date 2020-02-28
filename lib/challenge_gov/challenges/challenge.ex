@@ -215,11 +215,13 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_required([
       :challenge_manager,
       :challenge_manager_email,
+      :poc_email,
       :agency_id,
       :fiscal_year
     ])
     |> cast_assoc(:non_federal_partners)
     |> validate_format(:challenge_manager_email, ~r/.+@.+\..+/)
+    |> validate_format(:poc_email, ~r/.+@.+\..+/)
     |> validate_format(:fiscal_year, ~r/\bFY[0-9]{2}\b/)
   end
 

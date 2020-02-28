@@ -79,18 +79,11 @@ defmodule ChallengeGov.Challenges do
   """
   def new(user) do
     %Challenge{}
-    |> Repo.preload([:federal_partner_agencies, :non_federal_partners, :user])
+    |> challenge_form_preload()
     |> Challenge.create_changeset(%{}, user)
   end
 
   def create(%{"action" => action, "challenge" => challenge_params}) do
-    # %Challenge{}
-    # |> Repo.preload([:federal_partners, :non_federal_partners, :user])
-    # |> changeset_for_action(challenge_params, action)
-    # |> attach_federal_partners(challenge_params)
-    # |> attach_challenge_owners(challenge_params)
-    # |> Repo.insert()
-
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(
@@ -115,24 +108,11 @@ defmodule ChallengeGov.Challenges do
   """
   def edit(challenge) do
     challenge
-    |> Repo.preload([
-      :federal_partners,
-      :non_federal_partners,
-      :events,
-      :user,
-      :challenge_owner_users
-    ])
+    |> challenge_form_preload()
     |> Challenge.update_changeset(%{})
   end
 
   def update(challenge, %{"action" => action, "challenge" => challenge_params}) do
-    # challenge
-    # |> Repo.preload([:federal_partners, :non_federal_partners, :user])
-    # |> changeset_for_action(challenge_params, action)
-    # |> attach_federal_partners(challenge_params)
-    # |> attach_challenge_owners(challenge_params)
-    # |> Repo.update()
-
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset_for_action(challenge, challenge_params, action))
@@ -150,6 +130,8 @@ defmodule ChallengeGov.Challenges do
   end
 
   defp changeset_for_action(struct, params, action) do
+    struct = challenge_form_preload(struct)
+
     case action do
       "save_draft" ->
         Challenge.draft_changeset(struct, params)
@@ -157,6 +139,16 @@ defmodule ChallengeGov.Challenges do
       _ ->
         Challenge.section_changeset(struct, params)
     end
+  end
+
+  defp challenge_form_preload(challenge) do
+    Repo.preload(challenge, [
+      :federal_partner_agencies,
+      :non_federal_partners,
+      :events,
+      :user,
+      :challenge_owner_users
+    ])
   end
 
   @doc """
