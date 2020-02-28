@@ -34,7 +34,7 @@
                   <%= sortable_header(@conn, @sort, @filter, "end_date", "End Date") %>
                   <th>Type</th>
                   <%= if Accounts.has_admin_access?(@user) do %>
-                    <%= sortable_header(@conn, @sort, @filter, "user", "Owner") %>
+                    <th>Owners</th>
                     <%= sortable_header(@conn, @sort, @filter, "agency", "Agency") %>
                   <% end %>
                   <th>Actions</th>
