@@ -31,7 +31,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <%= link("Sign Out", to: Routes.session_path(@conn, :delete), method: :delete, class: "sign-out") %>
+          <%= link("(#{current_user(@conn).email}) Sign Out", to: Routes.session_path(@conn, :delete), method: :delete, class: "sign-out") %>
         </nav>
       </header>
 

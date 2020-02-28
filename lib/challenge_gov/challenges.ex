@@ -182,18 +182,20 @@ defmodule ChallengeGov.Challenges do
   Get all challenges for a user
   """
   def all_for_user(user, opts \\ []) do
+    start_query =
+      if user.role == "challenge_owner" do
+        Challenge
+        |> join(:inner, [c], co in assoc(c, :challenge_owners))
+        |> where([c, co], co.user_id == ^user.id)
+      else
+        Challenge
+      end
+
     query =
-      Challenge
+      start_query
       |> preload([:agency, :user, :challenge_owners])
       |> order_on_attribute(opts[:sort])
       |> Filter.filter(opts[:filter], __MODULE__)
-
-    query =
-      if user.role == "challenge_owner" do
-        where(query, [c], c.user_id == ^user.id)
-      else
-        query
-      end
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
   end
@@ -473,12 +475,19 @@ defmodule ChallengeGov.Challenges do
   Checks if a user is allowed to edit a challenge
   """
   def allowed_to_edit(user, challenge) do
-    if user.id == challenge.user_id or
+    if is_challenge_owner?(user, challenge) or
          Accounts.is_admin?(user) or Accounts.is_super_admin?(user) do
       {:ok, challenge}
     else
       {:error, :not_permitted}
     end
+  end
+
+  @doc """
+  Checks if a user is in the list of owners for a challenge
+  """
+  def is_challenge_owner?(user, challenge) do
+    Enum.member?(challenge.challenge_owner_users, user)
   end
 
   defp maybe_create_event(challenge, changeset) do
