@@ -113,6 +113,8 @@ defmodule Web.Admin.ChallengeView do
           end
         ]
       end
+    else
+      hidden_challenge_owners_field(form, changeset)
     end
   end
 
