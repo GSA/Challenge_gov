@@ -14,6 +14,7 @@ defmodule Web.Router do
   pipeline(:signed_in) do
     plug(Web.Plugs.VerifyUser)
     plug(Web.Plugs.SessionTimeout)
+    plug(:put_layout, {Web.LayoutView, "admin.html"})
   end
 
   pipeline(:not_signed_in) do
@@ -32,7 +33,7 @@ defmodule Web.Router do
   end
 
   scope "/admin", Web.Admin, as: :admin do
-    pipe_through([:browser, :admin])
+    pipe_through([:browser, :signed_in])
 
     get("/", DashboardController, :index)
 
@@ -61,11 +62,15 @@ defmodule Web.Router do
     post("/challenges/:id/remove_winner_image", ChallengeController, :remove_winner_image,
       as: :challenge
     )
+  end
+
+  scope "/admin", Web.Admin, as: :admin do
+    pipe_through([:browser, :admin])
 
     resources("/events", EventController, only: [:edit, :update, :delete])
 
     resources("/agencies", AgencyController)
-    post("/agencies/:id/remove_winner_image", AgencyController, :remove_logo, as: :agency)
+    post("/agencies/:id/remove_logo", AgencyController, :remove_logo, as: :agency)
 
     resources("/users", UserController, only: [:index, :show, :edit, :update])
   end

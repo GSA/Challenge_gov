@@ -51,18 +51,20 @@
                 <span>Challenges</span>
               <% end %>
             </li>
-            <li class="<%= tab_selected(@conn, "users") %>">
-              <%= link(to: Routes.admin_user_path(@conn, :index)) do %>
-                <i class="fa fa-user"></i>
-                <span>Users</span>
-              <% end %>
-            </li>
-            <li class="<%= tab_selected(@conn, "agencies") %>">
-              <%= link(to: Routes.admin_agency_path(@conn, :index)) do %>
-                <i class="fa fa-users"></i>
-                <span>Agencies</span>
-              <% end %>
-            </li>
+            <%= if ChallengeGov.Accounts.has_admin_access?(current_user(@conn)) do %>
+              <li class="<%= tab_selected(@conn, "users") %>">
+                <%= link(to: Routes.admin_user_path(@conn, :index)) do %>
+                  <i class="fa fa-user"></i>
+                  <span>Users</span>
+                <% end %>
+              </li>
+              <li class="<%= tab_selected(@conn, "agencies") %>">
+                <%= link(to: Routes.admin_agency_path(@conn, :index)) do %>
+                  <i class="fa fa-users"></i>
+                  <span>Agencies</span>
+                <% end %>
+              </li>
+            <% end %>
           </ul>
         </section>
       </aside>

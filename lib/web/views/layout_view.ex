@@ -21,6 +21,12 @@ defmodule Web.LayoutView do
     Map.has_key?(conn.assigns, :current_user)
   end
 
+  def current_user(conn) do
+    if user_signed_in?(conn) do
+      Map.get(conn.assigns, :current_user)
+    end
+  end
+
   def recaptcha_script() do
     recaptcha_key = Recaptcha.recaptcha_key()
 
