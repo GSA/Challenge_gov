@@ -263,6 +263,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
     |> changeset(params)
     |> cast_assoc(:non_federal_partners)
+    |> put_change(:status, "pending")
     |> put_change(:captured_on, Date.utc_today())
     |> validate_required([
       :user_id,

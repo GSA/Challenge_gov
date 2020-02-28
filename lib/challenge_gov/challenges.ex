@@ -83,13 +83,16 @@ defmodule ChallengeGov.Challenges do
     |> Challenge.create_changeset(%{}, user)
   end
 
-  def create(%{"action" => action, "challenge" => challenge_params}) do
+  def create(%{"action" => action, "challenge" => challenge_params}, user) do
+    challenge_params = add_blank_assoc_params(challenge_params)
+
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(
         :challenge,
         changeset_for_action(%Challenge{}, challenge_params, action)
       )
+      |> attach_initial_owner(user)
       |> attach_federal_partners(challenge_params)
       |> attach_challenge_owners(challenge_params)
       |> Repo.transaction()
@@ -113,6 +116,8 @@ defmodule ChallengeGov.Challenges do
   end
 
   def update(challenge, %{"action" => action, "challenge" => challenge_params}) do
+    challenge_params = add_blank_assoc_params(challenge_params)
+
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset_for_action(challenge, challenge_params, action))
@@ -149,6 +154,14 @@ defmodule ChallengeGov.Challenges do
       :user,
       :challenge_owner_users
     ])
+  end
+
+  defp add_blank_assoc_params(params) do
+    params
+    |> Map.put_new("challenge_owners", [])
+    |> Map.put_new("federal_partners", [])
+    |> Map.put_new("non_federal_partners", [])
+    |> Map.put_new("events", [])
   end
 
   @doc """
@@ -261,51 +274,14 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  # @doc """
-  # Submit a new challenge for a user
-  # """
-  # def submit(user, params) do
-  #   result =
-  #     Ecto.Multi.new()
-  #     |> Ecto.Multi.insert(:challenge, submit_challenge(user, params))
-  #     |> attach_documents(params)
-  #     |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
-  #       Logo.maybe_upload_logo(challenge, params)
-  #     end)
-  #     |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
-  #       WinnerImage.maybe_upload_winner_image(challenge, params)
-  #     end)
-  #     |> Repo.transaction()
-
-  #   case result do
-  #     {:ok, %{challenge: challenge}} ->
-  #       {:ok, challenge}
-
-  #     {:error, :challenge, changeset, _} ->
-  #       {:error, changeset}
-
-  #     {:error, {:document, _}, _, _} ->
-  #       user
-  #       |> Ecto.build_assoc(:challenges)
-  #       |> Challenge.create_changeset(params, user)
-  #       |> Ecto.Changeset.add_error(:document_ids, "are invalid")
-  #       |> Ecto.Changeset.apply_action(:insert)
-  #   end
-  # end
-
-  # defp submit_challenge(user, params) do
-  #   user
-  #   |> Ecto.build_assoc(:challenges)
-  #   |> Challenge.create_changeset(params, user)
-  # end
-
   @doc """
   Submit a new challenge for a user
   """
-  def create(user, params) do
+  def old_create(user, params) do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:challenge, create_challenge(user, params))
+      |> attach_initial_owner(user)
       |> attach_federal_partners(params)
       |> attach_challenge_owners(params)
       |> attach_documents(params)
@@ -370,6 +346,20 @@ defmodule ChallengeGov.Challenges do
   defp attach_federal_partners(multi, _params), do: multi
 
   # Attach challenge owners functions
+  defp attach_initial_owner(multi, user) do
+    Ecto.Multi.run(multi, {:user, user.id}, fn _repo, changes ->
+      if user.role == "challenge_owner" do
+        %ChallengeOwner{}
+        |> ChallengeOwner.changeset(%{
+          user_id: user.id,
+          challenge_id: changes.challenge.id
+        })
+        |> Repo.insert()
+      end
+    end)
+  end
+
+  # Attach challenge owners functions
   defp attach_challenge_owners(multi, %{challenge_owners: ids}) do
     attach_challenge_owners(multi, %{"challenge_owners" => ids})
   end
@@ -429,6 +419,8 @@ defmodule ChallengeGov.Challenges do
 
     params =
       params
+      |> Map.put_new("challenge_owners", [])
+      |> Map.put_new("federal_partners", [])
       |> Map.put_new("non_federal_partners", [])
       |> Map.put_new("events", [])
 

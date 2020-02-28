@@ -116,6 +116,23 @@ defmodule Web.Admin.ChallengeView do
     end
   end
 
+  # TODO: Change how challenge owner association works when no owners are passed
+  @doc """
+  Hidden challenge owner field to keep existing challenge owners from being wiped if none are passed
+  """
+  def hidden_challenge_owners_field(form, changeset) do
+    multiple_select(
+      form,
+      :challenge_owners,
+      Enum.map(
+        Accounts.all_for_select(),
+        &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}
+      ),
+      selected: Enum.map(changeset.data.challenge_owner_users, & &1.id),
+      style: "display: none;"
+    )
+  end
+
   @doc """
   Only shows challenge status field if the person is an admin and a challenge is being edited
   """

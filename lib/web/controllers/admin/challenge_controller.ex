@@ -65,7 +65,7 @@ defmodule Web.Admin.ChallengeController do
   def create(conn, params = %{"action" => action, "challenge" => %{"section" => section}}) do
     %{current_user: user} = conn.assigns
 
-    case Challenges.create(params) do
+    case Challenges.create(params, user) do
       {:ok, challenge} ->
         if action == "save_draft" do
           conn
@@ -100,7 +100,7 @@ defmodule Web.Admin.ChallengeController do
   def create(conn, %{"challenge" => params}) do
     %{current_user: user} = conn.assigns
 
-    case Challenges.create(user, params) do
+    case Challenges.old_create(user, params) do
       {:ok, challenge} ->
         conn
         |> put_flash(:info, "Challenge created!")
@@ -166,8 +166,8 @@ defmodule Web.Admin.ChallengeController do
     {:ok, challenge} = Challenges.get(id)
     to_section = Challenges.to_section(section, action)
 
-    with {:ok, challenge} <- Challenges.update(challenge, params),
-         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
+    with {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
+         {:ok, challenge} <- Challenges.update(challenge, params) do
       if action == "save_draft" do
         conn
         |> put_flash(:info, "Challenge saved as draft")
@@ -202,8 +202,8 @@ defmodule Web.Admin.ChallengeController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(id)
 
-    with {:ok, challenge} <- Challenges.update(challenge, params, user),
-         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
+    with {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
+         {:ok, challenge} <- Challenges.update(challenge, params, user) do
       conn
       |> put_flash(:info, "Challenge updated!")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))

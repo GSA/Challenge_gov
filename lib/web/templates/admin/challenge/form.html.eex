@@ -24,6 +24,7 @@
         <div class="box box-primary">
           <%= hidden_input f, :section, value: @section %>
           <%= hidden_input f, :user_id, value: @user.id %>
+          <%= hidden_challenge_owners_field(f, @changeset) %>
 
           <div class="box-body">
             <%= render Web.Admin.ChallengeView, "_#{@section}.html", form: f, changeset: @changeset, data: @changeset.data, path: @path %>
