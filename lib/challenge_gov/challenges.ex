@@ -8,7 +8,9 @@ defmodule ChallengeGov.Challenges do
   - archived: Archived by an admin, hidden to the public
   """
 
+  alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
@@ -29,33 +31,137 @@ defmodule ChallengeGov.Challenges do
   @doc false
   def legal_authority(), do: Challenge.legal_authority()
 
+  @doc false
+  def sections(), do: Challenge.sections()
+
+  @doc false
+  def statuses(), do: Challenge.statuses()
+
+  @doc false
+  def section_index(section) do
+    sections = sections()
+    Enum.find_index(sections, fn s -> s.id == section end)
+  end
+
+  @doc false
+  def next_section(section) do
+    sections = sections()
+
+    curr_index = section_index(section)
+
+    if curr_index < length(sections) do
+      Enum.at(sections, curr_index + 1)
+    end
+  end
+
+  @doc false
+  def prev_section(section) do
+    sections = sections()
+
+    curr_index = section_index(section)
+
+    if curr_index > 0 do
+      Enum.at(sections, curr_index - 1)
+    end
+  end
+
+  @doc false
+  def to_section(section, action) do
+    case action do
+      "next" -> next_section(section)
+      "back" -> prev_section(section)
+      _ -> nil
+    end
+  end
+
   @doc """
   New changeset for a challenge
   """
   def new(user) do
     %Challenge{}
-    |> Repo.preload([:federal_partners, :non_federal_partners])
+    |> challenge_form_preload()
     |> Challenge.create_changeset(%{}, user)
   end
 
-  # @doc """
-  # Changeset for adding a challenge (as an admin)
-  # """
-  # def admin_new(user) do
-  #   %Challenge{}
-  #   |> Repo.preload(:non_federal_partners)
-  #   |> Map.put(:federal_partners, [])
-  #   |> Map.put(:non_federal_partners, [])
-  #   |> Challenge.admin_changeset(%{}, user)
-  # end
+  def create(%{"action" => action, "challenge" => challenge_params}, user) do
+    challenge_params = add_blank_assoc_params(challenge_params)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(
+        :challenge,
+        changeset_for_action(%Challenge{}, challenge_params, action)
+      )
+      |> attach_initial_owner(user)
+      |> attach_federal_partners(challenge_params)
+      |> attach_challenge_owners(challenge_params)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, :challenge, changeset, _} ->
+        {:error, changeset}
+    end
+  end
 
   @doc """
   Changeset for editing a challenge (as an admin)
   """
   def edit(challenge) do
     challenge
-    |> Repo.preload([:non_federal_partners, :events])
+    |> challenge_form_preload()
     |> Challenge.update_changeset(%{})
+  end
+
+  def update(challenge, %{"action" => action, "challenge" => challenge_params}) do
+    challenge_params = add_blank_assoc_params(challenge_params)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset_for_action(challenge, challenge_params, action))
+      |> attach_federal_partners(challenge_params)
+      |> attach_challenge_owners(challenge_params)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  defp changeset_for_action(struct, params, action) do
+    struct = challenge_form_preload(struct)
+
+    case action do
+      "save_draft" ->
+        Challenge.draft_changeset(struct, params)
+
+      _ ->
+        Challenge.section_changeset(struct, params)
+    end
+  end
+
+  defp challenge_form_preload(challenge) do
+    Repo.preload(challenge, [
+      :federal_partner_agencies,
+      :non_federal_partners,
+      :events,
+      :user,
+      :challenge_owner_users
+    ])
+  end
+
+  defp add_blank_assoc_params(params) do
+    params
+    |> Map.put_new("challenge_owners", [])
+    |> Map.put_new("federal_partners", [])
+    |> Map.put_new("non_federal_partners", [])
+    |> Map.put_new("events", [])
   end
 
   @doc """
@@ -64,7 +170,7 @@ defmodule ChallengeGov.Challenges do
   def all(opts \\ []) do
     query =
       Challenge
-      |> preload([:agency])
+      |> preload([:agency, :user])
       |> where([c], c.status == "created")
       |> order_by([c], desc: c.published_on, asc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
@@ -78,8 +184,30 @@ defmodule ChallengeGov.Challenges do
   def admin_all(opts \\ []) do
     query =
       Challenge
-      |> preload([:agency])
+      |> preload([:agency, :user])
       |> order_by([c], desc: c.status, desc: c.id)
+      |> Filter.filter(opts[:filter], __MODULE__)
+
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
+  @doc """
+  Get all challenges for a user
+  """
+  def all_for_user(user, opts \\ []) do
+    start_query =
+      if user.role == "challenge_owner" do
+        Challenge
+        |> join(:inner, [c], co in assoc(c, :challenge_owners))
+        |> where([c, co], co.user_id == ^user.id)
+      else
+        Challenge
+      end
+
+    query =
+      start_query
+      |> preload([:agency, :user, :challenge_owner_users])
+      |> order_on_attribute(opts[:sort])
       |> Filter.filter(opts[:filter], __MODULE__)
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
@@ -115,7 +243,8 @@ defmodule ChallengeGov.Challenges do
             :user,
             :federal_partner_agencies,
             :non_federal_partners,
-            :agency
+            :agency,
+            :challenge_owner_users
           ])
 
         challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
@@ -148,10 +277,13 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Submit a new challenge for a user
   """
-  def submit(user, params) do
+  def old_create(user, params) do
     result =
       Ecto.Multi.new()
-      |> Ecto.Multi.insert(:challenge, submit_challenge(user, params))
+      |> Ecto.Multi.insert(:challenge, create_challenge(user, params))
+      |> attach_initial_owner(user)
+      |> attach_federal_partners(params)
+      |> attach_challenge_owners(params)
       |> attach_documents(params)
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, params)
@@ -177,52 +309,15 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  defp submit_challenge(user, params) do
-    user
-    |> Ecto.build_assoc(:challenges)
-    |> Challenge.create_changeset(params, user)
-  end
-
-  @doc """
-  Submit a new challenge for a user
-  """
-  def create(user, params) do
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.insert(:challenge, create_challenge(user, params))
-      |> attach_federal_partners(params)
-      |> attach_documents(params)
-      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
-        Logo.maybe_upload_logo(challenge, params)
-      end)
-      |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
-        WinnerImage.maybe_upload_winner_image(challenge, params)
-      end)
-      |> Repo.transaction()
-
-    case result do
-      {:ok, %{challenge: challenge}} ->
-        {:ok, challenge}
-
-      {:error, :challenge, changeset, _} ->
-        {:error, changeset}
-
-      {:error, {:document, _}, _, _} ->
-        user
-        |> Ecto.build_assoc(:challenges)
-        |> Challenge.admin_changeset(params, user)
-        |> Ecto.Changeset.add_error(:document_ids, "are invalid")
-        |> Ecto.Changeset.apply_action(:insert)
-    end
-  end
-
   defp create_challenge(user, params) do
     user
     |> Ecto.build_assoc(:challenges)
     |> Map.put(:federal_partners, [])
-    |> Challenge.admin_changeset(params, user)
+    |> Map.put(:federal_partner_agencies, [])
+    |> Challenge.create_changeset(params, user)
   end
 
+  # Attach federal partners functions
   defp attach_federal_partners(multi, %{federal_partners: ids}) do
     attach_federal_partners(multi, %{"federal_partners" => ids})
   end
@@ -250,6 +345,49 @@ defmodule ChallengeGov.Challenges do
 
   defp attach_federal_partners(multi, _params), do: multi
 
+  # Attach challenge owners functions
+  defp attach_initial_owner(multi, user) do
+    Ecto.Multi.run(multi, {:user, user.id}, fn _repo, changes ->
+      if user.role == "challenge_owner" do
+        %ChallengeOwner{}
+        |> ChallengeOwner.changeset(%{
+          user_id: user.id,
+          challenge_id: changes.challenge.id
+        })
+        |> Repo.insert()
+      end
+    end)
+  end
+
+  # Attach challenge owners functions
+  defp attach_challenge_owners(multi, %{challenge_owners: ids}) do
+    attach_challenge_owners(multi, %{"challenge_owners" => ids})
+  end
+
+  defp attach_challenge_owners(multi, %{"challenge_owners" => ids}) do
+    multi =
+      Ecto.Multi.run(multi, :delete_owners, fn _repo, changes ->
+        {:ok,
+         Repo.delete_all(
+           from(co in ChallengeOwner, where: co.challenge_id == ^changes.challenge.id)
+         )}
+      end)
+
+    Enum.reduce(ids, multi, fn user_id, multi ->
+      Ecto.Multi.run(multi, {:user, user_id}, fn _repo, changes ->
+        %ChallengeOwner{}
+        |> ChallengeOwner.changeset(%{
+          user_id: user_id,
+          challenge_id: changes.challenge.id
+        })
+        |> Repo.insert()
+      end)
+    end)
+  end
+
+  defp attach_challenge_owners(multi, _params), do: multi
+
+  # Attach supporting document functions
   defp attach_documents(multi, %{document_ids: ids}) do
     attach_documents(multi, %{"document_ids" => ids})
   end
@@ -267,7 +405,7 @@ defmodule ChallengeGov.Challenges do
   defp attach_documents(multi, _params), do: multi
 
   defp attach_document({:ok, document}, challenge) do
-    SupportingDocuments.attach_to_challenge(document, challenge)
+    SupportingDocuments.attach_to_challenge(document, challenge, "resources")
   end
 
   defp attach_document(result, _challenge), do: result
@@ -275,22 +413,29 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Update a challenge
   """
-  def update(challenge, params) do
+  def update(challenge, params, current_user) do
+    # TODO: Refactor the current_user permissions checking for updating challenge owner
     challenge = Repo.preload(challenge, [:non_federal_partners, :events])
 
     params =
       params
+      |> Map.put_new("challenge_owners", [])
+      |> Map.put_new("federal_partners", [])
       |> Map.put_new("non_federal_partners", [])
       |> Map.put_new("events", [])
 
     changeset =
-      challenge
-      |> Challenge.update_changeset(params)
+      if Accounts.is_admin?(current_user) or Accounts.is_super_admin?(current_user) do
+        Challenge.admin_update_changeset(challenge, params)
+      else
+        Challenge.update_changeset(challenge, params)
+      end
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
       |> attach_federal_partners(params)
+      |> attach_challenge_owners(params)
       |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
         maybe_create_event(challenge, changeset)
       end)
@@ -309,6 +454,32 @@ defmodule ChallengeGov.Challenges do
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
+  end
+
+  @doc """
+  Delete a challenge
+  """
+  def delete(challenge) do
+    Repo.delete(challenge)
+  end
+
+  @doc """
+  Checks if a user is allowed to edit a challenge
+  """
+  def allowed_to_edit(user, challenge) do
+    if is_challenge_owner?(user, challenge) or
+         Accounts.is_admin?(user) or Accounts.is_super_admin?(user) do
+      {:ok, challenge}
+    else
+      {:error, :not_permitted}
+    end
+  end
+
+  @doc """
+  Checks if a user is in the list of owners for a challenge
+  """
+  def is_challenge_owner?(user, challenge) do
+    Enum.member?(challenge.challenge_owner_users, user)
   end
 
   defp maybe_create_event(challenge, changeset) do
@@ -492,13 +663,100 @@ defmodule ChallengeGov.Challenges do
     where(query, [c], ilike(c.title, ^value) or ilike(c.description, ^value))
   end
 
-  def filter_on_attribute({"type", value}, query) do
-    where(query, [c], c.type in ^value)
+  def filter_on_attribute({"status", value}, query) do
+    where(query, [c], c.status == ^value)
+  end
+
+  # TODO: Refactor this to use jsonb column more elegantly
+  def filter_on_attribute({"types", values}, query) do
+    Enum.reduce(values, query, fn value, query ->
+      where(query, [c], fragment("? @> ?::jsonb", c.types, ^[value]))
+    end)
   end
 
   def filter_on_attribute({"agency_id", value}, query) do
     where(query, [c], c.agency_id == ^value)
   end
 
+  def filter_on_attribute({"user_id", value}, query) do
+    where(query, [c], c.user_id == ^value)
+  end
+
+  def filter_on_attribute({"user_ids", ids}, query) do
+    query
+    |> join(:inner, [c], co in assoc(c, :challenge_owners))
+    |> where([co], co.user_id in ^ids)
+  end
+
+  def filter_on_attribute({"start_date_start", value}, query) do
+    {:ok, datetime} = Timex.parse(value, "{YYYY}-{0M}-{0D}")
+    where(query, [c], c.start_date >= ^datetime)
+  end
+
+  def filter_on_attribute({"start_date_end", value}, query) do
+    {:ok, datetime} = Timex.parse(value, "{YYYY}-{0M}-{0D}")
+    where(query, [c], c.start_date <= ^datetime)
+  end
+
+  def filter_on_attribute({"end_date_start", value}, query) do
+    {:ok, datetime} = Timex.parse(value, "{YYYY}-{0M}-{0D}")
+    where(query, [c], c.end_date >= ^datetime)
+  end
+
+  def filter_on_attribute({"end_date_end", value}, query) do
+    {:ok, datetime} = Timex.parse(value, "{YYYY}-{0M}-{0D}")
+    where(query, [c], c.end_date <= ^datetime)
+  end
+
   def filter_on_attribute(_, query), do: query
+
+  def order_on_attribute(query, %{"user" => direction}) do
+    query = join(query, :left, [c], a in assoc(c, :user))
+
+    case direction do
+      "asc" ->
+        order_by(query, [c, a], asc_nulls_last: a.first_name)
+
+      "desc" ->
+        order_by(query, [c, a], desc_nulls_last: a.first_name)
+
+      _ ->
+        query
+    end
+  end
+
+  def order_on_attribute(query, %{"agency" => direction}) do
+    query = join(query, :left, [c], a in assoc(c, :agency))
+
+    case direction do
+      "asc" ->
+        order_by(query, [c, a], asc_nulls_last: a.name)
+
+      "desc" ->
+        order_by(query, [c, a], desc_nulls_last: a.name)
+
+      _ ->
+        query
+    end
+  end
+
+  def order_on_attribute(query, sort_columns) do
+    columns_to_sort =
+      Enum.reduce(sort_columns, [], fn {column, direction}, acc ->
+        column = String.to_atom(column)
+
+        case direction do
+          "asc" ->
+            acc ++ [asc_nulls_last: column]
+
+          "desc" ->
+            acc ++ [desc_nulls_last: column]
+
+          _ ->
+            []
+        end
+      end)
+
+    order_by(query, [c], ^columns_to_sort)
+  end
 end

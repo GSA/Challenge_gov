@@ -33,13 +33,14 @@ defmodule Web.SessionController do
   def result(conn, %{"code" => code, "state" => _state}) do
     %{
       client_id: client_id,
+      private_key_password: private_key_pass,
       private_key_path: private_key_path,
       idp_authorize_url: idp_authorize_url
     } = oidc_config()
 
     {:ok, well_known_config} = LoginGov.get_well_known_configuration(idp_authorize_url)
 
-    private_key = LoginGov.load_private_key(private_key_path)
+    private_key = LoginGov.load_private_key(private_key_pass, private_key_path)
     {:ok, public_key} = LoginGov.get_public_key(well_known_config["jwks_uri"])
     token_endpoint = "https://idp.int.identitysandbox.gov/api/openid_connect/token"
 
@@ -141,6 +142,7 @@ defmodule Web.SessionController do
 
   def check_session_timeout(conn, opts) do
     timeout_at = get_session(conn, :session_timeout_at)
+
     if timeout_at && now() > timeout_at do
       logout_user(conn)
     else
@@ -157,11 +159,10 @@ defmodule Web.SessionController do
   end
 
   defp now do
-    DateTime.utc_now() |> DateTime.to_unix
+    DateTime.utc_now() |> DateTime.to_unix()
   end
 
   defp new_session_timeout_at(timeout_after_minutes) do
-    now() + (timeout_after_minutes * 60)
+    now() + timeout_after_minutes * 60
   end
-
 end

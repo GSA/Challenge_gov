@@ -28,4 +28,12 @@ defmodule ChallengeGov.Challenges.FederalPartner do
       :challenge_id
     ])
   end
+
+  def draft_changeset(struct, params) do
+    struct
+    |> cast(params, [
+      :agency_id,
+      :challenge_id
+    ])
+  end
 end

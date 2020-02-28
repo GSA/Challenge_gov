@@ -5,7 +5,7 @@ defmodule ChallengeGov.MixProject do
     [
       app: :challenge_gov,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -51,7 +51,8 @@ defmodule ChallengeGov.MixProject do
       {:poison, "~> 3.0"},
       {:porcelain, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
-      {:stein, git: "https://github.com/smartlogic/stein.git"},
+      {:stein, "~> 0.5"},
+      {:stein_storage, "~> 0.1"},
       {:timex, "~> 3.5"}
     ]
   end

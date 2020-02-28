@@ -8,16 +8,21 @@ defmodule Web.Admin.ChallengeController do
   action_fallback(Web.Admin.FallbackController)
 
   def index(conn, params) do
+    %{current_user: user} = conn.assigns
+
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
-    pagination = Challenges.admin_all(filter: filter, page: page, per: per)
+    sort = Map.get(params, "sort", %{})
+    pagination = Challenges.all_for_user(user, filter: filter, sort: sort, page: page, per: per)
 
     counts = Challenges.admin_counts()
 
     conn
+    |> assign(:user, user)
     |> assign(:challenges, pagination.page)
     |> assign(:pagination, pagination.pagination)
     |> assign(:filter, filter)
+    |> assign(:sort, sort)
     |> assign(:pending_count, counts.pending)
     |> assign(:created_count, counts.created)
     |> assign(:archived_count, counts.archived)
@@ -34,18 +39,68 @@ defmodule Web.Admin.ChallengeController do
     end
   end
 
-  def new(conn, _params) do
+  def new(conn, %{"non_wizard" => _value}) do
     %{current_user: user} = conn.assigns
 
     conn
+    |> assign(:user, user)
+    |> assign(:action, action_name(conn))
     |> assign(:changeset, Challenges.new(user))
     |> render("new.html")
   end
 
+  # TODO: Make an old "new" to keep access to old challenge form for now
+  def new(conn, _params) do
+    %{current_user: user} = conn.assigns
+
+    conn
+    |> assign(:user, user)
+    |> assign(:changeset, Challenges.new(user))
+    |> assign(:path, Routes.admin_challenge_path(conn, :create))
+    |> assign(:action, action_name(conn))
+    |> assign(:section, "general")
+    |> render("form.html")
+  end
+
+  def create(conn, params = %{"action" => action, "challenge" => %{"section" => section}}) do
+    %{current_user: user} = conn.assigns
+
+    case Challenges.create(params, user) do
+      {:ok, challenge} ->
+        if action == "save_draft" do
+          conn
+          |> put_flash(:info, "Challenge saved as draft")
+          |> redirect(to: Routes.admin_challenge_path(conn, :index))
+        else
+          conn
+          |> redirect(
+            to:
+              Routes.admin_challenge_path(
+                conn,
+                :edit,
+                challenge.id,
+                Challenges.next_section(section).id
+              )
+          )
+        end
+
+      {:error, changeset} ->
+        conn
+        |> assign(:user, user)
+        |> assign(:path, Routes.admin_challenge_path(conn, :create))
+        |> assign(:action, action_name(conn))
+        |> assign(:section, section)
+        |> assign(:changeset, changeset)
+        |> put_status(422)
+        |> render("form.html")
+    end
+  end
+
+  # TODO: Remove this old create
   def create(conn, %{"challenge" => params}) do
     %{current_user: user} = conn.assigns
 
-    case Challenges.create(user, params) do
+    case Challenges.old_create(user, params) do
       {:ok, challenge} ->
         conn
         |> put_flash(:info, "Challenge created!")
@@ -53,36 +108,134 @@ defmodule Web.Admin.ChallengeController do
 
       {:error, changeset} ->
         conn
+        |> assign(:user, user)
+        |> assign(:action, action_name(conn))
         |> assign(:changeset, changeset)
         |> put_status(422)
         |> render("new.html")
     end
   end
 
-  def edit(conn, %{"id" => id}) do
-    with {:ok, challenge} <- Challenges.get(id) do
+  def edit(conn, %{"id" => id, "section" => section}) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       conn
+      |> assign(:user, user)
       |> assign(:challenge, challenge)
-      |> assign(:supporting_documents, challenge.supporting_documents)
+      |> assign(:path, Routes.admin_challenge_path(conn, :update, id))
+      |> assign(:action, action_name(conn))
+      |> assign(:section, section)
       |> assign(:changeset, Challenges.edit(challenge))
-      |> render("edit.html")
+      |> render("form.html")
+    else
+      {:error, :not_permitted} ->
+        conn
+        |> put_flash(:error, "You are not allowed to edit this challenge")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
     end
   end
 
-  def update(conn, %{"id" => id, "challenge" => params}) do
-    {:ok, challenge} = Challenges.get(id)
+  # TODO: Remove old edit
+  def edit(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
 
-    case Challenges.update(challenge, params) do
-      {:ok, challenge} ->
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
+      conn
+      |> assign(:challenge, challenge)
+      |> assign(:user, user)
+      |> assign(:supporting_documents, challenge.supporting_documents)
+      |> assign(:changeset, Challenges.edit(challenge))
+      |> assign(:action, action_name(conn))
+      |> render("edit.html")
+    else
+      {:error, :not_permitted} ->
         conn
-        |> put_flash(:info, "Challenge updated!")
-        |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+        |> put_flash(:error, "You are not allowed to edit this challenge")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
+    end
+  end
 
+  def update(
+        conn,
+        params = %{"id" => id, "action" => action, "challenge" => %{"section" => section}}
+      ) do
+    %{current_user: user} = conn.assigns
+    {:ok, challenge} = Challenges.get(id)
+    to_section = Challenges.to_section(section, action)
+
+    with {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
+         {:ok, challenge} <- Challenges.update(challenge, params) do
+      if action == "save_draft" do
+        conn
+        |> put_flash(:info, "Challenge saved as draft")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
+      end
+
+      if to_section do
+        redirect(conn, to: Routes.admin_challenge_path(conn, :edit, challenge.id, to_section.id))
+      else
+        redirect(conn, to: Routes.admin_challenge_path(conn, :index))
+      end
+    else
       {:error, changeset} ->
         conn
+        |> assign(:user, user)
+        |> assign(:challenge, challenge)
+        |> assign(:path, Routes.admin_challenge_path(conn, :update, id))
+        |> assign(:action, action_name(conn))
+        |> assign(:section, section)
+        |> assign(:changeset, changeset)
+        |> render("form.html")
+
+      {:error, :not_permitted} ->
+        conn
+        |> put_flash(:error, "You are not allowed to edit this challenge")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
+    end
+  end
+
+  # TODO: Remove old update
+  def update(conn, %{"id" => id, "challenge" => params}) do
+    %{current_user: user} = conn.assigns
+    {:ok, challenge} = Challenges.get(id)
+
+    with {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
+         {:ok, challenge} <- Challenges.update(challenge, params, user) do
+      conn
+      |> put_flash(:info, "Challenge updated!")
+      |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+    else
+      {:error, changeset} ->
+        conn
+        |> assign(:user, user)
+        |> assign(:action, action_name(conn))
         |> assign(:challenge, challenge)
         |> assign(:changeset, changeset)
         |> render("edit.html")
+
+      {:error, :not_permitted} ->
+        conn
+        |> put_flash(:error, "You are not allowed to edit this challenge")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
+    end
+  end
+
+  def delete(conn, %{"id" => id}) do
+    {:ok, challenge} = Challenges.get(id)
+
+    case Challenges.delete(challenge) do
+      {:ok, _challenge} ->
+        conn
+        |> put_flash(:info, "Challenge deleted")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
+
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:info, "Something went wrong")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
     end
   end
 

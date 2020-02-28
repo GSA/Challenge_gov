@@ -11,6 +11,9 @@
           </h2>
         </div>
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionWrap">
+          <%= challenge_owner_field(f, @user, @action) %>
+          <%= challenge_owners_field(f, @user, @changeset, @action) %>
+          <%= challenge_status_field(f, @user, @action) %>
           <%= FormView.file_field(f, :logo, label: "Logo") do %>
             <%= if @data.logo_key do %>
               <p>Current Logo:</p>
@@ -40,7 +43,7 @@
               Federal Partner Agency
             <% end %>
             <div class="col-md-8">
-              <%= multiple_select(f, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partners, &(&1.id)), class: "form-control js-multiselect") %>
+              <%= multiple_select(f, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partner_agencies, &(&1.id)), class: "form-control js-multiselect") %>
             </div>
           </div>
 
@@ -75,7 +78,7 @@
             Challenge Type <span class="required">*</span>
             <% end %>
             <div class="col-md-8">
-              <%= select(f, :type, Challenges.challenge_types(), class: "form-control js-select") %>
+              <%= multiple_select(f, :types, Challenges.challenge_types(), selected: @changeset.data.types, class: "form-control js-multiselect") %>
             </div>
           </div>
           <%= FormView.textarea_field(f, :description, label: "Challenge Description", rows: 5, required: true) %>
@@ -91,6 +94,7 @@
           <% end %>
           <%= FormView.datetime_field(f, :start_date, required: true) %>
           <%= FormView.datetime_field(f, :end_date, required: true) %>
+          <%= FormView.datetime_field(f, :auto_publish_date, required: true) %>
           <div class="<%= FormView.form_group_classes(f, :multi_phase) %>">
             <%= label(f, :multi_phase, class: "col-md-4") do %>
             Does this Challenge have multiple Phases? <span class="required">*</span>

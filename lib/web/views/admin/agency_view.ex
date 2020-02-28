@@ -6,6 +6,8 @@ defmodule Web.Admin.AgencyView do
   alias Web.AgencyView
 
   def name_link(conn, agency) do
-    link(agency.name, to: Routes.admin_agency_path(conn, :show, agency.id))
+    if agency do
+      link(agency.name, to: Routes.admin_agency_path(conn, :show, agency.id))
+    end
   end
 end

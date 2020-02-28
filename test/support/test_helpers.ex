@@ -72,11 +72,11 @@ defmodule ChallengeGov.TestHelpers do
     )
   end
 
-  def create_challenge(user, attributes \\ %{}) do
-    attributes = challenge_attributes(attributes)
-    {:ok, challenge} = Challenges.submit(user, attributes)
-    challenge
-  end
+  # def create_challenge(user, attributes \\ %{}) do
+  # attributes = challenge_attributes(attributes)
+  # {:ok, challenge} = Challenges.submit(user, attributes)
+  # challenge
+  # end
 
   @doc """
   Generate a struct with challenge data

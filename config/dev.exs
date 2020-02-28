@@ -75,6 +75,7 @@ config :challenge_gov, :oidc_config, %{
   acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
   redirect_uri: "http://localhost:4000/auth/result",
   client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_test_app",
+  private_key_password: nil,
   private_key_path: "private.pem",
   public_key_path: "cert.pem"
 }

@@ -8,12 +8,29 @@ defmodule ChallengeGov.Accounts.User do
   import Ecto.Changeset
 
   alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.SupportingDocuments.Document
   alias ChallengeGov.Agencies.Member
 
   @type t :: %__MODULE__{}
 
+  # TODO: Available roles to be able to change a user to need to differ by role attempting the change
+  # TODO: Add backend restriction on role modifying. Different roles need different changesets
+  @roles [
+    "super_admin",
+    "admin",
+    "challenge_owner"
+  ]
+
   schema "users" do
+    # Associations
+    has_many(:challenges, Challenge)
+    has_many(:challenge_owners, ChallengeOwner)
+    has_many(:challenge_owner_challenges, through: [:challenge_owners, :challenge])
+    has_many(:members, Member)
+    has_many(:supporting_documents, Document)
+
+    # Fields
     field(:role, :string, read_after_writes: true)
     field(:finalized, :boolean, default: true)
     field(:display, :boolean, default: true)
@@ -40,10 +57,6 @@ defmodule ChallengeGov.Accounts.User do
     field(:terms_of_use, :utc_datetime)
     field(:privacy_guidelines, :utc_datetime)
     field(:agency_id, :integer)
-
-    has_many(:challenges, Challenge)
-    has_many(:members, Member)
-    has_many(:supporting_documents, Document)
 
     timestamps()
   end
@@ -138,4 +151,6 @@ defmodule ChallengeGov.Accounts.User do
         |> put_change(:email_verified_at, nil)
     end
   end
+
+  def roles, do: @roles
 end

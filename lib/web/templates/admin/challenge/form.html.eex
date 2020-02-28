@@ -1,0 +1,42 @@
+<section class="content-header">
+  <h1>
+    Create a new challenge
+  </h1>
+
+  <ol class="breadcrumb">
+    <li>
+      <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
+        <i class="fa fa-dashboard"></i> Home
+      <% end %>
+    </li>
+    <li><%= link("Challenges", to: Routes.admin_challenge_path(@conn, :index)) %></li>
+    <li class="active">New</li>
+  </ol>
+</section>
+
+<section class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
+        <%= default_enter_action("next") %>
+        <%= progress_bar(@conn, @section, @changeset.data, @action) %>
+
+        <div class="box box-primary">
+          <%= hidden_input f, :section, value: @section %>
+          <%= hidden_input f, :user_id, value: @user.id %>
+          <%= hidden_challenge_owners_field(f, @changeset) %>
+
+          <div class="box-body">
+            <%= render Web.Admin.ChallengeView, "_#{@section}.html", form: f, changeset: @changeset, data: @changeset.data, path: @path %>
+          </div>
+
+          <div class="box-footer">
+            <%= back_button(@conn, @changeset.data) %>
+            <%= submit_button(@section) %>
+            <%= save_draft_button() %>
+          </div>
+        </div>
+      <% end) %>
+    </div>
+  </div>
+</section>

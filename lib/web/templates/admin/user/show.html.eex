@@ -9,7 +9,7 @@
         <i class="fa fa-dashboard"></i> Home
       <% end %>
     </li>
-    <li><%= link("Challenges", to: Routes.admin_user_path(@conn, :index)) %></li>
+    <li><%= link("Users", to: Routes.admin_user_path(@conn, :index)) %></li>
     <li class="active"><%= AccountView.full_name(@user) %></li>
   </ol>
 </section>

@@ -1,6 +1,3 @@
-# pem files
-*.pem
-
 # The directory Mix will write compiled artifacts to.
 /_build/
 
@@ -44,5 +41,7 @@ npm-debug.log
 # variables.
 /config/*.secret.exs
 /config/dev.local.exs
+/config/test.local.exs
 /uploads
-/*.pem
+/private.pem
+/key.pem

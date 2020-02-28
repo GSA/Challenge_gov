@@ -67,4 +67,10 @@ defmodule Web.SharedView do
         value
     end
   end
+
+  def readable_date(date) do
+    if date do
+      Timex.format!(date, "{0M}/{0D}/{YYYY}")
+    end
+  end
 end

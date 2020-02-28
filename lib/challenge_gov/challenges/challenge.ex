@@ -9,6 +9,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Agencies.Agency
+  alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.NonFederalPartner
   alias ChallengeGov.SupportingDocuments.Document
@@ -17,6 +18,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   @type t :: %__MODULE__{}
 
   @statuses [
+    "draft",
     "pending",
     "created",
     "rejected",
@@ -25,13 +27,14 @@ defmodule ChallengeGov.Challenges.Challenge do
   ]
 
   @challenge_types [
-    "Ideation",
-    "Scientific Discovery",
-    "Technology Development and hardware",
-    "Software and Apps",
-    "Data Analytics,Visualizations",
-    "Algorithms",
-    "Design"
+    "Software and apps",
+    "Creative (multimedia and design)",
+    "Ideas",
+    "Technology demonstration and hardware",
+    "Nominations",
+    "Business plans",
+    "Analytics, visualizations and algorithms",
+    "Scientific"
   ]
 
   @legal_authority [
@@ -51,15 +54,33 @@ defmodule ChallengeGov.Challenges.Challenge do
     "Public-Private Partnership Authority"
   ]
 
+  @sections [
+    %{id: "general", label: "General Info"},
+    %{id: "details", label: "Details"},
+    %{id: "timeline", label: "Timeline"},
+    %{id: "prizes", label: "Prizes"},
+    %{id: "rules", label: "Rules"},
+    %{id: "judging", label: "Judging"},
+    %{id: "how_to_enter", label: "How to enter"},
+    %{id: "resources", label: "Resources"},
+    %{id: "review", label: "Review and submit"}
+  ]
+
   schema "challenges" do
     # Associations
     belongs_to(:user, User)
     belongs_to(:agency, Agency)
     has_many(:events, Event, on_replace: :delete)
     has_many(:supporting_documents, Document)
+    has_many(:challenge_owners, ChallengeOwner)
+    has_many(:challenge_owner_users, through: [:challenge_owners, :user])
     has_many(:federal_partners, FederalPartner)
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
-    has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete)
+
+    has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete, on_delete: :delete_all)
+
+    # Array fields. Pseudo associations
+    field(:types, {:array, :string}, default: [])
 
     # Images
     field(:logo_key, Ecto.UUID)
@@ -70,6 +91,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
     # Fields
     field(:status, :string, default: "draft")
+    field(:last_section, :string)
     field(:challenge_manager, :string)
     field(:challenge_manager_email, :string)
     field(:poc_email, :string)
@@ -82,7 +104,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:description, :string)
     field(:brief_description, :string)
     field(:how_to_enter, :string)
-    field(:fiscal_year, :integer)
+    field(:fiscal_year, :string)
     field(:start_date, :utc_datetime)
     field(:end_date, :utc_datetime)
     field(:multi_phase, :boolean)
@@ -100,10 +122,16 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:faq, :string)
     field(:winner_information, :string)
     field(:captured_on, :date)
+    field(:auto_publish_date, :utc_datetime)
     field(:published_on, :date)
 
     timestamps()
   end
+
+  @doc """
+  List of all challenge statuses
+  """
+  def statuses(), do: @statuses
 
   @doc """
   List of all challenge types
@@ -115,10 +143,18 @@ defmodule ChallengeGov.Challenges.Challenge do
   """
   def legal_authority(), do: @legal_authority
 
+  @doc """
+  List of all valid sections
+  """
+  def sections(), do: @sections
+
+  # TODO: user_id, agency_id, and status should be locked behind admin only changeset
   def changeset(struct, params) do
     struct
     |> cast(params, [
+      :user_id,
       :agency_id,
+      :status,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
@@ -146,19 +182,92 @@ defmodule ChallengeGov.Challenges.Challenge do
       :terms_and_conditions,
       :legal_authority,
       :faq,
-      :winner_information
+      :winner_information,
+      :types,
+      :auto_publish_date
     ])
-    |> cast_assoc(:non_federal_partners)
+    |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
   end
 
+  def draft_changeset(struct, params = %{"section" => section}) do
+    struct
+    |> changeset(params)
+    |> put_change(:status, "draft")
+    |> put_change(:last_section, section)
+  end
+
+  def section_changeset(struct, params = %{"section" => section}) do
+    struct =
+      struct
+      |> changeset(params)
+      |> put_change(:last_section, section)
+
+    if section do
+      apply(__MODULE__, String.to_atom("#{section}_changeset"), [struct, params])
+    else
+      struct
+    end
+  end
+
+  def general_changeset(struct, _params) do
+    struct
+    |> validate_required([
+      :challenge_manager,
+      :challenge_manager_email,
+      :poc_email,
+      :agency_id,
+      :fiscal_year
+    ])
+    |> cast_assoc(:non_federal_partners)
+    |> validate_format(:challenge_manager_email, ~r/.+@.+\..+/)
+    |> validate_format(:poc_email, ~r/.+@.+\..+/)
+    |> validate_format(:fiscal_year, ~r/\bFY[0-9]{2}\b/)
+  end
+
+  def details_changeset(struct, _params) do
+    struct
+    |> validate_required([:title])
+  end
+
+  def timeline_changeset(struct, _params) do
+    struct
+  end
+
+  def prizes_changeset(struct, _params) do
+    struct
+  end
+
+  def rules_changeset(struct, _params) do
+    struct
+  end
+
+  def judging_changeset(struct, _params) do
+    struct
+  end
+
+  def how_to_enter_changeset(struct, _params) do
+    struct
+  end
+
+  def resources_changeset(struct, _params) do
+    struct
+  end
+
+  def review_changeset(struct, _params) do
+    struct
+  end
 
   # TODO: Add user usage back in if needing to track submitter
   def create_changeset(struct, params, _user) do
     struct
     |> changeset(params)
+    |> cast_assoc(:non_federal_partners)
+    |> put_change(:status, "pending")
     |> put_change(:captured_on, Date.utc_today())
     |> validate_required([
+      :user_id,
+      :agency_id,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
@@ -194,7 +303,10 @@ defmodule ChallengeGov.Challenges.Challenge do
   def update_changeset(struct, params) do
     struct
     |> changeset(params)
+    |> cast_assoc(:non_federal_partners)
     |> validate_required([
+      :user_id,
+      :agency_id,
       :status,
       :challenge_manager,
       :challenge_manager_email,
@@ -229,9 +341,10 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   # to allow change to admin info?
-  def admin_changeset(struct, params, user) do
+  def admin_update_changeset(struct, params) do
     struct
-    |> create_changeset(params, user)
+    |> cast(params, [:user_id])
+    |> update_changeset(params)
   end
 
   def publish_changeset(struct) do
@@ -249,6 +362,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_inclusion(:status, @statuses)
   end
 
+  # Image changesets
   def logo_changeset(struct, key, extension) do
     struct
     |> change()
