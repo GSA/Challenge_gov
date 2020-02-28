@@ -72,9 +72,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     belongs_to(:agency, Agency)
     has_many(:events, Event, on_replace: :delete)
     has_many(:supporting_documents, Document)
-    has_many(:challenge_owners, ChallengeOwner)
+    has_many(:challenge_owners, ChallengeOwner, on_delete: :delete_all)
     has_many(:challenge_owner_users, through: [:challenge_owners, :user])
-    has_many(:federal_partners, FederalPartner)
+    has_many(:federal_partners, FederalPartner, on_delete: :delete_all)
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
 
     has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete, on_delete: :delete_all)
