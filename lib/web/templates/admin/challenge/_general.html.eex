@@ -18,6 +18,7 @@
   <% end %>
   <div class="col-md-8">
     <%= multiple_select(@form, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partner_agencies, &(&1.id)), class: "form-control js-multiselect") %>
+    <%= error_tag(@form, :federal_partners) %>
   </div>
 </div>
 <hr/>

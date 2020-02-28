@@ -108,6 +108,8 @@ defmodule Web.Admin.ChallengeController do
 
       {:error, changeset} ->
         conn
+        |> assign(:user, user)
+        |> assign(:action, action_name(conn))
         |> assign(:changeset, changeset)
         |> put_status(422)
         |> render("new.html")

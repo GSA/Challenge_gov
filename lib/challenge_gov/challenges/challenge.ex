@@ -218,7 +218,6 @@ defmodule ChallengeGov.Challenges.Challenge do
       :agency_id,
       :fiscal_year
     ])
-    |> cast_assoc(:federal_partners)
     |> cast_assoc(:non_federal_partners)
     |> validate_format(:challenge_manager_email, ~r/.+@.+\..+/)
     |> validate_format(:fiscal_year, ~r/\bFY[0-9]{2}\b/)
