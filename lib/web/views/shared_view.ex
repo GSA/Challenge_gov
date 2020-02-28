@@ -4,13 +4,7 @@ defmodule Web.SharedView do
   alias Web.SharedView
 
   def session_timeout(conn) do
-    case Map.get(conn.private.plug_session, "session_timeout_at") do
-      # {:ok, session_timeout} ->
-      session_timeout ->
-        session_timeout
-      :error ->
-        nil
-    end
+    Map.get(conn.private.plug_session, "session_timeout_at")
   end
 
   def page_path(path, page) do
