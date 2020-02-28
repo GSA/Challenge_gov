@@ -310,6 +310,7 @@ defmodule ChallengeGov.Challenges do
   defp create_challenge(user, params) do
     user
     |> Ecto.build_assoc(:challenges)
+    |> Map.put(:challenge_owner_users, [])
     |> Map.put(:federal_partners, [])
     |> Map.put(:federal_partner_agencies, [])
     |> Challenge.create_changeset(params, user)
