@@ -356,6 +356,8 @@ defmodule ChallengeGov.Challenges do
           challenge_id: changes.challenge.id
         })
         |> Repo.insert()
+      else
+        {:ok, user}
       end
     end)
   end
