@@ -54,14 +54,13 @@ defmodule Web.SessionController do
           {:error, :not_found} ->
             Accounts.create(%{
               email: userinfo["email"],
-              first_name: "Admin",
-              last_name: "User",
-              password: "password",
-              password_confirmation: "password",
+              first_name: "Placeholder",
+              last_name: "Placeholder",
               role: "challenge_owner",
-              token: "",
+              token: userinfo["sub"],
               terms_of_use: nil,
-              privacy_guidelines: nil
+              privacy_guidelines: nil,
+              pending: true
             })
 
           {:ok, account_user} ->

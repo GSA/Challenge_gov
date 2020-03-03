@@ -77,7 +77,7 @@ defmodule ChallengeGov.Accounts.User do
       :agency_id,
       :pending
     ])
-    |> validate_required([:email, :first_name, :last_name])
+    |> validate_required([:email])
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
@@ -115,7 +115,6 @@ defmodule ChallengeGov.Accounts.User do
   def create_changeset(struct, params) do
     struct
     |> changeset(params)
-    |> password_changeset(params)
     |> put_change(:email_verification_token, UUID.uuid4())
   end
 
@@ -147,6 +146,7 @@ defmodule ChallengeGov.Accounts.User do
   def update_changeset(struct, params) do
     struct
     |> changeset(params)
+    |> validate_required([:email, :first_name, :last_name])
     |> maybe_reset_verification()
   end
 
