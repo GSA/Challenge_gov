@@ -54,16 +54,27 @@ defmodule Web.SessionController do
           {:error, :not_found} ->
             Accounts.create(%{
               email: userinfo["email"],
-              password: "password",
-              password_confirmation: "password",
               first_name: "Admin",
               last_name: "User",
-              role: "admin",
-              token: userinfo["sub"]
+              password: "password",
+              password_confirmation: "password",
+              role: "challenge_owner",
+              token: "",
+              terms_of_use: nil,
+              privacy_guidelines: nil
             })
 
           {:ok, account_user} ->
-            {:ok, account_user}
+            case Map.get(account_user, :token) do
+              nil ->
+                Accounts.update(
+                  account_user,
+                  %{token: userinfo["sub"]}
+                )
+
+              _ ->
+              {:ok, account_user}
+            end
         end
 
       conn
