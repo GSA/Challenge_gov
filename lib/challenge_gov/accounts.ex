@@ -179,6 +179,15 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Update an account's terms
+  """
+  def update_terms(user, params) do
+    user
+    |> User.terms_changeset(params)
+    |> Repo.update()
+  end
+
+  @doc """
   Validate a user's login information
   """
   def validate_login(email, password) do
@@ -324,16 +333,6 @@ defmodule ChallengeGov.Accounts do
   def is_challenge_owner?(%{role: "challenge_owner"}), do: true
 
   def is_challenge_owner?(_), do: false
-
-  @doc """
-  Check if a user is a pending challenge_owner
-  """
-
-  def is_challenge_owner_pending?(user)
-
-  def is_challenge_owner_pending?(%{role: "challenge_owner_pending"}), do: true
-
-  def is_challenge_owner_pending?(_), do: false
 
   @doc """
   Check if a user has accepted all terms

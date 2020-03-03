@@ -74,9 +74,7 @@ defmodule ChallengeGov.Accounts.User do
       :privacy_guidelines,
       :agency_id
     ])
-    |> put_terms(:terms_of_use)
-    |> put_terms(:privacy_guidelines)
-    |> validate_required([:email, :first_name, :last_name, :privacy_guidelines, :terms_of_use])
+    |> validate_required([:email, :first_name, :last_name])
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
@@ -84,6 +82,22 @@ defmodule ChallengeGov.Accounts.User do
   def put_terms(struct, params) do
     utc_datetime = DateTime.utc_now()
     put_change(struct, params, DateTime.truncate(utc_datetime, :second))
+  end
+
+  def terms_changeset(struct, params) do
+    struct
+    |> cast(params, [
+      :first_name,
+      :last_name,
+      :email,
+      :terms_of_use,
+      :privacy_guidelines,
+      :agency_id
+    ])
+    |> put_terms(:terms_of_use)
+    |> put_terms(:privacy_guidelines)
+    |> validate_format(:email, ~r/.+@.+\..+/)
+    |> unique_constraint(:email, name: :users_lower_email_index)
   end
 
   def password_changeset(struct, params) do

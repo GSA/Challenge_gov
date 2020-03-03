@@ -15,16 +15,23 @@ defmodule Web.Admin.TermsController do
     %{current_user: user} = conn.assigns
     data = Map.get(params, "user")
 
-    parsed_data =
+    parsed_data = if (Map.get(data, "agency_id") == nil) do
       Map.put(
         data,
         "agency_id",
-        String.to_integer(Map.get(data, "agency_id"))
+        nil
       )
+    else
+        Map.put(
+          data,
+          "agency_id",
+          String.to_integer(Map.get(data, "agency_id"))
+        )
+    end
 
     if Map.get(parsed_data, "accept_terms_of_use") === "true" and
          Map.get(parsed_data, "accept_privacy_guidelines") === "true" do
-      case Accounts.update(user, parsed_data) do
+      case Accounts.update_terms(user, parsed_data) do
         {:ok, user} ->
           conn
           |> put_flash(:info, "Your account has been updated")
@@ -48,7 +55,7 @@ defmodule Web.Admin.TermsController do
   end
 
   def redirect_based_on_user(conn, user) do
-    if Accounts.is_challenge_owner_pending?(user) do
+    if Accounts.is_challenge_owner?(user) do
       redirect(conn, to: Routes.admin_terms_path(conn, :pending))
     else
       redirect(conn, to: Routes.admin_challenge_path(conn, :index))
