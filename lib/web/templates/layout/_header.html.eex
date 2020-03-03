@@ -20,7 +20,7 @@
             </li>
           <% else %>
             <li>
-              <%= link("Challenge Owner Sign In", to: Routes.session_path(@conn, :new)) %>
+              <%= link("Sign In", to: Routes.session_path(@conn, :new)) %>
             </li>
           <% end %>
         </ul>

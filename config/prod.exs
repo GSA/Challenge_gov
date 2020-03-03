@@ -68,9 +68,7 @@ config :challenge_gov, :oidc_config, %{
   public_key_path: "cert.pem"
 }
 
-# config :challenge_gov, :session_timeout_in_minutes, 15	config :challenge_gov, 
-# config :challenge_gov, session_timeout_in_minutes: {:system, "SESSION_TIMEOUT_IN_MINUTES"}
-System.get_env("SESSION_TIMEOUT_IN_MINUTES")
+config :challenge_gov, session_timeout_in_minutes: System.get_env("SESSION_TIMEOUT_IN_MINUTES")
 
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
