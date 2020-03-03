@@ -13,9 +13,9 @@ defmodule Web.Plugs.SessionTimeout do
   end
 
   defp timeout_interval do
-    with  timeout_var <- Application.get_env(:challenge_gov, :session_timeout_in_minutes),
-          false <- is_nil(timeout_var),
-          {timeout, _} <- Integer.parse(timeout_var) do
+    with timeout_var <- Application.get_env(:challenge_gov, :session_timeout_in_minutes),
+         false <- is_nil(timeout_var),
+         {timeout, _} <- Integer.parse(timeout_var) do
       timeout
     else
       _ ->
