@@ -13,7 +13,6 @@ defmodule Web.Plugs.SessionTimeout do
   end
 
   defp timeout_interval do
-    {timeout, _} = Integer.parse(Application.get_env(:challenge_gov, :session_timeout_in_minutes))
-    timeout
+    Application.get_env(:challenge_gov, :session_timeout_in_minutes)
   end
 end
