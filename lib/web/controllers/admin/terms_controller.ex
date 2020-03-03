@@ -55,11 +55,13 @@ defmodule Web.Admin.TermsController do
   end
 
   def redirect_based_on_user(conn, user) do
-    if Accounts.is_challenge_owner?(user) do
-      redirect(conn, to: Routes.admin_terms_path(conn, :pending))
-    else
-      redirect(conn, to: Routes.admin_challenge_path(conn, :index))
-    end
+    case Accounts.is_pending_user?(user) do
+      true ->
+        redirect(conn, to: Routes.admin_terms_path(conn, :pending))
+
+      false ->
+        redirect(conn, to: Routes.admin_challenge_path(conn, :index))
+    end    
   end
 
   def pending(conn, _params) do

@@ -58,6 +58,8 @@ defmodule ChallengeGov.Accounts.User do
     field(:privacy_guidelines, :utc_datetime)
     field(:agency_id, :integer)
 
+    field(:pending, :boolean)
+
     timestamps()
   end
 
@@ -72,7 +74,8 @@ defmodule ChallengeGov.Accounts.User do
       :token,
       :terms_of_use,
       :privacy_guidelines,
-      :agency_id
+      :agency_id,
+      :pending
     ])
     |> validate_required([:email, :first_name, :last_name])
     |> validate_format(:email, ~r/.+@.+\..+/)
