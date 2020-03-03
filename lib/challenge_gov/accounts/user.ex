@@ -34,6 +34,7 @@ defmodule ChallengeGov.Accounts.User do
     field(:role, :string, read_after_writes: true)
     field(:finalized, :boolean, default: true)
     field(:display, :boolean, default: true)
+    field(:suspended, :boolean, default: false)
 
     field(:email, :string)
     field(:password_hash, :string)

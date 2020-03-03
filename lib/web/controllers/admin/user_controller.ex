@@ -60,20 +60,11 @@ defmodule Web.Admin.UserController do
     end
   end
 
-  def toggle(conn, %{"id" => id, "action" => "participation"}) do
+  def toggle(conn, %{"id" => id, "action" => "suspend"}) do
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.toggle_display(user) do
+         {:ok, user} <- Accounts.toggle_suspension(user) do
       conn
-      |> put_flash(:info, "User display updated")
-      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
-    end
-  end
-
-  def toggle(conn, %{"id" => id, "action" => "admin"}) do
-    with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.toggle_admin(user) do
-      conn
-      |> put_flash(:info, "User role updated")
+      |> put_flash(:info, "User access updated")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
     end
   end
