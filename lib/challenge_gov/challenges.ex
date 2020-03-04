@@ -546,6 +546,13 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
+  Checks if the challenge should be publicly accessible. Either published or archived
+  """
+  def public?(challenge) do
+    challenge.status == "created" or challenge.status == "archived"
+  end
+
+  @doc """
   Check if a challenge is publishable
 
       iex> Challenges.publishable?(%Challenge{status: "pending"})
