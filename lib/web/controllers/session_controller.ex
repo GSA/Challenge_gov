@@ -72,7 +72,7 @@ defmodule Web.SessionController do
                 )
 
               _ ->
-              {:ok, account_user}
+                {:ok, account_user}
             end
         end
 

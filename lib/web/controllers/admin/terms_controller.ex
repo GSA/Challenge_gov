@@ -15,19 +15,20 @@ defmodule Web.Admin.TermsController do
     %{current_user: user} = conn.assigns
     data = Map.get(params, "user")
 
-    parsed_data = if (Map.get(data, "agency_id") == nil) do
-      Map.put(
-        data,
-        "agency_id",
-        nil
-      )
-    else
+    parsed_data =
+      if Map.get(data, "agency_id") == nil do
+        Map.put(
+          data,
+          "agency_id",
+          nil
+        )
+      else
         Map.put(
           data,
           "agency_id",
           String.to_integer(Map.get(data, "agency_id"))
         )
-    end
+      end
 
     if Map.get(parsed_data, "accept_terms_of_use") === "true" and
          Map.get(parsed_data, "accept_privacy_guidelines") === "true" do
@@ -61,7 +62,7 @@ defmodule Web.Admin.TermsController do
 
       false ->
         redirect(conn, to: Routes.admin_challenge_path(conn, :index))
-    end    
+    end
   end
 
   def pending(conn, _params) do

@@ -356,7 +356,6 @@ defmodule ChallengeGov.Accounts do
 
   def is_pending_user?(%{pending: false}), do: false
 
-
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
