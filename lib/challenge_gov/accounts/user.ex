@@ -106,6 +106,7 @@ defmodule ChallengeGov.Accounts.User do
   def create_changeset(struct, params) do
     struct
     |> changeset(params)
+    |> password_changeset(params)
     |> put_change(:email_verification_token, UUID.uuid4())
   end
 
