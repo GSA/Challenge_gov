@@ -1,54 +1,64 @@
-<section class="content-header">
-  <h1>
-    Edit User #<%= @user.id %>
-  </h1>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          Editing <%= "#{AccountView.full_name(@user)} (#{(@user.email)})" %>
+        </h1>
+      </div>
 
-  <ol class="breadcrumb">
-    <li>
-      <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
-        <i class="fa fa-dashboard"></i> Home
-      <% end %>
-    </li>
-    <li><%= link("Users", to: Routes.admin_user_path(@conn, :index)) %></li>
-    <li><%= link("User ##{@user.id}", to: Routes.admin_user_path(@conn, :show, @user.id)) %></li>
-    <li class="active">Edit</li>
-  </ol>
-</section>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item"><%= link("Users", to: Routes.admin_user_path(@conn, :index)) %></li>
+          <li class="breadcrumb-item"><%= link("User #{AccountView.full_name(@user)} (#{(@user.email)})", to: Routes.admin_user_path(@conn, :show, @user.id)) %></li>
+          <li class="breadcrumb-item active">Edit</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
 
 <section class="content">
-  <div class="row">
-    <div class="col-md-10 col-md-offset-1">
-      <div class="box box-primary">
-        <div class="box-header">
-          <h3 class="box-title">Edit</h3>
-        </div>
-        
-        <%= form_for(@changeset, Routes.admin_user_path(@conn, :update, @user.id), [class: "form-horizontal", multipart: true], fn f -> %>
-          <div class="box-body">
-            <div class="form-group">
-              <div class="col-md-4">Name</div>
-              <div class="col-md-8"><%= "#{@user.first_name} #{@user.last_name}" %></div>
-            </div>
-            <div class="form-group">
-              <div class="col-md-4">Email</div>
-              <div class="col-md-8"><%= @user.email %></div>
-            </div>
-            <%= if Accounts.has_admin_access?(@current_user) do %>
-              <div class="<%= FormView.form_group_classes(f, :federal_partners) %>">
-                <%= label(f, :federal_partners, class: "col-md-4") do %>
-                  Role
-                <% end %>
-                <div class="col-md-8">
-                  <%= select(f, :role, Accounts.roles, label: "Role", required: true, class: "js-select") %>
-                </div>
-              </div>
-            <% end %>
-          </div>            
-
-          <div class="box-footer">
-            <%= submit("Submit", class: "btn btn-primary pull-right") %>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Edit</h3>
           </div>
-        <% end) %>
+          
+          <%= form_for(@changeset, Routes.admin_user_path(@conn, :update, @user.id), [class: "form-horizontal", multipart: true], fn f -> %>
+            <div class="card-body">
+              <div class="form-group">
+                <div class="col-md-4">Name</div>
+                <div class="col-md-8"><%= "#{@user.first_name} #{@user.last_name}" %></div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-4">Email</div>
+                <div class="col-md-8"><%= @user.email %></div>
+              </div>
+              <%= if Accounts.has_admin_access?(@current_user) do %>
+                <div class="<%= FormView.form_group_classes(f, :federal_partners) %>">
+                  <%= label(f, :federal_partners, class: "col-md-4") do %>
+                    Role
+                  <% end %>
+                  <div class="col-md-8">
+                    <%= select(f, :role, Accounts.roles, label: "Role", required: true, class: "js-select") %>
+                  </div>
+                </div>
+              <% end %>
+            </div>            
+
+            <div class="card-footer">
+              <%= submit("Submit", class: "btn btn-primary pull-right") %>
+            </div>
+          <% end) %>
+        </div>
       </div>
     </div>
   </div>

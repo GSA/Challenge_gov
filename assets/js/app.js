@@ -5,7 +5,8 @@ import jquery from  "jquery";
 import "popper.js";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
-import "font-awesome/css/font-awesome.css";
+import "@fortawesome/fontawesome-free/css/all.css";
+
 import "../css/app.css";
 
 // webpack automatically bundles all modules in your

@@ -8,7 +8,7 @@ defmodule Web.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug Web.Plugs.FetchUser
-    plug(Web.Plugs.SessionTimeout)
+    plug Web.Plugs.SessionTimeout
   end
 
   pipeline(:signed_in) do

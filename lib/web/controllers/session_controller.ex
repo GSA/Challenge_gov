@@ -104,7 +104,7 @@ defmodule Web.SessionController do
   def delete(conn, _params) do
     conn
     |> clear_session()
-    |> redirect(to: Routes.page_path(conn, :index))
+    |> redirect(to: Routes.session_path(conn, :new))
   end
 
   @doc """

@@ -1,30 +1,41 @@
-<section class="content-header">
-  <h1>
-    Challenges
-    <%= link "New", to: Routes.admin_challenge_path(@conn, :new), class: "btn btn-primary" %>
-    <%= link "New (Non Wizard)", to: Routes.admin_challenge_path(@conn, :new, non_wizard: true), class: "btn btn-primary", style: "margin-left: 1rem" %>
-    Pending: <%= @pending_count %>
-    Created: <%= @created_count %>
-    Archived: <%= @archived_count %>
-  </h1>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          <span>Challenges</span>
+          <div class="btn-group">
+            <%= link "New", to: Routes.admin_challenge_path(@conn, :new), class: "btn btn-primary" %>
+            <%= link "New (Non Wizard)", to: Routes.admin_challenge_path(@conn, :new, non_wizard: true), class: "btn btn-danger" %>
+          </div>
+          <a class="btn btn-info" data-widget="control-sidebar" href="#">Filter</a>
+          <%= if is_map(@filter) && map_size(@filter) > 0 do %>
+            <%= link "clear filters", to: Routes.admin_challenge_path(@conn, :index), class: "btn btn-link" %>
+          <% end %>
+        </h1>
+      </div>
 
-  <ol class="breadcrumb">
-    <li>
-      <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
-        <i class="fa fa-dashboard"></i> Home
-      <% end %>
-    </li>
-    <li class="active">Challenges</li>
-  </ol>
-</section>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item active">Challenges</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
 
 <section class="content">
-  <div class="row">
-    <div class="col-md-10">
-      <div class="box box-primary">
-        <div class="box-body">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
           <div class="table-responsive">
-            <table class="table">
+            <table class="table table-striped">
               <thead>
                 <tr>
                   <%= sortable_header(@conn, @sort, @filter, "id", "ID") %>
@@ -40,6 +51,7 @@
                   <th>Actions</th>
                 </tr>
               </thead>
+
               <tbody>
                 <%= Enum.map @challenges, fn (challenge) -> %>
                   <tr>
@@ -70,54 +82,6 @@
 
           <%= SharedView.pagination(path: Routes.admin_challenge_path(@conn, :index, filter: @filter, sort: @sort), pagination: @pagination) %>
         </div>
-      </div>
-    </div>
-
-    <div class="col-md-2">
-      <div class="box">
-        <div class="box-header">
-          <h3 class="box-title">Filter</h3>
-        </div>
-        <%= form_for(@conn, Routes.admin_challenge_path(@conn, :index, sort: @sort), [method: :get, as: :filter], fn f -> %>
-          <div class="box-body">
-            <div class="form-group">
-              <%= label f, :search, "Search" %>
-              <%= text_input f, :search, value: @filter["search"], class: "form-control" %>
-            </div>
-            <div class="form-group">
-              <%= label f, :status, "Status" %>
-              <%= select(f, :status, Challenges.statuses(), value: @filter["status"], prompt: "Choose a status", class: "form-control js-select") %>
-            </div>
-            <%= if Accounts.has_admin_access?(@user) do %>
-              <div class="form-group">
-                <%= label f, :user_ids, "Owners" %>
-                <%= multiple_select(f, :user_ids, Enum.map(Accounts.all_for_select(), &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}), value: @filter["user_ids"], class: "form-control js-multiselect") %>
-              </div>
-              <div class="form-group">
-                <%= label f, :agency_id %>
-                <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), value: @filter["agency_id"], prompt: "Choose an agency", class: "form-control js-select") %>
-              </div>
-            <% end %>
-            <div class="form-group">
-              <%= label f, :types, "Challenge types" %>
-              <%= multiple_select(f, :types, Challenges.challenge_types(), value: @filter["types"], class: "form-control js-multiselect") %>
-            </div>
-            <div class="form-group">
-              <%= label f, :start_date_start, "Start date" %>
-              <%= date_input(f, :start_date_start, value: @filter["start_date_start"], class: "form-control") %>
-              <%= date_input(f, :start_date_end, value: @filter["start_date_end"], class: "form-control") %>
-            </div>
-            <div class="form-group">
-              <%= label f, :end_date_start, "End date" %>
-              <%= date_input(f, :end_date_start, value: @filter["end_date_start"], class: "form-control") %>
-              <%= date_input(f, :end_date_end, value: @filter["end_date_end"], class: "form-control") %>
-            </div>
-          </div>
-          <div class="box-footer">
-            <%= submit "Filter", class: "btn btn-primary" %>
-            <%= link "Clear", to: Routes.admin_challenge_path(@conn, :index), class: "btn" %>
-          </div>
-        <% end) %>
       </div>
     </div>
   </div>

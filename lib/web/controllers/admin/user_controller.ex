@@ -10,12 +10,15 @@ defmodule Web.Admin.UserController do
 
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "user", %{})
+    sort = Map.get(params, "sort", %{})
     %{page: users, pagination: pagination} = Accounts.all(filter: filter, page: page, per: per)
 
     conn
+    |> assign(:user, current_user)
     |> assign(:current_user, current_user)
     |> assign(:users, users)
     |> assign(:filter, filter)
+    |> assign(:sort, sort)
     |> assign(:pagination, pagination)
     |> render("index.html")
   end

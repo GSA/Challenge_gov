@@ -1,47 +1,60 @@
-<section class="content-header">
-  <h1>
-    <%= AccountView.full_name(@user) %>
-  </h1>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          <%= "#{AccountView.full_name(@user)} (#{(@user.email)})" %>
+        </h1>
+      </div>
 
-  <ol class="breadcrumb">
-    <li>
-      <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
-        <i class="fa fa-dashboard"></i> Home
-      <% end %>
-    </li>
-    <li><%= link("Users", to: Routes.admin_user_path(@conn, :index)) %></li>
-    <li class="active"><%= AccountView.full_name(@user) %></li>
-  </ol>
-</section>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item"><%= link("Users", to: Routes.admin_user_path(@conn, :index)) %></li>
+          <li class="breadcrumb-item active"><%= AccountView.full_name(@user) %></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
 
 <section class="content">
-  <div class="row">
-    <div class="col-md-6">
-      <div class="box box-primary">
-        <div class="box-header">
-          <h3 class="box-title">Basics</h3>
-        </div>
-        <div class="box-body">
-          <dl>
-            <dt>Name</dd>
-            <dd><%= AccountView.full_name(@user) %></dd>
-            <br/>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Basics</h3>
+            <div class="card-tools">
+              <%= link("Edit", to: Routes.admin_user_path(@conn, :edit, @user.id), class: "btn btn-link") %>
+            </div>
+          </div>            
+          <div class="card-body">
+            <dl>
+              <dt>Name</dd>
+              <dd><%= AccountView.full_name(@user) %></dd>
+              <br/>
 
-            <dt>Phone Number</dd>
-            <dd><%= phone_number(@user) %></dd>
-            <br/>
+              <dt>Phone Number</dd>
+              <dd><%= phone_number(@user) %></dd>
+              <br/>
 
-            <dt>Email</dd>
-            <dd><%= @user.email %></dd>
-            <br/>
+              <dt>Email</dd>
+              <dd><%= @user.email %></dd>
+              <br/>
 
-            <dt>Role</dd>
-            <dd><%= @user.role %></dd>
-            <br/>
+              <dt>Role</dd>
+              <dd><%= @user.role %></dd>
+              <br/>
 
-            <dt>Verified email?</dt>
-            <dd><%= email_verified?(@user) %></dd>
-          </dl>
+              <dt>Verified email?</dt>
+              <dd><%= email_verified?(@user) %></dd>
+            </dl>
+          </div>
         </div>
       </div>
     </div>

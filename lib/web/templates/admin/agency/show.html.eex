@@ -1,66 +1,86 @@
-<section class="content-header">
-  <h1>
-    Agency: <%= @agency.name %>
-  </h1>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          Agency: <%= @agency.name %>
+        </h1>
+      </div>
 
-  <ol class="breadcrumb">
-    <li>
-      <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
-        <i class="fa fa-dashboard"></i> Home
-      <% end %>
-    </li>
-    <li><%= link("Challenges", to: Routes.admin_agency_path(@conn, :index)) %></li>
-    <li class="active"><%= @agency.name %></li>
-  </ol>
-</section>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item"><%= link("Challenges", to: Routes.admin_agency_path(@conn, :index)) %></li>
+          <li class="breadcrumb-item active"><%= @agency.name %></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
 
 <section class="content">
-  <div class="row">
-    <div class="col-md-offset-3 col-md-6">
-      <div class="box box-primary">
-        <div class="box-header">
-          <h3 class="box-title">Basics</h3>
-          <div class="box-tools">
-            <%= link("Edit", to: Routes.admin_agency_path(@conn, :edit, @agency.id), class: "btn btn-default") %>
-            <%= link("Delete", to: Routes.admin_agency_path(@conn, :delete, @agency.id), class: "btn btn-default", method: :delete, data: [confirm: "Are you sure?"]) %>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Information</h3>
+            <div class="card-tools">
+              <%= link("Edit", to: Routes.admin_agency_path(@conn, :edit, @agency.id), class: "btn btn-default mr-2") %>
+              <%= link("Delete", to: Routes.admin_agency_path(@conn, :delete, @agency.id), class: "btn btn-danger", method: :delete, data: [confirm: "Are you sure?"]) %>
+            </div>
+          </div>
+          <div class="card-body">
+            <dl>
+              <dt>Name</dd>
+              <dd><%= @agency.name %></dd>
+              <br/>
+
+              <dt>Description</dd>
+              <dd><%= @agency.description %></dd>
+              <br/>
+
+              <dt>Logo</dd>
+              <dd><%= AgencyView.avatar_img(@agency, height: 150) %></dd>
+
+              <%= if @agency.avatar_key do %>
+                <br/>
+                <%= button("Remove Logo", to: Routes.admin_agency_path(@conn, :remove_logo, @agency.id), class: "btn btn-danger", data: [confirm: "Are you sure?"]) %>
+              <% end %>
+            </dl>
           </div>
         </div>
-        <div class="box-body">
-          <dl>
-            <dt>Name</dd>
-            <dd><%= @agency.name %></dd>
-            <br/>
-
-            <dt>Description</dd>
-            <dd><%= @agency.description %></dd>
-            <br/>
-
-            <dt>Logo</dd>
-            <dd><%= AgencyView.avatar_img(@agency, height: 150) %></dd>
-
-            <%= if @agency.avatar_key do %>
-              <br/>
-              <%= button("Remove Logo", to: Routes.admin_agency_path(@conn, :remove_logo, @agency.id), class: "btn btn-danger", data: [confirm: "Are you sure?"]) %>
-            <% end %>
-          </dl>
-
-          <h4>Members</h4>
-          <ul>
-            <%= Enum.map(@members, fn member -> %>
-              <li><%= link(member.user.email, to: Routes.admin_user_path(@conn, :show, member.user_id)) %></li>
-            <% end) %>
-          <ul>
-        </div>
-      </div>
-    </div>  
+      </div>  
+    </div>
 
     <div class="row">
-      <div class="col-md-offset-3 col-md-6">
-        <div class="box box-primary">
-          <div class="box-header">
-            <h3 class="box-title">Is a lead agency for these challenges</h3>
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Members</h3>
           </div>
-          <div class="box-body">
+          <div class="card-body">
+            <ul>            
+              <%= Enum.map(@members, fn member -> %>
+                <li><%= link(member.user.email, to: Routes.admin_user_path(@conn, :show, member.user_id)) %></li>
+              <% end) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Is a lead agency for these challenges</h3>
+          </div>
+          <div class="card-body">
             <ul>
               <%= Enum.map(@agency.challenges, fn challenge -> %>
                 <li><%= Web.Admin.ChallengeView.name_link(@conn, challenge) %></li>
@@ -72,12 +92,12 @@
     </div>
 
     <div class="row">
-      <div class="col-md-offset-3 col-md-6">
-        <div class="box box-primary">
-          <div class="box-header">
-            <h3 class="box-title">Is a federal partner for these challenges</h3>
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Is a federal partner for these challenges</h3>
           </div>
-          <div class="box-body">
+          <div class="card-body">
             <ul>
               <%= Enum.map(@agency.federal_partner_challenges, fn challenge -> %>
                 <li><%= Web.Admin.ChallengeView.name_link(@conn, challenge) %></li>

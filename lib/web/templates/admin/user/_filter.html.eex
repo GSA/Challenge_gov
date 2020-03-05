@@ -1,0 +1,15 @@
+<div class="card-header">
+  <h3 class="card-title">Filter</h3>
+</div>
+<%= form_tag Routes.admin_user_path(@conn, :index), method: :get do %>
+  <div class="card-body">
+    <div class="form-group">
+      <%= label :user, :search, "Search" %>
+      <%= text_input :user, :search, value: @filter["search"], class: "form-control" %>
+    </div>
+  </div>
+  <div>
+    <%= submit "Filter", class: "btn btn-primary" %>
+    <%= link "Clear", to: Routes.admin_user_path(@conn, :index), class: "btn" %>
+  </div>
+<% end %>
