@@ -15,7 +15,15 @@ defmodule ChallengeGov.Accounts do
   @behaviour Stein.Filter
 
   @doc false
-  def roles(), do: User.roles()
+  def roles(user) do
+    case user.role do
+      "super_admin" ->
+        User.roles()
+
+      "admin" ->
+        Enum.slice(User.roles(), 1..2)
+    end
+  end
 
   @doc """
   Get all accounts
