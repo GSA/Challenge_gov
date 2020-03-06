@@ -1,17 +1,26 @@
 // Import External libraries and css
 import jquery from  "jquery";
 import "popper.js";
-import "../vendor/admin/bootstrap.min.css";
-import "../vendor/admin/bootstrap.min.js";
-import "admin-lte/dist/css/AdminLTE.css";
-import "admin-lte/dist/css/skins/skin-blue.css";
-import "admin-lte/dist/js/adminlte.js";
-import "font-awesome/css/font-awesome.css";
-import "phoenix_html"
-import "../css/admin.css";
-import "../css/progress_bar.scss";
-import "./dynamic_nested_fields.js";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/js/bootstrap.js";
 import "select2";
+
+// Phoenix html dependency
+import "phoenix_html"
+
+// import "../vendor/admin/bootstrap.min.css";
+// import "../vendor/admin/bootstrap.min.js";
+
+import "admin-lte/dist/css/adminlte.css";
+import "admin-lte/dist/js/adminlte.js";
+import "@fortawesome/fontawesome-free/css/all.css";
+
+// Custom CSS
+import "../css/admin.scss";
+import "../css/progress_bar.scss";
+
+// Custom JS
+import "./dynamic_nested_fields.js";
 
 window.$ = jquery;
 

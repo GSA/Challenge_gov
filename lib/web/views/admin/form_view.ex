@@ -38,12 +38,14 @@ defmodule Web.Admin.FormView do
     opts = Keyword.merge(opts, dopts)
     text_opts = Keyword.take(opts, [:value, :rows, :placeholder])
 
+    classes = form_control_classes(form, field)
+
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
         content_tag(:div, class: "col-md-8") do
           [
-            text_input(form, field, Keyword.merge([class: "form-control"], text_opts)),
+            text_input(form, field, Keyword.merge([class: classes], text_opts)),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
           ]
@@ -59,12 +61,14 @@ defmodule Web.Admin.FormView do
     opts = Keyword.merge(opts, dopts)
     text_opts = Keyword.take(opts, [:value, :rows, :placeholder])
 
+    classes = form_control_classes(form, field)
+
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
         content_tag(:div, class: "col-md-8") do
           [
-            email_input(form, field, Keyword.merge([class: "form-control"], text_opts)),
+            email_input(form, field, Keyword.merge([class: classes], text_opts)),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
           ]
@@ -80,12 +84,14 @@ defmodule Web.Admin.FormView do
     opts = Keyword.merge(opts, dopts)
     text_opts = Keyword.take(opts, [:value, :rows])
 
+    classes = form_control_classes(form, field)
+
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
         content_tag(:div, class: "col-md-8") do
           [
-            datetime_select(form, field, Keyword.merge([class: "form-control"], text_opts)),
+            datetime_select(form, field, Keyword.merge([class: classes], text_opts)),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
           ]
@@ -101,12 +107,14 @@ defmodule Web.Admin.FormView do
     opts = Keyword.merge(opts, dopts)
     text_opts = Keyword.take(opts, [:value, :rows])
 
+    classes = form_control_classes(form, field)
+
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
         content_tag(:div, class: "col-md-8") do
           [
-            password_input(form, field, Keyword.merge([class: "form-control"], text_opts)),
+            password_input(form, field, Keyword.merge([class: classes], text_opts)),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
           ]
@@ -122,12 +130,70 @@ defmodule Web.Admin.FormView do
     opts = Keyword.merge(opts, dopts)
     number_opts = Keyword.take(opts, [:placeholder, :min, :max])
 
+    classes = form_control_classes(form, field)
+
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
         content_tag(:div, class: "col-md-8") do
           [
-            number_input(form, field, Keyword.merge([class: "form-control"], number_opts)),
+            number_input(form, field, Keyword.merge([class: classes], number_opts)),
+            error_tag(form, field),
+            Keyword.get(opts, :do, "")
+          ]
+        end
+      ]
+    end
+  end
+
+  @doc """
+  Generate a select field, styled properly
+  """
+  def select_field(form, field, opts \\ [], dopts \\ []) do
+    opts = Keyword.merge(opts, dopts)
+    select_opts = Keyword.take(opts, [:prompt])
+
+    classes = form_control_classes(form, field)
+
+    content_tag(:div, class: form_group_classes(form, field)) do
+      [
+        label_field(form, field, opts),
+        content_tag(:div, class: "col-md-8") do
+          [
+            select(
+              form,
+              field,
+              opts[:collection],
+              Keyword.merge([class: "js-select #{classes}"], select_opts)
+            ),
+            error_tag(form, field),
+            Keyword.get(opts, :do, "")
+          ]
+        end
+      ]
+    end
+  end
+
+  @doc """
+  Generate a multiselect field, styled properly
+  """
+  def multiselect_field(form, field, opts \\ [], dopts \\ []) do
+    opts = Keyword.merge(opts, dopts)
+    select_opts = Keyword.take(opts, [:prompt, :selected])
+
+    classes = form_control_classes(form, field)
+
+    content_tag(:div, class: form_group_classes(form, field)) do
+      [
+        label_field(form, field, opts),
+        content_tag(:div, class: "col-md-8") do
+          [
+            multiple_select(
+              form,
+              field,
+              opts[:collection],
+              Keyword.merge([class: "js-multiselect #{classes}"], select_opts)
+            ),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
           ]
@@ -143,12 +209,14 @@ defmodule Web.Admin.FormView do
     opts = Keyword.merge(opts, dopts)
     textarea_opts = Keyword.take(opts, [:value, :rows])
 
+    classes = form_control_classes(form, field)
+
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
         content_tag(:div, class: "col-md-8") do
           [
-            textarea(form, field, Keyword.merge([class: "form-control"], textarea_opts)),
+            textarea(form, field, Keyword.merge([class: classes], textarea_opts)),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
           ]
@@ -182,12 +250,14 @@ defmodule Web.Admin.FormView do
   def file_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
 
+    classes = form_control_classes(form, field)
+
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label(form, field, class: "col-md-4"),
         content_tag(:div, class: "col-md-8") do
           [
-            file_input(form, field, class: "form-control"),
+            file_input(form, field, class: classes),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
           ]
@@ -199,10 +269,10 @@ defmodule Web.Admin.FormView do
   def form_group_classes(form, field) do
     case Keyword.has_key?(form.errors, field) do
       true ->
-        "form-group has-error"
+        "form-group row is-invalid"
 
       false ->
-        "form-group"
+        "form-group row"
     end
   end
 
@@ -212,10 +282,33 @@ defmodule Web.Admin.FormView do
 
     case !is_nil(current_field) and Keyword.has_key?(current_field.errors, field) and index != -1 do
       true ->
-        "form-group nested-form-group has-error"
+        "form-group row nested-form-group is-invalid"
 
       false ->
-        "form-group nested-form-group"
+        "form-group row nested-form-group"
+    end
+  end
+
+  def form_control_classes(form, field) do
+    case Keyword.has_key?(form.errors, field) do
+      true ->
+        "form-control is-invalid"
+
+      false ->
+        "form-control"
+    end
+  end
+
+  def nested_form_control_classes(form, children, field, index) do
+    fields_data = Map.get(form.source.changes, children)
+    current_field = if fields_data, do: Enum.at(fields_data, index), else: nil
+
+    case !is_nil(current_field) and Keyword.has_key?(current_field.errors, field) and index != -1 do
+      true ->
+        "form-control row nested-form-control is-invalid"
+
+      false ->
+        "form-control row nested-form-control"
     end
   end
 
@@ -239,6 +332,7 @@ defmodule Web.Admin.FormView do
                 [
                   Enum.map(Enum.with_index(fields), fn field_with_index ->
                     {field, index} = field_with_index
+                    classes = nested_form_control_classes(form, children, field, child.index)
 
                     content_tag(:div,
                       class: nested_form_group_classes(form, children, field, child.index)
@@ -250,21 +344,20 @@ defmodule Web.Admin.FormView do
                         label(child, field, class: "col-md-4"),
                         content_tag(:div, class: "col-md-6") do
                           [
-                            text_input(child, field, class: "form-control"),
+                            text_input(child, field, class: classes),
                             error_tag(child, field)
                           ]
                         end,
                         content_tag(:div, class: "col-md-2") do
                           if index < 1 do
                             content_tag(:div, "Remove",
-                              class: "remove-nested-section btn btn-danger"
+                              class: "remove-nested-section btn btn-link"
                             )
                           end
                         end
                       ]
                     end
-                  end),
-                  content_tag(:hr, "")
+                  end)
                 ]
               end
             ]
@@ -274,7 +367,7 @@ defmodule Web.Admin.FormView do
           class: "add-nested-section btn btn-primary",
           data: [parent: form.name, child: children_name]
         ),
-        content_tag(:div, class: "dynamic-nested-form-template hidden") do
+        content_tag(:div, class: "dynamic-nested-form-template d-none") do
           [
             content_tag(:div, class: "form-collection") do
               [
@@ -292,15 +385,12 @@ defmodule Web.Admin.FormView do
                       end,
                       content_tag(:div, class: "col-md-2") do
                         if index < 1 do
-                          content_tag(:div, "Remove",
-                            class: "remove-nested-section btn btn-danger"
-                          )
+                          content_tag(:div, "Remove", class: "remove-nested-section btn btn-link")
                         end
                       end
                     ]
                   end
-                end),
-                content_tag(:hr, "")
+                end)
               ]
             end
           ]

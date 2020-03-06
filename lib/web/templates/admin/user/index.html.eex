@@ -1,32 +1,43 @@
-<section class="content-header">
-  <h1>
-    Challenge Owners
-  </h1>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          <span>Users</span>          
+          <a class="btn btn-info" data-widget="control-sidebar" href="#">Filter</a>
+          <%= if is_map(@filter) && map_size(@filter) > 0 do %>
+            <%= link "clear filters", to: Routes.admin_user_path(@conn, :index), class: "btn btn-link" %>
+          <% end %>
+        </h1>
+      </div>
 
-  <ol class="breadcrumb">
-    <li>
-      <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
-        <i class="fa fa-dashboard"></i> Home
-      <% end %>
-    </li>
-    <li class="active">Users</li>
-  </ol>
-</section>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item active">Users</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
 
 <section class="content">
-  <div class="row">
-    <div class="col-md-9">
-      <div class="box box-primary">
-        <div class="box-body">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="card">
           <div class="table-responsive">
-            <table class="table">
+            <table class="table table-striped">
               <thead>
                 <tr>
                   <th>ID</th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Role</th>
-                  <th>Finalized?</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -37,7 +48,6 @@
                     <td><%= link(AccountView.full_name(user), to: Routes.admin_user_path(@conn, :show, user.id)) %></td>
                     <td><%= user.email %></td>
                     <td><%= user.role %></td>
-                    <td><%= user.finalized %></td>
                     <td>
                       <%= link("View", to: Routes.admin_user_path(@conn, :show, user.id), class: "btn btn-default btn-xs") %>
                       <%= link("Edit", to: Routes.admin_user_path(@conn, :edit, user.id), class: "btn btn-default btn-xs") %>
@@ -50,69 +60,27 @@
 
           <%= SharedView.pagination(path: Routes.admin_user_path(@conn, :index), pagination: @pagination) %>
         </div>
-      </div>
-    </div>
+      </div> 
 
-    <div class="col-md-3">
-      <div class="box">
-        <div class="box-header">
-          <h3 class="box-title">Filter</h3>
-        </div>
-        <%= form_tag Routes.admin_user_path(@conn, :index), method: :get do %>
-          <div class="box-body">
-            <div class="form-group">
-              <%= label :user, :search, "Search" %>
-              <%= text_input :user, :search, value: @filter["search"], class: "form-control" %>
-            </div>
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Add a User</h3>
           </div>
-          <div class="box-footer">
-            <%= submit "Filter", class: "btn btn-primary" %>
-            <%= link "Clear", to: Routes.admin_user_path(@conn, :index), class: "btn" %>
-          </div>
-        <% end %>
-      </div>
-    </div>
+          <%= form_for(@changeset, Routes.admin_user_path(@conn, :create), [method: :post], fn f -> %>
+            <div class="card-body">
+              <%= FormView.text_field(f, :first_name) %>
+              <%= FormView.text_field(f, :last_name) %>
+              <%= FormView.text_field(f, :email) %>
+              <%= FormView.text_field(f, :email_confirmation) %>
+              <%= FormView.select_field(f, :role, collection: Enum.map(Accounts.roles(@current_user), &{&1.label, &1.id})) %>
 
-    <div class="col-md-3">
-      <div class="box">
-        <div class="box-header">
-          <h3 class="box-title">Add a User</h3>
-        </div>
-        <%= form_for(@changeset, Routes.admin_user_path(@conn, :create), [method: :post], fn f -> %>
-          <div class="box-body">
-            <div class="form-group">
-              <%= label(f, :last_name, class: "label-text") do %>
-                First Name*
-              <% end %>
-              <%= text_input(f, :first_name, required: true, placeholder: "First Name", class: "form-control u-input") %>
-              <%= label(f, :last_name, class: "label-text") do %>
-                Last Name*
-              <% end %>
-              <%= text_input(f, :last_name, required: true, placeholder: "Last Name", class: "form-control u-input") %>
-              <div class="<%= FormView.form_group_classes(f, :email) %>">
-                <%= label(f, :email, class: "label-text") do %>
-                  Email*
-                <% end %>
-                <%= text_input(f, :email, required: true, placeholder: "Email", class: "form-control u-input") %>
-                <%= error_tag f, :email %>
-              </div>
-              <div class="<%= FormView.form_group_classes(f, :email) %>">
-                <%= label(f, :email_confirmation, class: "label-text") do %>
-                  Confirm Email*
-                <% end %>
-                <%= text_input(f, :email_confirmation, required: true, placeholder: "Confirm Email", class: "form-control u-input") %>
-                <%= error_tag f, :email_confirmation %>
-              </div>  
-              <%= label(f, :user_role, class: "label-text") do %>
-                User Type*
-              <% end %>
-              <%= select(f, :role, Enum.map(Accounts.roles(@current_user), &{&1.label, &1.id}), required: true, class: "form-control u-input") %>
               <div class="btn-wrapper">
                 <%= submit("Submit", class: "btn btn-primary") %>
               </div>
             </div>
-          </div>
-        <% end) %>
+          <% end) %>
+        </div>
       </div>
     </div>
   </div>

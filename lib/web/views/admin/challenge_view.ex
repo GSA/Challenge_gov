@@ -29,14 +29,13 @@ defmodule Web.Admin.ChallengeView do
       end
 
     content_tag :th do
-      content_tag :div do
-        [
-          link(label,
-            to: Routes.admin_challenge_path(conn, :index, filter: filter, sort: sort_values),
-            style: "margin-right: 1rem"
-          ),
-          content_tag(:i, "", class: "fa " <> sort_icon)
-        ]
+      link(to: Routes.admin_challenge_path(conn, :index, filter: filter, sort: sort_values)) do
+        content_tag :div do
+          [
+            content_tag(:span, label),
+            content_tag(:i, "", class: "fa " <> sort_icon)
+          ]
+        end
       end
     end
   end
@@ -221,21 +220,21 @@ defmodule Web.Admin.ChallengeView do
 
   def back_button(conn, challenge) do
     if challenge.id do
-      submit("Back", name: "action", value: "back", class: "btn btn-primary")
+      submit("Back", name: "action", value: "back", class: "btn btn-link")
     else
-      link("Back", to: Routes.admin_challenge_path(conn, :index), class: "btn btn-primary")
+      link("Back", to: Routes.admin_challenge_path(conn, :index), class: "btn btn-link")
     end
   end
 
   def save_draft_button() do
-    submit("Save Draft", name: "action", value: "save_draft", class: "btn btn-primary pull-right")
+    submit("Save Draft", name: "action", value: "save_draft", class: "btn btn-link float-right")
   end
 
   def submit_button(section) do
     if section == Enum.at(Challenges.sections(), -1).id do
-      submit("Submit", name: "action", value: "next", class: "btn btn-primary pull-right")
+      submit("Submit", name: "action", value: "next", class: "btn btn-primary float-right")
     else
-      submit("Next", name: "action", value: "next", class: "btn btn-primary pull-right")
+      submit("Next", name: "action", value: "next", class: "btn btn-primary float-right")
     end
   end
 

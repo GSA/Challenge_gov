@@ -9,7 +9,7 @@
 .sign-out {
   justify-content: flex-end;
   align-items: center;
-  color: #ffffff;
+  /* color: #ffffff; */
   padding: 15px 15px;
 }
 
@@ -113,6 +113,40 @@
   font-size: 17px;
 }
 
+.table {
+  margin-bottom: 0;
+
+  tbody a {
+    text-decoration: underline;
+  }
+
+  .btn {
+    text-decoration: none;
+  }
+}
+
+.pagination {
+  margin-bottom: 0;
+}
+
+th {
+  white-space: nowrap;
+  
+  i {
+    margin-left: .5em;
+  }
+
+  a {
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.control-sidebar {
+  width: 40%;
+}
 /* adding users */
 
 .u-input {

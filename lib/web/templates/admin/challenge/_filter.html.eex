@@ -1,0 +1,43 @@
+<div class="card-header">
+  <h3 class="card-title">Filter</h3>
+</div>
+<%= form_for(@conn, Routes.admin_challenge_path(@conn, :index, sort: @sort), [method: :get, as: :filter], fn f -> %>
+  <div class="card-body">
+    <div class="form-group">
+      <%= label f, :search, "Search" %>
+      <%= text_input f, :search, value: @filter["search"], class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= label f, :status, "Status" %>
+      <%= select(f, :status, Challenges.statuses(), value: @filter["status"], prompt: "Choose a status", class: "form-control js-select") %>
+    </div>
+    <%= if Accounts.has_admin_access?(@user) do %>
+      <div class="form-group">
+        <%= label f, :user_ids, "Owners" %>
+        <%= multiple_select(f, :user_ids, Enum.map(Accounts.all_for_select(), &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}), value: @filter["user_ids"], class: "form-control js-multiselect") %>
+      </div>
+      <div class="form-group">
+        <%= label f, :agency_id %>
+        <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), value: @filter["agency_id"], prompt: "Choose an agency", class: "form-control js-select") %>
+      </div>
+    <% end %>
+    <div class="form-group">
+      <%= label f, :types, "Challenge types" %>
+      <%= multiple_select(f, :types, Challenges.challenge_types(), value: @filter["types"], class: "form-control js-multiselect") %>
+    </div>
+    <div class="form-group">
+      <%= label f, :start_date_start, "Start date" %>
+      <%= date_input(f, :start_date_start, value: @filter["start_date_start"], class: "form-control") %>
+      <%= date_input(f, :start_date_end, value: @filter["start_date_end"], class: "form-control") %>
+    </div>
+    <div class="form-group">
+      <%= label f, :end_date_start, "End date" %>
+      <%= date_input(f, :end_date_start, value: @filter["end_date_start"], class: "form-control") %>
+      <%= date_input(f, :end_date_end, value: @filter["end_date_end"], class: "form-control") %>
+    </div>
+  </div>
+  <div>
+    <%= submit "Filter", class: "btn btn-primary" %>
+    <%= link "Clear", to: Routes.admin_challenge_path(@conn, :index), class: "btn" %>
+  </div>
+<% end) %>

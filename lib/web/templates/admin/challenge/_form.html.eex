@@ -1,5 +1,5 @@
 <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
-  <div class="box-body">
+  <div class="card-body">
     <div class="accordion" id="accordionWrap">
 
       <div class="card">
@@ -211,21 +211,7 @@
     </div>
   </div>
 
-  <div class="box-footer">
+  <div class="card-footer">
     <%= submit("Submit", class: "btn btn-primary pull-right") %>
   </div>
 <% end) %>
-
-<div id="non-federal-partners-template" class="hidden">
-  <div class="form-group nested-form-group">
-    <input id="nested_hidden_field" type="hidden">
-    <label class="col-md-4">Name</label>
-    <div class="col-md-6">
-      <input class="form-control" id="nested_value_field" type="text">
-    </div>
-    <div class="col-md-2">
-      <div class="remove-nested-section btn btn-danger">Remove</div>
-    </div>
-  </div>
-  <hr/>
-</div>

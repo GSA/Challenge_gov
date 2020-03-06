@@ -8,13 +8,17 @@ defmodule Web.Admin.AgencyController do
   action_fallback(Web.Admin.FallbackController)
 
   def index(conn, params) do
+    %{current_user: user} = conn.assigns
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
+    sort = Map.get(params, "sort", %{})
     %{page: agencies, pagination: pagination} = Agencies.all(filter: filter, page: page, per: per)
 
     conn
+    |> assign(:user, user)
     |> assign(:agencies, agencies)
     |> assign(:filter, filter)
+    |> assign(:sort, sort)
     |> assign(:pagination, pagination)
     |> render("index.html")
   end
