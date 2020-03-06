@@ -60,7 +60,7 @@ defmodule Web.SessionController do
               token: userinfo["sub"],
               terms_of_use: nil,
               privacy_guidelines: nil,
-              pending: true
+              pending: false
             })
 
           {:ok, account_user} ->
