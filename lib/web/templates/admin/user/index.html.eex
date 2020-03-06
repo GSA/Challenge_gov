@@ -72,5 +72,48 @@
         <% end %>
       </div>
     </div>
+
+    <div class="col-md-3">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Add a User</h3>
+        </div>
+        <%= form_for(@changeset, Routes.admin_user_path(@conn, :create), [method: :post], fn f -> %>
+          <div class="box-body">
+            <div class="form-group">
+              <%= label(f, :last_name, class: "label-text") do %>
+                First Name*
+              <% end %>
+              <%= text_input(f, :first_name, required: true, placeholder: "First Name", class: "form-control u-input") %>
+              <%= label(f, :last_name, class: "label-text") do %>
+                Last Name*
+              <% end %>
+              <%= text_input(f, :last_name, required: true, placeholder: "Last Name", class: "form-control u-input") %>
+              <div class="<%= FormView.form_group_classes(f, :email) %>">
+                <%= label(f, :email, class: "label-text") do %>
+                  Email*
+                <% end %>
+                <%= text_input(f, :email, required: true, placeholder: "Email", class: "form-control u-input") %>
+                <%= error_tag f, :email %>
+              </div>
+              <div class="<%= FormView.form_group_classes(f, :email) %>">
+                <%= label(f, :email_confirmation, class: "label-text") do %>
+                  Confirm Email*
+                <% end %>
+                <%= text_input(f, :email_confirmation, required: true, placeholder: "Confirm Email", class: "form-control u-input") %>
+                <%= error_tag f, :email_confirmation %>
+              </div>  
+              <%= label(f, :user_role, class: "label-text") do %>
+                User Type*
+              <% end %>
+              <%= select(f, :role, Enum.map(Accounts.roles(@current_user), &{&1.label, &1.id}), required: true, class: "form-control u-input") %>
+              <div class="btn-wrapper">
+                <%= submit("Submit", class: "btn btn-primary") %>
+              </div>
+            </div>
+          </div>
+        <% end) %>
+      </div>
+    </div>
   </div>
 </section>

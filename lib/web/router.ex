@@ -30,8 +30,6 @@ defmodule Web.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-    plug :fetch_session
-    plug Web.Plugs.FetchUser
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -74,8 +72,14 @@ defmodule Web.Router do
     resources("/agencies", AgencyController)
     post("/agencies/:id/remove_logo", AgencyController, :remove_logo, as: :agency)
 
-    resources("/users", UserController, only: [:index, :show, :edit, :update])
     post("/users/:id/toggle", UserController, :toggle, as: :user)
+    resources("/users", UserController, only: [:index, :show, :edit, :update, :create])
+  end
+
+  scope "/api", Web.Api, as: :api do
+    pipe_through([:api])
+
+    resources("/challenges", ChallengeController, only: [:index, :show])
   end
 
   scope "/", Web do

@@ -36,6 +36,20 @@ defmodule Web.ErrorHelpers do
     end
   end
 
+  def error_tag(form, field, class) do
+    errors = Enum.map(Keyword.get_values(form.errors, field), &translate_error/1)
+
+    case Enum.empty?(errors) do
+      true ->
+        []
+
+      false ->
+        content_tag(:span, class: class) do
+          errors
+        end
+    end
+  end
+
   @doc """
   Translates an error message using gettext.
   """
