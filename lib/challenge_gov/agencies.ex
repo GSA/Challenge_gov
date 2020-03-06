@@ -132,7 +132,9 @@ defmodule ChallengeGov.Agencies do
   def create(params) do
     %Agency{}
     |> Agency.create_changeset(params)
+    |> IO.inspect
     |> Repo.insert()
+    |> IO.inspect
   end
 
   @doc """

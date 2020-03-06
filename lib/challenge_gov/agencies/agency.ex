@@ -15,10 +15,13 @@ defmodule ChallengeGov.Agencies.Agency do
 
   schema "agencies" do
     # Associations
+    belongs_to(:parent, __MODULE__)
+    has_many(:children, __MODULE__, foreign_key: :parent_id)
     has_many(:federal_partners, FederalPartner)
     has_many(:federal_partner_challenges, through: [:federal_partners, :challenge])
 
     # Fields
+    field(:api_id, :integer)
     field(:name, :string)
     field(:description, :string)
     field(:deleted_at, :utc_datetime)
@@ -34,13 +37,15 @@ defmodule ChallengeGov.Agencies.Agency do
 
   def create_changeset(struct, params) do
     struct
-    |> cast(params, [:name, :description])
+    |> cast(params, [:name, :description, :api_id, :parent_id])
+    |> foreign_key_constraint(:api_id, name: :agencies_parent_id_fkey)
     |> validate_required([:name])
   end
 
   def update_changeset(struct, params) do
     struct
-    |> cast(params, [:name, :description])
+    |> cast(params, [:name, :description, :api_id, :parent_id])
+    |> foreign_key_constraint(:api_id, name: :agencies_parent_id_fkey)
     |> validate_required([:name])
   end
 

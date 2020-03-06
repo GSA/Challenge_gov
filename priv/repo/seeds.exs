@@ -12,6 +12,8 @@
 
 alias ChallengeGov.Accounts
 alias ChallengeGov.Agencies
+alias ChallengeGov.Agencies.Agency
+alias ChallengeGov.Repo
 
 defmodule Helpers do
   def create_admin(email) do
@@ -51,14 +53,57 @@ defmodule Helpers do
       end
     end)
   end
+
+  def import_agencies_api(url) do
+    {:ok, %{body: body, status_code: 200}} = HTTPoison.get(url)
+    data = Jason.decode!(body)
+    count = data["metadata"]["count"]
+
+    {:ok, %{body: body, status_code: 200}} = HTTPoison.get(url <> "?page_size=#{count}")
+    data = Jason.decode!(body)
+
+    num_inserted = 0
+    agencies_to_insert = []
+
+    Enum.each(data["results"], fn agency ->
+      api_id = agency["id"]
+      title = agency["title"]
+      parent = Enum.at(agency["parent"], 0)
+      parent_id = String.to_integer(parent["id"])
+
+      case Agencies.get_by_name(title) do
+        {:error, :not_found} ->
+          agencies_to_insert ++
+          [
+            name: title,
+            api_id: api_id,
+            parent_id: parent_id
+          ]
+
+          IO.inspect agencies_to_insert
+          # Agencies.create(%{
+          #   name: title,
+          #   api_id: api_id,
+          #   parent_id: parent_id
+          # })
+          num_inserted = num_inserted + 1
+
+        _ ->
+          nil
+      end
+    end)
+
+    IO.puts "Inserted #{num_inserted} agencies"
+  end
 end
 
 defmodule Seeds do
   import Helpers
 
   def run do
-    create_admin("admin@example.com")
-    create_agencies("priv/repo/agencies.txt")
+    # create_admin("admin@example.com")
+    # create_agencies("priv/repo/agencies.txt")
+    import_agencies_api("https://usagov.platform.gsa.gov/usaapi/api/v1/usagov/directory_records/federal.json")
   end
 end
 
