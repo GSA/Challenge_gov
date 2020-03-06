@@ -114,7 +114,16 @@
 
 .table {
   margin-bottom: 0;
+
+  tbody a {
+    text-decoration: underline;
+  }
+
+  .btn {
+    text-decoration: none;
+  }
 }
+
 .pagination {
   margin-bottom: 0;
 }
