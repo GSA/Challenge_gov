@@ -12,9 +12,11 @@ defmodule Web.Plugs.SessionTimeout do
     SessionController.check_session_timeout(conn, opts)
   end
 
+  # TODO: Handle session timeout defaults and parsing better
   defp timeout_interval do
     with timeout_var <- Application.get_env(:challenge_gov, :session_timeout_in_minutes),
          false <- is_nil(timeout_var),
+         false <- is_integer(timeout_var),
          {timeout, _} <- Integer.parse(timeout_var) do
       timeout
     else
