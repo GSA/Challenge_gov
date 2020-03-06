@@ -18,6 +18,16 @@ defmodule Web.AgencyView do
     end
   end
 
+  def avatar_url(agency) do
+    case is_nil(agency) or is_nil(agency.avatar_key) do
+      true ->
+        Routes.static_path(Web.Endpoint, "/images/teams-card-logo.jpg")
+
+      false ->
+        Storage.url(Avatar.avatar_path(agency, "original"), signed: [expires_in: 3600])
+    end
+  end
+
   def team_description(%{description: nil}), do: ""
 
   def team_description(team) do

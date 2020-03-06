@@ -18,6 +18,16 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def logo_url(challenge) do
+    case is_nil(challenge.logo_key) do
+      true ->
+        AgencyView.avatar_url(challenge.agency)
+
+      false ->
+        Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
+    end
+  end
+
   def winner_img(challenge, opts \\ []) do
     case is_nil(challenge.winner_image_key) do
       true ->
