@@ -43,12 +43,12 @@
                 <div class="col-md-8"><%= @user.email %></div>
               </div>
               <%= if Accounts.has_admin_access?(@current_user) do %>
-                <div class="<%= FormView.form_group_classes(f, :federal_partners) %>">
-                  <%= label(f, :federal_partners, class: "col-md-4") do %>
+                <div class="<%= FormView.form_group_classes(f, :roles) %>">
+                  <%= label(f, :roles, class: "col-md-4") do %>
                     Role
                   <% end %>
                   <div class="col-md-8">
-                    <%= select(f, :role, Accounts.roles, label: "Role", required: true, class: "js-select") %>
+                    <%= select(f, :role, Enum.map(Accounts.roles(@current_user), &{&1.label, &1.id}), label: "Role", required: true, class: "js-select") %>
                   </div>
                 </div>
               <% end %>

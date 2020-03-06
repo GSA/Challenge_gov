@@ -15,7 +15,15 @@ defmodule ChallengeGov.Accounts do
   @behaviour Stein.Filter
 
   @doc false
-  def roles(), do: User.roles()
+  def roles(user) do
+    case user.role do
+      "super_admin" ->
+        User.roles()
+
+      "admin" ->
+        Enum.slice(User.roles(), 1..2)
+    end
+  end
 
   @doc """
   Get all accounts
@@ -179,6 +187,15 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Update an account's terms
+  """
+  def update_terms(user, params) do
+    user
+    |> User.terms_changeset(params)
+    |> Repo.update()
+  end
+
+  @doc """
   Validate a user's login information
   """
   def validate_login(email, password) do
@@ -326,19 +343,8 @@ defmodule ChallengeGov.Accounts do
   def is_challenge_owner?(_), do: false
 
   @doc """
-  Check if a user is a pending challenge_owner
-  """
-
-  def is_challenge_owner_pending?(user)
-
-  def is_challenge_owner_pending?(%{role: "challenge_owner_pending"}), do: true
-
-  def is_challenge_owner_pending?(_), do: false
-
-  @doc """
   Check if a user has accepted all terms
   """
-
   def has_accepted_terms?(user)
 
   def has_accepted_terms?(%{terms_of_use: nil}), do: false
@@ -349,6 +355,15 @@ defmodule ChallengeGov.Accounts do
 
   def has_accepted_terms?(%{privacy_guidelines: _timestamp}), do: true
 
+  @doc """
+  Check if a user is pending
+  """
+  def is_pending_user?(user)
+
+  def is_pending_user?(%{pending: true}), do: true
+
+  def is_pending_user?(%{pending: false}), do: false
+
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
@@ -358,6 +373,16 @@ defmodule ChallengeGov.Accounts do
       [a],
       ilike(a.first_name, ^value) or ilike(a.last_name, ^value) or ilike(a.email, ^value)
     )
+  end
+
+  @doc """
+  Toggle suspension of a user
+  """
+  def toggle_suspension(user) do
+    user
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:suspended, !user.suspended)
+    |> Repo.update()
   end
 
   @doc """

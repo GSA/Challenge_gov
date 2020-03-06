@@ -60,6 +60,7 @@
 .label-text {
   align-self: start;
   margin-bottom: 0;
+  margin-left: 5px;
   color: #4A5C6B;
 }
 
@@ -145,4 +146,16 @@ th {
 
 .control-sidebar {
   width: 40%;
+}
+/* adding users */
+
+.u-input {
+  margin-bottom: 10px;
+}
+
+.u-error {
+  color: red;
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 10px;
 }

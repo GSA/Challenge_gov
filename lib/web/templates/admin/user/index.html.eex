@@ -28,7 +28,7 @@
 <section class="content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-9">
         <div class="card">
           <div class="table-responsive">
             <table class="table table-striped">
@@ -59,6 +59,27 @@
           </div>
 
           <%= SharedView.pagination(path: Routes.admin_user_path(@conn, :index), pagination: @pagination) %>
+        </div>
+      </div> 
+
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Add a User</h3>
+          </div>
+          <%= form_for(@changeset, Routes.admin_user_path(@conn, :create), [method: :post], fn f -> %>
+            <div class="card-body">
+              <%= FormView.text_field(f, :first_name) %>
+              <%= FormView.text_field(f, :last_name) %>
+              <%= FormView.text_field(f, :email) %>
+              <%= FormView.text_field(f, :email_confirmation) %>
+              <%= FormView.select_field(f, :role, collection: Enum.map(Accounts.roles(@current_user), &{&1.label, &1.id})) %>
+
+              <div class="btn-wrapper">
+                <%= submit("Submit", class: "btn btn-primary") %>
+              </div>
+            </div>
+          <% end) %>
         </div>
       </div>
     </div>

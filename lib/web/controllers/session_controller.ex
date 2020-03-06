@@ -54,28 +54,45 @@ defmodule Web.SessionController do
           {:error, :not_found} ->
             Accounts.create(%{
               email: userinfo["email"],
-              password: "password",
-              password_confirmation: "password",
-              first_name: "Admin",
-              last_name: "User",
-              role: "admin",
-              token: userinfo["sub"]
+              first_name: "Placeholder",
+              last_name: "Placeholder",
+              role: "challenge_owner",
+              token: userinfo["sub"],
+              terms_of_use: nil,
+              privacy_guidelines: nil,
+              pending: true
             })
 
           {:ok, account_user} ->
-            {:ok, account_user}
+            case Map.get(account_user, :token) do
+              nil ->
+                Accounts.update(
+                  account_user,
+                  %{token: userinfo["sub"]}
+                )
+
+              _ ->
+                {:ok, account_user}
+            end
         end
 
-      conn
-      |> put_flash(:info, "Login successful")
-      |> put_session(:user_token, user.token)
-      |> after_sign_in_redirect(get_default_path(conn, user))
+      case user.suspended do
+        true ->
+          conn
+          |> put_flash(:error, "Your account has been suspended")
+          |> redirect(to: Routes.session_path(conn, :new))
+
+        _ ->
+          conn
+          |> put_flash(:info, "Login successful")
+          |> put_session(:user_token, user.token)
+          |> after_sign_in_redirect(get_default_path(conn, user))
+      end
     else
       {:error, _err} ->
         conn
         |> put_flash(:error, "There was an issue logging in")
-        |> put_status(400)
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> redirect(to: Routes.session_path(conn, :new))
     end
   end
 
