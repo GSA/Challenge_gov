@@ -376,6 +376,16 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Toggle suspension of a user
+  """
+  def toggle_suspension(user) do
+    user
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:suspended, !user.suspended)
+    |> Repo.update()
+  end
+
+  @doc """
   Toggle display status of a user
   """
   def toggle_display(user) do

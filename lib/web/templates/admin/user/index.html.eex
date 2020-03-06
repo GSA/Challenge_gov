@@ -94,14 +94,14 @@
                   Email*
                 <% end %>
                 <%= text_input(f, :email, required: true, placeholder: "Email", class: "form-control u-input") %>
-                <%= error_tag f, :email, "u-error" %>
+                <%= error_tag f, :email %>
               </div>
               <div class="<%= FormView.form_group_classes(f, :email) %>">
                 <%= label(f, :email_confirmation, class: "label-text") do %>
                   Confirm Email*
                 <% end %>
                 <%= text_input(f, :email_confirmation, required: true, placeholder: "Confirm Email", class: "form-control u-input") %>
-                <%= error_tag f, :email_confirmation, "u-error" %>
+                <%= error_tag f, :email_confirmation %>
               </div>  
               <%= label(f, :user_role, class: "label-text") do %>
                 User Type*

@@ -8,11 +8,18 @@ defmodule Web.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug Web.Plugs.FetchUser
-    plug(Web.Plugs.SessionTimeout)
+  end
+
+  pipeline(:admin) do
+    plug(Web.Plugs.VerifyAdmin)
+  end
+
+  pipeline(:user) do
+    plug(Web.Plugs.VerifyUser)
   end
 
   pipeline(:signed_in) do
-    plug(Web.Plugs.VerifyUser)
+    plug(Web.Plugs.CheckSuspension)
     plug(Web.Plugs.SessionTimeout)
     plug(:put_layout, {Web.LayoutView, "admin.html"})
   end
@@ -21,17 +28,12 @@ defmodule Web.Router do
     plug(Web.Plugs.VerifyNoUser)
   end
 
-  pipeline(:admin) do
-    plug(Web.Plugs.VerifyAdmin)
-    plug(:put_layout, {Web.LayoutView, "admin.html"})
-  end
-
   pipeline :api do
     plug :accepts, ["json"]
   end
 
   scope "/admin", Web.Admin, as: :admin do
-    pipe_through([:browser, :signed_in])
+    pipe_through([:browser, :user, :signed_in])
 
     get("/", DashboardController, :index)
 
@@ -63,13 +65,14 @@ defmodule Web.Router do
   end
 
   scope "/admin", Web.Admin, as: :admin do
-    pipe_through([:browser, :admin])
+    pipe_through([:browser, :admin, :signed_in])
 
     resources("/events", EventController, only: [:edit, :update, :delete])
 
     resources("/agencies", AgencyController)
     post("/agencies/:id/remove_logo", AgencyController, :remove_logo, as: :agency)
 
+    post("/users/:id/toggle", UserController, :toggle, as: :user)
     resources("/users", UserController, only: [:index, :show, :edit, :update, :create])
   end
 

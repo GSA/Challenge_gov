@@ -76,16 +76,23 @@ defmodule Web.SessionController do
             end
         end
 
-      conn
-      |> put_flash(:info, "Login successful")
-      |> put_session(:user_token, user.token)
-      |> after_sign_in_redirect(get_default_path(conn, user))
+      case user.suspended do
+        true ->
+          conn
+          |> put_flash(:error, "Your account has been suspended")
+          |> redirect(to: Routes.session_path(conn, :new))
+
+        _ ->
+          conn
+          |> put_flash(:info, "Login successful")
+          |> put_session(:user_token, user.token)
+          |> after_sign_in_redirect(get_default_path(conn, user))
+      end
     else
       {:error, _err} ->
         conn
         |> put_flash(:error, "There was an issue logging in")
-        |> put_status(400)
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> redirect(to: Routes.session_path(conn, :new))
     end
   end
 
