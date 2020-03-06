@@ -111,3 +111,16 @@
   margin: 3% 0;
   font-size: 17px;
 }
+
+/* adding users */
+
+.u-input {
+  margin-bottom: 10px;
+}
+
+.u-error {
+  color: red;
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}

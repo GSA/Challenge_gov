@@ -72,7 +72,7 @@ defmodule Web.Router do
     resources("/agencies", AgencyController)
     post("/agencies/:id/remove_logo", AgencyController, :remove_logo, as: :agency)
 
-    resources("/users", UserController, only: [:index, :show, :edit, :update])
+    resources("/users", UserController, only: [:index, :show, :edit, :update, :create])
   end
 
   scope "/", Web do

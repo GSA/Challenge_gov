@@ -17,9 +17,9 @@ defmodule ChallengeGov.Accounts.User do
   # TODO: Available roles to be able to change a user to need to differ by role attempting the change
   # TODO: Add backend restriction on role modifying. Different roles need different changesets
   @roles [
-    "super_admin",
-    "admin",
-    "challenge_owner"
+    %{id: "super_admin", label: "Super Admin"},
+    %{id: "admin", label: "Admin"},
+    %{id: "challenge_owner", label: "Challenge Owner"}
   ]
 
   schema "users" do
@@ -36,6 +36,7 @@ defmodule ChallengeGov.Accounts.User do
     field(:display, :boolean, default: true)
 
     field(:email, :string)
+    field(:email_confirmation, :string, virtual: true)
     field(:password_hash, :string)
     field(:password, :string, virtual: true)
     field(:password_confirmation, :string, virtual: true)
@@ -93,6 +94,13 @@ defmodule ChallengeGov.Accounts.User do
     |> validate_confirmation(:password)
     |> Stein.Accounts.hash_password()
     |> validate_required([:password_hash])
+  end
+
+  def create_changeset(struct, params = %{"email_confirmation" => _}) do
+    struct
+    |> changeset(params)
+    |> cast(params, [:email_confirmation])
+    |> validate_confirmation(:email, message: "emails must match")
   end
 
   def create_changeset(struct, params) do
