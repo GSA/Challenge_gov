@@ -187,6 +187,15 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Update an account's terms
+  """
+  def update_terms(user, params) do
+    user
+    |> User.terms_changeset(params)
+    |> Repo.update()
+  end
+
+  @doc """
   Validate a user's login information
   """
   def validate_login(email, password) do
@@ -334,19 +343,8 @@ defmodule ChallengeGov.Accounts do
   def is_challenge_owner?(_), do: false
 
   @doc """
-  Check if a user is a pending challenge_owner
-  """
-
-  def is_challenge_owner_pending?(user)
-
-  def is_challenge_owner_pending?(%{role: "challenge_owner_pending"}), do: true
-
-  def is_challenge_owner_pending?(_), do: false
-
-  @doc """
   Check if a user has accepted all terms
   """
-
   def has_accepted_terms?(user)
 
   def has_accepted_terms?(%{terms_of_use: nil}), do: false
@@ -356,6 +354,15 @@ defmodule ChallengeGov.Accounts do
   def has_accepted_terms?(%{terms_of_use: _timestamp}), do: true
 
   def has_accepted_terms?(%{privacy_guidelines: _timestamp}), do: true
+
+  @doc """
+  Check if a user is pending
+  """
+  def is_pending_user?(user)
+
+  def is_pending_user?(%{pending: true}), do: true
+
+  def is_pending_user?(%{pending: false}), do: false
 
   @impl true
   def filter_on_attribute({"search", value}, query) do
