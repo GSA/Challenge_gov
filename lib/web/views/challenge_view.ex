@@ -28,6 +28,10 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def agency_name(challenge) do
+    if challenge.agency, do: challenge.agency.name
+  end
+
   def winner_img(challenge, opts \\ []) do
     case is_nil(challenge.winner_image_key) do
       true ->
