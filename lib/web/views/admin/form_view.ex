@@ -301,14 +301,24 @@ defmodule Web.Admin.FormView do
 
   def nested_form_control_classes(form, children, field, index) do
     fields_data = Map.get(form.source.changes, children)
+
+    fields_data =
+      if fields_data do
+        Enum.filter(fields_data, fn child ->
+          child.action !== :replace
+        end)
+      else
+        []
+      end
+
     current_field = if fields_data, do: Enum.at(fields_data, index), else: nil
 
     case !is_nil(current_field) and Keyword.has_key?(current_field.errors, field) and index != -1 do
       true ->
-        "form-control row nested-form-control is-invalid"
+        "form-control nested-form-control is-invalid"
 
       false ->
-        "form-control row nested-form-control"
+        "form-control nested-form-control"
     end
   end
 
