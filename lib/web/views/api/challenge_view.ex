@@ -18,8 +18,7 @@ defmodule Web.Api.ChallengeView do
       tagline: challenge.tagline,
       agency_name: ChallengeView.agency_name(challenge),
       logo: ChallengeView.logo_url(challenge),
-      open_until: challenge.end_date,
-      brief_description: challenge.brief_description
+      open_until: challenge.end_date
     }
   end
 

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { getActiveChallenges } from '../api'
 import { ChallengeTile } from '../components/ChallengeTile'
 import axios from 'axios'
 
