@@ -10,7 +10,9 @@ export const ChallengeTile = (data) => {
             data.data.collection.map(c => (
                 <div key={c.id} className="card">
                   <a href="http://google.com" aria-label="View challenge details">
-                    <img src={c.logo} alt="Challenge logo" />
+                    <div class="image_wrapper">
+                      <img src={c.logo} alt="Challenge logo" />
+                    </div>
                     <div className="card__text-wrapper">
                       <p className="card__title test" aria-label="Challenge title">{c.title}</p>
                       <p className="card__agency-name" aria-label="Agency name">{c.agency_name}</p>
