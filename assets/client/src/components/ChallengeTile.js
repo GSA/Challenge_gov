@@ -15,7 +15,6 @@ export const ChallengeTile = (data) => {
                       <p className="card__title test" aria-label="Challenge title">{c.title}</p>
                       <p className="card__agency-name" aria-label="Agency name">{c.agency_name}</p>
                       <p className="card__tagline" aria-label="Challenge tagline">{c.tagline}</p>
-                      <p className="card__tagline" aria-label="Challenge brief description">{c.brief_description}</p>
                       <p className="card__date">{c.open_until}</p>
                     </div>
                   </a>
