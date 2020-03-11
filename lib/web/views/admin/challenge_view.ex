@@ -194,13 +194,13 @@ defmodule Web.Admin.ChallengeView do
       content_tag :div, class: "row" do
         [
           content_tag :div, class: "col-12" do
-              content_tag(:div, class: "progress eqrs-progress") do
-                content_tag(:div, "",
-                  class: "progress-bar bg-success",
-                  style: "width: #{progressbar_width}%",
-                  role: "progressbar"
-                )
-              end
+            content_tag(:div, class: "progress eqrs-progress") do
+              content_tag(:div, "",
+                class: "progress-bar bg-success",
+                style: "width: #{progressbar_width}%",
+                role: "progressbar"
+              )
+            end
           end,
           Enum.map(Enum.with_index(sections), fn {section, index} ->
             content_tag :div, class: "button-container col" do
