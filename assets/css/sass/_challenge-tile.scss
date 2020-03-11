@@ -1,0 +1,214 @@
+$box-shadow-color: rgba(0,94,162,0.20);
+$box-shadow-color-darker: rgba(0,94,162,0.50);
+$font-color: #2E2E2E;
+$background-color-secondary: #EFF6FB;
+
+
+html {
+  font-size: 62.5%;
+}
+
+
+body {
+  font-size: 1.8rem;
+  font-family: 'Public Sans', sans-serif;
+
+}
+
+
+p {
+  padding: 5px 20px 5px 20px;
+}
+
+
+.cards__section {
+  background-color: $background-color-secondary;
+}
+
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(42.5rem, 1fr));
+  grid-gap: 4rem;
+  margin: auto;
+  padding: 20px;
+}
+
+
+.card {
+  border-radius: 15px;
+  box-shadow: 0 2px 8px 0 $box-shadow-color;
+  transition: .5s;
+  background-color: #fff;
+
+  &:hover {
+  box-shadow: 0 2px 25px 0 $box-shadow-color-darker;
+  }
+}
+
+.card a {
+    text-decoration: none;
+
+    &:visited,
+    :link {
+    color: $font-color;
+  }
+
+}
+
+.image_wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 50%;
+}
+
+.image_wrapper img {
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px 15px 0 0;
+}
+
+.card__text-wrapper {
+  display: grid;
+}
+
+.card__title {
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin: 0;
+  min-height: 6rem;
+  color: $font-color;
+
+  &:link {
+    text-decoration: none;
+
+  }
+}
+
+.card__agency-name {
+  font-size: 1.6rem;
+  min-height: 4rem;
+  margin: 0;
+  color: $font-color;
+}
+
+.card__tagline {
+  font-size: 1.8rem;
+  min-height: 8rem;
+  margin: auto;
+  color: $font-color;
+}
+
+.card__date {
+  font-size: 1.4rem;
+  color: $font-color;
+}
+
+$box-shadow-color: rgba(0,94,162,0.20);
+$background-color-secondary: #EFF6FB;
+
+
+
+.cards__section {
+  background-color: $background-color-secondary;
+}
+
+
+
+// LOADER CSS
+
+.cards__loader-wrapper {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 4rem;
+  margin: auto;
+  padding: 20px;
+}
+
+.card__loader--image {
+  height: 200px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px 0 $box-shadow-color;
+  background: linear-gradient(128deg, lightgray, lightgray, white, lightgray, lightgray);
+  background-size: 400% 400%;
+  background-position: bottom right;
+  animation: shimmer 2s ease-in-out 0s infinite;
+}
+
+.card__loader--text {
+  height: 25px;
+  border-radius: 100px;
+  box-shadow: 0 2px 8px 0 $box-shadow-color;
+  background: linear-gradient(128deg, lightgray, lightgray, white, lightgray, lightgray);
+  background-size: 400% 400%;
+  background-position: bottom right;
+  animation: shimmer 2s ease-in-out 0s infinite;
+}
+
+.line-1 {
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.line-2 {
+  margin-top: 10px;
+  margin-right: 75px;
+}
+
+.line-3 {
+  margin-top: 10px;
+  margin-right: 50px;
+}
+
+
+
+
+//ANIMATIONS
+
+@keyframes shimmer {
+    0%{background-position: bottom right}
+    50%{background-position: top left}
+    100%{background-position: top left}
+}
+
+
+// TABLET
+
+@media screen
+and (min-device-width: 375px) {
+
+  .cards__loader-wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+// DESKTOP
+
+@media screen
+and (min-device-width: 768px) {
+
+  .cards {
+    max-width: 1200px;
+    grid-template-columns: repeat(auto-fit, minmax(32.5rem, 1fr));
+  }
+
+  .cards__loader-wrapper {
+    max-width: 1200px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+
+// MOBILE
+
+@media screen
+and (max-device-width: 425px) {
+
+  html {
+    font-size: larger;
+  }
+}

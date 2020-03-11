@@ -1,10 +1,148 @@
 .challenge-progressbar {
-  .current-section {
-    color: darkorange;
-    font-weight: bold;
+  // max-width: 2000px;
+  // .current-section {
+  //   color: darkorange;
+  //   font-weight: bold;
+  // }
+
+  // .completed-section {
+  //   font-weight: bold;
+  // }
+
+  // VARIABLES
+  $eqrs-success-color: #009E51;
+  $eqrs-tertiary-color: #d6d7d9;
+  $eqrs-text-color: #323a45;
+
+
+  // GLOBAL STYLES
+
+  // * {
+  //   margin: 0;
+  //   padding: 0;
+  //   box-sizing: border-box;
+  // }
+
+
+  .section__title {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: $eqrs-text-color;
+    padding-top: 15px;
   }
 
-  .completed-section {
-    font-weight: bold;
+  .container {
+    margin-top: 100px;
+    max-width: 900px;
+  }
+
+
+  .button-container {
+    text-align: center;
+  }
+
+
+  .eqrs-wrapper {
+    align-items: center;
+  }
+
+  // PROGRESS BAR STYLES
+  .eqrs-progress {
+    position: absolute;
+    margin-top: 20px;
+    width: 90%;
+    margin-left: 5%;
+    height: 3px;
+    // z-index: -1;
+  }
+
+  // BUTTON STYLES
+  @mixin button {
+    &:link, :visited {
+    font-family: sans-serif;
+    color: #4A4A4A;
+    padding-top: 8px;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 100px;
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    }
+  }
+
+
+  .btn-not-completed {
+    @include button;
+    border: 2px solid $eqrs-success-color;
+  }
+
+  .btn-completed {
+    @include button;
+    background-color: $eqrs-success-color !important;
+    color: white !important;
+    border: none !important;
+  }
+
+  .btn-completed_hasFocus {
+    @include button;
+    background-color: $eqrs-success-color !important;
+    color: white !important;
+    border: none !important;
+    cursor: default;
+    z-index: 1;
+    
+    &::after {
+      @include button;
+      content: "";
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 2px solid $eqrs-success-color;
+      border-radius: 100px;
+      background-color: white;
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      z-index: -1;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .btn-not-completed_hasFocus {
+    @include button;
+    background-color: #fff !important;
+    color: #4A4A4A !important;
+    border: none !important;
+    cursor: default;
+    z-index: 1;
+    
+    &::after {
+      @include button;
+      content: "";
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 2px solid $eqrs-success-color;
+      border-radius: 100px;
+      background-color: white;
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      z-index: -1;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+
+
+  .btn-disabled {
+    @include button;
+    background-color: $eqrs-tertiary-color !important;
+    border: none !important;
+    color: white !important;
+    cursor: not-allowed;
   }
 }
