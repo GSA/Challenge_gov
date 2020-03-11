@@ -76,9 +76,17 @@
 
 /* timeout modal */
 
+.main-sidebar {
+  z-index: 1
+}
+
+.navbar {
+  z-index: 1
+}
+
 .timeout-modal {
   position: fixed;
-  z-index: 1;
+  z-index: 100;
   left: 0;
   top: 0;
   width: 100%;
@@ -131,7 +139,7 @@
 
 th {
   white-space: nowrap;
-  
+
   i {
     margin-left: .5em;
   }
