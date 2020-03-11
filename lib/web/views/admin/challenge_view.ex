@@ -186,7 +186,7 @@ defmodule Web.Admin.ChallengeView do
     sections = Challenges.sections()
     current_section_index = Challenges.section_index(current_section)
 
-    progressbar_width = current_section_index / length(sections) * 100
+    progressbar_width = current_section_index / length(sections) * 110
 
     base_classes = ""
 
@@ -194,14 +194,12 @@ defmodule Web.Admin.ChallengeView do
       content_tag :div, class: "row" do
         [
           content_tag :div, class: "col-12" do
-            content_tag :div, class: "offset-1" do
-              content_tag(:div, class: "progress eqrs-progress") do
-                content_tag(:div, "",
-                  class: "progress-bar bg-success",
-                  style: "width: #{progressbar_width}%",
-                  role: "progressbar"
-                )
-              end
+            content_tag(:div, class: "progress eqrs-progress") do
+              content_tag(:div, "",
+                class: "progress-bar bg-success",
+                style: "width: #{progressbar_width}%",
+                role: "progressbar"
+              )
             end
           end,
           Enum.map(Enum.with_index(sections), fn {section, index} ->
