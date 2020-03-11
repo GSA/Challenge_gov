@@ -186,35 +186,57 @@ defmodule Web.Admin.ChallengeView do
     sections = Challenges.sections()
     current_section_index = Challenges.section_index(current_section)
 
-    base_classes = "btn btn-link"
+    progressbar_width = current_section_index / length(sections) * 110
 
-    content_tag :div, class: "challenge-progressbar" do
-      Enum.map(sections, fn section ->
-        cond do
-          section.id == current_section ->
-            content_tag(:span, section.label, class: base_classes <> " current-section")
+    base_classes = ""
 
-          action == :new || action == :create ->
-            content_tag(:span, section.label,
-              class: base_classes,
-              disabled: true,
-              aria: [disabled: true]
-            )
+    content_tag :div, class: "challenge-progressbar container" do
+      content_tag :div, class: "row" do
+        [
+          content_tag :div, class: "col-12" do
+            content_tag(:div, class: "progress eqrs-progress") do
+              content_tag(:div, "",
+                class: "progress-bar bg-success",
+                style: "width: #{progressbar_width}%",
+                role: "progressbar"
+              )
+            end
+          end,
+          Enum.map(Enum.with_index(sections), fn {section, index} ->
+            content_tag :div, class: "button-container col" do
+              [
+                cond do
+                  section.id == current_section ->
+                    link(index + 1, to: "#", class: base_classes <> " btn-not-completed_hasFocus")
 
-          Challenges.section_index(section.id) < current_section_index ->
-            link(section.label,
-              to: Routes.admin_challenge_path(conn, :edit, challenge.id, section.id),
-              class: base_classes <> " completed-section"
-            )
+                  action == :new || action == :create ->
+                    link(index + 1,
+                      to: "#",
+                      class: base_classes <> " btn-disabled",
+                      disabled: true,
+                      aria: [disabled: true]
+                    )
 
-          true ->
-            content_tag(:span, section.label,
-              class: base_classes,
-              disabled: true,
-              aria: [disabled: true]
-            )
-        end
-      end)
+                  Challenges.section_index(section.id) < current_section_index ->
+                    link(index + 1,
+                      to: Routes.admin_challenge_path(conn, :edit, challenge.id, section.id),
+                      class: base_classes <> " btn-completed"
+                    )
+
+                  true ->
+                    link(index + 1,
+                      to: "#",
+                      class: base_classes <> " btn-disabled",
+                      disabled: true,
+                      aria: [disabled: true]
+                    )
+                end,
+                content_tag(:p, section.label, class: "section__title")
+              ]
+            end
+          end)
+        ]
+      end
     end
   end
 
