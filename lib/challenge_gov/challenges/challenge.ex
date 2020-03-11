@@ -248,6 +248,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_length(:description, max: 4000)
     |> validate_types(params)
     |> validate_upload_logo(params)
+    |> validate_custom_url(params)
   end
 
   def timeline_changeset(struct, _params) do
@@ -430,5 +431,28 @@ defmodule ChallengeGov.Challenges.Challenge do
       _ ->
         struct
     end
+  end
+
+  defp validate_custom_url(struct, params) do
+    custom_url = Map.get(params, "custom_url")
+    challenge_title = Map.get(params, "title")
+
+    cond do
+      custom_url != "" ->
+        put_change(struct, :custom_url, create_custom_url_slug(custom_url))
+
+      challenge_title != "" ->
+        put_change(struct, :custom_url, create_custom_url_slug(challenge_title))
+
+      true ->
+        struct
+    end
+  end
+
+  defp create_custom_url_slug(value) do
+    value
+    |> String.trim()
+    |> String.downcase()
+    |> String.replace(" ", "-")
   end
 end

@@ -24,6 +24,7 @@ import "./dynamic_nested_fields.js";
 import "./radio_button_show.js";
 import "./character_limit.js";
 import "./datetime_field.js";
+import "./custom_url_generator.js";
 
 window.$ = jquery;
 

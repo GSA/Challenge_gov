@@ -8,7 +8,16 @@
 <%= FormView.text_field(@form, :title, label: "Challenge title*", required: true) %>
 <%= FormView.text_field(@form, :tagline, label: "Tagline* (help text: Appears on challenge tiles)", limit: 90, required: true) %>
 <%= FormView.multiselect_field(@form, :types, collection: Challenges.challenge_types(), selected: @changeset.data.types, label: "Challenge type*", required: true) %>          
-<%= FormView.text_field(@form, :custom_url, label: "Custom url (optional)") %>
+
+<div class="form-group">
+  <%= label @form, :custom_url, "Custom url (optional)", class: "col-md-4" %>
+  <div class="col-md-8">
+    <p>If no custom URL is provided, the challenge URL will default to the challenge title.</p>
+    <span>http://www.challenge.gov/challenge/</span><span id="custom-url-example"></span>
+    <%= text_input @form, :custom_url, class: "form-control", placeholder: "my-custom-challenge-name" %>
+  </div>
+</div>
+
 <%= FormView.text_field(@form, :external_url, label: "Existing external challenge link (optional)") %>
 <%= FormView.textarea_field(@form, :brief_description, label: "Short description* (help text: Appears in challenge details header)", limit: 200, required: true) %>
 <%= FormView.textarea_field(@form, :description, label: "Long description*", limit: 4000, required: true) %>
