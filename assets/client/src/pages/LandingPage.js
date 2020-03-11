@@ -6,10 +6,12 @@ export const LandingPage = () => {
   const [currentChallenges, setCurrentChallenges] = useState([])
   const [loadingState, setLoadingState] = useState(false)
 
+  const base_url = window.location.origin
+
   useEffect(() => {
     setLoadingState(true)
     axios
-      .get("http://localhost:4000/api/challenges")
+      .get(base_url + "/api/challenges")
       .then(res => {
         setCurrentChallenges(res.data)
         setLoadingState(false)
