@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+body {
+  font-family: 'Public Sans', sans-serif;
+}
+
+
 .required {
   color: #ff0000;
 }
@@ -158,4 +165,25 @@ th {
   display: block;
   margin-top: -10px;
   margin-bottom: 10px;
+}
+
+label {
+  font-weight: 400 !important;
+}
+
+.form__note {
+  font-size: smaller;
+  font-style: italic;
+}
+
+.form__note--red {
+  color: red;
+}
+
+.challenge_navbar {
+  background-color: #0B4778;
+}
+
+.challenge_sidebar {
+  background-color: #dedede;
 }
