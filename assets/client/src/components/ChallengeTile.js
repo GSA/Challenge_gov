@@ -1,12 +1,12 @@
 import React from 'react'
 
-export const ChallengeTile = (data) => {
+export const ChallengeTile = ({data, loading}) => {
 
   const renderChallengeTiles = (challenges) => {
-    if (challenges.data.collection) {
+    if (challenges.collection) {
 
-      if (challenges.data.collection.length > 0) {
-        return challenges.data.collection.map(c => (
+      if (challenges.collection.length > 0) {
+        return challenges.collection.map(c => (
             <div key={c.id} className="card">
               <a href="http://google.com" aria-label="View challenge details">
                 <div className="image_wrapper">
@@ -28,16 +28,31 @@ export const ChallengeTile = (data) => {
         return <p>There are no current challenges</p>
       }
     }
-
   }
 
   return (
-    <div>
-      <section className="cards__section">
-        <div className="cards">
-          {renderChallengeTiles(data)}
-        </div>
-      </section>
-    </div>
+    <section className="cards__section">
+      {loading
+        ? (
+          <div className="cards__loader-wrapper" aria-label="Loading active challenges">
+            {[1,2,3,4,5,6].map(numOfPlaceholders => (
+              <div key={numOfPlaceholders}>
+                <div className="card__loader--image"></div>
+                <div className="card__loader--text line-1"></div>
+                <div className="card__loader--text line-2"></div>
+                <div className="card__loader--text line-3"></div>
+              </div>
+            ))}
+          </div>
+        )
+        : (
+          <section className="cards__section">
+            <div className="cards">
+              {renderChallengeTiles(data)}
+            </div>
+          </section>
+        )
+      }
+    </section>
   )
 }
