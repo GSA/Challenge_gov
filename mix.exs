@@ -78,9 +78,9 @@ defmodule ChallengeGov.MixProject do
         "format",
         "format --check-formatted",
         "credo",
-        "cmd mix test",
-        "cmd cd assets && yarn install",
-        "cmd cd assets/client && yarn test --watchAll=false"
+        "cmd mix test"
+        # "cmd cd assets && yarn install",
+        # "cmd cd assets/client && yarn jest --watchAll=false"
       ]
     ]
   end
