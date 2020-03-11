@@ -22,12 +22,12 @@ defmodule Web.Admin.FormView do
 
     case Keyword.get(opts, :required, false) do
       true ->
-        label(form, field, class: "col-md-4") do
+        label(form, field, class: "col") do
           [text, content_tag(:span, "*", class: "required")]
         end
 
       false ->
-        label(form, field, text, class: "col-md-4")
+        label(form, field, text, class: "col")
     end
   end
 
@@ -36,14 +36,14 @@ defmodule Web.Admin.FormView do
   """
   def text_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
-    text_opts = Keyword.take(opts, [:value, :rows, :placeholder])
+    text_opts = Keyword.take(opts, [:value, :rows, :placeholder, :required])
 
     classes = form_control_classes(form, field)
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
-        content_tag(:div, class: "col-md-8") do
+        content_tag(:div, class: "col") do
           [
             text_input(form, field, Keyword.merge([class: classes], text_opts)),
             error_tag(form, field),
@@ -66,7 +66,7 @@ defmodule Web.Admin.FormView do
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
-        content_tag(:div, class: "col-md-8") do
+        content_tag(:div, class: "col") do
           [
             email_input(form, field, Keyword.merge([class: classes], text_opts)),
             error_tag(form, field),
@@ -158,7 +158,7 @@ defmodule Web.Admin.FormView do
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
-        content_tag(:div, class: "col-md-8") do
+        content_tag(:div, class: "col") do
           [
             select(
               form,
@@ -269,10 +269,10 @@ defmodule Web.Admin.FormView do
   def form_group_classes(form, field) do
     case Keyword.has_key?(form.errors, field) do
       true ->
-        "form-group row is-invalid"
+        "form-group is-invalid"
 
       false ->
-        "form-group row"
+        "form-group"
     end
   end
 
