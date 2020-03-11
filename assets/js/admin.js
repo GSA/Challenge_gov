@@ -21,6 +21,9 @@ import "../css/progress_bar.scss";
 
 // Custom JS
 import "./dynamic_nested_fields.js";
+import "./radio_button_show.js";
+import "./character_limit.js";
+import "./datetime_field.js";
 
 window.$ = jquery;
 
@@ -74,3 +77,5 @@ setInterval(() => {
   }
   $("#login-modal-btn").click(() => {location.replace("sign-in/new");})
 }, 1000);
+
+$("#local-timezone-input").val( Intl.DateTimeFormat().resolvedOptions().timeZone)

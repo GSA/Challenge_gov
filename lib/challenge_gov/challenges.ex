@@ -97,6 +97,10 @@ defmodule ChallengeGov.Challenges do
       |> attach_initial_owner(user)
       |> attach_federal_partners(challenge_params)
       |> attach_challenge_owners(challenge_params)
+      |> attach_documents(challenge_params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, challenge_params)
+      end)
       |> Repo.transaction()
 
     case result do
@@ -127,6 +131,10 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.update(:challenge, changeset_for_action(challenge, challenge_params, action))
       |> attach_federal_partners(challenge_params)
       |> attach_challenge_owners(challenge_params)
+      |> attach_documents(challenge_params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, challenge_params)
+      end)
       |> Repo.transaction()
 
     case result do
@@ -142,7 +150,7 @@ defmodule ChallengeGov.Challenges do
     struct = challenge_form_preload(struct)
 
     case action do
-      "save_draft" ->
+      a when a == "back" or a == "save_draft" ->
         Challenge.draft_changeset(struct, params)
 
       _ ->
@@ -167,14 +175,6 @@ defmodule ChallengeGov.Challenges do
       params
     end
   end
-
-  # defp add_blank_assoc_params(params) do
-  #   params
-  #   |> Map.put_new("challenge_owners", [])
-  #   |> Map.put_new("federal_partners", [])
-  #   |> Map.put_new("non_federal_partners", [])
-  #   |> Map.put_new("events", [])
-  # end
 
   @doc """
   Get all challenges

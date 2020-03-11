@@ -1,3 +1,100 @@
-<h3>Details</h3>
+<%= hidden_input @form, :types, value: [] %>
+
+<h4>Add challenge details</h4>
 <br/>
-<%= FormView.text_field(@form, :title, label: "Challenge Title", required: true) %>
+<p><i>Required fields marked with an asterisk (*)</i></p>
+<br/>
+
+<%= FormView.text_field(@form, :title, label: "Challenge title*", required: true) %>
+<%= FormView.text_field(@form, :tagline, label: "Tagline* (help text: Appears on challenge tiles)", limit: 90, required: true) %>
+<%= FormView.multiselect_field(@form, :types, collection: Challenges.challenge_types(), selected: @changeset.data.types, label: "Challenge type*", required: true) %>          
+<%= FormView.text_field(@form, :custom_url, label: "Custom url (optional)") %>
+<%= FormView.text_field(@form, :external_url, label: "Existing external challenge link (optional)") %>
+<%= FormView.textarea_field(@form, :brief_description, label: "Short description* (help text: Appears in challenge details header)", limit: 200, required: true) %>
+<%= FormView.textarea_field(@form, :description, label: "Long description*", limit: 4000, required: true) %>
+
+<hr/>
+
+<div class="col">
+  <label class="control-label">Upload additional description materials*</label>
+</div>
+
+<hr/>
+
+<div class="col">
+  <label class="control-label">Upload challenge logo*</label>
+  <p>
+    This logo will appear on the challenge tile on the homepage and on the challenge details page in the the header.
+  </p>
+  <div class="col ml-2 upload-logo">
+    <div class="row">
+      <%= label class: "control-label" do %>
+        <%= radio_button(@form, :upload_logo, true, class: "mr-2", required: true) %>
+        Upload my own logo
+      <% end %>
+    </div>
+    <div class="row">
+      <%= label class: "control-label" do %>
+        <%= radio_button(@form, :upload_logo, false, class: "mr-2", required: true) %>
+        Use default challenge.gov logo
+      <% end %>
+    </div>
+    <div class="row logo-file-field collapse">
+      <%= FormView.file_field(@form, :logo, label: "Logo", required: true) %>
+    </div>
+  </div>
+</div>
+
+<hr/>
+<br/>
+
+<h4>Publish date</h4>
+<p>
+  Once your challenge is approved, your challenge will be listed on Challenge.gov based on the date you specify below. 
+  Please allow up to one business day for approval and publishing of your content
+</p>
+
+<div class="form-group">
+  <label class="control-label col-md-4">Schedule a publish date and time*</label>
+  <div class="col">
+    <%= datetime_local_input(@form, :auto_publish_date, label: "Publish date", class: "js-datetime-input", required: true) %>
+    <%= hidden_input(@form, :auto_publish_date, label: "Publish date") %>
+    <%= error_tag(@form, :auto_publish_date) %>
+    <br/>
+    <small class="form-text text-muted font-italic">All times listed in local timezone</small>
+  </div>
+</div>
+
+<br/>
+<hr/>
+<br/>
+
+<h4>Is this a multi-phase challenge?</h4>
+<p>
+  A multiphase challenge has a series of discrete phases each consiting of, for example, 
+  submission intake, judging, and participant selection
+</p>
+<p>
+  Example: Phase One -- Ideas, Phase Two -- Prototyping, Phase Three -- Demonstration of Final Product
+</p>
+
+<div class="form-group">
+  <label class="control-label col-md-4">This challenge contains multiple phases*</label>
+  <div class="col ml-2">
+    <div class="row">
+      <%= label class: "control-label" do %>
+        <%= radio_button(@form, :multi_phase, true, class: "mr-2", required: true) %>
+        Yes
+      <% end %>
+    </div>
+    <div class="row">
+      <%= label class: "control-label" do %>
+        <%= radio_button(@form, :multi_phase, false, class: "mr-2", required: true) %>
+        No
+      <% end %>
+    </div>
+    <div class="row phase-file-fields collapse">
+      Phase information
+    </div>
+  </div>
+</div>

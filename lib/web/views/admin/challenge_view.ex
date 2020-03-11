@@ -244,14 +244,23 @@ defmodule Web.Admin.ChallengeView do
 
   def back_button(conn, challenge) do
     if challenge.id do
-      submit("Back", name: "action", value: "back", class: "btn btn-link")
+      submit("Back", name: "action", value: "back", class: "btn btn-link", formnovalidate: true)
     else
-      link("Back", to: Routes.admin_challenge_path(conn, :index), class: "btn btn-link")
+      link("Back",
+        to: Routes.admin_challenge_path(conn, :index),
+        class: "btn btn-link",
+        formnovalidate: true
+      )
     end
   end
 
   def save_draft_button() do
-    submit("Save Draft", name: "action", value: "save_draft", class: "btn btn-link float-right")
+    submit("Save Draft",
+      name: "action",
+      value: "save_draft",
+      class: "btn btn-link float-right",
+      formnovalidate: true
+    )
   end
 
   def submit_button(section) do
