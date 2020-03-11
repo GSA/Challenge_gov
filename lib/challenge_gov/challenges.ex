@@ -84,6 +84,10 @@ defmodule ChallengeGov.Challenges do
   end
 
   def create(%{"action" => action, "challenge" => challenge_params}, user) do
+    challenge_params =
+      challenge_params
+      |> check_non_federal_partners
+
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(
@@ -114,7 +118,9 @@ defmodule ChallengeGov.Challenges do
   end
 
   def update(challenge, %{"action" => action, "challenge" => challenge_params}) do
-    challenge_params = add_blank_assoc_params(challenge_params)
+    challenge_params =
+      challenge_params
+      |> check_non_federal_partners
 
     result =
       Ecto.Multi.new()
@@ -154,13 +160,21 @@ defmodule ChallengeGov.Challenges do
     ])
   end
 
-  defp add_blank_assoc_params(params) do
-    params
-    |> Map.put_new("challenge_owners", [])
-    |> Map.put_new("federal_partners", [])
-    |> Map.put_new("non_federal_partners", [])
-    |> Map.put_new("events", [])
+  defp check_non_federal_partners(params) do
+    if Map.get(params, "non_federal_partners") == "" do
+      Map.put(params, "non_federal_partners", [])
+    else
+      params
+    end
   end
+
+  # defp add_blank_assoc_params(params) do
+  #   params
+  #   |> Map.put_new("challenge_owners", [])
+  #   |> Map.put_new("federal_partners", [])
+  #   |> Map.put_new("non_federal_partners", [])
+  #   |> Map.put_new("events", [])
+  # end
 
   @doc """
   Get all challenges
@@ -317,8 +331,8 @@ defmodule ChallengeGov.Challenges do
   end
 
   # Attach federal partners functions
-  defp attach_federal_partners(multi, %{federal_partners: ids}) do
-    attach_federal_partners(multi, %{"federal_partners" => ids})
+  defp attach_federal_partners(multi, %{"federal_partners" => ""}) do
+    attach_federal_partners(multi, %{"federal_partners" => []})
   end
 
   defp attach_federal_partners(multi, %{"federal_partners" => ids}) do
