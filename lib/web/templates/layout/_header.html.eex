@@ -14,15 +14,9 @@
       </div>
       <div class="top-nav">
         <ul class="mp-none">
-          <%= if user_signed_in?(@conn) do %>
-            <li>
-              <%= link("Sign Out", to: Routes.session_path(@conn, :delete), method: :delete) %>
-            </li>
-          <% else %>
-            <li>
-              <%= link("Sign In", to: Routes.session_path(@conn, :new)) %>
-            </li>
-          <% end %>
+          <li>
+            <%= link("Sign In", to: Routes.session_path(@conn, :new)) %>
+          </li>
         </ul>
       </div>
     </div>
