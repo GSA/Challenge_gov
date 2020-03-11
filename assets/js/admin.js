@@ -45,7 +45,7 @@ setInterval(() => {
         document.getElementById("countdown").textContent = time;
         if (seconds <= 0) clearInterval(countdown);
     }, 1000);
-    $(".navbar").prepend(
+    $(".wrapper").prepend(
       `<div id="renew-modal" class="timeout-modal">
         <div class="modal-content">
           <p>Your session will expire in <span id="countdown"></span></p>
@@ -58,7 +58,7 @@ setInterval(() => {
   }
   if (now === (session_expiration)) {
     $('#renew-modal').css('display', 'none');
-    $(".navbar").prepend(
+    $(".wrapper").prepend(
       `<div id="logged-out-modal" class="timeout-modal">
         <div class="modal-content">
           <p>You have been logged out due to inactivity</p>
