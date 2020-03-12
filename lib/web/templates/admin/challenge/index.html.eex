@@ -70,15 +70,9 @@
                       <td><%= Web.Admin.AgencyView.name_link(@conn, challenge.agency) %></td>
                     <% end %>
                     <td>
-<<<<<<< HEAD
-                      <%# <%= link("View", to: Routes.admin_challenge_path(@conn, :show, challenge.id), class: "btn btn-default btn-xs") %>
-                      <%# <%= challenge_edit_link(@conn, challenge) %>
-=======
->>>>>>> d339c4b17b7cd753d6118c2721d386a631ef48b0
                       <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
                         <%= link("View", to: Routes.admin_challenge_path(@conn, :show, challenge.id), class: "btn btn-default btn-xs mr-2") %>
                         <%= challenge_edit_link(@conn, challenge, class: "btn btn-default btn-xs") %>
-
                         <div class="btn-group btn-group-sm ml-2" role="group">
                           <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             More options
@@ -89,10 +83,6 @@
                           </div>
                         </div>
                       </div>
-<<<<<<< HEAD
-                      
-=======
->>>>>>> d339c4b17b7cd753d6118c2721d386a631ef48b0
                     </td>
                   </tr>
                 <% end %>
