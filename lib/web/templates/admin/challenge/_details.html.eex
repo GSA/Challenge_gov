@@ -25,7 +25,7 @@
 <hr/>
 
 <div class="col">
-  <label class="control-label">Upload additional description materials*</label>
+  <label class="control-label">Upload additional description materials (optional)</label>
   <div class="col">
     <label for="challenge_document_name" class="control-label">File name (optional)</label>
     <input id="challenge_document_name" type="text" class="form-control">
@@ -52,7 +52,7 @@
 <hr/>
 
 <div class="col">
-  <label class="control-label">Upload challenge logo*</label>
+  <label class="control-label"><%= FormView.label_field @form, :upload_logo, label: "Upload challenge logo", required: true %></label>
   <p>
     This logo will appear on the challenge tile on the homepage and on the challenge details page in the the header.
   </p>
@@ -109,7 +109,7 @@
 </p>
 
 <div class="form-group">
-  <label class="control-label col-md-4">This challenge contains multiple phases*</label>
+  <label class="control-label col-md-4"><%= FormView.label_field(@form, :multi_phase, label: "This challenge contains multiple phases", required: true) %></label>
   <div class="col ml-2">
     <div class="row">
       <%= label class: "control-label" do %>
