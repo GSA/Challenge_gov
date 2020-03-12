@@ -53,7 +53,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
               <li class="nav-item">
                 <%= link(to: Routes.admin_challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "challenges")}") do %>
-                  <i class="nav-icon fas fa-list-ul"></i>
+                  <i class="nav-icon fas fa-award"></i>
                   <p>Challenges</p>
                 <% end %>
               </li>

@@ -47,6 +47,8 @@ export const ChallengeTile = ({data, loading}) => {
         )
         : (
           <section className="cards__section">
+            <h2>Active challenges</h2>
+            <p className="card__section--sort">Challenges sorted by those closing soonest</p>
             <div className="cards">
               {renderChallengeTiles(data)}
             </div>

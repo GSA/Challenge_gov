@@ -15,9 +15,23 @@ body {
 
 }
 
+h2 {
+  font-family: 'Public Sans', sans-serif;
+  font-size: 4rem;
+  text-align: center;
+}
+
 
 p {
   padding: 5px 20px 5px 20px;
+}
+
+.card__section--sort {
+  // text-align: right;
+  font-size: 1.6rem;
+  font-style: italic;
+  max-width: 1200px;
+  margin: auto;
 }
 
 
