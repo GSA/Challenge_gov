@@ -2,7 +2,7 @@
 
 <h4>Add challenge details</h4>
 <br/>
-<p><i>Required fields marked with an asterisk (*)</i></p>
+<p class="form__note"><span class="form__note--red">*</span>Required field</p>
 <br/>
 
 <%= FormView.text_field(@form, :title, label: "Challenge title", required: true) %>
