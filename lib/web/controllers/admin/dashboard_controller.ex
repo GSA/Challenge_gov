@@ -2,7 +2,7 @@ defmodule Web.Admin.DashboardController do
   use Web, :controller
 
   def index(conn, _params) do
-    %{current_user: user} = conn.assigns 
+    %{current_user: user} = conn.assigns
     # redirect(conn, to: Routes.admin_challenge_path(conn, :index))
     conn
     |> assign(:user, user)
