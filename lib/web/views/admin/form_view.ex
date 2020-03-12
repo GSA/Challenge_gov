@@ -22,12 +22,12 @@ defmodule Web.Admin.FormView do
 
     case Keyword.get(opts, :required, false) do
       true ->
-        label(form, field, class: "col-md-4") do
+        label(form, field, class: "col") do
           [text, content_tag(:span, "*", class: "required")]
         end
 
       false ->
-        label(form, field, text, class: "col-md-4")
+        label(form, field, text, class: "col")
     end
   end
 
@@ -36,7 +36,7 @@ defmodule Web.Admin.FormView do
   """
   def text_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
-    text_opts = Keyword.take(opts, [:value, :rows, :placeholder, :limit])
+    text_opts = Keyword.take(opts, [:value, :rows, :placeholder, :limit, :required])
 
     char_limit_label =
       if text_opts[:limit] do
@@ -64,8 +64,8 @@ defmodule Web.Admin.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label(form, field, class: "col-md-4"),
-        content_tag(:div, class: "col-md-8") do
+        label_field(form, field, opts),
+        content_tag(:div, class: "col") do
           [
             text_input(form, field, Keyword.merge([class: classes], text_opts)),
             char_limit_label,
@@ -88,8 +88,8 @@ defmodule Web.Admin.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label(form, field, class: "col-md-4"),
-        content_tag(:div, class: "col-md-8") do
+        label_field(form, field, opts),
+        content_tag(:div, class: "col") do
           [
             email_input(form, field, Keyword.merge([class: classes], text_opts)),
             error_tag(form, field),
@@ -180,8 +180,8 @@ defmodule Web.Admin.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label(form, field, class: "col-md-4"),
-        content_tag(:div, class: "col-md-8") do
+        label_field(form, field, opts),
+        content_tag(:div, class: "col") do
           [
             select(
               form,
@@ -208,8 +208,8 @@ defmodule Web.Admin.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label(form, field, class: "col-md-4"),
-        content_tag(:div, class: "col-md-8") do
+        label_field(form, field, opts),
+        content_tag(:div, class: "col") do
           [
             multiple_select(
               form,
@@ -258,8 +258,8 @@ defmodule Web.Admin.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label(form, field, class: "col-md-4"),
-        content_tag(:div, class: "col-md-8") do
+        label_field(form, field, opts),
+        content_tag(:div, class: "col") do
           [
             textarea(form, field, Keyword.merge([class: classes], textarea_opts)),
             char_limit_label,
@@ -389,7 +389,7 @@ defmodule Web.Admin.FormView do
       end)
       |> Enum.join(" ")
 
-    content_tag(:div, class: "col-md-8 dynamic-nested-form") do
+    content_tag(:div, class: "col dynamic-nested-form") do
       [
         content_tag(:div, class: "nested-items") do
           inputs_for(form, children, [skip_hidden: true], fn child ->
@@ -437,7 +437,7 @@ defmodule Web.Admin.FormView do
           class: "add-nested-section btn btn-primary",
           data: [parent: form.name, child: children_name]
         ),
-        content_tag(:div, class: "col-md-8 dynamic-nested-form-template d-none") do
+        content_tag(:div, class: "col dynamic-nested-form-template d-none") do
           [
             content_tag(:div, class: "form-collection") do
               [

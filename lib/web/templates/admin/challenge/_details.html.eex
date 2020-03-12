@@ -5,9 +5,9 @@
 <p><i>Required fields marked with an asterisk (*)</i></p>
 <br/>
 
-<%= FormView.text_field(@form, :title, label: "Challenge title*", required: true) %>
-<%= FormView.text_field(@form, :tagline, label: "Tagline* (help text: Appears on challenge tiles)", limit: 90, required: true) %>
-<%= FormView.multiselect_field(@form, :types, collection: Challenges.challenge_types(), selected: @changeset.data.types, label: "Challenge type*", required: true) %>          
+<%= FormView.text_field(@form, :title, label: "Challenge title", required: true) %>
+<%= FormView.text_field(@form, :tagline, label: "Tagline (help text: Appears on challenge tiles)", limit: 90, required: true) %>
+<%= FormView.multiselect_field(@form, :types, collection: Challenges.challenge_types(), selected: @changeset.data.types, label: "Challenge type", required: true) %>
 
 <div class="form-group">
   <%= label @form, :custom_url, "Custom url (optional)", class: "col-md-4" %>
@@ -19,8 +19,8 @@
 </div>
 
 <%= FormView.text_field(@form, :external_url, label: "Existing external challenge link (optional)") %>
-<%= FormView.textarea_field(@form, :brief_description, label: "Short description* (help text: Appears in challenge details header)", limit: 200, required: true) %>
-<%= FormView.textarea_field(@form, :description, label: "Long description*", limit: 4000, required: true) %>
+<%= FormView.textarea_field(@form, :brief_description, label: "Short description (help text: Appears in challenge details header)", limit: 200, required: true) %>
+<%= FormView.textarea_field(@form, :description, label: "Long description", limit: 4000, required: true) %>
 
 <hr/>
 
