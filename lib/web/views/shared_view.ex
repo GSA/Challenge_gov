@@ -73,4 +73,10 @@ defmodule Web.SharedView do
       Timex.format!(date, "{0M}/{0D}/{YYYY}")
     end
   end
+
+  def readable_datetime(datetime) do
+    if datetime do
+      Timex.format!(datetime, "{0M}/{0D}/{YYYY} {h12}:{0m} {AM}")
+    end
+  end
 end

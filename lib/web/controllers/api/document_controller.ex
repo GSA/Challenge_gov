@@ -1,4 +1,4 @@
-defmodule Web.Admin.DocumentController do
+defmodule Web.Api.DocumentController do
   use Web, :controller
 
   alias ChallengeGov.Challenges
@@ -17,17 +17,18 @@ defmodule Web.Admin.DocumentController do
              Map.get(params, "name")
            ) do
       conn
-      |> put_flash(:info, "Document uploaded and attached")
-      |> redirect(to: Routes.admin_challenge_path(conn, :show, document.challenge_id))
+      |> put_status(:ok)
+      |> assign(:document, document)
+      |> render("show.json")
     end
   end
 
   def delete(conn, %{"id" => id}) do
     with {:ok, document} <- SupportingDocuments.get(id),
-         {:ok, document} <- SupportingDocuments.delete(document) do
+         {:ok, _document} <- SupportingDocuments.delete(document) do
       conn
-      |> put_flash(:info, "Document removed")
-      |> redirect(to: Routes.admin_challenge_path(conn, :show, document.challenge_id))
+      |> put_status(:ok)
+      |> render("delete.json")
     end
   end
 end
