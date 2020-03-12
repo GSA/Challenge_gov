@@ -196,7 +196,7 @@ defmodule Web.Admin.ChallengeView do
           content_tag :div, class: "col-12" do
             content_tag(:div, class: "progress eqrs-progress") do
               content_tag(:div, "",
-                class: "progress-bar bg-success",
+                class: "progress-bar progress-bar--success",
                 style: "width: #{progressbar_width}%",
                 role: "progressbar"
               )
