@@ -100,7 +100,7 @@ defmodule ChallengeGov.SupportingDocuments do
   - Not attached to a challenge
   - Same user owns both the challenge and document
   """
-  def attach_to_challenge(document = %{challenge_id: challenge_id}, _challenge, _section)
+  def attach_to_challenge(document = %{challenge_id: challenge_id}, _challenge, _section, _name)
       when challenge_id != nil do
     document
     |> Ecto.Changeset.change()
@@ -108,11 +108,11 @@ defmodule ChallengeGov.SupportingDocuments do
     |> Ecto.Changeset.apply_action(:update)
   end
 
-  def attach_to_challenge(document, challenge, section) do
+  def attach_to_challenge(document, challenge, section, name) do
     case document.user_id == challenge.user_id do
       true ->
         document
-        |> Document.challenge_changeset(challenge, section)
+        |> Document.challenge_changeset(challenge, section, name)
         |> Repo.update()
 
       false ->

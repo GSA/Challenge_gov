@@ -36,9 +36,31 @@ defmodule Web.Admin.FormView do
   """
   def text_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
-    text_opts = Keyword.take(opts, [:value, :rows, :placeholder, :required])
+    text_opts = Keyword.take(opts, [:value, :rows, :placeholder, :limit, :required])
 
-    classes = form_control_classes(form, field)
+    char_limit_label =
+      if text_opts[:limit] do
+        chars_remaining = text_opts[:limit] - String.length(input_value(form, field) || "")
+        base_classes = "char-limit-label ml-1"
+
+        [label_content, label_classes] =
+          if chars_remaining >= 0 do
+            ["#{chars_remaining} characters remaining", base_classes]
+          else
+            ["#{abs(chars_remaining)} characters over limit", base_classes <> " is-invalid"]
+          end
+
+        content_tag(:p, label_content, class: label_classes)
+      else
+        ""
+      end
+
+    classes =
+      if text_opts[:limit] do
+        form_control_classes(form, field) <> " char-limit-input"
+      else
+        form_control_classes(form, field)
+      end
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
@@ -46,6 +68,7 @@ defmodule Web.Admin.FormView do
         content_tag(:div, class: "col") do
           [
             text_input(form, field, Keyword.merge([class: classes], text_opts)),
+            char_limit_label,
             error_tag(form, field),
             Keyword.get(opts, :do, "")
           ]
@@ -88,7 +111,7 @@ defmodule Web.Admin.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label_field(form, field, opts),
+        label(form, field, class: "col-md-4"),
         content_tag(:div, class: "col-md-8") do
           [
             datetime_select(form, field, Keyword.merge([class: classes], text_opts)),
@@ -111,7 +134,7 @@ defmodule Web.Admin.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label_field(form, field, opts),
+        label(form, field, class: "col-md-4"),
         content_tag(:div, class: "col-md-8") do
           [
             password_input(form, field, Keyword.merge([class: classes], text_opts)),
@@ -134,7 +157,7 @@ defmodule Web.Admin.FormView do
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label_field(form, field, opts),
+        label(form, field, class: "col-md-4"),
         content_tag(:div, class: "col-md-8") do
           [
             number_input(form, field, Keyword.merge([class: classes], number_opts)),
@@ -186,7 +209,7 @@ defmodule Web.Admin.FormView do
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
-        content_tag(:div, class: "col-md-8") do
+        content_tag(:div, class: "col") do
           [
             multiple_select(
               form,
@@ -207,16 +230,39 @@ defmodule Web.Admin.FormView do
   """
   def textarea_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
-    textarea_opts = Keyword.take(opts, [:value, :rows])
+    textarea_opts = Keyword.take(opts, [:value, :rows, :limit])
 
-    classes = form_control_classes(form, field)
+    char_limit_label =
+      if textarea_opts[:limit] do
+        chars_remaining = textarea_opts[:limit] - String.length(input_value(form, field) || "")
+        base_classes = "char-limit-label ml-1"
+
+        [label_content, label_classes] =
+          if chars_remaining >= 0 do
+            ["#{chars_remaining} characters remaining", base_classes]
+          else
+            ["#{abs(chars_remaining)} characters over limit", base_classes <> " is-invalid"]
+          end
+
+        content_tag(:p, label_content, class: label_classes)
+      else
+        ""
+      end
+
+    classes =
+      if textarea_opts[:limit] do
+        form_control_classes(form, field) <> " char-limit-input"
+      else
+        form_control_classes(form, field)
+      end
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
-        content_tag(:div, class: "col-md-8") do
+        content_tag(:div, class: "col") do
           [
             textarea(form, field, Keyword.merge([class: classes], textarea_opts)),
+            char_limit_label,
             error_tag(form, field),
             Keyword.get(opts, :do, "")
           ]
@@ -234,7 +280,7 @@ defmodule Web.Admin.FormView do
     content_tag(:div, class: "checkbox form-group") do
       content_tag(:div, class: "col-md-8 col-md-offset-4") do
         [
-          label(form, field) do
+          label(form, field, class: "col-md-4") do
             [checkbox(form, field), " ", opts[:label]]
           end,
           error_tag(form, field),
@@ -250,7 +296,7 @@ defmodule Web.Admin.FormView do
   def file_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
 
-    classes = form_control_classes(form, field)
+    classes = form_control_file_classes(form, field)
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
@@ -282,10 +328,10 @@ defmodule Web.Admin.FormView do
 
     case !is_nil(current_field) and Keyword.has_key?(current_field.errors, field) and index != -1 do
       true ->
-        "form-group row nested-form-group is-invalid"
+        "form-group nested-form-group is-invalid"
 
       false ->
-        "form-group row nested-form-group"
+        "form-group nested-form-group"
     end
   end
 
@@ -296,6 +342,16 @@ defmodule Web.Admin.FormView do
 
       false ->
         "form-control"
+    end
+  end
+
+  def form_control_file_classes(form, field) do
+    case Keyword.has_key?(form.errors, field) do
+      true ->
+        "form-control-file is-invalid"
+
+      false ->
+        "form-control-file"
     end
   end
 
@@ -333,7 +389,7 @@ defmodule Web.Admin.FormView do
       end)
       |> Enum.join(" ")
 
-    content_tag(:div, class: "dynamic-nested-form") do
+    content_tag(:div, class: "col dynamic-nested-form") do
       [
         content_tag(:div, class: "nested-items") do
           inputs_for(form, children, [skip_hidden: true], fn child ->
@@ -352,18 +408,22 @@ defmodule Web.Admin.FormView do
                           hidden_input(child, k, value: v)
                         end),
                         label(child, field, class: "col-md-4"),
-                        content_tag(:div, class: "col-md-6") do
+                        content_tag(:div, class: "row") do
                           [
-                            text_input(child, field, class: classes),
-                            error_tag(child, field)
+                            content_tag(:div, class: "col-md-10") do
+                              [
+                                text_input(child, field, class: classes),
+                                error_tag(child, field)
+                              ]
+                            end,
+                            content_tag(:div, class: "col-md-2") do
+                              if index < 1 do
+                                content_tag(:div, "Remove",
+                                  class: "remove-nested-section btn btn-link"
+                                )
+                              end
+                            end
                           ]
-                        end,
-                        content_tag(:div, class: "col-md-2") do
-                          if index < 1 do
-                            content_tag(:div, "Remove",
-                              class: "remove-nested-section btn btn-link"
-                            )
-                          end
                         end
                       ]
                     end
@@ -377,7 +437,7 @@ defmodule Web.Admin.FormView do
           class: "add-nested-section btn btn-primary",
           data: [parent: form.name, child: children_name]
         ),
-        content_tag(:div, class: "dynamic-nested-form-template d-none") do
+        content_tag(:div, class: "col dynamic-nested-form-template d-none") do
           [
             content_tag(:div, class: "form-collection") do
               [
@@ -390,13 +450,19 @@ defmodule Web.Admin.FormView do
                   ) do
                     [
                       label(:template, field, class: "col-md-4 template-label"),
-                      content_tag(:div, class: "col-md-6") do
-                        text_input(:template, field, class: "form-control template-input")
-                      end,
-                      content_tag(:div, class: "col-md-2") do
-                        if index < 1 do
-                          content_tag(:div, "Remove", class: "remove-nested-section btn btn-link")
-                        end
+                      content_tag(:div, class: "row") do
+                        [
+                          content_tag(:div, class: "col-md-10") do
+                            text_input(:template, field, class: "form-control template-input")
+                          end,
+                          content_tag(:div, class: "col-md-2") do
+                            if index < 1 do
+                              content_tag(:div, "Remove",
+                                class: "remove-nested-section btn btn-link"
+                              )
+                            end
+                          end
+                        ]
                       end
                     ]
                   end
