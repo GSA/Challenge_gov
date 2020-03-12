@@ -180,6 +180,6 @@ defmodule Web.SessionController do
   end
 
   defp new_session_timeout_at(timeout_after_minutes) do
-    now() + 1000 * 60
+    now() + timeout_after_minutes * 60
   end
 end
