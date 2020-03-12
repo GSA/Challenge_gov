@@ -80,6 +80,7 @@ defmodule Web.Router do
     pipe_through([:api])
 
     resources("/challenges", ChallengeController, only: [:index, :show])
+    resources("/documents", DocumentController, only: [:create, :delete])
   end
 
   scope "/", Web do

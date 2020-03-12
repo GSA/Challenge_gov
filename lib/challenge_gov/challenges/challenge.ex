@@ -125,6 +125,10 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:auto_publish_date, :utc_datetime)
     field(:published_on, :date)
 
+    # Virtual Fields
+    field(:upload_logo, :boolean, virtual: true)
+    field(:logo, :string, virtual: true)
+
     timestamps()
   end
 
@@ -225,9 +229,26 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_format(:fiscal_year, ~r/\bFY[0-9]{2}\b/)
   end
 
-  def details_changeset(struct, _params) do
+  def details_changeset(struct, params) do
     struct
-    |> validate_required([:title])
+    |> cast(params, [
+      :upload_logo
+    ])
+    |> validate_required([
+      :title,
+      :tagline,
+      :types,
+      :brief_description,
+      :description,
+      :auto_publish_date,
+      :upload_logo
+    ])
+    |> validate_length(:tagline, max: 90)
+    |> validate_length(:brief_description, max: 200)
+    |> validate_length(:description, max: 4000)
+    |> validate_types(params)
+    |> validate_upload_logo(params)
+    |> validate_custom_url(params)
   end
 
   def timeline_changeset(struct, _params) do
@@ -375,5 +396,63 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> change()
     |> put_change(:winner_image_key, key)
     |> put_change(:winner_image_extension, extension)
+  end
+
+  # Custom validations
+  # TODO: Make this check that the types added are valid
+  defp validate_types(struct, params) do
+    case Map.get(params, "types") do
+      "" ->
+        add_error(struct, :types, "Must choose a challenge type")
+
+      types when is_list(types) ->
+        struct
+
+      _ ->
+        struct
+    end
+  end
+
+  defp validate_upload_logo(struct, params) do
+    case Map.get(params, "upload_logo") do
+      "true" ->
+        validate_logo(struct, params)
+
+      _ ->
+        struct
+    end
+  end
+
+  defp validate_logo(struct, params) do
+    case Map.get(params, "logo") do
+      nil ->
+        add_error(struct, :logo, "Must upload a logo")
+
+      _ ->
+        struct
+    end
+  end
+
+  defp validate_custom_url(struct, params) do
+    custom_url = Map.get(params, "custom_url")
+    challenge_title = Map.get(params, "title")
+
+    cond do
+      custom_url != "" ->
+        put_change(struct, :custom_url, create_custom_url_slug(custom_url))
+
+      challenge_title != "" ->
+        put_change(struct, :custom_url, create_custom_url_slug(challenge_title))
+
+      true ->
+        struct
+    end
+  end
+
+  defp create_custom_url_slug(value) do
+    value
+    |> String.trim()
+    |> String.downcase()
+    |> String.replace(" ", "-")
   end
 end
