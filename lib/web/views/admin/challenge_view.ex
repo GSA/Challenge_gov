@@ -40,7 +40,7 @@ defmodule Web.Admin.ChallengeView do
     end
   end
 
-  def challenge_edit_link(conn, challenge) do
+  def challenge_edit_link(conn, challenge, opts \\ []) do
     route =
       if challenge.status == "draft" do
         Routes.admin_challenge_path(
@@ -53,7 +53,7 @@ defmodule Web.Admin.ChallengeView do
         Routes.admin_challenge_path(conn, :edit, challenge.id)
       end
 
-    link("Edit", to: route, class: "btn btn-default btn-xs")
+    link("Edit", Keyword.merge([to: route], opts))
   end
 
   @doc """
