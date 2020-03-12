@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
+
 body {
   font-family: 'Public Sans', sans-serif;
 }
@@ -160,8 +161,10 @@ th {
 }
 
 .control-sidebar {
-  width: 40%;
+  width: 25%;
+  height: fit-content;
 }
+
 /* adding users */
 
 .u-input {

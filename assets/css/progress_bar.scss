@@ -10,7 +10,7 @@
   // }
 
   // VARIABLES
-  $eqrs-success-color: #009E51;
+  $eqrs-success-color: #FA9441;
   $eqrs-tertiary-color: #d6d7d9;
   $eqrs-text-color: #323a45;
 
@@ -55,6 +55,10 @@
     margin-left: 5%;
     height: 3px;
     // z-index: -1;
+  }
+
+  .progress-bar--success {
+    background-color: $eqrs-success-color;
   }
 
   // BUTTON STYLES
