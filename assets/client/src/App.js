@@ -6,7 +6,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={"/images/challenge-logo.png"} className="App-logo" alt="logo" />
       </header>
       <LandingPage />
     </div>

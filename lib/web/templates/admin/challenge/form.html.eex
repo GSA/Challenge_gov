@@ -33,9 +33,11 @@
           <div class="card">
             <%= hidden_input f, :section, value: @section %>
             <%= hidden_input f, :user_id, value: @user.id %>
+            <%= hidden_input f, :challenge_id, value: if @challenge, do: @challenge.id, else: nil %>
+            <%= hidden_input f, :local_timezone, id: "local-timezone-input" %>
 
             <div class="card-body">
-              <%= render Web.Admin.ChallengeView, "_#{@section}.html", form: f, changeset: @changeset, data: @changeset.data, path: @path %>
+              <%= render Web.Admin.ChallengeView, "_#{@section}.html", form: f, changeset: @changeset, data: @changeset.data, path: @path, conn: @conn %>
             </div>
 
             <div class="card-footer">

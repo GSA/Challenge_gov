@@ -59,6 +59,7 @@ defmodule Web.Admin.ChallengeController do
     |> assign(:path, Routes.admin_challenge_path(conn, :create))
     |> assign(:action, action_name(conn))
     |> assign(:section, "general")
+    |> assign(:challenge, nil)
     |> render("form.html")
   end
 
@@ -91,6 +92,7 @@ defmodule Web.Admin.ChallengeController do
         |> assign(:action, action_name(conn))
         |> assign(:section, section)
         |> assign(:changeset, changeset)
+        |> assign(:challenge, nil)
         |> put_status(422)
         |> render("form.html")
     end
