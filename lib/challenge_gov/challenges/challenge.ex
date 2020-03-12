@@ -28,12 +28,12 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   @challenge_types [
     "Software and apps",
-    "Creative (multimedia and design)",
+    "Creative (multimedia & design)",
     "Ideas",
     "Technology demonstration and hardware",
     "Nominations",
     "Business plans",
-    "Analytics, visualizations and algorithms",
+    "Analytics, visualizations, algorithms",
     "Scientific"
   ]
 
