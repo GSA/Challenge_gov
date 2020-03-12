@@ -8,7 +8,6 @@
 
       <div class="main">
         <div class="content-area">
-          <div class="menu-close"><a href="javascript:;"><i class="icon-close-custom"></i></a></div>
           <div class="logo side-nav-logo">
             <img src="<%= Routes.static_path(@conn, "/images/challenge-logo.png") %>" alt="Challenge.gov Logo" title="Challenge.gov">
           </div>

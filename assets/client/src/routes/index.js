@@ -1,8 +1,13 @@
 import App  from '../App'
+import { DetailsPage } from '../pages/DetailsPage'
 
 export const IndexRoutes = [
   {
     component: App,
-    path: "/"
+    path: "/challenges"
   },
+  {
+    component: DetailsPage,
+    path: "/challenge/:challengeId"
+  }
 ];
