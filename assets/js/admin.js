@@ -21,6 +21,11 @@ import "../css/progress_bar.scss";
 
 // Custom JS
 import "./dynamic_nested_fields.js";
+import "./radio_button_show.js";
+import "./character_limit.js";
+import "./datetime_field.js";
+import "./custom_url_generator.js";
+import "./section_file_upload.js";
 
 window.$ = jquery;
 
@@ -45,7 +50,7 @@ setInterval(() => {
         document.getElementById("countdown").textContent = time;
         if (seconds <= 0) clearInterval(countdown);
     }, 1000);
-    $(".navbar").prepend(
+    $(".wrapper").prepend(
       `<div id="renew-modal" class="timeout-modal">
         <div class="modal-content">
           <p>Your session will expire in <span id="countdown"></span></p>
@@ -58,7 +63,7 @@ setInterval(() => {
   }
   if (now === (session_expiration)) {
     $('#renew-modal').css('display', 'none');
-    $(".navbar").prepend(
+    $(".wrapper").prepend(
       `<div id="logged-out-modal" class="timeout-modal">
         <div class="modal-content">
           <p>You have been logged out due to inactivity</p>
@@ -74,3 +79,5 @@ setInterval(() => {
   }
   $("#login-modal-btn").click(() => {location.replace("sign-in/new");})
 }, 1000);
+
+$("#local-timezone-input").val( Intl.DateTimeFormat().resolvedOptions().timeZone)

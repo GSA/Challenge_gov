@@ -84,6 +84,10 @@ defmodule ChallengeGov.Challenges do
   end
 
   def create(%{"action" => action, "challenge" => challenge_params}, user) do
+    challenge_params =
+      challenge_params
+      |> check_non_federal_partners
+
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(
@@ -93,6 +97,10 @@ defmodule ChallengeGov.Challenges do
       |> attach_initial_owner(user)
       |> attach_federal_partners(challenge_params)
       |> attach_challenge_owners(challenge_params)
+      |> attach_documents(challenge_params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, challenge_params)
+      end)
       |> Repo.transaction()
 
     case result do
@@ -114,13 +122,19 @@ defmodule ChallengeGov.Challenges do
   end
 
   def update(challenge, %{"action" => action, "challenge" => challenge_params}) do
-    challenge_params = add_blank_assoc_params(challenge_params)
+    challenge_params =
+      challenge_params
+      |> check_non_federal_partners
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset_for_action(challenge, challenge_params, action))
       |> attach_federal_partners(challenge_params)
       |> attach_challenge_owners(challenge_params)
+      |> attach_documents(challenge_params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, challenge_params)
+      end)
       |> Repo.transaction()
 
     case result do
@@ -136,7 +150,7 @@ defmodule ChallengeGov.Challenges do
     struct = challenge_form_preload(struct)
 
     case action do
-      "save_draft" ->
+      a when a == "back" or a == "save_draft" ->
         Challenge.draft_changeset(struct, params)
 
       _ ->
@@ -154,12 +168,12 @@ defmodule ChallengeGov.Challenges do
     ])
   end
 
-  defp add_blank_assoc_params(params) do
-    params
-    |> Map.put_new("challenge_owners", [])
-    |> Map.put_new("federal_partners", [])
-    |> Map.put_new("non_federal_partners", [])
-    |> Map.put_new("events", [])
+  defp check_non_federal_partners(params) do
+    if Map.get(params, "non_federal_partners") == "" do
+      Map.put(params, "non_federal_partners", [])
+    else
+      params
+    end
   end
 
   @doc """
@@ -317,8 +331,8 @@ defmodule ChallengeGov.Challenges do
   end
 
   # Attach federal partners functions
-  defp attach_federal_partners(multi, %{federal_partners: ids}) do
-    attach_federal_partners(multi, %{"federal_partners" => ids})
+  defp attach_federal_partners(multi, %{"federal_partners" => ""}) do
+    attach_federal_partners(multi, %{"federal_partners" => []})
   end
 
   defp attach_federal_partners(multi, %{"federal_partners" => ids}) do
@@ -408,7 +422,7 @@ defmodule ChallengeGov.Challenges do
   defp attach_documents(multi, _params), do: multi
 
   defp attach_document({:ok, document}, challenge) do
-    SupportingDocuments.attach_to_challenge(document, challenge, "resources")
+    SupportingDocuments.attach_to_challenge(document, challenge, "resources", "")
   end
 
   defp attach_document(result, _challenge), do: result
