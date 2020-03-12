@@ -26,6 +26,27 @@
 
 <div class="col">
   <label class="control-label">Upload additional description materials*</label>
+  <div class="col">
+    <label for="challenge_document_name" class="control-label">File name (optional)</label>
+    <input id="challenge_document_name" type="text" class="form-control">
+    <br/>
+    <input id="challenge_document_file" type="file" class="form-file-control">
+    <div id="challenge_document_upload" class="btn btn-primary">Upload file</div>
+  </div>              
+
+  <br/>
+
+  <div id="challenge_uploaded_documents">
+    <%= Enum.map(@changeset.data.supporting_documents, fn document -> %>
+      <div class="challenge_uploaded_document">
+        <i class="fa fa-paperclip mr-1"></i>
+        <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %>
+        <%= link to: "", data: [document_id: document.id], class: "challenge_uploaded_document_delete" do %>
+          <i class="fa fa-trash"></i>
+        <% end %>
+      </div>
+    <% end) %>
+  </div>
 </div>
 
 <hr/>

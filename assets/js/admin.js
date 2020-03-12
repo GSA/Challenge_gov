@@ -25,6 +25,7 @@ import "./radio_button_show.js";
 import "./character_limit.js";
 import "./datetime_field.js";
 import "./custom_url_generator.js";
+import "./section_file_upload.js";
 
 window.$ = jquery;
 
