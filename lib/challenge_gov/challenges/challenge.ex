@@ -129,6 +129,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:upload_logo, :boolean, virtual: true)
     field(:logo, :string, virtual: true)
 
+    # Meta Timestamps
+    field(:deleted_at, :utc_datetime)
     timestamps()
   end
 

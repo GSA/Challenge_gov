@@ -56,6 +56,18 @@ defmodule Web.Admin.ChallengeView do
     link("Edit", Keyword.merge([to: route], opts))
   end
 
+  def challenge_delete_link(conn, challenge, user, opts \\ []) do
+    if (user.role == "challenge_owner" and challenge.status == "draft") or
+         Accounts.has_admin_access?(user) do
+      link(opts[:label] || "Delete",
+        to: Routes.admin_challenge_path(conn, :delete, challenge.id),
+        method: :delete,
+        class: "btn btn-link text-danger",
+        data: [confirm: "Are you sure you want to delete this challenge?"]
+      )
+    end
+  end
+
   @doc """
   Only shows challenge owner field if the person is an admin and a challenge is being edited
   """
