@@ -315,7 +315,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :terms_and_conditions,
       :legal_authority,
       :faq,
-      :winner_information
+      :winner_information,
+      :fiscal_year
     ])
     |> foreign_key_constraint(:agency)
     |> unique_constraint(:custom_url)
@@ -355,7 +356,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :terms_and_conditions,
       :legal_authority,
       :faq,
-      :winner_information
+      :winner_information,
+      :fiscal_year
     ])
     |> foreign_key_constraint(:agency)
     |> unique_constraint(:custom_url)

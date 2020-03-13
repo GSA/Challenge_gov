@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from "react-router-dom";
+import moment from "moment"
 
 export const ChallengeTile = ({data, loading}) => {
 
@@ -9,7 +10,7 @@ export const ChallengeTile = ({data, loading}) => {
       if (challenges.collection.length > 0) {
         return challenges.collection.map(c => (
             <div key={c.id} className="card">
-                <Link to={`/challenge/${c.id}`} aria-label="View challenge details">
+              <Link to={`/challenge/${c.id}`} aria-label="View challenge details">
                 <div className="image_wrapper">
                   <img src={c.logo} alt="Challenge logo" />
                 </div>
@@ -17,7 +18,7 @@ export const ChallengeTile = ({data, loading}) => {
                   <p className="card__title test" aria-label="Challenge title">{c.title}</p>
                   <p className="card__agency-name" aria-label="Agency name">{c.agency_name}</p>
                   <p className="card__tagline" aria-label="Challenge tagline">{c.tagline}</p>
-                  <p className="card__date">{c.open_until}</p>
+                  <p className="card__date">{moment(c.open_until).format("llll")}</p>
                 </div>
               </Link>
             </div>
