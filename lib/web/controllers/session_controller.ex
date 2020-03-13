@@ -156,7 +156,6 @@ defmodule Web.SessionController do
   @doc """
   session timeout and reset
   """
-
   def check_session_timeout(conn, opts) do
     timeout_at = get_session(conn, :session_timeout_at)
 
