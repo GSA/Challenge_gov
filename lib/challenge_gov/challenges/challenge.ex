@@ -248,6 +248,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_length(:description, max: 4000)
     |> validate_types(params)
     |> validate_upload_logo(params)
+    |> validate_auto_publish_date(params)
     |> validate_custom_url(params)
   end
 
@@ -430,6 +431,19 @@ defmodule ChallengeGov.Challenges.Challenge do
 
       _ ->
         struct
+    end
+  end
+
+  defp validate_auto_publish_date(struct, params) do
+    now = Timex.now()
+
+    with time <- Map.get(params, "auto_publish_date"),
+         {:ok, time} <- Timex.parse(time, "{ISO:Extended}"),
+         1 <- Timex.compare(time, now) do
+      struct
+    else
+      tc when tc == -1 or tc == 0 ->
+        add_error(struct, :auto_publish_date, "must be in the future")
     end
   end
 
