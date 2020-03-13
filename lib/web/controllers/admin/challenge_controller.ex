@@ -136,6 +136,11 @@ defmodule Web.Admin.ChallengeController do
         conn
         |> put_flash(:error, "You are not allowed to edit this challenge")
         |> redirect(to: Routes.admin_challenge_path(conn, :index))
+
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "Challenge not found")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
     end
   end
 
@@ -156,6 +161,11 @@ defmodule Web.Admin.ChallengeController do
       {:error, :not_permitted} ->
         conn
         |> put_flash(:error, "You are not allowed to edit this challenge")
+        |> redirect(to: Routes.admin_challenge_path(conn, :index))
+
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "Challenge not found")
         |> redirect(to: Routes.admin_challenge_path(conn, :index))
     end
   end
@@ -226,9 +236,10 @@ defmodule Web.Admin.ChallengeController do
   end
 
   def delete(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(id)
 
-    case Challenges.delete(challenge) do
+    case Challenges.delete(challenge, user) do
       {:ok, _challenge} ->
         conn
         |> put_flash(:info, "Challenge deleted")

@@ -79,7 +79,7 @@
                           </button>
                           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                             <a class="btn btn-link" href="#">Media</a>
-                            <%= link("Delete", to: Routes.admin_challenge_path(@conn, :delete, challenge.id), method: :delete, class: "btn btn-link text-danger", data: [confirm: "Are you sure you want to delete this challenge?"]) %>
+                            <%= challenge_delete_link(@conn, challenge, @user, label: "Delete", class: "btn btn-default btn-xs") %>
                           </div>
                         </div>
                       </div>

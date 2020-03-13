@@ -183,6 +183,7 @@ defmodule ChallengeGov.Challenges do
     query =
       Challenge
       |> preload([:agency, :user])
+      |> where([c], is_nil(c.deleted_at))
       |> where([c], c.status == "created")
       |> order_by([c], desc: c.published_on, asc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
@@ -197,6 +198,7 @@ defmodule ChallengeGov.Challenges do
     query =
       Challenge
       |> preload([:agency, :user])
+      |> where([c], is_nil(c.deleted_at))
       |> order_by([c], desc: c.status, desc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
 
@@ -210,10 +212,12 @@ defmodule ChallengeGov.Challenges do
     start_query =
       if user.role == "challenge_owner" do
         Challenge
+        |> where([c], is_nil(c.deleted_at))
         |> join(:inner, [c], co in assoc(c, :challenge_owners))
         |> where([c, co], co.user_id == ^user.id)
       else
         Challenge
+        |> where([c], is_nil(c.deleted_at))
       end
 
     query =
@@ -244,21 +248,25 @@ defmodule ChallengeGov.Challenges do
   Get a challenge
   """
   def get(id) do
-    case Repo.get(Challenge, id) do
+    challenge =
+      Challenge
+      |> where([c], is_nil(c.deleted_at))
+      |> where([c], c.id == ^id)
+      |> preload([
+        :supporting_documents,
+        :user,
+        :federal_partner_agencies,
+        :non_federal_partners,
+        :agency,
+        :challenge_owner_users
+      ])
+      |> Repo.one()
+
+    case challenge do
       nil ->
         {:error, :not_found}
 
       challenge ->
-        challenge =
-          Repo.preload(challenge, [
-            :supporting_documents,
-            :user,
-            :federal_partner_agencies,
-            :non_federal_partners,
-            :agency,
-            :challenge_owner_users
-          ])
-
         challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
         {:ok, challenge}
     end
@@ -478,6 +486,33 @@ defmodule ChallengeGov.Challenges do
   """
   def delete(challenge) do
     Repo.delete(challenge)
+  end
+
+  @doc """
+  Delete a challenge if allowed
+  """
+  def delete(challenge, user) do
+    if allowed_to_delete(user, challenge) do
+      soft_delete(challenge)
+    else
+      {:error, :not_permitted}
+    end
+  end
+
+  def soft_delete(challenge) do
+    now = DateTime.truncate(Timex.now(), :second)
+
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:deleted_at, now)
+    |> Repo.update()
+  end
+
+  @doc """
+  Checks if a user is allowed to delete a challenge
+  """
+  def allowed_to_delete(user, challenge) do
+    Accounts.has_admin_access?(user) or challenge.status == "draft"
   end
 
   @doc """
