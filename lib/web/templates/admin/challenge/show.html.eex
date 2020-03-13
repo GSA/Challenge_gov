@@ -86,11 +86,11 @@
               <br/>
 
               <dt>Start Date</dd>
-              <dd><%= SharedView.readable_date(@challenge.start_date) %></dd>
+              <dd><%= SharedView.readable_datetime(@challenge.start_date) %></dd>
               <br/>
 
               <dt>End Date</dd>
-              <dd><%= SharedView.readable_date(@challenge.end_date) %></dd>
+              <dd><%= SharedView.readable_datetime(@challenge.end_date) %></dd>
               <br/>
 
               <dt>Auto Publish Date</dd>

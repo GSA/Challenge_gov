@@ -82,7 +82,7 @@ defmodule Web.Admin.FormView do
   """
   def email_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
-    text_opts = Keyword.take(opts, [:value, :rows, :placeholder])
+    text_opts = Keyword.take(opts, [:value, :rows, :placeholder, :required])
 
     classes = form_control_classes(form, field)
 
@@ -174,7 +174,7 @@ defmodule Web.Admin.FormView do
   """
   def select_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
-    select_opts = Keyword.take(opts, [:prompt])
+    select_opts = Keyword.take(opts, [:prompt, :required])
 
     classes = form_control_classes(form, field)
 
@@ -202,7 +202,7 @@ defmodule Web.Admin.FormView do
   """
   def multiselect_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
-    select_opts = Keyword.take(opts, [:prompt, :selected])
+    select_opts = Keyword.take(opts, [:prompt, :selected, :required])
 
     classes = form_control_classes(form, field)
 
@@ -230,7 +230,7 @@ defmodule Web.Admin.FormView do
   """
   def textarea_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
-    textarea_opts = Keyword.take(opts, [:value, :rows, :limit])
+    textarea_opts = Keyword.take(opts, [:value, :rows, :limit, :required])
 
     char_limit_label =
       if textarea_opts[:limit] do

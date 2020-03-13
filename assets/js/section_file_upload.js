@@ -33,7 +33,7 @@ $(document).ready(function(){
           $("#challenge_uploaded_documents").append(`
             <div>
               <i class="fa fa-paperclip mr-1"></i>
-              <a href=${document.url} target="_blank">${document.filename}</a>
+              <a href=${document.url} target="_blank">${document.display_name}</a>
               <a href="" data-document-id=${document.id} class="challenge_uploaded_document_delete">
                 <i class="fa fa-trash"></i>
               </a>

@@ -71,7 +71,7 @@ defmodule Web.Admin.ChallengeController do
         if action == "save_draft" do
           conn
           |> put_flash(:info, "Challenge saved as draft")
-          |> redirect(to: Routes.admin_challenge_path(conn, :index))
+          |> redirect(to: Routes.admin_challenge_path(conn, :edit, challenge.id, section))
         else
           conn
           |> redirect(
@@ -183,7 +183,7 @@ defmodule Web.Admin.ChallengeController do
       if action == "save_draft" do
         conn
         |> put_flash(:info, "Challenge saved as draft")
-        |> redirect(to: Routes.admin_challenge_path(conn, :index))
+        |> redirect(to: Routes.admin_challenge_path(conn, :edit, challenge.id, section))
       end
 
       if to_section do

@@ -86,11 +86,8 @@
           <!-- character limit for below: 400 -->
           <%= FormView.textarea_field(f, :brief_description, label: "Brief Description", rows: 5, required: true) %>
           <%= FormView.textarea_field(f, :how_to_enter, label: "How to Enter", rows: 5, required: true) %>
-          <%= FormView.text_field(f, :fiscal_year_open, label: "Fiscal Year of Challenge Launch", required: true) do %>
-          <span class="help-block">Format <code>FY99</code></span>
-          <% end %>
-          <%= FormView.text_field(f, :fiscal_year_close, label: "Fiscal Year of Challenge Close", required: true) do %>
-          <span class="help-block">Format <code>FY99</code></span>
+          <%= FormView.text_field(f, :fiscal_year, label: "Fiscal Year of Challenge Launch", required: true) do %>
+            <span class="help-block">Format <code>FY99</code></span>
           <% end %>
           <%= FormView.datetime_field(f, :start_date, required: true) %>
           <%= FormView.datetime_field(f, :end_date, required: true) %>
