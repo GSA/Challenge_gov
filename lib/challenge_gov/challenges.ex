@@ -184,7 +184,7 @@ defmodule ChallengeGov.Challenges do
       Challenge
       |> preload([:agency, :user])
       |> where([c], c.status == "created")
-      |> order_by([c], desc: c.published_on, asc: c.id)
+      |> order_by([c], asc: c.end_date, asc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
