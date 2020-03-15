@@ -18,6 +18,7 @@ steps:
   - mix deps.get
   - export MIX_ENV=test
   - mix compile --force --warnings-as-errors
+  - mix deps.audit
 
 - name: lint
   image: elixir:1.9
