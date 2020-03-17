@@ -5,6 +5,7 @@ defmodule Web.ChallengeView do
   alias ChallengeGov.Challenges.WinnerImage
   alias Stein.Storage
   alias Web.AgencyView
+  alias ChallengeGov.Agencies.Agency
 
   def logo_img(challenge, opts \\ []) do
     case is_nil(challenge.logo_key) do
@@ -30,6 +31,14 @@ defmodule Web.ChallengeView do
 
   def agency_name(challenge) do
     if challenge.agency, do: challenge.agency.name
+  end
+
+  def federal_partner_agencies(federal_partner_agencies) do
+    if federal_partner_agencies do
+      Enum.map(federal_partner_agencies, fn x -> x.name end)
+      # Enum.map(federal_partner_agencies, &{&1.name, &1.id})
+      # Enum.map(federal_partner_agencies, fn %{"id" => id, "name" => name} -> %{id: id, name: name} end)
+    end
   end
 
   def winner_img(challenge, opts \\ []) do
