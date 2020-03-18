@@ -5,7 +5,6 @@ defmodule Web.ChallengeView do
   alias ChallengeGov.Challenges.WinnerImage
   alias Stein.Storage
   alias Web.AgencyView
-  alias ChallengeGov.Agencies.Agency
 
   def logo_img(challenge, opts \\ []) do
     case is_nil(challenge.logo_key) do

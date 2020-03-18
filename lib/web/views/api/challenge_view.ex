@@ -33,7 +33,6 @@ defmodule Web.Api.ChallengeView do
       faq: challenge.faq,
       title: challenge.title,
       logo: challenge.logo,
-      agency_id: challenge.agency_id,
       logo_key: challenge.logo_key,
       end_date: challenge.end_date,
       eligibility_requirements: challenge.eligibility_requirements,
@@ -53,7 +52,6 @@ defmodule Web.Api.ChallengeView do
       start_date: challenge.custom_url,
       non_monetary_prizes: challenge.non_monetary_prizes,
       events: challenge.non_monetary_prizes,
-      agency_name: challenge.agency_name,
       status: challenge.status,
       type: challenge.type,
       logo_extension: challenge.logo_extension,
@@ -64,18 +62,20 @@ defmodule Web.Api.ChallengeView do
       agency_name: ChallengeView.agency_name(challenge),
       agency_id: challenge.agency_id,
       rules: challenge.rules,
-      federal_partners: render_many(
-        challenge.federal_partner_agencies,
-        __MODULE__,
-        "federal_partner_agencies.json",
-        as: :agency
-      ),
-      non_federal_partners: render_many(
-        challenge.non_federal_partners,
-        __MODULE__,
-        "non_federal_partners.json",
-        as: :partner
-      )
+      federal_partners:
+        render_many(
+          challenge.federal_partner_agencies,
+          __MODULE__,
+          "federal_partner_agencies.json",
+          as: :agency
+        ),
+      non_federal_partners:
+        render_many(
+          challenge.non_federal_partners,
+          __MODULE__,
+          "non_federal_partners.json",
+          as: :partner
+        )
     }
   end
 
