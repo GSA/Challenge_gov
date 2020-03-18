@@ -203,6 +203,36 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Parse login.gov data into our system
+  """
+  def map_from_login(userinfo) do
+    # look for user based on token
+    case get_by_token(userinfo["sub"]) do
+      {:error, :not_found} ->
+        # look for users created by admin with emails, but no token
+        case get_by_email(userinfo["email"]) do
+          {:error, :not_found} ->
+            create(%{
+              email: userinfo["email"],
+              first_name: "Placeholder",
+              last_name: "Placeholder",
+              role: "admin",
+              token: userinfo["sub"],
+              terms_of_use: nil,
+              privacy_guidelines: nil,
+              pending: true
+            })
+
+          {:ok, user} ->
+            __MODULE__.update(user, %{token: userinfo["sub"]})
+        end
+
+      {:ok, account_user} ->
+        {:ok, account_user}
+    end
+  end
+
+  @doc """
   Get a user by an ID
   """
   def get(id) do

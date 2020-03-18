@@ -49,32 +49,7 @@ defmodule Web.SessionController do
          {:ok, %{"id_token" => id_token}} <-
            LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
-      {:ok, user} =
-        case Accounts.get_by_email(userinfo["email"]) do
-          {:error, :not_found} ->
-            Accounts.create(%{
-              email: userinfo["email"],
-              first_name: "Placeholder",
-              last_name: "Placeholder",
-              role: "admin",
-              token: userinfo["sub"],
-              terms_of_use: nil,
-              privacy_guidelines: nil,
-              pending: true
-            })
-
-          {:ok, account_user} ->
-            case Map.get(account_user, :token) do
-              nil ->
-                Accounts.update(
-                  account_user,
-                  %{token: userinfo["sub"]}
-                )
-
-              _ ->
-                {:ok, account_user}
-            end
-        end
+      {:ok, user} = Accounts.map_from_login(userinfo)
 
       case user.suspended do
         true ->
