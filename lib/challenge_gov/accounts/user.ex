@@ -165,8 +165,7 @@ defmodule ChallengeGov.Accounts.User do
 
   def last_active_changeset(struct) do
     struct
-    # |> cast(params, [:last_active])
-    # |> change()
+    |> change()
     |> timestamp(:last_active)
   end
 

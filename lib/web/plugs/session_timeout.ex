@@ -3,12 +3,15 @@ defmodule Web.Plugs.SessionTimeout do
   Manage session timeout
   """
   alias Web.SessionController
+  alias ChallengeGov.Accounts
 
   def init(opts \\ []) do
     Keyword.merge([timeout_after_minutes: timeout_interval()], opts)
   end
 
   def call(conn, opts) do
+    %{current_user: user} = conn.assigns
+    Accounts.update_last_active(user)
     SessionController.check_session_timeout(conn, opts)
   end
 

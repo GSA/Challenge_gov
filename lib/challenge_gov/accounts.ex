@@ -157,14 +157,9 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Update last active timestamp
   """
-  # def update_last_active(user), do: User.last_active_changeset(user, %{})
   def update_last_active(user) do
-    # user
-    # |> User.last_active_changeset()
-    # |> Repo.update()
     user
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:last_active, DateTime.truncate(DateTime.utc_now(), :second))
+    |> User.last_active_changeset()
     |> Repo.update()
   end
 
