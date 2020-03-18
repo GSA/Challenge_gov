@@ -127,7 +127,7 @@ defmodule Web.SessionController do
   @doc """
   Assign redirect path based on acceptance of terms
   """
-# TODO add user role paths here eg status: pending > pending page
+  # TODO add user role paths here eg status: pending > pending page
   def get_default_path(conn, user) do
     if Accounts.has_accepted_terms?(user) do
       Routes.admin_challenge_path(conn, :index)
@@ -153,7 +153,6 @@ defmodule Web.SessionController do
     end
   end
 
-
   @doc """
   check for activity in last 90 days
   """
@@ -162,8 +161,8 @@ defmodule Web.SessionController do
     last_active = DateTime.to_unix(user.last_active)
 
     if user.last_active && now() > last_active do
-      logout_user(conn, :error, "Your account has been suspended due to inactivity.
-      Please contact ___ to reactivate")
+      Accounts.update(user, %{suspended: true})
+      logout_user(conn, :error, "Your account has been suspended due to inactivity.")
     else
       Accounts.update_last_active(user)
     end
