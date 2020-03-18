@@ -125,9 +125,9 @@ defmodule Web.SessionController do
   end
 
   @doc """
-  Assign redirect path based acceptance of terms
+  Assign redirect path based on acceptance of terms
   """
-
+# TODO add user role paths here eg status: pending > pending page
   def get_default_path(conn, user) do
     if Accounts.has_accepted_terms?(user) do
       Routes.admin_challenge_path(conn, :index)
@@ -153,6 +153,22 @@ defmodule Web.SessionController do
     end
   end
 
+
+  @doc """
+  check for activity in last 90 days
+  """
+  def check_last_active(conn) do
+    %{current_user: user} = conn.assigns
+    last_active = DateTime.to_unix(user.last_active)
+
+    if user.last_active && now() > last_active do
+      logout_user(conn, :error, "Your account has been suspended due to inactivity.
+      Please contact ___ to reactivate")
+    else
+      Accounts.update_last_active(user)
+    end
+  end
+
   @doc """
   session timeout and reset
   """
@@ -160,17 +176,18 @@ defmodule Web.SessionController do
     timeout_at = get_session(conn, :session_timeout_at)
 
     if timeout_at && now() > timeout_at do
-      logout_user(conn)
+      logout_user(conn, :info, "Logged out")
     else
       put_session(conn, :session_timeout_at, new_session_timeout_at(opts[:timeout_after_minutes]))
     end
   end
 
-  defp logout_user(conn) do
+  defp logout_user(conn, message_type, message) do
     conn
     |> clear_session()
     |> configure_session([:renew])
     |> assign(:session_timeout, true)
+    |> put_flash(message_type, "#{message}")
     |> redirect(to: Routes.session_path(conn, :new))
   end
 
