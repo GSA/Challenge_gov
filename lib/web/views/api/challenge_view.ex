@@ -53,9 +53,8 @@ defmodule Web.Api.ChallengeView do
       start_date: challenge.custom_url,
       non_monetary_prizes: challenge.non_monetary_prizes,
       events: challenge.non_monetary_prizes,
-      non_federal_partners: challenge.non_federal_partners,
       agency_name: challenge.agency_name,
-      status: challenge.non_federal_partners,
+      status: challenge.status,
       type: challenge.type,
       logo_extension: challenge.logo_extension,
       supporting_documents: challenge.supporting_documents,
@@ -64,32 +63,33 @@ defmodule Web.Api.ChallengeView do
       tagline: challenge.tagline,
       agency_name: ChallengeView.agency_name(challenge),
       agency_id: challenge.agency_id,
-      rules: challenge.rules
-      
-    # ENUM EG FROM challenge_view
-      # federal_partner_agencies: ChallengeView.federal_partner_agencies(challenge.federal_partner_agencies)
-    # RENDER FN below
-      # federal_partners: render_many(challenge.federal_partner_agencies, __MODULE__, "federal_partner_agencies.json", as: :agency)
+      rules: challenge.rules,
+      federal_partners: render_many(
+        challenge.federal_partner_agencies,
+        __MODULE__,
+        "federal_partner_agencies.json",
+        as: :agency
+      ),
+      non_federal_partners: render_many(
+        challenge.non_federal_partners,
+        __MODULE__,
+        "non_federal_partners.json",
+        as: :partner
+      )
+    }
+  end
+
+  def render("federal_partner_agencies.json", %{agency: agency}) do
+    %{
+      id: agency.id,
+      name: agency.name
+    }
+  end
+
+  def render("non_federal_partners.json", %{partner: partner}) do
+    %{
+      id: partner.id,
+      name: partner.name
     }
   end
 end
-
-# def render("federal_partner_agencies.json", %{agency: agency}) do
-#   %{
-#     id: agency.id,
-#     name: agency.name,
-#   }
-# end
-
-
-# EXAMPLES/POSSIBILITIES
-
-# shifts: render_many(school.shifts, ShiftView, "show.json", assigns)
-# shift_claims: render_many(user.shift_claims, ShiftClaimView, "show_with_shift.json", assigns)
-
-# Enum.each(data["results"], fn agency ->
-#   api_id = agency["id"]
-#   title = agency["title"]
-#   parent = Enum.at(agency["parent"], 0)
-#   parent_id = String.to_integer(parent["id"])
-# end)

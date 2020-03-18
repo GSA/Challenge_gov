@@ -33,14 +33,6 @@ defmodule Web.ChallengeView do
     if challenge.agency, do: challenge.agency.name
   end
 
-  def federal_partner_agencies(federal_partner_agencies) do
-    if federal_partner_agencies do
-      Enum.map(federal_partner_agencies, fn x -> x.name end)
-      # Enum.map(federal_partner_agencies, &{&1.name, &1.id})
-      # Enum.map(federal_partner_agencies, fn %{"id" => id, "name" => name} -> %{id: id, name: name} end)
-    end
-  end
-
   def winner_img(challenge, opts \\ []) do
     case is_nil(challenge.winner_image_key) do
       true ->
