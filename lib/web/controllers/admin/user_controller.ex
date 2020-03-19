@@ -94,11 +94,29 @@ defmodule Web.Admin.UserController do
     end
   end
 
+  def toggle(conn, %{"id" => id, "action" => "activate"}) do
+    with {:ok, user} <- Accounts.get(id),
+         {:ok, user} <- Accounts.activate(user) do
+      conn
+      |> put_flash(:info, "User activated")
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
+    end
+  end
+
   def toggle(conn, %{"id" => id, "action" => "suspend"}) do
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.toggle_suspension(user) do
+         {:ok, user} <- Accounts.suspend(user) do
       conn
-      |> put_flash(:info, "User access updated")
+      |> put_flash(:info, "User suspended")
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
+    end
+  end
+
+  def toggle(conn, %{"id" => id, "action" => "revoke"}) do
+    with {:ok, user} <- Accounts.get(id),
+         {:ok, user} <- Accounts.revoke(user) do
+      conn
+      |> put_flash(:info, "User revoked")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
     end
   end

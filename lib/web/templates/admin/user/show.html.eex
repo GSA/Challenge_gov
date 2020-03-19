@@ -39,10 +39,6 @@
               <dd><%= AccountView.full_name(@user) %></dd>
               <br/>
 
-              <dt>Phone Number</dd>
-              <dd><%= phone_number(@user) %></dd>
-              <br/>
-
               <dt>Email</dd>
               <dd><%= @user.email %></dd>
               <br/>
@@ -51,8 +47,8 @@
               <dd><%= @user.role %></dd>
               <br/>
 
-              <dt>Verified email?</dt>
-              <dd><%= email_verified?(@user) %></dd>
+              <dt>Status</dd>
+              <dd><%= @user.status %></dd>
             </dl>
           </div>
         </div>
@@ -67,10 +63,13 @@
 
         <div class="box-body">
           <p>
-            <%= if @user.suspended do %>
-              <%= link("Renew user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "suspend"), method: :post, class: "btn btn-default") %>
-            <% else %>
+            <%= if !Accounts.is_active?(@user) do %>
+              <%= link("Activate user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "activate"), method: :post, class: "btn btn-default") %>
+            <% end %>
+
+            <%= if Accounts.is_active?(@user) do %>
               <%= link("Suspend user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "suspend"), method: :post, class: "btn btn-default") %>
+              <%= link("Revoke user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "revoke"), method: :post, class: "btn btn-default") %>
             <% end %>
           </p>
         </div>

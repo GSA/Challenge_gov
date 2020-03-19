@@ -22,6 +22,23 @@ defmodule ChallengeGov.Accounts.User do
     %{id: "challenge_owner", label: "Challenge Owner"}
   ]
 
+  @doc """
+  pending - newly created account is awaiting approval by an admin
+  active - account is able to login and perform actions on the platform
+  suspended - account is set to this by an admin and can no longer log in. Has access to old data when restored
+  revoked - account is set to this by an admin and can no longer log in. Doesn't have access to old data when restored
+  deactivated - account is set to this after 90 days of no activity and can no longer log in. Has access to old data when restored
+  decertified - account is set to this every 365 days and can no longer log in. Has access to old data when restored
+  """
+  @statuses [
+    "pending",
+    "active",
+    "suspended",
+    "revoked",
+    "deactivated",
+    "decertified"
+  ]
+
   schema "users" do
     # Associations
     has_many(:challenges, Challenge)
@@ -32,6 +49,7 @@ defmodule ChallengeGov.Accounts.User do
 
     # Fields
     field(:role, :string, read_after_writes: true)
+    field(:status, :string, default: "pending")
     field(:finalized, :boolean, default: true)
     field(:display, :boolean, default: true)
     field(:suspended, :boolean, default: false)
@@ -77,10 +95,12 @@ defmodule ChallengeGov.Accounts.User do
       :terms_of_use,
       :privacy_guidelines,
       :agency_id,
-      :pending
+      :pending,
+      :status
     ])
     |> validate_required([:email])
     |> validate_format(:email, ~r/.+@.+\..+/)
+    |> validate_inclusion(:status, @statuses)
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
 
@@ -179,4 +199,6 @@ defmodule ChallengeGov.Accounts.User do
   end
 
   def roles, do: @roles
+
+  def statuses, do: @statuses
 end

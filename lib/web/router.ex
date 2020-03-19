@@ -19,7 +19,7 @@ defmodule Web.Router do
   end
 
   pipeline(:signed_in) do
-    plug(Web.Plugs.CheckSuspension)
+    plug(Web.Plugs.CheckUserStatus)
     plug(Web.Plugs.SessionTimeout)
     plug(:put_layout, {Web.LayoutView, "admin.html"})
   end
