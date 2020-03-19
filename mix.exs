@@ -51,6 +51,7 @@ defmodule ChallengeGov.MixProject do
       {:poison, "~> 3.0"},
       {:porcelain, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
+      {:quantum, "~> 3.0-rc"},
       {:stein, "~> 0.5"},
       {:stein_storage, "~> 0.1"},
       {:timex, "~> 3.5"}

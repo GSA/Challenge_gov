@@ -9,7 +9,6 @@ defmodule Web.Plugs.SessionTimeout do
   end
 
   def call(conn, opts) do
-    SessionController.check_last_active(conn)
     SessionController.check_session_timeout(conn, opts)
   end
 

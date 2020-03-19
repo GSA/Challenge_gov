@@ -9,6 +9,7 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.Repo
   alias Stein.Filter
   alias Stein.Pagination
+  alias Web.SessionController
 
   import Ecto.Query
 
@@ -419,5 +420,24 @@ defmodule ChallengeGov.Accounts do
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:role, "admin")
     |> Repo.update()
+  end
+
+  @doc """
+  check for activity in last 90 days
+  """
+  def check_all_last_actives() do
+    Enum.map(__MODULE__.all(), fn user ->
+      check_last_active(user)
+    end)
+  end
+
+  def check_last_active(user) do
+    last_active = DateTime.to_unix(user.last_active)
+
+    if user.last_active && SessionController.now() > last_active do
+      __MODULE__.update(user, %{suspended: true})
+    else
+      __MODULE__.update_last_active(user)
+    end
   end
 end

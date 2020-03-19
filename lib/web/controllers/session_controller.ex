@@ -154,39 +154,23 @@ defmodule Web.SessionController do
   end
 
   @doc """
-  check for activity in last 90 days
-  """
-  def check_last_active(conn) do
-    %{current_user: user} = conn.assigns
-    last_active = DateTime.to_unix(user.last_active)
-
-    if user.last_active && now() > last_active do
-      Accounts.update(user, %{suspended: true})
-      logout_user(conn, :error, "Your account has been suspended due to inactivity.")
-    else
-      Accounts.update_last_active(user)
-    end
-  end
-
-  @doc """
   session timeout and reset
   """
   def check_session_timeout(conn, opts) do
     timeout_at = get_session(conn, :session_timeout_at)
 
     if timeout_at && now() > timeout_at do
-      logout_user(conn, :info, "Logged out")
+      logout_user(conn)
     else
       put_session(conn, :session_timeout_at, new_session_timeout_at(opts[:timeout_after_minutes]))
     end
   end
 
-  defp logout_user(conn, message_type, message) do
+  defp logout_user(conn) do
     conn
     |> clear_session()
     |> configure_session([:renew])
     |> assign(:session_timeout, true)
-    |> put_flash(message_type, "#{message}")
     |> redirect(to: Routes.session_path(conn, :new))
   end
 
