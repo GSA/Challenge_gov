@@ -4,11 +4,10 @@ defmodule ChallengeGov.SecurityLogs do
   """
 
   alias ChallengeGov.SecurityLogs.SecurityLog
-  
+
   def track(user, type, data \\ %{}) do
     user
     |> SecurityLog.changeset(type, data)
     |> Repo.insert()
   end
-
 end

@@ -9,6 +9,7 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Recaptcha
   alias ChallengeGov.Repo
+  alias ChallengeGov.SecurityLogs
   alias Stein.Filter
   alias Stein.Pagination
 
@@ -414,6 +415,7 @@ defmodule ChallengeGov.Accounts do
     user
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:status, "active")
+    |> SecurityLogs.track("status_change", %{status: "active"})
     |> Repo.update()
   end
 
@@ -424,6 +426,7 @@ defmodule ChallengeGov.Accounts do
     user
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:status, "suspended")
+    |> SecurityLogs.track("status_change", %{status: "suspended"})
     |> Repo.update()
   end
 
@@ -435,6 +438,7 @@ defmodule ChallengeGov.Accounts do
       user
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:status, "revoked")
+      |> SecurityLogs.track("status_change", %{status: "revoked"})
       |> Repo.update()
 
     case result do
@@ -454,6 +458,7 @@ defmodule ChallengeGov.Accounts do
     user
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:status, "deactivated")
+    |> SecurityLogs.track("status_change", %{status: "deactivated"})
     |> Repo.update()
   end
 
@@ -464,6 +469,7 @@ defmodule ChallengeGov.Accounts do
     user
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:status, "decertified")
+    |> SecurityLogs.track("status_change", %{status: "decertified"})
     |> Repo.update()
   end
 

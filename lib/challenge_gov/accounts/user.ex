@@ -11,6 +11,7 @@ defmodule ChallengeGov.Accounts.User do
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.SupportingDocuments.Document
   alias ChallengeGov.Agencies.Member
+  alias ChallengeGov.SecurityLogs
 
   @type t :: %__MODULE__{}
 
@@ -148,6 +149,7 @@ defmodule ChallengeGov.Accounts.User do
     struct
     |> changeset(params)
     |> put_change(:email_verification_token, UUID.uuid4())
+    |> SecurityLogs.track("status_change", %{status: "created"})
   end
 
   def invite_changeset(struct, params) do
