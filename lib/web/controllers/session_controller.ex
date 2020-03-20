@@ -125,9 +125,9 @@ defmodule Web.SessionController do
   end
 
   @doc """
-  Assign redirect path based acceptance of terms
+  Assign redirect path based on acceptance of terms
   """
-
+  # TODO add user role paths here eg status: pending > pending page
   def get_default_path(conn, user) do
     if Accounts.has_accepted_terms?(user) do
       Routes.admin_challenge_path(conn, :index)

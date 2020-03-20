@@ -78,6 +78,8 @@ defmodule ChallengeGov.Accounts.User do
     field(:privacy_guidelines, :utc_datetime)
     field(:agency_id, :integer)
 
+    field(:last_active, :utc_datetime)
+
     field(:pending, :boolean)
 
     timestamps()
@@ -96,6 +98,7 @@ defmodule ChallengeGov.Accounts.User do
       :privacy_guidelines,
       :agency_id,
       :pending,
+      :suspended,
       :status
     ])
     |> validate_required([:email])
@@ -104,7 +107,7 @@ defmodule ChallengeGov.Accounts.User do
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
 
-  def put_terms(struct, params) do
+  def timestamp(struct, params) do
     utc_datetime = DateTime.utc_now()
     put_change(struct, params, DateTime.truncate(utc_datetime, :second))
   end
@@ -119,8 +122,8 @@ defmodule ChallengeGov.Accounts.User do
       :privacy_guidelines,
       :agency_id
     ])
-    |> put_terms(:terms_of_use)
-    |> put_terms(:privacy_guidelines)
+    |> timestamp(:terms_of_use)
+    |> timestamp(:privacy_guidelines)
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
@@ -177,6 +180,12 @@ defmodule ChallengeGov.Accounts.User do
     |> changeset(params)
     |> validate_required([:email, :first_name, :last_name])
     |> maybe_reset_verification()
+  end
+
+  def last_active_changeset(struct) do
+    struct
+    |> change()
+    |> timestamp(:last_active)
   end
 
   def avatar_changeset(struct, key, extension) do

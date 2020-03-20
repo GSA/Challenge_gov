@@ -71,6 +71,11 @@ config :challenge_gov, :oidc_config, %{
 config :challenge_gov,
   session_timeout_in_minutes: System.get_env("SESSION_TIMEOUT_IN_MINUTES") || 15
 
+config :challenge_gov, ChallengeGov.Scheduler,
+  jobs: [
+    {"@daily", {ChallengeGov.Accounts, :check_all_last_actives, []}}
+  ]
+
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
 end
