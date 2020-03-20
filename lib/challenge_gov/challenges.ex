@@ -214,7 +214,7 @@ defmodule ChallengeGov.Challenges do
         Challenge
         |> where([c], is_nil(c.deleted_at))
         |> join(:inner, [c], co in assoc(c, :challenge_owners))
-        |> where([c, co], co.user_id == ^user.id)
+        |> where([c, co], co.user_id == ^user.id and is_nil(co.revoked_at))
       else
         Challenge
         |> where([c], is_nil(c.deleted_at))
@@ -528,10 +528,17 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
-  Checks if a user is in the list of owners for a challenge
+  Checks if a user is in the list of owners for a challenge and not revoked
   """
   def is_challenge_owner?(user, challenge) do
-    Enum.member?(challenge.challenge_owner_users, user)
+    challenge.challenge_owners
+    |> Enum.reject(fn co ->
+      !is_nil(co.revoked_at)
+    end)
+    |> Enum.map(fn co ->
+      co.user
+    end)
+    |> Enum.member?(user)
   end
 
   defp maybe_create_event(challenge, changeset) do

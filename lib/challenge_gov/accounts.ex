@@ -5,6 +5,7 @@ defmodule ChallengeGov.Accounts do
 
   alias ChallengeGov.Accounts.Avatar
   alias ChallengeGov.Accounts.User
+  alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Recaptcha
   alias ChallengeGov.Repo
   alias Stein.Filter
@@ -420,10 +421,20 @@ defmodule ChallengeGov.Accounts do
   Revoke a user. User can no longer login. Removes access to their challenges
   """
   def revoke(user) do
-    user
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:status, "revoked")
-    |> Repo.update()
+    result =
+      user
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "revoked")
+      |> Repo.update()
+
+    case result do
+      {:ok, user} ->
+        revoke_challenge_ownership(user)
+        {:ok, user}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
@@ -444,6 +455,15 @@ defmodule ChallengeGov.Accounts do
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:status, "decertified")
     |> Repo.update()
+  end
+
+  @doc """
+  Removes a user's access to their challenges while preserving they previously had access
+  """
+  def revoke_challenge_ownership(user) do
+    ChallengeOwner
+    |> where([co], co.user_id == ^user.id)
+    |> Repo.update_all(set: [revoked_at: Timex.now()])
   end
 
   @doc """
