@@ -5,6 +5,7 @@ defmodule ChallengeGov.Accounts do
 
   alias ChallengeGov.Accounts.Avatar
   alias ChallengeGov.Accounts.User
+  alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Recaptcha
   alias ChallengeGov.Repo
@@ -464,6 +465,13 @@ defmodule ChallengeGov.Accounts do
     ChallengeOwner
     |> where([co], co.user_id == ^user.id)
     |> Repo.update_all(set: [revoked_at: Timex.now()])
+  end
+
+  def revoked_challenges(user) do
+    Challenge
+    |> join(:inner, [c], co in assoc(c, :challenge_owners))
+    |> where([c, co], co.user_id == ^user.id and not is_nil(co.revoked_at))
+    |> Repo.all()
   end
 
   @doc """

@@ -25,7 +25,7 @@
 <section class="content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col">
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Basics</h3>
@@ -53,25 +53,44 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-3">
-      <div class="box box-primary">
-        <div class="box-header">
-          <h3 class="box-title">Actions</h3>
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Actions</h3>
+          </div>
+
+          <div class="card-body">
+            <p>
+              <%= if !Accounts.is_active?(@user) do %>
+                <%= link("Activate user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "activate"), method: :post, class: "btn btn-default") %>
+              <% end %>
+
+              <%= if Accounts.is_active?(@user) do %>
+                <%= link("Suspend user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "suspend"), method: :post, class: "btn btn-default") %>
+                <%= link("Revoke user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "revoke"), method: :post, class: "btn btn-default") %>
+              <% end %>
+            </p>
+          </div>
         </div>
+      </div>
 
-        <div class="box-body">
-          <p>
-            <%= if !Accounts.is_active?(@user) do %>
-              <%= link("Activate user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "activate"), method: :post, class: "btn btn-default") %>
-            <% end %>
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Revoked Challenges</h3>
+          </div>
 
-            <%= if Accounts.is_active?(@user) do %>
-              <%= link("Suspend user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "suspend"), method: :post, class: "btn btn-default") %>
-              <%= link("Revoke user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "revoke"), method: :post, class: "btn btn-default") %>
-            <% end %>
-          </p>
+          <div class="card-body">
+            <ul>
+              <%= Enum.map(Accounts.revoked_challenges(@user), fn challenge ->  %>
+                <li>
+                  <span class="mr-1"><%= Web.Admin.ChallengeView.name_link(@conn, challenge) %></span>
+                  <%= link("Restore access", to: Routes.admin_restore_challenge_access_path(@conn, :restore_challenge_access, @user.id, challenge.id), method: :post, class: "btn btn-xs btn-primary") %>
+                </li>
+              <% end) %>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

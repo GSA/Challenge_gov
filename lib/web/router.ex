@@ -74,6 +74,10 @@ defmodule Web.Router do
 
     post("/users/:id/toggle", UserController, :toggle, as: :user)
     resources("/users", UserController, only: [:index, :show, :edit, :update, :create])
+
+    post("/users/:user_id/challenge/:challenge_id", UserController, :restore_challenge_access,
+      as: :restore_challenge_access
+    )
   end
 
   scope "/api", Web.Api, as: :api do

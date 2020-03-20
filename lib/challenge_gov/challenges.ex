@@ -541,6 +541,15 @@ defmodule ChallengeGov.Challenges do
     |> Enum.member?(user)
   end
 
+  @doc """
+  Restores access to a user's challlenges
+  """
+  def restore_access(user, challenge) do
+    ChallengeOwner
+    |> where([co], co.user_id == ^user.id and co.challenge_id == ^challenge.id)
+    |> Repo.update_all(set: [revoked_at: nil])
+  end
+
   defp maybe_create_event(challenge, changeset) do
     case is_nil(Ecto.Changeset.get_change(changeset, :status)) do
       true ->
