@@ -98,7 +98,7 @@ defmodule ChallengeGov.Accounts.User do
       :privacy_guidelines,
       :agency_id,
       :pending,
-      :suspended
+      :suspended,
       :status
     ])
     |> validate_required([:email])
