@@ -80,9 +80,8 @@ defmodule ChallengeGov.Accounts.User do
       :privacy_guidelines,
       :agency_id,
       :pending,
-      :last_active
+      :suspended
     ])
-    |> timestamp(:last_active)
     |> validate_required([:email])
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> unique_constraint(:email, name: :users_lower_email_index)
