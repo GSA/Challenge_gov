@@ -19,7 +19,7 @@ defmodule Web.Router do
   end
 
   pipeline(:signed_in) do
-    plug(Web.Plugs.CheckSuspension)
+    plug(Web.Plugs.CheckUserStatus)
     plug(Web.Plugs.SessionTimeout)
     plug(:put_layout, {Web.LayoutView, "admin.html"})
   end
@@ -74,6 +74,10 @@ defmodule Web.Router do
 
     post("/users/:id/toggle", UserController, :toggle, as: :user)
     resources("/users", UserController, only: [:index, :show, :edit, :update, :create])
+
+    post("/users/:user_id/challenge/:challenge_id", UserController, :restore_challenge_access,
+      as: :restore_challenge_access
+    )
   end
 
   scope "/api", Web.Api, as: :api do

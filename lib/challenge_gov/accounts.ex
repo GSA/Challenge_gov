@@ -5,6 +5,8 @@ defmodule ChallengeGov.Accounts do
 
   alias ChallengeGov.Accounts.Avatar
   alias ChallengeGov.Accounts.User
+  alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Recaptcha
   alias ChallengeGov.Repo
   alias Stein.Filter
@@ -24,6 +26,8 @@ defmodule ChallengeGov.Accounts do
         Enum.slice(User.roles(), 2..2)
     end
   end
+
+  def statuses(), do: User.statuses()
 
   @doc """
   Get all accounts
@@ -384,14 +388,99 @@ defmodule ChallengeGov.Accounts do
     )
   end
 
+  # Status checks
+  def is_pending?(%{status: "pending"}), do: true
+  def is_pending?(_user), do: false
+
+  def is_active?(%{status: "active"}), do: true
+  def is_active?(_user), do: false
+
+  def is_suspended?(%{status: "suspended"}), do: true
+  def is_suspended?(_user), do: false
+
+  def is_revoked?(%{status: "revoked"}), do: true
+  def is_revoked?(_user), do: false
+
+  def is_decativated?(%{status: "decativated"}), do: true
+  def is_decativated?(_user), do: false
+
+  def is_decertified?(%{status: "decertified"}), do: true
+  def is_decertified?(_user), do: false
+
   @doc """
-  Toggle suspension of a user
+  Activate a user. Change status, allows login
   """
-  def toggle_suspension(user) do
+  def activate(user) do
     user
     |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:suspended, !user.suspended)
+    |> Ecto.Changeset.put_change(:status, "active")
     |> Repo.update()
+  end
+
+  @doc """
+  Suspend a user. User can no longer login. Still has data access after
+  """
+  def suspend(user) do
+    user
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:status, "suspended")
+    |> Repo.update()
+  end
+
+  @doc """
+  Revoke a user. User can no longer login. Removes access to their challenges
+  """
+  def revoke(user) do
+    result =
+      user
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "revoked")
+      |> Repo.update()
+
+    case result do
+      {:ok, user} ->
+        revoke_challenge_ownership(user)
+        {:ok, user}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Deactivate a user. User can no longer login. Still has data access after
+  """
+  def deactivate(user) do
+    user
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:status, "deactivated")
+    |> Repo.update()
+  end
+
+  @doc """
+  Decertify a user. User can no longer login. Still has data access after
+  """
+  def decertify(user) do
+    user
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:status, "decertified")
+    |> Repo.update()
+  end
+
+  @doc """
+  Removes a user's access to their challenges while preserving they previously had access
+  """
+  def revoke_challenge_ownership(user) do
+    ChallengeOwner
+    |> where([co], co.user_id == ^user.id)
+    |> Repo.update_all(set: [revoked_at: Timex.now()])
+  end
+
+  def revoked_challenges(user) do
+    Challenge
+    |> join(:inner, [c], co in assoc(c, :challenge_owners))
+    |> where([c, co], co.user_id == ^user.id and not is_nil(co.revoked_at))
+    |> Repo.all()
   end
 
   @doc """
