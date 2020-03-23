@@ -18,21 +18,20 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
     "session_duration"
   ]
 
-  schema "security_logs" do
-    belongs_to(:user_id, User)
+  schema "security_log" do
+    belongs_to(:user, User)
     field(:type, :string)
     field(:data, :map)
 
     timestamps()
   end
 
-  def changeset(struct, params) do
+  def changeset(struct, user, type, data) do
     struct
-    |> cast(params, [
-      :user_id,
-      :type,
-      :data
-    ])
+    |> change()
+    |> put_change(:user_id, user.id)
+    |> put_change(:type, type)
+    |> put_change(:data, data)
     |> validate_inclusion(:type, @types)
     |> foreign_key_constraint(:user_id)
   end

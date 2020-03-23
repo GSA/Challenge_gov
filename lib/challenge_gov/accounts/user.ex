@@ -149,7 +149,7 @@ defmodule ChallengeGov.Accounts.User do
     struct
     |> changeset(params)
     |> put_change(:email_verification_token, UUID.uuid4())
-    |> SecurityLogs.track("status_change", %{status: "created"})
+    # |> SecurityLogs.track("status_change", %{status: "created"})
   end
 
   def invite_changeset(struct, params) do

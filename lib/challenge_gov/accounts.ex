@@ -10,6 +10,7 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.Recaptcha
   alias ChallengeGov.Repo
   alias ChallengeGov.SecurityLogs
+  alias ChallengeGov.SecurityLogs.SecurityLog
   alias Stein.Filter
   alias Stein.Pagination
 
@@ -415,7 +416,7 @@ defmodule ChallengeGov.Accounts do
     user
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:status, "active")
-    |> SecurityLogs.track("status_change", %{status: "active"})
+    # |> SecurityLogs.track("status_change", %{status: "active"})
     |> Repo.update()
   end
 
@@ -426,7 +427,7 @@ defmodule ChallengeGov.Accounts do
     user
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:status, "suspended")
-    |> SecurityLogs.track("status_change", %{status: "suspended"})
+    # |> SecurityLogs.track("status_change", %{status: "suspended"})
     |> Repo.update()
   end
 
@@ -438,7 +439,7 @@ defmodule ChallengeGov.Accounts do
       user
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:status, "revoked")
-      |> SecurityLogs.track("status_change", %{status: "revoked"})
+      # |> SecurityLogs.track("status_change", %{status: "revoked"})
       |> Repo.update()
 
     case result do
@@ -454,12 +455,15 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Deactivate a user. User can no longer login. Still has data access after
   """
+
   def deactivate(user) do
+    SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "deactivated"})
+
     user
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:status, "deactivated")
-    |> SecurityLogs.track("status_change", %{status: "deactivated"})
     |> Repo.update()
+
   end
 
   @doc """
@@ -469,7 +473,7 @@ defmodule ChallengeGov.Accounts do
     user
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:status, "decertified")
-    |> SecurityLogs.track("status_change", %{status: "decertified"})
+    # |> SecurityLogs.track("status_change", %{status: "decertified"})
     |> Repo.update()
   end
 
@@ -530,7 +534,7 @@ defmodule ChallengeGov.Accounts do
     unix_last_active = DateTime.to_unix(user.last_active)
 
     if user.last_active && ninety_days_ago >= unix_last_active do
-      __MODULE__.update(user, %{suspended: true})
+      __MODULE__.deactivate(user)
     else
       __MODULE__.update_last_active(user)
     end
