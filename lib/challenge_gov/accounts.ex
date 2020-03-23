@@ -457,13 +457,25 @@ defmodule ChallengeGov.Accounts do
   """
 
   def deactivate(user) do
-    SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "deactivated"})
+    changeset =
+      user
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "deactivated")
 
-    user
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:status, "deactivated")
-    |> Repo.update()
+      result = Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "deactivated"})
+      end)
+      |> Repo.transaction()
 
+      case result do
+        {:ok, user} ->
+          {:ok, user}
+
+        {:error, _type, changeset, _changes} ->
+          {:error, changeset}
+      end
   end
 
   @doc """
