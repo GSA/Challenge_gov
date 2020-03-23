@@ -413,41 +413,77 @@ defmodule ChallengeGov.Accounts do
   Activate a user. Change status, allows login
   """
   def activate(user) do
-    user
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:status, "active")
-    # |> SecurityLogs.track("status_change", %{status: "active"})
-    |> Repo.update()
+    changeset =
+      user
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "active")
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "active"})
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, user} ->
+        {:ok, user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
   Suspend a user. User can no longer login. Still has data access after
   """
   def suspend(user) do
-    user
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:status, "suspended")
-    # |> SecurityLogs.track("status_change", %{status: "suspended"})
-    |> Repo.update()
+    changeset =
+      user
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "suspended")
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "suspended"})
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, user} ->
+        {:ok, user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
   Revoke a user. User can no longer login. Removes access to their challenges
   """
   def revoke(user) do
-    result =
+    changeset =
       user
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:status, "revoked")
-      # |> SecurityLogs.track("status_change", %{status: "revoked"})
-      |> Repo.update()
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "revoked"})
+      end)
+      |> Repo.transaction()
 
     case result do
       {:ok, user} ->
         revoke_challenge_ownership(user)
         {:ok, user}
 
-      {:error, changeset} ->
+      {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
   end
@@ -462,31 +498,47 @@ defmodule ChallengeGov.Accounts do
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:status, "deactivated")
 
-      result = Ecto.Multi.new()
+    result =
+      Ecto.Multi.new()
       |> Ecto.Multi.update(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
         SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "deactivated"})
       end)
       |> Repo.transaction()
 
-      case result do
-        {:ok, user} ->
-          {:ok, user}
+    case result do
+      {:ok, user} ->
+        {:ok, user}
 
-        {:error, _type, changeset, _changes} ->
-          {:error, changeset}
-      end
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
   Decertify a user. User can no longer login. Still has data access after
   """
   def decertify(user) do
-    user
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:status, "decertified")
-    # |> SecurityLogs.track("status_change", %{status: "decertified"})
-    |> Repo.update()
+    changeset =
+      user
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "decertified")
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "decertified"})
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, user} ->
+        {:ok, user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
