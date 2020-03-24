@@ -142,6 +142,7 @@ defmodule ChallengeGov.Accounts.User do
     struct
     |> changeset(params)
     |> cast(params, [:email_confirmation])
+    |> put_change(:status, "active")
     |> validate_confirmation(:email, message: "emails must match")
   end
 

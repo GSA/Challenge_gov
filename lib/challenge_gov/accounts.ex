@@ -126,7 +126,7 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, user} ->
-        {:ok, user}
+        {:ok, user.user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
@@ -240,26 +240,74 @@ defmodule ChallengeGov.Accounts do
     # look for user based on token
     case get_by_token(userinfo["sub"]) do
       {:error, :not_found} ->
-        # look for users created by admin with emails, but no token
+        # look for users created by admin which have emails, but no token
         case get_by_email(userinfo["email"]) do
           {:error, :not_found} ->
-            create(%{
-              email: userinfo["email"],
-              first_name: "Placeholder",
-              last_name: "Placeholder",
-              role: "challenge_owner",
-              token: userinfo["sub"],
-              terms_of_use: nil,
-              privacy_guidelines: nil,
-              pending: true
-            })
+            create_new_user(userinfo)
 
           {:ok, user} ->
-            __MODULE__.update(user, %{token: userinfo["sub"]})
+            update_admin_added_user(user, userinfo)
         end
 
       {:ok, account_user} ->
+        SecurityLogs.track(%SecurityLog{}, account_user, "accessed_site", %{})
         {:ok, account_user}
+    end
+  end
+
+  @doc """
+  Create new user
+  """
+  def create_new_user(userinfo) do
+    changeset =
+      create(%{
+        email: userinfo["email"],
+        first_name: "Placeholder",
+        last_name: "Placeholder",
+        role: "challenge_owner",
+        token: userinfo["sub"],
+        terms_of_use: nil,
+        privacy_guidelines: nil,
+        pending: true
+      })
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.run(:user, fn _repo, _changes -> changeset end)
+      |> Ecto.Multi.run(:log, fn _repo, %{user: user} ->
+        SecurityLogs.track(%SecurityLog{}, user, "accessed_site", %{})
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, user} ->
+        {:ok, user.user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Update user added by admin
+  """
+  def update_admin_added_user(user, userinfo) do
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.run(:user, fn _repo, _changes ->
+        __MODULE__.update(user, %{token: userinfo["sub"]})
+      end)
+      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+        SecurityLogs.track(%SecurityLog{}, user, "accessed_site", %{})
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, user} ->
+        {:ok, user.user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
     end
   end
 
@@ -641,7 +689,7 @@ defmodule ChallengeGov.Accounts do
 
   def check_last_active(user) do
     ninety_days_ago = DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -90))
-    unix_last_active = DateTime.to_unix(user.last_active)
+    unix_last_active = Timex.to_unix(user.last_active)
 
     if user.last_active && ninety_days_ago >= unix_last_active do
       __MODULE__.deactivate(user)
