@@ -13,7 +13,6 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
 
   @types [
     "status_change",
-    "login",
     "accessed_site",
     "session_duration"
   ]
