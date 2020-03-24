@@ -45,6 +45,40 @@ asdf install nodejs 11.13.0
 
 ### ChallengeGov Setup
 
+Create the file `config/dev.local.exs` and set a secret key base, and if needed, include local PostgreSQL connection information.
+It will look something like (replacing with your local configuration):
+
+```elixir
+use Mix.Config
+
+config :challenge_gov, Web.Endpoint,
+  secret_key_base: "<OUTPUT OF `mix phx.gen.secret`>"
+
+config :challenge_gov, ChallengeGov.Repo,
+  username: "postgres",
+  password: "postgres",
+  database: "challenge_gov_dev",
+  hostname: "localhost",
+  pool_size: 10
+```
+
+Create the file `config/test.local.exs` and set a secret key base, and if needed, include local PostgreSQL connection information.
+It will look something like (replacing with your local configuration):
+
+```elixir
+use Mix.Config
+
+config :challenge_gov, Web.Endpoint,
+  secret_key_base: "<OUTPUT OF `mix phx.gen.secret`>"
+
+config :challenge_gov, ChallengeGov.Repo,
+  username: "postgres",
+  password: "postgres",
+  database: "challenge_gov_test",
+  hostname: "localhost",
+  pool_size: 10
+```
+
 Start with cloning the application. Once cloned, in your terminal run the following commands inside the cloned folder.
 
 ```bash
@@ -61,25 +95,11 @@ mix ecto.create
 mix ecto.migrate
 ```
 
-If required, you can create the file `config/dev.local.exs` and include local PostgreSQL connection information. It will look like (replacing with your local configuration):
-
-```elixir
-use Mix.Config
-
-config :challenge_gov, ChallengeGov.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "challenge_gov_dev",
-  hostname: "localhost",
-  pool_size: 10
-```
-
 Once the database is setup, you can run the server.
 
 ```bash
 mix phx.server
 ```
-
 
 ### File Uploads
 
