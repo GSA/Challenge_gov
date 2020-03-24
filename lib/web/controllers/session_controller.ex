@@ -49,45 +49,12 @@ defmodule Web.SessionController do
          {:ok, %{"id_token" => id_token}} <-
            LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
-      {:ok, user} =
-        case Accounts.get_by_email(userinfo["email"]) do
-          {:error, :not_found} ->
-            Accounts.create(%{
-              email: userinfo["email"],
-              first_name: "Placeholder",
-              last_name: "Placeholder",
-              role: "admin",
-              token: userinfo["sub"],
-              terms_of_use: nil,
-              privacy_guidelines: nil,
-              pending: true
-            })
+      {:ok, user} = Accounts.map_from_login(userinfo)
 
-          {:ok, account_user} ->
-            case Map.get(account_user, :token) do
-              nil ->
-                Accounts.update(
-                  account_user,
-                  %{token: userinfo["sub"]}
-                )
-
-              _ ->
-                {:ok, account_user}
-            end
-        end
-
-      case user.suspended do
-        true ->
-          conn
-          |> put_flash(:error, "Your account has been suspended")
-          |> redirect(to: Routes.session_path(conn, :new))
-
-        _ ->
-          conn
-          |> put_flash(:info, "Login successful")
-          |> put_session(:user_token, user.user.token)
-          |> after_sign_in_redirect(get_default_path(conn, user.user))
-      end
+      conn
+      |> put_flash(:info, "Login successful")
+      |> put_session(:user_token, user.token)
+      |> after_sign_in_redirect(get_default_path(conn, user))
     else
       {:error, _err} ->
         conn
