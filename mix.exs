@@ -42,6 +42,7 @@ defmodule ChallengeGov.MixProject do
       {:httpoison, "~> 1.5"},
       {:jason, "~> 1.0"},
       {:joken, "~> 2.0"},
+      {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
       {:phoenix, "~> 1.4.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 2.14"},
@@ -51,6 +52,7 @@ defmodule ChallengeGov.MixProject do
       {:poison, "~> 3.0"},
       {:porcelain, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
+      {:quantum, "~> 3.0-rc"},
       {:stein, "~> 0.5"},
       {:stein_storage, "~> 0.1"},
       {:timex, "~> 3.5"}

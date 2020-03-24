@@ -97,6 +97,11 @@ config :challenge_gov,
 
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
 
+config :challenge_gov, ChallengeGov.Scheduler,
+  jobs: [
+    {"@daily", {ChallengeGov.Accounts, :check_all_last_actives, []}}
+  ]
+
 if File.exists?("config/dev.local.exs") do
   import_config("dev.local.exs")
 end
