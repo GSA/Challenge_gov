@@ -14,7 +14,6 @@ config :challenge_gov,
 # Configures the endpoint
 config :challenge_gov, Web.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "gQktXSHmqFhwR5a0rTW/SGWrvpUYZ1FaRELQsGoctIOiSlQ9qIoe2KYO1i8wDVR5",
   render_errors: [view: Web.ErrorView, accepts: ~w(html json)],
   pubsub: [name: ChallengeGov.PubSub, adapter: Phoenix.PubSub.PG2]
 
