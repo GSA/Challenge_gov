@@ -35,8 +35,11 @@ steps:
   volumes:
   - name: mix
     path: /root/.mix
+  environment:
+    SECRET_KEY_BASE:
+      from_secret: SECRET_KEY_BASE
   commands:
-  - cp config/test.drone.exs config/test.extra.exs
+  - cp config/test.drone.exs config/test.local.exs
   - export MIX_ENV=test
   - sleep 15
   - mix ecto.migrate
