@@ -453,7 +453,7 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
+      {:ok, _result} ->
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->

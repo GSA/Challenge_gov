@@ -23,9 +23,9 @@ defmodule ChallengeGov.SecurityLogs do
   end
 
   def remove_expired_records(record) do
-    inserted_at = Timex.to_unix(record.inserted_at)
-    # 180 days ago
+    # expiration after 180 days
     expiration_date = DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -180))
+    inserted_at = Timex.to_unix(record.inserted_at)
 
     if expiration_date >= inserted_at do
       Repo.delete(record)
