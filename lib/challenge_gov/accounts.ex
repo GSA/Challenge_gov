@@ -216,7 +216,7 @@ defmodule ChallengeGov.Accounts do
               email: userinfo["email"],
               first_name: "Placeholder",
               last_name: "Placeholder",
-              role: "admin",
+              role: "challenge_owner",
               token: userinfo["sub"],
               terms_of_use: nil,
               privacy_guidelines: nil,

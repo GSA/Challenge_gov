@@ -51,18 +51,10 @@ defmodule Web.SessionController do
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
       {:ok, user} = Accounts.map_from_login(userinfo)
 
-      case user.suspended do
-        true ->
-          conn
-          |> put_flash(:error, "Your account has been suspended")
-          |> redirect(to: Routes.session_path(conn, :new))
-
-        _ ->
-          conn
-          |> put_flash(:info, "Login successful")
-          |> put_session(:user_token, user.token)
-          |> after_sign_in_redirect(get_default_path(conn, user))
-      end
+      conn
+      |> put_flash(:info, "Login successful")
+      |> put_session(:user_token, user.token)
+      |> after_sign_in_redirect(get_default_path(conn, user))
     else
       {:error, _err} ->
         conn
