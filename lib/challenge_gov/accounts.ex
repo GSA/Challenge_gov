@@ -112,9 +112,25 @@ defmodule ChallengeGov.Accounts do
   Create an account
   """
   def create(params) do
-    %User{}
-    |> User.create_changeset(params)
-    |> Repo.insert()
+    changeset =
+      %User{}
+      |> User.create_changeset(params)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, %{user: user} ->
+        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "created"})
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, user} ->
+        {:ok, user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
