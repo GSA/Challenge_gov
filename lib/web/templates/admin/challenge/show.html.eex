@@ -24,23 +24,29 @@
 
 <section class="content">
   <div class="container-fluid">
+    <%= challenge_rejection_message(@challenge) %>
+
     <div class="row">
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Basics</h3>
             <div class="card-tools">
+              <%= if Challenges.approvable?(@challenge) do  %>
+                <%= link("Approve", to: Routes.admin_challenge_path(@conn, :approve, @challenge.id), method: :post, class: "btn btn-primary") %>
+              <% end %>
               <%= if Challenges.publishable?(@challenge) do  %>
                 <%= link("Publish", to: Routes.admin_challenge_path(@conn, :publish, @challenge.id), method: :post, class: "btn btn-primary") %>
               <% end %>
               <%= if Challenges.rejectable?(@challenge) do  %>
-                <%= link("Reject", to: Routes.admin_challenge_path(@conn, :reject, @challenge.id), method: :post, class: "btn btn-danger", data: [confirm: "Are you sure you want to reject this challenge?"] ) %>
+                <%= link("Request Edits", to: "#", class: "btn btn-danger", data: [toggle: "modal", target: "#rejection-modal"] ) %>
               <% end %>
               <%= if Challenges.archivable?(@challenge) do  %>
                 <%= link("Archive", to: Routes.admin_challenge_path(@conn, :archive, @challenge.id), method: :post, class: "btn btn-default", data: [confirm: "Are you sure you want to archive this challenge?"] ) %>
               <% end %>
 
               <%= challenge_edit_link(@conn, @challenge, class: "btn btn-primary") %>
+              <%= challenge_full_edit_link(@conn, @challenge, @user, class: "btn btn-primary") %>
             </div>
           </div>
 
@@ -357,3 +363,24 @@
     </div>
   </div>
 </section>
+
+<div class="modal fade" id="rejection-modal" tabindex="-1" role="dialog" aria-labelledby="rejection-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <%= form_for(@conn, Routes.admin_challenge_path(@conn, :reject, @challenge.id), fn f -> %>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rejection-modal-label">What would you like changed?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <%= textarea f, :rejection_message, style: "width: 100%;", rows: 10 %>
+        </div>
+        <div class="modal-footer">
+          <%= submit("Request Edits", class: "btn btn-danger", data: [confirm: "Are you sure you want to reject this challenge?"] ) %>
+        </div>
+      </div>
+    <% end) %>
+  </div>
+</div>

@@ -30,8 +30,11 @@ defmodule Web.Admin.ChallengeController do
   end
 
   def show(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
     with {:ok, challenge} <- Challenges.get(id) do
       conn
+      |> assign(:user, user)
       |> assign(:challenge, challenge)
       |> assign(:events, challenge.events)
       |> assign(:supporting_documents, challenge.supporting_documents)
@@ -252,6 +255,15 @@ defmodule Web.Admin.ChallengeController do
     end
   end
 
+  def approve(conn, %{"id" => id}) do
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.approve(challenge) do
+      conn
+      |> put_flash(:info, "Challenge approved")
+      |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+    end
+  end
+
   def publish(conn, %{"id" => id}) do
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.publish(challenge) do
@@ -261,9 +273,11 @@ defmodule Web.Admin.ChallengeController do
     end
   end
 
-  def reject(conn, %{"id" => id}) do
+  def reject(conn, params = %{"id" => id}) do
+    message = Map.get(params, "rejection_message")
+
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.reject(challenge) do
+         {:ok, challenge} <- Challenges.reject(challenge, message) do
       conn
       |> put_flash(:info, "Challenge rejected")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))

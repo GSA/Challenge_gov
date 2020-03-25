@@ -18,6 +18,8 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.SupportingDocuments
   alias ChallengeGov.Timeline
   alias ChallengeGov.Timeline.Event
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
   alias Stein.Filter
   alias Stein.Pagination
 
@@ -25,6 +27,7 @@ defmodule ChallengeGov.Challenges do
 
   @behaviour Stein.Filter
 
+  # BOOKMARK: Functions for fetching valid attribute values
   @doc false
   def challenge_types(), do: Challenge.challenge_types()
 
@@ -37,6 +40,7 @@ defmodule ChallengeGov.Challenges do
   @doc false
   def statuses(), do: Challenge.statuses()
 
+  # BOOKMARK: Wizard functionality helpers
   @doc false
   def section_index(section) do
     sections = sections()
@@ -74,6 +78,7 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  # BOOKMARK: Create and update functions
   @doc """
   New changeset for a challenge
   """
@@ -146,6 +151,7 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  # BOOKMARK: Create and update helper functions
   defp changeset_for_action(struct, params, action) do
     struct = challenge_form_preload(struct)
 
@@ -176,6 +182,7 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  # BOOKMARK: Querying functions 
   @doc """
   Get all challenges
   """
@@ -618,6 +625,22 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
+  Check if a challenge is approvable
+
+      iex> Challenges.publishable?(%Challenge{status: "pending"})
+      true
+
+      iex> Challenges.publishable?(%Challenge{status: "approved"})
+      false
+
+      iex> Challenges.publishable?(%Challenge{status: "archived"})
+      true
+  """
+  def approvable?(challenge) do
+    challenge.status != "approved"
+  end
+
+  @doc """
   Check if a challenge is publishable
 
       iex> Challenges.publishable?(%Challenge{status: "pending"})
@@ -630,7 +653,32 @@ defmodule ChallengeGov.Challenges do
       true
   """
   def publishable?(challenge) do
-    challenge.status != "created"
+    challenge.status != "published"
+  end
+
+  @doc """
+  Approve a challenge
+
+  Sets status to "approved"
+  """
+  def approve(challenge) do
+    changeset = Challenge.approve_changeset(challenge)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
+        maybe_create_event(challenge, changeset)
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
@@ -663,8 +711,8 @@ defmodule ChallengeGov.Challenges do
 
   Sets status to "rejected"
   """
-  def reject(challenge) do
-    changeset = Challenge.reject_changeset(challenge)
+  def reject(challenge, message \\ "") do
+    changeset = Challenge.reject_changeset(challenge, message)
 
     result =
       Ecto.Multi.new()
@@ -673,6 +721,7 @@ defmodule ChallengeGov.Challenges do
 
     case result do
       {:ok, %{challenge: challenge}} ->
+        send_challenge_rejection_emails(challenge)
         {:ok, challenge}
 
       {:error, _type, changeset, _changes} ->
@@ -680,12 +729,20 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  defp send_challenge_rejection_emails(challenge) do
+    Enum.map(challenge.challenge_owner_users, fn owner ->
+      owner
+      |> Emails.challenge_rejection_email(challenge)
+      |> Mailer.deliver_later()
+    end)
+  end
+
   @doc """
   Check if a challenge is rejectable
   """
   def rejectable?(challenge) do
     challenge.status != "rejected" &&
-      challenge.status != "created"
+      challenge.status != "gsa_review"
   end
 
   @doc """
