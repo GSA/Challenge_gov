@@ -1,6 +1,6 @@
 # ChallengeGov
 
-[![Build Status](https://drone.smartlogic.io/api/badges/smartlogic/Challenge.gov/status.svg)](https://drone.smartlogic.io/smartlogic/Challenge.gov)
+[![GSA](https://circleci.com/gh/GSA/Challenge_gov.svg?style=svg)](https://app.circleci.com/pipelines/github/GSA/Challenge_gov)
 
 Welcome to the ChallengeGov Data Portal
 
