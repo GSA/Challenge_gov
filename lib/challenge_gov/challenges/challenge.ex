@@ -17,14 +17,29 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   @type t :: %__MODULE__{}
 
+  @doc """
+  - Challenge owner starts the form → saves it as a draft - Draft
+  - Challenge owner submit for review from PMO - GSA Review
+    - (2a) GSA Admin approves the challenge (waiting to be published according to date specified)- Approved
+    - (2b) GSA Admin requests edits from Challenge Owner (i.e. date is wrong)- Edits Requested**
+  - Challenge Owner updates the edits and re-submit to GSA Admin - GSA Review
+  - Challenge goes Live - Published 
+  - Challenge is archived - Archived
+  - Published status but updating Winners & FAQ and submitted to GSA Admin - GSA Review
+  - Challenge Owner updates an Archived challenge posting - goes to "GSA Review" -> GSA Admin approves -> status back to Archived
+  """
   @statuses [
-    "draft",
-    "pending",
-    "created",
-    "rejected",
-    "published",
-    "archived"
+    %{id: "draft", label: "Draft"},
+    %{id: "gsa_review", label: "GSA Review"},
+    %{id: "approved", label: "Approved"},
+    %{id: "edits_requested", label: "Edits Requested"},
+    %{id: "published", label: "Published"},
+    %{id: "archived", label: "Archived"}
   ]
+
+  def status_ids() do
+    Enum.map(@statuses, & &1.id)
+  end
 
   @challenge_types [
     "Software and apps",
@@ -287,7 +302,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
     |> changeset(params)
     |> cast_assoc(:non_federal_partners)
-    |> put_change(:status, "pending")
+    |> put_change(:status, "gsa_review")
     |> put_change(:captured_on, Date.utc_today())
     |> validate_required([
       :user_id,
@@ -373,19 +388,27 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> update_changeset(params)
   end
 
+  def approve_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:status, "approved")
+    |> put_change(:published_on, Date.utc_today())
+    |> validate_inclusion(:status, status_ids())
+  end
+
   def publish_changeset(struct) do
     struct
     |> change()
-    |> put_change(:status, "created")
+    |> put_change(:status, "published")
     |> put_change(:published_on, Date.utc_today())
-    |> validate_inclusion(:status, @statuses)
+    |> validate_inclusion(:status, status_ids())
   end
 
   def reject_changeset(struct) do
     struct
     |> change()
-    |> put_change(:status, "rejected")
-    |> validate_inclusion(:status, @statuses)
+    |> put_change(:status, "edits_requested")
+    |> validate_inclusion(:status, status_ids())
   end
 
   # Image changesets

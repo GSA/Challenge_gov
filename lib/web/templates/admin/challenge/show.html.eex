@@ -30,6 +30,9 @@
           <div class="card-header">
             <h3 class="card-title">Basics</h3>
             <div class="card-tools">
+              <%= if Challenges.approvable?(@challenge) do  %>
+                <%= link("Approve", to: Routes.admin_challenge_path(@conn, :approve, @challenge.id), method: :post, class: "btn btn-primary") %>
+              <% end %>
               <%= if Challenges.publishable?(@challenge) do  %>
                 <%= link("Publish", to: Routes.admin_challenge_path(@conn, :publish, @challenge.id), method: :post, class: "btn btn-primary") %>
               <% end %>
@@ -41,6 +44,7 @@
               <% end %>
 
               <%= challenge_edit_link(@conn, @challenge, class: "btn btn-primary") %>
+              <%= challenge_full_edit_link(@conn, @challenge, @user, class: "btn btn-primary") %>
             </div>
           </div>
 

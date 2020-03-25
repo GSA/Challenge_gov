@@ -9,7 +9,7 @@
     </div>
     <div class="form-group">
       <%= label f, :status, "Status" %>
-      <%= select(f, :status, Challenges.statuses(), value: @filter["status"], prompt: "Choose a status", class: "form-control js-select") %>
+      <%= select(f, :status, Enum.map(Challenges.statuses(), &{&1.label, &1.id}), value: @filter["status"], prompt: "Choose a status", class: "form-control js-select") %>
     </div>
     <%= if Accounts.has_admin_access?(@user) do %>
       <div class="form-group">

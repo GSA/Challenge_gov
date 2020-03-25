@@ -56,6 +56,12 @@ defmodule Web.Admin.ChallengeView do
     link("Edit", Keyword.merge([to: route], opts))
   end
 
+  def challenge_full_edit_link(conn, challenge, user, opts \\ []) do
+    if Accounts.has_admin_access?(user) do
+      link("Full Edit", to: Routes.admin_challenge_path(conn, :edit, challenge.id, opts))
+    end
+  end
+
   def challenge_delete_link(conn, challenge, user, opts \\ []) do
     if (user.role == "challenge_owner" and challenge.status == "draft") or
          Accounts.has_admin_access?(user) do
@@ -185,7 +191,7 @@ defmodule Web.Admin.ChallengeView do
             select(
               form,
               :status,
-              Challenges.statuses(),
+              Enum.map(Challenges.statuses(), &{&1.label, &1.id}),
               class: "form-control js-select"
             )
           end
