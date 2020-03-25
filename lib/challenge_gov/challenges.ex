@@ -709,8 +709,8 @@ defmodule ChallengeGov.Challenges do
 
   Sets status to "rejected"
   """
-  def reject(challenge) do
-    changeset = Challenge.reject_changeset(challenge)
+  def reject(challenge, message \\ "") do
+    changeset = Challenge.reject_changeset(challenge, message)
 
     result =
       Ecto.Multi.new()

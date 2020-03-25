@@ -139,6 +139,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:captured_on, :date)
     field(:auto_publish_date, :utc_datetime)
     field(:published_on, :date)
+    field(:rejection_message, :string)
 
     # Virtual Fields
     field(:upload_logo, :boolean, virtual: true)
@@ -404,9 +405,10 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_inclusion(:status, status_ids())
   end
 
-  def reject_changeset(struct) do
+  def reject_changeset(struct, message) do
     struct
     |> change()
+    |> put_change(:rejection_message, message)
     |> put_change(:status, "edits_requested")
     |> validate_inclusion(:status, status_ids())
   end

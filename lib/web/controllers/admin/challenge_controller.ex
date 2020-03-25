@@ -273,9 +273,11 @@ defmodule Web.Admin.ChallengeController do
     end
   end
 
-  def reject(conn, %{"id" => id}) do
+  def reject(conn, params = %{"id" => id}) do
+    message = Map.get(params, "rejection_message")
+
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.reject(challenge) do
+         {:ok, challenge} <- Challenges.reject(challenge, message) do
       conn
       |> put_flash(:info, "Challenge rejected")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
