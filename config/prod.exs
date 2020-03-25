@@ -44,10 +44,15 @@ config :challenge_gov, :recaptcha,
   key: {:system, "RECAPTCHA_SITE_KEY"}
 
 config :challenge_gov, ChallengeGov.Mailer,
-  from: {:system, "MAILER_FROM_ADDRESS"},
-  adapter: Bamboo.MailgunAdapter,
-  api_key: {:system, "MAILGUN_API_KEY"},
-  domain: {:system, "MAILGUN_DOMAIN"}
+  adapter: Bamboo.SMTPAdapter,
+  server: "smtp-relay.gmail.com",
+  hostname: System.get_env("HOST"),
+  port: 587,
+  # can be `:always` or `:never`
+  tls: :always,
+  allowed_tls_versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2"],
+  ssl: true,
+  retries: 1
 
 config :stein_storage,
   backend: :s3,

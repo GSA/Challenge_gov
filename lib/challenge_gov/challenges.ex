@@ -18,6 +18,8 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.SupportingDocuments
   alias ChallengeGov.Timeline
   alias ChallengeGov.Timeline.Event
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
   alias Stein.Filter
   alias Stein.Pagination
 
@@ -719,11 +721,20 @@ defmodule ChallengeGov.Challenges do
 
     case result do
       {:ok, %{challenge: challenge}} ->
+        send_challenge_rejection_emails(challenge)
         {:ok, challenge}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
+  end
+
+  defp send_challenge_rejection_emails(challenge) do
+    Enum.map(challenge.challenge_owner_users, fn owner ->
+      owner
+      |> Emails.challenge_rejection_email(challenge)
+      |> Mailer.deliver_later()
+    end)
   end
 
   @doc """
