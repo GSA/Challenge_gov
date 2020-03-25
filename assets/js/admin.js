@@ -113,7 +113,20 @@ setInterval(() => {
   }
 
   // When clicking the sign in button on logged out modal redirect to sign in path
-  $("#login-modal-btn").click(() => {location.replace("sign-in/new");})
+  $("#login-modal-btn").click(() => {
+    $.ajax({
+      url: "/api/session/logout",
+      type: "post",
+      processData: false,
+      contentType: false,
+      success: function(res) {
+        location.replace("sign-in/new");
+      },
+      error: function(err) {
+        console.log("Something went wrong")
+      }
+    })
+  })
 
 }, 1000);
 
