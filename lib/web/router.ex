@@ -90,6 +90,7 @@ defmodule Web.Router do
 
     # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
+    # TODO: debug undefined/private error and change fn to logout_user
     post("/session/logout", SessionController, :check_session_timeout)
   end
 

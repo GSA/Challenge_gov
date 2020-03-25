@@ -186,6 +186,15 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Update active session
+  """
+  def update_active_session(user, param) do
+    user
+    |> User.active_session_changeset(param)
+    |> Repo.update()
+  end
+
+  @doc """
   Update an account
   """
   def update(user, params) do
