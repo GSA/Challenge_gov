@@ -783,8 +783,7 @@ defmodule ChallengeGov.Challenges do
   Check if a challenge is rejectable
   """
   def rejectable?(challenge) do
-    challenge.status != "rejected" &&
-      challenge.status != "gsa_review"
+    challenge.status == "gsa_review"
   end
 
   @doc """

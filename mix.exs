@@ -33,7 +33,7 @@ defmodule ChallengeGov.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:bamboo, git: "https://github.com/thoughtbot/bamboo.git"},
+      {:bamboo_smtp, "~> 2.1.0"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:earmark, "~> 1.4.3"},
       {:ecto_sql, "~> 3.0"},
