@@ -78,7 +78,8 @@ config :challenge_gov,
 
 config :challenge_gov, ChallengeGov.Scheduler,
   jobs: [
-    {"@daily", {ChallengeGov.Accounts, :check_all_last_actives, []}}
+    {"@daily", {ChallengeGov.Accounts, :check_all_last_actives, []}},
+    {"@daily", {ChallengeGov.SecurityLogs, :check_expired_records, []}}
   ]
 
 if File.exists?("config/prod.secret.exs") do
