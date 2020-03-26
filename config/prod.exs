@@ -44,6 +44,7 @@ config :challenge_gov, :recaptcha,
   key: {:system, "RECAPTCHA_SITE_KEY"}
 
 config :challenge_gov, ChallengeGov.Mailer,
+  from: System.get_env("MAILER_FROM_ADDRESS"),
   adapter: Bamboo.SMTPAdapter,
   server: "smtp-relay.gmail.com",
   hostname: System.get_env("HOST"),
