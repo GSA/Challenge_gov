@@ -63,6 +63,7 @@ defmodule Web.Router do
     post("/challenges/:id/remove_winner_image", ChallengeController, :remove_winner_image,
       as: :challenge
     )
+    get("/reports/export/security_logs", ReportController, :export_security_logs)
   end
 
   scope "/admin", Web.Admin, as: :admin do
