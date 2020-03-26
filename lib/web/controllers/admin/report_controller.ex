@@ -1,7 +1,7 @@
 defmodule ChallengeGov.Admin.ReportController do
   use Web, :controller
 
-  # alias ChallengeGov.Reports
+  alias ChallengeGov.Reports
   alias ChallengeGov.Admin.ReportView
 
   def new(conn, _params) do
@@ -26,8 +26,8 @@ defmodule ChallengeGov.Admin.ReportController do
   end
 
   defp chunk_records(conn) do
-    Enum.reduce_while(Reports.stream_all_shifts(), conn, fn shift, conn ->
-      chunk = ReportView.render("security-logs-content.csv", shift: shift) # <----- this
+    Enum.reduce_while(Reports.stream_all_records(), conn, fn record, conn ->
+      chunk = ReportView.render("security-logs-content.csv", record: record)
 
       case Plug.Conn.chunk(conn, chunk) do
         {:ok, conn} ->
