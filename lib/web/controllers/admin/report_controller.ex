@@ -1,13 +1,8 @@
-defmodule ChallengeGov.Admin.ReportController do
+defmodule Web.Admin.ReportController do
   use Web, :controller
 
   alias ChallengeGov.Reports
   alias ChallengeGov.Admin.ReportView
-
-  def new(conn, _params) do
-    conn
-    |> render("new.html")
-  end
 
   def export_security_logs(conn, _params) do
     conn =

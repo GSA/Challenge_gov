@@ -5,7 +5,7 @@ defmodule ChallengeGov.Admin.ReportView do
 
   alias ChallengeGov.Reports.CSV
 
-  def render("security-logs.csv", _assigns) do
+  def render("security-logs-header.csv", _assigns) do
     headers = [
       "Record ID",
       "User ID",
