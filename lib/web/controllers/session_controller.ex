@@ -90,6 +90,7 @@ defmodule Web.SessionController do
   def delete(conn, _params) do
     %{current_user: user} = conn.assigns
     Accounts.update_active_session(user, false)
+
     conn
     |> clear_session()
     |> redirect(to: Routes.session_path(conn, :new))
@@ -140,6 +141,7 @@ defmodule Web.SessionController do
   def logout_user(conn) do
     %{current_user: user} = conn.assigns
     Accounts.update_active_session(user, false)
+
     conn
     |> clear_session()
     |> configure_session([:renew])
