@@ -11,7 +11,6 @@ defmodule ChallengeGov.Accounts.User do
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.SupportingDocuments.Document
   alias ChallengeGov.Agencies.Member
-  alias ChallengeGov.SecurityLogs
 
   @type t :: %__MODULE__{}
 
