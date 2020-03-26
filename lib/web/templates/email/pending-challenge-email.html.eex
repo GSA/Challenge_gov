@@ -1,0 +1,1 @@
+<h3>A new challenge has been submitted for review. Please review it at <%= link("##{@challenge.id} #{@challenge.title}", to: Routes.admin_challenge_url(Endpoint, :show, @challenge.id)) %></h3>

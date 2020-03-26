@@ -7,14 +7,21 @@ defmodule Web.SharedView do
     Map.get(conn.private.plug_session, "session_timeout_at")
   end
 
-  def page_path(path, page) do
+  def page_path(path, page, pagination_param \\ nil) do
     uri = URI.parse(path)
 
     query =
-      uri.query
-      |> decode_query()
-      |> Map.put(:page, page)
-      |> URI.encode_query()
+      if pagination_param do
+        uri.query
+        |> decode_query()
+        |> Map.put("#{pagination_param}[page]", page)
+        |> URI.encode_query()
+      else
+        uri.query
+        |> decode_query()
+        |> Map.put(:page, page)
+        |> URI.encode_query()
+      end
 
     %{uri | query: query}
     |> URI.to_string()
@@ -48,6 +55,7 @@ defmodule Web.SharedView do
 
   def pagination(opts) do
     pagination = opts[:pagination]
+    opts = Keyword.put_new(opts, :pagination_param, nil)
 
     case pagination.total <= 1 do
       true ->

@@ -9,18 +9,26 @@ defmodule Web.Admin.ChallengeController do
 
   def index(conn, params) do
     %{current_user: user} = conn.assigns
-
     %{page: page, per: per} = conn.assigns
+
+    pending_page = String.to_integer(params["pending"]["page"] || "1")
+
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
-    pagination = Challenges.all_for_user(user, filter: filter, sort: sort, page: page, per: per)
+
+    pending_challenges =
+      Challenges.all_pending_for_user(user, filter: %{}, sort: %{}, page: pending_page, per: 5)
+
+    challenges = Challenges.all_for_user(user, filter: filter, sort: sort, page: page, per: per)
 
     counts = Challenges.admin_counts()
 
     conn
     |> assign(:user, user)
-    |> assign(:challenges, pagination.page)
-    |> assign(:pagination, pagination.pagination)
+    |> assign(:pending_challenges, pending_challenges.page)
+    |> assign(:pending_pagination, pending_challenges.pagination)
+    |> assign(:challenges, challenges.page)
+    |> assign(:pagination, challenges.pagination)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> assign(:pending_count, counts.pending)

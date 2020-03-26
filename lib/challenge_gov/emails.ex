@@ -7,6 +7,14 @@ defmodule ChallengeGov.Emails do
 
   alias ChallengeGov.Mailer
 
+  def pending_challenge_email(challenge) do
+    base_email()
+    |> to("team@challenge.gov")
+    |> subject("Challenge Review Needed")
+    |> assign(:challenge, challenge)
+    |> render("pending-challenge-email.html")
+  end
+
   def challenge_rejection_email(user, challenge) do
     base_email()
     |> to(user.email)
