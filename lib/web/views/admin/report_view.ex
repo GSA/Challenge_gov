@@ -34,7 +34,7 @@ defmodule ChallengeGov.Admin.ReportView do
   defp format_to_readable(record) do
     record
     |> Enum.map(fn x ->
-      ["#{elem(x, 0) |> to_string}: #{elem(x, 1) |> to_string}"]
+      ["#{elem(x, 0)}: #{elem(x, 1)}"]
     end)
   end
 end
