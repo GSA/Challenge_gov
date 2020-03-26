@@ -357,6 +357,7 @@ defmodule ChallengeGov.Challenges do
 
     case result do
       {:ok, %{challenge: challenge}} ->
+        send_pending_challenge_email(challenge)
         {:ok, challenge}
 
       {:error, :challenge, changeset, _} ->
@@ -378,6 +379,12 @@ defmodule ChallengeGov.Challenges do
     |> Map.put(:federal_partners, [])
     |> Map.put(:federal_partner_agencies, [])
     |> Challenge.create_changeset(params, user)
+  end
+
+  defp send_pending_challenge_email(challenge) do
+    challenge
+    |> Emails.pending_challenge_email()
+    |> Mailer.deliver_later()
   end
 
   # Attach federal partners functions
