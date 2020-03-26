@@ -43,6 +43,7 @@ defmodule ChallengeGov.MixProject do
       {:jason, "~> 1.0"},
       {:joken, "~> 2.0"},
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
+      {:nimble_csv, "~> 0.6"},
       {:phoenix, "~> 1.4.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 2.14"},
