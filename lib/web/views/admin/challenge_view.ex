@@ -40,6 +40,10 @@ defmodule Web.Admin.ChallengeView do
     end
   end
 
+  def status_display_name(challenge) do
+    Challenges.status_label(challenge.status)
+  end
+
   def challenge_edit_link(conn, challenge, opts \\ []) do
     route =
       if challenge.status == "draft" do

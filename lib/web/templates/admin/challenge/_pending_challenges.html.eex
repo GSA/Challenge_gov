@@ -1,21 +1,9 @@
-<%= if length(@pending_challenges) > 0 do %>
-  <%= render Web.Admin.ChallengeView, "_pending_challenges.html", conn: @conn, user: @user, challenges: @pending_challenges, pagination: @pending_pagination, sort: %{}, filter: %{} %>
-<% end %>
-
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">
-          <span>Challenges</span>
-          <div class="btn-group">
-            <%= link "New", to: Routes.admin_challenge_path(@conn, :new), class: "btn btn-primary" %>
-            <%= link "New (Non Wizard)", to: Routes.admin_challenge_path(@conn, :new, non_wizard: true), class: "btn btn-danger" %>
-          </div>
-          <a class="btn btn-info" data-widget="control-sidebar" href="#">Filter</a>
-          <%= if is_map(@filter) && map_size(@filter) > 0 do %>
-            <%= link "clear filters", to: Routes.admin_challenge_path(@conn, :index), class: "btn btn-link" %>
-          <% end %>
+          <span>Pending Challenges</span>
         </h1>
       </div>
 
@@ -42,15 +30,15 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <%= sortable_header(@conn, @sort, @filter, "id", "ID") %>
-                  <%= sortable_header(@conn, @sort, @filter, "title", "Name") %>
-                  <%= sortable_header(@conn, @sort, @filter, "status", "Status") %>
-                  <%= sortable_header(@conn, @sort, @filter, "start_date", "Start Date") %>
-                  <%= sortable_header(@conn, @sort, @filter, "end_date", "End Date") %>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
                   <th>Type</th>
                   <%= if Accounts.has_admin_access?(@user) do %>
                     <th>Owners</th>
-                    <%= sortable_header(@conn, @sort, @filter, "agency", "Agency") %>
+                    <th>Agency</th>
                   <% end %>
                   <th>Actions</th>
                 </tr>
@@ -94,7 +82,7 @@
             </table>
           </div>
 
-          <%= SharedView.pagination(path: Routes.admin_challenge_path(@conn, :index, filter: @filter, sort: @sort), pagination: @pagination) %>
+          <%= SharedView.pagination(path: Routes.admin_challenge_path(@conn, :index, filter: @filter, sort: @sort), pagination: @pagination, pagination_param: "pending") %>
         </div>
       </div>
     </div>

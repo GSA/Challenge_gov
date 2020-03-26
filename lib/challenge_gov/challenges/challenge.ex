@@ -338,7 +338,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     ])
     |> foreign_key_constraint(:agency)
     |> unique_constraint(:custom_url)
-    |> validate_inclusion(:status, @statuses)
+    |> validate_inclusion(:status, status_ids())
   end
 
   def update_changeset(struct, params) do
@@ -379,7 +379,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     ])
     |> foreign_key_constraint(:agency)
     |> unique_constraint(:custom_url)
-    |> validate_inclusion(:status, @statuses)
+    |> validate_inclusion(:status, status_ids())
   end
 
   # to allow change to admin info?

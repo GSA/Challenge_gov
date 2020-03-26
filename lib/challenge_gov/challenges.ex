@@ -40,6 +40,17 @@ defmodule ChallengeGov.Challenges do
   @doc false
   def statuses(), do: Challenge.statuses()
 
+  @doc false
+  def status_label(status) do
+    status_data = Enum.find(statuses(), fn s -> s.id == status end)
+
+    if status_data do
+      status_data.label
+    else
+      status
+    end
+  end
+
   # BOOKMARK: Wizard functionality helpers
   @doc false
   def section_index(section) do
@@ -207,6 +218,30 @@ defmodule ChallengeGov.Challenges do
       |> preload([:agency, :user])
       |> where([c], is_nil(c.deleted_at))
       |> order_by([c], desc: c.status, desc: c.id)
+      |> Filter.filter(opts[:filter], __MODULE__)
+
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
+  @doc """
+  Get all challenges for a user
+  """
+  def all_pending_for_user(user, opts \\ []) do
+    start_query =
+      if user.role == "challenge_owner" do
+        Challenge
+        |> where([c], is_nil(c.deleted_at) and c.status == "gsa_review")
+        |> join(:inner, [c], co in assoc(c, :challenge_owners))
+        |> where([c, co], co.user_id == ^user.id and is_nil(co.revoked_at))
+      else
+        Challenge
+        |> where([c], is_nil(c.deleted_at) and c.status == "gsa_review")
+      end
+
+    query =
+      start_query
+      |> preload([:agency, :user, :challenge_owner_users])
+      |> order_on_attribute(opts[:sort])
       |> Filter.filter(opts[:filter], __MODULE__)
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
