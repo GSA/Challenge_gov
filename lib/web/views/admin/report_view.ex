@@ -23,11 +23,18 @@ defmodule ChallengeGov.Admin.ReportView do
       record.id,
       record.user_id,
       record.type,
-      record.data,
+      format_to_readable(record.data),
       record.inserted_at,
       record.updated_at
     ]
 
     CSV.dump_to_iodata([csv])
+  end
+
+  defp format_to_readable(record) do
+    record
+    |> Enum.map(fn x ->
+      ["#{elem(x, 0) |> to_string}: #{elem(x, 1) |> to_string}"]
+    end)
   end
 end
