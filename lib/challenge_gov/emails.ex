@@ -10,11 +10,7 @@ defmodule ChallengeGov.Emails do
   def challenge_rejection_email(user, challenge) do
     base_email()
     |> to(user.email)
-    |> subject(
-      "Challenge.gov - Edits have been requested to your challenge: ##{challenge.id} #{
-        challenge.title
-      }"
-    )
+    |> subject("Challenge.gov - Edits Requested: ##{challenge.id} #{challenge.title}")
     |> assign(:challenge, challenge)
     |> assign(:message, challenge.rejection_message)
     |> render("challenge-rejection-email.html")
