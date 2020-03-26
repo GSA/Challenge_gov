@@ -79,6 +79,7 @@ defmodule ChallengeGov.Accounts.User do
     field(:agency_id, :integer)
 
     field(:last_active, :utc_datetime)
+    field(:active_session, :boolean)
 
     field(:pending, :boolean)
 
@@ -99,7 +100,8 @@ defmodule ChallengeGov.Accounts.User do
       :agency_id,
       :pending,
       :suspended,
-      :status
+      :status,
+      :active_session
     ])
     |> validate_required([:email])
     |> validate_format(:email, ~r/.+@.+\..+/)
@@ -141,6 +143,7 @@ defmodule ChallengeGov.Accounts.User do
     struct
     |> changeset(params)
     |> cast(params, [:email_confirmation])
+    |> put_change(:status, "active")
     |> validate_confirmation(:email, message: "emails must match")
   end
 
@@ -186,6 +189,12 @@ defmodule ChallengeGov.Accounts.User do
     struct
     |> change()
     |> timestamp(:last_active)
+  end
+
+  def active_session_changeset(struct, param) do
+    struct
+    |> change()
+    |> put_change(:active_session, param)
   end
 
   def avatar_changeset(struct, key, extension) do

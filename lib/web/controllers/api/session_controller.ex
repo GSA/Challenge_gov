@@ -2,8 +2,9 @@ defmodule Web.Api.SessionController do
   use Web, :controller
 
   alias Web.Plugs.SessionTimeout
+  alias ChallengeGov.Accounts
 
-  plug :fetch_session when action in [:check_session_timeout]
+  plug :fetch_session when action in [:check_session_timeout, :logout_user]
 
   # Might be able to just call SessionTimeout plug
   def check_session_timeout(conn, opts) do
@@ -21,7 +22,10 @@ defmodule Web.Api.SessionController do
     end
   end
 
-  defp logout_user(conn) do
+  def logout_user(conn) do
+    %{current_user: user} = conn.assigns
+    Accounts.update_active_session(user, false)
+
     conn
     |> clear_session()
     |> configure_session([:renew])

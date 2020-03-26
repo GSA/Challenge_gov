@@ -51,6 +51,8 @@ defmodule Web.SessionController do
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
       {:ok, user} = Accounts.map_from_login(userinfo)
 
+      Accounts.update_active_session(user, true)
+
       conn
       |> put_flash(:info, "Login successful")
       |> put_session(:user_token, user.token)
@@ -86,6 +88,9 @@ defmodule Web.SessionController do
   end
 
   def delete(conn, _params) do
+    %{current_user: user} = conn.assigns
+    Accounts.update_active_session(user, false)
+
     conn
     |> clear_session()
     |> redirect(to: Routes.session_path(conn, :new))
@@ -133,7 +138,10 @@ defmodule Web.SessionController do
     end
   end
 
-  defp logout_user(conn) do
+  def logout_user(conn) do
+    %{current_user: user} = conn.assigns
+    Accounts.update_active_session(user, false)
+
     conn
     |> clear_session()
     |> configure_session([:renew])

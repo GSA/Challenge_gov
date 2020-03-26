@@ -30,6 +30,8 @@ defmodule Web.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+    plug(Web.Plugs.FetchUser)
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -89,6 +91,8 @@ defmodule Web.Router do
 
     # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
+    # TODO: debug undefined/private error and change fn to logout_user
+    post("/session/logout", SessionController, :check_session_timeout)
   end
 
   scope "/", Web do
