@@ -179,9 +179,13 @@ workflows:
           filters:
             branches:
               only: master
-      - staging-deploy:
+      - release-approval:
+          type: approval
           requires:
             - assets
+      - staging-deploy:
+          requires:
+            - release-approval
           filters:
             branches:
               only: staging_setup
