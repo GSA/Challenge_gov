@@ -14,20 +14,20 @@ alias ChallengeGov.Accounts
 alias ChallengeGov.Agencies
 
 defmodule Helpers do
-  def create_admin(email) do
+  def create_super_admin(nil, nil, nil) do
+  end
+
+  def create_super_admin(email, first_name, last_name) do
     case Accounts.get_by_email(email) do
       {:error, :not_found} ->
         Accounts.create(%{
           email: email,
-          password: "password",
-          password_confirmation: "password",
-          first_name: "Admin",
-          last_name: "User",
-          role: "admin",
-          terms_of_user: nil,
-          privacy_guidelines: nil,
-          agency_id: nil,
-          token: Ecto.UUID.generate()
+          first_name: first_name,
+          last_name: last_name,
+          role: "super_admin",
+          terms_of_use: DateTime.truncate(DateTime.utc_now(), :second),
+          privacy_guidelines: DateTime.truncate(DateTime.utc_now(), :second),
+          pending: false
         })
 
       _ ->
@@ -57,7 +57,12 @@ defmodule Seeds do
   import Helpers
 
   def run do
-    create_admin("admin@example.com")
+    create_super_admin(
+      System.get_env("FIRST_USER_EMAIL"),
+      System.get_env("FIRST_USER_FN"),
+      System.get_env("FIRST_USER_LN")
+    )
+
     create_agencies("priv/repo/agencies.txt")
   end
 end
