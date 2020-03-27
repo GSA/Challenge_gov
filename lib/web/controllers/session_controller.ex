@@ -3,13 +3,21 @@ defmodule Web.SessionController do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.LoginGov
+  alias ChallengeGov.SecurityLogs
 
-  def new(conn, _params) do
+  def new(conn, params) do
     conn
     |> assign(:changeset, Accounts.new())
     |> put_layout("session.html")
+    |> maybe_put_flash(params)
     |> render("new.html")
   end
+
+  def maybe_put_flash(conn, %{"inactive" => "true"}), do:
+    put_flash(conn, :error, "You have been logged off due to inactivity")
+
+
+  def maybe_put_flash(conn, _), do: conn
 
   def create(conn, _params) do
     %{
@@ -90,6 +98,7 @@ defmodule Web.SessionController do
   def delete(conn, _params) do
     %{current_user: user} = conn.assigns
     Accounts.update_active_session(user, false)
+    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()))
 
     conn
     |> clear_session()
@@ -141,6 +150,7 @@ defmodule Web.SessionController do
   def logout_user(conn) do
     %{current_user: user} = conn.assigns
     Accounts.update_active_session(user, false)
+    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()))
 
     conn
     |> clear_session()
