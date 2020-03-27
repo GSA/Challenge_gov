@@ -159,7 +159,7 @@ jobs:
       - run: cf v3-zdt-push challenge-portal-staging --wait-for-deploy-complete
 
 workflows:
-  master-deploy:
+  test-and-deploy:
     jobs:
       - setup
       - lint:
@@ -179,13 +179,6 @@ workflows:
           filters:
             branches:
               only: master
-
-  staging-deploy:
-    jobs:
-      - setup
-      - assets:
-          requires:
-            - setup
       - staging-deploy:
           requires:
             - assets
