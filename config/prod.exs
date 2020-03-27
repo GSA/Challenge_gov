@@ -65,11 +65,11 @@ config :ex_aws,
 config :challenge_gov, :oidc_config, %{
   idp_authorize_url: "https://idp.int.identitysandbox.gov/openid_connect/authorize",
   acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
-  redirect_uri: "https://challenge-portal-dev.app.cloud.gov/auth/result",
-  client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_test_app",
-  private_key_path: "sandbox_key.pem",
+  redirect_uri: System.get_env("LOGIN_REDIRECT_URL"),
+  client_id: System.get_env("LOGIN_CLIENT_ID"),
+  private_key_path: System.get_env("LOGIN_PRIVATE_KEY_PATH"),
   private_key_password: System.get_env("LOGIN_PRIVATE_KEY_PASSWORD"),
-  public_key_path: "cert.pem"
+  public_key_path: System.get_env("LOGIN_PUBLIC_KEY_PATH")
 }
 
 config :challenge_gov,

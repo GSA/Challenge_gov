@@ -191,4 +191,4 @@ workflows:
             - assets
           filters:
             branches:
-              only: staging
+              only: staging_setup
