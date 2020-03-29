@@ -96,8 +96,9 @@ defmodule Web.Admin.UserController do
   end
 
   def toggle(conn, %{"id" => id, "action" => "activate"}) do
+    %{current_user: originator} = conn.assigns
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.activate(user) do
+         {:ok, user} <- Accounts.activate(user, originator) do
       conn
       |> put_flash(:info, "User activated")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
@@ -105,8 +106,9 @@ defmodule Web.Admin.UserController do
   end
 
   def toggle(conn, %{"id" => id, "action" => "suspend"}) do
+    %{current_user: originator} = conn.assigns
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.suspend(user) do
+         {:ok, user} <- Accounts.suspend(user, originator) do
       conn
       |> put_flash(:info, "User suspended")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
@@ -114,8 +116,9 @@ defmodule Web.Admin.UserController do
   end
 
   def toggle(conn, %{"id" => id, "action" => "revoke"}) do
+    %{current_user: originator} = conn.assigns
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.revoke(user) do
+         {:ok, user} <- Accounts.revoke(user, originator) do
       conn
       |> put_flash(:info, "User revoked")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))

@@ -11,29 +11,40 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
 
   @type t :: %__MODULE__{}
 
-  @types [
+  @actions [
     "status_change",
     "accessed_site",
     "session_duration"
   ]
 
   schema "security_log" do
-    belongs_to(:user, User)
-    field(:type, :string)
-    field(:data, :map)
-
-    timestamps()
+    belongs_to(:originator, User)
+    field(:action, :string)
+    field(:details, :map)
+    field(:originator_role, :string)
+    field(:originator_identifyer, :string)
+    field(:target_id, :integer)
+    field(:target_type, :string)
+    field(:target_identifyer, :string)
+    field(:logged_at, :utc_datetime)
   end
 
-  def changeset(struct, user, type, data) do
+  def changeset(struct, params) do
     struct
-    |> change()
-    |> put_change(:user_id, user.id)
-    |> put_change(:type, type)
-    |> put_change(:data, data)
-    |> validate_inclusion(:type, @types)
-    |> foreign_key_constraint(:user_id)
+    |> cast(params, [
+      :action,
+      :details,
+      :originator_id,
+      :originator_role,
+      :originator_identifyer,
+      :target_id,
+      :target_type,
+      :target_identifyer,
+      ])
+    |> put_change(:logged_at, DateTime.truncate(DateTime.utc_now(), :second))
+    |> validate_inclusion(:action, @actions)
+    |> unique_constraint(:originator_id)
   end
 
-  def types, do: @types
+  def actions, do: @actions
 end

@@ -59,7 +59,9 @@ defmodule Web.SessionController do
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
       {:ok, user} = Accounts.map_from_login(userinfo)
 
-      Accounts.update_active_session(user, true)
+      if user.status == "active" do
+        Accounts.update_active_session(user, true)
+      end
 
       conn
       |> put_flash(:info, "Login successful")

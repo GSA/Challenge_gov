@@ -10,9 +10,9 @@ defmodule ChallengeGov.SecurityLogs do
   alias Web.Plugs.SessionTimeout
   alias ChallengeGov.Accounts
 
-  def track(struct, user, type, data \\ %{}) do
+  def track(struct, params) do
     struct
-    |> SecurityLog.changeset(user, type, data)
+    |> SecurityLog.changeset(params)
     |> Repo.insert()
   end
 
@@ -29,7 +29,7 @@ defmodule ChallengeGov.SecurityLogs do
   def remove_expired_records(record) do
     # expiration after 180 days
     expiration_date = DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -180))
-    inserted_at = Timex.to_unix(record.inserted_at)
+    inserted_at = Timex.to_unix(record.logged_at)
 
     if expiration_date >= inserted_at do
       Repo.delete(record)
@@ -40,17 +40,23 @@ defmodule ChallengeGov.SecurityLogs do
 
     last_accessed_site =
       from(l in SecurityLog,
-        where: l.user_id == ^user.id,
+        where: l.target_id == ^user.id,
         limit: 1,
-        order_by: [desc: l.inserted_at]
+        order_by: [desc: l.logged_at]
       )
       |> Repo.one()
 
-    user_accessed_site = Timex.to_unix(last_accessed_site.inserted_at)
+    user_accessed_site = Timex.to_unix(last_accessed_site.logged_at)
 
     duration = session_end - user_accessed_site
 
     # TODO: convert to more readable time {ISOtime}?
-    track(%SecurityLog{}, user, "session_duration", %{duration: duration})
+    track(%SecurityLog{}, %{
+      action: "session_duration",
+      details: %{duration: duration},
+      target_id: user.id,
+      target_type: user.role,
+      target_identifyer: user.email,
+    })
   end
 end
