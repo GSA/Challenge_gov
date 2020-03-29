@@ -6,9 +6,6 @@ defmodule ChallengeGov.SecurityLogs do
 
   alias ChallengeGov.SecurityLogs.SecurityLog
   alias ChallengeGov.Repo
-  alias ChallengeGov.Accounts.User
-  alias Web.Plugs.SessionTimeout
-  alias ChallengeGov.Accounts
 
   def track(struct, params) do
     struct
@@ -37,13 +34,11 @@ defmodule ChallengeGov.SecurityLogs do
   end
 
   def log_session_duration(user, session_end) do
-
     last_accessed_site =
-      from(l in SecurityLog,
-        where: l.target_id == ^user.id,
-        limit: 1,
-        order_by: [desc: l.logged_at]
-      )
+      SecurityLog
+      |> where([l], l.target_id == ^user.id)
+      |> limit(1)
+      |> order_by([l], desc: l.logged_at)
       |> Repo.one()
 
     user_accessed_site = Timex.to_unix(last_accessed_site.logged_at)
@@ -56,7 +51,7 @@ defmodule ChallengeGov.SecurityLogs do
       details: %{duration: duration},
       target_id: user.id,
       target_type: user.role,
-      target_identifyer: user.email,
+      target_identifyer: user.email
     })
   end
 end

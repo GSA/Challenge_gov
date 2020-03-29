@@ -39,8 +39,8 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
       :originator_identifyer,
       :target_id,
       :target_type,
-      :target_identifyer,
-      ])
+      :target_identifyer
+    ])
     |> put_change(:logged_at, DateTime.truncate(DateTime.utc_now(), :second))
     |> validate_inclusion(:action, @actions)
     |> unique_constraint(:originator_id)

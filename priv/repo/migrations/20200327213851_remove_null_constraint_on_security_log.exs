@@ -3,7 +3,8 @@ defmodule ChallengeGov.Repo.Migrations.RemoveNullConstraintOnSecurityLog do
 
   def up do
     drop(constraint(:security_log, "security_log_originator_id_fkey"))
-    alter table (:security_log) do
+
+    alter table(:security_log) do
       modify :originator_id, references(:users), null: true
       modify :originator_role, :string, null: true
       modify :originator_identifyer, :string, null: true
@@ -12,7 +13,8 @@ defmodule ChallengeGov.Repo.Migrations.RemoveNullConstraintOnSecurityLog do
 
   def down do
     drop(constraint(:security_log, "security_log_originator_id_fkey"))
-    alter table (:security_log) do
+
+    alter table(:security_log) do
       modify :originator_id, references(:users), null: true
       modify :originator_role, :string, null: true
       modify :originator_identifyer, :string, null: true

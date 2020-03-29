@@ -13,9 +13,8 @@ defmodule Web.SessionController do
     |> render("new.html")
   end
 
-  def maybe_put_flash(conn, %{"inactive" => "true"}), do:
-    put_flash(conn, :error, "You have been logged off due to inactivity")
-
+  def maybe_put_flash(conn, %{"inactive" => "true"}),
+    do: put_flash(conn, :error, "You have been logged off due to inactivity")
 
   def maybe_put_flash(conn, _), do: conn
 

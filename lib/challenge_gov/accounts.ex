@@ -109,6 +109,40 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Create an account via admin panel
+  """
+  def create(params, originator) do
+    changeset =
+      %User{}
+      |> User.create_changeset(params)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, %{user: user} ->
+        SecurityLogs.track(%SecurityLog{}, %{
+          originator_id: originator.id,
+          originator_role: originator.role,
+          originator_identifyer: originator.email,
+          target_id: user.id,
+          target_type: user.role,
+          target_identifyer: user.email,
+          action: "status_change",
+          details: %{status: "created"}
+        })
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, user} ->
+        {:ok, user.user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
   Create an account
   """
   def create(params) do
@@ -125,8 +159,8 @@ defmodule ChallengeGov.Accounts do
           target_type: user.role,
           target_identifyer: user.email,
           action: "status_change",
-          details: %{status: "created"}}
-          )
+          details: %{status: "created"}
+        })
       end)
       |> Repo.transaction()
 
@@ -258,7 +292,7 @@ defmodule ChallengeGov.Accounts do
         # look for users created by admin which have emails, but no token
         case get_by_email(userinfo["email"]) do
           {:error, :not_found} ->
-          # no secrity log tracking of accesses_site bc account is pending and access blocked
+            # no secrity log tracking of accesses_site bc account is pending and access blocked
             create(%{
               email: userinfo["email"],
               first_name: "Placeholder",
@@ -280,8 +314,10 @@ defmodule ChallengeGov.Accounts do
             target_id: account_user.id,
             target_type: account_user.role,
             target_identifyer: account_user.email,
-            action: "accessed_site",})
+            action: "accessed_site"
+          })
         end
+
         {:ok, account_user}
     end
   end
