@@ -11,6 +11,8 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.Repo
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.SecurityLogs.SecurityLog
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
   alias Stein.Filter
   alias Stein.Pagination
 
@@ -691,8 +693,10 @@ defmodule ChallengeGov.Accounts do
   check for activity in last 90 days
   """
   def check_all_last_actives() do
-    Enum.map(__MODULE__.all_for_select(), fn user ->
-      check_last_active(user)
+    Enum.map(all_for_select(), fn user ->
+      user
+      |> maybe_send_deactivation_notice
+      |> check_last_active
     end)
   end
 
@@ -701,9 +705,38 @@ defmodule ChallengeGov.Accounts do
     unix_last_active = Timex.to_unix(user.last_active)
 
     if user.last_active && ninety_days_ago >= unix_last_active do
-      __MODULE__.deactivate(user)
-    else
-      __MODULE__.update_last_active(user)
+      deactivate(user)
     end
+  end
+
+  @doc """
+  Sends deactivation emails to people approaching their 90 days of inactivity
+  """
+  def maybe_send_deactivation_notice(user) do
+    ten_days_prior = Timex.shift(user.last_active, days: 80)
+    five_days_prior = Timex.shift(user.last_active, days: 85)
+    one_day_prior = Timex.shift(user.last_active, days: 89)
+
+    cond do
+      Timex.compare(DateTime.utc_now(), ten_days_prior, :days) === 0 ->
+        user
+        |> Emails.ten_day_deactivation_warning()
+        |> Mailer.deliver_later()
+
+      Timex.compare(DateTime.utc_now(), five_days_prior, :days) === 0 ->
+        user
+        |> Emails.five_day_deactivation_warning()
+        |> Mailer.deliver_later()
+
+      Timex.compare(DateTime.utc_now(), one_day_prior, :days) === 0 ->
+        user
+        |> Emails.one_day_deactivation_warning()
+        |> Mailer.deliver_later()
+
+      true ->
+        nil
+    end
+
+    user
   end
 end

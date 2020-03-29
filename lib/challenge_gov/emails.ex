@@ -24,6 +24,30 @@ defmodule ChallengeGov.Emails do
     |> render("challenge-rejection-email.html")
   end
 
+  def ten_day_deactivation_warning(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Challenge.gov - Account will be deactivated in 10 days")
+    |> assign(:user, user)
+    |> render("ten_day_deactivation_warning.html")
+  end
+
+  def five_day_deactivation_warning(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Challenge.gov - Account will be deactivated in 5 days")
+    |> assign(:user, user)
+    |> render("five_day_deactivation_warning.html")
+  end
+
+  def one_day_deactivation_warning(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Challenge.gov - Account will be deactivated in 1 day")
+    |> assign(:user, user)
+    |> render("one_day_deactivation_warning.html")
+  end
+
   defp base_email() do
     new_email()
     |> from(Mailer.from())
