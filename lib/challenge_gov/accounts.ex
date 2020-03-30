@@ -11,6 +11,8 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.Repo
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.SecurityLogs.SecurityLog
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
   alias Stein.Filter
   alias Stein.Pagination
 
@@ -109,6 +111,40 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Create an account via admin panel
+  """
+  def create(params, originator) do
+    changeset =
+      %User{}
+      |> User.create_changeset(params)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, %{user: user} ->
+        SecurityLogs.track(%SecurityLog{}, %{
+          originator_id: originator.id,
+          originator_role: originator.role,
+          originator_identifier: originator.email,
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.email,
+          action: "status_change",
+          details: %{status: "created"}
+        })
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, user} ->
+        {:ok, user.user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
   Create an account
   """
   def create(params) do
@@ -120,7 +156,13 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, %{user: user} ->
-        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "created"})
+        SecurityLogs.track(%SecurityLog{}, %{
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.email,
+          action: "status_change",
+          details: %{status: "created"}
+        })
       end)
       |> Repo.transaction()
 
@@ -252,48 +294,33 @@ defmodule ChallengeGov.Accounts do
         # look for users created by admin which have emails, but no token
         case get_by_email(userinfo["email"]) do
           {:error, :not_found} ->
-            create_new_user(userinfo)
+            # no secrity log tracking of accesses_site bc account is pending and access blocked
+            create(%{
+              email: userinfo["email"],
+              first_name: "Placeholder",
+              last_name: "Placeholder",
+              role: "challenge_owner",
+              token: userinfo["sub"],
+              terms_of_use: nil,
+              privacy_guidelines: nil,
+              status: "pending"
+            })
 
           {:ok, user} ->
             update_admin_added_user(user, userinfo)
         end
 
       {:ok, account_user} ->
-        SecurityLogs.track(%SecurityLog{}, account_user, "accessed_site", %{})
+        if account_user.status == "active" do
+          SecurityLogs.track(%SecurityLog{}, %{
+            target_id: account_user.id,
+            target_type: account_user.role,
+            target_identifier: account_user.email,
+            action: "accessed_site"
+          })
+        end
+
         {:ok, account_user}
-    end
-  end
-
-  @doc """
-  Create new user
-  """
-  def create_new_user(userinfo) do
-    changeset =
-      create(%{
-        email: userinfo["email"],
-        first_name: "Placeholder",
-        last_name: "Placeholder",
-        role: "challenge_owner",
-        token: userinfo["sub"],
-        terms_of_use: nil,
-        privacy_guidelines: nil,
-        pending: true
-      })
-
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.run(:user, fn _repo, _changes -> changeset end)
-      |> Ecto.Multi.run(:log, fn _repo, %{user: user} ->
-        SecurityLogs.track(%SecurityLog{}, user, "accessed_site", %{})
-      end)
-      |> Repo.transaction()
-
-    case result do
-      {:ok, user} ->
-        {:ok, user.user}
-
-      {:error, _type, changeset, _changes} ->
-        {:error, changeset}
     end
   end
 
@@ -307,7 +334,12 @@ defmodule ChallengeGov.Accounts do
         __MODULE__.update(user, %{token: userinfo["sub"]})
       end)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, user, "accessed_site", %{})
+        SecurityLogs.track(%SecurityLog{}, %{
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.email,
+          action: "accessed_site"
+        })
       end)
       |> Repo.transaction()
 
@@ -515,7 +547,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Activate a user. Change status, allows login
   """
-  def activate(user) do
+  def activate(user, originator) do
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -525,7 +557,16 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "active"})
+        SecurityLogs.track(%SecurityLog{}, %{
+          originator_id: originator.id,
+          originator_role: originator.role,
+          originator_identifier: originator.email,
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.email,
+          action: "status_change",
+          details: %{status: "active"}
+        })
       end)
       |> Repo.transaction()
 
@@ -541,7 +582,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Suspend a user. User can no longer login. Still has data access after
   """
-  def suspend(user) do
+  def suspend(user, originator) do
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -551,7 +592,16 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "suspended"})
+        SecurityLogs.track(%SecurityLog{}, %{
+          originator_id: originator.id,
+          originator_role: originator.role,
+          originator_identifier: originator.email,
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.email,
+          action: "status_change",
+          details: %{status: "suspended"}
+        })
       end)
       |> Repo.transaction()
 
@@ -567,7 +617,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Revoke a user. User can no longer login. Removes access to their challenges
   """
-  def revoke(user) do
+  def revoke(user, originator) do
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -577,7 +627,16 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "revoked"})
+        SecurityLogs.track(%SecurityLog{}, %{
+          originator_id: originator.id,
+          originator_role: originator.role,
+          originator_identifier: originator.email,
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.email,
+          action: "status_change",
+          details: %{status: "revoked"}
+        })
       end)
       |> Repo.transaction()
 
@@ -605,7 +664,13 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "deactivated"})
+        SecurityLogs.track(%SecurityLog{}, %{
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.email,
+          action: "status_change",
+          details: %{status: "deactivated"}
+        })
       end)
       |> Repo.transaction()
 
@@ -631,7 +696,13 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, user, "status_change", %{status: "decertified"})
+        SecurityLogs.track(%SecurityLog{}, %{
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.role,
+          action: "status_change",
+          details: %{status: "decertified"}
+        })
       end)
       |> Repo.transaction()
 
@@ -691,8 +762,10 @@ defmodule ChallengeGov.Accounts do
   check for activity in last 90 days
   """
   def check_all_last_actives() do
-    Enum.map(__MODULE__.all_for_select(), fn user ->
-      check_last_active(user)
+    Enum.map(all_for_select(), fn user ->
+      user
+      |> maybe_send_deactivation_notice
+      |> check_last_active
     end)
   end
 
@@ -701,9 +774,38 @@ defmodule ChallengeGov.Accounts do
     unix_last_active = Timex.to_unix(user.last_active)
 
     if user.last_active && ninety_days_ago >= unix_last_active do
-      __MODULE__.deactivate(user)
-    else
-      __MODULE__.update_last_active(user)
+      deactivate(user)
     end
+  end
+
+  @doc """
+  Sends deactivation emails to people approaching their 90 days of inactivity
+  """
+  def maybe_send_deactivation_notice(user) do
+    ten_days_prior = Timex.shift(user.last_active, days: 80)
+    five_days_prior = Timex.shift(user.last_active, days: 85)
+    one_day_prior = Timex.shift(user.last_active, days: 89)
+
+    cond do
+      Timex.compare(DateTime.utc_now(), ten_days_prior, :days) === 0 ->
+        user
+        |> Emails.ten_day_deactivation_warning()
+        |> Mailer.deliver_later()
+
+      Timex.compare(DateTime.utc_now(), five_days_prior, :days) === 0 ->
+        user
+        |> Emails.five_day_deactivation_warning()
+        |> Mailer.deliver_later()
+
+      Timex.compare(DateTime.utc_now(), one_day_prior, :days) === 0 ->
+        user
+        |> Emails.one_day_deactivation_warning()
+        |> Mailer.deliver_later()
+
+      true ->
+        nil
+    end
+
+    user
   end
 end

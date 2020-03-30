@@ -58,6 +58,7 @@ defmodule Web.Router do
     post("/challenges/:id/approve", ChallengeController, :approve, as: :challenge)
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)
     post("/challenges/:id/reject", ChallengeController, :reject, as: :challenge)
+    post("/challenges/:id/resubmit", ChallengeController, :resubmit, as: :challenge)
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
 
     post("/challenges/:id/remove_logo", ChallengeController, :remove_logo, as: :challenge)
@@ -94,7 +95,7 @@ defmodule Web.Router do
     # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
     # TODO: debug undefined/private error and change fn to logout_user
-    post("/session/logout", SessionController, :check_session_timeout)
+    post("/session/logout", SessionController, :logout_user)
   end
 
   scope "/", Web do

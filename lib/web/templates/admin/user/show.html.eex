@@ -82,12 +82,11 @@
           </div>
 
           <div class="card-body">
-            <ul>
               <%= Enum.map(Accounts.revoked_challenges(@user), fn challenge ->  %>
-                <li>
-                  <span class="mr-1"><%= Web.Admin.ChallengeView.name_link(@conn, challenge) %></span>
-                  <%= link("Restore access", to: Routes.admin_restore_challenge_access_path(@conn, :restore_challenge_access, @user.id, challenge.id), method: :post, class: "btn btn-xs btn-primary") %>
-                </li>
+                <div class="mb-2">
+                  <%= link("Restore access", to: Routes.admin_restore_challenge_access_path(@conn, :restore_challenge_access, @user.id, challenge.id), method: :post, class: "btn btn-xs btn-primary mr-2") %>
+                  <span><%= Web.Admin.ChallengeView.name_link(@conn, challenge) %></span>
+                </div>
               <% end) %>
             </ul>
           </div>
