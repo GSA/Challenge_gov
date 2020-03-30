@@ -5,7 +5,7 @@ defmodule ChallengeGov.Admin.ReportView do
 
   alias ChallengeGov.Reports.CSV
 
-  def render("security-logs-header.csv", _assigns) do
+  def render("security-log-header.csv", _assigns) do
     headers = [
       "ID",
       "Action",
@@ -22,7 +22,7 @@ defmodule ChallengeGov.Admin.ReportView do
     CSV.dump_to_iodata([headers])
   end
 
-  def render("security-logs-content.csv", %{record: record}) do
+  def render("security-log-content.csv", %{record: record}) do
     csv = [
       record.id,
       record.action,
@@ -40,9 +40,11 @@ defmodule ChallengeGov.Admin.ReportView do
   end
 
   defp format_to_readable(record) do
-    record
-    |> Enum.map(fn x ->
-      ["#{elem(x, 0)}: #{elem(x, 1)}"]
-    end)
+    if record do
+      record
+      |> Enum.map(fn x ->
+        ["#{elem(x, 0)}: #{elem(x, 1)}"]
+      end)
+    end
   end
 end

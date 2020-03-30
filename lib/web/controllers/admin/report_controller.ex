@@ -7,10 +7,10 @@ defmodule Web.Admin.ReportController do
   def export_security_logs(conn, _params) do
     conn =
       conn
-      |> put_resp_header("content-disposition", "attachment; filename=security-logs.csv")
+      |> put_resp_header("content-disposition", "attachment; filename=security-log.csv")
       |> send_chunked(200)
 
-    {:ok, conn} = chunk(conn, ReportView.render("security-logs-header.csv", %{}))
+    {:ok, conn} = chunk(conn, ReportView.render("security-log-header.csv", %{}))
 
     {:ok, conn} =
       ChallengeGov.Repo.transaction(fn ->
@@ -22,7 +22,7 @@ defmodule Web.Admin.ReportController do
 
   defp chunk_records(conn) do
     Enum.reduce_while(Reports.stream_all_records(), conn, fn record, conn ->
-      chunk = ReportView.render("security-logs-content.csv", record: record)
+      chunk = ReportView.render("security-log-content.csv", record: record)
 
       case Plug.Conn.chunk(conn, chunk) do
         {:ok, conn} ->
