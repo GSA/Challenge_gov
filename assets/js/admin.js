@@ -96,37 +96,19 @@ setInterval(() => {
 
   // If the current time gets to the session expiration time then show logged out modal
   if (now === (session_expiration)) {
-    $('#renew-modal').css('display', 'none');
-    $(".wrapper").prepend(
-      `<div id="logged-out-modal" class="timeout-modal">
-        <div class="modal-content">
-          <p>You have been logged out due to inactivity</p>
-          <button
-          class="btn btn-primary modal-btn"
-          type="button"
-          id="login-modal-btn"">
-            Sign In
-          </button>
-        </div>
-      </div>`
-    );
-  }
-
-  // When clicking the sign in button on logged out modal redirect to sign in path
-  $("#login-modal-btn").click(() => {
     $.ajax({
       url: "/api/session/logout",
       type: "post",
       processData: false,
       contentType: false,
       success: function(res) {
-        location.replace("sign-in/new");
+        location.replace("/sign-in/new?inactive=true")
       },
       error: function(err) {
         console.log("Something went wrong")
       }
     })
-  })
+  }
 
 }, 1000);
 
