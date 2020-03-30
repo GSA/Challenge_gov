@@ -83,7 +83,7 @@ defmodule Web.Admin.ChallengeView do
 
   def challenge_rejection_message(challenge) do
     if challenge.status == "edits_requested" and challenge.rejection_message do
-      content_tag :div, class: "row" do
+      content_tag :div, class: "row position-sticky sticky-top" do
         content_tag :div, class: "col-md-12" do
           content_tag :div, class: "card card-danger" do
             [

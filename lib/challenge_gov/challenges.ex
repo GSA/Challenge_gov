@@ -499,7 +499,7 @@ defmodule ChallengeGov.Challenges do
       |> Map.put_new("events", [])
 
     changeset =
-      if Accounts.is_admin?(current_user) or Accounts.is_super_admin?(current_user) do
+      if Accounts.has_admin_access?(current_user) do
         Challenge.admin_update_changeset(challenge, params)
       else
         Challenge.update_changeset(challenge, params)
@@ -585,9 +585,9 @@ defmodule ChallengeGov.Challenges do
       !is_nil(co.revoked_at)
     end)
     |> Enum.map(fn co ->
-      co.user
+      co.user_id
     end)
-    |> Enum.member?(user)
+    |> Enum.member?(user.id)
   end
 
   @doc """
@@ -783,7 +783,17 @@ defmodule ChallengeGov.Challenges do
   Check if a challenge is rejectable
   """
   def rejectable?(challenge) do
-    challenge.status == "gsa_review"
+    challenge.status == "gsa_review" or challenge.status == "edits_requested"
+  end
+
+  def resubmit(challenge) do
+    challenge
+    |> Challenge.resubmit_changeset()
+    |> Repo.update()
+  end
+
+  def resubmittable?(challenge) do
+    challenge.status == "edits_requested"
   end
 
   @doc """

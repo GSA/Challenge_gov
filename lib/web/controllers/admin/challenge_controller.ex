@@ -292,6 +292,15 @@ defmodule Web.Admin.ChallengeController do
     end
   end
 
+  def resubmit(conn, %{"id" => id}) do
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.resubmit(challenge) do
+      conn
+      |> put_flash(:info, "Challenge resubmitted")
+      |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+    end
+  end
+
   def archive(conn, %{"id" => id}) do
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.archive(challenge) do

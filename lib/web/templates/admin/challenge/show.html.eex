@@ -41,6 +41,9 @@
               <%= if Challenges.rejectable?(@challenge) do  %>
                 <%= link("Request Edits", to: "#", class: "btn btn-danger", data: [toggle: "modal", target: "#rejection-modal"] ) %>
               <% end %>
+              <%= if Challenges.resubmittable?(@challenge) do  %>
+                <%= link("Resubmit", to: Routes.admin_challenge_path(@conn, :resubmit, @challenge.id), method: :post, class: "btn btn-primary", data: [confirm: "Are you sure you want to resubmit this challenge for approval?"]) %>
+              <% end %>
               <%= if Challenges.archivable?(@challenge) do  %>
                 <%= link("Archive", to: Routes.admin_challenge_path(@conn, :archive, @challenge.id), method: :post, class: "btn btn-default", data: [confirm: "Are you sure you want to archive this challenge?"] ) %>
               <% end %>
@@ -375,7 +378,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <%= textarea f, :rejection_message, style: "width: 100%;", rows: 10 %>
+          <%= textarea f, :rejection_message, style: "width: 100%;", rows: 10, value: @challenge.rejection_message %>
         </div>
         <div class="modal-footer">
           <%= submit("Request Edits", class: "btn btn-danger", data: [confirm: "Are you sure you want to reject this challenge?"] ) %>

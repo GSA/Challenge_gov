@@ -413,6 +413,13 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_inclusion(:status, status_ids())
   end
 
+  def resubmit_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:status, "gsa_review")
+    |> validate_inclusion(:status, status_ids())
+  end
+
   # Image changesets
   def logo_changeset(struct, key, extension) do
     struct
