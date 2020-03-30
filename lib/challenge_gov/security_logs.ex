@@ -36,7 +36,7 @@ defmodule ChallengeGov.SecurityLogs do
   def log_session_duration(user, session_end) do
     last_accessed_site =
       SecurityLog
-      |> where([l], l.target_id == ^user.id)
+      |> where([l], l.originator_id == ^user.id and l.action == "accessed_site")
       |> limit(1)
       |> order_by([l], desc: l.logged_at)
       |> Repo.one()
@@ -45,13 +45,12 @@ defmodule ChallengeGov.SecurityLogs do
 
     duration = session_end - user_accessed_site
 
-    # TODO: convert to more readable time {ISOtime}?
     track(%SecurityLog{}, %{
       action: "session_duration",
       details: %{duration: duration},
-      target_id: user.id,
-      target_type: user.role,
-      target_identifier: user.email
+      originator_id: user.id,
+      originator_role: user.role,
+      originator_identifier: user.email
     })
   end
 end
