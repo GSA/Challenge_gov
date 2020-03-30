@@ -7,12 +7,16 @@ defmodule ChallengeGov.Admin.ReportView do
 
   def render("security-logs-header.csv", _assigns) do
     headers = [
-      "Record ID",
-      "User ID",
-      "Type",
+      "ID",
+      "Action",
       "Details",
-      "Inserted At",
-      "Updated At"
+      "Originator ID",
+      "Originator Type",
+      "Originator Identifier",
+      "Target ID",
+      "Target Type",
+      "Target Identifier",
+      "Logged At"
     ]
 
     CSV.dump_to_iodata([headers])
@@ -21,11 +25,15 @@ defmodule ChallengeGov.Admin.ReportView do
   def render("security-logs-content.csv", %{record: record}) do
     csv = [
       record.id,
-      record.user_id,
-      record.type,
-      format_to_readable(record.data),
-      record.inserted_at,
-      record.updated_at
+      record.action,
+      format_to_readable(record.details),
+      record.originator_id,
+      record.originator_role,
+      record.originator_identifier,
+      record.target_id,
+      record.target_type,
+      record.target_identifier,
+      record.logged_at
     ]
 
     CSV.dump_to_iodata([csv])
