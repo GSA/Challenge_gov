@@ -787,9 +787,19 @@ defmodule ChallengeGov.Challenges do
   end
 
   def resubmit(challenge) do
-    challenge
-    |> Challenge.resubmit_changeset()
-    |> Repo.update()
+    result =
+      challenge
+      |> Challenge.resubmit_changeset()
+      |> Repo.update()
+
+    case result do
+      {:ok, challenge} ->
+        send_pending_challenge_email(challenge)
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   def resubmittable?(challenge) do
