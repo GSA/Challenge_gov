@@ -797,7 +797,7 @@ defmodule ChallengeGov.Challenges do
         send_pending_challenge_email(challenge)
         {:ok, challenge}
 
-      {:error, _type, changeset, _changes} ->
+      {:error, changeset} ->
         {:error, changeset}
     end
   end
