@@ -188,4 +188,4 @@ workflows:
             - release-approval
           filters:
             branches:
-              only: staging_setup
+              only: staging
