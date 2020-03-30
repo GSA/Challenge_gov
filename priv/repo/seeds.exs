@@ -27,6 +27,7 @@ defmodule Helpers do
           terms_of_user: nil,
           privacy_guidelines: nil,
           agency_id: nil,
+          status: "active",
           token: Ecto.UUID.generate()
         })
 

@@ -11,7 +11,7 @@ defmodule Web.Plugs.SessionTimeout do
 
   def call(conn, opts) do
     %{current_user: user} = conn.assigns
-    Accounts.check_last_active(user)
+    Accounts.update_last_active(user)
     SessionController.check_session_timeout(conn, opts)
   end
 
