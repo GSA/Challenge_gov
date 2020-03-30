@@ -22,10 +22,10 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
     field(:action, :string)
     field(:details, :map)
     field(:originator_role, :string)
-    field(:originator_identifyer, :string)
+    field(:originator_identifier, :string)
     field(:target_id, :integer)
     field(:target_type, :string)
-    field(:target_identifyer, :string)
+    field(:target_identifier, :string)
     field(:logged_at, :utc_datetime)
   end
 
@@ -36,10 +36,10 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
       :details,
       :originator_id,
       :originator_role,
-      :originator_identifyer,
+      :originator_identifier,
       :target_id,
       :target_type,
-      :target_identifyer
+      :target_identifier
     ])
     |> put_change(:logged_at, DateTime.truncate(DateTime.utc_now(), :second))
     |> validate_inclusion(:action, @actions)

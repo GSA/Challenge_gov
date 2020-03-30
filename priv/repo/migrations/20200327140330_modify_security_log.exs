@@ -12,10 +12,10 @@ defmodule ChallengeGov.Repo.Migrations.ModifySecurityLog do
       add(:details, :map)
       add(:originator_id, references(:users), null: false)
       add(:originator_role, :string, null: false)
-      add(:originator_identifyer, :string, null: false)
+      add(:originator_identifier, :string, null: false)
       add(:target_id, :integer)
       add(:target_type, :string)
-      add(:target_identifyer, :string)
+      add(:target_identifier, :string)
       add(:logged_at, :naive_datetime, null: false)
     end
   end

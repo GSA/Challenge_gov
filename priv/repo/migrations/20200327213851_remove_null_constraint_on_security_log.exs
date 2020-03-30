@@ -7,7 +7,7 @@ defmodule ChallengeGov.Repo.Migrations.RemoveNullConstraintOnSecurityLog do
     alter table(:security_log) do
       modify :originator_id, references(:users), null: true
       modify :originator_role, :string, null: true
-      modify :originator_identifyer, :string, null: true
+      modify :originator_identifier, :string, null: true
     end
   end
 
@@ -17,7 +17,7 @@ defmodule ChallengeGov.Repo.Migrations.RemoveNullConstraintOnSecurityLog do
     alter table(:security_log) do
       modify :originator_id, references(:users), null: true
       modify :originator_role, :string, null: true
-      modify :originator_identifyer, :string, null: true
+      modify :originator_identifier, :string, null: true
     end
   end
 end

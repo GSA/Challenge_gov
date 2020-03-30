@@ -123,10 +123,10 @@ defmodule ChallengeGov.Accounts do
         SecurityLogs.track(%SecurityLog{}, %{
           originator_id: originator.id,
           originator_role: originator.role,
-          originator_identifyer: originator.email,
+          originator_identifier: originator.email,
           target_id: user.id,
           target_type: user.role,
-          target_identifyer: user.email,
+          target_identifier: user.email,
           action: "status_change",
           details: %{status: "created"}
         })
@@ -157,7 +157,7 @@ defmodule ChallengeGov.Accounts do
         SecurityLogs.track(%SecurityLog{}, %{
           target_id: user.id,
           target_type: user.role,
-          target_identifyer: user.email,
+          target_identifier: user.email,
           action: "status_change",
           details: %{status: "created"}
         })
@@ -313,7 +313,7 @@ defmodule ChallengeGov.Accounts do
           SecurityLogs.track(%SecurityLog{}, %{
             target_id: account_user.id,
             target_type: account_user.role,
-            target_identifyer: account_user.email,
+            target_identifier: account_user.email,
             action: "accessed_site"
           })
         end
@@ -335,7 +335,7 @@ defmodule ChallengeGov.Accounts do
         SecurityLogs.track(%SecurityLog{}, %{
           target_id: user.id,
           target_type: user.role,
-          target_identifyer: user.email,
+          target_identifier: user.email,
           action: "accessed_site"
         })
       end)
@@ -558,10 +558,10 @@ defmodule ChallengeGov.Accounts do
         SecurityLogs.track(%SecurityLog{}, %{
           originator_id: originator.id,
           originator_role: originator.role,
-          originator_identifyer: originator.email,
+          originator_identifier: originator.email,
           target_id: user.id,
           target_type: user.role,
-          target_identifyer: user.email,
+          target_identifier: user.email,
           action: "status_change",
           details: %{status: "active"}
         })
@@ -593,10 +593,10 @@ defmodule ChallengeGov.Accounts do
         SecurityLogs.track(%SecurityLog{}, %{
           originator_id: originator.id,
           originator_role: originator.role,
-          originator_identifyer: originator.email,
+          originator_identifier: originator.email,
           target_id: user.id,
           target_type: user.role,
-          target_identifyer: user.email,
+          target_identifier: user.email,
           action: "status_change",
           details: %{status: "suspended"}
         })
@@ -628,10 +628,10 @@ defmodule ChallengeGov.Accounts do
         SecurityLogs.track(%SecurityLog{}, %{
           originator_id: originator.id,
           originator_role: originator.role,
-          originator_identifyer: originator.email,
+          originator_identifier: originator.email,
           target_id: user.id,
           target_type: user.role,
-          target_identifyer: user.email,
+          target_identifier: user.email,
           action: "status_change",
           details: %{status: "revoked"}
         })
@@ -665,7 +665,7 @@ defmodule ChallengeGov.Accounts do
         SecurityLogs.track(%SecurityLog{}, %{
           target_id: user.id,
           target_type: user.role,
-          target_identifyer: user.email,
+          target_identifier: user.email,
           action: "status_change",
           details: %{status: "deactivated"}
         })
@@ -697,7 +697,7 @@ defmodule ChallengeGov.Accounts do
         SecurityLogs.track(%SecurityLog{}, %{
           target_id: user.id,
           target_type: user.role,
-          target_identifyer: user.role,
+          target_identifier: user.role,
           action: "status_change",
           details: %{status: "decertified"}
         })

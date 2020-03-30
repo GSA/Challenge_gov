@@ -51,7 +51,7 @@ defmodule ChallengeGov.SecurityLogs do
       details: %{duration: duration},
       target_id: user.id,
       target_type: user.role,
-      target_identifyer: user.email
+      target_identifier: user.email
     })
   end
 end
