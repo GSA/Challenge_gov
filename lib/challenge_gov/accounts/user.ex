@@ -52,7 +52,6 @@ defmodule ChallengeGov.Accounts.User do
     field(:status, :string, default: "pending")
     field(:finalized, :boolean, default: true)
     field(:display, :boolean, default: true)
-    field(:suspended, :boolean, default: false)
 
     field(:email, :string)
     field(:email_confirmation, :string, virtual: true)
@@ -96,7 +95,6 @@ defmodule ChallengeGov.Accounts.User do
       :terms_of_use,
       :privacy_guidelines,
       :agency_id,
-      :suspended,
       :status,
       :active_session
     ])
