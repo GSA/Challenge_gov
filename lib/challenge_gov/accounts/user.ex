@@ -81,8 +81,6 @@ defmodule ChallengeGov.Accounts.User do
     field(:last_active, :utc_datetime)
     field(:active_session, :boolean)
 
-    field(:pending, :boolean)
-
     timestamps()
   end
 
@@ -98,7 +96,6 @@ defmodule ChallengeGov.Accounts.User do
       :terms_of_use,
       :privacy_guidelines,
       :agency_id,
-      :pending,
       :suspended,
       :status,
       :active_session
