@@ -515,15 +515,6 @@ defmodule ChallengeGov.Accounts do
 
   def has_accepted_terms?(%{privacy_guidelines: _timestamp}), do: true
 
-  @doc """
-  Check if a user is pending
-  """
-  def is_pending_user?(user)
-
-  def is_pending_user?(%{pending: true}), do: true
-
-  def is_pending_user?(%{pending: false}), do: false
-
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
