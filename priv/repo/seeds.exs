@@ -27,7 +27,6 @@ defmodule Helpers do
           role: "super_admin",
           terms_of_use: DateTime.truncate(DateTime.utc_now(), :second),
           privacy_guidelines: DateTime.truncate(DateTime.utc_now(), :second),
-          pending: false,
           status: "active"
         })
 

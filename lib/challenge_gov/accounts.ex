@@ -294,7 +294,7 @@ defmodule ChallengeGov.Accounts do
         # look for users created by admin which have emails, but no token
         case get_by_email(userinfo["email"]) do
           {:error, :not_found} ->
-            # no secrity log tracking of accesses_site bc account is pending and access blocked
+            # no security log tracking of accesses_site bc account is pending and access blocked
             create(%{
               email: userinfo["email"],
               first_name: "Placeholder",
@@ -504,15 +504,6 @@ defmodule ChallengeGov.Accounts do
   def has_accepted_terms?(%{terms_of_use: _timestamp}), do: true
 
   def has_accepted_terms?(%{privacy_guidelines: _timestamp}), do: true
-
-  @doc """
-  Check if a user is pending
-  """
-  def is_pending_user?(user)
-
-  def is_pending_user?(%{pending: true}), do: true
-
-  def is_pending_user?(%{pending: false}), do: false
 
   @impl true
   def filter_on_attribute({"search", value}, query) do
