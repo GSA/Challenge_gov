@@ -142,7 +142,7 @@ jobs:
           endpoint: 'https://api.fr.cloud.gov'
           org: sandbox-gsa
           space: daniel.ivovich
-      - run: cf v3-zdt-push challenge-portal-dev --wait-for-deploy-complete
+      - run: cf push challenge-portal-dev
 
   staging-deploy:
     parallelism: 1
@@ -156,7 +156,7 @@ jobs:
           endpoint: 'https://api.fr.cloud.gov'
           org: sandbox-gsa
           space: daniel.ivovich
-      - run: cf v3-zdt-push challenge-portal-staging --wait-for-deploy-complete
+      - run: cf push challenge-portal-staging
 
 workflows:
   test-and-deploy:
@@ -183,6 +183,9 @@ workflows:
           type: approval
           requires:
             - assets
+          filters:
+            branches:
+              only: staging
       - staging-deploy:
           requires:
             - release-approval
