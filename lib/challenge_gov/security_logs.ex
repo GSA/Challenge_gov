@@ -4,8 +4,11 @@ defmodule ChallengeGov.SecurityLogs do
   """
   import Ecto.Query
 
-  alias ChallengeGov.SecurityLogs.SecurityLog
+  alias ChallengeGov.Accounts
+  alias ChallengeGov.Accounts.User
   alias ChallengeGov.Repo
+  alias ChallengeGov.SecurityLogs.SecurityLog
+  alias Web.Plugs.SessionTimeout
 
   def track(struct, params) do
     struct
@@ -42,10 +45,10 @@ defmodule ChallengeGov.SecurityLogs do
       |> Repo.one()
 
     user_accessed_site = Timex.to_unix(last_accessed_site.logged_at)
-
     duration = session_end - user_accessed_site
 
-    # TODO: convert to more readable time {ISOtime}?
+    Accounts.update_active_session(user, false)
+
     track(%SecurityLog{}, %{
       action: "session_duration",
       details: %{duration: duration},
@@ -53,5 +56,28 @@ defmodule ChallengeGov.SecurityLogs do
       target_type: user.role,
       target_identifier: user.email
     })
+  end
+
+  def check_for_timed_out_sessions do
+    active_users =
+      User
+      |> where([u], u.active_session == true)
+      |> Repo.all()
+
+    timeout_interval_in_minutes = SessionTimeout.timeout_interval()
+
+    if !is_nil(active_users) do
+      Enum.map(active_users, fn x ->
+        session_timeout = Timex.to_unix(x.last_active) + timeout_interval_in_minutes * 60
+        maybe_update_timed_out_sessions(x, session_timeout)
+      end)
+    end
+  end
+
+  def maybe_update_timed_out_sessions(user, session_timeout) do
+    # 5 min buffer after session should have timed out to avoid overlap
+    if Timex.to_unix(Timex.now()) >= session_timeout + 300 do
+      log_session_duration(user, session_timeout)
+    end
   end
 end
