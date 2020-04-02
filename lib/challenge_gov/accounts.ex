@@ -320,9 +320,7 @@ defmodule ChallengeGov.Accounts do
     email_ext = String.slice(email, length, 4)
 
     user_role =
-      if (email_ext == ".gov" or email_ext == ".mil"), do: "challenge_owner", else: "solver"
-    status =
-      if (email_ext == ".gov" or email_ext == ".mil"), do: "pending", else: "active"
+      if email_ext == ".gov" or email_ext == ".mil", do: "challenge_owner", else: "solver"
 
     create(%{
       email: userinfo["email"],
@@ -330,7 +328,7 @@ defmodule ChallengeGov.Accounts do
       token: userinfo["sub"],
       terms_of_use: nil,
       privacy_guidelines: nil,
-      status: status
+      status: "pending"
     })
   end
 

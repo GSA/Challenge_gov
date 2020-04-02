@@ -13,13 +13,13 @@ defmodule Web.Plugs.CheckUserStatus do
   def call(conn, _opts) do
     with {:ok, user} <- Map.fetch(conn.assigns, :current_user) do
       case user.status do
-        "pending" ->
-          conn
-          |> clear_flash()
-          |> put_flash(:error, "Your account is pending activation")
-          |> clear_session()
-          |> redirect(to: Routes.session_path(conn, :new))
-          |> halt()
+        # "pending" ->
+        #   conn
+        #   |> clear_flash()
+        #   |> put_flash(:error, "Your account is pending activation")
+        #   |> clear_session()
+        #   |> redirect(to: Routes.session_path(conn, :new))
+        #   |> halt()
 
         "suspended" ->
           conn
