@@ -16,7 +16,7 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.WinnerImage
   alias ChallengeGov.Repo
   alias ChallengeGov.SupportingDocuments
-  alias ChallengeGov.Timeline
+  # alias ChallengeGov.Timeline
   alias ChallengeGov.Timeline.Event
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
@@ -315,28 +315,6 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
-  Filter a challenge for created state
-
-  Returns `{:error, :not_found}` if the challenge is not created, to hit the same
-  fallback as if the challenge was a bad ID.
-
-      iex> Challenges.filter_for_created(%Challenge{status: "created"})
-      {:ok, %Challenge{status: "created"}}
-
-      iex> Challenges.filter_for_created(%Challenge{status: "pending"})
-      {:error, :not_found}
-  """
-  def filter_for_created(challenge) do
-    case created?(challenge) do
-      true ->
-        {:ok, challenge}
-
-      false ->
-        {:error, :not_found}
-    end
-  end
-
-  @doc """
   Submit a new challenge for a user
   """
   def old_create(user, params) do
@@ -379,12 +357,6 @@ defmodule ChallengeGov.Challenges do
     |> Map.put(:federal_partners, [])
     |> Map.put(:federal_partner_agencies, [])
     |> Challenge.create_changeset(params, user)
-  end
-
-  defp send_pending_challenge_email(challenge) do
-    challenge
-    |> Emails.pending_challenge_email()
-    |> Mailer.deliver_later()
   end
 
   # Attach federal partners functions
@@ -569,7 +541,7 @@ defmodule ChallengeGov.Challenges do
   """
   def allowed_to_edit(user, challenge) do
     if is_challenge_owner?(user, challenge) or
-         Accounts.is_admin?(user) or Accounts.is_super_admin?(user) do
+         Accounts.has_admin_access?(user) do
       {:ok, challenge}
     else
       {:error, :not_permitted}
@@ -613,96 +585,110 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Create a new status event when the status changes
   """
-  def create_status_event(challenge = %{status: "created"}) do
-    Timeline.create_event(challenge, %{
-      title: "Created",
-      occurs_on: Timeline.today()
-    })
-  end
-
-  def create_status_event(challenge = %{status: "champion assigned"}) do
-    Timeline.create_event(challenge, %{
-      title: "Champion Assigned",
-      occurs_on: Timeline.today()
-    })
-  end
-
-  def create_status_event(challenge = %{status: "design"}) do
-    Timeline.create_event(challenge, %{
-      title: "Design",
-      occurs_on: Timeline.today()
-    })
-  end
-
-  def create_status_event(challenge = %{status: "vetted"}) do
-    Timeline.create_event(challenge, %{
-      title: "Vetted",
-      occurs_on: Timeline.today()
-    })
-  end
-
   def create_status_event(_), do: :ok
 
-  @doc """
-  Check if a challenge is created
+  # BOOKMARK: Base status functions
+  def is_draft?(%{status: "draft"}), do: true
+  def is_draft?(_user), do: false
 
-      iex> Challenges.created?(%Challenge{status: "pending"})
-      false
+  def in_review?(%{status: "gsa_review"}), do: true
+  def in_review?(_user), do: false
 
-      iex> Challenges.created?(%Challenge{status: "created"})
-      true
+  def is_approved?(%{status: "approved"}), do: true
+  def is_approved?(_user), do: false
 
-      iex> Challenges.created?(%Challenge{status: "archived"})
-      false
-  """
-  def created?(challenge) do
-    challenge.status == "created"
-  end
+  def has_edits_requested?(%{status: "edits_requested"}), do: true
+  def has_edits_requested?(_user), do: false
 
+  def is_published?(%{status: "published"}), do: true
+  def is_published?(_user), do: false
+
+  def is_archived?(%{status: "archived"}), do: true
+  def is_archived?(_user), do: false
+
+  # BOOKMARK: Advanced status functions
   @doc """
   Checks if the challenge should be publicly accessible. Either published or archived
   """
-  def public?(challenge) do
-    challenge.status == "created" or challenge.status == "archived"
+  def is_public?(challenge) do
+    is_published?(challenge) or is_archived?(challenge)
   end
 
-  @doc """
-  Check if a challenge is approvable
-
-      iex> Challenges.publishable?(%Challenge{status: "pending"})
-      true
-
-      iex> Challenges.publishable?(%Challenge{status: "approved"})
-      false
-
-      iex> Challenges.publishable?(%Challenge{status: "archived"})
-      true
-  """
-  def approvable?(challenge) do
-    challenge.status != "approved"
+  def is_submittable?(challenge) do
+    !in_review?(challenge) and (is_draft?(challenge) or has_edits_requested?(challenge))
   end
 
-  @doc """
-  Check if a challenge is publishable
-
-      iex> Challenges.publishable?(%Challenge{status: "pending"})
-      true
-
-      iex> Challenges.publishable?(%Challenge{status: "created"})
-      false
-
-      iex> Challenges.publishable?(%Challenge{status: "archived"})
-      true
-  """
-  def publishable?(challenge) do
-    challenge.status != "published"
+  def is_submittable?(challenge, user) do
+    is_challenge_owner?(user, challenge) and is_submittable?(challenge)
   end
 
-  @doc """
-  Approve a challenge
+  def is_approvable?(challenge) do
+    in_review?(challenge)
+  end
 
-  Sets status to "approved"
-  """
+  def is_approvable?(challenge, user) do
+    Accounts.has_admin_access?(user) and is_approvable?(challenge)
+  end
+
+  def can_request_edits?(challenge) do
+    in_review?(challenge) or has_edits_requested?(challenge) or is_published?(challenge) or
+      is_approved?(challenge)
+  end
+
+  def can_request_edits?(challenge, user) do
+    Accounts.has_admin_access?(user) and can_request_edits?(challenge)
+  end
+
+  def is_archivable?(challenge) do
+    is_published?(challenge)
+  end
+
+  def is_archivable?(challenge, user) do
+    Accounts.has_admin_access?(user) and is_archivable?(challenge)
+  end
+
+  def is_unarchivable?(challenge) do
+    is_archived?(challenge)
+  end
+
+  def is_unarchivable?(challenge, user) do
+    Accounts.has_admin_access?(user) and is_unarchivable?(challenge)
+  end
+
+  def is_publishable?(challenge) do
+    is_approved?(challenge)
+  end
+
+  def is_publishable?(challenge, user) do
+    Accounts.has_admin_access?(user) and is_publishable?(challenge)
+  end
+
+  def is_editable?(_challenge) do
+    true
+  end
+
+  def is_editable?(challenge, user) do
+    (is_challenge_owner?(user, challenge) or Accounts.has_admin_access?(user)) and
+      is_editable?(challenge)
+  end
+
+  # BOOKMARK: Status altering functions
+  def submit(challenge) do
+    result =
+      challenge
+      |> Challenge.resubmit_changeset()
+      |> Repo.update()
+
+    case result do
+      {:ok, challenge} ->
+        send_pending_challenge_email(challenge)
+        {:ok, challenge}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
   def approve(challenge) do
     changeset = Challenge.approve_changeset(challenge)
 
@@ -723,11 +709,24 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  @doc """
-  Publish a challenge
+  def reject(challenge, message \\ "") do
+    changeset = Challenge.reject_changeset(challenge, message)
 
-  Sets status to "created"
-  """
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        send_challenge_rejection_emails(challenge)
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
   def publish(challenge) do
     changeset = Challenge.publish_changeset(challenge)
 
@@ -748,27 +747,25 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  @doc """
-  Reject a challenge
+  def archive(challenge) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:status, "archived")
+    |> Repo.update()
+  end
 
-  Sets status to "rejected"
-  """
-  def reject(challenge, message \\ "") do
-    changeset = Challenge.reject_changeset(challenge, message)
+  def unarchive(challenge) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:status, "published")
+    |> Repo.update()
+  end
 
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.update(:challenge, changeset)
-      |> Repo.transaction()
-
-    case result do
-      {:ok, %{challenge: challenge}} ->
-        send_challenge_rejection_emails(challenge)
-        {:ok, challenge}
-
-      {:error, _type, changeset, _changes} ->
-        {:error, changeset}
-    end
+  # BOOKMARK: Email functions
+  defp send_pending_challenge_email(challenge) do
+    challenge
+    |> Emails.pending_challenge_email()
+    |> Mailer.deliver_later()
   end
 
   defp send_challenge_rejection_emails(challenge) do
@@ -779,61 +776,7 @@ defmodule ChallengeGov.Challenges do
     end)
   end
 
-  @doc """
-  Check if a challenge is rejectable
-  """
-  def rejectable?(challenge) do
-    challenge.status == "gsa_review" or challenge.status == "edits_requested"
-  end
-
-  def resubmit(challenge) do
-    result =
-      challenge
-      |> Challenge.resubmit_changeset()
-      |> Repo.update()
-
-    case result do
-      {:ok, challenge} ->
-        send_pending_challenge_email(challenge)
-        {:ok, challenge}
-
-      {:error, changeset} ->
-        {:error, changeset}
-    end
-  end
-
-  def resubmittable?(challenge) do
-    challenge.status == "edits_requested"
-  end
-
-  @doc """
-  Check if a challenge is archivable
-
-      iex> Challenges.archivable?(%Challenge{status: "pending"})
-      true
-
-      iex> Challenges.archivable?(%Challenge{status: "created"})
-      true
-
-      iex> Challenges.archivable?(%Challenge{status: "archived"})
-      false
-  """
-  def archivable?(challenge) do
-    challenge.status != "archived"
-  end
-
-  @doc """
-  Archive a challenge
-
-  Sets status to "archived"
-  """
-  def archive(challenge) do
-    challenge
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:status, "archived")
-    |> Repo.update()
-  end
-
+  # BOOKMARK: Misc functions
   def remove_logo(challenge) do
     challenge
     |> Ecto.Changeset.change()
@@ -850,6 +793,7 @@ defmodule ChallengeGov.Challenges do
     |> Repo.update()
   end
 
+  # BOOKMARK: Filter functions
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
@@ -903,6 +847,7 @@ defmodule ChallengeGov.Challenges do
 
   def filter_on_attribute(_, query), do: query
 
+  # BOOKMARK: Order functions
   def order_on_attribute(query, %{"user" => direction}) do
     query = join(query, :left, [c], a in assoc(c, :user))
 

@@ -58,8 +58,9 @@ defmodule Web.Router do
     post("/challenges/:id/approve", ChallengeController, :approve, as: :challenge)
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)
     post("/challenges/:id/reject", ChallengeController, :reject, as: :challenge)
-    post("/challenges/:id/resubmit", ChallengeController, :resubmit, as: :challenge)
+    post("/challenges/:id/submit", ChallengeController, :submit, as: :challenge)
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
+    post("/challenges/:id/unarchive", ChallengeController, :unarchive, as: :challenge)
 
     post("/challenges/:id/remove_logo", ChallengeController, :remove_logo, as: :challenge)
 

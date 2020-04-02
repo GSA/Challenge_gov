@@ -292,11 +292,11 @@ defmodule Web.Admin.ChallengeController do
     end
   end
 
-  def resubmit(conn, %{"id" => id}) do
+  def submit(conn, %{"id" => id}) do
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.resubmit(challenge) do
+         {:ok, challenge} <- Challenges.submit(challenge) do
       conn
-      |> put_flash(:info, "Challenge resubmitted")
+      |> put_flash(:info, "Challenge submitted")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
     end
   end
@@ -306,6 +306,15 @@ defmodule Web.Admin.ChallengeController do
          {:ok, challenge} <- Challenges.archive(challenge) do
       conn
       |> put_flash(:info, "Challenge archived")
+      |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+    end
+  end
+
+  def unarchive(conn, %{"id" => id}) do
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.unarchive(challenge) do
+      conn
+      |> put_flash(:info, "Challenge unarchived")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
     end
   end
