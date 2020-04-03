@@ -777,9 +777,11 @@ defmodule ChallengeGov.Accounts do
   Sends deactivation emails to people approaching their deactivation cutoff
   """
   def maybe_send_deactivation_notice(user) do
-    ten_days_prior = Timex.shift(user.last_active, days: 80)
-    five_days_prior = Timex.shift(user.last_active, days: 85)
-    one_day_prior = Timex.shift(user.last_active, days: 89)
+    deactivation_interval = System.get_env("DEACTIVATION_INTERVAL_IN_DAYS")
+
+    ten_days_prior = Timex.shift(user.last_active, days: deactivation_interval - 10)
+    five_days_prior = Timex.shift(user.last_active, days: deactivation_interval - 5)
+    one_day_prior = Timex.shift(user.last_active, days: deactivation_interval - 1)
 
     cond do
       Timex.compare(DateTime.utc_now(), ten_days_prior, :days) === 0 ->
