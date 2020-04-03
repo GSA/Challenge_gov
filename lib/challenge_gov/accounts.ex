@@ -761,10 +761,10 @@ defmodule ChallengeGov.Accounts do
   end
 
   def check_last_active(user) do
-    ninety_days_ago = DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -90))
-    unix_last_active = Timex.to_unix(user.last_active)
+    three_days = DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -3))
+    last_active = if user.last_active, do: Timex.to_unix(user.last_active), else: nil
 
-    if user.last_active && ninety_days_ago >= unix_last_active do
+    if user.last_active && three_days >= last_active do
       deactivate(user)
     end
   end
@@ -773,20 +773,27 @@ defmodule ChallengeGov.Accounts do
   Sends deactivation emails to people approaching their 90 days of inactivity
   """
   def maybe_send_deactivation_notice(user) do
-    ten_days_prior = Timex.shift(user.last_active, days: 80)
-    five_days_prior = Timex.shift(user.last_active, days: 85)
-    one_day_prior = Timex.shift(user.last_active, days: 89)
+    two_days_prior = Timex.shift(user.last_active, days: 2)
+    one_day_prior = Timex.shift(user.last_active, days: 1)
+    # ten_days_prior = Timex.shift(user.last_active, days: 80)
+    # five_days_prior = Timex.shift(user.last_active, days: 85)
+    # one_day_prior = Timex.shift(user.last_active, days: 89)
 
     cond do
-      Timex.compare(DateTime.utc_now(), ten_days_prior, :days) === 0 ->
+      Timex.compare(DateTime.utc_now(), two_days_prior, :days) === 0 ->
         user
         |> Emails.ten_day_deactivation_warning()
         |> Mailer.deliver_later()
 
-      Timex.compare(DateTime.utc_now(), five_days_prior, :days) === 0 ->
-        user
-        |> Emails.five_day_deactivation_warning()
-        |> Mailer.deliver_later()
+      # Timex.compare(DateTime.utc_now(), ten_days_prior, :days) === 0 ->
+      #   user
+      #   |> Emails.ten_day_deactivation_warning()
+      #   |> Mailer.deliver_later()
+
+      # Timex.compare(DateTime.utc_now(), five_days_prior, :days) === 0 ->
+      #   user
+      #   |> Emails.five_day_deactivation_warning()
+      #   |> Mailer.deliver_later()
 
       Timex.compare(DateTime.utc_now(), one_day_prior, :days) === 0 ->
         user
