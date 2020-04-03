@@ -750,7 +750,7 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
-  check for activity in last 90 days
+  check timestamp for most recent activity for deactivation
   """
   def check_all_last_actives() do
     Enum.map(all_for_select(), fn user ->
@@ -761,16 +761,20 @@ defmodule ChallengeGov.Accounts do
   end
 
   def check_last_active(user) do
-    ninety_days_ago = DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -90))
-    unix_last_active = Timex.to_unix(user.last_active)
+    deactivation_interval = System.get_env("DEACTIVATION_INTERVAL_IN_DAYS")
 
-    if user.last_active && ninety_days_ago >= unix_last_active do
+    deactivation_cutoff =
+      Timex.to_unix(Timex.shift(DateTime.utc_now(), days: -deactivation_interval))
+
+    last_active = if user.last_active, do: Timex.to_unix(user.last_active), else: nil
+
+    if user.last_active && deactivation_cutoff >= last_active do
       deactivate(user)
     end
   end
 
   @doc """
-  Sends deactivation emails to people approaching their 90 days of inactivity
+  Sends deactivation emails to people approaching their deactivation cutoff
   """
   def maybe_send_deactivation_notice(user) do
     ten_days_prior = Timex.shift(user.last_active, days: 80)
