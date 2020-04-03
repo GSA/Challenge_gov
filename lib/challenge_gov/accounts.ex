@@ -773,8 +773,9 @@ defmodule ChallengeGov.Accounts do
   Sends deactivation emails to people approaching their 90 days of inactivity
   """
   def maybe_send_deactivation_notice(user) do
-    two_days_prior = Timex.shift(user.last_active, days: 2)
-    one_day_prior = Timex.shift(user.last_active, days: 1)
+    two_days_prior = Timex.shift(user.last_active, days: 1)
+    one_day_prior = Timex.shift(user.last_active, days: 2)
+
     # ten_days_prior = Timex.shift(user.last_active, days: 80)
     # five_days_prior = Timex.shift(user.last_active, days: 85)
     # one_day_prior = Timex.shift(user.last_active, days: 89)
