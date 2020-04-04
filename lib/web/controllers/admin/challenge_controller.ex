@@ -41,6 +41,8 @@ defmodule Web.Admin.ChallengeController do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(id) do
+      Challenges.add_to_security_log(user, challenge, "read")
+
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
@@ -189,8 +191,8 @@ defmodule Web.Admin.ChallengeController do
     {:ok, challenge} = Challenges.get(id)
     to_section = Challenges.to_section(section, action)
 
-    with {:ok, challenge} <- Challenges.update(challenge, params),
-         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
+    with {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
+         {:ok, challenge} <- Challenges.update(challenge, params, user) do
       if action == "save_draft" do
         conn
         |> put_flash(:info, "Challenge saved as draft")
@@ -264,8 +266,10 @@ defmodule Web.Admin.ChallengeController do
   end
 
   def approve(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.approve(challenge) do
+         {:ok, challenge} <- Challenges.approve(challenge, user) do
       conn
       |> put_flash(:info, "Challenge approved")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
@@ -273,8 +277,10 @@ defmodule Web.Admin.ChallengeController do
   end
 
   def publish(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.publish(challenge) do
+         {:ok, challenge} <- Challenges.publish(challenge, user) do
       conn
       |> put_flash(:info, "Challenge published")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
@@ -282,10 +288,11 @@ defmodule Web.Admin.ChallengeController do
   end
 
   def reject(conn, params = %{"id" => id}) do
+    %{current_user: user} = conn.assigns
     message = Map.get(params, "rejection_message")
 
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.reject(challenge, message) do
+         {:ok, challenge} <- Challenges.reject(challenge, user, message) do
       conn
       |> put_flash(:info, "Challenge rejected")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
@@ -293,8 +300,10 @@ defmodule Web.Admin.ChallengeController do
   end
 
   def submit(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.submit(challenge) do
+         {:ok, challenge} <- Challenges.submit(challenge, user) do
       conn
       |> put_flash(:info, "Challenge submitted")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
@@ -302,8 +311,10 @@ defmodule Web.Admin.ChallengeController do
   end
 
   def archive(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.archive(challenge) do
+         {:ok, challenge} <- Challenges.archive(challenge, user) do
       conn
       |> put_flash(:info, "Challenge archived")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
@@ -311,8 +322,10 @@ defmodule Web.Admin.ChallengeController do
   end
 
   def unarchive(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.unarchive(challenge) do
+         {:ok, challenge} <- Challenges.unarchive(challenge, user) do
       conn
       |> put_flash(:info, "Challenge unarchived")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))

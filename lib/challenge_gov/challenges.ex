@@ -14,6 +14,8 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
+  alias ChallengeGov.SecurityLogs
+  alias ChallengeGov.SecurityLogs.SecurityLog
   alias ChallengeGov.Repo
   alias ChallengeGov.SupportingDocuments
   # alias ChallengeGov.Timeline
@@ -117,6 +119,7 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, challenge_params)
       end)
+      |> add_to_security_log_multi(user, "create")
       |> Repo.transaction()
 
     case result do
@@ -137,7 +140,9 @@ defmodule ChallengeGov.Challenges do
     |> Challenge.update_changeset(%{})
   end
 
-  def update(challenge, %{"action" => action, "challenge" => challenge_params}) do
+  def update(challenge, %{"action" => action, "challenge" => challenge_params}, user) do
+    section = Map.get(challenge_params, "section")
+
     challenge_params =
       challenge_params
       |> check_non_federal_partners
@@ -151,6 +156,54 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, challenge_params)
       end)
+      |> add_to_security_log_multi(user, "update", %{action: action, section: section})
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Update a challenge
+  """
+  def update(challenge, params, current_user) do
+    # TODO: Refactor the current_user permissions checking for updating challenge owner
+    challenge = Repo.preload(challenge, [:non_federal_partners, :events])
+
+    params =
+      params
+      |> Map.put_new("challenge_owners", [])
+      |> Map.put_new("federal_partners", [])
+      |> Map.put_new("non_federal_partners", [])
+      |> Map.put_new("events", [])
+
+    changeset =
+      if Accounts.has_admin_access?(current_user) do
+        Challenge.admin_update_changeset(challenge, params)
+      else
+        Challenge.update_changeset(challenge, params)
+      end
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> attach_federal_partners(params)
+      |> attach_challenge_owners(params)
+      |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
+        maybe_create_event(challenge, changeset)
+      end)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, params)
+      end)
+      |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
+        WinnerImage.maybe_upload_winner_image(challenge, params)
+      end)
+      |> add_to_security_log_multi(current_user, "update")
       |> Repo.transaction()
 
     case result do
@@ -331,6 +384,7 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
         WinnerImage.maybe_upload_winner_image(challenge, params)
       end)
+      |> add_to_security_log_multi(user, "create")
       |> Repo.transaction()
 
     case result do
@@ -457,52 +511,6 @@ defmodule ChallengeGov.Challenges do
   defp attach_document(result, _challenge), do: result
 
   @doc """
-  Update a challenge
-  """
-  def update(challenge, params, current_user) do
-    # TODO: Refactor the current_user permissions checking for updating challenge owner
-    challenge = Repo.preload(challenge, [:non_federal_partners, :events])
-
-    params =
-      params
-      |> Map.put_new("challenge_owners", [])
-      |> Map.put_new("federal_partners", [])
-      |> Map.put_new("non_federal_partners", [])
-      |> Map.put_new("events", [])
-
-    changeset =
-      if Accounts.has_admin_access?(current_user) do
-        Challenge.admin_update_changeset(challenge, params)
-      else
-        Challenge.update_changeset(challenge, params)
-      end
-
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.update(:challenge, changeset)
-      |> attach_federal_partners(params)
-      |> attach_challenge_owners(params)
-      |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
-        maybe_create_event(challenge, changeset)
-      end)
-      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
-        Logo.maybe_upload_logo(challenge, params)
-      end)
-      |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
-        WinnerImage.maybe_upload_winner_image(challenge, params)
-      end)
-      |> Repo.transaction()
-
-    case result do
-      {:ok, %{challenge: challenge}} ->
-        {:ok, challenge}
-
-      {:error, _type, changeset, _changes} ->
-        {:error, changeset}
-    end
-  end
-
-  @doc """
   Delete a challenge
   """
   def delete(challenge) do
@@ -514,19 +522,27 @@ defmodule ChallengeGov.Challenges do
   """
   def delete(challenge, user) do
     if allowed_to_delete(user, challenge) do
-      soft_delete(challenge)
+      soft_delete(challenge, user)
     else
       {:error, :not_permitted}
     end
   end
 
-  def soft_delete(challenge) do
+  def soft_delete(challenge, user) do
     now = DateTime.truncate(Timex.now(), :second)
 
     challenge
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:deleted_at, now)
     |> Repo.update()
+    |> case do
+      {:ok, challenge} ->
+        add_to_security_log(user, challenge, "delete")
+        {:ok, challenge}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
@@ -673,14 +689,19 @@ defmodule ChallengeGov.Challenges do
   end
 
   # BOOKMARK: Status altering functions
-  def submit(challenge) do
-    result =
+  def submit(challenge, user) do
+    changeset =
       challenge
-      |> Challenge.resubmit_changeset()
-      |> Repo.update()
+      |> Challenge.submit_changeset()
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> add_to_security_log_multi(user, "status_change", %{status: "gsa_review"})
+      |> Repo.transaction()
 
     case result do
-      {:ok, challenge} ->
+      {:ok, %{challenge: challenge}} ->
         send_pending_challenge_email(challenge)
         {:ok, challenge}
 
@@ -689,15 +710,13 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def approve(challenge) do
+  def approve(challenge, user) do
     changeset = Challenge.approve_changeset(challenge)
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
-      |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
-        maybe_create_event(challenge, changeset)
-      end)
+      |> add_to_security_log_multi(user, "status_change", %{status: "approved"})
       |> Repo.transaction()
 
     case result do
@@ -709,12 +728,16 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def reject(challenge, message \\ "") do
+  def reject(challenge, user, message \\ "") do
     changeset = Challenge.reject_changeset(challenge, message)
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
+      |> add_to_security_log_multi(user, "status_change", %{
+        status: "edits_requested",
+        message: message
+      })
       |> Repo.transaction()
 
     case result do
@@ -727,15 +750,13 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def publish(challenge) do
+  def publish(challenge, user) do
     changeset = Challenge.publish_changeset(challenge)
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
-      |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
-        maybe_create_event(challenge, changeset)
-      end)
+      |> add_to_security_log_multi(user, "status_change", %{status: "published"})
       |> Repo.transaction()
 
     case result do
@@ -747,18 +768,46 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def archive(challenge) do
-    challenge
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:status, "archived")
-    |> Repo.update()
+  def archive(challenge, user) do
+    changeset =
+      challenge
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "archived")
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> add_to_security_log_multi(user, "status_change", %{status: "archived"})
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
-  def unarchive(challenge) do
-    challenge
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:status, "published")
-    |> Repo.update()
+  def unarchive(challenge, user) do
+    changeset =
+      challenge
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "published")
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> add_to_security_log_multi(user, "status_change", %{status: "published"})
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
   # BOOKMARK: Email functions
@@ -774,6 +823,25 @@ defmodule ChallengeGov.Challenges do
       |> Emails.challenge_rejection_email(challenge)
       |> Mailer.deliver_later()
     end)
+  end
+
+  # BOOKMARK: Security log functions
+  defp add_to_security_log_multi(multi, user, type, details \\ nil) do
+    Ecto.Multi.run(multi, :log, fn _repo, %{challenge: challenge} ->
+      add_to_security_log(user, challenge, type, details)
+    end)
+  end
+
+  def add_to_security_log(user, challenge, type, details \\ nil) do
+    SecurityLogs.track(%SecurityLog{}, %{
+      originator_id: user.id,
+      originator_role: user.role,
+      originator_identifier: user.email,
+      target_id: challenge.id,
+      target_type: "challenge",
+      action: type,
+      details: details
+    })
   end
 
   # BOOKMARK: Misc functions

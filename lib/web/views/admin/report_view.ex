@@ -45,6 +45,7 @@ defmodule ChallengeGov.Admin.ReportView do
       |> Enum.map(fn x ->
         ["#{elem(x, 0)}: #{elem(x, 1)}"]
       end)
+      |> Enum.join(", ")
     end
   end
 end

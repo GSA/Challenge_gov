@@ -55,6 +55,8 @@
                 <%= challenge_edit_link(@conn, @challenge, class: "btn btn-primary") %>
                 <%= challenge_full_edit_link(@conn, @challenge, @user, class: "btn btn-primary") %>
               <% end %>
+
+              <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-default btn-xs") %>
             </div>
           </div>
 
