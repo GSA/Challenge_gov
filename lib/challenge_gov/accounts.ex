@@ -157,9 +157,9 @@ defmodule ChallengeGov.Accounts do
       |> Ecto.Multi.insert(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, %{user: user} ->
         SecurityLogs.track(%SecurityLog{}, %{
-          target_id: user.id,
-          target_type: user.role,
-          target_identifier: user.email,
+          originator_id: user.id,
+          originator_role: user.role,
+          originator_identifier: user.email,
           action: "status_change",
           details: %{status: "created"}
         })
@@ -294,7 +294,7 @@ defmodule ChallengeGov.Accounts do
         # look for users created by admin which have emails, but no token
         case get_by_email(userinfo["email"]) do
           {:error, :not_found} ->
-            # no secrity log tracking of accesses_site bc account is pending and access blocked
+            # no security log tracking of accesses_site bc account is pending and access blocked
             create(%{
               email: userinfo["email"],
               first_name: "Placeholder",
@@ -313,9 +313,9 @@ defmodule ChallengeGov.Accounts do
       {:ok, account_user} ->
         if account_user.status == "active" do
           SecurityLogs.track(%SecurityLog{}, %{
-            target_id: account_user.id,
-            target_type: account_user.role,
-            target_identifier: account_user.email,
+            originator_id: account_user.id,
+            originator_role: account_user.role,
+            originator_identifier: account_user.email,
             action: "accessed_site"
           })
         end
@@ -335,9 +335,9 @@ defmodule ChallengeGov.Accounts do
       end)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
         SecurityLogs.track(%SecurityLog{}, %{
-          target_id: user.id,
-          target_type: user.role,
-          target_identifier: user.email,
+          originator_id: user.id,
+          originator_role: user.role,
+          originator_identifier: user.email,
           action: "accessed_site"
         })
       end)
@@ -504,15 +504,6 @@ defmodule ChallengeGov.Accounts do
   def has_accepted_terms?(%{terms_of_use: _timestamp}), do: true
 
   def has_accepted_terms?(%{privacy_guidelines: _timestamp}), do: true
-
-  @doc """
-  Check if a user is pending
-  """
-  def is_pending_user?(user)
-
-  def is_pending_user?(%{pending: true}), do: true
-
-  def is_pending_user?(%{pending: false}), do: false
 
   @impl true
   def filter_on_attribute({"search", value}, query) do
