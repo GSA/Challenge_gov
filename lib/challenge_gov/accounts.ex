@@ -761,10 +761,12 @@ defmodule ChallengeGov.Accounts do
   end
 
   def check_last_active(user) do
-    three_days = DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -3))
+    timeout_time =
+      DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -1 * Security.timeout_interval()))
+
     last_active = if user.last_active, do: Timex.to_unix(user.last_active), else: nil
 
-    if user.last_active && three_days >= last_active do
+    if user.last_active && timeout_time >= last_active do
       deactivate(user)
     end
   end
