@@ -24,9 +24,74 @@ defmodule Web.Api.ChallengeView do
 
   def render("show.json", %{challenge: challenge}) do
     %{
-      id: challenge.id,
+      prize_total: challenge.prize_total,
+      winner_information: challenge.winner_information,
+      winner_image: ChallengeView.winner_img_url(challenge),
+      poc_email: challenge.poc_email,
+      how_to_enter: challenge.how_to_enter,
+      number_of_phases: challenge.number_of_phases,
+      faq: challenge.faq,
       title: challenge.title,
-      description: challenge.description
+      logo: ChallengeView.logo_url(challenge),
+      end_date: challenge.end_date,
+      eligibility_requirements: challenge.eligibility_requirements,
+      fiscal_year: challenge.fiscal_year,
+      terms_and_conditions: challenge.terms_and_conditions,
+      judging_criteria: challenge.judging_criteria,
+      multi_phase: challenge.multi_phase,
+      description: challenge.description,
+      prize_description: challenge.prize_description,
+      id: challenge.id,
+      external_url: challenge.external_url,
+      legal_authority: challenge.legal_authority,
+      phase_descriptions: challenge.phase_descriptions,
+      phase_dates: challenge.phase_dates,
+      custom_url: challenge.custom_url,
+      start_date: challenge.custom_url,
+      non_monetary_prizes: challenge.non_monetary_prizes,
+      events: challenge.non_monetary_prizes,
+      status: challenge.status,
+      types: challenge.types,
+      supporting_documents:
+        render_many(
+          challenge.supporting_documents,
+          Web.Api.DocumentView,
+          "show.json"
+        ),
+      brief_description: challenge.brief_description,
+      tagline: challenge.tagline,
+      agency_name: ChallengeView.agency_name(challenge),
+      agency_id: challenge.agency_id,
+      rules: challenge.rules,
+      federal_partners:
+        render_many(
+          challenge.federal_partner_agencies,
+          __MODULE__,
+          "federal_partner_agencies.json",
+          as: :agency
+        ),
+      non_federal_partners:
+        render_many(
+          challenge.non_federal_partners,
+          __MODULE__,
+          "non_federal_partners.json",
+          as: :partner
+        )
+    }
+  end
+
+  def render("federal_partner_agencies.json", %{agency: agency}) do
+    %{
+      id: agency.id,
+      name: agency.name,
+      logo: Web.AgencyView.avatar_url(agency)
+    }
+  end
+
+  def render("non_federal_partners.json", %{partner: partner}) do
+    %{
+      id: partner.id,
+      name: partner.name
     }
   end
 end
