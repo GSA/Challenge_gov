@@ -32,6 +32,14 @@ config :stein_storage,
   backend: :file,
   file_backend_folder: "uploads/"
 
+config :challenge_gov,
+  session_timeout_in_minutes: 15,
+  account_deactivation_in_days: 90,
+  account_deactivation_warning_one_in_days: 10,
+  account_deactivation_warning_two_in_days: 5,
+  account_decertify_in_days: 365,
+  log_retention_in_days: 180
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

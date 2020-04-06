@@ -1,16 +1,15 @@
 defmodule Web.Api.SessionController do
   use Web, :controller
 
-  alias Web.Plugs.SessionTimeout
   alias ChallengeGov.Accounts
+  alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
 
   plug :fetch_session when action in [:check_session_timeout, :logout_user]
 
-  # Might be able to just call SessionTimeout plug
   def check_session_timeout(conn, opts) do
     timeout_at = get_session(conn, :session_timeout_at)
-    timeout_after_minutes = opts[:timeout_after_minutes] || SessionTimeout.timeout_interval()
+    timeout_after_minutes = opts[:timeout_after_minutes] || Security.timeout_interval()
     new_timeout = new_session_timeout_at(timeout_after_minutes)
 
     if timeout_at && now() > timeout_at do

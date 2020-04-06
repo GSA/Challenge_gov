@@ -92,9 +92,6 @@ config :challenge_gov, ChallengeGov.Mailer,
   from: "support@challenge.gov",
   adapter: Bamboo.LocalAdapter
 
-config :challenge_gov,
-  session_timeout_in_minutes: System.get_env("SESSION_TIMEOUT_IN_MINUTES") || 15
-
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
 
 config :challenge_gov, ChallengeGov.Scheduler,
