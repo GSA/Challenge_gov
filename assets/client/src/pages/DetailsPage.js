@@ -29,8 +29,12 @@ export const DetailsPage = () => {
     <div>
       {currentChallenge &&
         <div>
-          <p>id: {currentChallenge.id}</p>
-          <p>title: {currentChallenge.title}</p>
+          <section className="hero__wrapper">
+            <section className="hero__content">
+              <div className="hero__presentational"></div>
+              <div className="hero__info-section"></div>
+            </section>
+          </section>
         </div>
       }
     </div>

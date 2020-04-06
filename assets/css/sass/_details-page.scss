@@ -1,0 +1,28 @@
+.hero {
+
+  &__wrapper {
+    background-color: #2B608A;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__content {
+    width: 90%;
+    height: 80%;
+    margin: 30px;
+    border-radius: 10px;
+    background-color: #fff;
+  }
+
+  &__presentational {
+    height: 70%;
+  }
+
+  &__info-section {
+    height: 30%;
+    background-color: #F2F2F2;
+    border-radius: 0 0 10px 10px;
+  }
+}

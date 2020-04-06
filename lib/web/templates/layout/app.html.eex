@@ -8,10 +8,6 @@
 
       <div class="main">
         <div class="content-area">
-          <div class="logo side-nav-logo">
-            <img src="<%= Routes.static_path(@conn, "/images/challenge-logo.png") %>" alt="Challenge.gov Logo" title="Challenge.gov">
-          </div>
-
           <%= if flash = get_flash(@conn, :info) do %>
             <div class="alert alert-primary" role="alert">
               <%= flash %>
