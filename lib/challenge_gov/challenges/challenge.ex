@@ -413,7 +413,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_inclusion(:status, status_ids())
   end
 
-  def resubmit_changeset(struct) do
+  def submit_changeset(struct) do
     struct
     |> change()
     |> put_change(:status, "gsa_review")

@@ -45,6 +45,7 @@ defmodule ChallengeGov.Admin.ReportView do
       |> Enum.map(fn x ->
         format_to_readable(x)
       end)
+      |> Enum.join(", ")
     end
   end
 

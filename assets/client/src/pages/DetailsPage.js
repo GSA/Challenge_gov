@@ -25,6 +25,8 @@ export const DetailsPage = () => {
       })
   }, [])
 
+  console.log({currentChallenge})
+
   return (
     <div>
       {currentChallenge &&

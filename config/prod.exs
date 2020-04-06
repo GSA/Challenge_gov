@@ -73,7 +73,14 @@ config :challenge_gov, :oidc_config, %{
 }
 
 config :challenge_gov,
-  session_timeout_in_minutes: System.get_env("SESSION_TIMEOUT_IN_MINUTES") || 15
+  session_timeout_in_minutes: System.get_env("SESSION_TIMEOUT_IN_MINUTES") || 15,
+  account_deactivation_in_days: System.get_env("ACCOUNT_DEACTIVATION_IN_DAYS") || 90,
+  account_decertify_in_days: System.get_env("ACCOUNT_DECERTIFY_IN_DAYS") || 365,
+  account_deactivation_warning_one_in_days:
+    System.get_env("ACCOUNT_DEACTIVATION_WARNING_ONE_IN_DAYS") || 10,
+  account_deactivation_warning_two_in_days:
+    System.get_env("ACCOUNT_DEACTIVATION_WARNING_TWO_IN_DAYS") || 5,
+  log_retention_in_days: System.get_env("LOG_RETENTION_IN_DAYS") || 180
 
 config :challenge_gov, ChallengeGov.Scheduler,
   jobs: [

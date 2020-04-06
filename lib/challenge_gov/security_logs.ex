@@ -7,8 +7,8 @@ defmodule ChallengeGov.SecurityLogs do
   alias ChallengeGov.Accounts
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Repo
+  alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs.SecurityLog
-  alias Web.Plugs.SessionTimeout
 
   def track(struct, params) do
     struct
@@ -21,14 +21,16 @@ defmodule ChallengeGov.SecurityLogs do
   end
 
   def check_expired_records() do
+    # TODO just use a database query to delete old records
     Enum.map(__MODULE__.all(), fn record ->
       remove_expired_records(record)
     end)
   end
 
   def remove_expired_records(record) do
-    # expiration after 180 days
-    expiration_date = DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -180))
+    expiration_date =
+      DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -1 * Security.log_retention_days()))
+
     inserted_at = Timex.to_unix(record.logged_at)
 
     if expiration_date >= inserted_at do
@@ -44,18 +46,20 @@ defmodule ChallengeGov.SecurityLogs do
       |> order_by([l], desc: l.logged_at)
       |> Repo.one()
 
-    user_accessed_site = Timex.to_unix(last_accessed_site.logged_at)
-    duration = session_end - user_accessed_site
+    if last_accessed_site do
+      user_accessed_site = Timex.to_unix(last_accessed_site.logged_at)
+      duration = session_end - user_accessed_site
 
-    Accounts.update_active_session(user, false)
+      Accounts.update_active_session(user, false)
 
-    track(%SecurityLog{}, %{
-      action: "session_duration",
-      details: %{duration: duration},
-      originator_id: user.id,
-      originator_role: user.role,
-      originator_identifier: user.email
-    })
+      track(%SecurityLog{}, %{
+        action: "session_duration",
+        details: %{duration: duration},
+        originator_id: user.id,
+        originator_role: user.role,
+        originator_identifier: user.email
+      })
+    end
   end
 
   def check_for_timed_out_sessions do
@@ -64,7 +68,7 @@ defmodule ChallengeGov.SecurityLogs do
       |> where([u], u.active_session == true)
       |> Repo.all()
 
-    timeout_interval_in_minutes = SessionTimeout.timeout_interval()
+    timeout_interval_in_minutes = Security.timeout_interval()
 
     if !is_nil(active_users) do
       Enum.map(active_users, fn x ->
