@@ -9,7 +9,8 @@ defmodule Web.ChallengeView do
   def logo_img(challenge, opts \\ []) do
     case is_nil(challenge.logo_key) do
       true ->
-        AgencyView.avatar_img(challenge.agency, opts)
+        path = Routes.static_path(Web.Endpoint, "/images/challenge-logo.png")
+        img_tag(path, alt: "Challenge Logo")
 
       false ->
         url = Storage.url(Logo.logo_path(challenge, "thumbnail"), signed: [expires_in: 3600])
