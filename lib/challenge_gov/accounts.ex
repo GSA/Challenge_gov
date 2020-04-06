@@ -9,6 +9,7 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Recaptcha
   alias ChallengeGov.Repo
+  alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.SecurityLogs.SecurityLog
   alias ChallengeGov.Emails
@@ -775,30 +776,22 @@ defmodule ChallengeGov.Accounts do
   Sends deactivation emails to people approaching their 90 days of inactivity
   """
   def maybe_send_deactivation_notice(user) do
-    two_days_prior = Timex.shift(user.last_active, days: 1)
-    one_day_prior = Timex.shift(user.last_active, days: 2)
-
-    # ten_days_prior = Timex.shift(user.last_active, days: 80)
-    # five_days_prior = Timex.shift(user.last_active, days: 85)
-    # one_day_prior = Timex.shift(user.last_active, days: 89)
+    warning_one = Timex.shift(user.last_active, days: Security.deactivate_warning_one_days())
+    warning_two = Timex.shift(user.last_active, days: Security.deactivate_warning_two_days())
+    one_day_warning = Timex.shift(user.last_active, days: 1)
 
     cond do
-      Timex.compare(DateTime.utc_now(), two_days_prior, :days) === 0 ->
+      Timex.compare(DateTime.utc_now(), warning_one, :days) === 0 ->
         user
-        |> Emails.ten_day_deactivation_warning()
+        |> Emails.days_deactivation_warning(warning_one)
         |> Mailer.deliver_later()
 
-      # Timex.compare(DateTime.utc_now(), ten_days_prior, :days) === 0 ->
-      #   user
-      #   |> Emails.ten_day_deactivation_warning()
-      #   |> Mailer.deliver_later()
+      Timex.compare(DateTime.utc_now(), warning_two, :days) === 0 ->
+        user
+        |> Emails.days_deactivation_warning(warning_two)
+        |> Mailer.deliver_later()
 
-      # Timex.compare(DateTime.utc_now(), five_days_prior, :days) === 0 ->
-      #   user
-      #   |> Emails.five_day_deactivation_warning()
-      #   |> Mailer.deliver_later()
-
-      Timex.compare(DateTime.utc_now(), one_day_prior, :days) === 0 ->
+      Timex.compare(DateTime.utc_now(), one_day_warning, :days) === 0 ->
         user
         |> Emails.one_day_deactivation_warning()
         |> Mailer.deliver_later()

@@ -1,4 +1,8 @@
 defmodule ChallengeGov.Security do
+  @moduledoc """
+  Application env parsing for security related data
+  """
+
   def log_retention_days do
     var = Application.get_env(:challenge_gov, :log_retention_in_days)
 
@@ -41,6 +45,30 @@ defmodule ChallengeGov.Security do
     case parse_env(var) do
       nil ->
         15
+
+      val ->
+        val
+    end
+  end
+
+  def deactivate_warning_one_days do
+    var = Application.get_env(:challenge_gov, :account_deactivation_warning_one_in_days)
+
+    case parse_env(var) do
+      nil ->
+        10
+
+      val ->
+        val
+    end
+  end
+
+  def deactivate_warning_two_days do
+    var = Application.get_env(:challenge_gov, :account_deactivation_warning_two_in_days)
+
+    case parse_env(var) do
+      nil ->
+        5
 
       val ->
         val

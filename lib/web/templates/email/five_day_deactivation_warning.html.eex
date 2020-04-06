@@ -1,1 +1,0 @@
-Your account will be deactivated for inactivity in 5 days. Please sign in <%= link("here", to: Routes.session_url(Endpoint, :new)) %> to remain active.
