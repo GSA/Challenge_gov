@@ -46,18 +46,20 @@ defmodule ChallengeGov.SecurityLogs do
       |> order_by([l], desc: l.logged_at)
       |> Repo.one()
 
-    user_accessed_site = Timex.to_unix(last_accessed_site.logged_at)
-    duration = session_end - user_accessed_site
+    if last_accessed_site do
+      user_accessed_site = Timex.to_unix(last_accessed_site.logged_at)
+      duration = session_end - user_accessed_site
 
-    Accounts.update_active_session(user, false)
+      Accounts.update_active_session(user, false)
 
-    track(%SecurityLog{}, %{
-      action: "session_duration",
-      details: %{duration: duration},
-      originator_id: user.id,
-      originator_role: user.role,
-      originator_identifier: user.email
-    })
+      track(%SecurityLog{}, %{
+        action: "session_duration",
+        details: %{duration: duration},
+        originator_id: user.id,
+        originator_role: user.role,
+        originator_identifier: user.email
+      })
+    end
   end
 
   def check_for_timed_out_sessions do

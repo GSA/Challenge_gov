@@ -14,7 +14,11 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
   @actions [
     "status_change",
     "accessed_site",
-    "session_duration"
+    "session_duration",
+    "create",
+    "read",
+    "update",
+    "delete"
   ]
 
   schema "security_log" do
