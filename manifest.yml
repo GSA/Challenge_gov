@@ -12,3 +12,9 @@ applications:
   env:
     MIX_ENV: prod
     HOST: challenge-portal-dev.app.cloud.gov
+
+- name: challenge-portal-staging
+  <<: *defaults
+  env:
+    MIX_ENV: prod
+    HOST: challenge-portal-staging.app.cloud.gov

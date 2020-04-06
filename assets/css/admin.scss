@@ -85,7 +85,7 @@ body {
 /* timeout modal */
 
 .main-sidebar {
-  z-index: 1
+  z-index: 1021;
 }
 
 .navbar {
@@ -94,7 +94,6 @@ body {
 
 .timeout-modal {
   position: fixed;
-  z-index: 100;
   left: 0;
   top: 0;
   width: 100%;

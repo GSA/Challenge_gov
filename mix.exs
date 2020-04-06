@@ -33,7 +33,7 @@ defmodule ChallengeGov.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:bamboo, git: "https://github.com/thoughtbot/bamboo.git"},
+      {:bamboo_smtp, "~> 2.1.0"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:earmark, "~> 1.4.3"},
       {:ecto_sql, "~> 3.0"},
@@ -42,6 +42,8 @@ defmodule ChallengeGov.MixProject do
       {:httpoison, "~> 1.5"},
       {:jason, "~> 1.0"},
       {:joken, "~> 2.0"},
+      {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
+      {:nimble_csv, "~> 0.6"},
       {:phoenix, "~> 1.4.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 2.14"},
@@ -51,6 +53,7 @@ defmodule ChallengeGov.MixProject do
       {:poison, "~> 3.0"},
       {:porcelain, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
+      {:quantum, "~> 3.0-rc"},
       {:stein, "~> 0.5"},
       {:stein_storage, "~> 0.1"},
       {:timex, "~> 3.5"}

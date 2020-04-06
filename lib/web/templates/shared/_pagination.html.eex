@@ -22,7 +22,7 @@
 
         <%= Enum.map(SharedView.previous_pagination(@pagination), fn (page) -> %>
           <li class="page-item">
-            <%= link(page, to: SharedView.page_path(@path, page), class: "page-link") %>
+            <%= link(page, to: SharedView.page_path(@path, page, @pagination_param), class: "page-link") %>
           </li>
         <% end) %>
 
@@ -32,7 +32,7 @@
 
         <%= Enum.map(SharedView.next_pagination(@pagination), fn (page) -> %>
           <li class="page-item">
-            <%= link(page, to: SharedView.page_path(@path, page), class: "page-link") %>
+            <%= link(page, to: SharedView.page_path(@path, page, @pagination_param), class: "page-link") %>
           </li>
         <% end) %>
 
@@ -48,7 +48,7 @@
           </li>
         <% else %>
           <li class="page-item">
-            <%= link(to: SharedView.page_path(@path, @pagination.total), class: "page-link") do %>
+            <%= link(to: SharedView.page_path(@path, @pagination.total, @pagination_param), class: "page-link") do %>
               &raquo;
             <% end %>
           </li>

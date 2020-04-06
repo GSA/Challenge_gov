@@ -2,6 +2,7 @@ defmodule Web.Admin.UserController do
   use Web, :controller
 
   alias ChallengeGov.Accounts
+  alias ChallengeGov.Challenges
 
   plug(Web.Plugs.FetchPage when action in [:index, :create])
 
@@ -36,8 +37,10 @@ defmodule Web.Admin.UserController do
   end
 
   def create(conn, %{"user" => %{"email" => email, "email_confirmation" => _} = user_params}) do
+    %{current_user: originator} = conn.assigns
+
     with {:error, :not_found} <- Accounts.get_by_email(email),
-         {:ok, _} <- Accounts.create(user_params) do
+         {:ok, _} <- Accounts.create(user_params, originator) do
       conn
       |> put_flash(:info, "User has been added!")
       |> redirect(to: Routes.admin_user_path(conn, :index))
@@ -94,11 +97,45 @@ defmodule Web.Admin.UserController do
     end
   end
 
-  def toggle(conn, %{"id" => id, "action" => "suspend"}) do
+  def toggle(conn, %{"id" => id, "action" => "activate"}) do
+    %{current_user: originator} = conn.assigns
+
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.toggle_suspension(user) do
+         {:ok, user} <- Accounts.activate(user, originator) do
       conn
-      |> put_flash(:info, "User access updated")
+      |> put_flash(:info, "User activated")
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
+    end
+  end
+
+  def toggle(conn, %{"id" => id, "action" => "suspend"}) do
+    %{current_user: originator} = conn.assigns
+
+    with {:ok, user} <- Accounts.get(id),
+         {:ok, user} <- Accounts.suspend(user, originator) do
+      conn
+      |> put_flash(:info, "User suspended")
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
+    end
+  end
+
+  def toggle(conn, %{"id" => id, "action" => "revoke"}) do
+    %{current_user: originator} = conn.assigns
+
+    with {:ok, user} <- Accounts.get(id),
+         {:ok, user} <- Accounts.revoke(user, originator) do
+      conn
+      |> put_flash(:info, "User revoked")
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
+    end
+  end
+
+  def restore_challenge_access(conn, %{"user_id" => user_id, "challenge_id" => challenge_id}) do
+    with {:ok, user} <- Accounts.get(user_id),
+         {:ok, challenge} <- Challenges.get(challenge_id),
+         _ <- Challenges.restore_access(user, challenge) do
+      conn
+      |> put_flash(:info, "Challenge access restored")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
     end
   end

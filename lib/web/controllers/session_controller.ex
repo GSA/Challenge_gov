@@ -3,13 +3,20 @@ defmodule Web.SessionController do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.LoginGov
+  alias ChallengeGov.SecurityLogs
 
-  def new(conn, _params) do
+  def new(conn, params) do
     conn
     |> assign(:changeset, Accounts.new())
     |> put_layout("session.html")
+    |> maybe_put_flash(params)
     |> render("new.html")
   end
+
+  def maybe_put_flash(conn, %{"inactive" => "true"}),
+    do: put_flash(conn, :error, "You have been logged off due to inactivity")
+
+  def maybe_put_flash(conn, _), do: conn
 
   def create(conn, _params) do
     %{
@@ -49,45 +56,16 @@ defmodule Web.SessionController do
          {:ok, %{"id_token" => id_token}} <-
            LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
-      {:ok, user} =
-        case Accounts.get_by_email(userinfo["email"]) do
-          {:error, :not_found} ->
-            Accounts.create(%{
-              email: userinfo["email"],
-              first_name: "Placeholder",
-              last_name: "Placeholder",
-              role: "admin",
-              token: userinfo["sub"],
-              terms_of_use: nil,
-              privacy_guidelines: nil,
-              pending: true
-            })
+      {:ok, user} = Accounts.map_from_login(userinfo)
 
-          {:ok, account_user} ->
-            case Map.get(account_user, :token) do
-              nil ->
-                Accounts.update(
-                  account_user,
-                  %{token: userinfo["sub"]}
-                )
-
-              _ ->
-                {:ok, account_user}
-            end
-        end
-
-      case user.suspended do
-        true ->
-          conn
-          |> put_flash(:error, "Your account has been suspended")
-          |> redirect(to: Routes.session_path(conn, :new))
-
-        _ ->
-          conn
-          |> put_flash(:info, "Login successful")
-          |> put_session(:user_token, user.token)
-          |> after_sign_in_redirect(get_default_path(conn, user))
+      if user.status == "active" do
+        Accounts.update_active_session(user, true)
       end
+
+      conn
+      |> put_flash(:info, "Login successful")
+      |> put_session(:user_token, user.token)
+      |> after_sign_in_redirect(get_default_path(conn, user))
     else
       {:error, _err} ->
         conn
@@ -119,15 +97,19 @@ defmodule Web.SessionController do
   end
 
   def delete(conn, _params) do
+    %{current_user: user} = conn.assigns
+    Accounts.update_active_session(user, false)
+    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()))
+
     conn
     |> clear_session()
     |> redirect(to: Routes.session_path(conn, :new))
   end
 
   @doc """
-  Assign redirect path based acceptance of terms
+  Assign redirect path based on acceptance of terms
   """
-
+  # TODO add different user role paths by role eg status: pending > pending page
   def get_default_path(conn, user) do
     if Accounts.has_accepted_terms?(user) do
       Routes.admin_challenge_path(conn, :index)
@@ -166,7 +148,11 @@ defmodule Web.SessionController do
     end
   end
 
-  defp logout_user(conn) do
+  def logout_user(conn) do
+    %{current_user: user} = conn.assigns
+    Accounts.update_active_session(user, false)
+    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()))
+
     conn
     |> clear_session()
     |> configure_session([:renew])

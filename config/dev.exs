@@ -92,10 +92,14 @@ config :challenge_gov, ChallengeGov.Mailer,
   from: "support@challenge.gov",
   adapter: Bamboo.LocalAdapter
 
-config :challenge_gov,
-  session_timeout_in_minutes: System.get_env("SESSION_TIMEOUT_IN_MINUTES") || 15
-
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
+
+config :challenge_gov, ChallengeGov.Scheduler,
+  jobs: [
+    {"@daily", {ChallengeGov.Accounts, :check_all_last_actives, []}},
+    {"@daily", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
+    {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}}
+  ]
 
 if File.exists?("config/dev.local.exs") do
   import_config("dev.local.exs")

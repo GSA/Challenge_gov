@@ -27,7 +27,7 @@
             </a>
           </li>
         </ul>
-        
+
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
@@ -71,6 +71,16 @@
                   <% end %>
                 </li>
               <% end %>
+            </ul>
+          </nav>
+          <nav class="mt-5">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+              <li class="nav-item">
+                <%= link(to: Routes.admin_report_path(@conn, :export_security_logs), class: "nav-link") do %>
+                <i class="nav-icon fas fa-download"></i>
+                <p>Export Security Logs</p>
+                <% end %>
+              </li>
             </ul>
           </nav>
         </div>

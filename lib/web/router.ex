@@ -19,7 +19,7 @@ defmodule Web.Router do
   end
 
   pipeline(:signed_in) do
-    plug(Web.Plugs.CheckSuspension)
+    plug(Web.Plugs.CheckUserStatus)
     plug(Web.Plugs.SessionTimeout)
     plug(:put_layout, {Web.LayoutView, "admin.html"})
   end
@@ -30,6 +30,8 @@ defmodule Web.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+    plug(Web.Plugs.FetchUser)
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -53,15 +55,20 @@ defmodule Web.Router do
 
     get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
 
+    post("/challenges/:id/approve", ChallengeController, :approve, as: :challenge)
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)
     post("/challenges/:id/reject", ChallengeController, :reject, as: :challenge)
+    post("/challenges/:id/submit", ChallengeController, :submit, as: :challenge)
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
+    post("/challenges/:id/unarchive", ChallengeController, :unarchive, as: :challenge)
 
     post("/challenges/:id/remove_logo", ChallengeController, :remove_logo, as: :challenge)
 
     post("/challenges/:id/remove_winner_image", ChallengeController, :remove_winner_image,
       as: :challenge
     )
+
+    get("/reports/export/security_logs", ReportController, :export_security_logs)
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -74,6 +81,10 @@ defmodule Web.Router do
 
     post("/users/:id/toggle", UserController, :toggle, as: :user)
     resources("/users", UserController, only: [:index, :show, :edit, :update, :create])
+
+    post("/users/:user_id/challenge/:challenge_id", UserController, :restore_challenge_access,
+      as: :restore_challenge_access
+    )
   end
 
   scope "/api", Web.Api, as: :api do
@@ -84,6 +95,7 @@ defmodule Web.Router do
 
     # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
+    post("/session/logout", SessionController, :logout_user)
   end
 
   scope "/", Web do

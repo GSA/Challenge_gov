@@ -40,6 +40,10 @@ defmodule Web.Admin.ChallengeView do
     end
   end
 
+  def status_display_name(challenge) do
+    Challenges.status_label(challenge.status)
+  end
+
   def challenge_edit_link(conn, challenge, opts \\ []) do
     route =
       if challenge.status == "draft" do
@@ -56,6 +60,15 @@ defmodule Web.Admin.ChallengeView do
     link("Edit", Keyword.merge([to: route], opts))
   end
 
+  def challenge_full_edit_link(conn, challenge, user, opts \\ []) do
+    if Accounts.has_admin_access?(user) do
+      link(
+        "Full Edit",
+        Keyword.merge([to: Routes.admin_challenge_path(conn, :edit, challenge.id)], opts)
+      )
+    end
+  end
+
   def challenge_delete_link(conn, challenge, user, opts \\ []) do
     if (user.role == "challenge_owner" and challenge.status == "draft") or
          Accounts.has_admin_access?(user) do
@@ -65,6 +78,25 @@ defmodule Web.Admin.ChallengeView do
         class: "btn btn-link text-danger",
         data: [confirm: "Are you sure you want to delete this challenge?"]
       )
+    end
+  end
+
+  def challenge_rejection_message(challenge) do
+    if challenge.status == "edits_requested" and challenge.rejection_message do
+      content_tag :div, class: "row position-sticky sticky-top" do
+        content_tag :div, class: "col-md-12" do
+          content_tag :div, class: "card card-danger" do
+            [
+              content_tag(:div, class: "card-header") do
+                "Some edits were requested"
+              end,
+              content_tag(:div, class: "card-body") do
+                challenge.rejection_message
+              end
+            ]
+          end
+        end
+      end
     end
   end
 
@@ -185,7 +217,7 @@ defmodule Web.Admin.ChallengeView do
             select(
               form,
               :status,
-              Challenges.statuses(),
+              Enum.map(Challenges.statuses(), &{&1.label, &1.id}),
               class: "form-control js-select"
             )
           end

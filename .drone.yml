@@ -18,6 +18,7 @@ steps:
   - mix deps.get
   - export MIX_ENV=test
   - mix compile --force --warnings-as-errors
+  - mix deps.audit
 
 - name: lint
   image: elixir:1.9
@@ -34,8 +35,11 @@ steps:
   volumes:
   - name: mix
     path: /root/.mix
+  environment:
+    SECRET_KEY_BASE:
+      from_secret: SECRET_KEY_BASE
   commands:
-  - cp config/test.drone.exs config/test.extra.exs
+  - cp config/test.drone.exs config/test.local.exs
   - export MIX_ENV=test
   - sleep 15
   - mix ecto.migrate
@@ -84,50 +88,3 @@ steps:
 trigger:
   event:
   - pull_request
-
----
-kind: pipeline
-name: challenge_gov_publish
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-- name: install
-  image: node:11.10.1
-  commands:
-  - cd assets
-  - yarn
-
-- name: build
-  image: node:11.10.1
-  commands:
-  - cd assets
-  - yarn run deploy
-
-- name: digest
-  image: elixir:1.9
-  commands:
-  - mix local.rebar --force
-  - mix local.hex --force
-  - mix deps.get
-  - mix phx.digest
-
-- name: deploy
-  image: cheslip/drone-cloudfoundry
-  settings:
-    api: api.fr.cloud.gov
-    org: sandbox-gsa
-    space: daniel.ivovich
-    user:
-      from_secret: CF_USER
-    password:
-      from_secret: CF_PASSWORD
-
-
-trigger:
-  branch:
-  - master
-  event:
-  - push

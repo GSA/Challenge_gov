@@ -22,6 +22,23 @@ defmodule ChallengeGov.Accounts.User do
     %{id: "challenge_owner", label: "Challenge Owner"}
   ]
 
+  @doc """
+  pending - newly created account is awaiting approval by an admin
+  active - account is able to login and perform actions on the platform
+  suspended - account is set to this by an admin and can no longer log in. Has access to old data when restored
+  revoked - account is set to this by an admin and can no longer log in. Doesn't have access to old data when restored
+  deactivated - account is set to this after 90 days of no activity and can no longer log in. Has access to old data when restored
+  decertified - account is set to this every 365 days and can no longer log in. Has access to old data when restored
+  """
+  @statuses [
+    "pending",
+    "active",
+    "suspended",
+    "revoked",
+    "deactivated",
+    "decertified"
+  ]
+
   schema "users" do
     # Associations
     has_many(:challenges, Challenge)
@@ -32,9 +49,9 @@ defmodule ChallengeGov.Accounts.User do
 
     # Fields
     field(:role, :string, read_after_writes: true)
+    field(:status, :string, default: "pending")
     field(:finalized, :boolean, default: true)
     field(:display, :boolean, default: true)
-    field(:suspended, :boolean, default: false)
 
     field(:email, :string)
     field(:email_confirmation, :string, virtual: true)
@@ -60,7 +77,8 @@ defmodule ChallengeGov.Accounts.User do
     field(:privacy_guidelines, :utc_datetime)
     field(:agency_id, :integer)
 
-    field(:pending, :boolean)
+    field(:last_active, :utc_datetime)
+    field(:active_session, :boolean)
 
     timestamps()
   end
@@ -77,14 +95,16 @@ defmodule ChallengeGov.Accounts.User do
       :terms_of_use,
       :privacy_guidelines,
       :agency_id,
-      :pending
+      :status,
+      :active_session
     ])
     |> validate_required([:email])
     |> validate_format(:email, ~r/.+@.+\..+/)
+    |> validate_inclusion(:status, @statuses)
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
 
-  def put_terms(struct, params) do
+  def timestamp(struct, params) do
     utc_datetime = DateTime.utc_now()
     put_change(struct, params, DateTime.truncate(utc_datetime, :second))
   end
@@ -99,8 +119,8 @@ defmodule ChallengeGov.Accounts.User do
       :privacy_guidelines,
       :agency_id
     ])
-    |> put_terms(:terms_of_use)
-    |> put_terms(:privacy_guidelines)
+    |> timestamp(:terms_of_use)
+    |> timestamp(:privacy_guidelines)
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
@@ -118,6 +138,7 @@ defmodule ChallengeGov.Accounts.User do
     struct
     |> changeset(params)
     |> cast(params, [:email_confirmation])
+    |> put_change(:status, "active")
     |> validate_confirmation(:email, message: "emails must match")
   end
 
@@ -159,6 +180,18 @@ defmodule ChallengeGov.Accounts.User do
     |> maybe_reset_verification()
   end
 
+  def last_active_changeset(struct) do
+    struct
+    |> change()
+    |> timestamp(:last_active)
+  end
+
+  def active_session_changeset(struct, param) do
+    struct
+    |> change()
+    |> put_change(:active_session, param)
+  end
+
   def avatar_changeset(struct, key, extension) do
     struct
     |> change()
@@ -179,4 +212,6 @@ defmodule ChallengeGov.Accounts.User do
   end
 
   def roles, do: @roles
+
+  def statuses, do: @statuses
 end

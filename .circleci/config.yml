@@ -1,0 +1,194 @@
+version: 2.1
+
+orbs:
+  cloudfoundry: circleci/cloudfoundry@0.1.73
+
+jobs:
+  setup:
+    parallelism: 1
+    docker:
+      - image: circleci/elixir:1.9.2-node
+        environment:
+          MIX_ENV: test
+    steps:
+      - checkout
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+      - run: cp config/test.circleci.exs config/test.local.exs
+      - restore_cache:
+          keys:
+            - v2-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
+            - v2-yarn-cache-{{ .Branch }}
+            - v2-yarn-cache
+      - restore_cache:
+          keys:
+            - v2-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v2-mix-cache-{{ .Branch }}
+            - v2-mix-cache
+      - restore_cache:
+          keys:
+            - v2-build-cache-{{ .Branch }}
+            - v2-build-cache
+      - run: mix do deps.get, compile
+      - run: cd assets && yarn && cd ..
+      - save_cache:
+          key: v2-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
+          paths: "assets/node_modules"
+      - save_cache:
+          key: v2-yarn-cache-{{ .Branch }}
+          paths: "assets/node_modules"
+      - save_cache:
+          key: v2-yarn-cache-{{ .Branch }}
+          paths: "assets/node_modules"
+      - save_cache:
+          key: v2-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          paths: "deps"
+      - save_cache:
+          key: v2-mix-cache-{{ .Branch }}
+          paths: "deps"
+      - save_cache:
+          key: v2-mix-cache
+          paths: "deps"
+      - save_cache:
+          key: v2-build-cache-{{ .Branch }}
+          paths: "_build"
+      - save_cache:
+          key: v2-build-cache
+          paths: "_build"
+
+  lint:
+    parallelism: 1
+    docker:
+      - image: circleci/elixir:1.9.2-node
+        environment:
+          MIX_ENV: test
+    steps:
+      - checkout
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+      - run: cp config/test.circleci.exs config/test.local.exs
+      - restore_cache:
+          key: v2-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
+      - restore_cache:
+          key: v2-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+      - restore_cache:
+          key: v2-build-cache-{{ .Branch }}
+      - run: mix compile --force --warnings-as-errors
+      - run: mix deps.audit
+      - run: mix format --check-formatted
+      - run: mix credo --all --format=oneline
+
+  test:
+    parallelism: 1
+    docker:
+      - image: circleci/elixir:1.9.2-node
+        environment:
+          MIX_ENV: test
+      - image: mdillon/postgis:10
+        environment:
+          POSTGRES_DB: challenge_gov_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+    steps:
+      - checkout
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+      - run: cp config/test.circleci.exs config/test.local.exs
+      - restore_cache:
+          key: v2-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
+      - restore_cache:
+          key: v2-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+      - restore_cache:
+          key: v2-build-cache-{{ .Branch }}
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: mix ecto.migrate
+      - run: mix run priv/repo/seeds.exs
+      - run: mix test
+
+  assets:
+    parallelism: 1
+    docker:
+      - image: circleci/elixir:1.9.2-node
+        environment:
+          MIX_ENV: test
+    steps:
+      - checkout
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+      - run: cp config/test.circleci.exs config/test.local.exs
+      - restore_cache:
+          key: v2-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
+      - restore_cache:
+          key: v2-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+      - restore_cache:
+          key: v2-build-cache-{{ .Branch }}
+      - run: cd assets && yarn run build && cd ..
+      - run: mix phx.digest
+      - persist_to_workspace:
+          root: ~/project
+          paths: priv/static
+
+  dev-deploy:
+    parallelism: 1
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - cloudfoundry/install:
+          endpoint: 'https://api.fr.cloud.gov'
+          org: sandbox-gsa
+          space: daniel.ivovich
+      - run: cf push challenge-portal-dev
+
+  staging-deploy:
+    parallelism: 1
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - cloudfoundry/install:
+          endpoint: 'https://api.fr.cloud.gov'
+          org: sandbox-gsa
+          space: daniel.ivovich
+      - run: cf push challenge-portal-staging
+
+workflows:
+  test-and-deploy:
+    jobs:
+      - setup
+      - lint:
+          requires:
+            - setup
+      - test:
+          requires:
+            - setup
+      - assets:
+          requires:
+            - setup
+      - dev-deploy:
+          requires:
+            - lint
+            - test
+            - assets
+          filters:
+            branches:
+              only: master
+      - release-approval:
+          type: approval
+          requires:
+            - assets
+          filters:
+            branches:
+              only: staging
+      - staging-deploy:
+          requires:
+            - release-approval
+          filters:
+            branches:
+              only: staging

@@ -56,7 +56,7 @@ defmodule Web.Admin.TermsController do
   end
 
   def redirect_based_on_user(conn, user) do
-    case Accounts.is_pending_user?(user) do
+    case Accounts.is_pending?(user) do
       true ->
         redirect(conn, to: Routes.admin_terms_path(conn, :pending))
 

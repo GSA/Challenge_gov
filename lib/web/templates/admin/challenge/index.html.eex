@@ -1,3 +1,7 @@
+<%= if length(@pending_challenges) > 0 do %>
+  <%= render Web.Admin.ChallengeView, "_pending_challenges.html", conn: @conn, user: @user, challenges: @pending_challenges, pagination: @pending_pagination, sort: %{}, filter: %{} %>
+<% end %>
+
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
@@ -57,7 +61,7 @@
                   <tr>
                     <td><%= challenge.id %></td>
                     <td><%= link(challenge.title, to: Routes.admin_challenge_path(@conn, :show, challenge.id)) %></td>
-                    <td><%= String.capitalize(challenge.status) %></td>
+                    <td><%= status_display_name(challenge) %></td>
                     <td><%= Web.SharedView.readable_date(challenge.start_date) %></td>
                     <td><%= Web.SharedView.readable_date(challenge.end_date) %></td>
                     <td><%= Enum.join(challenge.types || [], ", ") %></td>

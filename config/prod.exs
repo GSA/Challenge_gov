@@ -44,10 +44,14 @@ config :challenge_gov, :recaptcha,
   key: {:system, "RECAPTCHA_SITE_KEY"}
 
 config :challenge_gov, ChallengeGov.Mailer,
-  from: {:system, "MAILER_FROM_ADDRESS"},
-  adapter: Bamboo.MailgunAdapter,
-  api_key: {:system, "MAILGUN_API_KEY"},
-  domain: {:system, "MAILGUN_DOMAIN"}
+  from: System.get_env("MAILER_FROM_ADDRESS"),
+  adapter: Bamboo.SMTPAdapter,
+  server: "smtp-relay.gmail.com",
+  hostname: System.get_env("HOST"),
+  port: 25,
+  tls: :never,
+  ssl: false,
+  retries: 1
 
 config :stein_storage,
   backend: :s3,
@@ -61,15 +65,29 @@ config :ex_aws,
 config :challenge_gov, :oidc_config, %{
   idp_authorize_url: "https://idp.int.identitysandbox.gov/openid_connect/authorize",
   acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
-  redirect_uri: "https://challenge-portal-dev.app.cloud.gov/auth/result",
-  client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_test_app",
-  private_key_path: "sandbox_key.pem",
+  redirect_uri: System.get_env("LOGIN_REDIRECT_URL"),
+  client_id: System.get_env("LOGIN_CLIENT_ID"),
+  private_key_path: System.get_env("LOGIN_PRIVATE_KEY_PATH"),
   private_key_password: System.get_env("LOGIN_PRIVATE_KEY_PASSWORD"),
-  public_key_path: "cert.pem"
+  public_key_path: System.get_env("LOGIN_PUBLIC_KEY_PATH")
 }
 
 config :challenge_gov,
-  session_timeout_in_minutes: System.get_env("SESSION_TIMEOUT_IN_MINUTES") || 15
+  session_timeout_in_minutes: System.get_env("SESSION_TIMEOUT_IN_MINUTES") || 15,
+  account_deactivation_in_days: System.get_env("ACCOUNT_DEACTIVATION_IN_DAYS") || 90,
+  account_decertify_in_days: System.get_env("ACCOUNT_DECERTIFY_IN_DAYS") || 365,
+  account_deactivation_warning_one_in_days:
+    System.get_env("ACCOUNT_DEACTIVATION_WARNING_ONE_IN_DAYS") || 10,
+  account_deactivation_warning_two_in_days:
+    System.get_env("ACCOUNT_DEACTIVATION_WARNING_TWO_IN_DAYS") || 5,
+  log_retention_in_days: System.get_env("LOG_RETENTION_IN_DAYS") || 180
+
+config :challenge_gov, ChallengeGov.Scheduler,
+  jobs: [
+    {"@daily", {ChallengeGov.Accounts, :check_all_last_actives, []}},
+    {"@daily", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
+    {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}}
+  ]
 
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
