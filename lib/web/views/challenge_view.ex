@@ -49,6 +49,18 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def winner_img_url(challenge, _opts \\ []) do
+    case is_nil(challenge.winner_image_key) do
+      true ->
+        nil
+
+      false ->
+        Storage.url(WinnerImage.winner_image_path(challenge, "original"),
+          signed: [expires_in: 3600]
+        )
+    end
+  end
+
   def disqus_domain() do
     Application.get_env(:challenge_gov, :disqus_domain)
   end

@@ -26,14 +26,13 @@ defmodule Web.Api.ChallengeView do
     %{
       prize_total: challenge.prize_total,
       winner_information: challenge.winner_information,
-      winner_image_key: challenge.winner_image_key,
+      winner_image: ChallengeView.winner_img_url(challenge),
       poc_email: challenge.poc_email,
       how_to_enter: challenge.how_to_enter,
       number_of_phases: challenge.number_of_phases,
       faq: challenge.faq,
       title: challenge.title,
-      logo: challenge.logo,
-      logo_key: challenge.logo_key,
+      logo: ChallengeView.logo_url(challenge),
       end_date: challenge.end_date,
       eligibility_requirements: challenge.eligibility_requirements,
       fiscal_year: challenge.fiscal_year,
@@ -42,7 +41,6 @@ defmodule Web.Api.ChallengeView do
       multi_phase: challenge.multi_phase,
       description: challenge.description,
       prize_description: challenge.prize_description,
-      upload_logo: challenge.upload_logo,
       id: challenge.id,
       external_url: challenge.external_url,
       legal_authority: challenge.legal_authority,
@@ -53,10 +51,13 @@ defmodule Web.Api.ChallengeView do
       non_monetary_prizes: challenge.non_monetary_prizes,
       events: challenge.non_monetary_prizes,
       status: challenge.status,
-      type: challenge.type,
-      logo_extension: challenge.logo_extension,
-      supporting_documents: challenge.supporting_documents,
-      winner_image_extension: challenge.winner_image_extension,
+      types: challenge.types,
+      supporting_documents:
+        render_many(
+          challenge.supporting_documents,
+          Web.Api.DocumentView,
+          "show.json"
+        ),
       brief_description: challenge.brief_description,
       tagline: challenge.tagline,
       agency_name: ChallengeView.agency_name(challenge),
@@ -82,7 +83,8 @@ defmodule Web.Api.ChallengeView do
   def render("federal_partner_agencies.json", %{agency: agency}) do
     %{
       id: agency.id,
-      name: agency.name
+      name: agency.name,
+      logo: Web.AgencyView.avatar_url(agency)
     }
   end
 
