@@ -82,13 +82,6 @@ config :challenge_gov,
     System.get_env("ACCOUNT_DEACTIVATION_WARNING_TWO_IN_DAYS") || 5,
   log_retention_in_days: System.get_env("LOG_RETENTION_IN_DAYS") || 180
 
-config :challenge_gov, ChallengeGov.Scheduler,
-  jobs: [
-    {"@daily", {ChallengeGov.Accounts, :check_all_last_actives, []}},
-    {"@daily", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
-    {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}}
-  ]
-
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
 end
