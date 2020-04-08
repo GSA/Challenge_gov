@@ -26,136 +26,148 @@
     background-color: #fff;
   }
 
+  &__presentational {
+    height: auto;
+    padding: 15px;
 
-      // MOBILE
+    .presentational-info {
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
 
-      @media screen
-      and (max-device-width: 425px) {
-
-        &__content {
-
-          h1 {
-            font-size: .8em;
-          }
-
-          h3 {
-            font-size: .5em;
-          }
-        }
-
-        &__presentational {
-          height: auto;
-          padding: 20px;
-
-          .presentational-info {
-            height: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-            .logos {
-              margin-bottom: 10px;
-            }
-
-            .agency-logo {
-              height: 100px;
-              margin-right: 25px;
-            }
-
-            .title {
-              margin-bottom: 10px;
-            }
-
-            .tagline {
-              margin-bottom: 10px;
-            }
-
-            .brief_description {
-              font-size: 15px;
-              padding: 0 0 10px 0;
-            }
-          }
-
-          .presentational-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            .challenge-logo {
-              max-width: 80%;
-              max-height: 300px;
-            }
-          }
-        }
-
-        &__info-section {
-          height: auto;
-          padding: 20px 20px 0;
-          background-color: #F2F2F2;
-          border-radius: 0 0 10px 10px;
-
-          span {
-            font-size: .5em;
-          }
-
-          .info-title{
-            font-size: .5em;
-            font-weight: bold;
-          }
-
-          &__block {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-
-            .item {
-
-              h3 {
-                line-height: 27px;
-                height: 27px;
-                width: auto;
-              }
-
-              p {
-                font-size: 17.5px;
-                display: inline;
-              }
-
-              &__first {
-                display: flex;
-                flex-direction: row;
-                margin: 10px 0;
-              }
-
-              &__standard {
-                margin-bottom: .5em;
-                display: flex;
-                flex-direction: row;
-              }
-
-              .info-title{
-                font-size: .5em;
-                font-weight: bold;
-                margin-right: 10px;
-              }
-
-              .date-qualifier {
-                color: #B50707;
-                font-weight: bold;
-              }
-
-              &__types {
-                margin-top: -5px;
-                line-height: .65em;
-                margin-bottom: .5em;
-              }
-            }
-
-          }
-
-        }
-
+      .logos {
+        margin-bottom: 10px;
       }
+
+      .agency-logo {
+        height: 100px;
+        margin-right: 10px;
+      }
+
+      .title {
+        margin-bottom: 10px;
+      }
+
+      .tagline {
+        margin-bottom: 10px;
+      }
+
+      .brief_description {
+        font-size: 15px;
+        padding: 0 0 10px 0;
+      }
+    }
+
+    .presentational-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .challenge-logo {
+        max-width: 80%;
+        max-height: 300px;
+      }
+    }
+  }
+
+  &__info-section {
+    height: auto;
+    padding: 15px 15px 0;
+    background-color: #F2F2F2;
+    border-radius: 0 0 10px 10px;
+
+    span {
+      font-size: .5em;
+    }
+
+    &__block {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+
+      .item {
+
+        h3 {
+          line-height: 27px;
+          height: 27px;
+          width: auto;
+        }
+
+        p {
+          font-size: 17.5px;
+          display: inline;
+        }
+
+        .info-title {
+          display: inline;
+          font-weight: bold;
+          margin-right: 5px;
+        }
+
+        &__standard {
+          margin-bottom: .5em;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+
+        .info-title {
+          font-weight: bold;
+        }
+
+        .date-qualifier {
+          color: #B50707;
+          font-weight: bold;
+        }
+
+        &__types {
+          margin-top: -5px;
+          margin-bottom: .5em;
+        }
+      }
+
+    }
+
+  }
+
+  // MOBILE
+
+  @media screen
+  and (max-device-width: 425px) {
+
+    &__content {
+
+      h1 {
+        font-size: .8em;
+      }
+
+      h3 {
+        font-size: .5em;
+      }
+    }
+
+    &__info-section {
+      &__block {
+
+        .info-title {
+          font-size: .5em;
+        }
+
+        .item {
+
+          &__types {
+            line-height: .65em;
+
+            p {
+              font-size: .5em;
+            }
+
+          }
+        }
+      }
+    }
+  }
 
 
   // DESKTOP
@@ -224,14 +236,13 @@
         flex-direction: column;
         justify-content: space-around;
 
-        .info-title{
-          display: inline;
-          font-weight: bold;
-          margin-right: 10px;
-        }
 
         .item {
           margin-bottom: 20px;
+
+          .info-title {
+            margin-right: 10px;
+          }
 
           &__standard {
             display: flex;

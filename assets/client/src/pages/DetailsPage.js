@@ -45,9 +45,9 @@ export const DetailsPage = () => {
   const renderChallengeTypes = (types) => {
     return types.map((t, i) => {
       if (i == types.length - 1) {
-        return <span key={i}>{t} </span>
+        return <p key={i}>{t} </p>
       } else {
-        return <span key={i}>{t}, </span>
+        return <p key={i}>{t}, </p>
       }
     })
   }
