@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
 
 export const useTracking = (GA_MEASUREMENT_ID) => {
 
