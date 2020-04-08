@@ -28,7 +28,7 @@ export const ChallengeTile = ({data, loading}) => {
 
       if (challenges.collection.length == 0) {
         return (
-          <p className="check-back-message">
+          <p>
             There are no current challenges. Please check back again soon!
           </p>
         )
