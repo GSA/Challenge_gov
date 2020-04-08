@@ -26,27 +26,16 @@ export const DetailsPage = () => {
       })
   }, [])
 
-  const renderSubmissionOpen = (date) => {
-    if (date >  moment().utc().format()) {
-      return (
-        <div className="item">
-          <span className="info-title">Submission Period:</span>
-          <p>open</p>
-        </div>
-      )
-    }
-  }
-
   const renderDeadline = (date) => {
     const fiveDaysFromNow = moment().add(5,'d').utc().format()
     const withinFiveDays = moment(date).diff(fiveDaysFromNow) <= 0
 
     if (date >  moment().utc().format()) {
       return (
-        <div className="item__text">
+        <span>
           <p>{moment(date).local().format('L LT')}</p>
           { withinFiveDays && <p className="date-qualifier">Closing soon</p> }
-        </div>
+        </span>
       )
     } else {
       return <p className="date-qualifier">Closed</p>
@@ -93,19 +82,24 @@ export const DetailsPage = () => {
               </div>
               <div className="hero__info-section">
                 <div className="hero__info-section__block">
-                  {renderSubmissionOpen(currentChallenge.end_date)}
-                  <div className="item">
-                    <span className="info-title">Open Until:</span>
+                  { currentChallenge.end_date >  moment().utc().format() &&
+                    <div className="item item__standard">
+                      <p className="info-title">Submission Period:</p>
+                      <p>open</p>
+                    </div>
+                  }
+                  <div className="item item__standard">
+                    <p className="info-title">Open Until:</p>
                     {renderDeadline(currentChallenge.end_date)}
                   </div>
                 </div>
                 <div className="hero__info-section__block">
-                  <div className="item-types">
-                    <span className="info-title">Challenge Type(s):</span>
+                  <div className="item item__types">
+                    <p className="info-title">Challenge Type(s):</p>
                     {renderChallengeTypes(currentChallenge.types)}
                   </div>
-                  <div className="item">
-                    <span className="info-title">Total Cash Prizes:</span>
+                  <div className="item item__standard">
+                    <p className="info-title">Total Cash Prizes:</p>
                     <p>{`$${currentChallenge.prize_total}`}</p>
                   </div>
                 </div>
