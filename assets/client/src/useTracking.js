@@ -1,24 +1,16 @@
 import { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 
-export const useTracking = (
-  trackingId = process.env.GA_MEASUREMENT_ID
-) => {
-  const { listen } = useHistory()
+export const useTracking = (GA_MEASUREMENT_ID) => {
 
   useEffect(() => {
-    const unlisten = listen((location) => {
-      if (!window.gtag) return
-      if (!trackingId) {
-        console.log(
-          'Tracking not enabled, as `trackingId` was not given and there is no `GA_MEASUREMENT_ID`.'
-        )
-        return
-      }
+    const script = document.createElement("script");
 
-      window.gtag('config', trackingId, { page_path: location.pathname })
-    })
+    script.async = true;
+    script.type = "text/javascript"
+    script.id = GA_MEASUREMENT_ID
+    script.src = "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js";
 
-    return unlisten
-  }, [trackingId, listen])
+    document.body.appendChild(script)
+  },[])
 }
