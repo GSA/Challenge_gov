@@ -32,13 +32,19 @@ export const DetailsPage = () => {
 
     if (date >  moment().utc().format()) {
       return (
-        <span>
+        <div className="item item__standard">
+          <p className="info-title">Open Until:</p>
           <p>{moment(date).local().format('L LT')}</p>
           { withinFiveDays && <p className="date-qualifier">Closing soon</p> }
-        </span>
+        </div>
       )
     } else {
-      return <p className="date-qualifier">Closed</p>
+      return (
+        <div className="item item__standard">
+          <p className="info-title">Closed On:</p>
+          <p>{moment(date).local().format('L LT')}</p>
+        </div>
+      )
     }
   }
 
@@ -82,26 +88,26 @@ export const DetailsPage = () => {
               </div>
               <div className="hero__info-section">
                 <div className="hero__info-section__block">
-                  { currentChallenge.end_date >  moment().utc().format() &&
                     <div className="item item__standard">
                       <p className="info-title">Submission Period:</p>
-                      <p>open</p>
+                      { currentChallenge.end_date >  moment().utc().format()
+                        ? <p>open</p>
+                        : <p className="date-qualifier">Closed</p>
+                      }
                     </div>
-                  }
-                  <div className="item item__standard">
-                    <p className="info-title">Open Until:</p>
-                    {renderDeadline(currentChallenge.end_date)}
-                  </div>
+                  {renderDeadline(currentChallenge.end_date)}
                 </div>
                 <div className="hero__info-section__block">
                   <div className="item item__types">
                     <p className="info-title">Challenge Type(s):</p>
                     {renderChallengeTypes(currentChallenge.types)}
                   </div>
-                  <div className="item item__standard">
-                    <p className="info-title">Total Cash Prizes:</p>
-                    <p>{`$${currentChallenge.prize_total}`}</p>
-                  </div>
+                  { !currentChallenge.prize_total || currentChallenge.prize_total != 0 &&
+                    <div className="item item__standard">
+                      <p className="info-title">Total Cash Prizes:</p>
+                      <p>{`$${currentChallenge.prize_total.toLocaleString()}`}</p>
+                    </div>
+                  }
                 </div>
               </div>
             </section>

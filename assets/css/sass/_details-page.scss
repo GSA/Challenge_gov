@@ -77,10 +77,6 @@
     background-color: #F2F2F2;
     border-radius: 0 0 10px 10px;
 
-    span {
-      font-size: .5em;
-    }
-
     &__block {
       display: flex;
       flex-direction: column;
@@ -119,6 +115,7 @@
         .date-qualifier {
           color: #B50707;
           font-weight: bold;
+          margin: 0 10px 0 5px;
         }
 
         &__types {
