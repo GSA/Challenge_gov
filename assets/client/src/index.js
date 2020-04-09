@@ -5,6 +5,7 @@ import App from './App';
 import { BrowserRouter, Redirect, Switch, Route } from "react-router-dom";
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
+import { useTracking } from './useTracking'
 
 const getRoutes = () => {
   return IndexRoutes.map((prop, i) => {
@@ -24,9 +25,17 @@ const getRoutes = () => {
   });
 };
 
-const renderRouter = () => (
-  <BrowserRouter>
+const Application = () => {
+  useTracking('_fed_an_ua_tag')
+
+  return (
     <Switch>{getRoutes()}</Switch>
+  )
+}
+
+const renderRouter = () => (
+  <BrowserRouter history={history}>
+    <Application />
   </BrowserRouter>
 )
 
