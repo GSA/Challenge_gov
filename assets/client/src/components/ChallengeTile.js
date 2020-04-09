@@ -5,6 +5,11 @@ import moment from "moment"
 export const ChallengeTile = ({data, loading}) => {
 
   const renderChallengeTiles = (challenges) => {
+    // TODO: Temporary showing of layout on chal details until the layout is moved
+    $(".top-banner").show()
+    $(".help-section").show()
+    $(".footer").show()
+
     if (challenges.collection) {
 
       if (challenges.collection.length > 0) {
