@@ -767,7 +767,7 @@ defmodule ChallengeGov.Accounts do
     Enum.map(all_for_select(), fn user ->
       user
       |> maybe_send_deactivation_notice(
-        Security.timeout_interval(),
+        Security.deactivate_days(),
         Security.deactivate_warning_one_days(),
         Security.deactivate_warning_two_days()
       )
@@ -777,7 +777,7 @@ defmodule ChallengeGov.Accounts do
 
   def check_last_active(user) do
     timeout_time =
-      DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -1 * Security.timeout_interval()))
+      DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -1 * Security.deactivate_days()))
 
     last_active = if user.last_active, do: Timex.to_unix(user.last_active), else: nil
 
