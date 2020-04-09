@@ -295,17 +295,7 @@ defmodule ChallengeGov.Accounts do
         # look for users created by admin which have emails, but no token
         case get_by_email(userinfo["email"]) do
           {:error, :not_found} ->
-            # no security log tracking of accesses_site bc account is pending and access blocked
-            create(%{
-              email: userinfo["email"],
-              first_name: "Placeholder",
-              last_name: "Placeholder",
-              role: "challenge_owner",
-              token: userinfo["sub"],
-              terms_of_use: nil,
-              privacy_guidelines: nil,
-              status: "pending"
-            })
+            create_new_user(userinfo)
 
           {:ok, user} ->
             update_admin_added_user(user, userinfo)
@@ -323,6 +313,24 @@ defmodule ChallengeGov.Accounts do
 
         {:ok, account_user}
     end
+  end
+
+  def create_new_user(userinfo) do
+    %{"email" => email} = userinfo
+    length = String.length(email) - 4
+    email_ext = String.slice(email, length, 4)
+
+    user_role =
+      if email_ext == ".gov" or email_ext == ".mil", do: "challenge_owner", else: "solver"
+
+    create(%{
+      email: userinfo["email"],
+      role: user_role,
+      token: userinfo["sub"],
+      terms_of_use: nil,
+      privacy_guidelines: nil,
+      status: "pending"
+    })
   end
 
   @doc """
