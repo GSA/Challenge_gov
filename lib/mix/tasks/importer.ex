@@ -8,10 +8,10 @@ defmodule Mix.Tasks.Importer do
   def run(_file) do
     Mix.Task.run("app.start")
 
-    case File.read("lib/mix/tasks/sample_data/type_one.json") do
+    case File.read("lib/mix/tasks/sample_data/netlify.json") do
       {:ok, binary} ->
         {:ok, parsed_data} = Jason.decode(binary)
-        IO.inspect parsed_data["tagline"]
+        IO.inspect parsed_data
         # create archived challenge
 
       {:error, error} ->
