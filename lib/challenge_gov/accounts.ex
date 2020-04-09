@@ -778,11 +778,11 @@ defmodule ChallengeGov.Accounts do
   def check_last_active(user) do
     will_timeout_on = Timex.shift(user.last_active, days: Security.deactivate_days())
 
-    cond do
-      Timex.compare(DateTime.utc_now(), will_timeout_on, :days) === 0 ->
+    case Timex.compare(DateTime.utc_now(), will_timeout_on, :days) === 0 do
+      true ->
         deactivate(user)
 
-      true ->
+      _ ->
         nil
     end
   end
