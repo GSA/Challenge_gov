@@ -41,10 +41,9 @@ config :challenge_gov,
   log_retention_in_days: 180
 
 config :challenge_gov, ChallengeGov.Scheduler,
-  timezone: "America/New_York",
   jobs: [
-    {"0 23 * * *", {ChallengeGov.Accounts, :check_all_last_actives, []}},
-    {"0 23 * * *", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
+    {"0 2 * * *", {ChallengeGov.Accounts, :check_all_last_actives, []}},
+    {"0 2 * * *", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
     {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}}
   ]
 
