@@ -776,13 +776,14 @@ defmodule ChallengeGov.Accounts do
   end
 
   def check_last_active(user) do
-    timeout_time =
-      DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -1 * Security.deactivate_days()))
+    will_timeout_on = Timex.shift(user.last_active, days: Security.deactivate_days())
 
-    last_active = if user.last_active, do: Timex.to_unix(user.last_active), else: nil
+    cond do
+      Timex.compare(DateTime.utc_now(), will_timeout_on, :days) === 0 ->
+        deactivate(user)
 
-    if user.last_active && timeout_time >= last_active do
-      deactivate(user)
+      true ->
+        nil
     end
   end
 
@@ -790,8 +791,9 @@ defmodule ChallengeGov.Accounts do
   Sends deactivation emails to people approaching their 90 days of inactivity
   """
   def maybe_send_deactivation_notice(user, timeout, warning_one_days, warning_two_days) do
-    warning_one = Timex.shift(user.last_active, days: timeout - warning_one_days)
-    warning_two = Timex.shift(user.last_active, days: timeout - warning_two_days)
+    will_timeout_on = Timex.shift(user.last_active, days: timeout)
+    warning_one = Timex.shift(will_timeout_on, days: -1 * warning_one_days)
+    warning_two = Timex.shift(will_timeout_on, days: -1 * warning_two_days)
     one_day_warning = Timex.shift(user.last_active, days: timeout - 1)
 
     cond do

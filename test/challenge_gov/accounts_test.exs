@@ -6,6 +6,15 @@ defmodule ChallengeGov.AccountsTest do
   alias ChallengeGov.Emails
 
   describe "warnings for account deactivation" do
+    test "with no last active" do
+      timeout = 90
+      warning_one = 10
+      warning_two = 5
+      user = %{last_active: nil, email: "test@example.com"}
+      Accounts.maybe_send_deactivation_notice(user, timeout, warning_one, warning_two)
+      assert_no_emails_delivered()
+    end
+
     test "more than the warning away" do
       timeout = 90
       warning_one = 10
