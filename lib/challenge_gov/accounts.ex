@@ -776,9 +776,12 @@ defmodule ChallengeGov.Accounts do
   end
 
   def check_last_active(user) do
-    will_timeout_on = Timex.shift(user.last_active, days: Security.deactivate_days())
+    will_timeout_on =
+      user.last_active
+      |> Timex.to_date()
+      |> Timex.shift(days: Security.deactivate_days())
 
-    case Timex.compare(DateTime.utc_now(), will_timeout_on, :days) === 0 do
+    case Timex.compare(Timex.today(), will_timeout_on, :days) === 0 do
       true ->
         deactivate(user)
 
@@ -791,23 +794,24 @@ defmodule ChallengeGov.Accounts do
   Sends deactivation emails to people approaching their 90 days of inactivity
   """
   def maybe_send_deactivation_notice(user, timeout, warning_one_days, warning_two_days) do
-    will_timeout_on = Timex.shift(user.last_active, days: timeout)
+    will_timeout_on = Timex.shift(Timex.to_date(user.last_active), days: timeout)
     warning_one = Timex.shift(will_timeout_on, days: -1 * warning_one_days)
     warning_two = Timex.shift(will_timeout_on, days: -1 * warning_two_days)
     one_day_warning = Timex.shift(will_timeout_on, days: -1)
+    now = Timex.today()
 
     cond do
-      Timex.compare(DateTime.utc_now(), warning_one, :days) === 0 ->
+      Timex.compare(now, warning_one, :days) === 0 ->
         user
         |> Emails.days_deactivation_warning(warning_one_days)
         |> Mailer.deliver_later()
 
-      Timex.compare(DateTime.utc_now(), warning_two, :days) === 0 ->
+      Timex.compare(now, warning_two, :days) === 0 ->
         user
         |> Emails.days_deactivation_warning(warning_two_days)
         |> Mailer.deliver_later()
 
-      Timex.compare(DateTime.utc_now(), one_day_warning, :days) === 0 ->
+      Timex.compare(now, one_day_warning, :days) === 0 ->
         user
         |> Emails.one_day_deactivation_warning()
         |> Mailer.deliver_later()

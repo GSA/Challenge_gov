@@ -42,8 +42,8 @@ config :challenge_gov,
 
 config :challenge_gov, ChallengeGov.Scheduler,
   jobs: [
-    {"0 2 * * *", {ChallengeGov.Accounts, :check_all_last_actives, []}},
-    {"0 2 * * *", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
+    {"0 5 * * *", {ChallengeGov.Accounts, :check_all_last_actives, []}},
+    {"0 5 * * *", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
     {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}}
   ]
 
