@@ -37,7 +37,7 @@ export const ChallengeTile = ({data, loading}) => {
   }
 
   return (
-    <section className="cards__section">
+    <section id="active-challenges" className="cards__section">
       {loading
         ? (
           <div className="cards__loader-wrapper" aria-label="Loading active challenges">

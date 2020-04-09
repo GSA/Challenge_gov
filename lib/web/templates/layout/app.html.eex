@@ -6,6 +6,8 @@
     <div class="main-wrapper">
       <%= render("_header.html", assigns) %>
 
+      <%= render("_top_banner.html", assigns) %>
+
       <div class="main">
         <div class="content-area">
           <%= if flash = get_flash(@conn, :info) do %>
@@ -23,8 +25,12 @@
         </div>
       </div>
 
-      <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
-      <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/client.js") %>"></script>
+      <%= render("_help_section.html", assigns) %>
+
+      <%= render("_footer.html", assigns) %>
     </div>
   </body>
+
+  <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+  <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/client.js") %>"></script>
 </html>

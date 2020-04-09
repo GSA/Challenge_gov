@@ -1,2 +1,12 @@
 @import "challenge-tile";
 @import "details-page";
+
+body {
+  background-color: #fcfcfc;
+}
+
+.main-wrapper {
+  max-width: 1440px;
+  margin: auto;
+}
+
