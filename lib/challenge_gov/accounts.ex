@@ -794,7 +794,7 @@ defmodule ChallengeGov.Accounts do
     will_timeout_on = Timex.shift(user.last_active, days: timeout)
     warning_one = Timex.shift(will_timeout_on, days: -1 * warning_one_days)
     warning_two = Timex.shift(will_timeout_on, days: -1 * warning_two_days)
-    one_day_warning = Timex.shift(user.last_active, days: timeout - 1)
+    one_day_warning = Timex.shift(will_timeout_on, days: -1)
 
     cond do
       Timex.compare(DateTime.utc_now(), warning_one, :days) === 0 ->
