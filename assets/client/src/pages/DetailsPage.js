@@ -13,6 +13,11 @@ export const DetailsPage = () => {
   const base_url = window.location.origin
 
   useEffect(() => {
+    // TODO: Temporary hiding of layout on chal details until the layout is moved
+    $(".top-banner").hide()
+    $(".help-section").hide()
+    $(".footer").hide()
+
     setLoadingState(true)
     axios
       .get(base_url + `/api/challenges/${challengeId}`)
