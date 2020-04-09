@@ -26,8 +26,12 @@ export const ChallengeTile = ({data, loading}) => {
         )
       }
 
-      if (challenges.data.collection.length > 0) {
-        return <p>There are no current challenges</p>
+      if (challenges.collection.length == 0) {
+        return (
+          <p>
+            There are no current challenges. Please check back again soon!
+          </p>
+        )
       }
     }
   }
@@ -50,7 +54,10 @@ export const ChallengeTile = ({data, loading}) => {
         : (
           <section className="cards__section">
             <h2>Active challenges</h2>
-            <p className="card__section--sort">Challenges sorted by those closing soonest</p>
+            {
+              (data.collection && data.collection.length >= 1) &&
+              <p className="card__section--sort">Challenges sorted by those closing soonest</p>
+            }
             <div className="cards">
               {renderChallengeTiles(data)}
             </div>
