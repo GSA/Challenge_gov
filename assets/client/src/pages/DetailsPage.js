@@ -99,7 +99,10 @@ export const DetailsPage = () => {
                 </div>
                 <div className="hero__info-section__block">
                   <div className="item item__types">
-                    <p className="info-title">Challenge Type(s):</p>
+                    { currentChallenge.types.length > 1
+                      ? <p className="info-title">Challenge Types:</p>
+                      : <p className="info-title">Challenge Type:</p>
+                    }
                     {renderChallengeTypes(currentChallenge.types)}
                   </div>
                   { !currentChallenge.prize_total || currentChallenge.prize_total != 0 &&
