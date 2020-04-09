@@ -1,24 +1,21 @@
-<div class="header">
-  <div class="container-fluid">
-    <div class="header-inner">
-      <div class="mobile-icon">
-        <a href="javascript:;">
-          <i class="icon-menu ipad-icon"></i>
-          <i class="icon-mobile-menu mob-icon"></i>
-        </a>
+<nav class="header navbar navbar-expand-lg navbar-light bg-light">
+  <%= link(to: Routes.page_path(@conn, :index), class: "navbar-brand", href: "#") do %>
+    <img src='<%= Routes.static_path(@conn, "/images/challenge-logo.png") %>' alt="Challenge Gov Logo" title="Challenge Gov" class="header__challenge-logo">
+  <% end %>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+    </ul>
+    <form class="form-inline my-2 my-lg-0 mr-5">
+      <div class="input-group input-group-lg">
+        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
       </div>
-      <div class="logo">
-        <%= link(to: Routes.page_path(@conn, :index)) do %>
-          <img src="<%= Routes.static_path(@conn, "/images/challenge-logo.png") %>" alt="Challenge Gov Logo" title="Challenge Gov">
-        <% end %>
-      </div>
-      <div class="top-nav">
-        <ul class="mp-none">
-          <li>
-            <%= link("Sign In", to: Routes.session_path(@conn, :new)) %>
-          </li>
-        </ul>
-      </div>
-    </div>
+    </form>
+    <%= link("Login", to: Routes.session_path(@conn, :new), class: "header__login") %>
   </div>
-</div>
+</nav>

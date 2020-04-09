@@ -1,0 +1,47 @@
+.footer {
+  height: 338px;
+  padding: 12rem 7rem 3rem 7rem;
+  color: #ffffff;
+  background-image: url(/images/curved_blue_footer.svg);
+
+  &__challenge-logo {
+    height: 22px;
+    margin-bottom: 3rem;
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  a {
+    color: #ffffff;
+    margin-bottom: 1rem;
+
+    &:hover {
+      color: #ffffff;
+    }
+  }
+
+  &__social_links {
+    justify-content: flex-end;
+  }
+
+  &__social_link {
+    margin-right: 2rem;
+    font-size: 3rem;
+  }
+
+  hr {
+    border-color: #ffffff;
+    margin-bottom: 2rem;
+  }
+
+  &__challenge-logo-square {
+    height: 80px;
+  }
+
+  &__right {
+    text-align: right;
+  }
+}

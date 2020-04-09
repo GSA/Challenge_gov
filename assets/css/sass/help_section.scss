@@ -1,0 +1,57 @@
+.help-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5rem;
+
+  &__header {
+    margin: auto;
+    margin-bottom: 3rem;
+    font-size: 3rem;
+  }
+
+  &__content {
+    .col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+    }
+
+    a {
+      padding: 1rem 4rem;
+      border: 2px solid #2C608A;
+      border-radius: 5px;
+      color: #2C608A;
+      transition: .2s;
+
+      &:hover {
+        color: #ffffff;
+        background-color: #2C608A;
+        text-decoration: none;
+      }
+    }
+
+    img {
+      padding: 3rem 0rem;
+      color: #2C608A;
+      font-size: 6rem;
+    }
+
+    p {
+      padding: 2rem;
+      text-align: center;
+      font-size: 2rem;
+    }
+  }
+
+  &__noteworthy {
+    border: 2px solid #2C608A;
+    border-radius: 5px;
+
+    span {
+      font-weight: bold;
+    }
+  }
+}

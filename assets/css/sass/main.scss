@@ -1,1 +1,10 @@
-@import "challenge-tile"
+@import "challenge-tile";
+
+body {
+  background-color: #fcfcfc;
+}
+
+.main-wrapper {
+  max-width: 1440px;
+  margin: auto;
+}

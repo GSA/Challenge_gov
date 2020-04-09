@@ -2,3 +2,7 @@
 
 @import "style.css";
 @import "sass/main.scss";
+@import "sass/header.scss";
+@import "sass/footer.scss";
+@import "sass/top_banner.scss";
+@import "sass/help_section.scss";
