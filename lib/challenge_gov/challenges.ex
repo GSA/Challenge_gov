@@ -839,6 +839,7 @@ defmodule ChallengeGov.Challenges do
       originator_identifier: user.email,
       target_id: challenge.id,
       target_type: "challenge",
+      target_identifier: challenge.title,
       action: type,
       details: details
     })
