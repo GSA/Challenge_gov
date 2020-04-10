@@ -37,7 +37,8 @@ defmodule Web.ChallengeView do
 
   def agency_logo(challenge) do
     if challenge.agency.avatar_key,
-      do: AgencyView.avatar_url(challenge.agency)
+      do: AgencyView.avatar_url(challenge.agency),
+      else: nil
   end
 
   def winner_img(challenge, opts \\ []) do

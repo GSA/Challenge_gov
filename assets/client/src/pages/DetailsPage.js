@@ -40,7 +40,7 @@ export const DetailsPage = () => {
             src={currentChallenge.agency_logo}
             alt={`${currentChallenge.agency_name} logo`}
             title={currentChallenge.agency_name} />
-          { currentChallenge.federal_partners[0].logo &&
+          { (currentChallenge.federal_partners.length > 0 && currentChallenge.federal_partners[0].logo) &&
             <img
               className="agency-logo"
               src={currentChallenge.federal_partners[0].logo}
