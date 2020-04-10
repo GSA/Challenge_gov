@@ -19,10 +19,12 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def logo_url(challenge) do
+  def logo_url(challenge, source) do
     case is_nil(challenge.logo_key) do
       true ->
-        Routes.static_path(Web.Endpoint, "/images/challenge-logo.png")
+        if source == "card",
+          do: Routes.static_path(Web.Endpoint, "/images/challenge-logo.png"),
+          else: nil
 
       false ->
         Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])

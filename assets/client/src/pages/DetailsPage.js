@@ -31,6 +31,27 @@ export const DetailsPage = () => {
       })
   }, [])
 
+  const renderAgencyLogos = () => {
+    if (currentChallenge.agency_logo) {
+      return (
+        <div className="logos">
+          <img
+            className="agency-logo"
+            src={currentChallenge.agency_logo}
+            alt={`${currentChallenge.agency_name} logo`}
+            title={currentChallenge.agency_name} />
+          { currentChallenge.federal_partners[0].logo &&
+            <img
+              className="agency-logo"
+              src={currentChallenge.federal_partners[0].logo}
+              alt={`${currentChallenge.federal_partners[0].name} logo`}
+              title={currentChallenge.federal_partners[0].name} />
+          }
+        </div>
+      )
+    }
+  }
+
   const renderDeadline = (date) => {
     const fiveDaysFromNow = moment().add(5,'d').utc().format()
     const withinFiveDays = moment(date).diff(fiveDaysFromNow) <= 0
@@ -71,24 +92,18 @@ export const DetailsPage = () => {
             <section className="hero__content">
               <div className="hero__presentational">
                 <div className="presentational-info">
-                  <div className="logos">
-                    <img
-                      className="agency-logo"
-                      src={currentChallenge.agency_logo}
-                      alt={`${currentChallenge.agency_name} logo`} />
-                    { currentChallenge.federal_partners[0].logo &&
-                      <img
-                        className="agency-logo"
-                        src={currentChallenge.federal_partners[0].logo}
-                        alt={`${currentChallenge.federal_partners[0].name} logo`} />
-                    }
-                  </div>
+                  { currentChallenge.logo &&
+                    renderAgencyLogos()
+                  }
                   <h1 className="title">{currentChallenge.title}</h1>
                   <h3 className="tagline">{currentChallenge.tagline}</h3>
                   <p className="brief_description">{currentChallenge.brief_description}</p>
                 </div>
                 <div className="presentational-logo">
-                  <img className="challenge-logo" src={currentChallenge.logo} alt={"challenge logo"}/>
+                  { currentChallenge.logo
+                    ? <img className="challenge-logo" src={currentChallenge.logo} alt="challenge logo" title="challenge logo"/>
+                    : renderAgencyLogos()
+                  }
                 </div>
               </div>
               <div className="hero__info-section">
