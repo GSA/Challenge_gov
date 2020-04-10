@@ -17,7 +17,13 @@ export const ChallengeTile = ({data, loading}) => {
             <div key={c.id} className="card">
               <Link to={`/challenge/${c.id}`} aria-label="View challenge details">
                 <div className="image_wrapper">
-                  <img src={c.logo} alt="Challenge logo" />
+                  { c.logo
+                    ? <img src={c.logo} alt="Challenge logo" title="Challenge logo"/>
+                    : <img
+                      src={c.agency_logo}
+                      alt="Challenge agency logo"
+                      title="Challenge agency logo" />
+                  }
                 </div>
                 <div className="card__text-wrapper">
                   <p className="card__title test" aria-label="Challenge title">{c.title}</p>
