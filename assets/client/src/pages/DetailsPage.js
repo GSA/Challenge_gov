@@ -38,7 +38,7 @@ export const DetailsPage = () => {
     if (date >  moment().utc().format()) {
       return (
         <div className="item item__standard">
-          <p className="info-title">Open Until:</p>
+          <p className="info-title">Open until:</p>
           <p>{moment(date).local().format('L LT')}</p>
           { withinFiveDays && <p className="date-qualifier">Closing soon</p> }
         </div>
@@ -46,7 +46,7 @@ export const DetailsPage = () => {
     } else {
       return (
         <div className="item item__standard">
-          <p className="info-title">Closed On:</p>
+          <p className="info-title">Closed on:</p>
           <p>{moment(date).local().format('L LT')}</p>
         </div>
       )
@@ -94,10 +94,10 @@ export const DetailsPage = () => {
               <div className="hero__info-section">
                 <div className="hero__info-section__block">
                     <div className="item item__standard">
-                      <p className="info-title">Submission Period:</p>
+                      <p className="info-title">Submission period:</p>
                       { currentChallenge.end_date >  moment().utc().format()
-                        ? <p>open</p>
-                        : <p className="date-qualifier">Closed</p>
+                        ? <p>Open</p>
+                        : <p>Closed</p>
                       }
                     </div>
                   {renderDeadline(currentChallenge.end_date)}
@@ -105,14 +105,14 @@ export const DetailsPage = () => {
                 <div className="hero__info-section__block">
                   <div className="item item__types">
                     { currentChallenge.types.length > 1
-                      ? <p className="info-title">Challenge Types:</p>
-                      : <p className="info-title">Challenge Type:</p>
+                      ? <p className="info-title">Challenge types:</p>
+                      : <p className="info-title">Challenge type:</p>
                     }
                     {renderChallengeTypes(currentChallenge.types)}
                   </div>
                   { !currentChallenge.prize_total || currentChallenge.prize_total != 0 &&
                     <div className="item item__standard">
-                      <p className="info-title">Total Cash Prizes:</p>
+                      <p className="info-title">Total cash prizes:</p>
                       <p>{`$${currentChallenge.prize_total.toLocaleString()}`}</p>
                     </div>
                   }
