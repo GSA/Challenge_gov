@@ -255,7 +255,7 @@ defmodule ChallengeGov.Challenges do
       Challenge
       |> preload([:agency, :user])
       |> where([c], is_nil(c.deleted_at))
-      |> where([c], c.status == "created")
+      |> where([c], c.status == "published")
       |> order_by([c], asc: c.end_date, asc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
 
@@ -839,6 +839,7 @@ defmodule ChallengeGov.Challenges do
       originator_identifier: user.email,
       target_id: challenge.id,
       target_type: "challenge",
+      target_identifier: challenge.title,
       action: type,
       details: details
     })

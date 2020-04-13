@@ -9,7 +9,8 @@ defmodule Web.ChallengeView do
   def logo_img(challenge, opts \\ []) do
     case is_nil(challenge.logo_key) do
       true ->
-        AgencyView.avatar_img(challenge.agency, opts)
+        path = Routes.static_path(Web.Endpoint, "/images/challenge-logo.png")
+        img_tag(path, alt: "Challenge Logo")
 
       false ->
         url = Storage.url(Logo.logo_path(challenge, "thumbnail"), signed: [expires_in: 3600])
@@ -18,10 +19,12 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def logo_url(challenge) do
+  def logo_url(challenge, source) do
     case is_nil(challenge.logo_key) do
       true ->
-        AgencyView.avatar_url(challenge.agency)
+        if source == "card",
+          do: Routes.static_path(Web.Endpoint, "/images/challenge-logo.png"),
+          else: nil
 
       false ->
         Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
@@ -30,6 +33,11 @@ defmodule Web.ChallengeView do
 
   def agency_name(challenge) do
     if challenge.agency, do: challenge.agency.name
+  end
+
+  def agency_logo(challenge) do
+    if challenge.agency.avatar_key,
+      do: AgencyView.avatar_url(challenge.agency)
   end
 
   def winner_img(challenge, opts \\ []) do
@@ -46,6 +54,18 @@ defmodule Web.ChallengeView do
 
         opts = Keyword.merge([alt: "Winner Image"], opts)
         img_tag(url, opts)
+    end
+  end
+
+  def winner_img_url(challenge, _opts \\ []) do
+    case is_nil(challenge.winner_image_key) do
+      true ->
+        nil
+
+      false ->
+        Storage.url(WinnerImage.winner_image_path(challenge, "original"),
+          signed: [expires_in: 3600]
+        )
     end
   end
 

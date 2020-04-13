@@ -1,0 +1,33 @@
+<div class="top-banner">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col top-banner__description">
+        <p>
+          <span>Compete</span> to help the U.S. government solve problems
+          <br/>
+          &mdash; big and small.
+        </p>
+        <button class="scroll-to-anchor" data-anchor="active-challenges">Explore challenges</button>
+      </div>
+
+      <div class="col banner-steps">
+        <div class="banner-steps__header">
+          How to get involved
+        </div>
+        <hr/>
+        <div class="row banner-steps__numbers">
+          <div class="banner-steps__number">1</div>
+          <div class="banner-steps__arrow"></div>
+          <div class="banner-steps__number">2</div>
+          <div class="banner-steps__arrow"></div>
+          <div class="banner-steps__number">3</div>
+        </div>
+        <div class="row banner-steps__descriptions">
+          <p class="col banner-steps__description">Browse open challenges</p>
+          <p class="col banner-steps__description">Review challenge details</p>
+          <p class="col banner-steps__description">Submit your entry</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

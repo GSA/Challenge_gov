@@ -295,17 +295,7 @@ defmodule ChallengeGov.Accounts do
         # look for users created by admin which have emails, but no token
         case get_by_email(userinfo["email"]) do
           {:error, :not_found} ->
-            # no security log tracking of accesses_site bc account is pending and access blocked
-            create(%{
-              email: userinfo["email"],
-              first_name: "Placeholder",
-              last_name: "Placeholder",
-              role: "challenge_owner",
-              token: userinfo["sub"],
-              terms_of_use: nil,
-              privacy_guidelines: nil,
-              status: "pending"
-            })
+            create_new_user(userinfo)
 
           {:ok, user} ->
             update_admin_added_user(user, userinfo)
@@ -323,6 +313,26 @@ defmodule ChallengeGov.Accounts do
 
         {:ok, account_user}
     end
+  end
+
+  def create_new_user(userinfo) do
+    %{"email" => email} = userinfo
+    length = String.length(email) - 4
+    email_ext = String.slice(email, length, 4)
+
+    user_role =
+      if email_ext == ".gov" or email_ext == ".mil", do: "challenge_owner", else: "solver"
+
+    create(%{
+      email: userinfo["email"],
+      first_name: "Placeholder",
+      last_name: "Placeholder",
+      role: user_role,
+      token: userinfo["sub"],
+      terms_of_use: nil,
+      privacy_guidelines: nil,
+      status: "pending"
+    })
   end
 
   @doc """
@@ -756,42 +766,52 @@ defmodule ChallengeGov.Accounts do
   def check_all_last_actives() do
     Enum.map(all_for_select(), fn user ->
       user
-      |> maybe_send_deactivation_notice
+      |> maybe_send_deactivation_notice(
+        Security.deactivate_days(),
+        Security.deactivate_warning_one_days(),
+        Security.deactivate_warning_two_days()
+      )
       |> check_last_active
     end)
   end
 
   def check_last_active(user) do
-    timeout_time =
-      DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -1 * Security.timeout_interval()))
+    will_timeout_on =
+      user.last_active
+      |> Timex.to_date()
+      |> Timex.shift(days: Security.deactivate_days())
 
-    last_active = if user.last_active, do: Timex.to_unix(user.last_active), else: nil
+    case Timex.compare(Timex.today(), will_timeout_on, :days) === 0 do
+      true ->
+        deactivate(user)
 
-    if user.last_active && timeout_time >= last_active do
-      deactivate(user)
+      _ ->
+        nil
     end
   end
 
   @doc """
   Sends deactivation emails to people approaching their 90 days of inactivity
   """
-  def maybe_send_deactivation_notice(user) do
-    warning_one = Timex.shift(user.last_active, days: Security.deactivate_warning_one_days())
-    warning_two = Timex.shift(user.last_active, days: Security.deactivate_warning_two_days())
-    one_day_warning = Timex.shift(user.last_active, days: 1)
+  def maybe_send_deactivation_notice(user, timeout, warning_one_days, warning_two_days) do
+    will_timeout_on = Timex.shift(Timex.to_date(user.last_active), days: timeout)
+    warning_one = Timex.shift(will_timeout_on, days: -1 * warning_one_days)
+    warning_two = Timex.shift(will_timeout_on, days: -1 * warning_two_days)
+    one_day_warning = Timex.shift(will_timeout_on, days: -1)
+    now = Timex.today()
 
     cond do
-      Timex.compare(DateTime.utc_now(), warning_one, :days) === 0 ->
+      Timex.compare(now, warning_one, :days) === 0 ->
         user
-        |> Emails.days_deactivation_warning(warning_one)
+        |> Emails.days_deactivation_warning(warning_one_days)
         |> Mailer.deliver_later()
 
-      Timex.compare(DateTime.utc_now(), warning_two, :days) === 0 ->
+      Timex.compare(now, warning_two, :days) === 0 ->
         user
-        |> Emails.days_deactivation_warning(warning_two)
+        |> Emails.days_deactivation_warning(warning_two_days)
         |> Mailer.deliver_later()
 
-      Timex.compare(DateTime.utc_now(), one_day_warning, :days) === 0 ->
+      Timex.compare(now, one_day_warning, :days) === 0 ->
         user
         |> Emails.one_day_deactivation_warning()
         |> Mailer.deliver_later()

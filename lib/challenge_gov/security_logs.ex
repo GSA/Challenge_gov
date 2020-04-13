@@ -20,22 +20,16 @@ defmodule ChallengeGov.SecurityLogs do
     Repo.all(SecurityLog)
   end
 
-  def check_expired_records() do
-    # TODO just use a database query to delete old records
-    Enum.map(__MODULE__.all(), fn record ->
-      remove_expired_records(record)
-    end)
+  def logs_to_remove() do
+    expiration_date = Timex.shift(DateTime.utc_now(), days: -1 * Security.log_retention_days())
+
+    SecurityLog
+    |> where([l], l.logged_at < ^expiration_date)
   end
 
-  def remove_expired_records(record) do
-    expiration_date =
-      DateTime.to_unix(Timex.shift(DateTime.utc_now(), days: -1 * Security.log_retention_days()))
-
-    inserted_at = Timex.to_unix(record.logged_at)
-
-    if expiration_date >= inserted_at do
-      Repo.delete(record)
-    end
+  def check_expired_records() do
+    logs_to_remove()
+    |> Repo.delete_all()
   end
 
   def log_session_duration(user, session_end) do

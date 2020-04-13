@@ -12,7 +12,7 @@
           <%= label(f, :first_name, class: "label-text") do %>
             First Name*
           <% end %>
-          <%= text_input(f, :first_name, required: true, placeholder: "First Name", class: "form-control fc-input is-invalid") %>
+          <%= text_input(f, :first_name, required: true, placeholder: "First Name", class: "form-control fc-inpute") %>
         </div>
         <div class="input">
           <%= label(f, :first_name, class: "label-text") do %>

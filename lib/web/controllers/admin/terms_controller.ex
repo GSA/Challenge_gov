@@ -2,6 +2,8 @@ defmodule Web.Admin.TermsController do
   use Web, :controller
 
   alias ChallengeGov.Accounts
+  alias ChallengeGov.SecurityLogs
+  alias ChallengeGov.SecurityLogs.SecurityLog
 
   def new(conn, _params) do
     %{current_user: user} = conn.assigns
@@ -13,26 +15,22 @@ defmodule Web.Admin.TermsController do
 
   def create(conn, params) do
     %{current_user: user} = conn.assigns
-    data = Map.get(params, "user")
+    %{role: user_role} = user
+    %{"user" => user_params} = params
 
-    parsed_data =
-      if Map.get(data, "agency_id") == nil do
-        Map.put(
-          data,
-          "agency_id",
-          nil
-        )
-      else
-        Map.put(
-          data,
-          "agency_id",
-          String.to_integer(Map.get(data, "agency_id"))
-        )
+    updated_params =
+      case user_role == "challenge_owner" do
+        true ->
+          %{"user" => %{"agency_id" => agency_id}} = params
+          Map.put(user_params, "agency_id", String.to_integer(agency_id))
+
+        false ->
+          Map.merge(user_params, %{"agency_id" => nil, "status" => "active"})
       end
 
-    if Map.get(parsed_data, "accept_terms_of_use") === "true" and
-         Map.get(parsed_data, "accept_privacy_guidelines") === "true" do
-      case Accounts.update_terms(user, parsed_data) do
+    if Map.get(updated_params, "accept_terms_of_use") == "true" and
+         Map.get(updated_params, "accept_privacy_guidelines") == "true" do
+      case Accounts.update_terms(user, updated_params) do
         {:ok, user} ->
           conn
           |> put_flash(:info, "Your account has been updated")
@@ -56,13 +54,19 @@ defmodule Web.Admin.TermsController do
   end
 
   def redirect_based_on_user(conn, user) do
-    case Accounts.is_pending?(user) do
-      true ->
-        redirect(conn, to: Routes.admin_terms_path(conn, :pending))
+    redirect_route =
+      if Accounts.is_pending?(user),
+        do: Routes.admin_terms_path(conn, :pending),
+        else: Routes.admin_dashboard_path(conn, :index)
 
-      false ->
-        redirect(conn, to: Routes.admin_challenge_path(conn, :index))
-    end
+    SecurityLogs.track(%SecurityLog{}, %{
+      originator_id: user.id,
+      originator_role: user.role,
+      originator_identifier: user.email,
+      action: "accessed_site"
+    })
+
+    redirect(conn, to: redirect_route)
   end
 
   def pending(conn, _params) do

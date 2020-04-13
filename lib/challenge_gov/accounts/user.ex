@@ -112,17 +112,15 @@ defmodule ChallengeGov.Accounts.User do
   def terms_changeset(struct, params) do
     struct
     |> cast(params, [
+      :agency_id,
       :first_name,
       :last_name,
-      :email,
       :terms_of_use,
       :privacy_guidelines,
-      :agency_id
+      :status
     ])
     |> timestamp(:terms_of_use)
     |> timestamp(:privacy_guidelines)
-    |> validate_format(:email, ~r/.+@.+\..+/)
-    |> unique_constraint(:email, name: :users_lower_email_index)
   end
 
   def password_changeset(struct, params) do

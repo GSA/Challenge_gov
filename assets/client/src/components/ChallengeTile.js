@@ -5,6 +5,11 @@ import moment from "moment"
 export const ChallengeTile = ({data, loading}) => {
 
   const renderChallengeTiles = (challenges) => {
+    // TODO: Temporary showing of layout on chal details until the layout is moved
+    $(".top-banner").show()
+    $(".help-section").show()
+    $(".footer").show()
+
     if (challenges.collection) {
 
       if (challenges.collection.length > 0) {
@@ -26,14 +31,18 @@ export const ChallengeTile = ({data, loading}) => {
         )
       }
 
-      if (challenges.data.collection.length > 0) {
-        return <p>There are no current challenges</p>
+      if (challenges.collection.length == 0) {
+        return (
+          <p>
+            There are no current challenges. Please check back again soon!
+          </p>
+        )
       }
     }
   }
 
   return (
-    <section className="cards__section">
+    <section id="active-challenges" className="cards__section">
       {loading
         ? (
           <div className="cards__loader-wrapper" aria-label="Loading active challenges">
@@ -50,7 +59,10 @@ export const ChallengeTile = ({data, loading}) => {
         : (
           <section className="cards__section">
             <h2>Active challenges</h2>
-            <p className="card__section--sort">Challenges sorted by those closing soonest</p>
+            {
+              (data.collection && data.collection.length >= 1) &&
+              <p className="card__section--sort">Challenges sorted by those closing soonest</p>
+            }
             <div className="cards">
               {renderChallengeTiles(data)}
             </div>
