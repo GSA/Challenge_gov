@@ -619,6 +619,9 @@ defmodule ChallengeGov.Challenges do
   def is_published?(%{status: "published"}), do: true
   def is_published?(_user), do: false
 
+  def is_unpublished?(%{status: "unpublished"}), do: true
+  def is_unpublished?(_user), do: false
+
   def is_archived?(%{status: "archived"}), do: true
   def is_archived?(_user), do: false
 
@@ -639,7 +642,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_approvable?(challenge) do
-    in_review?(challenge)
+    in_review?(challenge) or is_unpublished?(challenge)
   end
 
   def is_approvable?(challenge, user) do
@@ -656,7 +659,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_archivable?(challenge) do
-    is_published?(challenge)
+    is_published?(challenge) or is_unpublished?(challenge)
   end
 
   def is_archivable?(challenge, user) do
@@ -672,11 +675,19 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_publishable?(challenge) do
-    is_approved?(challenge)
+    is_approved?(challenge) or is_unpublished?(challenge)
   end
 
   def is_publishable?(challenge, user) do
     Accounts.has_admin_access?(user) and is_publishable?(challenge)
+  end
+
+  def is_unpublishable?(challenge) do
+    is_approved?(challenge) or is_published?(challenge) or is_archived?(challenge)
+  end
+
+  def is_unpublishable?(challenge, user) do
+    Accounts.has_admin_access?(user) and is_unpublishable?(challenge)
   end
 
   def is_editable?(_challenge) do
@@ -757,6 +768,24 @@ defmodule ChallengeGov.Challenges do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
       |> add_to_security_log_multi(user, "status_change", %{status: "published"})
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  def unpublish(challenge, user) do
+    changeset = Challenge.unpublish_changeset(challenge)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> add_to_security_log_multi(user, "status_change", %{status: "unpublished"})
       |> Repo.transaction()
 
     case result do

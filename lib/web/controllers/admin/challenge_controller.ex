@@ -287,6 +287,17 @@ defmodule Web.Admin.ChallengeController do
     end
   end
 
+  def unpublish(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.unpublish(challenge, user) do
+      conn
+      |> put_flash(:info, "Challenge unpublished")
+      |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
+    end
+  end
+
   def reject(conn, params = %{"id" => id}) do
     %{current_user: user} = conn.assigns
     message = Map.get(params, "rejection_message")
