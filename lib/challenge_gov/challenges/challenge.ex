@@ -30,9 +30,10 @@ defmodule ChallengeGov.Challenges.Challenge do
   """
   @statuses [
     %{id: "draft", label: "Draft"},
-    %{id: "gsa_review", label: "GSA Review"},
+    %{id: "gsa_review", label: "GSA review"},
     %{id: "approved", label: "Approved"},
-    %{id: "edits_requested", label: "Edits Requested"},
+    %{id: "edits_requested", label: "Edits requested"},
+    %{id: "unpublished", label: "Unpublished"},
     %{id: "published", label: "Published"},
     %{id: "archived", label: "Archived"}
   ]
@@ -401,6 +402,14 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
     |> change()
     |> put_change(:status, "published")
+    |> put_change(:published_on, Date.utc_today())
+    |> validate_inclusion(:status, status_ids())
+  end
+
+  def unpublish_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:status, "unpublished")
     |> put_change(:published_on, Date.utc_today())
     |> validate_inclusion(:status, status_ids())
   end

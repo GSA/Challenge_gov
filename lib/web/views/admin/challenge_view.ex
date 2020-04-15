@@ -72,11 +72,16 @@ defmodule Web.Admin.ChallengeView do
   def challenge_delete_link(conn, challenge, user, opts \\ []) do
     if (user.role == "challenge_owner" and challenge.status == "draft") or
          Accounts.has_admin_access?(user) do
-      link(opts[:label] || "Delete",
-        to: Routes.admin_challenge_path(conn, :delete, challenge.id),
-        method: :delete,
-        class: "btn btn-link text-danger",
-        data: [confirm: "Are you sure you want to delete this challenge?"]
+      link(
+        opts[:label] || "Delete",
+        Keyword.merge(
+          [
+            to: Routes.admin_challenge_path(conn, :delete, challenge.id),
+            method: :delete,
+            data: [confirm: "Are you sure you want to delete this challenge?"]
+          ],
+          opts
+        )
       )
     end
   end
