@@ -39,7 +39,7 @@ export const ChallengeTile = ({data, loading}) => {
 
       if (challenges.collection.length == 0) {
         return (
-          <p>
+          <p className="cards__none">
             There are no current challenges. Please check back again soon!
           </p>
         )
