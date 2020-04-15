@@ -5,4 +5,5 @@
     </h4>
     <%= link "Review Agency Toolkit", to: "https://en.wiktionary.org/wiki/toolkit", target: "_blank" %>
   </div>
+  <%= mil_users_content(@current_user) %>
 </section>
