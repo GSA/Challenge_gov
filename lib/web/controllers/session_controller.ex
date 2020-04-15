@@ -58,10 +58,6 @@ defmodule Web.SessionController do
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
       {:ok, user} = Accounts.map_from_login(userinfo)
 
-      if user.status == "active" do
-        Accounts.update_active_session(user, true)
-      end
-
       conn
       |> put_flash(:info, "Login successful")
       |> put_session(:user_token, user.token)
@@ -111,10 +107,16 @@ defmodule Web.SessionController do
   """
   # TODO add different user role paths by role eg status: pending > pending page
   def get_default_path(conn, user) do
-    if Accounts.has_accepted_terms?(user) do
-      Routes.admin_challenge_path(conn, :index)
-    else
-      Routes.admin_terms_path(conn, :new)
+    case Accounts.has_accepted_terms?(user) do
+      true ->
+        if user.status == "pending" do
+          Routes.admin_terms_path(conn, :pending)
+        else
+          Routes.admin_dashboard_path(conn, :index)
+        end
+
+      false ->
+        Routes.admin_terms_path(conn, :new)
     end
   end
 

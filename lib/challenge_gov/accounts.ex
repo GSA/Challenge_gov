@@ -302,14 +302,14 @@ defmodule ChallengeGov.Accounts do
         end
 
       {:ok, account_user} ->
-        if account_user.status == "active" do
-          SecurityLogs.track(%SecurityLog{}, %{
-            originator_id: account_user.id,
-            originator_role: account_user.role,
-            originator_identifier: account_user.email,
-            action: "accessed_site"
-          })
-        end
+        update_active_session(account_user, true)
+
+        SecurityLogs.track(%SecurityLog{}, %{
+          originator_id: account_user.id,
+          originator_role: account_user.role,
+          originator_identifier: account_user.email,
+          action: "accessed_site"
+        })
 
         {:ok, account_user}
     end
