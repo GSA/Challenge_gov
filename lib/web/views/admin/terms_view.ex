@@ -19,4 +19,26 @@ defmodule Web.Admin.TermsView do
       ]
     end
   end
+
+  def mil_users_content(user) do
+    length = String.length(user.email) - 4
+    email_ext = String.slice(user.email, length, 4)
+
+    if email_ext == ".mil" do
+      [
+        content_tag(:div, class: "page-center") do
+          [
+            content_tag(:p, "You have been registered as a Challenge Owner and
+            will be able to create Challenges to go live on Challenge.gov."),
+            content_tag(:p) do
+              [
+                "If this is not correct please contact ",
+                content_tag(:a, "team@challenge.gov", href: "mailto:team@challenge.gov")
+              ]
+            end
+          ]
+        end
+      ]
+    end
+  end
 end
