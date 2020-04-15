@@ -1,11 +1,6 @@
 defmodule ChallengeGov.Challenges do
   @moduledoc """
   Context for Challenges
-
-  Statuses for challenges:
-  - pending: Awaiting review by an admin, hidden to the public
-  - created: Published by an admin, viewable to the public
-  - archived: Archived by an admin, hidden to the public
   """
 
   alias ChallengeGov.Accounts
