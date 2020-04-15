@@ -1,8 +1,8 @@
 defmodule ChallengeGov.Solutions do
   @moduledoc """
   Context for Solutions
-  """  
-  
+  """
+
   alias ChallengeGov.Solutions.Solution
   alias ChallengeGov.Repo
   alias Stein.Filter
@@ -13,9 +13,6 @@ defmodule ChallengeGov.Solutions do
   @behaviour Stein.Filter
 
   def all(opts \\ []) do
-    IO.inspect "ALL"
-    IO.inspect opts
-
     query =
       Solution
       |> preload([:submitter, :challenge])
@@ -35,7 +32,7 @@ defmodule ChallengeGov.Solutions do
     |> where([s], s.id == ^id)
     |> preload([
       :submitter,
-      :challenge,
+      :challenge
     ])
     |> Repo.one()
     |> case do
@@ -51,7 +48,7 @@ defmodule ChallengeGov.Solutions do
     Solution.changeset(%Solution{}, %{})
   end
 
-  def create(%{"action" => action, "solution" => params}, user) do
+  def create(%{"action" => action, "solution" => params}, _user) do
     changeset = changeset_for_action(%Solution{}, params, action)
 
     Ecto.Multi.new()
@@ -70,7 +67,7 @@ defmodule ChallengeGov.Solutions do
     Solution.changeset(solution, %{})
   end
 
-  def update(solution, %{"action" => action, "solution" => params}, user) do    
+  def update(solution, %{"action" => action, "solution" => params}, _user) do
     changeset = changeset_for_action(solution, params, action)
 
     Ecto.Multi.new()
@@ -83,8 +80,8 @@ defmodule ChallengeGov.Solutions do
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
-  end  
-  
+  end
+
   defp changeset_for_action(struct, params, action) do
     case action do
       "draft" ->
@@ -97,13 +94,13 @@ defmodule ChallengeGov.Solutions do
 
   def delete(solution, user) do
     if allowed_to_delete?(solution, user) do
-      soft_delete(solution, user)
+      soft_delete(solution)
     else
       {:error, :not_permitted}
     end
   end
 
-  defp soft_delete(solution, user) do
+  defp soft_delete(solution) do
     solution
     |> Solution.delete_changeset()
     |> Repo.update()
@@ -116,7 +113,7 @@ defmodule ChallengeGov.Solutions do
     end
   end
 
-  defp allowed_to_delete?(solution, user) do
+  defp allowed_to_delete?(_solution, _user) do
     true
   end
 
@@ -138,7 +135,13 @@ defmodule ChallengeGov.Solutions do
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
-    where(query, [s], ilike(s.title, ^value) or ilike(s.brief_description, ^value) or ilike(s.description, ^value) or ilike(s.external_url, ^value) or ilike(s.status, ^value))
+
+    where(
+      query,
+      [s],
+      ilike(s.title, ^value) or ilike(s.brief_description, ^value) or ilike(s.description, ^value) or
+        ilike(s.external_url, ^value) or ilike(s.status, ^value)
+    )
   end
 
   def filter_on_attribute({"submitter_id", value}, query) do
