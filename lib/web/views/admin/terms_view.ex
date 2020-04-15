@@ -21,10 +21,10 @@ defmodule Web.Admin.TermsView do
   end
 
   def mil_users_content(user) do
-    length = String.length(user.email) - 4
-    email_ext = String.slice(user.email, length, 4)
+    length = String.length(user.email) - 3
+    email_ext = String.slice(user.email, length, 3)
 
-    if email_ext == ".mil" do
+    if email_ext == ".ch" do
       [
         content_tag(:div, class: "page-center") do
           [
