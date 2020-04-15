@@ -6,6 +6,14 @@ import { BrowserRouter, Redirect, Switch, Route } from "react-router-dom";
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
+import ReactGA from 'react-ga'
+
+ReactGA.initialize('_fed_an_ua_tag',
+  {
+    gaAddress:
+      "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=GSA"
+  }
+)
 
 const getRoutes = () => {
   return IndexRoutes.map((prop, i) => {
@@ -34,7 +42,7 @@ const Application = () => {
 }
 
 const renderRouter = () => (
-  <BrowserRouter history={history}>
+  <BrowserRouter>
     <Application />
   </BrowserRouter>
 )
