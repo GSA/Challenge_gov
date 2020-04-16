@@ -1,4 +1,4 @@
-defmodule :"Elixir.ChallengeGov.Repo.Migrations.Remove-non-null-from-users-first-last" do
+defmodule :"Elixir.ChallengeGov.Repo.Migrations.Remove_non_null_from_users_first_last" do
   use Ecto.Migration
 
   def up do
