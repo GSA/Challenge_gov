@@ -4,7 +4,6 @@ defmodule Web.Admin.TermsController do
   alias ChallengeGov.Accounts
   alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
-  alias ChallengeGov.SecurityLogs.SecurityLog
 
   def new(conn, _params) do
     %{current_user: user} = conn.assigns
@@ -77,7 +76,7 @@ defmodule Web.Admin.TermsController do
   end
 
   defp add_to_security_log(conn, user, action, details \\ nil) do
-    SecurityLogs.track(%SecurityLog{}, %{
+    SecurityLogs.track(%{
       originator_id: user.id,
       originator_role: user.role,
       originator_identifier: user.email,

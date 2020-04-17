@@ -18,10 +18,11 @@ config :challenge_gov, Web.Endpoint,
 
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15")
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
+  loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger, backends: [LoggerJSON], level: :info
 
 # ## Using releases (distillery)
 #

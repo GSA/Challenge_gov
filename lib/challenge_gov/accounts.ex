@@ -11,7 +11,6 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
-  alias ChallengeGov.SecurityLogs.SecurityLog
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias Stein.Filter
@@ -123,7 +122,7 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, %{user: user} ->
-        SecurityLogs.track(%SecurityLog{}, %{
+        SecurityLogs.track(%{
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
@@ -158,7 +157,7 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, %{user: user} ->
-        SecurityLogs.track(%SecurityLog{}, %{
+        SecurityLogs.track(%{
           originator_id: user.id,
           originator_role: user.role,
           originator_identifier: user.email,
@@ -305,7 +304,7 @@ defmodule ChallengeGov.Accounts do
 
       {:ok, account_user} ->
         if account_user.status == "active" do
-          SecurityLogs.track(%SecurityLog{}, %{
+          SecurityLogs.track(%{
             originator_id: account_user.id,
             originator_role: account_user.role,
             originator_identifier: account_user.email,
@@ -346,7 +345,7 @@ defmodule ChallengeGov.Accounts do
         __MODULE__.update(user, %{token: userinfo["sub"]})
       end)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, %{
+        SecurityLogs.track(%{
           originator_id: user.id,
           originator_role: user.role,
           originator_identifier: user.email,
@@ -561,7 +560,7 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, %{
+        SecurityLogs.track(%{
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
@@ -597,7 +596,7 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, %{
+        SecurityLogs.track(%{
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
@@ -633,7 +632,7 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, %{
+        SecurityLogs.track(%{
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
@@ -671,7 +670,7 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, %{
+        SecurityLogs.track(%{
           target_id: user.id,
           target_type: user.role,
           target_identifier: user.email,
@@ -703,7 +702,7 @@ defmodule ChallengeGov.Accounts do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:user, changeset)
       |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%SecurityLog{}, %{
+        SecurityLogs.track(%{
           target_id: user.id,
           target_type: user.role,
           target_identifier: user.role,

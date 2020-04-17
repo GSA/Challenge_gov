@@ -15,7 +15,6 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
   alias ChallengeGov.SecurityLogs
-  alias ChallengeGov.SecurityLogs.SecurityLog
   alias ChallengeGov.Repo
   alias ChallengeGov.SupportingDocuments
   # alias ChallengeGov.Timeline
@@ -862,7 +861,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def add_to_security_log(user, challenge, type, remote_ip, details \\ nil) do
-    SecurityLogs.track(%SecurityLog{}, %{
+    SecurityLogs.track(%{
       originator_id: user.id,
       originator_role: user.role,
       originator_identifier: user.email,

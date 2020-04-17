@@ -4,14 +4,18 @@ defmodule ChallengeGov.SecurityLogs do
   """
   import Ecto.Query
 
+  require Logger
+
   alias ChallengeGov.Accounts
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs.SecurityLog
 
-  def track(struct, params) do
-    struct
+  def track(params) do
+    Logger.info("An audit log event #{params[:action]}", params)
+
+    %SecurityLog{}
     |> SecurityLog.changeset(params)
     |> Repo.insert()
   end
@@ -46,7 +50,7 @@ defmodule ChallengeGov.SecurityLogs do
 
       Accounts.update_active_session(user, false)
 
-      track(%SecurityLog{}, %{
+      track(%{
         action: "session_duration",
         details: %{duration: duration},
         originator_id: user.id,
