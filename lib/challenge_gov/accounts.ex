@@ -325,8 +325,6 @@ defmodule ChallengeGov.Accounts do
 
     create(%{
       email: userinfo["email"],
-      first_name: "Placeholder",
-      last_name: "Placeholder",
       role: user_role,
       token: userinfo["sub"],
       terms_of_use: nil,
