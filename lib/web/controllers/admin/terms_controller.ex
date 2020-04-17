@@ -63,6 +63,7 @@ defmodule Web.Admin.TermsController do
       originator_id: user.id,
       originator_role: user.role,
       originator_identifier: user.email,
+      originator_remote_ip: to_string(:inet_parse.ntoa(conn.remote_ip)),
       action: "accessed_site"
     })
 

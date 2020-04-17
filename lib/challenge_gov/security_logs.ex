@@ -32,7 +32,7 @@ defmodule ChallengeGov.SecurityLogs do
     |> Repo.delete_all()
   end
 
-  def log_session_duration(user, session_end) do
+  def log_session_duration(user, session_end, remote_ip) do
     last_accessed_site =
       SecurityLog
       |> where([l], l.originator_id == ^user.id and l.action == "accessed_site")
@@ -51,7 +51,8 @@ defmodule ChallengeGov.SecurityLogs do
         details: %{duration: duration},
         originator_id: user.id,
         originator_role: user.role,
-        originator_identifier: user.email
+        originator_identifier: user.email,
+        originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
       })
     end
   end

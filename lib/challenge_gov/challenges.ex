@@ -101,7 +101,7 @@ defmodule ChallengeGov.Challenges do
     |> Challenge.create_changeset(%{}, user)
   end
 
-  def create(%{"action" => action, "challenge" => challenge_params}, user) do
+  def create(%{"action" => action, "challenge" => challenge_params}, user, remote_ip) do
     challenge_params =
       challenge_params
       |> check_non_federal_partners
@@ -119,7 +119,7 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, challenge_params)
       end)
-      |> add_to_security_log_multi(user, "create")
+      |> add_to_security_log_multi(user, "create", remote_ip)
       |> Repo.transaction()
 
     case result do
@@ -140,7 +140,7 @@ defmodule ChallengeGov.Challenges do
     |> Challenge.update_changeset(%{})
   end
 
-  def update(challenge, %{"action" => action, "challenge" => challenge_params}, user) do
+  def update(challenge, %{"action" => action, "challenge" => challenge_params}, user, remote_ip) do
     section = Map.get(challenge_params, "section")
 
     challenge_params =
@@ -156,7 +156,7 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, challenge_params)
       end)
-      |> add_to_security_log_multi(user, "update", %{action: action, section: section})
+      |> add_to_security_log_multi(user, "update", remote_ip, %{action: action, section: section})
       |> Repo.transaction()
 
     case result do
@@ -171,7 +171,7 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Update a challenge
   """
-  def update(challenge, params, current_user) do
+  def update(challenge, params, current_user, remote_ip) do
     # TODO: Refactor the current_user permissions checking for updating challenge owner
     challenge = Repo.preload(challenge, [:non_federal_partners, :events])
 
@@ -203,7 +203,7 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
         WinnerImage.maybe_upload_winner_image(challenge, params)
       end)
-      |> add_to_security_log_multi(current_user, "update")
+      |> add_to_security_log_multi(current_user, "update", remote_ip)
       |> Repo.transaction()
 
     case result do
@@ -370,7 +370,7 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Submit a new challenge for a user
   """
-  def old_create(user, params) do
+  def old_create(user, params, remote_ip) do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:challenge, create_challenge(user, params))
@@ -384,7 +384,7 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
         WinnerImage.maybe_upload_winner_image(challenge, params)
       end)
-      |> add_to_security_log_multi(user, "create")
+      |> add_to_security_log_multi(user, "create", remote_ip)
       |> Repo.transaction()
 
     case result do
@@ -520,15 +520,15 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Delete a challenge if allowed
   """
-  def delete(challenge, user) do
+  def delete(challenge, user, remote_ip) do
     if allowed_to_delete(user, challenge) do
-      soft_delete(challenge, user)
+      soft_delete(challenge, user, remote_ip)
     else
       {:error, :not_permitted}
     end
   end
 
-  def soft_delete(challenge, user) do
+  def soft_delete(challenge, user, remote_ip) do
     now = DateTime.truncate(Timex.now(), :second)
 
     challenge
@@ -537,7 +537,7 @@ defmodule ChallengeGov.Challenges do
     |> Repo.update()
     |> case do
       {:ok, challenge} ->
-        add_to_security_log(user, challenge, "delete")
+        add_to_security_log(user, challenge, "delete", remote_ip)
         {:ok, challenge}
 
       {:error, changeset} ->
@@ -700,7 +700,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   # BOOKMARK: Status altering functions
-  def submit(challenge, user) do
+  def submit(challenge, user, remote_ip) do
     changeset =
       challenge
       |> Challenge.submit_changeset()
@@ -708,7 +708,7 @@ defmodule ChallengeGov.Challenges do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
-      |> add_to_security_log_multi(user, "status_change", %{status: "gsa_review"})
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "gsa_review"})
       |> Repo.transaction()
 
     case result do
@@ -721,13 +721,13 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def approve(challenge, user) do
+  def approve(challenge, user, remote_ip) do
     changeset = Challenge.approve_changeset(challenge)
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
-      |> add_to_security_log_multi(user, "status_change", %{status: "approved"})
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "approved"})
       |> Repo.transaction()
 
     case result do
@@ -739,13 +739,13 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def reject(challenge, user, message \\ "") do
+  def reject(challenge, user, remote_ip, message \\ "") do
     changeset = Challenge.reject_changeset(challenge, message)
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
-      |> add_to_security_log_multi(user, "status_change", %{
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{
         status: "edits_requested",
         message: message
       })
@@ -761,13 +761,13 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def publish(challenge, user) do
+  def publish(challenge, user, remote_ip) do
     changeset = Challenge.publish_changeset(challenge)
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
-      |> add_to_security_log_multi(user, "status_change", %{status: "published"})
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "published"})
       |> Repo.transaction()
 
     case result do
@@ -779,13 +779,13 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def unpublish(challenge, user) do
+  def unpublish(challenge, user, remote_ip) do
     changeset = Challenge.unpublish_changeset(challenge)
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
-      |> add_to_security_log_multi(user, "status_change", %{status: "unpublished"})
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "unpublished"})
       |> Repo.transaction()
 
     case result do
@@ -797,7 +797,7 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def archive(challenge, user) do
+  def archive(challenge, user, remote_ip) do
     changeset =
       challenge
       |> Ecto.Changeset.change()
@@ -806,7 +806,7 @@ defmodule ChallengeGov.Challenges do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
-      |> add_to_security_log_multi(user, "status_change", %{status: "archived"})
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "archived"})
       |> Repo.transaction()
 
     case result do
@@ -818,7 +818,7 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def unarchive(challenge, user) do
+  def unarchive(challenge, user, remote_ip) do
     changeset =
       challenge
       |> Ecto.Changeset.change()
@@ -827,7 +827,7 @@ defmodule ChallengeGov.Challenges do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
-      |> add_to_security_log_multi(user, "status_change", %{status: "published"})
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "published"})
       |> Repo.transaction()
 
     case result do
@@ -855,17 +855,18 @@ defmodule ChallengeGov.Challenges do
   end
 
   # BOOKMARK: Security log functions
-  defp add_to_security_log_multi(multi, user, type, details \\ nil) do
+  defp add_to_security_log_multi(multi, user, type, remote_ip, details \\ nil) do
     Ecto.Multi.run(multi, :log, fn _repo, %{challenge: challenge} ->
-      add_to_security_log(user, challenge, type, details)
+      add_to_security_log(user, challenge, type, remote_ip, details)
     end)
   end
 
-  def add_to_security_log(user, challenge, type, details \\ nil) do
+  def add_to_security_log(user, challenge, type, remote_ip, details \\ nil) do
     SecurityLogs.track(%SecurityLog{}, %{
       originator_id: user.id,
       originator_role: user.role,
       originator_identifier: user.email,
+      originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
       target_id: challenge.id,
       target_type: "challenge",
       target_identifier: challenge.title,
