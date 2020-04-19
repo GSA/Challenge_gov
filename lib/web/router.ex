@@ -51,6 +51,8 @@ defmodule Web.Router do
       resources("/documents", DocumentController, only: [:create])
 
       resources("/events", EventController, only: [:new, :create])
+
+      resources("/solutions", SolutionController, only: [:index, :new, :create])
     end
 
     get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
@@ -67,6 +69,8 @@ defmodule Web.Router do
     post("/challenges/:id/remove_winner_image", ChallengeController, :remove_winner_image,
       as: :challenge
     )
+
+    resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
 
     get("/reports/export/security_logs", ReportController, :export_security_logs)
   end

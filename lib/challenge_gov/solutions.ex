@@ -48,7 +48,13 @@ defmodule ChallengeGov.Solutions do
     Solution.changeset(%Solution{}, %{})
   end
 
-  def create(%{"action" => action, "solution" => params}, _user) do
+  def create(%{"action" => action, "solution" => params}, user, challenge) do
+    params =
+      Map.merge(params, %{
+        "submitter_id" => user.id,
+        "challenge_id" => challenge.id
+      })
+
     changeset = changeset_for_action(%Solution{}, params, action)
 
     Ecto.Multi.new()
@@ -87,8 +93,19 @@ defmodule ChallengeGov.Solutions do
       "draft" ->
         Solution.draft_changeset(struct, params)
 
+      "review" ->
+        Solution.review_changeset(struct, params)
+
       "submit" ->
         Solution.submit_changeset(struct, params)
+    end
+  end
+
+  def allowed_to_edit?(user, solution) do
+    if solution.submitter_id === user.id do
+      {:ok, solution}
+    else
+      {:error, :not_permitted}
     end
   end
 

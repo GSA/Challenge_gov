@@ -15,12 +15,10 @@ defmodule ChallengeGov.SolutionsTest do
         Solutions.create(
           %{
             "action" => "draft",
-            "solution" => %{
-              submitter_id: user.id,
-              challenge_id: challenge.id
-            }
+            "solution" => %{}
           },
-          user
+          user,
+          challenge
         )
 
       assert solution.submitter_id === user.id
@@ -38,15 +36,14 @@ defmodule ChallengeGov.SolutionsTest do
           %{
             "action" => "draft",
             "solution" => %{
-              submitter_id: user.id,
-              challenge_id: challenge.id,
-              title: "Test Title",
-              brief_description: "Test Brief Description",
-              description: "Test Description",
-              external_url: "www.example.com"
+              "title" => "Test Title",
+              "brief_description" => "Test Brief Description",
+              "description" => "Test Description",
+              "external_url" => "www.example.com"
             }
           },
-          user
+          user,
+          challenge
         )
 
       assert solution.submitter_id === user.id
@@ -66,12 +63,10 @@ defmodule ChallengeGov.SolutionsTest do
         Solutions.create(
           %{
             "action" => "submit",
-            "solution" => %{
-              submitter_id: user.id,
-              challenge_id: challenge.id
-            }
+            "solution" => %{}
           },
-          user
+          user,
+          challenge
         )
 
       assert changeset.errors[:title]
@@ -89,15 +84,14 @@ defmodule ChallengeGov.SolutionsTest do
           %{
             "action" => "submit",
             "solution" => %{
-              submitter_id: user.id,
-              challenge_id: challenge.id,
-              title: "Test Title",
-              brief_description: "Test Brief Description",
-              description: "Test Description",
-              external_url: "www.example.com"
+              "title" => "Test Title",
+              "brief_description" => "Test Brief Description",
+              "description" => "Test Description",
+              "external_url" => "www.example.com"
             }
           },
-          user
+          user,
+          challenge
         )
 
       assert solution.submitter_id === user.id

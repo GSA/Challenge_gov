@@ -69,6 +69,19 @@ defmodule ChallengeGov.Solutions.Solution do
     ])
   end
 
+  def review_changeset(struct, params) do
+    struct
+    |> changeset(params)
+    |> put_change(:status, "draft")
+    |> validate_inclusion(:status, status_ids())
+    |> validate_required([
+      :title,
+      :brief_description,
+      :description,
+      :external_url
+    ])
+  end
+
   def draft_changeset(struct, params) do
     struct
     |> changeset(params)
