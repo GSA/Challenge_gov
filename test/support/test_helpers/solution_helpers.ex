@@ -18,20 +18,29 @@ defmodule ChallengeGov.TestHelpers.SolutionHelpers do
     )
   end
 
-  def create_submitted_solution(attributes \\ %{}) do
+  def create_draft_solution(attributes \\ %{}, user, challenge) do
     {:ok, solution} =
       %Solution{}
-      |> Solution.submit_changeset(default_attributes(attributes))
+      |> Solution.draft_changeset(default_attributes(attributes), user, challenge)
       |> Repo.insert()
 
     solution
   end
 
-  def create_draft_solution(attributes \\ %{}) do
+  def create_review_solution(attributes \\ %{}, user, challenge) do
     {:ok, solution} =
       %Solution{}
-      |> Solution.draft_changeset(default_attributes(attributes))
+      |> Solution.review_changeset(default_attributes(attributes), user, challenge)
       |> Repo.insert()
+
+    solution
+  end
+
+  def create_submitted_solution(attributes \\ %{}, user, challenge) do
+    {:ok, solution} =
+      attributes
+      |> create_review_solution(user, challenge)
+      |> Solutions.submit()
 
     solution
   end

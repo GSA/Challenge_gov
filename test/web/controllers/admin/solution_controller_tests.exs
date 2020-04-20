@@ -14,15 +14,9 @@ defmodule Web.Admin.SolutionControllerTests do
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
       challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge_2.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge_2)
 
       conn = get(conn, Routes.admin_challenge_solution_path(conn, :index, challenge.id))
 
@@ -38,22 +32,23 @@ defmodule Web.Admin.SolutionControllerTests do
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
       challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id,
-        title: "Filtered title"
-      })
+      SolutionHelpers.create_submitted_solution(
+        %{
+          title: "Filtered title"
+        },
+        user,
+        challenge
+      )
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge_2.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge_2)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge_2.id,
-        title: "Filtered title"
-      })
+      SolutionHelpers.create_submitted_solution(
+        %{
+          title: "Filtered title"
+        },
+        user,
+        challenge_2
+      )
 
       conn =
         get(conn, Routes.admin_challenge_solution_path(conn, :index, challenge.id),
@@ -85,11 +80,13 @@ defmodule Web.Admin.SolutionControllerTests do
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
       solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id,
-          title: "Filtered title"
-        })
+        SolutionHelpers.create_submitted_solution(
+          %{
+            title: "Filtered title"
+          },
+          user,
+          challenge
+        )
 
       conn = get(conn, Routes.admin_solution_path(conn, :show, solution.id))
       %{solution: fetched_solution} = conn.assigns
@@ -103,11 +100,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       Solutions.delete(solution, user)
 
@@ -204,8 +197,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_draft_solution(%{submitter_id: user.id, challenge_id: challenge.id})
+      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
       conn = get(conn, Routes.admin_solution_path(conn, :edit, solution.id))
 
@@ -221,11 +213,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       conn = get(conn, Routes.admin_solution_path(conn, :edit, solution.id))
 
@@ -242,11 +230,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user_2.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
       conn = get(conn, Routes.admin_solution_path(conn, :edit, solution.id))
 
@@ -260,8 +244,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_draft_solution(%{submitter_id: user.id, challenge_id: challenge.id})
+      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
       {:ok, solution} = Solutions.delete(solution, user)
 
@@ -288,8 +271,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_draft_solution(%{submitter_id: user.id, challenge_id: challenge.id})
+      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
       params = %{
         "action" => "draft",
@@ -316,11 +298,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       params = %{
         "action" => "draft",
@@ -347,11 +325,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       params = %{
         "action" => "review",
@@ -376,11 +350,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       params = %{
         "action" => "review",
@@ -407,11 +377,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user_2.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
       params = %{
         "action" => "review",
@@ -435,15 +401,9 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_draft_solution(%{submitter_id: user.id, challenge_id: challenge.id})
+      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
-      params = %{
-        "action" => "submit",
-        "solution" => %{}
-      }
-
-      conn = put(conn, Routes.admin_solution_path(conn, :update, solution.id), params)
+      conn = put(conn, Routes.admin_solution_path(conn, :submit, solution.id))
 
       {:ok, solution} = Solutions.get(solution.id)
 
@@ -457,11 +417,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       {:ok, solution} = Solutions.delete(solution, user)
 
@@ -508,8 +464,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_draft_solution(%{submitter_id: user.id, challenge_id: challenge.id})
+      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
       conn = delete(conn, Routes.admin_solution_path(conn, :delete, solution.id))
 
@@ -524,11 +479,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       conn = delete(conn, Routes.admin_solution_path(conn, :delete, solution.id))
 
@@ -545,11 +496,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_draft_solution(%{
-          submitter_id: user_2.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_draft_solution(%{}, user_2, challenge)
 
       conn = delete(conn, Routes.admin_solution_path(conn, :delete, solution.id))
 
@@ -566,11 +513,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user_2.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
       conn = delete(conn, Routes.admin_solution_path(conn, :delete, solution.id))
 
@@ -585,11 +528,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       {:ok, solution} = Solutions.delete(solution, user)
 

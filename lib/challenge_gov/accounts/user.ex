@@ -19,7 +19,8 @@ defmodule ChallengeGov.Accounts.User do
   @roles [
     %{id: "super_admin", label: "Super Admin"},
     %{id: "admin", label: "Admin"},
-    %{id: "challenge_owner", label: "Challenge Owner"}
+    %{id: "challenge_owner", label: "Challenge Owner"},
+    %{id: "solver", label: "Solver"}
   ]
 
   @doc """

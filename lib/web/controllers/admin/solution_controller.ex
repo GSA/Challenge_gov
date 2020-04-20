@@ -77,44 +77,51 @@ defmodule Web.Admin.SolutionController do
 
   def create(
         conn,
-        params = %{
+        %{
           "challenge_id" => challenge_id,
-          "action" => action,
-          "solution" => _solution_params
+          "action" => "draft",
+          "solution" => solution_params
         }
       ) do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
-         {:ok, solution} <- Solutions.create(params, user, challenge) do
-      case action do
-        "draft" ->
-          conn
-          |> put_flash(:info, "Solution saved as draft")
-          |> redirect(to: Routes.admin_solution_path(conn, :edit, solution.id))
-
-        "review" ->
-          conn
-          |> redirect(
-            to:
-              Routes.admin_solution_path(
-                conn,
-                :show,
-                solution.id
-              )
-          )
-      end
+         {:ok, solution} <- Solutions.create_draft(solution_params, user, challenge) do
+      conn
+      |> put_flash(:info, "Solution saved as draft")
+      |> redirect(to: Routes.admin_solution_path(conn, :edit, solution.id))
     else
       {:error, changeset} ->
-        conn
-        |> assign(:user, user)
-        |> assign(:path, Routes.admin_challenge_path(conn, :create))
-        |> assign(:action, action_name(conn))
-        |> assign(:changeset, changeset)
-        |> assign(:solution, nil)
-        |> put_status(422)
-        |> render("new.html")
+        create_error(conn, changeset, user)
     end
+  end
+
+  def create(conn, %{
+        "challenge_id" => challenge_id,
+        "action" => "review",
+        "solution" => solution_params
+      }) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, challenge} <- Challenges.get(challenge_id),
+         {:ok, solution} <- Solutions.create_review(solution_params, user, challenge) do
+      conn
+      |> redirect(to: Routes.admin_solution_path(conn, :show, solution.id))
+    else
+      {:error, changeset} ->
+        create_error(conn, changeset, user)
+    end
+  end
+
+  defp create_error(conn, changeset, user) do
+    conn
+    |> assign(:user, user)
+    |> assign(:path, Routes.admin_challenge_path(conn, :create))
+    |> assign(:action, action_name(conn))
+    |> assign(:changeset, changeset)
+    |> assign(:solution, nil)
+    |> put_status(422)
+    |> render("new.html")
   end
 
   def edit(conn, %{"id" => id}) do
@@ -141,19 +148,71 @@ defmodule Web.Admin.SolutionController do
     end
   end
 
-  def update(conn, params = %{"id" => id, "action" => action, "solution" => _solution_params}) do
+  def update(conn, %{"id" => id, "action" => "draft", "solution" => solution_params}) do
     %{current_user: user} = conn.assigns
 
     with {:ok, solution} <- Solutions.get(id),
          {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
-         {:ok, solution} <- Solutions.update(solution, params, user) do
-      if action == "draft" do
+         {:ok, solution} <- Solutions.update_draft(solution, solution_params) do
+      conn
+      |> put_flash(:info, "Solution saved as draft")
+      |> redirect(to: Routes.admin_solution_path(conn, :edit, solution.id))
+    else
+      {:error, :not_found} ->
         conn
-        |> put_flash(:info, "Solution saved as draft")
-        |> redirect(to: Routes.admin_solution_path(conn, :edit, solution.id))
-      else
-        redirect(conn, to: Routes.admin_solution_path(conn, :show, solution.id))
-      end
+        |> put_flash(:error, "This solution does not exist")
+        |> redirect(to: Routes.admin_solution_path(conn, :index))
+
+      {:error, :not_permitted} ->
+        conn
+        |> put_flash(:error, "You are not allowed to edit this solution")
+        |> redirect(to: Routes.admin_solution_path(conn, :index))
+
+      {:error, changeset} ->
+        conn
+        |> assign(:user, user)
+        |> assign(:path, Routes.admin_solution_path(conn, :update, id))
+        |> assign(:changeset, changeset)
+        |> render("edit.html")
+    end
+  end
+
+  def update(conn, %{"id" => id, "action" => "review", "solution" => solution_params}) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, solution} <- Solutions.get(id),
+         {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
+         {:ok, solution} <- Solutions.update_review(solution, solution_params) do
+      redirect(conn, to: Routes.admin_solution_path(conn, :show, solution.id))
+    else
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "This solution does not exist")
+        |> redirect(to: Routes.admin_solution_path(conn, :index))
+
+      {:error, :not_permitted} ->
+        conn
+        |> put_flash(:error, "You are not allowed to edit this solution")
+        |> redirect(to: Routes.admin_solution_path(conn, :index))
+
+      {:error, changeset} ->
+        conn
+        |> assign(:user, user)
+        |> assign(:path, Routes.admin_solution_path(conn, :update, id))
+        |> assign(:changeset, changeset)
+        |> render("edit.html")
+    end
+  end
+
+  def submit(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, solution} <- Solutions.get(id),
+         {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
+         {:ok, solution} <- Solutions.submit(solution) do
+      conn
+      |> put_flash(:info, "Solution submitted")
+      |> redirect(to: Routes.admin_solution_path(conn, :show, solution.id))
     else
       {:error, :not_found} ->
         conn

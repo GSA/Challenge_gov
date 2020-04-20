@@ -43,49 +43,69 @@ defmodule ChallengeGov.Solutions.Solution do
   def changeset(struct, params) do
     struct
     |> cast(params, [
-      :submitter_id,
-      :challenge_id,
       :title,
       :brief_description,
       :description,
       :external_url
     ])
+  end
+
+  def draft_changeset(struct, params, user, challenge) do
+    struct
+    |> changeset(params)
+    |> put_change(:submitter_id, user.id)
+    |> put_change(:challenge_id, challenge.id)
+    |> put_change(:status, "draft")
+    |> foreign_key_constraint(:submitter)
+    |> foreign_key_constraint(:challenge)
+    |> validate_inclusion(:status, status_ids())
+  end
+
+  def review_changeset(struct, params, user, challenge) do
+    struct
+    |> changeset(params)
+    |> put_change(:submitter_id, user.id)
+    |> put_change(:challenge_id, challenge.id)
+    |> put_change(:status, "draft")
+    |> foreign_key_constraint(:submitter)
+    |> foreign_key_constraint(:challenge)
+    |> validate_inclusion(:status, status_ids())
     |> validate_required([
-      :submitter_id,
-      :challenge_id
+      :title,
+      :brief_description,
+      :description,
+      :external_url
     ])
   end
 
-  def submit_changeset(struct, params) do
+  def update_draft_changeset(struct, params) do
     struct
     |> changeset(params)
+    |> put_change(:status, "draft")
+    |> foreign_key_constraint(:submitter)
+    |> foreign_key_constraint(:challenge)
+    |> validate_inclusion(:status, status_ids())
+  end
+
+  def update_review_changeset(struct, params) do
+    struct
+    |> changeset(params)
+    |> put_change(:status, "draft")
+    |> foreign_key_constraint(:submitter)
+    |> foreign_key_constraint(:challenge)
+    |> validate_inclusion(:status, status_ids())
+    |> validate_required([
+      :title,
+      :brief_description,
+      :description,
+      :external_url
+    ])
+  end
+
+  def submit_changeset(struct) do
+    struct
+    |> change()
     |> put_change(:status, "submitted")
-    |> validate_inclusion(:status, status_ids())
-    |> validate_required([
-      :title,
-      :brief_description,
-      :description,
-      :external_url
-    ])
-  end
-
-  def review_changeset(struct, params) do
-    struct
-    |> changeset(params)
-    |> put_change(:status, "draft")
-    |> validate_inclusion(:status, status_ids())
-    |> validate_required([
-      :title,
-      :brief_description,
-      :description,
-      :external_url
-    ])
-  end
-
-  def draft_changeset(struct, params) do
-    struct
-    |> changeset(params)
-    |> put_change(:status, "draft")
     |> validate_inclusion(:status, status_ids())
   end
 

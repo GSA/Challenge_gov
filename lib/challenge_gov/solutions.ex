@@ -48,14 +48,23 @@ defmodule ChallengeGov.Solutions do
     Solution.changeset(%Solution{}, %{})
   end
 
-  def create(%{"action" => action, "solution" => params}, user, challenge) do
-    params =
-      Map.merge(params, %{
-        "submitter_id" => user.id,
-        "challenge_id" => challenge.id
-      })
+  def create_draft(params, user, challenge) do
+    changeset = Solution.draft_changeset(%Solution{}, params, user, challenge)
 
-    changeset = changeset_for_action(%Solution{}, params, action)
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:solution, changeset)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{solution: solution}} ->
+        {:ok, solution}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  def create_review(params, user, challenge) do
+    changeset = Solution.review_changeset(%Solution{}, params, user, challenge)
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:solution, changeset)
@@ -73,8 +82,8 @@ defmodule ChallengeGov.Solutions do
     Solution.changeset(solution, %{})
   end
 
-  def update(solution, %{"action" => action, "solution" => params}, _user) do
-    changeset = changeset_for_action(solution, params, action)
+  def update_draft(solution, params) do
+    changeset = Solution.update_draft_changeset(solution, params)
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:solution, changeset)
@@ -88,17 +97,25 @@ defmodule ChallengeGov.Solutions do
     end
   end
 
-  defp changeset_for_action(struct, params, action) do
-    case action do
-      "draft" ->
-        Solution.draft_changeset(struct, params)
+  def update_review(solution, params) do
+    changeset = Solution.update_review_changeset(solution, params)
 
-      "review" ->
-        Solution.review_changeset(struct, params)
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:solution, changeset)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{solution: solution}} ->
+        {:ok, solution}
 
-      "submit" ->
-        Solution.submit_changeset(struct, params)
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
     end
+  end
+
+  def submit(solution) do
+    solution
+    |> Solution.submit_changeset()
+    |> Repo.update()
   end
 
   def allowed_to_edit?(user, solution) do

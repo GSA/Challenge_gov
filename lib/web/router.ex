@@ -71,6 +71,7 @@ defmodule Web.Router do
     )
 
     resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
+    put("/solutions/:id/submit", SolutionController, :submit)
 
     get("/reports/export/security_logs", ReportController, :export_security_logs)
   end

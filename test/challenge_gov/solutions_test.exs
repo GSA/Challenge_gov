@@ -12,7 +12,7 @@ defmodule ChallengeGov.SolutionsTest do
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
       {:ok, solution} =
-        Solutions.create(
+        Solutions.create_draft(
           %{
             "action" => "draft",
             "solution" => %{}
@@ -32,15 +32,12 @@ defmodule ChallengeGov.SolutionsTest do
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
       {:ok, solution} =
-        Solutions.create(
+        Solutions.create_draft(
           %{
-            "action" => "draft",
-            "solution" => %{
-              "title" => "Test Title",
-              "brief_description" => "Test Brief Description",
-              "description" => "Test Description",
-              "external_url" => "www.example.com"
-            }
+            "title" => "Test Title",
+            "brief_description" => "Test Brief Description",
+            "description" => "Test Description",
+            "external_url" => "www.example.com"
           },
           user,
           challenge
@@ -60,9 +57,9 @@ defmodule ChallengeGov.SolutionsTest do
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
       {:error, changeset} =
-        Solutions.create(
+        Solutions.create_review(
           %{
-            "action" => "submit",
+            "action" => "review",
             "solution" => %{}
           },
           user,
@@ -80,19 +77,18 @@ defmodule ChallengeGov.SolutionsTest do
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
       {:ok, solution} =
-        Solutions.create(
+        Solutions.create_review(
           %{
-            "action" => "submit",
-            "solution" => %{
-              "title" => "Test Title",
-              "brief_description" => "Test Brief Description",
-              "description" => "Test Description",
-              "external_url" => "www.example.com"
-            }
+            "title" => "Test Title",
+            "brief_description" => "Test Brief Description",
+            "description" => "Test Description",
+            "external_url" => "www.example.com"
           },
           user,
           challenge
         )
+
+      {:ok, solution} = Solutions.submit(solution)
 
       assert solution.submitter_id === user.id
       assert solution.challenge_id === challenge.id
@@ -109,19 +105,12 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_draft_solution(%{submitter_id: user.id, challenge_id: challenge.id})
+      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
       {:ok, updated_solution} =
-        Solutions.update(
+        Solutions.update_draft(
           solution,
-          %{
-            "action" => "draft",
-            "solution" => %{
-              title: nil
-            }
-          },
-          user
+          %{title: nil}
         )
 
       assert updated_solution.submitter_id === user.id
@@ -137,19 +126,14 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_draft_solution(%{submitter_id: user.id, challenge_id: challenge.id})
+      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
       {:ok, updated_solution} =
-        Solutions.update(
+        Solutions.update_draft(
           solution,
           %{
-            "action" => "draft",
-            "solution" => %{
-              title: "New Test Title"
-            }
-          },
-          user
+            title: "New Test Title"
+          }
         )
 
       assert updated_solution.submitter_id === user.id
@@ -165,18 +149,9 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_draft_solution(%{submitter_id: user.id, challenge_id: challenge.id})
+      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
-      {:ok, updated_solution} =
-        Solutions.update(
-          solution,
-          %{
-            "action" => "submit",
-            "solution" => %{}
-          },
-          user
-        )
+      {:ok, updated_solution} = Solutions.submit(solution)
 
       assert updated_solution.submitter_id === user.id
       assert updated_solution.challenge_id === challenge.id
@@ -191,17 +166,12 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_draft_solution(%{submitter_id: user.id, challenge_id: challenge.id})
+      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
       {:error, changeset} =
-        Solutions.update(
+        Solutions.update_review(
           solution,
-          %{
-            "action" => "submit",
-            "solution" => %{title: nil}
-          },
-          user
+          %{title: nil}
         )
 
       assert changeset.errors[:title]
@@ -211,21 +181,15 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       {:ok, updated_solution} =
-        Solutions.update(
+        Solutions.update_review(
           solution,
-          %{
-            "action" => "submit",
-            "solution" => %{title: "New Test Title"}
-          },
-          user
+          %{title: "New Test Title"}
         )
+
+      {:ok, updated_solution} = Solutions.submit(updated_solution)
 
       assert updated_solution.submitter_id === user.id
       assert updated_solution.challenge_id === challenge.id
@@ -240,20 +204,12 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       {:error, changeset} =
-        Solutions.update(
+        Solutions.update_review(
           solution,
-          %{
-            "action" => "submit",
-            "solution" => %{title: nil}
-          },
-          user
+          %{title: nil}
         )
 
       assert changeset.errors[:title]
@@ -265,11 +221,7 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       {:ok, solution} = Solutions.delete(solution, user)
 
@@ -282,26 +234,13 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      deleted_solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       Solutions.delete(deleted_solution, user)
 
@@ -314,26 +253,13 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      deleted_solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       Solutions.delete(deleted_solution, user)
 
@@ -347,26 +273,13 @@ defmodule ChallengeGov.SolutionsTest do
       user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user_2.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user_2.id,
-          challenge_id: challenge.id
-        })
+      deleted_solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
       Solutions.delete(deleted_solution, user)
 
@@ -380,26 +293,13 @@ defmodule ChallengeGov.SolutionsTest do
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
       challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge_2.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge_2)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge_2.id
-        })
+      deleted_solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge_2)
 
       Solutions.delete(deleted_solution, user)
 
@@ -412,76 +312,85 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id,
-        title: "Filtered Title"
-      })
-
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id,
-        brief_description: "Filtered Brief Description"
-      })
-
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id,
-        description: "Filtered Description"
-      })
-
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id,
-        external_url: "www.example_filtered.com"
-      })
-
-      deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
-
-      Solutions.delete(deleted_solution, user)
-
-      deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id,
+      SolutionHelpers.create_submitted_solution(
+        %{
           title: "Filtered Title"
-        })
+        },
+        user,
+        challenge
+      )
 
-      Solutions.delete(deleted_solution, user)
-
-      deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id,
+      SolutionHelpers.create_submitted_solution(
+        %{
           brief_description: "Filtered Brief Description"
-        })
+        },
+        user,
+        challenge
+      )
 
-      Solutions.delete(deleted_solution, user)
-
-      deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id,
+      SolutionHelpers.create_submitted_solution(
+        %{
           description: "Filtered Description"
-        })
+        },
+        user,
+        challenge
+      )
+
+      SolutionHelpers.create_submitted_solution(
+        %{
+          external_url: "www.example_filtered.com"
+        },
+        user,
+        challenge
+      )
+
+      deleted_solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       Solutions.delete(deleted_solution, user)
 
       deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id,
-          external_url: "www.example_filtered.com"
-        })
+        SolutionHelpers.create_submitted_solution(
+          %{
+            title: "Filtered Title"
+          },
+          user,
+          challenge
+        )
+
+      Solutions.delete(deleted_solution, user)
+
+      deleted_solution =
+        SolutionHelpers.create_submitted_solution(
+          %{
+            brief_description: "Filtered Brief Description"
+          },
+          user,
+          challenge
+        )
+
+      Solutions.delete(deleted_solution, user)
+
+      deleted_solution =
+        SolutionHelpers.create_submitted_solution(
+          %{
+            description: "Filtered Description"
+          },
+          user,
+          challenge
+        )
+
+      Solutions.delete(deleted_solution, user)
+
+      deleted_solution =
+        SolutionHelpers.create_submitted_solution(
+          %{
+            external_url: "www.example_filtered.com"
+          },
+          user,
+          challenge
+        )
 
       Solutions.delete(deleted_solution, user)
 
@@ -494,28 +403,26 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id,
-        title: "Filtered Title"
-      })
+      SolutionHelpers.create_submitted_solution(
+        %{
+          title: "Filtered Title"
+        },
+        user,
+        challenge
+      )
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id,
-          title: "Filtered Title"
-        })
+        SolutionHelpers.create_submitted_solution(
+          %{
+            title: "Filtered Title"
+          },
+          user,
+          challenge
+        )
 
       Solutions.delete(deleted_solution, user)
 
@@ -528,28 +435,26 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id,
-        brief_description: "Filtered Brief Description"
-      })
+      SolutionHelpers.create_submitted_solution(
+        %{
+          brief_description: "Filtered Brief Description"
+        },
+        user,
+        challenge
+      )
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id,
-          brief_description: "Filtered Brief Description"
-        })
+        SolutionHelpers.create_submitted_solution(
+          %{
+            brief_description: "Filtered Brief Description"
+          },
+          user,
+          challenge
+        )
 
       Solutions.delete(deleted_solution, user)
 
@@ -562,28 +467,26 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id,
-        description: "Filtered Description"
-      })
+      SolutionHelpers.create_submitted_solution(
+        %{
+          description: "Filtered Description"
+        },
+        user,
+        challenge
+      )
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id,
-          description: "Filtered Description"
-        })
+        SolutionHelpers.create_submitted_solution(
+          %{
+            description: "Filtered Description"
+          },
+          user,
+          challenge
+        )
 
       Solutions.delete(deleted_solution, user)
 
@@ -596,28 +499,26 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id,
-        external_url: "www.example_filtered.com"
-      })
+      SolutionHelpers.create_submitted_solution(
+        %{
+          external_url: "www.example_filtered.com"
+        },
+        user,
+        challenge
+      )
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      SolutionHelpers.create_submitted_solution(%{
-        submitter_id: user.id,
-        challenge_id: challenge.id
-      })
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       deleted_solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id,
-          external_url: "www.example_filtered.com"
-        })
+        SolutionHelpers.create_submitted_solution(
+          %{
+            external_url: "www.example_filtered.com"
+          },
+          user,
+          challenge
+        )
 
       Solutions.delete(deleted_solution, user)
 
@@ -632,11 +533,7 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       {:ok, fetched_solution} = Solutions.get(solution.id)
 
@@ -647,11 +544,7 @@ defmodule ChallengeGov.SolutionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      solution =
-        SolutionHelpers.create_submitted_solution(%{
-          submitter_id: user.id,
-          challenge_id: challenge.id
-        })
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       {:ok, deleted_solution} = Solutions.delete(solution, user)
 
