@@ -56,7 +56,7 @@ defmodule Web.SessionController do
          {:ok, %{"id_token" => id_token}} <-
            LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
-      {:ok, user} = Accounts.map_from_login(userinfo)
+      {:ok, user} = Accounts.map_from_login(userinfo, conn.remote_ip)
 
       if user.status == "active" do
         Accounts.update_active_session(user, true)

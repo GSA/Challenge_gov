@@ -13,6 +13,7 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
 
   @actions [
     "status_change",
+    "account_update",
     "accessed_site",
     "session_duration",
     "create",

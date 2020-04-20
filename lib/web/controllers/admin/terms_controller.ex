@@ -34,6 +34,12 @@ defmodule Web.Admin.TermsController do
         {:ok, user} ->
           conn
           |> put_flash(:info, "Your account has been updated")
+          |> add_to_security_log(user, "account_update", %{
+            terms_of_use: true,
+            privacy_guidelines: true,
+            first_name: user.first_name,
+            last_name: user.last_name
+          })
           |> redirect_based_on_user(user)
 
         {:error, changeset} ->
@@ -59,19 +65,26 @@ defmodule Web.Admin.TermsController do
         do: Routes.admin_terms_path(conn, :pending),
         else: Routes.admin_dashboard_path(conn, :index)
 
-    SecurityLogs.track(%SecurityLog{}, %{
-      originator_id: user.id,
-      originator_role: user.role,
-      originator_identifier: user.email,
-      originator_remote_ip: to_string(:inet_parse.ntoa(conn.remote_ip)),
-      action: "accessed_site"
-    })
-
-    redirect(conn, to: redirect_route)
+    conn
+    |> add_to_security_log(user, "accessed_site")
+    |> redirect(to: redirect_route)
   end
 
   def pending(conn, _params) do
     conn
     |> render("pending.html")
+  end
+
+  defp add_to_security_log(conn, user, action, details \\ nil) do
+    SecurityLogs.track(%SecurityLog{}, %{
+      originator_id: user.id,
+      originator_role: user.role,
+      originator_identifier: user.email,
+      originator_remote_ip: to_string(:inet_parse.ntoa(conn.remote_ip)),
+      action: action,
+      details: details
+    })
+
+    conn
   end
 end

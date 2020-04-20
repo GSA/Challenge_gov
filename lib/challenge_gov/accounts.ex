@@ -114,7 +114,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Create an account via admin panel
   """
-  def create(params, originator) do
+  def create(params, originator, remote_ip) do
     changeset =
       %User{}
       |> User.create_changeset(params)
@@ -127,6 +127,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
+          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
           target_id: user.id,
           target_type: user.role,
           target_identifier: user.email,
@@ -148,7 +149,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Create an account
   """
-  def create(params) do
+  def create(remote_ip, params) do
     changeset =
       %User{}
       |> User.create_changeset(params)
@@ -161,6 +162,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: user.id,
           originator_role: user.role,
           originator_identifier: user.email,
+          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
           action: "status_change",
           details: %{status: "created"}
         })
@@ -288,17 +290,17 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Parse login.gov data into our system
   """
-  def map_from_login(userinfo) do
+  def map_from_login(userinfo, remote_ip) do
     # look for user based on token
     case get_by_token(userinfo["sub"]) do
       {:error, :not_found} ->
         # look for users created by admin which have emails, but no token
         case get_by_email(userinfo["email"]) do
           {:error, :not_found} ->
-            create_new_user(userinfo)
+            create_new_user(userinfo, remote_ip)
 
           {:ok, user} ->
-            update_admin_added_user(user, userinfo)
+            update_admin_added_user(user, userinfo, remote_ip)
         end
 
       {:ok, account_user} ->
@@ -307,6 +309,7 @@ defmodule ChallengeGov.Accounts do
             originator_id: account_user.id,
             originator_role: account_user.role,
             originator_identifier: account_user.email,
+            originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
             action: "accessed_site"
           })
         end
@@ -315,7 +318,7 @@ defmodule ChallengeGov.Accounts do
     end
   end
 
-  def create_new_user(userinfo) do
+  def create_new_user(userinfo, remote_ip) do
     %{"email" => email} = userinfo
     length = String.length(email) - 4
     email_ext = String.slice(email, length, 4)
@@ -323,7 +326,7 @@ defmodule ChallengeGov.Accounts do
     user_role =
       if email_ext == ".gov" or email_ext == ".mil", do: "challenge_owner", else: "solver"
 
-    create(%{
+    create(remote_ip, %{
       email: userinfo["email"],
       first_name: "Placeholder",
       last_name: "Placeholder",
@@ -338,7 +341,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Update user added by admin
   """
-  def update_admin_added_user(user, userinfo) do
+  def update_admin_added_user(user, userinfo, remote_ip) do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.run(:user, fn _repo, _changes ->
@@ -349,6 +352,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: user.id,
           originator_role: user.role,
           originator_identifier: user.email,
+          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
           action: "accessed_site"
         })
       end)
@@ -549,7 +553,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Activate a user. Change status, allows login
   """
-  def activate(user, originator) do
+  def activate(user, originator, remote_ip) do
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -563,6 +567,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
+          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
           target_id: user.id,
           target_type: user.role,
           target_identifier: user.email,
@@ -584,7 +589,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Suspend a user. User can no longer login. Still has data access after
   """
-  def suspend(user, originator) do
+  def suspend(user, originator, remote_ip) do
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -598,6 +603,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
+          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
           target_id: user.id,
           target_type: user.role,
           target_identifier: user.email,
@@ -619,7 +625,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Revoke a user. User can no longer login. Removes access to their challenges
   """
-  def revoke(user, originator) do
+  def revoke(user, originator, remote_ip) do
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -633,6 +639,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
+          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
           target_id: user.id,
           target_type: user.role,
           target_identifier: user.email,

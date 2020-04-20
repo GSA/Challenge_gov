@@ -40,7 +40,7 @@ defmodule Web.Admin.UserController do
     %{current_user: originator} = conn.assigns
 
     with {:error, :not_found} <- Accounts.get_by_email(email),
-         {:ok, _} <- Accounts.create(user_params, originator) do
+         {:ok, _} <- Accounts.create(user_params, originator, conn.remote_ip) do
       conn
       |> put_flash(:info, "User has been added!")
       |> redirect(to: Routes.admin_user_path(conn, :index))
@@ -101,7 +101,7 @@ defmodule Web.Admin.UserController do
     %{current_user: originator} = conn.assigns
 
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.activate(user, originator) do
+         {:ok, user} <- Accounts.activate(user, originator, conn.remote_ip) do
       conn
       |> put_flash(:info, "User activated")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
@@ -112,7 +112,7 @@ defmodule Web.Admin.UserController do
     %{current_user: originator} = conn.assigns
 
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.suspend(user, originator) do
+         {:ok, user} <- Accounts.suspend(user, originator, conn.remote_ip) do
       conn
       |> put_flash(:info, "User suspended")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
@@ -123,7 +123,7 @@ defmodule Web.Admin.UserController do
     %{current_user: originator} = conn.assigns
 
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.revoke(user, originator) do
+         {:ok, user} <- Accounts.revoke(user, originator, conn.remote_ip) do
       conn
       |> put_flash(:info, "User revoked")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
