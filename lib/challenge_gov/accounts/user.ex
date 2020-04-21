@@ -10,6 +10,7 @@ defmodule ChallengeGov.Accounts.User do
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.SupportingDocuments.Document
+  alias ChallengeGov.Solutions
   alias ChallengeGov.Agencies.Member
 
   @type t :: %__MODULE__{}
@@ -47,6 +48,7 @@ defmodule ChallengeGov.Accounts.User do
     has_many(:challenge_owner_challenges, through: [:challenge_owners, :challenge])
     has_many(:members, Member)
     has_many(:supporting_documents, Document)
+    has_many(:solution_documents, Solutions.Document)
 
     # Fields
     field(:role, :string, read_after_writes: true)

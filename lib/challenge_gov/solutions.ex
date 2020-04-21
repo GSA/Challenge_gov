@@ -4,6 +4,7 @@ defmodule ChallengeGov.Solutions do
   """
 
   alias ChallengeGov.Solutions.Solution
+  alias ChallengeGov.SolutionDocuments
   alias ChallengeGov.Repo
   alias Stein.Filter
   alias Stein.Pagination
@@ -53,6 +54,7 @@ defmodule ChallengeGov.Solutions do
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:solution, changeset)
+    |> attach_documents(params)
     |> Repo.transaction()
     |> case do
       {:ok, %{solution: solution}} ->
@@ -68,6 +70,7 @@ defmodule ChallengeGov.Solutions do
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:solution, changeset)
+    |> attach_documents(params)
     |> Repo.transaction()
     |> case do
       {:ok, %{solution: solution}} ->
@@ -87,6 +90,7 @@ defmodule ChallengeGov.Solutions do
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:solution, changeset)
+    |> attach_documents(params)
     |> Repo.transaction()
     |> case do
       {:ok, %{solution: solution}} ->
@@ -102,6 +106,7 @@ defmodule ChallengeGov.Solutions do
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:solution, changeset)
+    |> attach_documents(params)
     |> Repo.transaction()
     |> case do
       {:ok, %{solution: solution}} ->
@@ -150,6 +155,29 @@ defmodule ChallengeGov.Solutions do
   defp allowed_to_delete?(_solution, _user) do
     true
   end
+
+  # Attach solution document functions
+  defp attach_documents(multi, %{document_ids: ids}) do
+    attach_documents(multi, %{"document_ids" => ids})
+  end
+
+  defp attach_documents(multi, %{"document_ids" => ids}) do
+    Enum.reduce(ids, multi, fn document_id, multi ->
+      Ecto.Multi.run(multi, {:document, document_id}, fn _repo, changes ->
+        document_id
+        |> SolutionDocuments.get()
+        |> attach_document(changes.solution)
+      end)
+    end)
+  end
+
+  defp attach_documents(multi, _params), do: multi
+
+  defp attach_document({:ok, document}, solution) do
+    SolutionDocuments.attach_to_solution(document, solution, "")
+  end
+
+  defp attach_document(result, _solution), do: result
 
   @doc false
   def statuses(), do: Solution.statuses()
