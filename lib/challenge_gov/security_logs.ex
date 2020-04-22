@@ -13,7 +13,7 @@ defmodule ChallengeGov.SecurityLogs do
   alias ChallengeGov.SecurityLogs.SecurityLog
 
   def track(params) do
-    Logger.info("An audit log event #{params[:action]}", params)
+    Logger.info("Audit event #{params[:action]}", Map.put(params, :log_type, "audit"))
 
     %SecurityLog{}
     |> SecurityLog.changeset(params)
