@@ -100,7 +100,12 @@ defmodule Web.SessionController do
   def delete(conn, _params) do
     %{current_user: user} = conn.assigns
     Accounts.update_active_session(user, false)
-    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()), Security.extract_remote_ip(conn))
+
+    SecurityLogs.log_session_duration(
+      user,
+      Timex.to_unix(Timex.now()),
+      Security.extract_remote_ip(conn)
+    )
 
     conn
     |> clear_session()
@@ -152,7 +157,12 @@ defmodule Web.SessionController do
   def logout_user(conn) do
     %{current_user: user} = conn.assigns
     Accounts.update_active_session(user, false)
-    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()), Security.extract_remote_ip(conn))
+
+    SecurityLogs.log_session_duration(
+      user,
+      Timex.to_unix(Timex.now()),
+      Security.extract_remote_ip(conn)
+    )
 
     conn
     |> clear_session()

@@ -79,7 +79,8 @@ defmodule ChallengeGov.Security do
     case is_nil(remote_ip) do
       true ->
         nil
-      false
+
+      false ->
         to_string(:inet_parse.ntoa(remote_ip))
     end
   end

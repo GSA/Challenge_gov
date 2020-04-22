@@ -193,7 +193,8 @@ defmodule Web.Admin.ChallengeController do
     to_section = Challenges.to_section(section, action)
 
     with {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
-         {:ok, challenge} <- Challenges.update(challenge, params, user, Security.extract_remote_ip(conn)) do
+         {:ok, challenge} <-
+           Challenges.update(challenge, params, user, Security.extract_remote_ip(conn)) do
       if action == "save_draft" do
         conn
         |> put_flash(:info, "Challenge saved as draft")
@@ -228,7 +229,8 @@ defmodule Web.Admin.ChallengeController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(id)
 
-    with {:ok, challenge} <- Challenges.update(challenge, params, user, Security.extract_remote_ip(conn)),
+    with {:ok, challenge} <-
+           Challenges.update(challenge, params, user, Security.extract_remote_ip(conn)),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       conn
       |> put_flash(:info, "Challenge updated!")
@@ -292,7 +294,8 @@ defmodule Web.Admin.ChallengeController do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.unpublish(challenge, user, Security.extract_remote_ip(conn)) do
+         {:ok, challenge} <-
+           Challenges.unpublish(challenge, user, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "Challenge unpublished")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
@@ -304,7 +307,8 @@ defmodule Web.Admin.ChallengeController do
     message = Map.get(params, "rejection_message")
 
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.reject(challenge, user, Security.extract_remote_ip(conn), message) do
+         {:ok, challenge} <-
+           Challenges.reject(challenge, user, Security.extract_remote_ip(conn), message) do
       conn
       |> put_flash(:info, "Challenge rejected")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
@@ -337,7 +341,8 @@ defmodule Web.Admin.ChallengeController do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.unarchive(challenge, user, Security.extract_remote_ip(conn)) do
+         {:ok, challenge} <-
+           Challenges.unarchive(challenge, user, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "Challenge unarchived")
       |> redirect(to: Routes.admin_challenge_path(conn, :show, challenge.id))
