@@ -25,7 +25,7 @@ defmodule Web.Api.SessionController do
   def logout_user(conn, _opts) do
     %{current_user: user} = conn.assigns
     Accounts.update_active_session(user, false)
-    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()))
+    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()), Security.extract_remote_ip(conn))
 
     conn
     |> clear_session()
