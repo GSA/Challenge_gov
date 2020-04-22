@@ -3,6 +3,7 @@ defmodule Web.SessionController do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.LoginGov
+  alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
 
   def new(conn, params) do
@@ -56,7 +57,7 @@ defmodule Web.SessionController do
          {:ok, %{"id_token" => id_token}} <-
            LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
-      {:ok, user} = Accounts.map_from_login(userinfo, conn.remote_ip)
+      {:ok, user} = Accounts.map_from_login(userinfo, Security.extract_remote_ip(conn))
 
       if user.status == "active" do
         Accounts.update_active_session(user, true)
@@ -99,7 +100,7 @@ defmodule Web.SessionController do
   def delete(conn, _params) do
     %{current_user: user} = conn.assigns
     Accounts.update_active_session(user, false)
-    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()), conn.remote_ip)
+    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()), Security.extract_remote_ip(conn))
 
     conn
     |> clear_session()
@@ -151,7 +152,7 @@ defmodule Web.SessionController do
   def logout_user(conn) do
     %{current_user: user} = conn.assigns
     Accounts.update_active_session(user, false)
-    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()), conn.remote_ip)
+    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()), Security.extract_remote_ip(conn))
 
     conn
     |> clear_session()

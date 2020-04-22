@@ -2,6 +2,7 @@ defmodule Web.Admin.TermsController do
   use Web, :controller
 
   alias ChallengeGov.Accounts
+  alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.SecurityLogs.SecurityLog
 
@@ -80,7 +81,7 @@ defmodule Web.Admin.TermsController do
       originator_id: user.id,
       originator_role: user.role,
       originator_identifier: user.email,
-      originator_remote_ip: to_string(:inet_parse.ntoa(conn.remote_ip)),
+      originator_remote_ip: Security.extract_remote_ip(conn),
       action: action,
       details: details
     })

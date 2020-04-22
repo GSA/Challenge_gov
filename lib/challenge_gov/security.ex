@@ -75,6 +75,15 @@ defmodule ChallengeGov.Security do
     end
   end
 
+  def extract_remote_ip(%{remote_ip: remote_ip}) do
+    case is_nil(remote_ip) do
+      true ->
+        nil
+      false
+        to_string(:inet_parse.ntoa(remote_ip))
+    end
+  end
+
   defp parse_env(nil), do: nil
   defp parse_env(""), do: nil
   defp parse_env(var) when is_integer(var), do: var

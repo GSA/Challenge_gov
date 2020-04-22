@@ -127,7 +127,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
-          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
+          originator_remote_ip: remote_ip,
           target_id: user.id,
           target_type: user.role,
           target_identifier: user.email,
@@ -162,7 +162,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: user.id,
           originator_role: user.role,
           originator_identifier: user.email,
-          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
+          originator_remote_ip: remote_ip,
           action: "status_change",
           details: %{status: "created"}
         })
@@ -309,7 +309,7 @@ defmodule ChallengeGov.Accounts do
             originator_id: account_user.id,
             originator_role: account_user.role,
             originator_identifier: account_user.email,
-            originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
+            originator_remote_ip: remote_ip,
             action: "accessed_site"
           })
         end
@@ -352,7 +352,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: user.id,
           originator_role: user.role,
           originator_identifier: user.email,
-          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
+          originator_remote_ip: remote_ip,
           action: "accessed_site"
         })
       end)
@@ -567,7 +567,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
-          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
+          originator_remote_ip: remote_ip,
           target_id: user.id,
           target_type: user.role,
           target_identifier: user.email,
@@ -603,7 +603,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
-          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
+          originator_remote_ip: remote_ip,
           target_id: user.id,
           target_type: user.role,
           target_identifier: user.email,
@@ -639,7 +639,7 @@ defmodule ChallengeGov.Accounts do
           originator_id: originator.id,
           originator_role: originator.role,
           originator_identifier: originator.email,
-          originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
+          originator_remote_ip: remote_ip,
           target_id: user.id,
           target_type: user.role,
           target_identifier: user.email,

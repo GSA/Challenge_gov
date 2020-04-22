@@ -46,22 +46,13 @@ defmodule ChallengeGov.SecurityLogs do
 
       Accounts.update_active_session(user, false)
 
-      ip_address =
-        case is_binary(remote_ip) or is_nil(remote_ip) do
-          true ->
-            remote_ip
-
-          false ->
-            to_string(:inet_parse.ntoa(remote_ip))
-        end
-
       track(%SecurityLog{}, %{
         action: "session_duration",
         details: %{duration: duration},
         originator_id: user.id,
         originator_role: user.role,
         originator_identifier: user.email,
-        originator_remote_ip: ip_address
+        originator_remote_ip: remote_ip
       })
     end
   end

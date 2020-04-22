@@ -866,7 +866,7 @@ defmodule ChallengeGov.Challenges do
       originator_id: user.id,
       originator_role: user.role,
       originator_identifier: user.email,
-      originator_remote_ip: to_string(:inet_parse.ntoa(remote_ip)),
+      originator_remote_ip: remote_ip,
       target_id: challenge.id,
       target_type: "challenge",
       target_identifier: challenge.title,
