@@ -3,10 +3,22 @@ defmodule ChallengeGov.Security do
   Application env parsing for security related data
   """
 
+  def challenge_owner_assumed_tlds do
+    var = Application.get_env(:challenge_gov, :challenge_owner_assumed_tlds)
+
+    case parse_list_env(var) do
+      nil ->
+        [".mil"]
+
+      val ->
+        val
+    end
+  end
+
   def log_retention_days do
     var = Application.get_env(:challenge_gov, :log_retention_in_days)
 
-    case parse_env(var) do
+    case parse_integer_env(var) do
       nil ->
         180
 
@@ -18,7 +30,7 @@ defmodule ChallengeGov.Security do
   def deactivate_days do
     var = Application.get_env(:challenge_gov, :account_deactivation_in_days)
 
-    case parse_env(var) do
+    case parse_integer_env(var) do
       nil ->
         90
 
@@ -30,7 +42,7 @@ defmodule ChallengeGov.Security do
   def decertify_days do
     var = Application.get_env(:challenge_gov, :account_decertify_in_days)
 
-    case parse_env(var) do
+    case parse_integer_env(var) do
       nil ->
         365
 
@@ -42,7 +54,7 @@ defmodule ChallengeGov.Security do
   def timeout_interval do
     var = Application.get_env(:challenge_gov, :session_timeout_in_minutes)
 
-    case parse_env(var) do
+    case parse_integer_env(var) do
       nil ->
         15
 
@@ -54,7 +66,7 @@ defmodule ChallengeGov.Security do
   def deactivate_warning_one_days do
     var = Application.get_env(:challenge_gov, :account_deactivation_warning_one_in_days)
 
-    case parse_env(var) do
+    case parse_integer_env(var) do
       nil ->
         10
 
@@ -66,7 +78,7 @@ defmodule ChallengeGov.Security do
   def deactivate_warning_two_days do
     var = Application.get_env(:challenge_gov, :account_deactivation_warning_two_in_days)
 
-    case parse_env(var) do
+    case parse_integer_env(var) do
       nil ->
         5
 
@@ -85,12 +97,22 @@ defmodule ChallengeGov.Security do
     end
   end
 
-  defp parse_env(nil), do: nil
-  defp parse_env(""), do: nil
-  defp parse_env(var) when is_integer(var), do: var
+  defp parse_integer_env(nil), do: nil
+  defp parse_integer_env(""), do: nil
+  defp parse_integer_env(var) when is_integer(var), do: var
 
-  defp parse_env(var) do
+  defp parse_integer_env(var) do
     {val, ""} = Integer.parse(var)
     val
+  end
+
+  defp parse_list_env(nil), do: nil
+  defp parse_list_env(""), do: nil
+  defp parse_list_env(var) when is_list(var), do: var
+
+  defp parse_list_env(var) do
+    var
+    |> String.split(",")
+    |> Enum.map(&String.trim/1)
   end
 end

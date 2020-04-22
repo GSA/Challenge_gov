@@ -81,7 +81,8 @@ config :challenge_gov,
     System.get_env("ACCOUNT_DEACTIVATION_WARNING_ONE_IN_DAYS") || 10,
   account_deactivation_warning_two_in_days:
     System.get_env("ACCOUNT_DEACTIVATION_WARNING_TWO_IN_DAYS") || 5,
-  log_retention_in_days: System.get_env("LOG_RETENTION_IN_DAYS") || 180
+  log_retention_in_days: System.get_env("LOG_RETENTION_IN_DAYS") || 180,
+  challenge_owner_assumed_tlds: System.get_env("CHALLENGE_OWNER_ASSUMED_TLDS") || [".mil"]
 
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"

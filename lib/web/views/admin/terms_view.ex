@@ -2,6 +2,7 @@ defmodule Web.Admin.TermsView do
   use Web, :view
 
   alias ChallengeGov.Agencies
+  alias ChallengeGov.Security
 
   def challenge_owner_fields(f, user) do
     if user.data.role == "challenge_owner" do
@@ -20,25 +21,41 @@ defmodule Web.Admin.TermsView do
     end
   end
 
-  def mil_users_content(user) do
-    length = String.length(user.email) - 4
-    email_ext = String.slice(user.email, length, 4)
+  def challenge_owner_assumed_content(user) do
+    case match_user_email(user) do
+      true ->
+        [
+          content_tag(:div, class: "page-center") do
+            [
+              content_tag(:p, "You have been registered as a Challenge Owner and
+              will be able to create Challenges to go live on Challenge.gov."),
+              content_tag(:p) do
+                [
+                  "If this is not correct please contact ",
+                  content_tag(:a, "team@challenge.gov", href: "mailto:team@challenge.gov")
+                ]
+              end
+            ]
+          end
+        ]
 
-    if email_ext == ".mil" do
-      [
-        content_tag(:div, class: "page-center") do
-          [
-            content_tag(:p, "You have been registered as a Challenge Owner and
-            will be able to create Challenges to go live on Challenge.gov."),
-            content_tag(:p) do
-              [
-                "If this is not correct please contact ",
-                content_tag(:a, "team@challenge.gov", href: "mailto:team@challenge.gov")
-              ]
-            end
-          ]
-        end
-      ]
+      false ->
+        ""
     end
+  end
+
+  defp match_user_email(%{email: email}) do
+    tlds = Security.challenge_owner_assumed_tlds()
+
+    regexs =
+      Enum.map(tlds, fn tld ->
+        escaped_tld = Regex.escape(tld)
+        matching_string = ".*#{escaped_tld}$"
+        Regex.compile!(matching_string)
+      end)
+
+    Enum.any?(regexs, fn regex ->
+      Regex.match?(regex, email)
+    end)
   end
 end
