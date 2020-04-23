@@ -24,7 +24,7 @@ defmodule Web.Admin.ReportsController do
 
   def export_security_log(conn, params) do
     csv =
-      if is_nil(params),
+      if params == %{},
         do: Reports.stream_all_records(),
         else: Reports.filter_by_params(params)
 

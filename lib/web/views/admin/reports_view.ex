@@ -4,6 +4,7 @@ defmodule Web.Admin.ReportsView do
   use Web, :view
 
   alias ChallengeGov.Reports.CSV
+  alias Web.Admin.FormView
 
   def render("security-log-header.csv", _assigns) do
     headers = [

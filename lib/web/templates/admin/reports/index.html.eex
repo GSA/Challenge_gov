@@ -1,11 +1,3 @@
-<!-- <section class="content">
-  <div class="container-fluid">
-    <p>
-      Ok here we go
-    </p>
-  </div>
-</div> -->
-
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
@@ -30,32 +22,27 @@
 </div>
 
 <section class="content">
-<div class="row">
-  <div class="col-md-12">
-    <div class="box">
-      <div class="box-header">
-        <h3 class="box-title">Security Log</h3>
-        <%= form_for(@conn, Routes.admin_reports_path(@conn, :export_security_log), [method: :get], fn f -> %>
-          <div class="box-body">
-            <div class="form-group">
-              <%= label(f, :records, :year) %>
-              <%= select(f, :year, Enum.map(@years, &(&1)), prompt: "", label: "year", class: "form-control") %>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box content-sub-1">
+        <div class="box-header row">
+          <h4 class="box-title">Security Log</h4>
+          <%= link(to: Routes.admin_reports_path(@conn, :export_security_log), class: "btn btn-primary mx-3") do %>
+            <span>Export All</span>
+          <% end %>
+        </div>
+        <div class="col-md-4 content-sub-2">
+          <h5>Filter by date:</h5>
+          <%= form_for(@conn, Routes.admin_reports_path(@conn, :export_security_log), [method: :get], fn f -> %>
+            <%= FormView.select_field(f, :year, collection: Enum.map(@years, &(&1)), prompt: "", label: "Year", class: "form-control", required: true) %>
+            <%= FormView.select_field(f, :month, collection: Enum.map(@months, &(&1)), prompt: "", label: "Month", class: "form-control") %>
+            <%= FormView.select_field(f, :day, collection: Enum.map(@days, &(&1)), prompt: "", label: "Day", class: "form-control") %>
+            <div class="btn-wrapper">
+              <%= submit("Export", class: "btn btn-primary") %>
             </div>
-            <div class="form-group">
-              <%= label(f, :records, :month) %>
-              <%= select(f, :month, Enum.map(@months, &(&1)), prompt: "", label: "month", class: "form-control") %>
-            </div>
-            <div class="form-group">
-              <%= label(f, :records, :day) %>
-              <%= select(f, :day, Enum.map(@days, &(&1)), prompt: "", label: "day", class: "form-control") %>
-            </div>
-          </div>
-          <div class="box-footer">
-            <%= submit("Export", class: "btn btn-primary") %>
-          </div>
-        <% end) %>
+          <% end) %>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </section>
