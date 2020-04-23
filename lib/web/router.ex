@@ -69,7 +69,8 @@ defmodule Web.Router do
       as: :challenge
     )
 
-    get("/reports/export/security_logs", ReportController, :export_security_logs)
+    get("/reports/export/security_log", ReportsController, :export_security_log)
+    get("/reports/security_log", ReportsController, :new)
   end
 
   scope "/admin", Web.Admin, as: :admin do

@@ -1,6 +1,6 @@
 NimbleCSV.define(ChallengeGov.Reports.CSV, separator: ",", escape: "\"")
 
-defmodule ChallengeGov.Admin.ReportView do
+defmodule Web.Admin.ReportsView do
   use Web, :view
 
   alias ChallengeGov.Reports.CSV
