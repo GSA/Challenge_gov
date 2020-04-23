@@ -20,7 +20,7 @@ defmodule ChallengeGov.MixProject do
   def application do
     [
       mod: {ChallengeGov.Application, []},
-      extra_applications: [:logger, :runtime_tools, :timex]
+      extra_applications: [:logger, :runtime_tools, :timex, :jason, :logger_json]
     ]
   end
 
@@ -36,12 +36,13 @@ defmodule ChallengeGov.MixProject do
       {:bamboo_smtp, "~> 2.1.0"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:earmark, "~> 1.4.3"},
-      {:ecto_sql, "~> 3.0"},
+      {:ecto_sql, "~> 3.4"},
       {:elixir_uuid, "~> 1.2"},
       {:gettext, "~> 0.11"},
       {:httpoison, "~> 1.5"},
       {:jason, "~> 1.0"},
       {:joken, "~> 2.0"},
+      {:logger_json, "~> 4.0"},
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
       {:nimble_csv, "~> 0.6"},
       {:phoenix, "~> 1.4.0"},

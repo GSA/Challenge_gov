@@ -57,7 +57,7 @@ config :challenge_gov, Web.Endpoint,
   ]
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n"
+config :logger, backends: [LoggerJSON]
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
@@ -86,7 +86,8 @@ config :challenge_gov, ChallengeGov.Repo,
   password: "postgres",
   database: "challenge_gov_dev",
   hostname: "localhost",
-  pool_size: 10
+  pool_size: 10,
+  loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
 config :challenge_gov, ChallengeGov.Mailer,
   from: "support@challenge.gov",

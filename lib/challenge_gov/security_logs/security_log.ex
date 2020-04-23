@@ -13,6 +13,7 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
 
   @actions [
     "status_change",
+    "account_update",
     "accessed_site",
     "session_duration",
     "create",
@@ -27,6 +28,7 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
     field(:details, :map)
     field(:originator_role, :string)
     field(:originator_identifier, :string)
+    field(:originator_remote_ip, :string)
     field(:target_id, :integer)
     field(:target_type, :string)
     field(:target_identifier, :string)
@@ -41,6 +43,7 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
       :originator_id,
       :originator_role,
       :originator_identifier,
+      :originator_remote_ip,
       :target_id,
       :target_type,
       :target_identifier

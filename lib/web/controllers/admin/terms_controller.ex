@@ -2,8 +2,8 @@ defmodule Web.Admin.TermsController do
   use Web, :controller
 
   alias ChallengeGov.Accounts
+  alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
-  alias ChallengeGov.SecurityLogs.SecurityLog
 
   def new(conn, _params) do
     %{current_user: user} = conn.assigns
@@ -34,6 +34,12 @@ defmodule Web.Admin.TermsController do
         {:ok, user} ->
           conn
           |> put_flash(:info, "Your account has been updated")
+          |> add_to_security_log(user, "account_update", %{
+            terms_of_use: true,
+            privacy_guidelines: true,
+            first_name: user.first_name,
+            last_name: user.last_name
+          })
           |> redirect_based_on_user(user)
 
         {:error, changeset} ->
@@ -59,18 +65,26 @@ defmodule Web.Admin.TermsController do
         do: Routes.admin_terms_path(conn, :pending),
         else: Routes.admin_dashboard_path(conn, :index)
 
-    SecurityLogs.track(%SecurityLog{}, %{
-      originator_id: user.id,
-      originator_role: user.role,
-      originator_identifier: user.email,
-      action: "accessed_site"
-    })
-
-    redirect(conn, to: redirect_route)
+    conn
+    |> add_to_security_log(user, "accessed_site")
+    |> redirect(to: redirect_route)
   end
 
   def pending(conn, _params) do
     conn
     |> render("pending.html")
+  end
+
+  defp add_to_security_log(conn, user, action, details \\ nil) do
+    SecurityLogs.track(%{
+      originator_id: user.id,
+      originator_role: user.role,
+      originator_identifier: user.email,
+      originator_remote_ip: Security.extract_remote_ip(conn),
+      action: action,
+      details: details
+    })
+
+    conn
   end
 end
