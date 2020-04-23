@@ -20,7 +20,13 @@ defmodule ChallengeGov.Reports do
 
   def filter_by_params(params) do
     %{"year" => year, "month" => month, "day" => day} = params
-    {datetime_start, datetime_end} = range_from(year, month, day)
+
+    {datetime_start, datetime_end} =
+      range_from(
+        sanitize_param(year),
+        sanitize_param(month),
+        sanitize_param(day)
+      )
 
     SecurityLog
     |> where([r], r.logged_at >= ^datetime_start)
@@ -29,17 +35,21 @@ defmodule ChallengeGov.Reports do
     |> Repo.all()
   end
 
+  defp sanitize_param(value) do
+    if value == "", do: nil, else: String.to_integer(value)
+  end
+
   defp range_from(year, month, day) do
     case {year, month, day} do
-      {year, month, day} when month == "" and day == "" ->
+      {year, month, day} when month == nil and day == nil ->
         # just year given
         datetime_start =
-          String.to_integer(year)
+          year
           |> Timex.beginning_of_year()
           |> Timex.to_datetime()
 
         datetime_end =
-          String.to_integer(year)
+          year
           |> Timex.end_of_year()
           |> Timex.to_datetime()
           |> Timex.end_of_day()
@@ -47,17 +57,17 @@ defmodule ChallengeGov.Reports do
 
         {datetime_start, datetime_end}
 
-      {year, month, day} when day == "" ->
+      {year, month, day} when day == nil ->
         # month/year given
         datetime_start =
-          String.to_integer(year)
-          |> Timex.beginning_of_month(String.to_integer(month))
+          year
+          |> Timex.beginning_of_month(month)
           |> Timex.to_datetime()
           |> Timex.beginning_of_day()
 
         datetime_end =
-          String.to_integer(year)
-          |> Timex.end_of_month(String.to_integer(month))
+          year
+          |> Timex.end_of_month(month)
           |> Timex.to_datetime()
           |> Timex.end_of_day()
 
@@ -66,12 +76,12 @@ defmodule ChallengeGov.Reports do
       {year, month, day} ->
         # day/month/year given
         datetime_start =
-          {String.to_integer(year), String.to_integer(month), String.to_integer(day)}
+          {year, month, day}
           |> Timex.to_datetime()
           |> Timex.beginning_of_day()
 
         datetime_end =
-          {String.to_integer(year), String.to_integer(month), String.to_integer(day)}
+          {year, month, day}
           |> Timex.to_datetime()
           |> Timex.end_of_day()
 
