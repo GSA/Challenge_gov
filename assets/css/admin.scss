@@ -22,6 +22,11 @@ body {
   padding: 15px 15px;
 }
 
+.component-btn {
+  color: #000;
+  background-color: #FA9441;
+}
+
 /* post sign-in screen: lib/web/templates/admin/terms/index.html.eex */
 
 .rules-of-behavior {
@@ -218,5 +223,9 @@ label {
 
   .content-sub-2 {
     margin-top: 4rem;
+  }
+
+  label, .col {
+    padding: 0;
   }
 }
