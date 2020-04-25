@@ -1,6 +1,5 @@
 .hero {
 
-
   &__wrapper {
     background-color: #2B608A;
     height: auto;
@@ -27,13 +26,14 @@
     border-radius: 10px;
     background-color: #fff;
   }
+}
 
-  &__presentational {
+  .main-section {
     height: auto;
     width: auto;
     padding: 15px;
 
-    .presentational-info {
+    &__text {
       height: auto;
       width: auto;
       display: flex;
@@ -63,7 +63,7 @@
       }
     }
 
-    .presentational-logo {
+    .logo-container {
       width: auto;
       display: flex;
       align-items: center;
@@ -83,18 +83,35 @@
     }
   }
 
-  &__info-section {
-    height: auto;
-    padding: 15px 15px 0;
+  .detail-section {
+    padding: 15px 15px 5px 15px;
     background-color: #F2F2F2;
     border-radius: 0 0 10px 10px;
+    display: grid;
 
-    &__block {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
+
+      &__apply {
+        grid-row: 1 / 1;
+        margin-bottom: 1.5rem;
+
+        .apply-btn {
+          height: 100%;
+          width: 100%;
+          padding: .5rem;
+          align-self: center;
+          color: #000;
+          background-color: #FA9441;
+          border-radius: 7px;
+          border: 1px solid #C9C9C9;
+          box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
+        }
+      }
 
       .item {
+        margin-bottom: .5em;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
 
         h3 {
           line-height: 27px;
@@ -113,13 +130,6 @@
           margin-right: 5px;
         }
 
-        &__standard {
-          margin-bottom: .5em;
-          display: flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-        }
-
         .info-title {
           font-weight: bold;
         }
@@ -129,15 +139,7 @@
           font-weight: bold;
           margin: 0 10px 0 5px;
         }
-
-        &__types {
-          margin-top: -5px;
-          margin-bottom: .5em;
-        }
       }
-
-    }
-
   }
 
   // MOBILE
@@ -145,7 +147,7 @@
   @media screen
   and (max-device-width: 425px) {
 
-    &__content {
+    .main-section {
 
       h1 {
         font-size: .8em;
@@ -156,8 +158,13 @@
       }
     }
 
-    &__info-section {
-      &__block {
+    .detail-section {
+
+      .apply-btn {
+        font-size: 1rem;
+      }
+
+      &__text-block {
 
         .info-title {
           font-size: .5em;
@@ -184,12 +191,12 @@
   @media screen
   and (min-device-width: 768px) {
 
-    &__presentational {
+    .main-section {
       min-height: 12em;
       padding: 20px;
       display: flex;
 
-      .presentational-info {
+      &__text {
         width: 40%;
         height: auto;
 
@@ -202,7 +209,7 @@
         }
       }
 
-      .presentational-logo {
+      .logo-container {
         width: 60%;
 
         .agency-logo {
@@ -212,24 +219,26 @@
       }
     }
 
-    &__info-section {
-      padding: 20px 20px 0 20px;
-      display: flex;
+    .detail-section {
+      grid-template-columns: repeat(auto-fit, 50%);
+      row-gap: .1rem;
 
-      &__block {
-        width: 50%;
+      &__apply {
+        grid-row: 1 / 5;
+        margin: 3.1rem 2.6rem 2.6rem;
+        height: 90%;
+        width: 100%;
 
-        .item {
-          margin-bottom: 20px;
-
-          .info-title {
-            margin-right: 10px;
-          }
+        .apply-btn {
+          width: 60%;
+          height: 50%;
+          padding: 0 40px;
+          color: #000;
+          background-color: #FA9441;
+          border-radius: 7px;
+          border: 1px solid #C9C9C9;
+          box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
         }
-
       }
-
     }
   }
-
-}
