@@ -14,8 +14,18 @@
               <div class="col"><a href="#", class="solution_uploaded_document_delete" data-document-id="<%= document.id %>">Remove</a></div>
             </li>
           <% end) %>
+          <%= Enum.map(@changeset.changes[:document_objects] || [], fn document -> %>
+            <li class="row solution-document-row">
+              <div class="col"><%= link(document.filename, to: ChallengeGov.SolutionDocuments.download_document_url(document), target: "_blank") %></div>
+              <div class="col"><a href="#", class="solution_uploaded_document_delete" data-document-id="<%= document.id %>">Remove</a></div>
+            </li>
+          <% end) %>
         </ul>
-        <ul class="solution-document-ids"></ul>
+        <ul class="solution-document-ids">
+          <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
+            <%= hidden_input f, :document_id, name: "solution[document_ids][]", value: document_id %>
+          <% end) %>
+        </ul>
         <%= file_input f, :document, name: "solution[documents][]", class: "mb-3" %>
       </div>
     </div>

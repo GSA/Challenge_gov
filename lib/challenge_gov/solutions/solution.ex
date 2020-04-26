@@ -29,6 +29,7 @@ defmodule ChallengeGov.Solutions.Solution do
     belongs_to(:submitter, User)
     belongs_to(:challenge, Challenge)
     has_many(:documents, Document)
+    field(:document_ids, :map, virtual: true)
 
     # Fields
     field(:title, :string)

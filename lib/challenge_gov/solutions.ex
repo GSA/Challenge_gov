@@ -71,6 +71,7 @@ defmodule ChallengeGov.Solutions do
         {:ok, solution}
 
       {:error, _type, changeset, _changes} ->
+        changeset = preserve_document_ids_on_error(changeset, params)
         {:error, changeset}
     end
   end
@@ -88,6 +89,7 @@ defmodule ChallengeGov.Solutions do
         {:ok, solution}
 
       {:error, _type, changeset, _changes} ->
+        changeset = preserve_document_ids_on_error(changeset, params)
         {:error, changeset}
     end
   end
@@ -109,6 +111,7 @@ defmodule ChallengeGov.Solutions do
         {:ok, solution}
 
       {:error, _type, changeset, _changes} ->
+        changeset = preserve_document_ids_on_error(changeset, params)
         {:error, changeset}
     end
   end
@@ -126,6 +129,7 @@ defmodule ChallengeGov.Solutions do
         {:ok, solution}
 
       {:error, _type, changeset, _changes} ->
+        changeset = preserve_document_ids_on_error(changeset, params)
         {:error, changeset}
     end
   end
@@ -210,6 +214,24 @@ defmodule ChallengeGov.Solutions do
   end
 
   defp attach_document(result, _challenge), do: result
+
+  defp preserve_document_ids_on_error(changeset, %{"document_ids" => ids}) do
+    {document_ids, documents} =
+      Enum.reduce(ids, {[], []}, fn document_id, {document_ids, documents} ->
+        with {:ok, document} <- SolutionDocuments.get(document_id) do
+          {[document_id | document_ids], [document | documents]}
+        else
+          _ ->
+            {document_ids, documents}
+        end
+      end)
+
+    changeset
+    |> Ecto.Changeset.put_change(:document_ids, document_ids)
+    |> Ecto.Changeset.put_change(:document_objects, documents)
+  end
+
+  defp preserve_document_ids_on_error(changeset, _params), do: changeset
 
   @doc false
   def statuses(), do: Solution.statuses()
