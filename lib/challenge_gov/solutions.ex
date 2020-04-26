@@ -16,7 +16,7 @@ defmodule ChallengeGov.Solutions do
   def all(opts \\ []) do
     query =
       Solution
-      |> preload([:submitter, :challenge])
+      |> base_preload
       |> where([s], is_nil(s.deleted_at))
       |> Filter.filter(opts[:filter], __MODULE__)
 
@@ -31,10 +31,7 @@ defmodule ChallengeGov.Solutions do
     Solution
     |> where([s], is_nil(s.deleted_at))
     |> where([s], s.id == ^id)
-    |> preload([
-      :submitter,
-      :challenge
-    ])
+    |> base_preload
     |> Repo.one()
     |> case do
       nil ->
@@ -45,16 +42,28 @@ defmodule ChallengeGov.Solutions do
     end
   end
 
+  defp base_preload(solution) do
+    solution
+    |> preload([:submitter, :challenge, :documents])
+  end
+
   def new do
-    Solution.changeset(%Solution{}, %{})
+    %Solution{}
+    |> new_form_preload
+    |> Solution.changeset(%{})
+  end
+
+  defp new_form_preload(solution) do
+    Repo.preload(solution, [:submitter, :challenge, :documents])
   end
 
   def create_draft(params, user, challenge) do
+    params = attach_default_multi_params(params)
     changeset = Solution.draft_changeset(%Solution{}, params, user, challenge)
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:solution, changeset)
-    |> attach_documents(params)
+    |> attach_documents(params, user)
     |> Repo.transaction()
     |> case do
       {:ok, %{solution: solution}} ->
@@ -66,11 +75,12 @@ defmodule ChallengeGov.Solutions do
   end
 
   def create_review(params, user, challenge) do
+    params = attach_default_multi_params(params)
     changeset = Solution.review_changeset(%Solution{}, params, user, challenge)
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:solution, changeset)
-    |> attach_documents(params)
+    |> attach_documents(params, user)
     |> Repo.transaction()
     |> case do
       {:ok, %{solution: solution}} ->
@@ -86,11 +96,12 @@ defmodule ChallengeGov.Solutions do
   end
 
   def update_draft(solution, params) do
+    params = attach_default_multi_params(params)
     changeset = Solution.update_draft_changeset(solution, params)
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:solution, changeset)
-    |> attach_documents(params)
+    |> attach_documents(params, solution.submitter)
     |> Repo.transaction()
     |> case do
       {:ok, %{solution: solution}} ->
@@ -102,11 +113,12 @@ defmodule ChallengeGov.Solutions do
   end
 
   def update_review(solution, params) do
+    params = attach_default_multi_params(params)
     changeset = Solution.update_review_changeset(solution, params)
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:solution, changeset)
-    |> attach_documents(params)
+    |> attach_documents(params, solution.submitter)
     |> Repo.transaction()
     |> case do
       {:ok, %{solution: solution}} ->
@@ -115,6 +127,10 @@ defmodule ChallengeGov.Solutions do
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
+  end
+
+  defp attach_default_multi_params(params) do
+    Map.put_new(params, "documents", [])
   end
 
   def submit(solution) do
@@ -157,19 +173,48 @@ defmodule ChallengeGov.Solutions do
   end
 
   # Attach solution document functions
-  defp attach_documents(multi, %{document_ids: ids}) do
-    attach_documents(multi, %{"document_ids" => ids})
+  defp attach_documents(multi, %{documents: documents}, _user) do
+    attach_documents(multi, %{"documents" => documents})
   end
 
-  defp attach_documents(multi, %{"document_ids" => ids}) do
-    Enum.reduce(ids, multi, fn document_id, multi ->
-      Ecto.Multi.run(multi, {:document, document_id}, fn _repo, changes ->
-        document_id
-        |> SolutionDocuments.get()
+  defp attach_documents(multi, %{"documents" => documents}, user) do
+    documents
+    |> Enum.with_index()
+    |> Enum.reduce(multi, fn document, multi ->
+      {document, index} = document
+
+      Ecto.Multi.run(multi, {:document, index}, fn _repo, changes ->
+        user
+        |> SolutionDocuments.upload(document)
         |> attach_document(changes.solution)
       end)
     end)
   end
+
+  #   IO.inspect file
+  #   file = Stein.Storage.prep_file(file)
+  #   IO.inspect file
+  #   meta = [
+  #     {:content_disposition, ~s{attachment; filename="#{file.filename}"}}
+  #   ]
+  #   key = UUID.uuid4()
+  #   path = SolutionDocuments.document_path(key, file.extension)
+  #   Stein.Storage.upload(file, path, meta: meta)
+  #   Ecto.Multi.run(multi, :document, fn _repo, changes ->
+  #     changes.solution
+  #     |> ChallengeGov.Solutions.Document.create_changeset(file, key)
+  #     |> attach_document(changes.solution)
+  #     |> Repo.insert
+  #   end)
+  #   # IO.inspect documents
+  #   # # Enum.reduce(ids, multi, fn document_id, multi ->
+  #   #   Ecto.Multi.run(multi, :document, fn _repo, changes ->
+  #   #     ids
+  #   #     |> SolutionDocuments.upload(user)
+  #   #     |> attach_document(changes.solution)
+  #   #   end)
+  #   # # end)
+  # end
 
   defp attach_documents(multi, _params), do: multi
 

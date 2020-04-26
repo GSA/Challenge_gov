@@ -32,6 +32,7 @@
           <div class="card-header">
             <h3 class="card-title">Basics</h3>
             <div class="card-tools">
+              <%= link("Submit Solution", to: Routes.admin_challenge_solution_path(@conn, :new, @challenge.id), class: "btn btn-primary") %>
               <%= if Challenges.is_approvable?(@challenge, @user) do  %>
                 <%= link("Approve", to: Routes.admin_challenge_path(@conn, :approve, @challenge.id), method: :post, class: "btn btn-primary") %>
               <% end %>

@@ -15,6 +15,8 @@ import "admin-lte/dist/css/adminlte.css";
 import "admin-lte/dist/js/adminlte.js";
 import "@fortawesome/fontawesome-free/css/all.css";
 
+// import "uswds";
+
 // Custom CSS
 import "../css/admin.scss";
 import "../css/progress_bar.scss";
@@ -25,7 +27,8 @@ import "./radio_button_show.js";
 import "./character_limit.js";
 import "./datetime_field.js";
 import "./custom_url_generator.js";
-import "./section_file_upload.js"        
+import "./section_file_upload.js";
+import "./multi_file_upload.js";
 
 $(".wrapper").prepend(
   `<div id="renew-modal" class="modal timeout-modal">

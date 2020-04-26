@@ -124,6 +124,8 @@ defmodule Web.Router do
     pipe_through([:browser])
 
     get("/", PageController, :index)
+    get("/challenges", PageController, :index, as: :public_challenge_index)
+    get("/challenge/:id", PageController, :index, as: :public_challenge_details)
     get("/*path", PageController, :index)
   end
 end

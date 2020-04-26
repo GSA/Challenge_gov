@@ -1,0 +1,25 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.admin_dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item"><%= link("Solutions", to: Routes.admin_solution_path(@conn, :index)) %></li>
+          <%= case @action do %>
+            <% :show -> %>
+              <li class="breadcrumb-item active"><%= @solution.title || "Solution ##{@solution.id}" %></li>
+            <% a when a === :new or a === :create -> %>
+              <li class="breadcrumb-item active">Submit solution</li>
+            <% a when a === :edit or a === :update or a === :submit -> %>
+              <li class="breadcrumb-item"><%= link(@solution.title || "Solution ##{@solution.id}", to: Routes.admin_solution_path(@conn, :show, @solution.id)) %></li>
+              <li class="breadcrumb-item active">Edit</li>
+          <% end %>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>

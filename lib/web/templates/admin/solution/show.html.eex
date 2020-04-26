@@ -1,0 +1,51 @@
+<%= render Web.Admin.SolutionView, "_breadcrumbs.html", conn: @conn, action: @action, solution: @solution %>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card p-3">
+          <%= render Web.Admin.SolutionView, "_header.html", conn: @conn, challenge: @solution.challenge %>
+          <section>
+            <div class="form-group">
+              <label class="col">Title</label>
+              <div class="col"><%= @solution.title || "None" %></div>
+            </div>
+            <div class="form-group">
+              <label class="col">Brief description</label>
+              <div class="col"><%= @solution.brief_description || "None" %></div>
+            </div>
+            <div class="form-group">
+              <label class="col">Description</label>
+              <div class="col"><%= @solution.description || "None" %></div>
+            </div>
+            <%= if @solution.external_url do %>
+              <div class="form-group">
+                <label class="col">External URL</label>
+                <div class="col"><%= @solution.external_url %></div>
+              </div>
+            <% end %>
+
+            <ul class="solution-documents-list">
+              <%= Enum.map(@solution.documents, fn document -> %>
+                <li>
+                  <%= link(document.filename, to: ChallengeGov.SolutionDocuments.download_document_url(document)) %>
+                </li>
+              <% end) %>
+            </ul>
+
+            <div class="form-group">
+              <label class="col">Status</label>
+              <div class="col"><%= status_display_name(@solution) %></div>
+            </div>
+
+            <%= if @solution.status !== "submitted" do %>
+              <%= link("Submit", to: Routes.admin_solution_path(@conn, :submit, @solution.id), method: :put, class: "btn btn-primary float-right") %>
+            <% end %>
+            <%= link("Edit", to: Routes.admin_solution_path(@conn, :edit, @solution.id), class: "btn btn-link float-right") %>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

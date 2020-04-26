@@ -61,17 +61,22 @@ defmodule Web.Admin.SolutionController do
       conn
       |> assign(:user, user)
       |> assign(:solution, solution)
+      |> assign(:action, action_name(conn))
+      |> assign(:navbar_text, solution.title || "Solution #{solution.id}")
       |> render("show.html")
     end
   end
 
-  def new(conn, _params) do
+  def new(conn, %{"challenge_id" => challenge_id}) do
     %{current_user: user} = conn.assigns
+    {:ok, challenge} = Challenges.get(challenge_id)
 
     conn
     |> assign(:user, user)
+    |> assign(:challenge, challenge)
     |> assign(:action, action_name(conn))
     |> assign(:changeset, Solutions.new())
+    |> assign(:navbar_text, "Submit solution")
     |> render("new.html")
   end
 
@@ -84,15 +89,15 @@ defmodule Web.Admin.SolutionController do
         }
       ) do
     %{current_user: user} = conn.assigns
+    {:ok, challenge} = Challenges.get(challenge_id)
 
-    with {:ok, challenge} <- Challenges.get(challenge_id),
-         {:ok, solution} <- Solutions.create_draft(solution_params, user, challenge) do
+    with {:ok, solution} <- Solutions.create_draft(solution_params, user, challenge) do
       conn
       |> put_flash(:info, "Solution saved as draft")
       |> redirect(to: Routes.admin_solution_path(conn, :edit, solution.id))
     else
       {:error, changeset} ->
-        create_error(conn, changeset, user)
+        create_error(conn, changeset, user, challenge)
     end
   end
 
@@ -102,20 +107,21 @@ defmodule Web.Admin.SolutionController do
         "solution" => solution_params
       }) do
     %{current_user: user} = conn.assigns
+    {:ok, challenge} = Challenges.get(challenge_id)
 
-    with {:ok, challenge} <- Challenges.get(challenge_id),
-         {:ok, solution} <- Solutions.create_review(solution_params, user, challenge) do
+    with {:ok, solution} <- Solutions.create_review(solution_params, user, challenge) do
       conn
       |> redirect(to: Routes.admin_solution_path(conn, :show, solution.id))
     else
       {:error, changeset} ->
-        create_error(conn, changeset, user)
+        create_error(conn, changeset, user, challenge)
     end
   end
 
-  defp create_error(conn, changeset, user) do
+  defp create_error(conn, changeset, user, challenge) do
     conn
     |> assign(:user, user)
+    |> assign(:challenge, challenge)
     |> assign(:path, Routes.admin_challenge_path(conn, :create))
     |> assign(:action, action_name(conn))
     |> assign(:changeset, changeset)
@@ -132,8 +138,10 @@ defmodule Web.Admin.SolutionController do
       conn
       |> assign(:user, user)
       |> assign(:solution, solution)
+      |> assign(:action, action_name(conn))
       |> assign(:path, Routes.admin_solution_path(conn, :update, id))
       |> assign(:changeset, Solutions.edit(solution))
+      |> assign(:navbar_text, "Edit solution")
       |> render("edit.html")
     else
       {:error, :not_permitted} ->
@@ -150,9 +158,9 @@ defmodule Web.Admin.SolutionController do
 
   def update(conn, %{"id" => id, "action" => "draft", "solution" => solution_params}) do
     %{current_user: user} = conn.assigns
+    {:ok, solution} = Solutions.get(id)
 
-    with {:ok, solution} <- Solutions.get(id),
-         {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
+    with {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
          {:ok, solution} <- Solutions.update_draft(solution, solution_params) do
       conn
       |> put_flash(:info, "Solution saved as draft")
@@ -169,19 +177,15 @@ defmodule Web.Admin.SolutionController do
         |> redirect(to: Routes.admin_solution_path(conn, :index))
 
       {:error, changeset} ->
-        conn
-        |> assign(:user, user)
-        |> assign(:path, Routes.admin_solution_path(conn, :update, id))
-        |> assign(:changeset, changeset)
-        |> render("edit.html")
+        update_error(conn, changeset, user, solution)
     end
   end
 
   def update(conn, %{"id" => id, "action" => "review", "solution" => solution_params}) do
     %{current_user: user} = conn.assigns
+    {:ok, solution} = Solutions.get(id)
 
-    with {:ok, solution} <- Solutions.get(id),
-         {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
+    with {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
          {:ok, solution} <- Solutions.update_review(solution, solution_params) do
       redirect(conn, to: Routes.admin_solution_path(conn, :show, solution.id))
     else
@@ -196,19 +200,26 @@ defmodule Web.Admin.SolutionController do
         |> redirect(to: Routes.admin_solution_path(conn, :index))
 
       {:error, changeset} ->
-        conn
-        |> assign(:user, user)
-        |> assign(:path, Routes.admin_solution_path(conn, :update, id))
-        |> assign(:changeset, changeset)
-        |> render("edit.html")
+        update_error(conn, changeset, user, solution)
     end
+  end
+
+  defp update_error(conn, changeset, user, solution) do
+    conn
+    |> assign(:user, user)
+    |> assign(:solution, solution)
+    |> assign(:action, action_name(conn))
+    |> assign(:path, Routes.admin_solution_path(conn, :update, solution.id))
+    |> assign(:changeset, changeset)
+    |> put_status(422)
+    |> render("edit.html")
   end
 
   def submit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
+    {:ok, solution} = Solutions.get(id)
 
-    with {:ok, solution} <- Solutions.get(id),
-         {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
+    with {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
          {:ok, solution} <- Solutions.submit(solution) do
       conn
       |> put_flash(:info, "Solution submitted")
@@ -227,6 +238,8 @@ defmodule Web.Admin.SolutionController do
       {:error, changeset} ->
         conn
         |> assign(:user, user)
+        |> assign(:solution, solution)
+        |> assign(:action, action_name(conn))
         |> assign(:path, Routes.admin_solution_path(conn, :update, id))
         |> assign(:changeset, changeset)
         |> render("edit.html")

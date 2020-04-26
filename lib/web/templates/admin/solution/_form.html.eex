@@ -1,0 +1,25 @@
+<section>
+  <small class="d-block pl-2 mb-2">Required<span class="required">*</span></small>
+  <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
+    <%= FormView.text_field(f, :title, label: "Title", required: true) %>
+    <%= FormView.textarea_field(f, :brief_description, label: "Brief description", required: true, limit: 500) %>
+    <%= FormView.textarea_field(f, :description, label: "Description", required: true) %>
+
+    <ul class="solution-documents-list">
+      <%= Enum.map(@data.documents, fn document -> %>
+        <li>
+          <%= link(document.filename, to: ChallengeGov.SolutionDocuments.download_document_url(document)) %>
+        </li>
+      <% end) %>
+    </ul>
+    <ul class="solution-documents-upload-list"></ul>
+
+    <%= file_input f, :document, name: "solution[documents][]", class: "mb-3" %>
+
+    <%= FormView.text_field(f, :external_url, label: "External URL (optional)") %>
+
+    <%= cancel_button(@conn, @action, @challenge) %>
+    <%= submit("Review and submit", name: "action", value: "review", class: "btn btn-primary float-right") %>
+    <%= save_draft_button() %>
+  <% end) %>
+</section>

@@ -9,6 +9,7 @@ defmodule ChallengeGov.Solutions.Solution do
 
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.Solutions.Document
 
   @type t :: %__MODULE__{}
 
@@ -27,6 +28,7 @@ defmodule ChallengeGov.Solutions.Solution do
     # Associations
     belongs_to(:submitter, User)
     belongs_to(:challenge, Challenge)
+    has_many(:documents, Document)
 
     # Fields
     field(:title, :string)
@@ -59,6 +61,7 @@ defmodule ChallengeGov.Solutions.Solution do
     |> foreign_key_constraint(:submitter)
     |> foreign_key_constraint(:challenge)
     |> validate_inclusion(:status, status_ids())
+    |> validate_length(:brief_description, max: 500)
   end
 
   def review_changeset(struct, params, user, challenge) do
@@ -73,9 +76,9 @@ defmodule ChallengeGov.Solutions.Solution do
     |> validate_required([
       :title,
       :brief_description,
-      :description,
-      :external_url
+      :description
     ])
+    |> validate_length(:brief_description, max: 500)
   end
 
   def update_draft_changeset(struct, params) do
@@ -85,6 +88,7 @@ defmodule ChallengeGov.Solutions.Solution do
     |> foreign_key_constraint(:submitter)
     |> foreign_key_constraint(:challenge)
     |> validate_inclusion(:status, status_ids())
+    |> validate_length(:brief_description, max: 500)
   end
 
   def update_review_changeset(struct, params) do
@@ -97,15 +101,16 @@ defmodule ChallengeGov.Solutions.Solution do
     |> validate_required([
       :title,
       :brief_description,
-      :description,
-      :external_url
+      :description
     ])
+    |> validate_length(:brief_description, max: 500)
   end
 
   def submit_changeset(struct) do
     struct
     |> change()
     |> put_change(:status, "submitted")
+    |> validate_required_fields
     |> validate_inclusion(:status, status_ids())
   end
 
@@ -115,5 +120,22 @@ defmodule ChallengeGov.Solutions.Solution do
     struct
     |> change()
     |> put_change(:deleted_at, now)
+  end
+
+  defp validate_required_fields(struct) do
+    %{title: t, brief_description: bd, description: d} = struct.data
+
+    struct = if is_blank?(t), do: add_error(struct, :title, "can't be blank"), else: struct
+
+    struct =
+      if is_blank?(bd), do: add_error(struct, :brief_description, "can't be blank"), else: struct
+
+    struct = if is_blank?(d), do: add_error(struct, :description, "can't be blank"), else: struct
+
+    struct
+  end
+
+  defp is_blank?(string) do
+    is_nil(string) or String.trim(string) === ""
   end
 end

@@ -69,7 +69,6 @@ defmodule ChallengeGov.SolutionsTest do
       assert changeset.errors[:title]
       assert changeset.errors[:brief_description]
       assert changeset.errors[:description]
-      assert changeset.errors[:external_url]
     end
 
     test "submitting with data" do
@@ -110,7 +109,7 @@ defmodule ChallengeGov.SolutionsTest do
       {:ok, updated_solution} =
         Solutions.update_draft(
           solution,
-          %{title: nil}
+          %{"title" => nil}
         )
 
       assert updated_solution.submitter_id === user.id
@@ -132,7 +131,7 @@ defmodule ChallengeGov.SolutionsTest do
         Solutions.update_draft(
           solution,
           %{
-            title: "New Test Title"
+            "title" => "New Test Title"
           }
         )
 
@@ -171,7 +170,7 @@ defmodule ChallengeGov.SolutionsTest do
       {:error, changeset} =
         Solutions.update_review(
           solution,
-          %{title: nil}
+          %{"title" => nil}
         )
 
       assert changeset.errors[:title]
@@ -186,7 +185,7 @@ defmodule ChallengeGov.SolutionsTest do
       {:ok, updated_solution} =
         Solutions.update_review(
           solution,
-          %{title: "New Test Title"}
+          %{"title" => "New Test Title"}
         )
 
       {:ok, updated_solution} = Solutions.submit(updated_solution)
@@ -209,7 +208,7 @@ defmodule ChallengeGov.SolutionsTest do
       {:error, changeset} =
         Solutions.update_review(
           solution,
-          %{title: nil}
+          %{"title" => nil}
         )
 
       assert changeset.errors[:title]

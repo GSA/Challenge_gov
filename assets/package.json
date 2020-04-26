@@ -27,6 +27,7 @@
     "react-scripts": "3.3.0",
     "select2": "^4.0.13",
     "url-loader": "^1.1.2",
+    "uswds": "^2.6.0",
     "yarn": "^1.13.0"
   },
   "devDependencies": {

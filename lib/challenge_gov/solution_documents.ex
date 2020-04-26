@@ -39,7 +39,7 @@ defmodule ChallengeGov.SolutionDocuments do
   @doc """
   Upload a new solution document
   """
-  def upload(user, %{"file" => file}) do
+  def upload(user, file) do
     file = Storage.prep_file(file)
 
     key = UUID.uuid4()
@@ -65,13 +65,13 @@ defmodule ChallengeGov.SolutionDocuments do
     end
   end
 
-  def upload(user, _) do
-    user
-    |> Ecto.build_assoc(:solution_documents)
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.add_error(:file, "can't be blank")
-    |> Ecto.Changeset.apply_action(:insert)
-  end
+  # def upload(user, _) do
+  #   user
+  #   |> Ecto.build_assoc(:solution_documents)
+  #   |> Ecto.Changeset.change()
+  #   |> Ecto.Changeset.add_error(:file, "can't be blank")
+  #   |> Ecto.Changeset.apply_action(:insert)
+  # end
 
   @doc """
   Delete a document
