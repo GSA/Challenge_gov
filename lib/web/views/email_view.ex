@@ -3,5 +3,6 @@ defmodule Web.EmailView do
 
   alias Web.Endpoint
   alias Web.Admin.ChallengeView
+  alias Web.SharedView
   alias Web.Admin.SolutionView
 end

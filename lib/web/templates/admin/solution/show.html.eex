@@ -22,17 +22,24 @@
             <%= if @solution.external_url do %>
               <div class="form-group">
                 <label class="col">External URL</label>
-                <div class="col"><%= @solution.external_url %></div>
+                <div class="col"><%= SharedView.string_to_link(@solution.external_url, target: "_blank") %></div>
               </div>
             <% end %>
 
-            <ul class="solution-documents-list">
-              <%= Enum.map(@solution.documents, fn document -> %>
-                <li>
-                  <%= link(document.filename, to: ChallengeGov.SolutionDocuments.download_document_url(document)) %>
-                </li>
-              <% end) %>
-            </ul>
+            <%= if length(@solution.documents) > 0 do %>
+              <div class="form-group">
+                <label class="col">Uploaded files</label>
+                <div class="col">
+                  <ul class="solution-documents-list">
+                    <%= Enum.map(@solution.documents, fn document -> %>
+                      <li>
+                        <%= link(document.filename, to: ChallengeGov.SolutionDocuments.download_document_url(document), target: "_blank") %>
+                      </li>
+                    <% end) %>
+                  </ul>
+                </div>
+              </div>
+            <% end %>
 
             <div class="form-group">
               <label class="col">Status</label>

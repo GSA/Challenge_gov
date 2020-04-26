@@ -97,6 +97,7 @@ defmodule Web.Router do
 
     resources("/challenges", ChallengeController, only: [:index, :show])
     resources("/documents", DocumentController, only: [:create, :delete])
+    resources("/solution_documents", SolutionDocumentController, only: [:create, :delete])
 
     # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
