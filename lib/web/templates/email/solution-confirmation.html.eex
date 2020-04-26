@@ -1,0 +1,1 @@
+Your solution <%= SolutionView.name_link(Endpoint, @solution) %> for challenge <%= ChallengeView.public_name_link(Endpoint, @challenge) %> was submitted at <%= @solution.updated_at %> UTC

@@ -6,6 +6,12 @@ defmodule Web.Admin.SolutionView do
   alias Web.Admin.FormView
   alias Web.SharedView
 
+  def name_link(conn, solution) do
+    link(solution.title || "Solution #{solution.id}",
+      to: Routes.admin_solution_path(conn, :show, solution.id)
+    )
+  end
+
   def sortable_header(conn, sort, filter, column, label) do
     {sort_icon, sort_values} =
       case Map.get(sort, column) do

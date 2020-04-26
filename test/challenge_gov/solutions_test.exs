@@ -1,6 +1,8 @@
 defmodule ChallengeGov.SolutionsTest do
   use ChallengeGov.DataCase
+  use Bamboo.Test
 
+  alias ChallengeGov.Emails
   alias ChallengeGov.Solutions
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
@@ -197,6 +199,7 @@ defmodule ChallengeGov.SolutionsTest do
       assert updated_solution.description === solution.description
       assert updated_solution.external_url === solution.external_url
       assert updated_solution.status === "submitted"
+      assert_delivered_email(Emails.solution_confirmation(updated_solution))
     end
 
     test "update submitted with invalid value" do

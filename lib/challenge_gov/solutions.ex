@@ -5,6 +5,8 @@ defmodule ChallengeGov.Solutions do
 
   alias ChallengeGov.Solutions.Solution
   alias ChallengeGov.SolutionDocuments
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
   alias Stein.Filter
   alias Stein.Pagination
@@ -42,9 +44,8 @@ defmodule ChallengeGov.Solutions do
     end
   end
 
-  defp base_preload(solution) do
-    solution
-    |> preload([:submitter, :challenge, :documents])
+  def base_preload(solution) do
+    preload(solution, [:submitter, :challenge, :documents])
   end
 
   def new do
@@ -137,6 +138,21 @@ defmodule ChallengeGov.Solutions do
     solution
     |> Solution.submit_changeset()
     |> Repo.update()
+    |> case do
+      {:ok, solution} ->
+        solution = new_form_preload(solution)
+        send_solution_confirmation_email(solution)
+        {:ok, solution}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  defp send_solution_confirmation_email(solution) do
+    solution
+    |> Emails.solution_confirmation()
+    |> Mailer.deliver_later()
   end
 
   def allowed_to_edit?(user, solution) do

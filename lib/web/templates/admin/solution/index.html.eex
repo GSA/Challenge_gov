@@ -45,7 +45,7 @@
                 <%= Enum.map @solutions, fn (solution) -> %>
                   <tr>
                     <td><%= solution.id %></td>
-                    <td><%= link(solution.title, to: Routes.admin_solution_path(@conn, :show, solution.id)) %></td>
+                    <td><%= name_link(@conn, solution) %></td>
                     <td><%= link(solution.challenge.title, to: Routes.admin_challenge_path(@conn, :show, solution.challenge.id)) %></td>
                     <td><%= status_display_name(solution) %></td>
                     <%= if Accounts.has_admin_access?(@user) do %>
