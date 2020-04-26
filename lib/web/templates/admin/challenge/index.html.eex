@@ -83,7 +83,7 @@
                           </button>
                           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                             <a class="btn btn-link" href="#">Media</a>
-                            <%= challenge_delete_link(@conn, challenge, @user, label: "Delete", class: "btn btn-default btn-xs") %>
+                            <%= challenge_delete_link(@conn, challenge, @user, label: "Delete", class: "btn btn-link text-danger") %>
                           </div>
                         </div>
                       </div>

@@ -31,13 +31,16 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Basics</h3>
-            <div class="card-tools">
+            <div class="card-tools btn-group">
               <%= link("Submit Solution", to: Routes.admin_challenge_solution_path(@conn, :new, @challenge.id), class: "btn btn-primary") %>
               <%= if Challenges.is_approvable?(@challenge, @user) do  %>
                 <%= link("Approve", to: Routes.admin_challenge_path(@conn, :approve, @challenge.id), method: :post, class: "btn btn-primary") %>
               <% end %>
               <%= if Challenges.is_publishable?(@challenge, @user) do  %>
                 <%= link("Publish", to: Routes.admin_challenge_path(@conn, :publish, @challenge.id), method: :post, class: "btn btn-primary") %>
+              <% end %>
+              <%= if Challenges.is_unpublishable?(@challenge, @user) do  %>
+                <%= link("Unpublish", to: Routes.admin_challenge_path(@conn, :unpublish, @challenge.id), method: :post, class: "btn btn-danger", data: [confirm: "Are you sure you want to unpublish this challenge?"]) %>
               <% end %>
               <%= if Challenges.can_request_edits?(@challenge, @user) do  %>
                 <%= link("Request Edits", to: "#", class: "btn btn-danger", data: [toggle: "modal", target: "#rejection-modal"] ) %>
@@ -57,7 +60,7 @@
                 <%= challenge_full_edit_link(@conn, @challenge, @user, class: "btn btn-primary") %>
               <% end %>
 
-              <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-default btn-xs") %>
+              <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-danger") %>
             </div>
           </div>
 

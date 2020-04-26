@@ -4,14 +4,18 @@ defmodule ChallengeGov.SecurityLogs do
   """
   import Ecto.Query
 
+  require Logger
+
   alias ChallengeGov.Accounts
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs.SecurityLog
 
-  def track(struct, params) do
-    struct
+  def track(params) do
+    Logger.info("Audit event #{params[:action]}", Map.put(params, :log_type, "audit"))
+
+    %SecurityLog{}
     |> SecurityLog.changeset(params)
     |> Repo.insert()
   end
@@ -32,7 +36,7 @@ defmodule ChallengeGov.SecurityLogs do
     |> Repo.delete_all()
   end
 
-  def log_session_duration(user, session_end) do
+  def log_session_duration(user, session_end, remote_ip) do
     last_accessed_site =
       SecurityLog
       |> where([l], l.originator_id == ^user.id and l.action == "accessed_site")
@@ -46,12 +50,13 @@ defmodule ChallengeGov.SecurityLogs do
 
       Accounts.update_active_session(user, false)
 
-      track(%SecurityLog{}, %{
+      track(%{
         action: "session_duration",
         details: %{duration: duration},
         originator_id: user.id,
         originator_role: user.role,
-        originator_identifier: user.email
+        originator_identifier: user.email,
+        originator_remote_ip: remote_ip
       })
     end
   end
@@ -73,9 +78,17 @@ defmodule ChallengeGov.SecurityLogs do
   end
 
   def maybe_update_timed_out_sessions(user, session_timeout) do
+    # fetch user for remote ip used in login
+    inactive_user =
+      SecurityLog
+      |> where([l], l.originator_id == ^user.id and l.action == "accessed_site")
+      |> limit(1)
+      |> order_by([l], desc: l.logged_at)
+      |> Repo.one()
+
     # 5 min buffer after session should have timed out to avoid overlap
     if Timex.to_unix(Timex.now()) >= session_timeout + 300 do
-      log_session_duration(user, session_timeout)
+      log_session_duration(user, session_timeout, inactive_user.originator_remote_ip)
     end
   end
 end

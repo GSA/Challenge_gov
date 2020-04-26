@@ -17,7 +17,8 @@ defmodule Web.Api.ChallengeView do
       title: challenge.title,
       tagline: challenge.tagline,
       agency_name: ChallengeView.agency_name(challenge),
-      logo: ChallengeView.logo_url(challenge, "card"),
+      agency_logo: ChallengeView.agency_logo(challenge),
+      logo: ChallengeView.logo_url(challenge),
       open_until: challenge.end_date
     }
   end
@@ -47,7 +48,7 @@ defmodule Web.Api.ChallengeView do
       id: challenge.id,
       judging_criteria: challenge.judging_criteria,
       legal_authority: challenge.legal_authority,
-      logo: ChallengeView.logo_url(challenge, "details page"),
+      logo: ChallengeView.logo_url(challenge),
       multi_phase: challenge.multi_phase,
       non_federal_partners:
         render_many(

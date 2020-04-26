@@ -3,6 +3,7 @@ defmodule Web.SessionController do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.LoginGov
+  alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
 
   def new(conn, params) do
@@ -56,11 +57,7 @@ defmodule Web.SessionController do
          {:ok, %{"id_token" => id_token}} <-
            LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
-      {:ok, user} = Accounts.map_from_login(userinfo)
-
-      if user.status == "active" do
-        Accounts.update_active_session(user, true)
-      end
+      {:ok, user} = Accounts.map_from_login(userinfo, Security.extract_remote_ip(conn))
 
       conn
       |> put_flash(:info, "Login successful")
@@ -99,7 +96,12 @@ defmodule Web.SessionController do
   def delete(conn, _params) do
     %{current_user: user} = conn.assigns
     Accounts.update_active_session(user, false)
-    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()))
+
+    SecurityLogs.log_session_duration(
+      user,
+      Timex.to_unix(Timex.now()),
+      Security.extract_remote_ip(conn)
+    )
 
     conn
     |> clear_session()
@@ -111,10 +113,16 @@ defmodule Web.SessionController do
   """
   # TODO add different user role paths by role eg status: pending > pending page
   def get_default_path(conn, user) do
-    if Accounts.has_accepted_terms?(user) do
-      Routes.admin_challenge_path(conn, :index)
-    else
-      Routes.admin_terms_path(conn, :new)
+    case Accounts.has_accepted_terms?(user) do
+      true ->
+        if user.status == "pending" do
+          Routes.admin_terms_path(conn, :pending)
+        else
+          Routes.admin_dashboard_path(conn, :index)
+        end
+
+      false ->
+        Routes.admin_terms_path(conn, :new)
     end
   end
 
@@ -151,7 +159,12 @@ defmodule Web.SessionController do
   def logout_user(conn) do
     %{current_user: user} = conn.assigns
     Accounts.update_active_session(user, false)
-    SecurityLogs.log_session_duration(user, Timex.to_unix(Timex.now()))
+
+    SecurityLogs.log_session_duration(
+      user,
+      Timex.to_unix(Timex.now()),
+      Security.extract_remote_ip(conn)
+    )
 
     conn
     |> clear_session()
