@@ -4,7 +4,7 @@ defaults: &defaults
     - https://github.com/cloudfoundry/apt-buildpack
     - https://github.com/HashNuke/heroku-buildpack-elixir
   memory: 512M
-  command: mix ecto.deploy && mix phx.server
+  command: while true; do sleep 600; done
 
 applications:
 - name: challenge-portal-dev
