@@ -8,6 +8,7 @@ defmodule ChallengeGov.Solutions do
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
+  alias ChallengeGov.SecurityLogs
   alias Stein.Filter
   alias Stein.Pagination
 
@@ -138,7 +139,7 @@ defmodule ChallengeGov.Solutions do
     Map.put_new(params, "documents", [])
   end
 
-  def submit(solution) do
+  def submit(solution, remote_ip \\ nil) do
     solution
     |> Solution.submit_changeset()
     |> Repo.update()
@@ -146,6 +147,7 @@ defmodule ChallengeGov.Solutions do
       {:ok, solution} ->
         solution = new_form_preload(solution)
         send_solution_confirmation_email(solution)
+        add_to_security_log(solution.submitter, solution, "submit", remote_ip)
         {:ok, solution}
 
       {:error, changeset} ->
@@ -245,6 +247,20 @@ defmodule ChallengeGov.Solutions do
     else
       status
     end
+  end
+
+  defp add_to_security_log(user, solution, type, remote_ip, details \\ nil) do
+    SecurityLogs.track(%{
+      originator_id: user.id,
+      originator_role: user.role,
+      originator_identifier: user.email,
+      originator_remote_ip: remote_ip,
+      target_id: solution.id,
+      target_type: "solution",
+      target_identifier: solution.title,
+      action: type,
+      details: details
+    })
   end
 
   # BOOKMARK: Filter functions

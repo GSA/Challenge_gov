@@ -4,6 +4,7 @@ defmodule ChallengeGov.SolutionsTest do
 
   alias ChallengeGov.Emails
   alias ChallengeGov.Solutions
+  alias ChallengeGov.SecurityLogs
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
   alias ChallengeGov.TestHelpers.SolutionHelpers
@@ -555,6 +556,23 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "not found" do
       assert Solutions.get(1) === {:error, :not_found}
+    end
+  end
+
+  describe "security log" do
+    test "tracks an event when a solution is submitted" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+
+      log_event = List.first(SecurityLogs.all())
+
+      assert log_event.action === "submit"
+      assert log_event.originator_id === user.id
+      assert log_event.originator_identifier === user.email
+      assert log_event.target_id === solution.id
+      assert log_event.target_identifier === solution.title
+      assert log_event.target_type === "solution"
     end
   end
 end

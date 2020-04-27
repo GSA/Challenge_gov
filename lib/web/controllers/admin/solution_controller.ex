@@ -3,6 +3,7 @@ defmodule Web.Admin.SolutionController do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.Solutions
+  alias ChallengeGov.Security
 
   plug Web.Plugs.FetchPage when action in [:index]
 
@@ -220,7 +221,7 @@ defmodule Web.Admin.SolutionController do
     {:ok, solution} = Solutions.get(id)
 
     with {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
-         {:ok, solution} <- Solutions.submit(solution) do
+         {:ok, solution} <- Solutions.submit(solution, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "Solution submitted")
       |> redirect(to: Routes.admin_solution_path(conn, :show, solution.id))

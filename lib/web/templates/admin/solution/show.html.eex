@@ -32,8 +32,8 @@
                 <div class="col">
                   <ul class="solution-documents-list">
                     <%= Enum.map(@solution.documents, fn document -> %>
-                      <li>
-                        <%= link(document.filename, to: ChallengeGov.SolutionDocuments.download_document_url(document), target: "_blank") %>
+                      <li class="row solution-document-row">
+                        <div class="col"><%= link(document.filename, to: ChallengeGov.SolutionDocuments.download_document_url(document), target: "_blank") %></div>
                       </li>
                     <% end) %>
                   </ul>
