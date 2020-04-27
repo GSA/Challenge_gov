@@ -13,13 +13,10 @@ defmodule Web.Plugs.CheckUserStatus do
   def call(conn, _opts) do
     with {:ok, user} <- Map.fetch(conn.assigns, :current_user) do
       case user.status do
-        # "pending" ->
-        #   conn
-        #   |> clear_flash()
-        #   |> put_flash(:error, "Your account is pending activation")
-        #   |> clear_session()
-        #   |> redirect(to: Routes.session_path(conn, :new))
-        #   |> halt()
+        "pending" ->
+          conn
+          |> redirect(to: Routes.admin_terms_path(conn, :pending))
+          |> halt()
 
         "suspended" ->
           conn
@@ -53,11 +50,25 @@ defmodule Web.Plugs.CheckUserStatus do
           |> redirect(to: Routes.session_path(conn, :new))
           |> halt()
 
+        "active" ->
+          conn
+
         _ ->
           conn
+          |> clear_flash()
+          |> put_flash(:error, "Your account has an unknown error")
+          |> clear_session()
+          |> redirect(to: Routes.session_path(conn, :new))
+          |> halt()
       end
     else
-      _ -> conn
+      _ ->
+        conn
+        |> clear_flash()
+        |> put_flash(:error, "Your account has an unknown error")
+        |> clear_session()
+        |> redirect(to: Routes.session_path(conn, :new))
+        |> halt()
     end
   end
 end

@@ -1,4 +1,4 @@
-defmodule Web.Plugs.VerifyAdmin do
+defmodule Web.Plugs.VerifyPendingUser do
   @moduledoc """
   Verify a _admin_ user is in the session
   """
@@ -12,7 +12,7 @@ defmodule Web.Plugs.VerifyAdmin do
   def init(default), do: default
 
   def call(conn, _opts) do
-    case is_super_admin?(conn) or is_admin?(conn) do
+    case is_pending?(conn) do
       true ->
         conn
 
@@ -23,20 +23,10 @@ defmodule Web.Plugs.VerifyAdmin do
     end
   end
 
-  defp is_super_admin?(conn) do
+  defp is_pending?(conn) do
     case Map.fetch(conn.assigns, :current_user) do
       {:ok, user} ->
-        Accounts.is_super_admin?(user)
-
-      :error ->
-        false
-    end
-  end
-
-  defp is_admin?(conn) do
-    case Map.fetch(conn.assigns, :current_user) do
-      {:ok, user} ->
-        Accounts.is_admin?(user)
+        Accounts.is_pending?(user)
 
       :error ->
         false

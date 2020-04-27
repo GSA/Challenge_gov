@@ -18,6 +18,12 @@ defmodule Web.Router do
     plug(Web.Plugs.VerifyUser)
   end
 
+  pipeline(:pending) do
+    plug(Web.Plugs.VerifyPendingUser)
+    plug(Web.Plugs.SessionTimeout)
+    plug(:put_layout, {Web.LayoutView, "admin.html"})
+  end
+
   pipeline(:signed_in) do
     plug(Web.Plugs.CheckUserStatus)
     plug(Web.Plugs.SessionTimeout)
@@ -35,15 +41,18 @@ defmodule Web.Router do
   end
 
   scope "/admin", Web.Admin, as: :admin do
+    pipe_through([:browser, :pending])
+    resources("/terms", TermsController, only: [:new, :create])
+
+    get("/pending", TermsController, :pending)
+  end
+
+  scope "/admin", Web.Admin, as: :admin do
     pipe_through([:browser, :user, :signed_in])
 
     get("/", DashboardController, :index)
 
     resources("/documents", DocumentController, only: [:delete])
-
-    resources("/terms", TermsController, only: [:new, :create])
-
-    get("/pending", TermsController, :pending)
 
     resources("/challenges", ChallengeController,
       only: [:index, :show, :new, :create, :edit, :update, :delete]
@@ -71,9 +80,6 @@ defmodule Web.Router do
       as: :challenge
     )
 
-    get("/reports/export/security_log", ReportsController, :export_security_log)
-    get("/reports/security_log", ReportsController, :new)
-
     resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
     put("/solutions/:id/submit", SolutionController, :submit)
   end
@@ -82,6 +88,9 @@ defmodule Web.Router do
     pipe_through([:browser, :admin, :signed_in])
 
     resources("/events", EventController, only: [:edit, :update, :delete])
+
+    get("/reports/export/security_log", ReportsController, :export_security_log)
+    get("/reports/security_log", ReportsController, :new)
 
     resources("/agencies", AgencyController)
     post("/agencies/:id/remove_logo", AgencyController, :remove_logo, as: :agency)
@@ -129,6 +138,5 @@ defmodule Web.Router do
     get("/", PageController, :index)
     get("/challenges", PageController, :index, as: :public_challenge_index)
     get("/challenge/:id", PageController, :index, as: :public_challenge_details)
-    get("/*path", PageController, :index)
   end
 end
