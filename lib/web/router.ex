@@ -45,7 +45,6 @@ defmodule Web.Router do
     resources("/terms", TermsController, only: [:new, :create])
 
     get("/pending", TermsController, :pending)
-    resources("/sign-in", SessionController, only: [:delete], singleton: true)
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -114,6 +113,12 @@ defmodule Web.Router do
     # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
     post("/session/logout", SessionController, :logout_user)
+  end
+
+  scope "/", Web do
+    pipe_through([:browser, :pending])
+
+    resources("/sign-in", SessionController, only: [:delete], singleton: true)
   end
 
   scope "/", Web do
