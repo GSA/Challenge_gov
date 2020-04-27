@@ -91,9 +91,9 @@
               <nav class="mt-5">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                   <li class="nav-item">
-                    <%= link(to: Routes.admin_report_path(@conn, :export_security_logs), class: "nav-link") do %>
+                    <%= link(to: Routes.admin_reports_path(@conn, :new), class: "nav-link #{tab_selected(@conn, "reports")}") do %>
                     <i class="nav-icon fas fa-download"></i>
-                    <p>Export Security Logs</p>
+                    <p>Reports</p>
                     <% end %>
                   </li>
                 </ul>

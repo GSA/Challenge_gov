@@ -1,9 +1,10 @@
 NimbleCSV.define(ChallengeGov.Reports.CSV, separator: ",", escape: "\"")
 
-defmodule ChallengeGov.Admin.ReportView do
+defmodule Web.Admin.ReportsView do
   use Web, :view
 
   alias ChallengeGov.Reports.CSV
+  alias Web.Admin.FormView
 
   def render("security-log-header.csv", _assigns) do
     headers = [
