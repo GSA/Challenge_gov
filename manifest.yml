@@ -7,7 +7,7 @@ defaults: &defaults
   command: mix ecto.deploy && mix phx.server
 
 applications:
-- name: Challenge Portal Dev
+- name: challenge-portal-dev
   <<: *defaults
   env:
     MIX_ENV: prod
@@ -16,7 +16,7 @@ applications:
     LOGIN_PUBLIC_KEY_PATH: cert.pem
     LOGIN_REDIRECT_URL: https://challenge-portal-dev.app.cloud.gov/auth/result
 
-- name: Challenge Portal Staging
+- name: challenge-portal-staging
   <<: *defaults
   env:
     MIX_ENV: prod
