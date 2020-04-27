@@ -45,6 +45,7 @@ defmodule Web.Router do
     resources("/terms", TermsController, only: [:new, :create])
 
     get("/pending", TermsController, :pending)
+    resources("/sign-in", SessionController, only: [:delete], singleton: true)
   end
 
   scope "/admin", Web.Admin, as: :admin do
