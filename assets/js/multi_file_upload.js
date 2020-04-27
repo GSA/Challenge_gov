@@ -38,14 +38,14 @@ $(document).ready(function(){
           $(file_input).val("")
 
           $(".solution-documents-list").append(`
-            <li class="row solution-document-row">
+            <div class="row solution-document-row">
               <div class="col">
                 <a href=${document.url} target="_blank">${document.filename}</a>
               </div>
               <div class="col">
                 <a href="#", class="solution_uploaded_document_delete" data-document-id="${document.id}">Remove</a>
               </div>
-            </li>
+            </div>
           `)
           
           $(".solution-document-ids").append(`
