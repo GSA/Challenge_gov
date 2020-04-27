@@ -41,7 +41,7 @@ defmodule Web.Router do
   end
 
   scope "/admin", Web.Admin, as: :admin do
-    pipe_through([:browser, :pending])
+    pipe_through([:browser, :user, :pending])
     resources("/terms", TermsController, only: [:new, :create])
 
     get("/pending", TermsController, :pending)
@@ -116,13 +116,7 @@ defmodule Web.Router do
   end
 
   scope "/", Web do
-    pipe_through([:browser, :pending])
-
-    resources("/sign-in", SessionController, only: [:delete], singleton: true)
-  end
-
-  scope "/", Web do
-    pipe_through([:browser, :signed_in])
+    pipe_through([:browser, :user])
 
     resources("/sign-in", SessionController, only: [:delete], singleton: true)
   end
