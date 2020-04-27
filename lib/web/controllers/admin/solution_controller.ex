@@ -1,6 +1,7 @@
 defmodule Web.Admin.SolutionController do
   use Web, :controller
 
+  alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges
   alias ChallengeGov.Solutions
   alias ChallengeGov.Security
@@ -17,6 +18,13 @@ defmodule Web.Admin.SolutionController do
       params
       |> Map.get("filter", %{})
       |> Map.merge(%{"challenge_id" => challenge_id})
+
+    filter =
+      if Accounts.role_at_or_below(user, "solver") do
+        Map.merge(filter, %{"submitter_id" => user.id})
+      else
+        filter
+      end
 
     sort = Map.get(params, "sort", %{})
 
@@ -36,10 +44,14 @@ defmodule Web.Admin.SolutionController do
     %{current_user: user} = conn.assigns
     %{page: page, per: per} = conn.assigns
 
+    filter = Map.get(params, "filter", %{})
+
     filter =
-      params
-      |> Map.get("filter", %{})
-      |> Map.merge(%{"submitter_id" => user.id})
+      if Accounts.role_at_or_below(user, "solver") do
+        Map.merge(filter, %{"submitter_id" => user.id})
+      else
+        filter
+      end
 
     sort = Map.get(params, "sort", %{})
 

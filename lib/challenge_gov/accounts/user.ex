@@ -18,10 +18,10 @@ defmodule ChallengeGov.Accounts.User do
   # TODO: Available roles to be able to change a user to need to differ by role attempting the change
   # TODO: Add backend restriction on role modifying. Different roles need different changesets
   @roles [
-    %{id: "super_admin", label: "Super Admin"},
-    %{id: "admin", label: "Admin"},
-    %{id: "challenge_owner", label: "Challenge Owner"},
-    %{id: "solver", label: "Solver"}
+    %{id: "super_admin", label: "Super Admin", rank: 1},
+    %{id: "admin", label: "Admin", rank: 2},
+    %{id: "challenge_owner", label: "Challenge Owner", rank: 3},
+    %{id: "solver", label: "Solver", rank: 4}
   ]
 
   @doc """

@@ -63,12 +63,14 @@
                     <p>Solutions</p>
                   <% end %>
                 </li>
-                <li class="nav-item">
-                  <%= link(to: Routes.admin_challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "challenges")}") do %>
-                    <i class="nav-icon fas fa-award"></i>
-                    <p>Challenges</p>
-                  <% end %>
-                </li>
+                <%= if Accounts.role_at_or_above(current_user(@conn), "challenge_owner") do %>
+                  <li class="nav-item">
+                    <%= link(to: Routes.admin_challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "challenges")}") do %>
+                      <i class="nav-icon fas fa-award"></i>
+                      <p>Challenges</p>
+                    <% end %>
+                  </li>
+                <% end %>
                 <%= if ChallengeGov.Accounts.has_admin_access?(current_user(@conn)) do %>
                   <li class="nav-item">
                     <%= link(to: Routes.admin_user_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "users")}") do %>
