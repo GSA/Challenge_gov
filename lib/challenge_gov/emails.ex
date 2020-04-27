@@ -24,6 +24,17 @@ defmodule ChallengeGov.Emails do
     |> render("challenge-rejection-email.html")
   end
 
+  def new_solution_submission(user, solution) do
+    base_email()
+    |> to(user.email)
+    |> subject(
+      "Challenge.gov - Solution submitted for #{solution.challenge.id} #{solution.challenge.title}"
+    )
+    |> assign(:solution, solution)
+    |> assign(:challenge, solution.challenge)
+    |> render("solution-submission.html")
+  end
+
   def solution_confirmation(solution) do
     base_email()
     |> to(solution.submitter.email)

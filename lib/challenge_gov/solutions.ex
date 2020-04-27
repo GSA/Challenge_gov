@@ -141,18 +141,28 @@ defmodule ChallengeGov.Solutions do
 
   def submit(solution, remote_ip \\ nil) do
     solution
+    |> Repo.preload(challenge: [:challenge_owner_users])
     |> Solution.submit_changeset()
     |> Repo.update()
     |> case do
       {:ok, solution} ->
         solution = new_form_preload(solution)
         send_solution_confirmation_email(solution)
+        challenge_owner_new_submission_email(solution)
         add_to_security_log(solution.submitter, solution, "submit", remote_ip)
         {:ok, solution}
 
       {:error, changeset} ->
         {:error, changeset}
     end
+  end
+
+  defp challenge_owner_new_submission_email(solution) do
+    Enum.map(solution.challenge.challenge_owner_users, fn owner ->
+      owner
+      |> Emails.new_solution_submission(solution)
+      |> Mailer.deliver_later()
+    end)
   end
 
   defp send_solution_confirmation_email(solution) do
