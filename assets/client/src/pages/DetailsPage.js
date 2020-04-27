@@ -3,7 +3,6 @@ import axios from 'axios'
 import { useParams } from "react-router-dom";
 import moment from 'moment'
 
-
 export const DetailsPage = () => {
 
   const [currentChallenge, setCurrentChallenge] = useState()
@@ -31,13 +30,13 @@ export const DetailsPage = () => {
       })
   }, [])
 
-  const renderDeadline = (date) => {
+  const renderEndDate = (date) => {
     const fiveDaysFromNow = moment().add(5,'d').utc().format()
     const withinFiveDays = moment(date).diff(fiveDaysFromNow) <= 0
 
     if (date >  moment().utc().format()) {
       return (
-        <div className="item item__standard">
+        <div className="item">
           <p className="info-title">Open until:</p>
           <p>{moment(date).local().format('L LT')}</p>
           { withinFiveDays && <p className="date-qualifier">Closing soon</p> }
@@ -45,7 +44,7 @@ export const DetailsPage = () => {
       )
     } else {
       return (
-        <div className="item item__standard">
+        <div className="item">
           <p className="info-title">Closed on:</p>
           <p>{moment(date).local().format('L LT')}</p>
         </div>
@@ -67,23 +66,23 @@ export const DetailsPage = () => {
     <div>
       {currentChallenge &&
         <div>
-          <section className="hero__wrapper">
+          <section className="hero__wrapper" aria-label="Challenge overview details">
             <section className="hero__content">
-              <div className="hero__presentational">
-                <div className="presentational-info">
+              <div className="main-section">
+                <div className="main-section__text">
                   { currentChallenge.logo &&
                     <div className="logos">
                       <img
                         className="agency-logo"
                         src={currentChallenge.agency_logo}
                         alt={`${currentChallenge.agency_name} logo`}
-                        title={currentChallenge.agency_name} />
+                        title="Challenge agency logo" />
                       { (currentChallenge.federal_partners.length > 0 && currentChallenge.federal_partners[0].logo) &&
                         <img
                           className="agency-logo"
                           src={currentChallenge.federal_partners[0].logo}
                           alt={`${currentChallenge.federal_partners[0].name} logo`}
-                          title={currentChallenge.federal_partners[0].name} />
+                          title="Federal partner agency logo"/>
                       }
                     </div>
                   }
@@ -91,7 +90,7 @@ export const DetailsPage = () => {
                   <h3 className="tagline">{currentChallenge.tagline}</h3>
                   <p className="brief_description">{currentChallenge.brief_description}</p>
                 </div>
-                <div className="presentational-logo">
+                <div className="logo-container">
                   { currentChallenge.logo
                     ? <img
                         className="challenge-logo"
@@ -101,36 +100,40 @@ export const DetailsPage = () => {
                         className="agency-logo"
                         src={currentChallenge.agency_logo}
                         alt={`${currentChallenge.agency_name} logo`}
-                        title={currentChallenge.agency_name} />
+                        title="Challenge agency logo" />
                   }
                 </div>
               </div>
-              <div className="hero__info-section">
-                <div className="hero__info-section__block">
-                    <div className="item item__standard">
-                      <p className="info-title">Submission period:</p>
-                      { currentChallenge.end_date >  moment().utc().format()
-                        ? <p>Open</p>
-                        : <p>Closed</p>
-                      }
-                    </div>
-                  {renderDeadline(currentChallenge.end_date)}
-                </div>
-                <div className="hero__info-section__block">
-                  <div className="item item__types">
-                    { currentChallenge.types.length > 1
-                      ? <p className="info-title">Challenge types:</p>
-                      : <p className="info-title">Challenge type:</p>
-                    }
-                    {renderChallengeTypes(currentChallenge.types)}
+              <div className="detail-section">
+                { (!currentChallenge.external_url &&
+                  currentChallenge.end_date >  moment().utc().format()) &&
+                  <div className="detail-section__apply">
+                    <a href={`/admin/challenges/${currentChallenge.id}/solutions/news`}>
+                      <button className="apply-btn">Apply for this challenge</button>
+                    </a>
                   </div>
-                  { !currentChallenge.prize_total || currentChallenge.prize_total != 0 &&
-                    <div className="item item__standard">
-                      <p className="info-title">Total cash prizes:</p>
-                      <p>{`$${currentChallenge.prize_total.toLocaleString()}`}</p>
-                    </div>
+                }
+                <div className="item">
+                  <p className="info-title">Submission period:</p>
+                  { currentChallenge.end_date >  moment().utc().format()
+                    ? <p>Open</p>
+                    : <p>Closed</p>
                   }
                 </div>
+                {renderEndDate(currentChallenge.end_date)}
+                <div className="item">
+                  { currentChallenge.types.length > 1
+                    ? <p className="info-title">Challenge types:</p>
+                    : <p className="info-title">Challenge type:</p>
+                  }
+                  {renderChallengeTypes(currentChallenge.types)}
+                </div>
+                { !currentChallenge.prize_total || currentChallenge.prize_total != 0 &&
+                  <div className="item">
+                    <p className="info-title">Total cash prizes:</p>
+                    <p>{`$${currentChallenge.prize_total.toLocaleString()}`}</p>
+                  </div>
+                }
               </div>
             </section>
           </section>
