@@ -1,10 +1,5 @@
 use Mix.Config
 
-vcap_services = Jason.decode!(System.get_env("VCAP_SERVICES"))
-
-s3 = List.first(vcap_services["s3"])
-rds = List.first(vcap_services["aws-rds"])
-
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
 # when generating URLs.
@@ -22,7 +17,7 @@ config :challenge_gov, Web.Endpoint,
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
 config :challenge_gov, ChallengeGov.Repo,
-  url: rds["credentials"]["uri"],
+  url: System.get_env("DATABASE_URL"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
@@ -61,12 +56,12 @@ config :challenge_gov, ChallengeGov.Mailer,
 
 config :stein_storage,
   backend: :s3,
-  bucket: s3["bucket"]
+  bucket: {:system, "BUCKET_NAME"}
 
 config :ex_aws,
   region: "us-gov-west-1",
-  access_key_id: s3["credentials"]["access_key_id"],
-  secret_access_key: s3["credentials"]["secret_access_key"]
+  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
 
 config :challenge_gov, :oidc_config, %{
   idp_authorize_url: "https://idp.int.identitysandbox.gov/openid_connect/authorize",
