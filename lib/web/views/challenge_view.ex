@@ -9,8 +9,9 @@ defmodule Web.ChallengeView do
   def logo_img(challenge, opts \\ []) do
     case is_nil(challenge.logo_key) do
       true ->
-        path = Routes.static_path(Web.Endpoint, "/images/challenge-logo.png")
-        img_tag(path, alt: "Challenge Logo")
+        url = Routes.static_path(Web.Endpoint, "/images/challenge-logo.png")
+        opts = Keyword.merge([alt: "Challenge Logo"], opts)
+        img_tag(url, opts)
 
       false ->
         url = Storage.url(Logo.logo_path(challenge, "thumbnail"), signed: [expires_in: 3600])

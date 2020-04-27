@@ -31,6 +31,10 @@ defmodule ChallengeGov.Accounts do
     end
   end
 
+  def get_role_rank(role) do
+    Enum.find(User.roles(), fn r -> r.id === role end).rank
+  end
+
   def statuses(), do: User.statuses()
 
   @doc """
@@ -503,6 +507,20 @@ defmodule ChallengeGov.Accounts do
   def is_challenge_owner?(%{role: "challenge_owner"}), do: true
 
   def is_challenge_owner?(_), do: false
+
+  @doc """
+  Checks if a user's role is at or above the specified role
+  """
+  def role_at_or_above(user, role) do
+    get_role_rank(user.role) <= get_role_rank(role)
+  end
+
+  @doc """
+  Checks if a user's role is at or below the specified role
+  """
+  def role_at_or_below(user, role) do
+    get_role_rank(user.role) >= get_role_rank(role)
+  end
 
   @doc """
   Check if a user has accepted all terms

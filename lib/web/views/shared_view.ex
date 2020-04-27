@@ -87,4 +87,8 @@ defmodule Web.SharedView do
       Timex.format!(datetime, "{0M}/{0D}/{YYYY} {h12}:{0m} {AM}")
     end
   end
+
+  def string_to_link(string, opts \\ []) do
+    link(string, Keyword.merge([to: string], opts))
+  end
 end

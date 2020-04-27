@@ -10,6 +10,7 @@ defmodule ChallengeGov.Accounts.User do
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.SupportingDocuments.Document
+  alias ChallengeGov.Solutions
   alias ChallengeGov.Agencies.Member
 
   @type t :: %__MODULE__{}
@@ -17,9 +18,10 @@ defmodule ChallengeGov.Accounts.User do
   # TODO: Available roles to be able to change a user to need to differ by role attempting the change
   # TODO: Add backend restriction on role modifying. Different roles need different changesets
   @roles [
-    %{id: "super_admin", label: "Super Admin"},
-    %{id: "admin", label: "Admin"},
-    %{id: "challenge_owner", label: "Challenge Owner"}
+    %{id: "super_admin", label: "Super Admin", rank: 1},
+    %{id: "admin", label: "Admin", rank: 2},
+    %{id: "challenge_owner", label: "Challenge Owner", rank: 3},
+    %{id: "solver", label: "Solver", rank: 4}
   ]
 
   @doc """
@@ -46,6 +48,7 @@ defmodule ChallengeGov.Accounts.User do
     has_many(:challenge_owner_challenges, through: [:challenge_owners, :challenge])
     has_many(:members, Member)
     has_many(:supporting_documents, Document)
+    has_many(:solution_documents, Solutions.Document)
 
     # Fields
     field(:role, :string, read_after_writes: true)

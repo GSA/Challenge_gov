@@ -27,6 +27,9 @@
                 <i class="fas fa-ellipsis-v"></i>
               </a>
             </li>
+            <li class="navbar-text">
+              <%= assigns[:navbar_text] %>
+            </li>
           </ul>
         <% end %>
 
@@ -55,11 +58,19 @@
             <nav class="mt-2">
               <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                 <li class="nav-item">
-                  <%= link(to: Routes.admin_challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "challenges")}") do %>
-                    <i class="nav-icon fas fa-award"></i>
-                    <p>Challenges</p>
+                  <%= link(to: Routes.admin_solution_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "solutions")}") do %>
+                    <i class="nav-icon fas fa-flask"></i>
+                    <p>Solutions</p>
                   <% end %>
                 </li>
+                <%= if Accounts.role_at_or_above(current_user(@conn), "challenge_owner") do %>
+                  <li class="nav-item">
+                    <%= link(to: Routes.admin_challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "challenges")}") do %>
+                      <i class="nav-icon fas fa-award"></i>
+                      <p>Challenges</p>
+                    <% end %>
+                  </li>
+                <% end %>
                 <%= if ChallengeGov.Accounts.has_admin_access?(current_user(@conn)) do %>
                   <li class="nav-item">
                     <%= link(to: Routes.admin_user_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "users")}") do %>

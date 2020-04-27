@@ -314,28 +314,9 @@ defmodule ChallengeGov.Challenges.Challenge do
       :poc_email,
       :non_federal_partners,
       :title,
-      # :custom_url,
-      # :external_url,
       :tagline,
       :description,
       :brief_description
-      # :how_to_enter,
-      # :start_date,
-      # :end_date,
-      # :number_of_phases,
-      # :phase_descriptions,
-      # :phase_dates,
-      # :judging_criteria,
-      # :prize_total,
-      # :non_monetary_prizes,
-      # :prize_description,
-      # :eligibility_requirements,
-      # :rules,
-      # :terms_and_conditions,
-      # :legal_authority,
-      # :faq,
-      # :winner_information,
-      # :fiscal_year
     ])
     |> foreign_key_constraint(:agency)
     |> unique_constraint(:custom_url)
@@ -349,34 +330,14 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_required([
       :user_id,
       :agency_id,
-      :status,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
       :non_federal_partners,
       :title,
-      :custom_url,
-      :external_url,
       :tagline,
       :description,
-      :brief_description,
-      :how_to_enter,
-      :start_date,
-      :end_date,
-      :number_of_phases,
-      :phase_descriptions,
-      :phase_dates,
-      :judging_criteria,
-      :prize_total,
-      :non_monetary_prizes,
-      :prize_description,
-      :eligibility_requirements,
-      :rules,
-      :terms_and_conditions,
-      :legal_authority,
-      :faq,
-      :winner_information,
-      :fiscal_year
+      :brief_description
     ])
     |> foreign_key_constraint(:agency)
     |> unique_constraint(:custom_url)

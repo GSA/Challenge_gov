@@ -75,4 +75,65 @@ defmodule ChallengeGov.AccountsTest do
       assert_no_emails_delivered()
     end
   end
+
+  describe "roles" do
+    test "get role rank" do
+      assert Accounts.get_role_rank("super_admin") === 1
+      assert Accounts.get_role_rank("admin") === 2
+      assert Accounts.get_role_rank("challenge_owner") === 3
+      assert Accounts.get_role_rank("solver") === 4
+    end
+
+    test "role at or above" do
+      user = %{role: "super_admin"}
+      assert Accounts.role_at_or_above(user, "super_admin")
+      assert Accounts.role_at_or_above(user, "admin")
+      assert Accounts.role_at_or_above(user, "challenge_owner")
+      assert Accounts.role_at_or_above(user, "solver")
+
+      user = %{role: "admin"}
+      assert !Accounts.role_at_or_above(user, "super_admin")
+      assert Accounts.role_at_or_above(user, "admin")
+      assert Accounts.role_at_or_above(user, "challenge_owner")
+      assert Accounts.role_at_or_above(user, "solver")
+
+      user = %{role: "challenge_owner"}
+      assert !Accounts.role_at_or_above(user, "super_admin")
+      assert !Accounts.role_at_or_above(user, "admin")
+      assert Accounts.role_at_or_above(user, "challenge_owner")
+      assert Accounts.role_at_or_above(user, "solver")
+
+      user = %{role: "solver"}
+      assert !Accounts.role_at_or_above(user, "super_admin")
+      assert !Accounts.role_at_or_above(user, "admin")
+      assert !Accounts.role_at_or_above(user, "challenge_owner")
+      assert Accounts.role_at_or_above(user, "solver")
+    end
+
+    test "role at or below" do
+      user = %{role: "super_admin"}
+      assert Accounts.role_at_or_below(user, "super_admin")
+      assert !Accounts.role_at_or_below(user, "admin")
+      assert !Accounts.role_at_or_below(user, "challenge_owner")
+      assert !Accounts.role_at_or_below(user, "solver")
+
+      user = %{role: "admin"}
+      assert Accounts.role_at_or_below(user, "super_admin")
+      assert Accounts.role_at_or_below(user, "admin")
+      assert !Accounts.role_at_or_below(user, "challenge_owner")
+      assert !Accounts.role_at_or_below(user, "solver")
+
+      user = %{role: "challenge_owner"}
+      assert Accounts.role_at_or_below(user, "super_admin")
+      assert Accounts.role_at_or_below(user, "admin")
+      assert Accounts.role_at_or_below(user, "challenge_owner")
+      assert !Accounts.role_at_or_below(user, "solver")
+
+      user = %{role: "solver"}
+      assert Accounts.role_at_or_below(user, "super_admin")
+      assert Accounts.role_at_or_below(user, "admin")
+      assert Accounts.role_at_or_below(user, "challenge_owner")
+      assert Accounts.role_at_or_below(user, "solver")
+    end
+  end
 end

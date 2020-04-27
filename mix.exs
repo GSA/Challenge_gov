@@ -55,6 +55,7 @@ defmodule ChallengeGov.MixProject do
       {:porcelain, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
       {:quantum, "~> 3.0-rc"},
+      {:remote_ip, "~> 0.2.0"},
       {:stein, "~> 0.5"},
       {:stein_storage, "~> 0.1"},
       {:timex, "~> 3.5"}

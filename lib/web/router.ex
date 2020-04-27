@@ -51,6 +51,8 @@ defmodule Web.Router do
       resources("/documents", DocumentController, only: [:create])
 
       resources("/events", EventController, only: [:new, :create])
+
+      resources("/solutions", SolutionController, only: [:index, :new, :create])
     end
 
     get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
@@ -71,6 +73,9 @@ defmodule Web.Router do
 
     get("/reports/export/security_log", ReportsController, :export_security_log)
     get("/reports/security_log", ReportsController, :new)
+
+    resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
+    put("/solutions/:id/submit", SolutionController, :submit)
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -94,6 +99,7 @@ defmodule Web.Router do
 
     resources("/challenges", ChallengeController, only: [:index, :show])
     resources("/documents", DocumentController, only: [:create, :delete])
+    resources("/solution_documents", SolutionDocumentController, only: [:create, :delete])
 
     # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
@@ -121,6 +127,8 @@ defmodule Web.Router do
     pipe_through([:browser])
 
     get("/", PageController, :index)
+    get("/challenges", PageController, :index, as: :public_challenge_index)
+    get("/challenge/:id", PageController, :index, as: :public_challenge_details)
     get("/*path", PageController, :index)
   end
 end
