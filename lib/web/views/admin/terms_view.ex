@@ -22,7 +22,7 @@ defmodule Web.Admin.TermsView do
   end
 
   def challenge_owner_assumed_content(user) do
-    case match_user_email(user) do
+    case Security.assume_challenge_owner?(user.email) do
       true ->
         [
           content_tag(:div, class: "page-center") do
@@ -42,20 +42,5 @@ defmodule Web.Admin.TermsView do
       false ->
         ""
     end
-  end
-
-  defp match_user_email(%{email: email}) do
-    tlds = Security.challenge_owner_assumed_tlds()
-
-    regexs =
-      Enum.map(tlds, fn tld ->
-        escaped_tld = Regex.escape(tld)
-        matching_string = ".*#{escaped_tld}$"
-        Regex.compile!(matching_string)
-      end)
-
-    Enum.any?(regexs, fn regex ->
-      Regex.match?(regex, email)
-    end)
   end
 end

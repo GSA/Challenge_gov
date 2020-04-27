@@ -15,6 +15,28 @@ defmodule ChallengeGov.Security do
     end
   end
 
+  def default_challenge_owner?(email) do
+    escaped_gov_tld = Regex.escape(".gov")
+    matching_gov_string = ".*#{escaped_gov_tld}$"
+    gov_regex = Regex.compile!(matching_gov_string)
+    Regex.match?(gov_regex, email) or assume_challenge_owner?(email)
+  end
+
+  def assume_challenge_owner?(email) do
+    tlds = challenge_owner_assumed_tlds()
+
+    regexs =
+      Enum.map(tlds, fn tld ->
+        escaped_tld = Regex.escape(tld)
+        matching_string = ".*#{escaped_tld}$"
+        Regex.compile!(matching_string)
+      end)
+
+    Enum.any?(regexs, fn regex ->
+      Regex.match?(regex, email)
+    end)
+  end
+
   def log_retention_days do
     var = Application.get_env(:challenge_gov, :log_retention_in_days)
 

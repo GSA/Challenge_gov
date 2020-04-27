@@ -323,20 +323,25 @@ defmodule ChallengeGov.Accounts do
 
   def create_new_user(userinfo, remote_ip) do
     %{"email" => email} = userinfo
-    length = String.length(email) - 4
-    email_ext = String.slice(email, length, 4)
-
-    user_role =
-      if email_ext == ".gov" or email_ext == ".mil", do: "challenge_owner", else: "solver"
 
     create(remote_ip, %{
-      email: userinfo["email"],
-      role: user_role,
+      email: email,
+      role: default_role_for_email(email),
       token: userinfo["sub"],
       terms_of_use: nil,
       privacy_guidelines: nil,
       status: "pending"
     })
+  end
+
+  defp default_role_for_email(email) do
+    case Security.default_challenge_owner?(email) do
+      true ->
+        "challenge_owner"
+
+      false ->
+        "solver"
+    end
   end
 
   @doc """
