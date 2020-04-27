@@ -1,6 +1,7 @@
 defmodule Web.LayoutView do
   use Web, :view
 
+  alias ChallengeGov.Accounts
   alias ChallengeGov.Recaptcha
   alias Web.AccountView
   alias Web.PageTitle
