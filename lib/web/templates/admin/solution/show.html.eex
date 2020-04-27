@@ -8,41 +8,41 @@
           <%= render Web.Admin.SolutionView, "_header.html", conn: @conn, challenge: @solution.challenge %>
           <section>
             <div class="form-group">
-              <label class="col">Title</label>
+              <label class="col"><strong>Title</strong></label>
               <div class="col"><%= @solution.title || "None" %></div>
             </div>
             <div class="form-group">
-              <label class="col">Brief description</label>
+              <label class="col"><strong>Brief description</strong></label>
               <div class="col"><%= @solution.brief_description || "None" %></div>
             </div>
             <div class="form-group">
-              <label class="col">Description</label>
+              <label class="col"><strong>Description</strong></label>
               <div class="col"><%= @solution.description || "None" %></div>
             </div>
             <%= if @solution.external_url do %>
               <div class="form-group">
-                <label class="col">External URL</label>
+                <label class="col"><strong>External URL</strong></label>
                 <div class="col"><%= SharedView.string_to_link(@solution.external_url, target: "_blank") %></div>
               </div>
             <% end %>
 
             <%= if length(@solution.documents) > 0 do %>
               <div class="form-group">
-                <label class="col">Uploaded files</label>
+                <label class="col"><strong>Uploaded files</strong></label>
                 <div class="col">
-                  <ul class="solution-documents-list">
+                  <div class="solution-documents-list">
                     <%= Enum.map(@solution.documents, fn document -> %>
-                      <li class="row solution-document-row">
+                      <div class="row solution-document-row">
                         <div class="col"><%= link(document.filename, to: ChallengeGov.SolutionDocuments.download_document_url(document), target: "_blank") %></div>
-                      </li>
+                      </div>
                     <% end) %>
-                  </ul>
+                  </div>
                 </div>
               </div>
             <% end %>
 
             <div class="form-group">
-              <label class="col">Status</label>
+              <label class="col"><strong>Status</strong></label>
               <div class="col"><%= status_display_name(@solution) %></div>
             </div>
 

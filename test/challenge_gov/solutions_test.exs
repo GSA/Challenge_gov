@@ -181,7 +181,15 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "update submitted" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          challenge_owners: [user.id, user_2.id]
+        })
+
+      challenge = Repo.preload(challenge, [:challenge_owner_users])
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -201,6 +209,10 @@ defmodule ChallengeGov.SolutionsTest do
       assert updated_solution.external_url === solution.external_url
       assert updated_solution.status === "submitted"
       assert_delivered_email(Emails.solution_confirmation(updated_solution))
+
+      Enum.map(solution.challenge.challenge_owner_users, fn owner ->
+        assert_delivered_email(Emails.new_solution_submission(owner, updated_solution))
+      end)
     end
 
     test "update submitted with invalid value" do
