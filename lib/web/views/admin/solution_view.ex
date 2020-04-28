@@ -12,6 +12,12 @@ defmodule Web.Admin.SolutionView do
     )
   end
 
+  def name_link_url(conn, solution) do
+    link(solution.title || "Solution #{solution.id}",
+      to: Routes.admin_solution_url(conn, :show, solution.id)
+    )
+  end
+
   def sortable_header(conn, sort, filter, column, label) do
     {sort_icon, sort_values} =
       case Map.get(sort, column) do

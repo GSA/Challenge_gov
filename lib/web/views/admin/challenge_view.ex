@@ -17,6 +17,10 @@ defmodule Web.Admin.ChallengeView do
     link(challenge.title, to: Routes.public_challenge_details_path(conn, :index, challenge.id))
   end
 
+  def public_name_link_url(conn, challenge) do
+    link(challenge.title, to: Routes.public_challenge_details_url(conn, :index, challenge.id))
+  end
+
   # TODO: Refactor to be more generic
   # Example: Take a path with existing query params and append sort after and no longer need to pass filter
   def sortable_header(conn, sort, filter, column, label) do
