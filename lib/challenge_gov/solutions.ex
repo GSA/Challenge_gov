@@ -46,7 +46,7 @@ defmodule ChallengeGov.Solutions do
   end
 
   def base_preload(solution) do
-    preload(solution, [:submitter, :challenge, :documents])
+    preload(solution, [:submitter, :documents, challenge: [:agency]])
   end
 
   def new do
@@ -56,7 +56,7 @@ defmodule ChallengeGov.Solutions do
   end
 
   defp new_form_preload(solution) do
-    Repo.preload(solution, [:submitter, :challenge, :documents])
+    Repo.preload(solution, [:submitter, :documents, challenge: [:agency]])
   end
 
   def create_draft(params, user, challenge) do
