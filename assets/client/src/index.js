@@ -7,13 +7,6 @@ import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
 import ReactGA from 'react-ga'
 
-ReactGA.initialize('_fed_an_ua_tag',
-  {
-    gaAddress:
-      "https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=GSA"
-  }
-)
-
 const getRoutes = () => {
   return IndexRoutes.map((prop, i) => {
     if (prop.redirect) {
@@ -33,7 +26,7 @@ const getRoutes = () => {
 };
 
 const Application = () => {
-  useTracking('_fed_an_ua_tag')
+  useTracking()
 
   return (
     <Switch>{getRoutes()}</Switch>
