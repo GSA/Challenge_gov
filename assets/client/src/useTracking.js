@@ -4,8 +4,6 @@ import ReactGA from 'react-ga'
 
 export const useTracking = () => {
 
-  ReactGA.initialize('_fed_an_ua_tag')
-
   // send pathname on SPA routed pages
   let location = useLocation()
 
