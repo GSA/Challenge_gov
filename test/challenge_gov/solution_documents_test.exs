@@ -13,12 +13,14 @@ defmodule ChallengeGov.SolutionDocumentsTest do
 
       {:ok, document} =
         SolutionDocuments.upload(user, %{
-          "file" => %{path: "test/fixtures/test.pdf"}
+          "file" => %{path: "test/fixtures/test.pdf"},
+          "name" => "Test File Name"
         })
 
       assert document.user_id == user.id
       assert document.extension == ".pdf"
       assert document.key
+      assert document.name === "Test File Name"
     end
   end
 
@@ -27,11 +29,14 @@ defmodule ChallengeGov.SolutionDocumentsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
-      document = SolutionDocumentHelpers.upload_document(user, "test/fixtures/test.pdf")
+
+      document =
+        SolutionDocumentHelpers.upload_document(user, "test/fixtures/test.pdf", "Test File Name")
 
       {:ok, document} = SolutionDocuments.attach_to_solution(document, solution)
 
       assert document.solution_id == solution.id
+      assert document.name === "Test File Name"
     end
 
     test "already assigned" do
@@ -44,6 +49,8 @@ defmodule ChallengeGov.SolutionDocumentsTest do
 
       {:ok, document} = SolutionDocuments.attach_to_solution(document, solution_1)
       {:error, _changeset} = SolutionDocuments.attach_to_solution(document, solution_2)
+
+      assert document.name === ""
     end
 
     test "attempting to assign another user's solution" do

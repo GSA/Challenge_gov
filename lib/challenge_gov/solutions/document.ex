@@ -24,19 +24,19 @@ defmodule ChallengeGov.Solutions.Document do
     timestamps()
   end
 
-  def create_changeset(struct, file, key) do
+  def create_changeset(struct, file, key, name \\ "") do
     struct
     |> change()
     |> put_change(:filename, file.filename)
     |> put_change(:key, key)
     |> put_change(:extension, file.extension)
+    |> put_change(:name, name)
   end
 
-  def solution_changeset(struct, solution, name) do
+  def solution_changeset(struct, solution) do
     struct
     |> change()
     |> put_change(:solution_id, solution.id)
-    |> put_change(:name, name)
     |> foreign_key_constraint(:challenge_id)
   end
 end
