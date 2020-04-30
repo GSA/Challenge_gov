@@ -101,6 +101,7 @@ defmodule Web.Admin.UserController do
             details: %{role: Map.get(params, "role")}
           })
         end
+
         conn
         |> assign(:user, user)
         |> render("show.html")
