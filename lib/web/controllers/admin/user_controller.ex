@@ -4,6 +4,7 @@ defmodule Web.Admin.UserController do
   alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges
   alias ChallengeGov.Security
+  alias ChallengeGov.SecurityLogs
 
   plug(Web.Plugs.FetchPage when action in [:index, :create])
 
@@ -83,9 +84,23 @@ defmodule Web.Admin.UserController do
 
   def update(conn, %{"id" => id, "user" => params}) do
     {:ok, user} = Accounts.get(id)
+    %{current_user: current_user} = conn.assigns
 
     case Accounts.update(user, params) do
       {:ok, user} ->
+        if !is_nil(Map.get(params, "role")) do
+          SecurityLogs.track(%{
+            originator_id: current_user.id,
+            originator_role: current_user.role,
+            originator_identifier: current_user.email,
+            originator_remote_ip: Security.extract_remote_ip(conn),
+            target_id: user.id,
+            target_type: user.role,
+            target_identifier: user.email,
+            action: "role_change",
+            details: %{role: Map.get(params, "role")}
+          })
+        end
         conn
         |> assign(:user, user)
         |> render("show.html")
