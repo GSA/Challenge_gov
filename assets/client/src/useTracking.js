@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import ReactGA from 'react-ga'
 
 export const useTracking = () => {
 
@@ -8,8 +7,7 @@ export const useTracking = () => {
   let location = useLocation()
 
   useEffect(() => {
-      window.ga('set', 'page', location.pathname);
-      window.ga('send', 'pageview');
+      window.gas('send', 'pageview', location.pathname);
     },
     [location]
   )
