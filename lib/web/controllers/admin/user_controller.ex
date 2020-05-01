@@ -85,6 +85,7 @@ defmodule Web.Admin.UserController do
   def update(conn, %{"id" => id, "user" => params}) do
     {:ok, user} = Accounts.get(id)
     %{current_user: current_user} = conn.assigns
+    previous_role = user.role
 
     case Accounts.update(user, params) do
       {:ok, user} ->
@@ -98,7 +99,7 @@ defmodule Web.Admin.UserController do
             target_type: user.role,
             target_identifier: user.email,
             action: "role_change",
-            details: %{role: Map.get(params, "role")}
+            details: %{previous_role: previous_role, new_role: Map.get(params, "role")}
           })
         end
 
