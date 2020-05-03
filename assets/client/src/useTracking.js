@@ -1,13 +1,19 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 export const useTracking = () => {
+
+  // track if is initial mount
+  const [isInitialMount, setIsInitialMount] = useState(true)
+
+  useEffect(() => setIsInitialMount(false),[])
+
 
   // send pathname on SPA routed pages
   let location = useLocation()
 
   useEffect(() => {
-      window.gas('send', 'pageview', location.pathname);
+      !isInitialMount && window.gas('send', 'pageview', location.pathname);
     },
     [location]
   )
