@@ -1,1 +1,5 @@
-Contact Confirmation
+<div>We have received your message on your challenge <%= ChallengeView.public_name_link_url(Endpoint, @challenge) %></div>
+
+<p><%= @body %></p>
+
+<div>We'll get back to you as soon as possible. Thank you for your patience.</div>

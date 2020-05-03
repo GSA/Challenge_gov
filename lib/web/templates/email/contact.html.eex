@@ -1,1 +1,3 @@
-Contact
+<div>You have a new message on your challenge <%= ChallengeView.public_name_link_url(Endpoint, @challenge) %></div>
+
+<p><%= @body %></p>
