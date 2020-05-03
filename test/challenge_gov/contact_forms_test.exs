@@ -8,13 +8,15 @@ defmodule ChallengeGov.ContactFormsTest do
   alias ChallengeGov.TestHelpers.ChallengeHelpers
 
   describe "sending an email" do
-    test "successfully" do          
+    test "successfully" do
       public_email = "user@example.com"
       body = "This is test contact form content"
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id, poc_email: "poc@example.com"})
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{user_id: user.id, poc_email: "poc@example.com"})
+
       params = %{
-        "challenge_id" => challenge.id,
         "email" => public_email,
         "body" => body
       }
@@ -28,23 +30,23 @@ defmodule ChallengeGov.ContactFormsTest do
       body = "This is test contact form content"
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+
       params = %{
-        "challenge_id" => challenge.id,
         "body" => body
       }
 
       {:error, changeset} = ContactForms.send_email(challenge, params)
       assert changeset.errors[:email]
       assert_no_emails_delivered()
-    end    
-    
+    end
+
     test "malformed email field" do
       public_email = "userexample"
       body = "This is test contact form content"
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+
       params = %{
-        "challenge_id" => challenge.id,
         "email" => public_email,
         "body" => body
       }
@@ -58,8 +60,8 @@ defmodule ChallengeGov.ContactFormsTest do
       public_email = "user@example.com"
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+
       params = %{
-        "challenge_id" => challenge.id,
         "email" => public_email
       }
 

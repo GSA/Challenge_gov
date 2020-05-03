@@ -67,6 +67,7 @@ defmodule ChallengeGov.Emails do
     |> to(poc_email)
     |> subject("#{challenge.id}: Question from Public Visitor")
     |> assign(:challenge, challenge)
+    |> assign(:body, body)
     |> render("contact.html")
   end
 
@@ -75,6 +76,7 @@ defmodule ChallengeGov.Emails do
     |> to(public_email)
     |> subject("#{challenge.id}: Contact Confirmation")
     |> assign(:challenge, challenge)
+    |> assign(:body, body)
     |> render("contact_confirmation.html")
   end
 

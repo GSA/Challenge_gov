@@ -12,7 +12,7 @@ defmodule ChallengeGov.ContactForms do
 
     if changeset.valid? do
       %{"email" => email, "body" => body} = params
-      
+
       challenge.poc_email
       |> Emails.contact(challenge, email, body)
       |> Mailer.deliver_later()
