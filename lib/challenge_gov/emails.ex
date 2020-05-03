@@ -61,6 +61,23 @@ defmodule ChallengeGov.Emails do
     |> render("one_day_deactivation_warning.html")
   end
 
+  def contact(poc_email, challenge, public_email, body) do
+    new_email()
+    |> from(public_email)
+    |> to(poc_email)
+    |> subject("#{challenge.id}: Question from Public Visitor")
+    |> assign(:challenge, challenge)
+    |> render("contact.html")
+  end
+
+  def contact_confirmation(public_email, challenge, body) do
+    base_email()
+    |> to(public_email)
+    |> subject("#{challenge.id}: Contact Confirmation")
+    |> assign(:challenge, challenge)
+    |> render("contact_confirmation.html")
+  end
+
   defp base_email() do
     new_email()
     |> from(Mailer.from())
