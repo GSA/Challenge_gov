@@ -4,6 +4,7 @@ defmodule ChallengeGov.Reports do
   """
 
   import Ecto.Query
+  import Ecto.Changeset
   alias ChallengeGov.Repo
   alias ChallengeGov.Reports.Report
   alias ChallengeGov.SecurityLogs.SecurityLog
@@ -23,11 +24,12 @@ defmodule ChallengeGov.Reports do
   def filter_by_params(params) do
     %{"report" => %{"year" => year, "month" => month, "day" => day}} = params
 
-    changeset = Report.changeset(%Report{}, %{
-      "year" => sanitize_param(year),
-      "month" => sanitize_param(month),
-      "day" => sanitize_param(day)}
-    )
+    changeset =
+      Report.changeset(%Report{}, %{
+        "year" => sanitize_param(year),
+        "month" => sanitize_param(month),
+        "day" => sanitize_param(day)
+      })
 
     if changeset.valid? do
       {datetime_start, datetime_end} =
@@ -46,9 +48,9 @@ defmodule ChallengeGov.Reports do
 
       {:ok, records}
     else
-      {:error, changeset}
+      changeset = apply_action(changeset, :update)
+      changeset
     end
-
   end
 
   defp sanitize_param(value) do

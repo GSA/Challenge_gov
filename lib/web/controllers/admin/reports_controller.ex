@@ -78,6 +78,7 @@ defmodule Web.Admin.ReportsController do
       Enum.reduce(1..12, [], fn num, acc ->
         Enum.concat(acc, [{Timex.month_name(num), num}])
       end)
+
     days = Range.new(1, 31)
     years = Range.new(Timex.now().year, 2020)
 

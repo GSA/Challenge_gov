@@ -20,7 +20,7 @@ defmodule ChallengeGov.Reports.Report do
     |> validate_dates(params)
   end
 
- # Custom validation of days/month
+  # Custom validation of days/month
   defp validate_dates(struct, params) do
     %{"year" => year, "month" => month, "day" => day} = params
     days_in_month = Timex.days_in_month(year, month)
@@ -28,7 +28,8 @@ defmodule ChallengeGov.Reports.Report do
     if day do
       case day > days_in_month do
         true ->
-          add_error(struct, :day, "Day is invalid for month selected")
+          struct
+          |> add_error(:day, "is invalid for selected month")
 
         false ->
           struct
