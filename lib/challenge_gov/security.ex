@@ -3,6 +3,8 @@ defmodule ChallengeGov.Security do
   Application env parsing for security related data
   """
 
+  alias ChallengeGov.SecurityLogs
+
   def challenge_owner_assumed_tlds do
     var = Application.get_env(:challenge_gov, :challenge_owner_assumed_tlds)
 
@@ -119,12 +121,12 @@ defmodule ChallengeGov.Security do
     end
   end
 
-  def track_role_change_in_security_log(remote_ip, current_user, user, nil, previous_role) do
-    # NO-OP, the role didn't change
+  def track_role_change_in_security_log(_remote_ip, _current_user, _user, new_role, new_role) do
+    # NO-OP, the roles are the same
   end
 
-  def track_role_change_in_security_log(remote_ip, current_user, user, new_role, new_role) do
-    # NO-OP, the roles are the same
+  def track_role_change_in_security_log(_remote_ip, _current_user, _user, nil, _previous_role) do
+    # NO-_OP, role is not a param being updated
   end
 
   def track_role_change_in_security_log(remote_ip, current_user, user, new_role, previous_role) do
@@ -138,6 +140,40 @@ defmodule ChallengeGov.Security do
       target_identifier: user.email,
       action: "role_change",
       details: %{previous_role: previous_role, new_role: new_role}
+    })
+  end
+
+  def track_status_update_in_security_log(
+        _remote_ip,
+        _current_user,
+        _user,
+        new_status,
+        new_status
+      ) do
+    # NO-OP, the statuses are the same
+  end
+
+  def track_status_update_in_security_log(_remote_ip, _current_user, _user, nil, _previous_status) do
+    # NO-_OP, status is not a param being updated
+  end
+
+  def track_status_update_in_security_log(
+        remote_ip,
+        current_user,
+        user,
+        new_status,
+        previous_status
+      ) do
+    SecurityLogs.track(%{
+      originator_id: current_user.id,
+      originator_role: current_user.role,
+      originator_identifier: current_user.email,
+      originator_remote_ip: remote_ip,
+      target_id: user.id,
+      target_type: user.role,
+      target_identifier: user.email,
+      action: "status_change",
+      details: %{previous_status: previous_status, new_status: new_status}
     })
   end
 

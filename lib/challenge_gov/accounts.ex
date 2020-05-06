@@ -574,6 +574,8 @@ defmodule ChallengeGov.Accounts do
   Activate a user. Change status, allows login
   """
   def activate(user, originator, remote_ip) do
+    previous_status = user.status
+
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -592,7 +594,7 @@ defmodule ChallengeGov.Accounts do
           target_type: user.role,
           target_identifier: user.email,
           action: "status_change",
-          details: %{status: "active"}
+          details: %{previous_status: previous_status, new_status: "active"}
         })
       end)
       |> Repo.transaction()
@@ -610,6 +612,8 @@ defmodule ChallengeGov.Accounts do
   Suspend a user. User can no longer login. Still has data access after
   """
   def suspend(user, originator, remote_ip) do
+    previous_status = user.status
+
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -628,7 +632,7 @@ defmodule ChallengeGov.Accounts do
           target_type: user.role,
           target_identifier: user.email,
           action: "status_change",
-          details: %{status: "suspended"}
+          details: %{previous_status: previous_status, new_status: "suspended"}
         })
       end)
       |> Repo.transaction()
@@ -646,6 +650,8 @@ defmodule ChallengeGov.Accounts do
   Revoke a user. User can no longer login. Removes access to their challenges
   """
   def revoke(user, originator, remote_ip) do
+    previous_status = user.status
+
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -664,7 +670,7 @@ defmodule ChallengeGov.Accounts do
           target_type: user.role,
           target_identifier: user.email,
           action: "status_change",
-          details: %{status: "revoked"}
+          details: %{previous_status: previous_status, new_status: "revoked"}
         })
       end)
       |> Repo.transaction()
@@ -684,6 +690,8 @@ defmodule ChallengeGov.Accounts do
   """
 
   def deactivate(user) do
+    previous_status = user.status
+
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -698,7 +706,7 @@ defmodule ChallengeGov.Accounts do
           target_type: user.role,
           target_identifier: user.email,
           action: "status_change",
-          details: %{status: "deactivated"}
+          details: %{previous_status: previous_status, new_status: "deactivated"}
         })
       end)
       |> Repo.transaction()
@@ -716,6 +724,8 @@ defmodule ChallengeGov.Accounts do
   Decertify a user. User can no longer login. Still has data access after
   """
   def decertify(user) do
+    previous_status = user.status
+
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -730,7 +740,7 @@ defmodule ChallengeGov.Accounts do
           target_type: user.role,
           target_identifier: user.role,
           action: "status_change",
-          details: %{status: "decertified"}
+          details: %{previous_status: previous_status, new_status: "decertified"}
         })
       end)
       |> Repo.transaction()
