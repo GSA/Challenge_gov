@@ -119,6 +119,28 @@ defmodule ChallengeGov.Security do
     end
   end
 
+  def track_role_change_in_security_log(remote_ip, current_user, user, nil, previous_role) do
+    # NO-OP, the role didn't change
+  end
+
+  def track_role_change_in_security_log(remote_ip, current_user, user, new_role, new_role) do
+    # NO-OP, the roles are the same
+  end
+
+  def track_role_change_in_security_log(remote_ip, current_user, user, new_role, previous_role) do
+    SecurityLogs.track(%{
+      originator_id: current_user.id,
+      originator_role: current_user.role,
+      originator_identifier: current_user.email,
+      originator_remote_ip: remote_ip,
+      target_id: user.id,
+      target_type: new_role,
+      target_identifier: user.email,
+      action: "role_change",
+      details: %{previous_role: previous_role, new_role: new_role}
+    })
+  end
+
   defp parse_integer_env(nil), do: nil
   defp parse_integer_env(""), do: nil
   defp parse_integer_env(var) when is_integer(var), do: var

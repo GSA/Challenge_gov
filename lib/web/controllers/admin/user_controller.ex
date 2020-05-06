@@ -90,8 +90,13 @@ defmodule Web.Admin.UserController do
 
     case Accounts.update(user, params) do
       {:ok, user} ->
-        if role != previous_role, do:
-          track_role_change_in_security_log(conn, current_user, user, previous_role)
+        Security.track_role_change_in_security_log(
+          Security.extract_remote_ip(conn),
+          current_user,
+          user,
+          role,
+          previous_role
+        )
 
         conn
         |> assign(:user, user)
@@ -103,20 +108,6 @@ defmodule Web.Admin.UserController do
         |> assign(:changeset, changeset)
         |> render("edit.html")
     end
-  end
-
-  def track_role_change_in_security_log(conn, current_user, user, previous_role) do
-    SecurityLogs.track(%{
-      originator_id: current_user.id,
-      originator_role: current_user.role,
-      originator_identifier: current_user.email,
-      originator_remote_ip: Security.extract_remote_ip(conn),
-      target_id: user.id,
-      target_type: user.role,
-      target_identifier: user.email,
-      action: "role_change",
-      details: %{previous_role: previous_role, new_role: user.role}
-    })
   end
 
   def toggle(conn, %{"id" => id, "action" => "activate"}) do
