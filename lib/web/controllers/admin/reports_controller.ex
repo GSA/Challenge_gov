@@ -58,17 +58,18 @@ defmodule Web.Admin.ReportsController do
   end
 
   defp chunk_records(conn, records) do
-    Enum.reduce_while(records, conn, fn record, conn ->
-      chunk = ReportsView.render("security-log-content.csv", record: record)
+    _records =
+      Enum.reduce_while(records, conn, fn record, conn ->
+        chunk = ReportsView.render("security-log-content.csv", record: record)
 
-      case Plug.Conn.chunk(conn, chunk) do
-        {:ok, conn} ->
-          {:cont, conn}
+        case Plug.Conn.chunk(conn, chunk) do
+          {:ok, conn} ->
+            {:cont, conn}
 
-        {:error, :closed} ->
-          {:halt, conn}
-      end
-    end)
+          {:error, :closed} ->
+            {:halt, conn}
+        end
+      end)
 
     conn
   end
