@@ -300,7 +300,16 @@ defmodule ChallengeGov.Accounts do
         # look for users created by admin which have emails, but no token
         case get_by_email(userinfo["email"]) do
           {:error, :not_found} ->
-            create_new_user(userinfo, remote_ip)
+            %{"email" => email} = userinfo
+
+            create(remote_ip, %{
+              email: email,
+              role: default_role_for_email(email),
+              token: userinfo["sub"],
+              terms_of_use: nil,
+              privacy_guidelines: nil,
+              status: "pending"
+            })
 
           {:ok, user} ->
             update_admin_added_user(user, userinfo, remote_ip)
@@ -319,19 +328,6 @@ defmodule ChallengeGov.Accounts do
 
         {:ok, account_user}
     end
-  end
-
-  def create_new_user(userinfo, remote_ip) do
-    %{"email" => email} = userinfo
-
-    create(remote_ip, %{
-      email: email,
-      role: default_role_for_email(email),
-      token: userinfo["sub"],
-      terms_of_use: nil,
-      privacy_guidelines: nil,
-      status: "pending"
-    })
   end
 
   defp default_role_for_email(email) do
