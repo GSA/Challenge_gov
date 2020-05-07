@@ -5,6 +5,7 @@ defmodule Web.Admin.SolutionView do
   alias ChallengeGov.Solutions
   alias Web.Admin.FormView
   alias Web.SharedView
+  alias Web.DocumentView
 
   def name_link(conn, solution) do
     link(solution.title || "Solution #{solution.id}",
