@@ -42,3 +42,23 @@
     </div>
   </div>
 </section>
+
+<section class="content">
+  <div class="row">
+    <div class="col-md-12 row content-sub-1">
+      <h4 class="box-title">Certification Log</h4>
+      <%= link(to: Routes.admin_reports_path(@conn, :export_certification_log), class: "btn component-btn mx-3") do %>
+        <span>Export All</span>
+      <% end %>
+    </div>
+    <div class="col-md-2 content-sub-1">
+      <h5>Filter by year:</h5>
+      <%= form_for(@conn, Routes.admin_reports_path(@conn, :export_certification_log), [method: :get], fn f -> %>
+        <%= FormView.select_field(f, :year, collection: Enum.map(@years, &(&1)), prompt: "", label: "Year", class: "form-control", required: true) %>
+        <div class="btn-wrapper">
+          <%= submit("Export", class: "btn component-btn") %>
+        </div>
+      <% end) %>
+    </div>
+  </div>
+</section>

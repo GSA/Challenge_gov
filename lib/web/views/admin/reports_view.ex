@@ -6,7 +6,7 @@ defmodule Web.Admin.ReportsView do
   alias ChallengeGov.Reports.CSV
   alias Web.Admin.FormView
 
-  def render("security-log-header.csv", _assigns) do
+  def render_security_log("security-log-header.csv", _assigns) do
     headers = [
       "ID",
       "Action",
@@ -24,22 +24,70 @@ defmodule Web.Admin.ReportsView do
     CSV.dump_to_iodata([headers])
   end
 
-  def render("security-log-content.csv", %{record: record}) do
-    csv = [
-      record.id,
-      record.action,
-      parse_details(record.details),
-      record.originator_id,
-      record.originator_role,
-      record.originator_identifier,
-      record.originator_remote_ip,
-      record.target_id,
-      record.target_type,
-      record.target_identifier,
-      record.logged_at
+  def render_certification_log("certification-log-header.csv", _assigns) do
+    headers = [
+      "ID",
+      "Approver ID",
+      "Approver Role",
+      "Approver Identifier",
+      "Approver IP Address",
+      "User ID",
+      "User Role",
+      "User Identifier",
+      "User IP Address",
+      "Requested At",
+      "Certified At",
+      "Expires At",
+      "Denied At",
+      "Inserted At",
+      "Updated At"
     ]
 
+    CSV.dump_to_iodata([headers])
+  end
+
+  def render(file_name, %{record: record}) do
+    csv = csv_schema_by_report(file_name, record)
+
     CSV.dump_to_iodata([csv])
+  end
+
+  defp csv_schema_by_report(file_name, record) do
+    case file_name do
+      "security-log-content.csv" ->
+        [
+          record.id,
+          record.action,
+          parse_details(record.details),
+          record.originator_id,
+          record.originator_role,
+          record.originator_identifier,
+          record.originator_remote_ip,
+          record.target_id,
+          record.target_type,
+          record.target_identifier,
+          record.logged_at
+        ]
+
+      "certification-log-content.csv" ->
+        [
+          record.id,
+          record.approver_id,
+          record.approver_role,
+          record.approver_identifier,
+          record.approver_remote_ip,
+          record.user_id,
+          record.user_role,
+          record.user_identifier,
+          record.user_remote_ip,
+          record.requested_at,
+          record.certified_at,
+          record.expires_at,
+          record.denied_at,
+          record.inserted_at,
+          record.updated_at
+        ]
+    end
   end
 
   defp parse_details(record) do

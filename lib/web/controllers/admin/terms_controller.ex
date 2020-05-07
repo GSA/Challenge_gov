@@ -93,9 +93,10 @@ defmodule Web.Admin.TermsController do
         user_identifier: user.email,
         user_remote_ip: Security.extract_remote_ip(conn),
         certified_at: Timex.now(),
-        expires_at: CertificationLogs.calulate_expiry(),
+        expires_at: CertificationLogs.calulate_expiry()
       })
     end
+
     conn
   end
 end
