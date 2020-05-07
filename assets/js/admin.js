@@ -15,7 +15,8 @@ import "admin-lte/dist/css/adminlte.css";
 import "admin-lte/dist/js/adminlte.js";
 import "@fortawesome/fontawesome-free/css/all.css";
 
-// import "uswds";
+import "uswds/dist/css/uswds.css";
+import "uswds/dist/js/uswds.js";
 
 // Custom CSS
 import "../css/admin.scss";
