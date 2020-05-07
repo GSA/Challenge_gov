@@ -213,6 +213,10 @@ label {
 
 /*  Reports */
 
+.ch-report-hr {
+  margin: 1rem 1rem;
+}
+
 .content-sub-1 {
   margin: 2rem 5rem;
 
@@ -227,5 +231,9 @@ label {
 
   label, .col {
     padding: 0;
+  }
+
+  .ch-export-btn-wrapper {
+    margin-top: 2rem;
   }
 }

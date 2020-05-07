@@ -40,11 +40,11 @@ defmodule ChallengeGov.CertificationLogs do
   def filter_by_params(params) do
     %{"year" => year} = params
 
-    {datetime_start, datetime_end} = range_from(year)
+    {datetime_start, datetime_end} = range_from(String.to_integer(year))
 
     CertificationLog
-    |> where([r], r.inserted_at >= ^datetime_start)
-    |> where([r], r.inserted_at <= ^datetime_end)
+    |> where([r], r.certified_at >= ^datetime_start)
+    |> where([r], r.certified_at <= ^datetime_end)
     |> order_by([r], asc: r.id)
     |> Repo.all()
   end
