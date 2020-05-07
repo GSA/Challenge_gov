@@ -1,0 +1,27 @@
+.contact-form {
+  input, textarea {
+    font-size: unset;
+  }
+
+  label span {
+    color: red;
+  }
+
+  &__submit {
+    height: 100%;
+    width: 100%;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1rem 0rem;
+    align-self: center;
+    color: #000;
+    background-color: #FA9441;
+    border-radius: 7px;
+    border: 1px solid #C9C9C9;
+    box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
+  }
+
+  &__bottom {
+    text-align: center;
+  }
+}
