@@ -34,7 +34,6 @@ defmodule Web.Public.SitemapView do
   end
 
   defp base_rss(content) do
-    # element(:rss, %{version: "2.0"}, rss_channel("Challenge.gov", content))
     element(
       :rss,
       %{version: "2.0"},
