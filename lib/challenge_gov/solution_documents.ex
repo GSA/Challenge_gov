@@ -39,7 +39,7 @@ defmodule ChallengeGov.SolutionDocuments do
   @doc """
   Upload a new solution document
   """
-  def upload(user, %{"file" => file}) do
+  def upload(user, params = %{"file" => file}) do
     file = Storage.prep_file(file)
 
     key = UUID.uuid4()
@@ -53,7 +53,7 @@ defmodule ChallengeGov.SolutionDocuments do
       :ok ->
         user
         |> Ecto.build_assoc(:solution_documents)
-        |> Document.create_changeset(file, key)
+        |> Document.create_changeset(file, key, params["name"])
         |> Repo.insert()
 
       {:error, _reason} ->
@@ -105,11 +105,11 @@ defmodule ChallengeGov.SolutionDocuments do
     |> Ecto.Changeset.apply_action(:update)
   end
 
-  def attach_to_solution(document, solution, name) do
+  def attach_to_solution(document, solution, _name) do
     case document.user_id == solution.submitter_id do
       true ->
         document
-        |> Document.solution_changeset(solution, name)
+        |> Document.solution_changeset(solution)
         |> Repo.update()
 
       false ->
