@@ -29,6 +29,7 @@ import "./datetime_field.js";
 import "./custom_url_generator.js";
 import "./section_file_upload.js";
 import "./multi_file_upload.js";
+import "./remove_reports_error.js";
 
 $(".wrapper").prepend(
   `<div id="renew-modal" class="modal timeout-modal">
