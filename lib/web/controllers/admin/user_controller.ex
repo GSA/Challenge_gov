@@ -2,6 +2,7 @@ defmodule Web.Admin.UserController do
   use Web, :controller
 
   alias ChallengeGov.Accounts
+  alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Challenges
   alias ChallengeGov.Security
 
@@ -109,6 +110,17 @@ defmodule Web.Admin.UserController do
     end
   end
 
+  def toggle(conn, %{"id" => id, "action" => "recertify"}) do
+    %{current_user: originator} = conn.assigns
+
+    with {:ok, user} <- Accounts.get(id),
+         {:ok, user} <- admin_recertify_user(user, originator, Security.extract_remote_ip(conn)) do
+      conn
+      |> put_flash(:info, "User recertified")
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
+    end
+  end
+
   def toggle(conn, %{"id" => id, "action" => "suspend"}) do
     %{current_user: originator} = conn.assigns
 
@@ -138,6 +150,28 @@ defmodule Web.Admin.UserController do
       conn
       |> put_flash(:info, "Challenge access restored")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
+    end
+  end
+
+  def admin_recertify_user(user, approver, approver_remote_ip) do
+    result = CertificationLogs.track(%{
+      approver_id: approver.id,
+      approver_role: approver.role,
+      approver_identifier: approver.email,
+      approver_remote_ip: approver_remote_ip,
+      user_id: user.id,
+      user_role: user.role,
+      user_identifier: user.email,
+      certified_at: Timex.now(),
+      expires_at: CertificationLogs.calulate_expiry()
+    })
+
+    case result do
+      {:ok, _result} ->
+        {:ok, user}
+
+      {:error, _error} ->
+        {:error, _error}
     end
   end
 end
