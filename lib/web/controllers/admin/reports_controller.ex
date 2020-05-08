@@ -3,22 +3,21 @@ defmodule Web.Admin.ReportsController do
 
   alias ChallengeGov.Reports
   alias Web.Admin.ReportsView
+  alias ChallengeGov.Reports.Report
 
   def new(conn, _params) do
     %{current_user: user} = conn.assigns
 
-    months =
-      Enum.reduce(1..12, [], fn num, acc ->
-        Enum.concat(acc, [{Timex.month_name(num), num}])
-      end)
+    [years, months, days] = generate_date_options()
 
-    days = Range.new(1, 31)
+    changeset = Report.changeset(%Report{}, %{"year" => nil, "month" => nil, "day" => nil})
 
     conn
-    |> assign(:years, Range.new(Timex.now().year, 2017))
+    |> assign(:years, years)
     |> assign(:months, months)
     |> assign(:days, days)
     |> assign(:user, user)
+    |> assign(:changeset, changeset)
     |> render("index.html")
   end
 
@@ -28,32 +27,62 @@ defmodule Web.Admin.ReportsController do
         do: Reports.stream_all_records(),
         else: Reports.filter_by_params(params)
 
-    conn =
-      conn
-      |> put_resp_header("content-disposition", "attachment; filename=security-log.csv")
-      |> send_chunked(200)
+    case csv do
+      {:ok, records} ->
+        conn =
+          conn
+          |> put_resp_header("content-disposition", "attachment; filename=security-log.csv")
+          |> send_chunked(200)
 
-    {:ok, conn} = chunk(conn, ReportsView.render("security-log-header.csv", %{}))
+        {:ok, conn} = chunk(conn, ReportsView.render("security-log-header.csv", %{}))
 
-    {:ok, conn} =
-      ChallengeGov.Repo.transaction(fn ->
-        chunk_records(conn, csv)
+        {:ok, conn} =
+          ChallengeGov.Repo.transaction(fn ->
+            chunk_records(conn, records)
+          end)
+
+        conn
+
+      {:error, changeset} ->
+        [years, months, days] = generate_date_options()
+        %{current_user: user} = conn.assigns
+
+        conn
+        |> assign(:years, years)
+        |> assign(:months, months)
+        |> assign(:days, days)
+        |> assign(:user, user)
+        |> assign(:changeset, changeset)
+        |> render("index.html")
+    end
+  end
+
+  defp chunk_records(conn, records) do
+    _records =
+      Enum.reduce_while(records, conn, fn record, conn ->
+        chunk = ReportsView.render("security-log-content.csv", record: record)
+
+        case Plug.Conn.chunk(conn, chunk) do
+          {:ok, conn} ->
+            {:cont, conn}
+
+          {:error, :closed} ->
+            {:halt, conn}
+        end
       end)
 
     conn
   end
 
-  defp chunk_records(conn, csv) do
-    Enum.reduce_while(csv, conn, fn record, conn ->
-      chunk = ReportsView.render("security-log-content.csv", record: record)
+  def generate_date_options do
+    months =
+      Enum.reduce(1..12, [], fn num, acc ->
+        Enum.concat(acc, [{Timex.month_name(num), num}])
+      end)
 
-      case Plug.Conn.chunk(conn, chunk) do
-        {:ok, conn} ->
-          {:cont, conn}
+    days = Range.new(1, 31)
+    years = Range.new(Timex.now().year, 2020)
 
-        {:error, :closed} ->
-          {:halt, conn}
-      end
-    end)
+    [years, months, days]
   end
 end
