@@ -21,6 +21,7 @@ defmodule ChallenegGov.CertificationLogs.CertificationLog do
     field(:requested_at, :utc_datetime)
     field(:certified_at, :utc_datetime)
     field(:expires_at, :utc_datetime)
+    field(:decertified_at, :utc_datetime)
     field(:denied_at, :utc_datetime)
 
     timestamps()
@@ -40,6 +41,7 @@ defmodule ChallenegGov.CertificationLogs.CertificationLog do
       :requested_at,
       :certified_at,
       :expires_at,
+      :decertified_at,
       :denied_at
     ])
     |> unique_constraint([:approver_id, :user_id])
