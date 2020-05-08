@@ -30,11 +30,17 @@ defmodule Web.Admin.UserController do
   def show(conn, %{"id" => id}) do
     %{current_user: current_user} = conn.assigns
 
-    with {:ok, user} <- Accounts.get(id) do
+    with {:ok, user} <- Accounts.get(id),
+         {:ok, certification} <- CertificationLogs.get_current_certification(id) do
+          
       conn
       |> assign(:current_user, current_user)
       |> assign(:user, user)
+      |> assign(:certification, certification || %{})
       |> render("show.html")
+    else
+      _ ->
+      conn
     end
   end
 
@@ -170,8 +176,8 @@ defmodule Web.Admin.UserController do
       {:ok, _result} ->
         {:ok, user}
 
-      {:error, _error} ->
-        {:error, _error}
+      :error ->
+        {:error, :not_recertified}
     end
   end
 end

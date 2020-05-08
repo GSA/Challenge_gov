@@ -92,18 +92,18 @@ defmodule ChallengeGov.SecurityLogs do
     end
   end
 
-  # @doc """
-  # Stream security log for CSV download
-  # """
+  @doc """
+  Stream security log for CSV download
+  """
   def stream_all_records() do
     SecurityLog
     |> order_by([r], asc: r.id)
     |> Repo.all()
   end
 
-  # @doc """
-  # Filter security log for CSV download
-  # """
+  @doc """
+  Filter security log for CSV download
+  """
   def filter_by_params(params) do
     %{"year" => year, "month" => month, "day" => day} = params
 
@@ -125,10 +125,10 @@ defmodule ChallengeGov.SecurityLogs do
     if value == "", do: nil, else: String.to_integer(value)
   end
 
-  # @doc """
-  # Deliver start and end dates by selected params for
-  # security log filtering for CSV download
-  # """
+  @doc """
+  Deliver start and end dates by selected params for
+  security log filtering for CSV download
+  """
   defp range_from(year, month, day) do
     case {year, month, day} do
       {year, month, day} when month == nil and day == nil ->

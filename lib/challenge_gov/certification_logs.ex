@@ -19,24 +19,44 @@ defmodule ChallengeGov.CertificationLogs do
   #   Repo.all(CertificationLog)
   # end
 
+  @doc """
+  Get most
+  """
+  def get_current_certification(user_id) do
+    result = CertificationLog
+    |> where([r], r.user_id == ^user_id)
+    |> limit(1)
+    |> order_by([r], desc: r.expires_at)
+    |> Repo.all()
+    |> List.first
+
+    case result do
+      nil ->
+        {:error, :no_log_found}
+
+      result ->
+        {:ok, result}
+    end
+  end
+
   def calulate_expiry() do
     decertification_interval = Security.decertify_days()
     expiry = Timex.shift(DateTime.utc_now(), days: decertification_interval)
     DateTime.truncate(expiry, :second)
   end
 
-  # @doc """
-  # Stream certification log for CSV download
-  # """
+  @doc """
+  Stream certification log for CSV download
+  """
   def stream_all_records() do
     CertificationLog
     |> order_by([r], asc: r.id)
     |> Repo.all()
   end
 
-  # @doc """
-  # Filter security log for CSV download
-  # """
+  @doc """
+  Filter security log for CSV download
+  """
   def filter_by_params(params) do
     %{"year" => year} = params
 
