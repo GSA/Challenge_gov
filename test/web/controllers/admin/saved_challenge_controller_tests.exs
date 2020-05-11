@@ -1,0 +1,157 @@
+defmodule Web.Admin.SavedChallengeControllerTests do
+  use Web.ConnCase
+
+  alias ChallengeGov.SavedChallenges
+  alias ChallengeGov.TestHelpers.AccountHelpers
+  alias ChallengeGov.TestHelpers.ChallengeHelpers
+
+  describe "index for saved challenges" do
+    test "successfully retrieve all saved challenges for current user", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
+      challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
+      challenge_3 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
+
+      {:ok, _saved_challenge} = SavedChallenges.create(user, challenge)
+      {:ok, _saved_challenge_2} = SavedChallenges.create(user, challenge_2)
+      {:ok, _saved_challenge_3} = SavedChallenges.create(user_2, challenge_3)
+
+      conn = get(conn, Routes.admin_saved_challenge_path(conn, :index))
+
+      %{saved_challenges: saved_challenges, pagination: _pagination} = conn.assigns
+
+      assert length(saved_challenges) === 2
+    end
+
+    test "redirect to sign in when signed out", %{conn: conn} do
+      conn = get(conn, Routes.admin_saved_challenge_path(conn, :index))
+
+      assert conn.status === 302
+      assert conn.halted
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
+  end
+
+  describe "create action" do
+    test "successfully", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
+
+      conn = post(conn, Routes.admin_challenge_saved_challenge_path(conn, :create, challenge.id))
+
+      saved_challenges = SavedChallenges.all(user)
+      assert length(saved_challenges) === 1
+      assert conn.status === 302
+      assert get_flash(conn, :info) === "Challenge saved"
+      assert redirected_to(conn) == Routes.admin_saved_challenge_path(conn, :index)
+    end
+
+    @tag :pending
+    test "successfully save after sign in", %{conn: _conn} do
+      # saved_challenges = SavedChallenges.all(user)
+      # assert length(saved_challenges) === 1
+      # assert conn.status === 200
+      # assert get_flash(conn, :info) === "Challenge saved"
+      # assert redirected_to(conn) == Routes.admin_saved_challenge_path(conn, :index)
+    end
+
+    test "failure challenge not public", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "draft"})
+
+      conn = post(conn, Routes.admin_challenge_saved_challenge_path(conn, :create, challenge.id))
+
+      saved_challenges = SavedChallenges.all(user)
+      assert length(saved_challenges) === 0
+      assert conn.status === 302
+      assert get_flash(conn, :error) === "There was an error saving this challenge"
+      assert redirected_to(conn) == Routes.admin_saved_challenge_path(conn, :index)
+    end
+
+    @tag :pending
+    test "failure when saving own challenge", %{conn: _conn} do
+    end
+
+    @tag :pending
+    test "failure when not a solver", %{conn: _conn} do
+    end
+
+    test "redirect to sign in when signed out", %{conn: conn} do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+
+      conn = post(conn, Routes.admin_challenge_saved_challenge_path(conn, :create, challenge.id))
+
+      assert conn.status === 302
+      assert conn.halted
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
+  end
+
+  describe "delete action" do
+    test "successfully", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
+      {:ok, saved_challenge} = SavedChallenges.create(user, challenge)
+
+      conn = delete(conn, Routes.admin_saved_challenge_path(conn, :delete, saved_challenge.id))
+
+      assert get_flash(conn, :info) === "Challenge unsaved"
+      assert redirected_to(conn) == Routes.admin_saved_challenge_path(conn, :index)
+    end
+
+    test "failure when not found", %{conn: conn} do
+      conn = prep_conn(conn)
+
+      conn = delete(conn, Routes.admin_saved_challenge_path(conn, :delete, 1))
+
+      assert get_flash(conn, :error) === "Saved challenge not found"
+      assert redirected_to(conn) == Routes.admin_saved_challenge_path(conn, :index)
+    end
+
+    test "failure when not owner", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
+      {:ok, saved_challenge} = SavedChallenges.create(user_2, challenge)
+
+      conn = delete(conn, Routes.admin_saved_challenge_path(conn, :delete, saved_challenge.id))
+
+      assert conn.status === 302
+      assert get_flash(conn, :error) === "Something went wrong"
+      assert redirected_to(conn) == Routes.admin_saved_challenge_path(conn, :index)
+    end
+
+    test "redirect to sign in when signed out", %{conn: conn} do
+      user = AccountHelpers.create_user()
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
+      {:ok, saved_challenge} = SavedChallenges.create(user, challenge)
+
+      conn = delete(conn, Routes.admin_saved_challenge_path(conn, :delete, saved_challenge.id))
+
+      assert conn.status === 302
+      assert conn.halted
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
+  end
+
+  defp prep_conn(conn) do
+    user = AccountHelpers.create_user()
+    assign(conn, :current_user, user)
+  end
+end
