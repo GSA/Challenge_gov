@@ -24,5 +24,8 @@ defmodule ChallengeGov.SavedChallenges.SavedChallenge do
     |> put_change(:challenge_id, challenge.id)
     |> foreign_key_constraint(:user)
     |> foreign_key_constraint(:challenge)
+    |> unique_constraint(:unique_user_challenge,
+      name: :saved_challenges_user_id_challenge_id_index
+    )
   end
 end

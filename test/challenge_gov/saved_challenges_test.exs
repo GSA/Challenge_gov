@@ -36,6 +36,21 @@ defmodule ChallengeGov.SavedChallengesTest do
       assert length(saved_challenges) === 2
     end
 
+    test "failure saving same challenge twice" do
+      user = AccountHelpers.create_user()
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
+
+      {:ok, _saved_challenge} = SavedChallenges.create(user, challenge)
+      {:error, changeset} = SavedChallenges.create(user, challenge)
+
+      saved_challenges = SavedChallenges.all(user)
+
+      assert length(saved_challenges) === 1
+      assert changeset.errors[:unique_user_challenge]
+    end
+
     test "failure saving non public challenges" do
       user = AccountHelpers.create_user()
       user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})

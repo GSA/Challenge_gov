@@ -8,5 +8,7 @@ defmodule ChallengeGov.Repo.Migrations.CreateSavedChallenges do
 
       timestamps()
     end
+
+    create unique_index(:saved_challenges, [:user_id, :challenge_id])
   end
 end
