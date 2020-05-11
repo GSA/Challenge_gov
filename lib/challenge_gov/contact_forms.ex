@@ -6,9 +6,13 @@ defmodule ChallengeGov.ContactForms do
   alias ChallengeGov.ContactForms.ContactForm
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
+  alias ChallengeGov.Recaptcha
 
   def send_email(challenge, params) do
-    changeset = ContactForm.changeset(%ContactForm{}, params)
+    changeset =
+      %ContactForm{}
+      |> ContactForm.changeset(params)
+      |> check_recaptcha(params)
 
     if changeset.valid? do
       %{"email" => email, "body" => body} = params
@@ -24,6 +28,16 @@ defmodule ChallengeGov.ContactForms do
       {:ok, changeset}
     else
       {:error, changeset}
+    end
+  end
+
+  defp check_recaptcha(changeset, params) do
+    recaptcha_token = Map.get(params, "recaptchaToken")
+
+    if Recaptcha.valid_token?(recaptcha_token) do
+      changeset
+    else
+      Ecto.Changeset.add_error(changeset, :recaptcha, "Invalid reCaptcha token. Please try again")
     end
   end
 end
