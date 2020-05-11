@@ -67,8 +67,10 @@
                     <td><%= Enum.join(challenge.types || [], ", ") %></td>
                     <%= if Accounts.has_admin_access?(@user) do %>
                       <td>
-                        <%= Enum.map(challenge.challenge_owner_users, fn owner -> %>
-                          <div><%= Web.Admin.UserView.name_link(@conn, owner) %></div>
+                        <%= Enum.map(challenge.challenge_owners, fn owner -> %>
+                          <%= if is_nil(owner.revoked_at) do %>
+                            <div><%= Web.Admin.UserView.name_link(@conn, owner.user) %></div>
+                          <% end %>
                         <% end) %>
                       </td>
                       <td><%= Web.Admin.AgencyView.name_link(@conn, challenge.agency) %></td>
