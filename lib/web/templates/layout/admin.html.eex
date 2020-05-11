@@ -63,6 +63,8 @@
                       <i class="nav-icon fas fa-flask"></i>
                       <p>Solutions</p>
                     <% end %>
+                  </li>
+                  <li class="nav-item">
                     <%= link(to: Routes.admin_saved_challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "saved_challenges")}") do %>
                       <i class="nav-icon fas fa-bookmark"></i>
                       <p>Saved challenges</p>
