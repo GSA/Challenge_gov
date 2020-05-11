@@ -40,6 +40,10 @@ defmodule Web.Router do
     plug(Web.Plugs.FetchUser)
   end
 
+  scope "/public", Web.Public, as: :public do
+    get("/rss.xml", SitemapController, :rss)
+  end
+
   scope "/admin", Web.Admin, as: :admin do
     pipe_through([:browser, :user, :pending])
     resources("/terms", TermsController, only: [:new, :create])

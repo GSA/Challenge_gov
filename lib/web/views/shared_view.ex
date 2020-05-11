@@ -84,8 +84,14 @@ defmodule Web.SharedView do
 
   def readable_datetime(datetime) do
     if datetime do
-      Timex.format!(datetime, "{0M}/{0D}/{YYYY} {h12}:{0m} {AM}")
+      Timex.format!(datetime, "{0M}/{0D}/{YYYY} {h12}:{0m} {AM} {Zname}")
     end
+  end
+
+  def naive_to_readable_datetime(naive_datetime) do
+    naive_datetime
+    |> Timex.to_datetime()
+    |> readable_datetime
   end
 
   def string_to_link(string, opts \\ []) do
