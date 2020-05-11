@@ -58,10 +58,10 @@ defmodule Web.Admin.ReportsController do
     end
   end
 
-  defp chunk_records(conn, records) do
+  defp chunk_records(conn, records, file_name) do
     _records =
       Enum.reduce_while(records, conn, fn record, conn ->
-        chunk = ReportsView.render("security-log-content.csv", record: record)
+        chunk = ReportsView.render(file_name, record: record)
 
         case Plug.Conn.chunk(conn, chunk) do
           {:ok, conn} ->
@@ -71,8 +71,6 @@ defmodule Web.Admin.ReportsController do
             {:halt, conn}
         end
       end)
-
-    conn
   end
 
   def export_certification_log(conn, params) do
