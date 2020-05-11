@@ -4,7 +4,6 @@ defmodule Web.Admin.TermsController do
   alias ChallengeGov.Accounts
   alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
-  alias ChallengeGov.CertificationLogs
 
   def new(conn, _params) do
     %{current_user: user} = conn.assigns
