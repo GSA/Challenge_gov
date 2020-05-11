@@ -144,6 +144,24 @@ defmodule Web.Admin.SavedChallengeControllerTests do
       assert length(saved_challenges) === 1
       assert conn.status === 302
 
+      # TODO: Find a way to use a route helper here
+      assert get_flash(conn, :info) === [
+               "Challenge saved. Click ",
+               {:safe,
+                [
+                  60,
+                  "a",
+                  [[32, "href", 61, 34, "http://localhost:4002/challenge/#{challenge.id}", 34]],
+                  62,
+                  "here",
+                  60,
+                  47,
+                  "a",
+                  62
+                ]},
+               " to be taken back to the challenge details"
+             ]
+
       assert redirected_to(conn) ==
                Routes.admin_saved_challenge_path(conn, :index)
     end

@@ -86,7 +86,13 @@ defmodule Web.Admin.SavedChallengeController do
     with {:ok, challenge} <- Challenges.get(challenge_id),
          {:ok, _saved_challenge} <- SavedChallenges.create(user, challenge) do
       conn
-      |> put_flash(:info, "Challenge saved")
+      |> put_flash(:info, [
+        "Challenge saved. Click ",
+        Phoenix.HTML.Link.link("here",
+          to: Routes.public_challenge_details_url(conn, :index, challenge.id)
+        ),
+        " to be taken back to the challenge details"
+      ])
       |> redirect(to: Routes.admin_saved_challenge_path(conn, :index))
     else
       {:error, :not_saved} ->

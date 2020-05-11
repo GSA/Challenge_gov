@@ -120,6 +120,14 @@ body {
   overflow-y: scroll;
 }
 
+.callout a {
+  color: #007bff;
+
+  &:hover {
+    color: #0056b3;
+  }
+}
+
 @media (min-width: 768px) {
   .modal-content {
     margin: 10% 25% 0 30%;
