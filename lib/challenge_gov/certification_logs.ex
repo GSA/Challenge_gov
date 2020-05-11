@@ -16,31 +16,37 @@ defmodule ChallengeGov.CertificationLogs do
     |> Repo.insert()
   end
 
-  # def check_user_certifications() do
-  #   Repo.all(CertificationLog)
-  # end
+  def check_user_certifications do
+    two_days_ago = Timex.shift(Timex.now(), days: -2)
 
-  def decertify_user(user) do
-    Accounts.revoke_challenge_ownership(user)
-    CertificationLogs.track(%{
-      user_id: user.id,
-      user_role: user.role,
-      user_identifier: user.email,
-      certified_at: Timex.now(),
-      expires_at: calulate_expiry()
-    })
+    # get records where user is not decertified and expiry is past now
+    results =
+      CertificationLog
+      |> join(:left, [r], user in assoc(r, :user))
+      |> where([r, user], r.user_id == user.id and user.status != "decertified")
+      |> where([r], is_nil(r.decertified_at))
+      |> where([r], r.expires_at < ^Timex.now() and r.updated_at > ^two_days_ago)
+      |> Repo.all()
+
+    # decertify found users
+    Enum.map(results, fn r ->
+      with {:ok, user} <- Accounts.get(r.user_id) do
+        Accounts.decertify(user)
+      end
+    end)
   end
 
   @doc """
-  Get most
+  Get most current certification record by user id
   """
   def get_current_certification(user_id) do
-    result = CertificationLog
-    |> where([r], r.user_id == ^user_id)
-    |> limit(1)
-    |> order_by([r], desc: r.expires_at)
-    |> Repo.all()
-    |> List.first
+    result =
+      CertificationLog
+      |> where([r], r.user_id == ^user_id)
+      |> limit(1)
+      |> order_by([r], desc: r.expires_at)
+      |> Repo.all()
+      |> List.first()
 
     case result do
       nil ->
@@ -51,6 +57,9 @@ defmodule ChallengeGov.CertificationLogs do
     end
   end
 
+  @doc """
+  calculate certification expiry based on decertification env var
+  """
   def calulate_expiry() do
     decertification_interval = Security.decertify_days()
     expiry = Timex.shift(DateTime.utc_now(), days: decertification_interval)

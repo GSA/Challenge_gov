@@ -62,7 +62,7 @@
 
           <div class="card-body">
             <p>
-              <%= if !Accounts.is_active?(@user) do %>
+              <%= if !Accounts.is_active?(@user) and !Accounts.is_decertified?(@user) do %>
                 <%= link("Activate user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "activate"), method: :post, class: "btn btn-default") %>
               <% end %>
 

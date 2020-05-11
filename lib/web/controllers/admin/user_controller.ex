@@ -32,7 +32,6 @@ defmodule Web.Admin.UserController do
 
     with {:ok, user} <- Accounts.get(id),
          {:ok, certification} <- CertificationLogs.get_current_certification(id) do
-          
       conn
       |> assign(:current_user, current_user)
       |> assign(:user, user)
@@ -40,7 +39,7 @@ defmodule Web.Admin.UserController do
       |> render("show.html")
     else
       _ ->
-      conn
+        conn
     end
   end
 
@@ -160,17 +159,18 @@ defmodule Web.Admin.UserController do
   end
 
   def admin_recertify_user(user, approver, approver_remote_ip) do
-    result = CertificationLogs.track(%{
-      approver_id: approver.id,
-      approver_role: approver.role,
-      approver_identifier: approver.email,
-      approver_remote_ip: approver_remote_ip,
-      user_id: user.id,
-      user_role: user.role,
-      user_identifier: user.email,
-      certified_at: Timex.now(),
-      expires_at: CertificationLogs.calulate_expiry()
-    })
+    result =
+      CertificationLogs.track(%{
+        approver_id: approver.id,
+        approver_role: approver.role,
+        approver_identifier: approver.email,
+        approver_remote_ip: approver_remote_ip,
+        user_id: user.id,
+        user_role: user.role,
+        user_identifier: user.email,
+        certified_at: Timex.now(),
+        expires_at: CertificationLogs.calulate_expiry()
+      })
 
     case result do
       {:ok, _result} ->

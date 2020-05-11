@@ -5,6 +5,7 @@ defmodule ChallengeGov.Accounts do
 
   alias ChallengeGov.Accounts.Avatar
   alias ChallengeGov.Accounts.User
+  alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Recaptcha
@@ -676,7 +677,7 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
-  Deactivate a user. User can no longer login. Still has data access after
+  Deactivate a user. User can no longer login. Removes access to their challenges
   """
 
   def deactivate(user) do
@@ -729,11 +730,20 @@ defmodule ChallengeGov.Accounts do
           details: %{status: "decertified"}
         })
       end)
+      |> Ecto.Multi.run(:track, fn _repo, _changes ->
+        CertificationLogs.track(%{
+          user_id: user.id,
+          user_role: user.role,
+          user_identifier: user.email,
+          decertified_at: Timex.now()
+        })
+      end)
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
-        {:ok, user}
+      {:ok, result} ->
+        revoke_challenge_ownership(result.user)
+        {:ok, result.user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}

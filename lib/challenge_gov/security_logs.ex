@@ -125,10 +125,6 @@ defmodule ChallengeGov.SecurityLogs do
     if value == "", do: nil, else: String.to_integer(value)
   end
 
-  @doc """
-  Deliver start and end dates by selected params for
-  security log filtering for CSV download
-  """
   defp range_from(year, month, day) do
     case {year, month, day} do
       {year, month, day} when month == nil and day == nil ->
