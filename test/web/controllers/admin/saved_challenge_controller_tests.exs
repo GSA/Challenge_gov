@@ -24,10 +24,94 @@ defmodule Web.Admin.SavedChallengeControllerTests do
       %{saved_challenges: saved_challenges, pagination: _pagination} = conn.assigns
 
       assert length(saved_challenges) === 2
+      assert html_response(conn, 200) =~ "Saved challenges"
     end
 
     test "redirect to sign in when signed out", %{conn: conn} do
       conn = get(conn, Routes.admin_saved_challenge_path(conn, :index))
+
+      assert conn.status === 302
+      assert conn.halted
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
+  end
+
+  describe "new action" do
+    test "successfully shows pre-save page", %{conn: conn} do
+      conn = prep_conn(conn)
+
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user_2.id,
+          title: "Test challenge",
+          status: "published"
+        })
+
+      conn = get(conn, Routes.admin_challenge_saved_challenge_path(conn, :new, challenge.id))
+
+      assert html_response(conn, 200) =~ "Saving challenge: #{challenge.title}"
+    end
+
+    test "redirect to sign in when signed out", %{conn: conn} do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+
+      conn = get(conn, Routes.admin_challenge_saved_challenge_path(conn, :new, challenge.id))
+
+      assert conn.status === 302
+      assert conn.halted
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
+  end
+
+  describe "show action" do
+    test "successfully shows post-save page", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
+      {:ok, saved_challenge} = SavedChallenges.create(user, challenge)
+
+      conn = get(conn, Routes.admin_saved_challenge_path(conn, :show, saved_challenge.id))
+
+      assert html_response(conn, 200) =~ "Challenge successfully saved"
+    end
+
+    test "redirect when not owner", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
+      {:ok, saved_challenge} = SavedChallenges.create(user_2, challenge)
+
+      conn = get(conn, Routes.admin_saved_challenge_path(conn, :show, saved_challenge.id))
+
+      assert conn.status === 302
+      assert get_flash(conn, :error) === "Permission denied"
+      assert redirected_to(conn) == Routes.admin_saved_challenge_path(conn, :index)
+    end
+
+    test "redirect when not found", %{conn: conn} do
+      conn = prep_conn(conn)
+
+      conn = get(conn, Routes.admin_saved_challenge_path(conn, :show, 1))
+
+      assert conn.status === 302
+      assert get_flash(conn, :error) === "Saved challenge not found"
+      assert redirected_to(conn) == Routes.admin_saved_challenge_path(conn, :index)
+    end
+
+    test "redirect to sign in when signed out", %{conn: conn} do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
+
+      {:ok, saved_challenge} = SavedChallenges.create(user, challenge)
+
+      conn = get(conn, Routes.admin_saved_challenge_path(conn, :show, saved_challenge.id))
 
       assert conn.status === 302
       assert conn.halted
@@ -46,10 +130,12 @@ defmodule Web.Admin.SavedChallengeControllerTests do
       conn = post(conn, Routes.admin_challenge_saved_challenge_path(conn, :create, challenge.id))
 
       saved_challenges = SavedChallenges.all(user)
+      saved_challenge = List.first(saved_challenges)
       assert length(saved_challenges) === 1
       assert conn.status === 302
-      assert get_flash(conn, :info) === "Challenge saved"
-      assert redirected_to(conn) == Routes.admin_saved_challenge_path(conn, :index)
+
+      assert redirected_to(conn) ==
+               Routes.admin_saved_challenge_path(conn, :show, saved_challenge.id)
     end
 
     @tag :pending

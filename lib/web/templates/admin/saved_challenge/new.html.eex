@@ -1,0 +1,3 @@
+Saving challenge: <%= @challenge.title %>
+
+<%= link "Save challenge", to: Routes.admin_challenge_saved_challenge_path(@conn, :create, @challenge.id), method: "post" %>

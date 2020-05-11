@@ -1,0 +1,4 @@
+Saved challenges
+<%= Enum.map(@saved_challenges, fn saved_challenge -> %>
+  <div><%= saved_challenge.challenge.title %></div>
+<% end) %>

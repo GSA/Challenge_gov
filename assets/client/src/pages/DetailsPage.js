@@ -118,6 +118,9 @@ export const DetailsPage = () => {
                       <button className="apply-btn">Apply for this challenge</button>
                     </a>
                     }
+                    <a href={`/admin/challenges/${currentChallenge.id}/save_challenge/new`}>
+                      <button className="apply-btn">Follow challenge</button>
+                    </a>
                   </div>
                 }
                 <div className="item">

@@ -27,14 +27,47 @@ defmodule Web.Admin.SavedChallengeController do
     |> render("index.html")
   end
 
+  def show(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, saved_challenge} <- SavedChallenges.get(id),
+         {:ok, saved_challenge} <- SavedChallenges.check_owner(user, saved_challenge) do
+      conn
+      |> assign(:challenge, saved_challenge.challenge)
+      |> render("show.html")
+    else
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "Saved challenge not found")
+        |> redirect(to: Routes.admin_saved_challenge_path(conn, :index))
+
+      {:error, :wrong_owner} ->
+        conn
+        |> put_flash(:error, "Permission denied")
+        |> redirect(to: Routes.admin_saved_challenge_path(conn, :index))
+    end
+  end
+
+  def new(conn, %{"challenge_id" => challenge_id}) do
+    with {:ok, challenge} <- Challenges.get(challenge_id) do
+      conn
+      |> assign(:challenge, challenge)
+      |> render("new.html")
+    else
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "Challenge not found")
+        |> redirect(to: Routes.admin_saved_challenge_path(conn, :index))
+    end
+  end
+
   def create(conn, %{"challenge_id" => challenge_id}) do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
-         {:ok, _saved_challenge} <- SavedChallenges.create(user, challenge) do
+         {:ok, saved_challenge} <- SavedChallenges.create(user, challenge) do
       conn
-      |> put_flash(:info, "Challenge saved")
-      |> redirect(to: Routes.admin_saved_challenge_path(conn, :index))
+      |> redirect(to: Routes.admin_saved_challenge_path(conn, :show, saved_challenge.id))
     else
       {:error, :not_saved} ->
         conn

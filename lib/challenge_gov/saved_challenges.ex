@@ -58,6 +58,14 @@ defmodule ChallengeGov.SavedChallenges do
     end
   end
 
+  def check_owner(user, saved_challenge) do
+    if user.id === saved_challenge.user_id do
+      {:ok, saved_challenge}
+    else
+      {:error, :wrong_owner}
+    end
+  end
+
   defp base_preload(saved_challenge) do
     preload(saved_challenge, [:user, :challenge])
   end
