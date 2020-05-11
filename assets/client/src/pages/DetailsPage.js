@@ -3,6 +3,8 @@ import axios from 'axios'
 import { useParams } from "react-router-dom";
 import moment from 'moment'
 
+import { ContactForm } from "../components/ContactForm"
+
 export const DetailsPage = () => {
 
   const [currentChallenge, setCurrentChallenge] = useState()
@@ -142,6 +144,7 @@ export const DetailsPage = () => {
               </div>
             </section>
           </section>
+          <ContactForm />
         </div>
       }
     </div>

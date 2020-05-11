@@ -105,15 +105,21 @@ defmodule Web.Router do
   end
 
   scope "/api", Web.Api, as: :api do
-    pipe_through([:api])
+    pipe_through([:api, :signed_in])
 
-    resources("/challenges", ChallengeController, only: [:index, :show])
     resources("/documents", DocumentController, only: [:create, :delete])
     resources("/solution_documents", SolutionDocumentController, only: [:create, :delete])
 
     # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
     post("/session/logout", SessionController, :logout_user)
+  end
+
+  scope "/api", Web.Api, as: :api do
+    pipe_through([:api])
+
+    resources("/challenges", ChallengeController, only: [:index, :show])
+    post("/challenges/:challenge_id/contact_form", ContactFormController, :send_email)
   end
 
   scope "/", Web do

@@ -1,31 +1,20 @@
 $(document).ready(function(){
-  $("#solution_document").on("change", function(e) {
-    console.log("Changed")
-    console.log(e.target.value)
-    // file_input.prop("files")[0]
-    console.log($(this).prop("files")[0])
-    appendedFileInput = $(this).clone().attr("id", "test")
-    console.log(appendedFileInput)
-    $(".solution-documents-upload-list").append(appendedFileInput)
-    $(this).value = null
-  })
-})
-
-$(document).ready(function(){
   csrf_token = $("input[name='_csrf_token']").val()
 
   $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
     jqXHR.setRequestHeader('X-CSRF-Token', csrf_token);
   });
 
-  $("#solution_document").on("change", function(e) {
-    console.log("File selected")
-    file_input = $(this)
+  $("#solution_document_upload").on("click", function(e) {
+    console.log("Click")
+    name_input = $("#solution_document_name")
+    name = name_input.val()
+    file_input = $("#solution_document")
     file = file_input.prop("files")[0]
-    console.log(file)
 
     fd = new FormData()
     fd.append("document[file]", file)
+    fd.append("document[name]", name)
 
     if (file) {
       $.ajax({
@@ -35,12 +24,13 @@ $(document).ready(function(){
         contentType: false,
         data: fd,
         success: function(document) {
+          $(name_input).val("")
           $(file_input).val("")
 
           $(".solution-documents-list").append(`
             <div class="row solution-document-row">
               <div class="col">
-                <a href=${document.url} target="_blank">${document.filename}</a>
+                <a href=${document.url} target="_blank">${document.display_name}</a>
               </div>
               <div class="col">
                 <a href="#", class="solution_uploaded_document_delete" data-document-id="${document.id}">Remove</a>
@@ -64,7 +54,6 @@ $(document).ready(function(){
 
     document_id = $(this).data("document-id")
     parent_element = $(this).parents(".solution-document-row")
-    console.log(parent_element)
 
     $.ajax({
       url: `/api/solution_documents/${document_id}`, 
