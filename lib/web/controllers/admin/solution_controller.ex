@@ -171,9 +171,9 @@ defmodule Web.Admin.SolutionController do
 
   def update(conn, %{"id" => id, "action" => "draft", "solution" => solution_params}) do
     %{current_user: user} = conn.assigns
-    {:ok, solution} = Solutions.get(id)
 
-    with {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
+    with {:ok, solution} <- Solutions.get(id),
+         {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
          {:ok, solution} <- Solutions.update_draft(solution, solution_params) do
       conn
       |> put_flash(:info, "Solution saved as draft")
@@ -190,15 +190,16 @@ defmodule Web.Admin.SolutionController do
         |> redirect(to: Routes.admin_solution_path(conn, :index))
 
       {:error, changeset} ->
+        {:ok, solution} = Solutions.get(id)
         update_error(conn, changeset, user, solution)
     end
   end
 
   def update(conn, %{"id" => id, "action" => "review", "solution" => solution_params}) do
     %{current_user: user} = conn.assigns
-    {:ok, solution} = Solutions.get(id)
 
-    with {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
+    with {:ok, solution} <- Solutions.get(id),
+         {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
          {:ok, solution} <- Solutions.update_review(solution, solution_params) do
       redirect(conn, to: Routes.admin_solution_path(conn, :show, solution.id))
     else
@@ -213,6 +214,7 @@ defmodule Web.Admin.SolutionController do
         |> redirect(to: Routes.admin_solution_path(conn, :index))
 
       {:error, changeset} ->
+        {:ok, solution} = Solutions.get(id)
         update_error(conn, changeset, user, solution)
     end
   end

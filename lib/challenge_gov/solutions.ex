@@ -73,6 +73,8 @@ defmodule ChallengeGov.Solutions do
 
       {:error, _type, changeset, _changes} ->
         changeset = preserve_document_ids_on_error(changeset, params)
+        changeset = %Ecto.Changeset{changeset | data: Repo.preload(changeset.data, [:documents])}
+
         {:error, changeset}
     end
   end
@@ -91,6 +93,8 @@ defmodule ChallengeGov.Solutions do
 
       {:error, _type, changeset, _changes} ->
         changeset = preserve_document_ids_on_error(changeset, params)
+        changeset = %Ecto.Changeset{changeset | data: Repo.preload(changeset.data, [:documents])}
+
         {:error, changeset}
     end
   end

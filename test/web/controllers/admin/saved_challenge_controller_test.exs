@@ -1,4 +1,4 @@
-defmodule Web.Admin.SavedChallengeControllerTests do
+defmodule Web.Admin.SavedChallengeControllerTest do
   use Web.ConnCase
 
   alias ChallengeGov.SavedChallenges
