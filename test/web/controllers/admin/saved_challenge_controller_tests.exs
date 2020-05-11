@@ -13,17 +13,23 @@ defmodule Web.Admin.SavedChallengeControllerTests do
       user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
       challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
       challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
-      challenge_3 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
+      challenge_3 = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "archived"})
+      challenge_4 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
 
       {:ok, _saved_challenge} = SavedChallenges.create(user, challenge)
       {:ok, _saved_challenge_2} = SavedChallenges.create(user, challenge_2)
-      {:ok, _saved_challenge_3} = SavedChallenges.create(user_2, challenge_3)
+      {:ok, _saved_challenge_3} = SavedChallenges.create(user, challenge_3)
+      {:ok, _saved_challenge_4} = SavedChallenges.create(user_2, challenge_4)
 
       conn = get(conn, Routes.admin_saved_challenge_path(conn, :index))
 
-      %{saved_challenges: saved_challenges, pagination: _pagination} = conn.assigns
+      %{
+        open_saved_challenges: open_saved_challenges,
+        closed_saved_challenges: closed_saved_challenges
+      } = conn.assigns
 
-      assert length(saved_challenges) === 2
+      assert length(open_saved_challenges) === 2
+      assert length(closed_saved_challenges) === 1
       assert html_response(conn, 200) =~ "Saved challenges"
     end
 
@@ -51,7 +57,7 @@ defmodule Web.Admin.SavedChallengeControllerTests do
 
       conn = get(conn, Routes.admin_challenge_saved_challenge_path(conn, :new, challenge.id))
 
-      assert html_response(conn, 200) =~ "Saving challenge: #{challenge.title}"
+      assert html_response(conn, 200) =~ "You are about to save challenge: #{challenge.title}"
     end
 
     test "redirect to sign in when signed out", %{conn: conn} do
@@ -130,12 +136,11 @@ defmodule Web.Admin.SavedChallengeControllerTests do
       conn = post(conn, Routes.admin_challenge_saved_challenge_path(conn, :create, challenge.id))
 
       saved_challenges = SavedChallenges.all(user)
-      saved_challenge = List.first(saved_challenges)
       assert length(saved_challenges) === 1
       assert conn.status === 302
 
       assert redirected_to(conn) ==
-               Routes.admin_saved_challenge_path(conn, :show, saved_challenge.id)
+               Routes.admin_saved_challenge_path(conn, :index)
     end
 
     @tag :pending

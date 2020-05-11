@@ -1,3 +1,10 @@
-Saving challenge: <%= @challenge.title %>
-
-<%= link "Save challenge", to: Routes.admin_challenge_saved_challenge_path(@conn, :create, @challenge.id), method: "post" %>
+<section class="p-5">
+  <div class="card col-md-6 mx-auto">
+    <div class="card-body justify-content-center">
+      <div class="rules-wrapper">
+        <h4 class="text-center">You are about to save challenge: <%= @challenge.title %></h4>
+        <%= link "Save challenge", to: Routes.admin_challenge_saved_challenge_path(@conn, :create, @challenge.id), method: "post", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</section>

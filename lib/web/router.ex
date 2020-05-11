@@ -85,7 +85,7 @@ defmodule Web.Router do
     resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
     put("/solutions/:id/submit", SolutionController, :submit)
 
-    resources("/saved_challenges", SavedChallengeController, only: [:index, :show, :delete])
+    resources("/saved_challenges", SavedChallengeController, only: [:index, :delete])
   end
 
   scope "/admin", Web.Admin, as: :admin do

@@ -84,13 +84,19 @@ defmodule Web.Admin.SavedChallengeController do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
-         {:ok, saved_challenge} <- SavedChallenges.create(user, challenge) do
+         {:ok, _saved_challenge} <- SavedChallenges.create(user, challenge) do
       conn
-      |> redirect(to: Routes.admin_saved_challenge_path(conn, :show, saved_challenge.id))
+      |> put_flash(:info, "Challenge saved")
+      |> redirect(to: Routes.admin_saved_challenge_path(conn, :index))
     else
       {:error, :not_saved} ->
         conn
         |> put_flash(:error, "There was an error saving this challenge")
+        |> redirect(to: Routes.admin_saved_challenge_path(conn, :index))
+
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:error, "Already saved this challenge")
         |> redirect(to: Routes.admin_saved_challenge_path(conn, :index))
 
       _ ->
