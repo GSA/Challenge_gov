@@ -67,7 +67,7 @@ defmodule ChallengeGov.SavedChallenges do
   end
 
   defp base_preload(saved_challenge) do
-    preload(saved_challenge, [:user, :challenge])
+    preload(saved_challenge, [:user, challenge: [:agency]])
   end
 
   @impl true

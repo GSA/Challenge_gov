@@ -1,4 +1,34 @@
-Saved challenges
-<%= Enum.map(@saved_challenges, fn saved_challenge -> %>
-  <div><%= saved_challenge.challenge.title %></div>
-<% end) %>
+<section class="container-fluid p-5">
+  <h2 class="mb-5">Saved challenges</h2>
+  <%= if !Enum.empty?(@open_saved_challenges) do %>
+    <h5>Open for submissions</h5>
+    <hr/>
+    <%= Enum.map(Enum.with_index(@open_saved_challenges), fn {saved_challenge, index} -> %>
+      <%= if rem(index, 3) === 0 do %>
+        <div class="row">
+      <% end %>
+      <div class="col-md-4 p-5">
+        <%= render "_challenge_card.html", conn: @conn, saved_challenge: saved_challenge %>
+      </div>
+      <%= if rem(index, 3) === 2 or length(@open_saved_challenges) - 1 === index do %>
+        </div>
+      <% end %>
+    <% end) %>
+  <% end %>
+
+  <%= if !Enum.empty?(@closed_saved_challenges) do %>
+    <h5>Closed to submissions</h5>
+    <hr/>
+    <%= Enum.map(Enum.with_index(@closed_saved_challenges), fn {saved_challenge, index} -> %>
+      <%= if rem(index, 3) === 0 do %>
+        <div class="row">
+      <% end %>
+      <div class="col-md-4 p-5">
+        <%= render "_challenge_card.html", conn: @conn, saved_challenge: saved_challenge %>
+      </div>
+      <%= if rem(index, 3) === 2 or length(@closed_saved_challenges) - 1 === index do %>
+        </div>
+      <% end %>
+    <% end) %>
+  <% end %>
+</section>

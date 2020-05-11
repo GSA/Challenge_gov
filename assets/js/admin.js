@@ -15,8 +15,9 @@ import "admin-lte/dist/css/adminlte.css";
 import "admin-lte/dist/js/adminlte.js";
 import "@fortawesome/fontawesome-free/css/all.css";
 
-import "uswds/dist/css/uswds.css";
-import "uswds/dist/js/uswds.js";
+// TODO: Add in after fixing fontsize and selectbox fixes
+// import "uswds/dist/css/uswds.css";
+// import "uswds/dist/js/uswds.js";
 
 // Custom CSS
 import "../css/admin.scss";

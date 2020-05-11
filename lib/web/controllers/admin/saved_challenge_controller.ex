@@ -10,17 +10,36 @@ defmodule Web.Admin.SavedChallengeController do
 
   def index(conn, params) do
     %{current_user: user} = conn.assigns
-    %{page: page, per: per} = conn.assigns
+    %{page: _page, per: _per} = conn.assigns
 
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
 
-    %{page: saved_challenges, pagination: pagination} =
-      SavedChallenges.all(user, filter: filter, sort: sort, page: page, per: per)
+    # {saved_challenges, pagination} = 
+    #   if !is_nil(page) and !is_nil(per) do
+    #     %{page: saved_challenges, pagination: pagination} =
+    #       SavedChallenges.all(user, filter: filter, sort: sort, page: page, per: per)
+    #     {saved_challenges, pagination}
+    #   else
+    #     {SavedChallenges.all(user, filter: filter, sort: sort), nil}
+    #   end
+
+    {saved_challenges, pagination} = {SavedChallenges.all(user, filter: filter, sort: sort), nil}
+
+    open_saved_challenges =
+      Enum.filter(saved_challenges, fn saved_challenge ->
+        Challenges.is_published?(saved_challenge.challenge)
+      end)
+
+    closed_saved_challenges =
+      Enum.filter(saved_challenges, fn saved_challenge ->
+        Challenges.is_archived?(saved_challenge.challenge)
+      end)
 
     conn
     |> assign(:user, user)
-    |> assign(:saved_challenges, saved_challenges)
+    |> assign(:open_saved_challenges, open_saved_challenges)
+    |> assign(:closed_saved_challenges, closed_saved_challenges)
     |> assign(:pagination, pagination)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
