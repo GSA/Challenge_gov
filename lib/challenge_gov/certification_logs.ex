@@ -5,6 +5,7 @@ defmodule ChallengeGov.CertificationLogs do
 
   import Ecto.Query
   require Logger
+  alias ChallengeGov.Accounts
   alias ChallenegGov.CertificationLogs.CertificationLog
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
@@ -18,6 +19,17 @@ defmodule ChallengeGov.CertificationLogs do
   # def check_user_certifications() do
   #   Repo.all(CertificationLog)
   # end
+
+  def decertify_user(user) do
+    Accounts.revoke_challenge_ownership(user)
+    CertificationLogs.track(%{
+      user_id: user.id,
+      user_role: user.role,
+      user_identifier: user.email,
+      certified_at: Timex.now(),
+      expires_at: calulate_expiry()
+    })
+  end
 
   @doc """
   Get most
