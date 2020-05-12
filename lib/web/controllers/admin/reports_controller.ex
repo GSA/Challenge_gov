@@ -1,7 +1,8 @@
 defmodule Web.Admin.ReportsController do
   use Web, :controller
 
-  alias ChallengeGov.Reports
+  alias ChallengeGov.SecurityLogs
+  alias ChallengeGov.CertificationLogs
   alias Web.Admin.ReportsView
   alias ChallengeGov.Reports.Report
 
@@ -24,8 +25,8 @@ defmodule Web.Admin.ReportsController do
   def export_security_log(conn, params) do
     csv =
       if params == %{},
-        do: Reports.stream_all_records(),
-        else: Reports.filter_by_params(params)
+        do: SecurityLogs.stream_all_records(),
+        else: SecurityLogs.filter_by_params(params)
 
     case csv do
       {:ok, records} ->
@@ -34,11 +35,11 @@ defmodule Web.Admin.ReportsController do
           |> put_resp_header("content-disposition", "attachment; filename=security-log.csv")
           |> send_chunked(200)
 
-        {:ok, conn} = chunk(conn, ReportsView.render("security-log-header.csv", %{}))
+        {:ok, conn} = chunk(conn, ReportsView.render_security_log("security-log-header.csv", %{}))
 
         {:ok, conn} =
           ChallengeGov.Repo.transaction(fn ->
-            chunk_records(conn, records)
+            chunk_records(conn, records, "security-log-content.csv")
           end)
 
         conn
@@ -57,10 +58,10 @@ defmodule Web.Admin.ReportsController do
     end
   end
 
-  defp chunk_records(conn, records) do
+  defp chunk_records(conn, records, file_name) do
     _records =
       Enum.reduce_while(records, conn, fn record, conn ->
-        chunk = ReportsView.render("security-log-content.csv", record: record)
+        chunk = ReportsView.render(file_name, record: record)
 
         case Plug.Conn.chunk(conn, chunk) do
           {:ok, conn} ->
@@ -69,6 +70,26 @@ defmodule Web.Admin.ReportsController do
           {:error, :closed} ->
             {:halt, conn}
         end
+      end)
+  end
+
+  def export_certification_log(conn, params) do
+    csv =
+      if params == %{},
+        do: CertificationLogs.stream_all_records(),
+        else: CertificationLogs.filter_by_params(params)
+
+    conn =
+      conn
+      |> put_resp_header("content-disposition", "attachment; filename=certification-log.csv")
+      |> send_chunked(200)
+
+    {:ok, conn} =
+      chunk(conn, ReportsView.render_certification_log("certification-log-header.csv", %{}))
+
+    {:ok, conn} =
+      ChallengeGov.Repo.transaction(fn ->
+        chunk_records(conn, csv, "certification-log-content.csv")
       end)
 
     conn

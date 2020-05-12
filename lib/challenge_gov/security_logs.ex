@@ -91,4 +91,91 @@ defmodule ChallengeGov.SecurityLogs do
       log_session_duration(user, session_timeout, inactive_user.originator_remote_ip)
     end
   end
+
+  # @doc """
+  # Stream security log for CSV download
+  # """
+  def stream_all_records() do
+    SecurityLog
+    |> order_by([r], asc: r.id)
+    |> Repo.all()
+  end
+
+  # @doc """
+  # Filter security log for CSV download
+  # """
+  def filter_by_params(params) do
+    %{"year" => year, "month" => month, "day" => day} = params
+
+    {datetime_start, datetime_end} =
+      range_from(
+        sanitize_param(year),
+        sanitize_param(month),
+        sanitize_param(day)
+      )
+
+    SecurityLog
+    |> where([r], r.logged_at >= ^datetime_start)
+    |> where([r], r.logged_at <= ^datetime_end)
+    |> order_by([r], asc: r.id)
+    |> Repo.all()
+  end
+
+  defp sanitize_param(value) do
+    if value == "", do: nil, else: String.to_integer(value)
+  end
+
+  # @doc """
+  # Deliver start and end dates by selected params for
+  # security log filtering for CSV download
+  # """
+  defp range_from(year, month, day) do
+    case {year, month, day} do
+      {year, month, day} when month == nil and day == nil ->
+        # just year given
+        datetime_start =
+          year
+          |> Timex.beginning_of_year()
+          |> Timex.to_datetime()
+
+        datetime_end =
+          year
+          |> Timex.end_of_year()
+          |> Timex.to_datetime()
+          |> Timex.end_of_day()
+          |> Timex.to_datetime()
+
+        {datetime_start, datetime_end}
+
+      {year, month, day} when day == nil ->
+        # month/year given
+        datetime_start =
+          year
+          |> Timex.beginning_of_month(month)
+          |> Timex.to_datetime()
+          |> Timex.beginning_of_day()
+
+        datetime_end =
+          year
+          |> Timex.end_of_month(month)
+          |> Timex.to_datetime()
+          |> Timex.end_of_day()
+
+        {datetime_start, datetime_end}
+
+      {year, month, day} ->
+        # day/month/year given
+        datetime_start =
+          {year, month, day}
+          |> Timex.to_datetime()
+          |> Timex.beginning_of_day()
+
+        datetime_end =
+          {year, month, day}
+          |> Timex.to_datetime()
+          |> Timex.end_of_day()
+
+        {datetime_start, datetime_end}
+    end
+  end
 end
