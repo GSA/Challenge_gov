@@ -55,13 +55,19 @@ defmodule Helpers do
 
   def create_user_certifications do
     Enum.map(Accounts.all_for_select(), fn x ->
-      CertificationLogs.track(%{
-        user_id: x.id,
-        user_role: x.role,
-        user_identifier: x.email,
-        certified_at: Timex.now(),
-        expires_at: CertificationLogs.calulate_expiry()
-      })
+      case CertificationLogs.get_current_certification(x) do
+        {:error, :no_log_found} ->
+          CertificationLogs.track(%{
+            user_id: x.id,
+            user_role: x.role,
+            user_identifier: x.email,
+            certified_at: Timex.now(),
+            expires_at: CertificationLogs.calulate_expiry()
+          })
+
+        {:ok, result} ->
+          nil
+      end
     end)
   end
 end
