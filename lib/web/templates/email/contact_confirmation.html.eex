@@ -1,4 +1,4 @@
-<div>We have received your message on your challenge <%= ChallengeView.public_name_link_url(Endpoint, @challenge) %></div>
+<div>We have received your message on challenge <%= ChallengeView.public_name_link_url(Endpoint, @challenge) %></div>
 
 <p><%= @body %></p>
 

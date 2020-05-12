@@ -59,7 +59,7 @@ export const ContactForm = props => {
               {errors.recaptcha && <div className="invalid-feedback">{errors.recaptcha}</div> }
             </div>
             <div className="form-group">
-              <label htmlFor="contactEmail">Email <span>*</span></label>
+              <label htmlFor="contactEmail">Email address <span>*</span></label>
               <input id="contactEmail" type="email" value={email} onChange={e => setEmail(e.target.value)} className={`form-control ${errors.email ? "is-invalid" : ""}`} required/>
               {errors.email && <div className="invalid-feedback">{errors.email}</div> }
             </div>
