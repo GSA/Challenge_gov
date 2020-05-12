@@ -65,6 +65,7 @@ defmodule ChallengeGov.Emails do
     base_email()
     |> to(poc_email)
     |> subject("Challenge #{challenge.id}: Question from Public Visitor")
+    |> put_header("Reply-To", public_email)
     |> assign(:public_email, public_email)
     |> assign(:challenge, challenge)
     |> assign(:body, body)
