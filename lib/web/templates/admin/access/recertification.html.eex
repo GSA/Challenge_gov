@@ -1,7 +1,5 @@
 <section class="content-header text-center">
-  <h4>
-    <%= recertification_heading_based_on_user(@user) %>
-  </h4>
+  <%= recertification_heading_based_on_user(@user) %>
 </section>
 <section class="content registration-content">
   <div class="row col-md-9 registration-row">

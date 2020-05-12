@@ -32,7 +32,7 @@
             <div class="card-tools">
               <%= link("Edit", to: Routes.admin_user_path(@conn, :edit, @user.id), class: "btn btn-link") %>
             </div>
-          </div>            
+          </div>
           <div class="card-body">
             <dl>
               <dt>Name</dd>

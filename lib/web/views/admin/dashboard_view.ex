@@ -2,6 +2,7 @@ defmodule Web.Admin.DashboardView do
   use Web, :view
 
   alias ChallengeGov.CertificationLogs
+  alias ChallengeGov.Accounts
 
   def recertification_warning(user) do
     case CertificationLogs.get_current_certification(user) do
@@ -26,6 +27,9 @@ defmodule Web.Admin.DashboardView do
             )
           ]
         end
+
+      {:error, :no_log_found} ->
+        nil
     end
   end
 end

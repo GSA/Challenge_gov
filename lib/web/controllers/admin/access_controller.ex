@@ -1,17 +1,9 @@
-defmodule Web.AccessController do
+defmodule Web.Admin.AccessController do
   use Web, :controller
 
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Security
   alias ChallengeGov.Accounts
-
-  # on recert button press:
-  # ERROR: function Web.Admin.AccessController.init/1 is undefined (module Web.Admin.AccessController is not available)
-
-  # def init(conn) do
-  #   conn
-  #   |> render("recertification.html")
-  # end
 
   def create(conn, params) do
     %{current_user: user} = conn.assigns

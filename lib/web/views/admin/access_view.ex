@@ -2,13 +2,11 @@ defmodule Web.Admin.AccessView do
   use Web, :view
 
   def recertification_heading_based_on_user(user) do
-    case user.role == "decertified" do
+    case user.status == "decertified" do
       true ->
         [
-          content_tag(
-            :p,
-            "Your account must be recertified. You may request recertification by submitting the following:"
-          )
+          content_tag(:h4, "Your account must be recertified."),
+          content_tag(:p, "You may request recertification by submitting the following:")
         ]
 
       false ->

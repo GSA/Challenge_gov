@@ -44,8 +44,8 @@ defmodule Web.Plugs.CheckUserStatus do
 
         "decertified" ->
           conn
-          # |> redirect(to: Routes.admin_access_path(conn, :decertified))
-          # |> halt()
+          |> redirect(to: Routes.admin_access_path(conn, :decertified))
+          |> halt()
 
         "active" ->
           conn
