@@ -1,4 +1,4 @@
-defmodule Web.Api.ChallengeControllerTests do
+defmodule Web.Api.ContactFormControllerTest do
   use Web.ConnCase
   use Bamboo.Test
 

@@ -11,6 +11,6 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
       |> Challenges.Challenge.changeset(attributes)
       |> Repo.insert()
 
-    challenge
+    Repo.preload(challenge, [:agency])
   end
 end

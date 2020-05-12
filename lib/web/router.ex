@@ -66,6 +66,8 @@ defmodule Web.Router do
       resources("/events", EventController, only: [:new, :create])
 
       resources("/solutions", SolutionController, only: [:index, :new, :create])
+
+      resources("/save_challenge", SavedChallengeController, only: [:new, :create])
     end
 
     get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
@@ -86,6 +88,8 @@ defmodule Web.Router do
 
     resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
     put("/solutions/:id/submit", SolutionController, :submit)
+
+    resources("/saved_challenges", SavedChallengeController, only: [:index, :delete])
   end
 
   scope "/admin", Web.Admin, as: :admin do

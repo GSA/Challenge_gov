@@ -9,8 +9,9 @@ import "@fortawesome/fontawesome-free/css/all.css";
 
 import "../css/app.css";
 
-import "uswds/dist/css/uswds.css";
-import "uswds/dist/js/uswds.js";
+// TODO: Add this back after font size fixes
+// import "uswds/dist/css/uswds.css";
+// import "uswds/dist/js/uswds.js";
 
 // webpack automatically bundles all modules in your
 // entry points. Those entry points can be configured

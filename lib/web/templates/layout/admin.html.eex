@@ -57,12 +57,20 @@
           <div class="sidebar">
             <nav class="mt-2">
               <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-                <li class="nav-item">
-                  <%= link(to: Routes.admin_solution_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "solutions")}") do %>
-                    <i class="nav-icon fas fa-flask"></i>
-                    <p>Solutions</p>
-                  <% end %>
-                </li>
+                <%= if Accounts.role_at_or_below(current_user(@conn), "solver") do %>
+                  <li class="nav-item">
+                    <%= link(to: Routes.admin_solution_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "solutions")}") do %>
+                      <i class="nav-icon fas fa-flask"></i>
+                      <p>Solutions</p>
+                    <% end %>
+                  </li>
+                  <li class="nav-item">
+                    <%= link(to: Routes.admin_saved_challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "saved_challenges")}") do %>
+                      <i class="nav-icon fas fa-bookmark"></i>
+                      <p>Saved challenges</p>
+                    <% end %>
+                  </li>
+                <% end %>
                 <%= if Accounts.role_at_or_above(current_user(@conn), "challenge_owner") do %>
                   <li class="nav-item">
                     <%= link(to: Routes.admin_challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "challenges")}") do %>
