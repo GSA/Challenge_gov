@@ -752,6 +752,8 @@ defmodule ChallengeGov.Accounts do
       user
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:status, "decertified")
+      |> Ecto.Changeset.put_change(:terms_of_use, nil)
+      |> Ecto.Changeset.put_change(:privacy_guidelines, nil)
 
     result =
       Ecto.Multi.new()

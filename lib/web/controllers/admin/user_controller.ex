@@ -202,6 +202,12 @@ defmodule Web.Admin.UserController do
       |> Ecto.Multi.run(:user, fn _repo, _changes ->
         Accounts.activate(user, approver, approver_remote_ip)
       end)
+      |> Ecto.Multi.run(:renew_terms, fn _repo, _changes ->
+        Accounts.update(
+          user,
+          %{"terms_of_use" => nil, "privacy_guidelines" => nil}
+        )
+      end)
       |> Ecto.Multi.run(:certification_record, fn _repo, _changes ->
         CertificationLogs.track(%{
           approver_id: approver.id,
