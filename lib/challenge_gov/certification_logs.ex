@@ -23,7 +23,12 @@ defmodule ChallengeGov.CertificationLogs do
     results =
       CertificationLog
       |> join(:left, [r], user in assoc(r, :user))
-      |> where([r, user], r.user_id == user.id and user.status != "decertified")
+      |> where(
+        [r, user],
+        r.user_id == user.id and
+          user.status != "decertified" and
+          user.role != "solver"
+      )
       |> where([r], is_nil(r.decertified_at))
       |> where([r], r.updated_at > ^two_days_ago)
       |> order_by([r], desc: r.updated_at)

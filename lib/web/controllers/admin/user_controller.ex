@@ -86,18 +86,18 @@ defmodule Web.Admin.UserController do
   end
 
   def update(conn, %{"id" => id, "user" => params}) do
-    %{current_user: current_user} = conn.assigns
     {:ok, user} = Accounts.get(id)
     %{current_user: current_user} = conn.assigns
     %{"role" => role} = params
     %{"status" => status} = params
     previous_role = user.role
     previous_status = user.status
+    remote_ip = Security.extract_remote_ip(conn)
 
     case Accounts.update(user, params) do
       {:ok, user} ->
         Security.track_role_change_in_security_log(
-          Security.extract_remote_ip(conn),
+          remote_ip,
           current_user,
           user,
           role,
@@ -105,15 +105,32 @@ defmodule Web.Admin.UserController do
         )
 
         Security.track_status_update_in_security_log(
-          Security.extract_remote_ip(conn),
+          remote_ip,
           current_user,
           user,
           status,
           previous_status
         )
 
+        {:ok, certification} =
+          case CertificationLogs.get_current_certification(user) do
+            {:ok, certification} ->
+              {:ok, certification}
+
+            {:error, :no_log_found} ->
+              CertificationLogs.track(%{
+                user_id: user.id,
+                user_role: user.role,
+                user_identifier: user.email,
+                user_remote_ip: remote_ip,
+                certified_at: Timex.now(),
+                expires_at: CertificationLogs.calulate_expiry()
+              })
+          end
+
         conn
         |> assign(:user, user)
+        |> assign(:certification, certification)
         |> render("show.html")
 
       {:error, changeset} ->
