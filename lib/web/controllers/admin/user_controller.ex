@@ -29,12 +29,9 @@ defmodule Web.Admin.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    %{current_user: current_user} = conn.assigns
-
     with {:ok, user} <- Accounts.get(id),
          {:ok, certification} <- CertificationLogs.get_current_certification(user) do
       conn
-      |> assign(:current_user, current_user)
       |> assign(:user, user)
       |> assign(:certification, certification || %{})
       |> render("show.html")
@@ -89,6 +86,7 @@ defmodule Web.Admin.UserController do
   end
 
   def update(conn, %{"id" => id, "user" => params}) do
+    %{current_user: current_user} = conn.assigns
     {:ok, user} = Accounts.get(id)
 
     case Accounts.update(user, params) do
@@ -100,6 +98,7 @@ defmodule Web.Admin.UserController do
       {:error, changeset} ->
         conn
         |> assign(:user, user)
+        |> assign(:current_user, current_user)
         |> assign(:changeset, changeset)
         |> render("edit.html")
     end

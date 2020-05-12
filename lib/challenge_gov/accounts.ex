@@ -350,13 +350,23 @@ defmodule ChallengeGov.Accounts do
       |> Ecto.Multi.run(:user, fn _repo, _changes ->
         __MODULE__.update(user, %{token: userinfo["sub"]})
       end)
-      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+      |> Ecto.Multi.run(:security_tracking, fn _repo, _changes ->
         SecurityLogs.track(%{
           originator_id: user.id,
           originator_role: user.role,
           originator_identifier: user.email,
           originator_remote_ip: remote_ip,
           action: "accessed_site"
+        })
+      end)
+      |> Ecto.Multi.run(:certification_tracking, fn _repo, _changes ->
+        CertificationLogs.track(%{
+          user_id: user.id,
+          user_role: user.role,
+          user_identifier: user.email,
+          user_remote_ip: remote_ip,
+          certified_at: Timex.now(),
+          expires_at: CertificationLogs.calulate_expiry()
         })
       end)
       |> Repo.transaction()
