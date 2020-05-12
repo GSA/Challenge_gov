@@ -105,7 +105,7 @@ defmodule ChallengeGov.SecurityLogs do
   # Filter security log for CSV download
   # """
   def filter_by_params(params) do
-    %{"year" => year, "month" => month, "day" => day} = params
+    %{"report" => %{"year" => year, "month" => month, "day" => day}} = params
 
     {datetime_start, datetime_end} =
       range_from(
@@ -114,11 +114,14 @@ defmodule ChallengeGov.SecurityLogs do
         sanitize_param(day)
       )
 
-    SecurityLog
-    |> where([r], r.logged_at >= ^datetime_start)
-    |> where([r], r.logged_at <= ^datetime_end)
-    |> order_by([r], asc: r.id)
-    |> Repo.all()
+    result =
+      SecurityLog
+      |> where([r], r.logged_at >= ^datetime_start)
+      |> where([r], r.logged_at <= ^datetime_end)
+      |> order_by([r], asc: r.id)
+      |> Repo.all()
+
+    {:ok, result}
   end
 
   defp sanitize_param(value) do
