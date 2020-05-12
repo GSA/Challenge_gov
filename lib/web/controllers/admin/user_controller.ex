@@ -4,6 +4,7 @@ defmodule Web.Admin.UserController do
   alias ChallengeGov.Accounts
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Repo
   alias ChallengeGov.Security
 
   plug(Web.Plugs.FetchPage when action in [:index, :create])
@@ -31,7 +32,7 @@ defmodule Web.Admin.UserController do
     %{current_user: current_user} = conn.assigns
 
     with {:ok, user} <- Accounts.get(id),
-         {:ok, certification} <- CertificationLogs.get_current_certification(id) do
+         {:ok, certification} <- CertificationLogs.get_current_certification(user) do
       conn
       |> assign(:current_user, current_user)
       |> assign(:user, user)
@@ -160,21 +161,28 @@ defmodule Web.Admin.UserController do
 
   def admin_recertify_user(user, approver, approver_remote_ip) do
     result =
-      CertificationLogs.track(%{
-        approver_id: approver.id,
-        approver_role: approver.role,
-        approver_identifier: approver.email,
-        approver_remote_ip: approver_remote_ip,
-        user_id: user.id,
-        user_role: user.role,
-        user_identifier: user.email,
-        certified_at: Timex.now(),
-        expires_at: CertificationLogs.calulate_expiry()
-      })
+      Ecto.Multi.new()
+      |> Ecto.Multi.run(:user, fn _repo, _changes ->
+        Accounts.activate(user, approver, approver_remote_ip)
+      end)
+      |> Ecto.Multi.run(:certification_record, fn _repo, _changes ->
+        CertificationLogs.track(%{
+          approver_id: approver.id,
+          approver_role: approver.role,
+          approver_identifier: approver.email,
+          approver_remote_ip: approver_remote_ip,
+          user_id: user.id,
+          user_role: user.role,
+          user_identifier: user.email,
+          certified_at: Timex.now(),
+          expires_at: CertificationLogs.calulate_expiry()
+        })
+      end)
+      |> Repo.transaction()
 
     case result do
-      {:ok, _result} ->
-        {:ok, user}
+      {:ok, result} ->
+        {:ok, result.user}
 
       :error ->
         {:error, :not_recertified}

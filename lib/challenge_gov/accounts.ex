@@ -498,10 +498,10 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Check if a user is a challenge owner
 
-      iex> Accounts.is_admin?(%User{role: "challenge_owner"})
+      iex> Accounts.is_challenge_owner?(%User{role: "challenge_owner"})
       true
 
-      iex> Accounts.is_admin?(%User{role: "challenge_owner"})
+      iex> Accounts.is_challenge_owner?(%User{role: "challenge_owner"})
       false
   """
   def is_challenge_owner?(user)
@@ -509,6 +509,21 @@ defmodule ChallengeGov.Accounts do
   def is_challenge_owner?(%{role: "challenge_owner"}), do: true
 
   def is_challenge_owner?(_), do: false
+
+  @doc """
+  Check if a user is a solver
+
+      iex> Accounts.is_solver?(%User{role: "solver"})
+      true
+
+      iex> Accounts.is_solver?(%User{role: "challenge_owner"})
+      false
+  """
+  def is_solver?(user)
+
+  def is_solver?(%{role: "solver"}), do: true
+
+  def is_solver?(_), do: false
 
   @doc """
   Checks if a user's role is at or above the specified role
