@@ -86,8 +86,10 @@
               <dt>Owners</dd>
               <dd>
                 <ul>
-                  <%= Enum.map(@challenge.challenge_owner_users, fn owner -> %>
-                    <li><%= Web.Admin.UserView.name_link(@conn, owner) %></li>
+                  <%= Enum.map(@challenge.challenge_owners, fn owner -> %>
+                    <%= if is_nil(owner.revoked_at) do %>
+                      <li><%= Web.Admin.UserView.name_link(@conn, owner.user) %></li>
+                    <% end %>
                   <% end) %>
                 </ul>
               </dd>
