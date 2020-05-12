@@ -1,4 +1,4 @@
-defmodule Web.Api.ChallengeControllerTests do
+defmodule Web.Api.ChallengeControllerTest do
   use Web.ConnCase
 
   alias ChallengeGov.TestHelpers.AccountHelpers
@@ -14,14 +14,28 @@ defmodule Web.Api.ChallengeControllerTests do
         user_id: user.id,
         agency_id: agency.id,
         title: "Test Title 1",
-        status: "created"
+        status: "published"
       })
 
       ChallengeHelpers.create_challenge(%{
         user_id: user.id,
         agency_id: agency.id,
         title: "Test Title 2",
-        status: "created"
+        status: "published"
+      })
+
+      ChallengeHelpers.create_challenge(%{
+        user_id: user.id,
+        agency_id: agency.id,
+        title: "Test Title 3",
+        status: "archived"
+      })
+
+      ChallengeHelpers.create_challenge(%{
+        user_id: user.id,
+        agency_id: agency.id,
+        title: "Test Title 4",
+        status: "draft"
       })
 
       conn = get(conn, Routes.api_challenge_path(conn, :index))
@@ -45,14 +59,10 @@ defmodule Web.Api.ChallengeControllerTests do
           agency_id: agency.id,
           title: "Test Title 1",
           description: "Test description 1",
-          status: "created"
+          status: "published"
         })
 
-      expected_json = %{
-        "id" => challenge.id,
-        "title" => "Test Title 1",
-        "description" => "Test description 1"
-      }
+      expected_json = expected_show_json(challenge)
 
       conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.id))
       assert json_response(conn, 200) === expected_json
@@ -71,11 +81,7 @@ defmodule Web.Api.ChallengeControllerTests do
           status: "archived"
         })
 
-      expected_json = %{
-        "id" => challenge.id,
-        "title" => "Test Title 1",
-        "description" => "Test description 1"
-      }
+      expected_json = expected_show_json(challenge)
 
       conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.id))
       assert json_response(conn, 200) === expected_json
@@ -143,5 +149,47 @@ defmodule Web.Api.ChallengeControllerTests do
       conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.id))
       assert json_response(conn, 404) === expected_json
     end
+  end
+
+  defp expected_show_json(challenge) do
+    %{
+      "description" => challenge.description,
+      "id" => challenge.id,
+      "title" => challenge.title,
+      "legal_authority" => nil,
+      "phase_dates" => nil,
+      "agency_id" => challenge.agency_id,
+      "fiscal_year" => nil,
+      "custom_url" => nil,
+      "end_date" => nil,
+      "prize_description" => nil,
+      "faq" => nil,
+      "multi_phase" => nil,
+      "judging_criteria" => nil,
+      "status" => challenge.status,
+      "agency_name" => challenge.agency.name,
+      "supporting_documents" => [],
+      "external_url" => nil,
+      "eligibility_requirements" => nil,
+      "winner_information" => nil,
+      "poc_email" => nil,
+      "rules" => nil,
+      "types" => [],
+      "agency_logo" => nil,
+      "logo" => nil,
+      "terms_and_conditions" => nil,
+      "non_monetary_prizes" => nil,
+      "how_to_enter" => nil,
+      "events" => nil,
+      "start_date" => nil,
+      "non_federal_partners" => [],
+      "number_of_phases" => nil,
+      "winner_image" => nil,
+      "tagline" => nil,
+      "prize_total" => nil,
+      "brief_description" => nil,
+      "phase_descriptions" => nil,
+      "federal_partners" => []
+    }
   end
 end
