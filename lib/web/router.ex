@@ -49,6 +49,8 @@ defmodule Web.Router do
     resources("/terms", TermsController, only: [:new, :create])
 
     get("/pending", TermsController, :pending)
+
+    get("/reactivation", AccessController, :deactivated)
   end
 
   scope "/admin", Web.Admin, as: :admin do
