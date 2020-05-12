@@ -62,10 +62,11 @@ defmodule ChallengeGov.Emails do
   end
 
   def contact(poc_email, challenge, public_email, body) do
-    new_email()
-    |> from(public_email)
+    base_email()
     |> to(poc_email)
     |> subject("Challenge #{challenge.id}: Question from Public Visitor")
+    |> put_header("Reply-To", public_email)
+    |> assign(:public_email, public_email)
     |> assign(:challenge, challenge)
     |> assign(:body, body)
     |> render("contact.html")
