@@ -52,7 +52,9 @@ defmodule Web.Router do
 
     get("/recertification", AccessController, :decertified)
 
-    post("/recertify", AccessController, :new)
+    post("/access", AccessController, :create)
+
+    get("/access", AccessController, :index)
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -61,8 +63,6 @@ defmodule Web.Router do
     get("/", DashboardController, :index)
 
     resources("/documents", DocumentController, only: [:delete])
-
-    resources("/access", AccessController, only: [:create, :index])
 
     resources("/challenges", ChallengeController,
       only: [:index, :show, :new, :create, :edit, :update, :delete]

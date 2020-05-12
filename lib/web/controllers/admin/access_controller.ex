@@ -20,7 +20,7 @@ defmodule Web.Admin.AccessController do
 
         conn
         |> put_flash(:info, "Success")
-        |> redirect(to: Routes.admin_access_path(conn, :index, user))
+        |> redirect(to: Routes.admin_access_path(conn, :index))
 
       {:error, changeset} ->
         %{current_user: user} = conn.assigns
@@ -44,7 +44,10 @@ defmodule Web.Admin.AccessController do
   end
 
   def index(conn, _params) do
+    %{current_user: user} = conn.assigns
+
     conn
+    |> assign(:user, user)
     |> render("index.html")
   end
 end
