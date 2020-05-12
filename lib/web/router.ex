@@ -58,6 +58,12 @@ defmodule Web.Router do
 
     resources("/documents", DocumentController, only: [:delete])
 
+    resources("/access", AccessController, only: [:create, :index])
+
+    get("/recertify", AccessController, :decertified)
+
+    post("/recertify", AccessController, :decertified)
+
     resources("/challenges", ChallengeController,
       only: [:index, :show, :new, :create, :edit, :update, :delete]
     ) do

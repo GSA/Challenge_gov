@@ -1,0 +1,5 @@
+<section class="content-header">
+  <p>
+    <%= recertification_warning(@current_user)%>
+  </p>
+</section>

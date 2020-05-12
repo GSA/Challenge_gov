@@ -1,24 +1,11 @@
 <section class="content-header text-center">
   <h4>
-    To complete your registration please submit the following items
+    <%= recertification_heading_based_on_user(@user) %>
   </h4>
 </section>
 <section class="content registration-content">
   <div class="row col-md-9 registration-row">
-      <%= form_for(@changeset, Routes.admin_terms_path(@conn, :create), [method: :post], fn f -> %>
-        <%= challenge_owner_fields(f, @changeset) %>
-        <div class="input">
-          <%= label(f, :first_name, class: "label-text") do %>
-            First Name*
-          <% end %>
-          <%= text_input(f, :first_name, required: true, placeholder: "First Name", class: "form-control fc-inpute") %>
-        </div>
-        <div class="input">
-          <%= label(f, :last_name, class: "label-text") do %>
-            Last Name*
-          <% end %>
-          <%= text_input(f, :last_name, required: true, placeholder: "Last Name", class: "form-control fc-input") %>
-        </div>
+      <%= form_for(@changeset, Routes.admin_access_path(@conn, :create), [method: :post], fn f -> %>
         <div class="checkbox-input">
           <%= Phoenix.HTML.Form.checkbox(f, :accept_terms_of_use, required: true) %>
           <%= label(f, :accept_terms_of_use, class: "label-text") do %>
@@ -32,7 +19,7 @@
           <% end %>
         </div>
         <div class="btn-wrapper">
-          <%= submit("Submit", class: "btn btn-primary btn-lg") %>
+          <%= submit("Request Recertification", class: "btn btn-primary btn-lg") %>
         </div>
       <% end) %>
   </div>
