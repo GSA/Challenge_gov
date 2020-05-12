@@ -21,7 +21,7 @@ defmodule Web.Admin.DashboardView do
               class: "mx-2"
             ),
             button("Request recertification",
-              to: "/admin/recertify",
+              to: "/admin/recertification",
               method: :get,
               class: "btn btn-primary"
             )
