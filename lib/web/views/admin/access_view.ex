@@ -6,7 +6,7 @@ defmodule Web.Admin.AccessView do
       true ->
         [
           content_tag(:h4, "Your account must be recertified."),
-          content_tag(:p, "You may request recertification by submitting the following:")
+          content_tag(:p, "Request recertification by submitting the following:")
         ]
 
       false ->

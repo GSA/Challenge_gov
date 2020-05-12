@@ -2,7 +2,7 @@
   <%= recertification_heading_based_on_user(@user) %>
 </section>
 <section class="content registration-content">
-  <div class="row col-md-9 registration-row">
+  <div class="row col-md-9 justify-content-center">
       <%= form_for(@changeset, Routes.admin_access_path(@conn, :create), [method: :post], fn f -> %>
         <div class="checkbox-input">
           <%= Phoenix.HTML.Form.checkbox(f, :accept_terms_of_use, required: true) %>

@@ -64,6 +64,8 @@ defmodule Web.Router do
 
     resources("/documents", DocumentController, only: [:delete])
 
+    resources("/access", AccessController, only: [:new])
+
     resources("/challenges", ChallengeController,
       only: [:index, :show, :new, :create, :edit, :update, :delete]
     ) do

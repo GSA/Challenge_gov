@@ -1,10 +1,10 @@
 <section class="content-header text-center">
-  <h4>
+  <h4 class="mt-5">
     To complete your registration please submit the following items
   </h4>
 </section>
 <section class="content registration-content">
-  <div class="row col-md-9 registration-row">
+  <div class="row col-md-9 registration-row justify-content-center">
       <%= form_for(@changeset, Routes.admin_terms_path(@conn, :create), [method: :post], fn f -> %>
         <%= challenge_owner_fields(f, @changeset) %>
         <div class="input">
@@ -32,7 +32,7 @@
           <% end %>
         </div>
         <div class="btn-wrapper">
-          <%= submit("Submit", class: "btn btn-primary btn-lg") %>
+          <%= submit("Submit", class: "btn btn-primary") %>
         </div>
       <% end) %>
   </div>
