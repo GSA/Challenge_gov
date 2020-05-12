@@ -3,6 +3,8 @@ import axios from 'axios'
 import { useParams } from "react-router-dom";
 import moment from 'moment'
 
+import { ContactForm } from "../components/ContactForm"
+
 export const DetailsPage = () => {
 
   const [currentChallenge, setCurrentChallenge] = useState()
@@ -106,17 +108,24 @@ export const DetailsPage = () => {
               </div>
               <div className="detail-section">
                 { currentChallenge.end_date >  moment().utc().format() &&
-                  <div className="detail-section__apply">
-                    { currentChallenge.external_url ? 
-                    <a href={`${currentChallenge.external_url}`} target="_blank">
-                      <button className="apply-btn">Apply on external website <i className="fa fa-external-link-alt ml-3"></i></button>
-                    </a>
-                    :
-                    <a href={`/admin/challenges/${currentChallenge.id}/solutions/new`}>
-                      <button className="apply-btn">Apply for this challenge</button>
-                    </a>
-                    }
-                  </div>
+                  <>
+                    <div className="detail-section__apply">
+                      { currentChallenge.external_url ? 
+                      <a href={`${currentChallenge.external_url}`} target="_blank">
+                        <button className="apply-btn">Apply on external website <i className="fa fa-external-link-alt ml-3"></i></button>
+                      </a>
+                      :
+                      <a href={`/admin/challenges/${currentChallenge.id}/solutions/new`}>
+                        <button className="apply-btn">Apply for this challenge</button>
+                      </a>
+                      }
+                    </div>
+                    <div className="detail-section__follow">
+                      <a href={`/admin/challenges/${currentChallenge.id}/save_challenge/new`}>
+                        <button className="follow-btn"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
+                      </a>
+                    </div>
+                  </>
                 }
                 <div className="item">
                   <p className="info-title">Submission period:</p>
@@ -142,6 +151,7 @@ export const DetailsPage = () => {
               </div>
             </section>
           </section>
+          <ContactForm />
         </div>
       }
     </div>

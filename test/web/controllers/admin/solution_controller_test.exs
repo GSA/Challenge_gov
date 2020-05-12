@@ -1,4 +1,4 @@
-defmodule Web.Admin.SolutionControllerTests do
+defmodule Web.Admin.SolutionControllerTest do
   use Web.ConnCase
 
   alias ChallengeGov.Solutions
@@ -186,7 +186,6 @@ defmodule Web.Admin.SolutionControllerTests do
       assert changeset.errors[:title]
       assert changeset.errors[:brief_description]
       assert changeset.errors[:description]
-      assert changeset.errors[:external_url]
     end
   end
 
@@ -332,7 +331,7 @@ defmodule Web.Admin.SolutionControllerTests do
         "solution" => %{
           "title" => "New test title",
           "brief_description" => "Test brief description",
-          "description" => "Test description",
+          "description" => nil,
           "external_url" => nil
         }
       }
@@ -341,7 +340,7 @@ defmodule Web.Admin.SolutionControllerTests do
 
       %{changeset: changeset} = conn.assigns
 
-      assert changeset.errors[:external_url]
+      assert changeset.errors[:description]
     end
 
     test "updating a solution and sending to review", %{conn: conn} do

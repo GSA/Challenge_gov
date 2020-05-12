@@ -67,6 +67,18 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def public_index_url() do
+    Routes.public_challenge_index_url(Web.Endpoint, :index)
+  end
+
+  def public_details_url(challenge) do
+    Routes.public_challenge_details_url(
+      Web.Endpoint,
+      :index,
+      challenge.custom_url || challenge.id
+    )
+  end
+
   def disqus_domain() do
     Application.get_env(:challenge_gov, :disqus_domain)
   end

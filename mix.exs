@@ -58,7 +58,8 @@ defmodule ChallengeGov.MixProject do
       {:remote_ip, "~> 0.2.0"},
       {:stein, "~> 0.5"},
       {:stein_storage, "~> 0.1"},
-      {:timex, "~> 3.5"}
+      {:timex, "~> 3.5"},
+      {:xml_builder, "~> 2.1.1", override: true}
     ]
   end
 

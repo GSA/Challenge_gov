@@ -4,7 +4,6 @@ defmodule Web.Admin.TermsController do
   alias ChallengeGov.Accounts
   alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
-  alias ChallengeGov.CertificationLogs
 
   def new(conn, _params) do
     %{current_user: user} = conn.assigns
@@ -41,7 +40,6 @@ defmodule Web.Admin.TermsController do
             first_name: user.first_name,
             last_name: user.last_name
           })
-          |> maybe_add_to_certification_log(user)
           |> redirect_based_on_user(user)
 
         {:error, changeset} ->
@@ -81,21 +79,6 @@ defmodule Web.Admin.TermsController do
       action: action,
       details: details
     })
-
-    conn
-  end
-
-  defp maybe_add_to_certification_log(conn, user) do
-    if user.role == "solver" do
-      CertificationLogs.track(%{
-        user_id: user.id,
-        user_role: user.role,
-        user_identifier: user.email,
-        user_remote_ip: Security.extract_remote_ip(conn),
-        certified_at: Timex.now(),
-        expires_at: CertificationLogs.calulate_expiry()
-      })
-    end
 
     conn
   end

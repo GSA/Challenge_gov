@@ -40,6 +40,10 @@ defmodule Web.Router do
     plug(Web.Plugs.FetchUser)
   end
 
+  scope "/public", Web.Public, as: :public do
+    get("/rss.xml", SitemapController, :rss)
+  end
+
   scope "/admin", Web.Admin, as: :admin do
     pipe_through([:browser, :user, :pending])
     resources("/terms", TermsController, only: [:new, :create])
@@ -62,6 +66,8 @@ defmodule Web.Router do
       resources("/events", EventController, only: [:new, :create])
 
       resources("/solutions", SolutionController, only: [:index, :new, :create])
+
+      resources("/save_challenge", SavedChallengeController, only: [:new, :create])
     end
 
     get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
@@ -82,6 +88,8 @@ defmodule Web.Router do
 
     resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
     put("/solutions/:id/submit", SolutionController, :submit)
+
+    resources("/saved_challenges", SavedChallengeController, only: [:index, :delete])
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -105,15 +113,21 @@ defmodule Web.Router do
   end
 
   scope "/api", Web.Api, as: :api do
-    pipe_through([:api])
+    pipe_through([:api, :signed_in])
 
-    resources("/challenges", ChallengeController, only: [:index, :show])
     resources("/documents", DocumentController, only: [:create, :delete])
     resources("/solution_documents", SolutionDocumentController, only: [:create, :delete])
 
     # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
     post("/session/logout", SessionController, :logout_user)
+  end
+
+  scope "/api", Web.Api, as: :api do
+    pipe_through([:api])
+
+    resources("/challenges", ChallengeController, only: [:index, :show])
+    post("/challenges/:challenge_id/contact_form", ContactFormController, :send_email)
   end
 
   scope "/", Web do

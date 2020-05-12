@@ -67,6 +67,16 @@ module.exports = (env, options) => ({
           mimetype: 'application/image/svg+xml',
           fallback: 'file-loader'
         }
+      },      
+      {
+        test: /\.png(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: '../css/[name].[ext]',
+          mimetype: 'image/png',
+          fallback: 'file-loader'
+        }
       },
       {
         test: /\.s?css$/,

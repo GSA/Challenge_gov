@@ -88,9 +88,30 @@ defmodule Web.Admin.UserController do
   def update(conn, %{"id" => id, "user" => params}) do
     %{current_user: current_user} = conn.assigns
     {:ok, user} = Accounts.get(id)
+    %{current_user: current_user} = conn.assigns
+    %{"role" => role} = params
+    %{"status" => status} = params
+    previous_role = user.role
+    previous_status = user.status
 
     case Accounts.update(user, params) do
       {:ok, user} ->
+        Security.track_role_change_in_security_log(
+          Security.extract_remote_ip(conn),
+          current_user,
+          user,
+          role,
+          previous_role
+        )
+
+        Security.track_status_update_in_security_log(
+          Security.extract_remote_ip(conn),
+          current_user,
+          user,
+          status,
+          previous_status
+        )
+
         conn
         |> assign(:user, user)
         |> render("show.html")

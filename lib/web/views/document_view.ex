@@ -6,7 +6,7 @@ defmodule Web.DocumentView do
   end
 
   def name(document) do
-    if !is_nil(document.name) != "" and document.name != "" do
+    if !is_nil(document.name) and document.name != "" do
       "#{document.filename} (#{document.name})"
     else
       document.filename

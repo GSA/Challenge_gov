@@ -257,6 +257,18 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
+  Get all public challenges non paginated for sitemap
+  """
+  def all_for_sitemap() do
+    Challenge
+    |> preload([:agency, :user])
+    |> where([c], is_nil(c.deleted_at))
+    |> where([c], c.status == "published" or c.status == "archived")
+    |> order_by([c], asc: c.end_date, asc: c.id)
+    |> Repo.all()
+  end
+
+  @doc """
   Get all challenges
   """
   def admin_all(opts \\ []) do
