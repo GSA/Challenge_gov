@@ -24,9 +24,9 @@ defmodule Web.Admin.AccessController do
   end
 
   def request_recertification(conn, params) do
-    %{current_user: user} = conn.assigns
+    %{current_user: current_user} = conn.assigns
 
-    with {:ok, user} <- Accounts.update_terms(user, params),
+    with {:ok, user} <- Accounts.update_terms(current_user, params),
          {:ok, user} <- Accounts.update(user, %{renewal_request: "certification"}) do
       CertificationLogs.track(%{
         user_id: user.id,

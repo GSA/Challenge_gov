@@ -1,5 +1,5 @@
 <section class="content-header text-center">
-  <%= recertification_heading_based_on_user(@user) %>
+  <%= recertification_heading_by_status(@user) %>
 </section>
 <section class="content registration-content">
   <div class="row col-md-9 justify-content-center">
