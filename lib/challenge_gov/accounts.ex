@@ -790,6 +790,7 @@ defmodule ChallengeGov.Accounts do
 
   def revoked_challenges(user) do
     Challenge
+    |> where([c], is_nil(c.deleted_at))
     |> join(:inner, [c], co in assoc(c, :challenge_owners))
     |> where([c, co], co.user_id == ^user.id and not is_nil(co.revoked_at))
     |> Repo.all()
