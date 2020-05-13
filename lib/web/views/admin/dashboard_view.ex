@@ -10,27 +10,18 @@ defmodule Web.Admin.DashboardView do
         expiration = Timex.to_unix(certification.expires_at)
         two_weeks_from_now = Timex.to_unix(Timex.shift(Timex.now(), days: 14))
 
-        cond do
-          user.renewal_request === "certification" ->
-            [
-              recertification_action(conn, user)
-            ]
-
-          expiration < two_weeks_from_now ->
-            [
-              content_tag(
-                :span,
-                "Your account certification will expire on
+        if expiration < two_weeks_from_now do
+          [
+            content_tag(
+              :span,
+              "Your account certification will expire on
                 #{certification.expires_at.month}/#{certification.expires_at.day}/#{
-                  certification.expires_at.year
-                }",
-                class: "mx-2"
-              ),
-              recertification_action(conn, user)
-            ]
-
-          true ->
-            nil
+                certification.expires_at.year
+              }",
+              class: "mx-2"
+            ),
+            recertification_action(conn, user)
+          ]
         end
 
       {:error, :no_log_found} ->
@@ -41,7 +32,7 @@ defmodule Web.Admin.DashboardView do
   def recertification_action(conn, user) do
     if user.renewal_request == "certification" do
       [
-        content_tag(:span, "Recertification requested", class: "btn btn-primary")
+        content_tag(:span, "Recertification requested", class: "text-primary")
       ]
     else
       [
