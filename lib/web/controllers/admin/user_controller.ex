@@ -119,10 +119,13 @@ defmodule Web.Admin.UserController do
 
             {:error, :no_log_found} ->
               CertificationLogs.track(%{
+                approver_id: current_user.id,
+                approver_role: current_user.role,
+                approver_identifier: current_user.email,
+                approver_remote_ip: remote_ip,
                 user_id: user.id,
                 user_role: user.role,
                 user_identifier: user.email,
-                user_remote_ip: remote_ip,
                 certified_at: Timex.now(),
                 expires_at: CertificationLogs.calulate_expiry()
               })

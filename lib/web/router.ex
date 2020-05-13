@@ -45,6 +45,12 @@ defmodule Web.Router do
   end
 
   scope "/admin", Web.Admin, as: :admin do
+    pipe_through([:browser, :user])
+
+    post("/recertification", AccessController, :request_recertification)
+  end
+
+  scope "/admin", Web.Admin, as: :admin do
     pipe_through([:browser, :user, :pending])
     resources("/terms", TermsController, only: [:new, :create])
 
@@ -53,10 +59,6 @@ defmodule Web.Router do
     get("/reactivation", AccessController, :reactivation)
 
     post("/reactivation", AccessController, :request_reactivation)
-
-    get("/recertification", AccessController, :recertification)
-
-    post("/recertification", AccessController, :request_recertification)
 
     get("/access", AccessController, :index)
   end
@@ -68,7 +70,9 @@ defmodule Web.Router do
 
     resources("/documents", DocumentController, only: [:delete])
 
-    resources("/access", AccessController, only: [:new])
+    get("/recertification", AccessController, :recertification)
+
+    get("/certification_requested", AccessController, :index)
 
     resources("/challenges", ChallengeController,
       only: [:index, :show, :new, :create, :edit, :update, :delete]

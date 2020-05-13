@@ -767,14 +767,6 @@ defmodule ChallengeGov.Accounts do
           details: %{previous_status: previous_status, new_status: "decertified"}
         })
       end)
-      |> Ecto.Multi.run(:track, fn _repo, _changes ->
-        CertificationLogs.track(%{
-          user_id: user.id,
-          user_role: user.role,
-          user_identifier: user.email,
-          decertified_at: Timex.now()
-        })
-      end)
       |> Repo.transaction()
 
     case result do
