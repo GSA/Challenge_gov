@@ -126,7 +126,7 @@ defmodule ChallengeGov.Security do
   end
 
   def track_role_change_in_security_log(_remote_ip, _current_user, _user, nil, _previous_role) do
-    # NO-_OP, role is not a param being updated
+    # NO-OP, role is not a param being updated
   end
 
   def track_role_change_in_security_log(remote_ip, current_user, user, new_role, previous_role) do

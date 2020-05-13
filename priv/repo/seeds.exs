@@ -12,6 +12,7 @@
 
 alias ChallengeGov.Accounts
 alias ChallengeGov.Agencies
+alias ChallengeGov.CertificationLogs
 
 defmodule Helpers do
   def create_super_admin(nil, nil, nil) do
@@ -51,6 +52,24 @@ defmodule Helpers do
       end
     end)
   end
+
+  def create_user_certifications do
+    Enum.map(Accounts.all_for_select(), fn x ->
+      case CertificationLogs.get_current_certification(x) do
+        {:error, :no_log_found} ->
+          CertificationLogs.track(%{
+            user_id: x.id,
+            user_role: x.role,
+            user_identifier: x.email,
+            certified_at: Timex.now(),
+            expires_at: CertificationLogs.calulate_expiry()
+          })
+
+        {:ok, _result} ->
+          nil
+      end
+    end)
+  end
 end
 
 defmodule Seeds do
@@ -64,6 +83,7 @@ defmodule Seeds do
     )
 
     create_agencies("priv/repo/agencies.txt")
+    create_user_certifications()
   end
 end
 
