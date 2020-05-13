@@ -65,7 +65,7 @@ defmodule Helpers do
             expires_at: CertificationLogs.calulate_expiry()
           })
 
-        {:ok, result} ->
+        {:ok, _result} ->
           nil
       end
     end)
