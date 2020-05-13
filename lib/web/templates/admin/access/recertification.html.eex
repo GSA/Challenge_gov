@@ -1,0 +1,24 @@
+<section class="content-header text-center">
+  <%= recertification_heading_based_on_user(@user) %>
+</section>
+<section class="content registration-content">
+  <div class="row col-md-9 justify-content-center">
+      <%= form_for(@changeset, Routes.admin_access_path(@conn, :request_recertification), [method: :post], fn f -> %>
+        <div class="checkbox-input">
+          <%= Phoenix.HTML.Form.checkbox(f, :accept_terms_of_use, required: true) %>
+          <%= label(f, :accept_terms_of_use, class: "label-text") do %>
+            I accept the <%= link "terms of use", to: "https://www.challenge.gov/terms/", target: "_blank" %>
+          <% end %>
+        </div>
+        <div class="checkbox-input">
+          <%= Phoenix.HTML.Form.checkbox(f, :accept_privacy_guidelines, required: true) %>
+          <%= label(f, :accept_privacy_guidelines, class: "label-text") do %>
+            I accept the <%= link "privacy guidelines", to: "https://www.fastcompany.com/privacy-policy", target: "_blank" %>
+          <% end %>
+        </div>
+        <div class="btn-wrapper">
+          <%= submit("Request Recertification", class: "btn btn-primary") %>
+        </div>
+      <% end) %>
+  </div>
+</section>

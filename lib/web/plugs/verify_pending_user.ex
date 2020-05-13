@@ -12,7 +12,7 @@ defmodule Web.Plugs.VerifyPendingUser do
   def init(default), do: default
 
   def call(conn, _opts) do
-    case is_pending?(conn) do
+    case is_pending?(conn) or is_decertified?(conn) or is_deactivated?(conn) do
       true ->
         conn
 
@@ -27,6 +27,26 @@ defmodule Web.Plugs.VerifyPendingUser do
     case Map.fetch(conn.assigns, :current_user) do
       {:ok, user} ->
         Accounts.is_pending?(user)
+
+      :error ->
+        false
+    end
+  end
+
+  defp is_decertified?(conn) do
+    case Map.fetch(conn.assigns, :current_user) do
+      {:ok, user} ->
+        Accounts.is_decertified?(user)
+
+      :error ->
+        false
+    end
+  end
+
+  defp is_deactivated?(conn) do
+    case Map.fetch(conn.assigns, :current_user) do
+      {:ok, user} ->
+        Accounts.is_deactivated?(user)
 
       :error ->
         false

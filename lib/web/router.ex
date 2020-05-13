@@ -50,7 +50,15 @@ defmodule Web.Router do
 
     get("/pending", TermsController, :pending)
 
-    get("/reactivation", AccessController, :deactivated)
+    get("/access", AccessController, :reactivation)
+
+    post("/access", AccessController, :request_reactivation)
+
+    get("/recertification", AccessController, :recertification)
+
+    post("/access", AccessController, :request_recertification)
+
+    get("/access", AccessController, :index)
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -59,6 +67,8 @@ defmodule Web.Router do
     get("/", DashboardController, :index)
 
     resources("/documents", DocumentController, only: [:delete])
+
+    resources("/access", AccessController, only: [:new])
 
     resources("/challenges", ChallengeController,
       only: [:index, :show, :new, :create, :edit, :update, :delete]

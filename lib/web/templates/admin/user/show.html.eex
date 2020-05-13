@@ -32,7 +32,7 @@
             <div class="card-tools">
               <%= link("Edit", to: Routes.admin_user_path(@conn, :edit, @user.id), class: "btn btn-link") %>
             </div>
-          </div>            
+          </div>
           <div class="card-body">
             <dl>
               <dt>Name</dd>
@@ -62,13 +62,19 @@
 
           <div class="card-body">
             <p>
-              <%= if !Accounts.is_active?(@user) do %>
+              <%= if !Accounts.is_active?(@user) and !Accounts.is_decertified?(@user) do %>
                 <%= link("Activate user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "activate"), method: :post, class: "btn btn-default") %>
               <% end %>
 
               <%= if Accounts.is_active?(@user) do %>
                 <%= link("Suspend user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "suspend"), method: :post, class: "btn btn-default") %>
                 <%= link("Revoke user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "revoke"), method: :post, class: "btn btn-default") %>
+              <% end %>
+              <%= if !Accounts.is_solver?(@user) do %>
+                <p>
+                  <%= Web.Admin.UserView.certification_info(@certification)%>
+                </p>
+                <%= link("Recertify user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "recertify"), method: :post, class: "btn btn-default")%>
               <% end %>
             </p>
           </div>

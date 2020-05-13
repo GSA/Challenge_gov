@@ -36,18 +36,12 @@ defmodule Web.Plugs.CheckUserStatus do
 
         "deactivated" ->
           conn
-          |> clear_flash()
-          |> put_flash(:error, "Your account has been deactivated")
-          |> clear_session()
-          |> redirect(to: Routes.session_path(conn, :new))
+          |> redirect(to: Routes.admin_access_path(conn, :reactivation))
           |> halt()
 
         "decertified" ->
           conn
-          |> clear_flash()
-          |> put_flash(:error, "Your account has been decertified")
-          |> clear_session()
-          |> redirect(to: Routes.session_path(conn, :new))
+          |> redirect(to: Routes.admin_access_path(conn, :recertification))
           |> halt()
 
         "active" ->

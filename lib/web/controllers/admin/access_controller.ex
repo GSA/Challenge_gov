@@ -1,15 +1,33 @@
 defmodule Web.Admin.AccessController do
   use Web, :controller
 
+  alias ChallengeGov.Accounts
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Security
-  alias ChallengeGov.Accounts
+  alias ChallengeGov.SecurityLogs
 
-  def create(conn, params) do
+  def index(conn, _params) do
     %{current_user: user} = conn.assigns
 
-    case Accounts.update_terms(user, params) do
-      {:ok, user} ->
+    conn
+    |> assign(:user, user)
+    |> render("index.html")
+  end
+
+  def recertification(conn, _params) do
+    %{current_user: user} = conn.assigns
+
+    conn
+    |> assign(:user, user)
+    |> assign(:changeset, Accounts.edit(user))
+    |> render("recertification.html")
+  end
+
+  def request_recertification(conn, params) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, user} <- Accounts.update_terms(user, params),
+         {:ok, user} <- Accounts.update(user, %{renewal_request: "certification"}) do
         CertificationLogs.track(%{
           user_id: user.id,
           user_role: user.role,
@@ -21,7 +39,7 @@ defmodule Web.Admin.AccessController do
         conn
         |> put_flash(:info, "Success")
         |> redirect(to: Routes.admin_access_path(conn, :index))
-
+    else
       {:error, changeset} ->
         %{current_user: user} = conn.assigns
 
@@ -34,29 +52,41 @@ defmodule Web.Admin.AccessController do
     end
   end
 
-  def decertified(conn, _params) do
+  def reactivation(conn, _params) do
     %{current_user: user} = conn.assigns
 
     conn
     |> assign(:user, user)
-    |> assign(:changeset, Accounts.edit(user))
-    |> render("recertification.html")
-  end
-
-  def deactivated(conn, _params) do
-    %{current_user: user} = conn.assigns
-
-    conn
-    |> assign(:user, user)
-    |> assign(:changeset, Accounts.edit(user))
     |> render("reactivation.html")
   end
 
-  def index(conn, _params) do
+  def request_reactivation(conn) do
     %{current_user: user} = conn.assigns
 
-    conn
-    |> assign(:user, user)
-    |> render("index.html")
+    changeset = Accounts.update(user, %{renewal_request: "activation"})
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.run(:reactivation_request, fn _repo, _changes ->
+        SecurityLogs.track(%{
+          action: "renewal_request",
+          details: %{renewal_requested: "reactivation"},
+          originatory_id: user.id,
+          originator_role: user.role,
+          originator_identifier: user.email,
+          originator_remote_ip: Security.extract_remote_ip(conn),
+        })
+      end)
+      |> Ecto.Multi.update(:user, changeset)
+
+    case result do
+      {:ok, _result} ->
+        conn
+        |> put_flash(:info, "Success")
+        |> redirect(to: Routes.admin_access_path(conn, :index))
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 end

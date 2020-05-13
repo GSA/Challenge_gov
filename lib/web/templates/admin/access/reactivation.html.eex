@@ -1,0 +1,6 @@
+<section class="content-header text-center">
+  <h4>
+    Your account has been deactivated due to extended inactivity.
+  </h4>
+  <%= link("Request reactivation", to: Routes.admin_access_path(@conn, :request_reactivation), class: "btn btn-primary") %>
+</section>

@@ -21,7 +21,8 @@ defmodule ChallengeGov.SecurityLogs.SecurityLog do
     "read",
     "update",
     "delete",
-    "submit"
+    "submit",
+    "renewal_request"
   ]
 
   schema "security_log" do

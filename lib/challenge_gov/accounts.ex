@@ -5,6 +5,7 @@ defmodule ChallengeGov.Accounts do
 
   alias ChallengeGov.Accounts.Avatar
   alias ChallengeGov.Accounts.User
+  alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Recaptcha
@@ -349,13 +350,23 @@ defmodule ChallengeGov.Accounts do
       |> Ecto.Multi.run(:user, fn _repo, _changes ->
         __MODULE__.update(user, %{token: userinfo["sub"]})
       end)
-      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+      |> Ecto.Multi.run(:security_tracking, fn _repo, _changes ->
         SecurityLogs.track(%{
           originator_id: user.id,
           originator_role: user.role,
           originator_identifier: user.email,
           originator_remote_ip: remote_ip,
           action: "accessed_site"
+        })
+      end)
+      |> Ecto.Multi.run(:certification_tracking, fn _repo, _changes ->
+        CertificationLogs.track(%{
+          user_id: user.id,
+          user_role: user.role,
+          user_identifier: user.email,
+          user_remote_ip: remote_ip,
+          certified_at: Timex.now(),
+          expires_at: CertificationLogs.calulate_expiry()
         })
       end)
       |> Repo.transaction()
@@ -497,10 +508,10 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Check if a user is a challenge owner
 
-      iex> Accounts.is_admin?(%User{role: "challenge_owner"})
+      iex> Accounts.is_challenge_owner?(%User{role: "challenge_owner"})
       true
 
-      iex> Accounts.is_admin?(%User{role: "challenge_owner"})
+      iex> Accounts.is_challenge_owner?(%User{role: "challenge_owner"})
       false
   """
   def is_challenge_owner?(user)
@@ -508,6 +519,21 @@ defmodule ChallengeGov.Accounts do
   def is_challenge_owner?(%{role: "challenge_owner"}), do: true
 
   def is_challenge_owner?(_), do: false
+
+  @doc """
+  Check if a user is a solver
+
+      iex> Accounts.is_solver?(%User{role: "solver"})
+      true
+
+      iex> Accounts.is_solver?(%User{role: "challenge_owner"})
+      false
+  """
+  def is_solver?(user)
+
+  def is_solver?(%{role: "solver"}), do: true
+
+  def is_solver?(_), do: false
 
   @doc """
   Checks if a user's role is at or above the specified role
@@ -560,8 +586,8 @@ defmodule ChallengeGov.Accounts do
   def is_revoked?(%{status: "revoked"}), do: true
   def is_revoked?(_user), do: false
 
-  def is_decativated?(%{status: "decativated"}), do: true
-  def is_decativated?(_user), do: false
+  def is_deactivated?(%{status: "deactivated"}), do: true
+  def is_deactivated?(_user), do: false
 
   def is_decertified?(%{status: "decertified"}), do: true
   def is_decertified?(_user), do: false
@@ -682,7 +708,7 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
-  Deactivate a user. User can no longer login. Still has data access after
+  Deactivate a user. User can no longer login. Removes access to their challenges
   """
 
   def deactivate(user) do
@@ -726,6 +752,8 @@ defmodule ChallengeGov.Accounts do
       user
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:status, "decertified")
+      |> Ecto.Changeset.put_change(:terms_of_use, nil)
+      |> Ecto.Changeset.put_change(:privacy_guidelines, nil)
 
     result =
       Ecto.Multi.new()
@@ -739,11 +767,20 @@ defmodule ChallengeGov.Accounts do
           details: %{previous_status: previous_status, new_status: "decertified"}
         })
       end)
+      |> Ecto.Multi.run(:track, fn _repo, _changes ->
+        CertificationLogs.track(%{
+          user_id: user.id,
+          user_role: user.role,
+          user_identifier: user.email,
+          decertified_at: Timex.now()
+        })
+      end)
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
-        {:ok, user}
+      {:ok, result} ->
+        revoke_challenge_ownership(result.user)
+        {:ok, result.user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
