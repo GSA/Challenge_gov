@@ -47,7 +47,7 @@ defmodule Web.Router do
   scope "/admin", Web.Admin, as: :admin do
     pipe_through([:browser, :user])
 
-    post("/recertification", AccessController, :request_recertification) 
+    post("/recertification", AccessController, :request_recertification)
   end
 
   scope "/admin", Web.Admin, as: :admin do

@@ -11,11 +11,12 @@ defmodule Web.Admin.DashboardView do
         two_weeks_from_now = Timex.to_unix(Timex.shift(Timex.now(), days: 14))
 
         cond do
-          user.renewal_request === "certification" -> 
+          user.renewal_request === "certification" ->
             [
               recertification_action(conn, user)
             ]
-          expiration < two_weeks_from_now -> 
+
+          expiration < two_weeks_from_now ->
             [
               content_tag(
                 :span,
@@ -27,6 +28,7 @@ defmodule Web.Admin.DashboardView do
               ),
               recertification_action(conn, user)
             ]
+
           true ->
             nil
         end
