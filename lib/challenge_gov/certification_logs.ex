@@ -16,7 +16,7 @@ defmodule ChallengeGov.CertificationLogs do
     |> Repo.insert()
   end
 
-  def check_user_certifications do
+  def check_for_expired_certifications do
     two_days_ago = Timex.shift(Timex.now(), days: -2)
 
     # get records where user is not decertified and expiry is past now
@@ -51,6 +51,31 @@ defmodule ChallengeGov.CertificationLogs do
   Get most current certification record by user id
   """
   def get_current_certification(user) do
+    case user.role == "solver" do
+      true ->
+        {:ok, %{}}
+
+      false ->
+        result =
+          CertificationLog
+          |> where([r], r.user_id == ^user.id)
+          |> where([r], is_nil(r.requested_at))
+          |> order_by([r], desc: r.expires_at)
+          |> limit(1)
+          |> Repo.all()
+          |> List.first()
+
+        case result do
+          nil ->
+            {:error, :no_log_found}
+
+          result ->
+            {:ok, result}
+        end
+    end
+  end
+
+  def check_user_certification_history(user) do
     case user.role == "solver" do
       true ->
         {:ok, %{}}
