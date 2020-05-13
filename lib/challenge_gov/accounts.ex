@@ -708,7 +708,7 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
-  Deactivate a user. User can no longer login. Removes access to their challenges
+  Deactivate a user. User can no longer login. Still has access after
   """
 
   def deactivate(user) do
@@ -743,7 +743,7 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
-  Decertify a user. User can no longer login. Still has data access after
+  Decertify a user. User can no longer login. Removes access to their challenges
   """
   def decertify(user) do
     previous_status = user.status
