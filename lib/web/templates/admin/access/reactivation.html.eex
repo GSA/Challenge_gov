@@ -1,6 +1,10 @@
 <section class="content-header text-center">
-  <h4>
+  <h5 class="mt-5">
     Your account has been deactivated due to extended inactivity.
-  </h4>
-  <%= link("Request reactivation", to: Routes.admin_access_path(@conn, :request_reactivation), class: "btn btn-primary") %>
+  </h5>
+  <div class="mt-5">
+    <%= form_for(@changeset, Routes.admin_access_path(@conn, :request_reactivation), [method: :post], fn f -> %>
+      <%= submit("Request reactivation", class: "btn btn-primary") %>
+    <% end) %>
+  </div>
 </section>

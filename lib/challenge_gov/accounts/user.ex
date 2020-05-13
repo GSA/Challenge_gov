@@ -83,6 +83,8 @@ defmodule ChallengeGov.Accounts.User do
     field(:last_active, :utc_datetime)
     field(:active_session, :boolean)
 
+    field(:renewal_request, :string)
+
     timestamps()
   end
 
@@ -99,7 +101,8 @@ defmodule ChallengeGov.Accounts.User do
       :privacy_guidelines,
       :agency_id,
       :status,
-      :active_session
+      :active_session,
+      :renewal_request
     ])
     |> validate_required([:email])
     |> validate_format(:email, ~r/.+@.+\..+/)
