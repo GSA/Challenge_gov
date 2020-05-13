@@ -2,7 +2,7 @@ defmodule ChallengeGov.Repo.Migrations.RemoveDecertifiedAtFromCertificationLog d
   use Ecto.Migration
 
   def change do
-    alter table (:certification_log) do
+    alter table(:certification_log) do
       remove(:decertified_at)
     end
   end
