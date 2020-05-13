@@ -29,7 +29,7 @@ defmodule ChallengeGov.CertificationLogs do
           user.status != "decertified" and
           user.role != "solver"
       )
-      |> where([r], is_nil(r.decertified_at))
+      |> where([r], is_nil(r.requested_at))
       |> where([r], r.updated_at > ^two_days_ago)
       |> order_by([r], desc: r.updated_at)
       |> Repo.all()
