@@ -586,8 +586,8 @@ defmodule ChallengeGov.Accounts do
   def is_revoked?(%{status: "revoked"}), do: true
   def is_revoked?(_user), do: false
 
-  def is_decativated?(%{status: "decativated"}), do: true
-  def is_decativated?(_user), do: false
+  def is_deactivated?(%{status: "deactivated"}), do: true
+  def is_deactivated?(_user), do: false
 
   def is_decertified?(%{status: "decertified"}), do: true
   def is_decertified?(_user), do: false

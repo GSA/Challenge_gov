@@ -50,6 +50,10 @@ defmodule Web.Router do
 
     get("/pending", TermsController, :pending)
 
+    get("/reactivation", AccessController, :reactivation)
+
+    post("/reactivation", AccessController, :request_reactivation)
+
     get("/recertification", AccessController, :recertification)
 
     post("/recertification", AccessController, :request_recertification)
