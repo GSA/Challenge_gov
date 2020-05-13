@@ -29,14 +29,13 @@ defmodule Web.Admin.UserView do
   def certification_info(certification) do
     now = Timex.to_unix(Timex.now())
     expiration_date = certification.expires_at
-    decertified = certification.decertified_at
 
-    if Timex.to_unix(expiration_date) <= now or decertified != nil do
+    if Timex.to_unix(expiration_date) <= now do
       [
         content_tag(:span, "Certification status: decertified", class: "d-block"),
         content_tag(
           :span,
-          "Decertified on #{decertified.month}/#{decertified.day}/#{decertified.year}",
+          "Decertified on #{expiration_date.month}/#{expiration_date.day}/#{expiration_date.year}",
           class: "d-block"
         )
       ]
