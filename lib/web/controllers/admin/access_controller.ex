@@ -73,6 +73,7 @@ defmodule Web.Admin.AccessController do
         originator_identifier: user.email,
         originator_remote_ip: Security.extract_remote_ip(conn)
       })
+
       conn
       |> put_flash(:info, "Success")
       |> redirect(to: Routes.admin_access_path(conn, :index))
