@@ -20,16 +20,28 @@ defmodule Web.Admin.DashboardView do
               }",
               class: "mx-2"
             ),
-            button("Request recertification",
-              to: "/admin/recertification",
-              method: :get,
-              class: "btn btn-primary"
-            )
+            recertification_action(user)
           ]
         end
 
       {:error, :no_log_found} ->
         nil
+    end
+  end
+
+  def recertification_action(user) do
+    if user.renewal_request == "certification" do
+      [
+        content_tag(:span, "Recertification requested", class: "btn btn-primary")
+      ]
+    else
+      [
+        button("Request recertification",
+          to: "/admin/recertify",
+          method: :get,
+          class: "btn btn-primary"
+        )
+      ]
     end
   end
 end
