@@ -14,7 +14,6 @@ defmodule ChallengeGov.Repo.Migrations.CreateCertificationLog do
       add(:requested_at, :utc_datetime)
       add(:certified_at, :utc_datetime)
       add(:expires_at, :utc_datetime)
-      add(:decertified_at, :utc_datetime)
       add(:denied_at, :utc_datetime)
 
       timestamps()
