@@ -83,7 +83,6 @@ defmodule Seeds do
     )
 
     create_agencies("priv/repo/agencies.txt")
-    CertificationLogs.del_decert_at_records()
     create_user_certifications()
   end
 end
