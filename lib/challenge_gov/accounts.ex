@@ -624,6 +624,7 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, _result} ->
+        maybe_certify_user(user, previous_status, originator, remote_ip)
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -637,6 +638,27 @@ defmodule ChallengeGov.Accounts do
     else
       struct
     end
+  end
+
+  defp maybe_certify_user(user, "pending", approver, approver_remote_ip) do
+    # check for certification history since user could have been active before
+    with {:error, :no_log_found} <- CertificationLogs.get_current_certification(user) do
+      CertificationLogs.track(%{
+        approver_id: approver.id,
+        approver_role: approver.role,
+        approver_identifier: approver.email,
+        approver_remote_ip: approver_remote_ip,
+        user_id: user.id,
+        user_role: user.role,
+        user_identifier: user.email,
+        certified_at: Timex.now(),
+        expires_at: CertificationLogs.calulate_expiry()
+      })
+    end
+  end
+
+  defp maybe_certify_user(_user, _previous_status, _approver, _approver_remote_ip) do
+    # NO OP - was not a pending user
   end
 
   @doc """

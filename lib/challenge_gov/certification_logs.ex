@@ -102,7 +102,7 @@ defmodule ChallengeGov.CertificationLogs do
   @doc """
   calculate certification expiry based on decertification env var
   """
-  def calulate_expiry() do
+  def calulate_expiry do
     decertification_interval = Security.decertify_days()
     expiry = Timex.shift(DateTime.utc_now(), days: decertification_interval)
     DateTime.truncate(expiry, :second)
@@ -111,7 +111,7 @@ defmodule ChallengeGov.CertificationLogs do
   @doc """
   Stream certification log for CSV download
   """
-  def stream_all_records() do
+  def stream_all_records do
     CertificationLog
     |> order_by([r], asc: r.id)
     |> Repo.all()
