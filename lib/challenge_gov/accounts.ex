@@ -602,6 +602,7 @@ defmodule ChallengeGov.Accounts do
       user
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:status, "active")
+      |> maybe_update_request_renewal(user)
 
     result =
       Ecto.Multi.new()
@@ -627,6 +628,12 @@ defmodule ChallengeGov.Accounts do
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
+    end
+  end
+
+  defp maybe_update_request_renewal(struct, user) do
+    if user.renewal_request == "activation" do
+      Ecto.Changeset.put_change(struct, :renewal_request, nil)
     end
   end
 

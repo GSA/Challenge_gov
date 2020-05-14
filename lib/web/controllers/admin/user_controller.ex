@@ -206,10 +206,7 @@ defmodule Web.Admin.UserController do
         Accounts.activate(user, approver, approver_remote_ip)
       end)
       |> Ecto.Multi.run(:renew_terms, fn _repo, _changes ->
-        Accounts.update(
-          user,
-          %{"terms_of_use" => nil, "privacy_guidelines" => nil}
-        )
+        Accounts.update(user, get_recertify_update_params(user))
       end)
       |> Ecto.Multi.run(:certification_record, fn _repo, _changes ->
         CertificationLogs.track(%{
@@ -232,6 +229,20 @@ defmodule Web.Admin.UserController do
 
       :error ->
         {:error, :not_recertified}
+    end
+  end
+
+  defp get_recertify_update_params(user) do
+    case user.renewal_request == "certification" do
+      true ->
+        %{
+          "terms_of_use" => nil,
+          "privacy_guidelines" => nil,
+          "renewal_request" => nil
+        }
+
+      false ->
+        %{"terms_of_use" => nil, "privacy_guidelines" => nil}
     end
   end
 end
