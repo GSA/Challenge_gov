@@ -62,7 +62,7 @@ defmodule Web.SessionController do
       conn
       |> put_flash(:info, "Login successful")
       |> put_session(:user_token, user.token)
-      |> after_sign_in_redirect(get_default_path(conn, user))
+      |> after_sign_in_redirect(Routes.admin_dashboard_path(conn, :index))
     else
       {:error, _err} ->
         conn
@@ -106,24 +106,6 @@ defmodule Web.SessionController do
     conn
     |> clear_session()
     |> redirect(to: Routes.session_path(conn, :new))
-  end
-
-  @doc """
-  Assign redirect path based on acceptance of terms
-  """
-  # TODO add different user role paths by role eg status: pending > pending page
-  def get_default_path(conn, user) do
-    case Accounts.has_accepted_terms?(user) do
-      true ->
-        if user.status == "pending" do
-          Routes.admin_terms_path(conn, :pending)
-        else
-          Routes.admin_dashboard_path(conn, :index)
-        end
-
-      false ->
-        Routes.admin_terms_path(conn, :new)
-    end
   end
 
   @doc """
