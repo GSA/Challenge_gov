@@ -623,8 +623,8 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, _result} ->
-        maybe_certify_user(user, previous_status, originator, remote_ip)
+      {:ok, %{user: user}} ->
+        maybe_certify_user(user, originator, remote_ip)
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -640,7 +640,7 @@ defmodule ChallengeGov.Accounts do
     end
   end
 
-  defp maybe_certify_user(user, "pending", approver, approver_remote_ip) do
+  defp maybe_certify_user(user, approver, approver_remote_ip) do
     # check for certification history since user could have been active before
     with {:error, :no_log_found} <- CertificationLogs.get_current_certification(user) do
       CertificationLogs.track(%{
@@ -655,10 +655,6 @@ defmodule ChallengeGov.Accounts do
         expires_at: CertificationLogs.calulate_expiry()
       })
     end
-  end
-
-  defp maybe_certify_user(_user, _previous_status, _approver, _approver_remote_ip) do
-    # NO OP - was not a pending user
   end
 
   @doc """

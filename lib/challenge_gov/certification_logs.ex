@@ -51,7 +51,7 @@ defmodule ChallengeGov.CertificationLogs do
   Get most current certification record by user id
   """
   def get_current_certification(user) do
-    case user.role == "solver" do
+    case user.role == "solver" or user.status == "pending" do
       true ->
         {:ok, %{}}
 
