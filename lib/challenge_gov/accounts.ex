@@ -142,8 +142,8 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
-        {:ok, user.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
@@ -174,8 +174,8 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
-        {:ok, user.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
@@ -372,8 +372,8 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
-        {:ok, user.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
@@ -623,7 +623,7 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, _result} ->
+      {:ok, %{user: user}} ->
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -669,7 +669,7 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, _result} ->
+      {:ok, %{user: user}} ->
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -707,7 +707,7 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, _result} ->
+      {:ok, %{user: user}} ->
         revoke_challenge_ownership(user)
         {:ok, user}
 
@@ -743,7 +743,7 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
+      {:ok, %{user: user}} ->
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -779,9 +779,9 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, result} ->
-        revoke_challenge_ownership(result.user)
-        {:ok, result.user}
+      {:ok, %{user: user}} ->
+        revoke_challenge_ownership(user)
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}

@@ -241,8 +241,8 @@ defmodule Web.Admin.UserController do
       |> Repo.transaction()
 
     case result do
-      {:ok, result} ->
-        {:ok, result.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
       :error ->
         {:error, :not_recertified}
