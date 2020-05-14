@@ -96,9 +96,12 @@ defmodule ChallengeGov.SecurityLogs do
   Stream security log for CSV download
   """
   def stream_all_records() do
-    SecurityLog
-    |> order_by([r], asc: r.id)
-    |> Repo.all()
+    result =
+      SecurityLog
+      |> order_by([r], asc: r.id)
+      |> Repo.all()
+
+    {:ok, result}
   end
 
   @doc """
