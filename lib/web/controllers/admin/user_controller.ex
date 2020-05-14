@@ -112,6 +112,8 @@ defmodule Web.Admin.UserController do
           previous_status
         )
 
+        maybe_decertify_user_manually(user, status, previous_status)
+
         {:ok, certification} =
           case CertificationLogs.get_current_certification(user) do
             {:ok, certification} ->
@@ -143,6 +145,21 @@ defmodule Web.Admin.UserController do
         |> assign(:changeset, changeset)
         |> render("edit.html")
     end
+  end
+
+  def maybe_decertify_user_manually(_user, status, status) do
+    # NO OP status not changed
+  end
+
+  def maybe_decertify_user_manually(user, "decertified", _previous_status) do
+    with {:ok, user} <-
+           Accounts.update(user, %{terms_of_use: nil, privacy_guidelines: nil}) do
+      Accounts.revoke_challenge_ownership(user)
+    end
+  end
+
+  def maybe_decertify_user_manually(_user, _status, _previous_status) do
+    # NO OP status not changed to decertified
   end
 
   def toggle(conn, %{"id" => id, "action" => "activate"}) do

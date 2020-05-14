@@ -634,6 +634,8 @@ defmodule ChallengeGov.Accounts do
   defp maybe_update_request_renewal(struct, user) do
     if user.renewal_request == "activation" do
       Ecto.Changeset.put_change(struct, :renewal_request, nil)
+    else
+      struct
     end
   end
 
