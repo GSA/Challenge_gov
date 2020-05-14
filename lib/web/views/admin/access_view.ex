@@ -15,4 +15,14 @@ defmodule Web.Admin.AccessView do
         ]
     end
   end
+
+  def request_type_by_status(user) do
+    case user.status do
+      "decertified" ->
+        "recertification"
+
+      "deactivated" ->
+        "reactivation"
+    end
+  end
 end

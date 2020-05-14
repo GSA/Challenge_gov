@@ -1,7 +1,10 @@
 <section class="content-header text-center">
   <div class="page-center">
     <h4>
-      Your request has been sent.
+      Your <%= request_type_by_status(@user)%> request has been sent.
     </h4>
+    <p class="mt-5">
+      The Challenge.gov team is working to review your request.
+    </p>
   </div>
 </section>

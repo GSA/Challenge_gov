@@ -24,6 +24,11 @@ defmodule Web.Router do
     plug(:put_layout, {Web.LayoutView, "admin.html"})
   end
 
+  pipeline(:access) do
+    plug(Web.Plugs.SessionTimeout)
+    plug(:put_layout, {Web.LayoutView, "admin.html"})
+  end
+
   pipeline(:signed_in) do
     plug(Web.Plugs.CheckUserStatus)
     plug(Web.Plugs.SessionTimeout)
@@ -45,9 +50,11 @@ defmodule Web.Router do
   end
 
   scope "/admin", Web.Admin, as: :admin do
-    pipe_through([:browser, :user])
+    pipe_through([:browser, :user, :access])
 
     post("/recertification", AccessController, :request_recertification)
+
+    get("/recertification", AccessController, :recertification)
   end
 
   scope "/admin", Web.Admin, as: :admin do
@@ -69,8 +76,6 @@ defmodule Web.Router do
     get("/", DashboardController, :index)
 
     resources("/documents", DocumentController, only: [:delete])
-
-    get("/recertification", AccessController, :recertification)
 
     get("/certification_requested", AccessController, :index)
 

@@ -17,10 +17,18 @@ defmodule Web.Admin.AccessController do
   def recertification(conn, _params) do
     %{current_user: user} = conn.assigns
 
-    conn
-    |> assign(:user, user)
-    |> assign(:changeset, Accounts.edit(user))
-    |> render("recertification.html")
+    case user.renewal_request do
+      nil ->
+        conn
+        |> assign(:user, user)
+        |> assign(:changeset, Accounts.edit(user))
+        |> render("recertification.html")
+
+      _ ->
+        conn
+        |> assign(:user, user)
+        |> render("index.html")
+    end
   end
 
   def request_recertification(conn, params) do
@@ -55,10 +63,18 @@ defmodule Web.Admin.AccessController do
   def reactivation(conn, _params) do
     %{current_user: user} = conn.assigns
 
-    conn
-    |> assign(:user, user)
-    |> assign(:changeset, Accounts.edit(user))
-    |> render("reactivation.html")
+    case user.renewal_request do
+      nil ->
+        conn
+        |> assign(:user, user)
+        |> assign(:changeset, Accounts.edit(user))
+        |> render("reactivation.html")
+
+      _ ->
+        conn
+        |> assign(:user, user)
+        |> render("index.html")
+    end
   end
 
   def request_reactivation(conn, _params) do
