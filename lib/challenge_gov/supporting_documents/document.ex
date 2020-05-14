@@ -26,6 +26,7 @@ defmodule ChallengeGov.SupportingDocuments.Document do
     field(:key, Ecto.UUID)
     field(:extension, :string)
     field(:section, :string, default: "resources")
+    field(:name, :string)
 
     timestamps()
   end
@@ -38,11 +39,12 @@ defmodule ChallengeGov.SupportingDocuments.Document do
     |> put_change(:extension, file.extension)
   end
 
-  def challenge_changeset(struct, challenge, section) do
+  def challenge_changeset(struct, challenge, section, name) do
     struct
     |> change()
     |> put_change(:challenge_id, challenge.id)
     |> put_change(:section, section)
+    |> put_change(:name, name)
     |> foreign_key_constraint(:challenge_id)
   end
 

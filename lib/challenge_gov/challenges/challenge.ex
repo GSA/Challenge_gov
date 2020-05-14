@@ -17,23 +17,39 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   @type t :: %__MODULE__{}
 
+  @doc """
+  - Challenge owner starts the form → saves it as a draft - Draft
+  - Challenge owner submit for review from PMO - GSA Review
+    - (2a) GSA Admin approves the challenge (waiting to be published according to date specified)- Approved
+    - (2b) GSA Admin requests edits from Challenge Owner (i.e. date is wrong)- Edits Requested**
+  - Challenge Owner updates the edits and re-submit to GSA Admin - GSA Review
+  - Challenge goes Live - Published 
+  - Challenge is archived - Archived
+  - Published status but updating Winners & FAQ and submitted to GSA Admin - GSA Review
+  - Challenge Owner updates an Archived challenge posting - goes to "GSA Review" -> GSA Admin approves -> status back to Archived
+  """
   @statuses [
-    "draft",
-    "pending",
-    "created",
-    "rejected",
-    "published",
-    "archived"
+    %{id: "draft", label: "Draft"},
+    %{id: "gsa_review", label: "GSA review"},
+    %{id: "approved", label: "Approved"},
+    %{id: "edits_requested", label: "Edits requested"},
+    %{id: "unpublished", label: "Unpublished"},
+    %{id: "published", label: "Published"},
+    %{id: "archived", label: "Archived"}
   ]
+
+  def status_ids() do
+    Enum.map(@statuses, & &1.id)
+  end
 
   @challenge_types [
     "Software and apps",
-    "Creative (multimedia and design)",
+    "Creative (multimedia & design)",
     "Ideas",
     "Technology demonstration and hardware",
     "Nominations",
     "Business plans",
-    "Analytics, visualizations and algorithms",
+    "Analytics, visualizations, algorithms",
     "Scientific"
   ]
 
@@ -70,8 +86,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     # Associations
     belongs_to(:user, User)
     belongs_to(:agency, Agency)
-    has_many(:events, Event, on_replace: :delete)
-    has_many(:supporting_documents, Document)
+    has_many(:events, Event, on_replace: :delete, on_delete: :delete_all)
+    has_many(:supporting_documents, Document, on_delete: :delete_all)
     has_many(:challenge_owners, ChallengeOwner, on_delete: :delete_all)
     has_many(:challenge_owner_users, through: [:challenge_owners, :user])
     has_many(:federal_partners, FederalPartner, on_delete: :delete_all)
@@ -124,7 +140,14 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:captured_on, :date)
     field(:auto_publish_date, :utc_datetime)
     field(:published_on, :date)
+    field(:rejection_message, :string)
 
+    # Virtual Fields
+    field(:upload_logo, :boolean, virtual: true)
+    field(:logo, :string, virtual: true)
+
+    # Meta Timestamps
+    field(:deleted_at, :utc_datetime)
     timestamps()
   end
 
@@ -225,9 +248,27 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_format(:fiscal_year, ~r/\bFY[0-9]{2}\b/)
   end
 
-  def details_changeset(struct, _params) do
+  def details_changeset(struct, params) do
     struct
-    |> validate_required([:title])
+    |> cast(params, [
+      :upload_logo
+    ])
+    |> validate_required([
+      :title,
+      :tagline,
+      :types,
+      :brief_description,
+      :description,
+      :auto_publish_date,
+      :upload_logo
+    ])
+    |> validate_length(:tagline, max: 90)
+    |> validate_length(:brief_description, max: 200)
+    |> validate_length(:description, max: 4000)
+    |> validate_types(params)
+    |> validate_upload_logo(params)
+    |> validate_auto_publish_date(params)
+    |> validate_custom_url(params)
   end
 
   def timeline_changeset(struct, _params) do
@@ -263,7 +304,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
     |> changeset(params)
     |> cast_assoc(:non_federal_partners)
-    |> put_change(:status, "pending")
+    |> put_change(:status, "gsa_review")
     |> put_change(:captured_on, Date.utc_today())
     |> validate_required([
       :user_id,
@@ -273,31 +314,13 @@ defmodule ChallengeGov.Challenges.Challenge do
       :poc_email,
       :non_federal_partners,
       :title,
-      :custom_url,
-      :external_url,
       :tagline,
       :description,
-      :brief_description,
-      :how_to_enter,
-      :start_date,
-      :end_date,
-      :number_of_phases,
-      :phase_descriptions,
-      :phase_dates,
-      :judging_criteria,
-      :prize_total,
-      :non_monetary_prizes,
-      :prize_description,
-      :eligibility_requirements,
-      :rules,
-      :terms_and_conditions,
-      :legal_authority,
-      :faq,
-      :winner_information
+      :brief_description
     ])
     |> foreign_key_constraint(:agency)
     |> unique_constraint(:custom_url)
-    |> validate_inclusion(:status, @statuses)
+    |> validate_inclusion(:status, status_ids())
   end
 
   def update_changeset(struct, params) do
@@ -307,37 +330,18 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_required([
       :user_id,
       :agency_id,
-      :status,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
       :non_federal_partners,
       :title,
-      :custom_url,
-      :external_url,
       :tagline,
       :description,
-      :brief_description,
-      :how_to_enter,
-      :start_date,
-      :end_date,
-      :number_of_phases,
-      :phase_descriptions,
-      :phase_dates,
-      :judging_criteria,
-      :prize_total,
-      :non_monetary_prizes,
-      :prize_description,
-      :eligibility_requirements,
-      :rules,
-      :terms_and_conditions,
-      :legal_authority,
-      :faq,
-      :winner_information
+      :brief_description
     ])
     |> foreign_key_constraint(:agency)
     |> unique_constraint(:custom_url)
-    |> validate_inclusion(:status, @statuses)
+    |> validate_inclusion(:status, status_ids())
   end
 
   # to allow change to admin info?
@@ -347,19 +351,43 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> update_changeset(params)
   end
 
+  def approve_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:status, "approved")
+    |> put_change(:published_on, Date.utc_today())
+    |> validate_inclusion(:status, status_ids())
+  end
+
   def publish_changeset(struct) do
     struct
     |> change()
-    |> put_change(:status, "created")
+    |> put_change(:status, "published")
     |> put_change(:published_on, Date.utc_today())
-    |> validate_inclusion(:status, @statuses)
+    |> validate_inclusion(:status, status_ids())
   end
 
-  def reject_changeset(struct) do
+  def unpublish_changeset(struct) do
     struct
     |> change()
-    |> put_change(:status, "rejected")
-    |> validate_inclusion(:status, @statuses)
+    |> put_change(:status, "unpublished")
+    |> put_change(:published_on, Date.utc_today())
+    |> validate_inclusion(:status, status_ids())
+  end
+
+  def reject_changeset(struct, message) do
+    struct
+    |> change()
+    |> put_change(:rejection_message, message)
+    |> put_change(:status, "edits_requested")
+    |> validate_inclusion(:status, status_ids())
+  end
+
+  def submit_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:status, "gsa_review")
+    |> validate_inclusion(:status, status_ids())
   end
 
   # Image changesets
@@ -375,5 +403,76 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> change()
     |> put_change(:winner_image_key, key)
     |> put_change(:winner_image_extension, extension)
+  end
+
+  # Custom validations
+  # TODO: Make this check that the types added are valid
+  defp validate_types(struct, params) do
+    case Map.get(params, "types") do
+      "" ->
+        add_error(struct, :types, "Must choose a challenge type")
+
+      types when is_list(types) ->
+        struct
+
+      _ ->
+        struct
+    end
+  end
+
+  defp validate_upload_logo(struct, params) do
+    case Map.get(params, "upload_logo") do
+      "true" ->
+        validate_logo(struct, params)
+
+      _ ->
+        struct
+    end
+  end
+
+  defp validate_logo(struct, params) do
+    case Map.get(params, "logo") do
+      nil ->
+        add_error(struct, :logo, "Must upload a logo")
+
+      _ ->
+        struct
+    end
+  end
+
+  defp validate_auto_publish_date(struct, params) do
+    now = Timex.now()
+
+    with time <- Map.get(params, "auto_publish_date"),
+         {:ok, time} <- Timex.parse(time, "{ISO:Extended}"),
+         1 <- Timex.compare(time, now) do
+      struct
+    else
+      tc when tc == -1 or tc == 0 ->
+        add_error(struct, :auto_publish_date, "must be in the future")
+    end
+  end
+
+  defp validate_custom_url(struct, params) do
+    custom_url = Map.get(params, "custom_url")
+    challenge_title = Map.get(params, "title")
+
+    cond do
+      custom_url != "" ->
+        put_change(struct, :custom_url, create_custom_url_slug(custom_url))
+
+      challenge_title != "" ->
+        put_change(struct, :custom_url, create_custom_url_slug(challenge_title))
+
+      true ->
+        struct
+    end
+  end
+
+  defp create_custom_url_slug(value) do
+    value
+    |> String.trim()
+    |> String.downcase()
+    |> String.replace(" ", "-")
   end
 end

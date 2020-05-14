@@ -14,7 +14,9 @@ defmodule ChallengeGov.TestHelpers.AccountHelpers do
         phone_number: "123-123-1234",
         password: "password",
         password_confirmation: "password",
-        token: UUID.uuid4()
+        token: UUID.uuid4(),
+        role: "solver",
+        status: "active"
       },
       attributes
     )

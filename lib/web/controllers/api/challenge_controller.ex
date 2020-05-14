@@ -22,7 +22,7 @@ defmodule Web.Api.ChallengeController do
   def show(conn, %{"id" => id}) do
     with {id, _} <- Integer.parse(id),
          {:ok, challenge} <- Challenges.get(id),
-         true <- Challenges.public?(challenge) do
+         true <- Challenges.is_public?(challenge) do
       conn
       |> assign(:challenge, challenge)
       |> put_status(:ok)

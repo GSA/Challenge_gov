@@ -7,14 +7,21 @@ defmodule Web.SharedView do
     Map.get(conn.private.plug_session, "session_timeout_at")
   end
 
-  def page_path(path, page) do
+  def page_path(path, page, pagination_param \\ nil) do
     uri = URI.parse(path)
 
     query =
-      uri.query
-      |> decode_query()
-      |> Map.put(:page, page)
-      |> URI.encode_query()
+      if pagination_param do
+        uri.query
+        |> decode_query()
+        |> Map.put("#{pagination_param}[page]", page)
+        |> URI.encode_query()
+      else
+        uri.query
+        |> decode_query()
+        |> Map.put(:page, page)
+        |> URI.encode_query()
+      end
 
     %{uri | query: query}
     |> URI.to_string()
@@ -48,6 +55,7 @@ defmodule Web.SharedView do
 
   def pagination(opts) do
     pagination = opts[:pagination]
+    opts = Keyword.put_new(opts, :pagination_param, nil)
 
     case pagination.total <= 1 do
       true ->
@@ -72,5 +80,21 @@ defmodule Web.SharedView do
     if date do
       Timex.format!(date, "{0M}/{0D}/{YYYY}")
     end
+  end
+
+  def readable_datetime(datetime) do
+    if datetime do
+      Timex.format!(datetime, "{0M}/{0D}/{YYYY} {h12}:{0m} {AM} {Zname}")
+    end
+  end
+
+  def naive_to_readable_datetime(naive_datetime) do
+    naive_datetime
+    |> Timex.to_datetime()
+    |> readable_datetime
+  end
+
+  def string_to_link(string, opts \\ []) do
+    link(string, Keyword.merge([to: string], opts))
   end
 end

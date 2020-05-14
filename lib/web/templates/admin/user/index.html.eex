@@ -38,6 +38,7 @@
                   <th>Name</th>
                   <th>Email</th>
                   <th>Role</th>
+                  <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -48,6 +49,7 @@
                     <td><%= link(AccountView.full_name(user), to: Routes.admin_user_path(@conn, :show, user.id)) %></td>
                     <td><%= user.email %></td>
                     <td><%= user.role %></td>
+                    <td><%= user.status %></td>
                     <td>
                       <%= link("View", to: Routes.admin_user_path(@conn, :show, user.id), class: "btn btn-default btn-xs") %>
                       <%= link("Edit", to: Routes.admin_user_path(@conn, :edit, user.id), class: "btn btn-default btn-xs") %>
@@ -69,11 +71,11 @@
           </div>
           <%= form_for(@changeset, Routes.admin_user_path(@conn, :create), [method: :post], fn f -> %>
             <div class="card-body">
-              <%= FormView.text_field(f, :first_name) %>
-              <%= FormView.text_field(f, :last_name) %>
-              <%= FormView.text_field(f, :email) %>
-              <%= FormView.text_field(f, :email_confirmation) %>
-              <%= FormView.select_field(f, :role, collection: Enum.map(Accounts.roles(@current_user), &{&1.label, &1.id})) %>
+              <%= FormView.text_field(f, :first_name, required: true) %>
+              <%= FormView.text_field(f, :last_name, required: true) %>
+              <%= FormView.email_field(f, :email, required: true) %>
+              <%= FormView.email_field(f, :email_confirmation, required: true) %>
+              <%= FormView.select_field(f, :role, collection: Enum.map(Accounts.roles(@current_user), &{&1.label, &1.id}), required: true) %>
 
               <div class="btn-wrapper">
                 <%= submit("Submit", class: "btn btn-primary") %>

@@ -1,11 +1,6 @@
 defmodule ChallengeGov.Challenges do
   @moduledoc """
   Context for Challenges
-
-  Statuses for challenges:
-  - pending: Awaiting review by an admin, hidden to the public
-  - created: Published by an admin, viewable to the public
-  - archived: Archived by an admin, hidden to the public
   """
 
   alias ChallengeGov.Accounts
@@ -14,10 +9,13 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
+  alias ChallengeGov.SecurityLogs
   alias ChallengeGov.Repo
   alias ChallengeGov.SupportingDocuments
-  alias ChallengeGov.Timeline
+  # alias ChallengeGov.Timeline
   alias ChallengeGov.Timeline.Event
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
   alias Stein.Filter
   alias Stein.Pagination
 
@@ -25,6 +23,7 @@ defmodule ChallengeGov.Challenges do
 
   @behaviour Stein.Filter
 
+  # BOOKMARK: Functions for fetching valid attribute values
   @doc false
   def challenge_types(), do: Challenge.challenge_types()
 
@@ -37,6 +36,18 @@ defmodule ChallengeGov.Challenges do
   @doc false
   def statuses(), do: Challenge.statuses()
 
+  @doc false
+  def status_label(status) do
+    status_data = Enum.find(statuses(), fn s -> s.id == status end)
+
+    if status_data do
+      status_data.label
+    else
+      status
+    end
+  end
+
+  # BOOKMARK: Wizard functionality helpers
   @doc false
   def section_index(section) do
     sections = sections()
@@ -74,6 +85,7 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  # BOOKMARK: Create and update functions
   @doc """
   New changeset for a challenge
   """
@@ -83,7 +95,11 @@ defmodule ChallengeGov.Challenges do
     |> Challenge.create_changeset(%{}, user)
   end
 
-  def create(%{"action" => action, "challenge" => challenge_params}, user) do
+  def create(%{"action" => action, "challenge" => challenge_params}, user, remote_ip) do
+    challenge_params =
+      challenge_params
+      |> check_non_federal_partners
+
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(
@@ -93,6 +109,11 @@ defmodule ChallengeGov.Challenges do
       |> attach_initial_owner(user)
       |> attach_federal_partners(challenge_params)
       |> attach_challenge_owners(challenge_params)
+      |> attach_documents(challenge_params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, challenge_params)
+      end)
+      |> add_to_security_log_multi(user, "create", remote_ip)
       |> Repo.transaction()
 
     case result do
@@ -113,14 +134,23 @@ defmodule ChallengeGov.Challenges do
     |> Challenge.update_changeset(%{})
   end
 
-  def update(challenge, %{"action" => action, "challenge" => challenge_params}) do
-    challenge_params = add_blank_assoc_params(challenge_params)
+  def update(challenge, %{"action" => action, "challenge" => challenge_params}, user, remote_ip) do
+    section = Map.get(challenge_params, "section")
+
+    challenge_params =
+      challenge_params
+      |> check_non_federal_partners
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset_for_action(challenge, challenge_params, action))
       |> attach_federal_partners(challenge_params)
       |> attach_challenge_owners(challenge_params)
+      |> attach_documents(challenge_params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, challenge_params)
+      end)
+      |> add_to_security_log_multi(user, "update", remote_ip, %{action: action, section: section})
       |> Repo.transaction()
 
     case result do
@@ -132,11 +162,59 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  @doc """
+  Update a challenge
+  """
+  def update(challenge, params, current_user, remote_ip) do
+    # TODO: Refactor the current_user permissions checking for updating challenge owner
+    challenge = Repo.preload(challenge, [:non_federal_partners, :events])
+
+    params =
+      params
+      |> Map.put_new("challenge_owners", [])
+      |> Map.put_new("federal_partners", [])
+      |> Map.put_new("non_federal_partners", [])
+      |> Map.put_new("events", [])
+
+    changeset =
+      if Accounts.has_admin_access?(current_user) do
+        Challenge.admin_update_changeset(challenge, params)
+      else
+        Challenge.update_changeset(challenge, params)
+      end
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> attach_federal_partners(params)
+      |> attach_challenge_owners(params)
+      |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
+        maybe_create_event(challenge, changeset)
+      end)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, params)
+      end)
+      |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
+        WinnerImage.maybe_upload_winner_image(challenge, params)
+      end)
+      |> add_to_security_log_multi(current_user, "update", remote_ip)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  # BOOKMARK: Create and update helper functions
   defp changeset_for_action(struct, params, action) do
     struct = challenge_form_preload(struct)
 
     case action do
-      "save_draft" ->
+      a when a == "back" or a == "save_draft" ->
         Challenge.draft_changeset(struct, params)
 
       _ ->
@@ -154,14 +232,15 @@ defmodule ChallengeGov.Challenges do
     ])
   end
 
-  defp add_blank_assoc_params(params) do
-    params
-    |> Map.put_new("challenge_owners", [])
-    |> Map.put_new("federal_partners", [])
-    |> Map.put_new("non_federal_partners", [])
-    |> Map.put_new("events", [])
+  defp check_non_federal_partners(params) do
+    if Map.get(params, "non_federal_partners") == "" do
+      Map.put(params, "non_federal_partners", [])
+    else
+      params
+    end
   end
 
+  # BOOKMARK: Querying functions 
   @doc """
   Get all challenges
   """
@@ -169,11 +248,24 @@ defmodule ChallengeGov.Challenges do
     query =
       Challenge
       |> preload([:agency, :user])
-      |> where([c], c.status == "created")
-      |> order_by([c], desc: c.published_on, asc: c.id)
+      |> where([c], is_nil(c.deleted_at))
+      |> where([c], c.status == "published")
+      |> order_by([c], asc: c.end_date, asc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
+  @doc """
+  Get all public challenges non paginated for sitemap
+  """
+  def all_for_sitemap() do
+    Challenge
+    |> preload([:agency, :user])
+    |> where([c], is_nil(c.deleted_at))
+    |> where([c], c.status == "published" or c.status == "archived")
+    |> order_by([c], asc: c.end_date, asc: c.id)
+    |> Repo.all()
   end
 
   @doc """
@@ -183,7 +275,32 @@ defmodule ChallengeGov.Challenges do
     query =
       Challenge
       |> preload([:agency, :user])
+      |> where([c], is_nil(c.deleted_at))
       |> order_by([c], desc: c.status, desc: c.id)
+      |> Filter.filter(opts[:filter], __MODULE__)
+
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
+  @doc """
+  Get all challenges for a user
+  """
+  def all_pending_for_user(user, opts \\ []) do
+    start_query =
+      if user.role == "challenge_owner" do
+        Challenge
+        |> where([c], is_nil(c.deleted_at) and c.status == "gsa_review")
+        |> join(:inner, [c], co in assoc(c, :challenge_owners))
+        |> where([c, co], co.user_id == ^user.id and is_nil(co.revoked_at))
+      else
+        Challenge
+        |> where([c], is_nil(c.deleted_at) and c.status == "gsa_review")
+      end
+
+    query =
+      start_query
+      |> preload([:agency, :user, :challenge_owner_users])
+      |> order_on_attribute(opts[:sort])
       |> Filter.filter(opts[:filter], __MODULE__)
 
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
@@ -196,10 +313,12 @@ defmodule ChallengeGov.Challenges do
     start_query =
       if user.role == "challenge_owner" do
         Challenge
+        |> where([c], is_nil(c.deleted_at))
         |> join(:inner, [c], co in assoc(c, :challenge_owners))
-        |> where([c, co], co.user_id == ^user.id)
+        |> where([c, co], co.user_id == ^user.id and is_nil(co.revoked_at))
       else
         Challenge
+        |> where([c], is_nil(c.deleted_at))
       end
 
     query =
@@ -230,52 +349,34 @@ defmodule ChallengeGov.Challenges do
   Get a challenge
   """
   def get(id) do
-    case Repo.get(Challenge, id) do
+    challenge =
+      Challenge
+      |> where([c], is_nil(c.deleted_at))
+      |> where([c], c.id == ^id)
+      |> preload([
+        :supporting_documents,
+        :user,
+        :federal_partner_agencies,
+        :non_federal_partners,
+        :agency,
+        :challenge_owner_users
+      ])
+      |> Repo.one()
+
+    case challenge do
       nil ->
         {:error, :not_found}
 
       challenge ->
-        challenge =
-          Repo.preload(challenge, [
-            :supporting_documents,
-            :user,
-            :federal_partner_agencies,
-            :non_federal_partners,
-            :agency,
-            :challenge_owner_users
-          ])
-
         challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
         {:ok, challenge}
     end
   end
 
   @doc """
-  Filter a challenge for created state
-
-  Returns `{:error, :not_found}` if the challenge is not created, to hit the same
-  fallback as if the challenge was a bad ID.
-
-      iex> Challenges.filter_for_created(%Challenge{status: "created"})
-      {:ok, %Challenge{status: "created"}}
-
-      iex> Challenges.filter_for_created(%Challenge{status: "pending"})
-      {:error, :not_found}
-  """
-  def filter_for_created(challenge) do
-    case created?(challenge) do
-      true ->
-        {:ok, challenge}
-
-      false ->
-        {:error, :not_found}
-    end
-  end
-
-  @doc """
   Submit a new challenge for a user
   """
-  def old_create(user, params) do
+  def old_create(user, params, remote_ip) do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:challenge, create_challenge(user, params))
@@ -289,10 +390,12 @@ defmodule ChallengeGov.Challenges do
       |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
         WinnerImage.maybe_upload_winner_image(challenge, params)
       end)
+      |> add_to_security_log_multi(user, "create", remote_ip)
       |> Repo.transaction()
 
     case result do
       {:ok, %{challenge: challenge}} ->
+        send_pending_challenge_email(challenge)
         {:ok, challenge}
 
       {:error, :challenge, changeset, _} ->
@@ -317,8 +420,8 @@ defmodule ChallengeGov.Challenges do
   end
 
   # Attach federal partners functions
-  defp attach_federal_partners(multi, %{federal_partners: ids}) do
-    attach_federal_partners(multi, %{"federal_partners" => ids})
+  defp attach_federal_partners(multi, %{"federal_partners" => ""}) do
+    attach_federal_partners(multi, %{"federal_partners" => []})
   end
 
   defp attach_federal_partners(multi, %{"federal_partners" => ids}) do
@@ -408,56 +511,10 @@ defmodule ChallengeGov.Challenges do
   defp attach_documents(multi, _params), do: multi
 
   defp attach_document({:ok, document}, challenge) do
-    SupportingDocuments.attach_to_challenge(document, challenge, "resources")
+    SupportingDocuments.attach_to_challenge(document, challenge, "resources", "")
   end
 
   defp attach_document(result, _challenge), do: result
-
-  @doc """
-  Update a challenge
-  """
-  def update(challenge, params, current_user) do
-    # TODO: Refactor the current_user permissions checking for updating challenge owner
-    challenge = Repo.preload(challenge, [:non_federal_partners, :events])
-
-    params =
-      params
-      |> Map.put_new("challenge_owners", [])
-      |> Map.put_new("federal_partners", [])
-      |> Map.put_new("non_federal_partners", [])
-      |> Map.put_new("events", [])
-
-    changeset =
-      if Accounts.is_admin?(current_user) or Accounts.is_super_admin?(current_user) do
-        Challenge.admin_update_changeset(challenge, params)
-      else
-        Challenge.update_changeset(challenge, params)
-      end
-
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.update(:challenge, changeset)
-      |> attach_federal_partners(params)
-      |> attach_challenge_owners(params)
-      |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
-        maybe_create_event(challenge, changeset)
-      end)
-      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
-        Logo.maybe_upload_logo(challenge, params)
-      end)
-      |> Ecto.Multi.run(:winner_image, fn _repo, %{challenge: challenge} ->
-        WinnerImage.maybe_upload_winner_image(challenge, params)
-      end)
-      |> Repo.transaction()
-
-    case result do
-      {:ok, %{challenge: challenge}} ->
-        {:ok, challenge}
-
-      {:error, _type, changeset, _changes} ->
-        {:error, changeset}
-    end
-  end
 
   @doc """
   Delete a challenge
@@ -467,11 +524,46 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
+  Delete a challenge if allowed
+  """
+  def delete(challenge, user, remote_ip) do
+    if allowed_to_delete(user, challenge) do
+      soft_delete(challenge, user, remote_ip)
+    else
+      {:error, :not_permitted}
+    end
+  end
+
+  def soft_delete(challenge, user, remote_ip) do
+    now = DateTime.truncate(Timex.now(), :second)
+
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:deleted_at, now)
+    |> Repo.update()
+    |> case do
+      {:ok, challenge} ->
+        add_to_security_log(user, challenge, "delete", remote_ip)
+        {:ok, challenge}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Checks if a user is allowed to delete a challenge
+  """
+  def allowed_to_delete(user, challenge) do
+    Accounts.has_admin_access?(user) or challenge.status == "draft"
+  end
+
+  @doc """
   Checks if a user is allowed to edit a challenge
   """
   def allowed_to_edit(user, challenge) do
     if is_challenge_owner?(user, challenge) or
-         Accounts.is_admin?(user) or Accounts.is_super_admin?(user) do
+         Accounts.has_admin_access?(user) do
       {:ok, challenge}
     else
       {:error, :not_permitted}
@@ -479,10 +571,26 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
-  Checks if a user is in the list of owners for a challenge
+  Checks if a user is in the list of owners for a challenge and not revoked
   """
   def is_challenge_owner?(user, challenge) do
-    Enum.member?(challenge.challenge_owner_users, user)
+    challenge.challenge_owners
+    |> Enum.reject(fn co ->
+      !is_nil(co.revoked_at)
+    end)
+    |> Enum.map(fn co ->
+      co.user_id
+    end)
+    |> Enum.member?(user.id)
+  end
+
+  @doc """
+  Restores access to a user's challlenges
+  """
+  def restore_access(user, challenge) do
+    ChallengeOwner
+    |> where([co], co.user_id == ^user.id and co.challenge_id == ^challenge.id)
+    |> Repo.update_all(set: [revoked_at: nil])
   end
 
   defp maybe_create_event(challenge, changeset) do
@@ -499,89 +607,173 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Create a new status event when the status changes
   """
-  def create_status_event(challenge = %{status: "created"}) do
-    Timeline.create_event(challenge, %{
-      title: "Created",
-      occurs_on: Timeline.today()
-    })
-  end
-
-  def create_status_event(challenge = %{status: "champion assigned"}) do
-    Timeline.create_event(challenge, %{
-      title: "Champion Assigned",
-      occurs_on: Timeline.today()
-    })
-  end
-
-  def create_status_event(challenge = %{status: "design"}) do
-    Timeline.create_event(challenge, %{
-      title: "Design",
-      occurs_on: Timeline.today()
-    })
-  end
-
-  def create_status_event(challenge = %{status: "vetted"}) do
-    Timeline.create_event(challenge, %{
-      title: "Vetted",
-      occurs_on: Timeline.today()
-    })
-  end
-
   def create_status_event(_), do: :ok
 
-  @doc """
-  Check if a challenge is created
+  # BOOKMARK: Base status functions
+  def is_draft?(%{status: "draft"}), do: true
+  def is_draft?(_user), do: false
 
-      iex> Challenges.created?(%Challenge{status: "pending"})
-      false
+  def in_review?(%{status: "gsa_review"}), do: true
+  def in_review?(_user), do: false
 
-      iex> Challenges.created?(%Challenge{status: "created"})
-      true
+  def is_approved?(%{status: "approved"}), do: true
+  def is_approved?(_user), do: false
 
-      iex> Challenges.created?(%Challenge{status: "archived"})
-      false
-  """
-  def created?(challenge) do
-    challenge.status == "created"
-  end
+  def has_edits_requested?(%{status: "edits_requested"}), do: true
+  def has_edits_requested?(_user), do: false
 
+  def is_published?(%{status: "published"}), do: true
+  def is_published?(_user), do: false
+
+  def is_unpublished?(%{status: "unpublished"}), do: true
+  def is_unpublished?(_user), do: false
+
+  def is_archived?(%{status: "archived"}), do: true
+  def is_archived?(_user), do: false
+
+  # BOOKMARK: Advanced status functions
   @doc """
   Checks if the challenge should be publicly accessible. Either published or archived
   """
-  def public?(challenge) do
-    challenge.status == "created" or challenge.status == "archived"
+  def is_public?(challenge) do
+    is_published?(challenge) or is_archived?(challenge)
   end
 
-  @doc """
-  Check if a challenge is publishable
-
-      iex> Challenges.publishable?(%Challenge{status: "pending"})
-      true
-
-      iex> Challenges.publishable?(%Challenge{status: "created"})
-      false
-
-      iex> Challenges.publishable?(%Challenge{status: "archived"})
-      true
-  """
-  def publishable?(challenge) do
-    challenge.status != "created"
+  def is_submittable?(challenge) do
+    !in_review?(challenge) and (is_draft?(challenge) or has_edits_requested?(challenge))
   end
 
-  @doc """
-  Publish a challenge
+  def is_submittable?(challenge, user) do
+    is_challenge_owner?(user, challenge) and is_submittable?(challenge)
+  end
 
-  Sets status to "created"
-  """
-  def publish(challenge) do
+  def is_approvable?(challenge) do
+    in_review?(challenge) or is_unpublished?(challenge)
+  end
+
+  def is_approvable?(challenge, user) do
+    Accounts.has_admin_access?(user) and is_approvable?(challenge)
+  end
+
+  def can_request_edits?(challenge) do
+    in_review?(challenge) or has_edits_requested?(challenge) or is_published?(challenge) or
+      is_approved?(challenge)
+  end
+
+  def can_request_edits?(challenge, user) do
+    Accounts.has_admin_access?(user) and can_request_edits?(challenge)
+  end
+
+  def is_archivable?(challenge) do
+    is_published?(challenge) or is_unpublished?(challenge)
+  end
+
+  def is_archivable?(challenge, user) do
+    Accounts.has_admin_access?(user) and is_archivable?(challenge)
+  end
+
+  def is_unarchivable?(challenge) do
+    is_archived?(challenge)
+  end
+
+  def is_unarchivable?(challenge, user) do
+    Accounts.has_admin_access?(user) and is_unarchivable?(challenge)
+  end
+
+  def is_publishable?(challenge) do
+    is_approved?(challenge) or is_unpublished?(challenge)
+  end
+
+  def is_publishable?(challenge, user) do
+    Accounts.has_admin_access?(user) and is_publishable?(challenge)
+  end
+
+  def is_unpublishable?(challenge) do
+    is_approved?(challenge) or is_published?(challenge) or is_archived?(challenge)
+  end
+
+  def is_unpublishable?(challenge, user) do
+    Accounts.has_admin_access?(user) and is_unpublishable?(challenge)
+  end
+
+  def is_editable?(_challenge) do
+    true
+  end
+
+  def is_editable?(challenge, user) do
+    (is_challenge_owner?(user, challenge) or Accounts.has_admin_access?(user)) and
+      is_editable?(challenge)
+  end
+
+  # BOOKMARK: Status altering functions
+  def submit(challenge, user, remote_ip) do
+    changeset =
+      challenge
+      |> Challenge.submit_changeset()
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "gsa_review"})
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        send_pending_challenge_email(challenge)
+        {:ok, challenge}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  def approve(challenge, user, remote_ip) do
+    changeset = Challenge.approve_changeset(challenge)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "approved"})
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  def reject(challenge, user, remote_ip, message \\ "") do
+    changeset = Challenge.reject_changeset(challenge, message)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{
+        status: "edits_requested",
+        message: message
+      })
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        send_challenge_rejection_emails(challenge)
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  def publish(challenge, user, remote_ip) do
     changeset = Challenge.publish_changeset(challenge)
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
-      |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
-        maybe_create_event(challenge, changeset)
-      end)
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "published"})
       |> Repo.transaction()
 
     case result do
@@ -593,17 +785,13 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  @doc """
-  Reject a challenge
-
-  Sets status to "rejected"
-  """
-  def reject(challenge) do
-    changeset = Challenge.reject_changeset(challenge)
+  def unpublish(challenge, user, remote_ip) do
+    changeset = Challenge.unpublish_changeset(challenge)
 
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "unpublished"})
       |> Repo.transaction()
 
     case result do
@@ -615,42 +803,85 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  @doc """
-  Check if a challenge is rejectable
-  """
-  def rejectable?(challenge) do
-    challenge.status != "rejected" &&
-      challenge.status != "created"
+  def archive(challenge, user, remote_ip) do
+    changeset =
+      challenge
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "archived")
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "archived"})
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
-  @doc """
-  Check if a challenge is archivable
+  def unarchive(challenge, user, remote_ip) do
+    changeset =
+      challenge
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "published")
 
-      iex> Challenges.archivable?(%Challenge{status: "pending"})
-      true
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:challenge, changeset)
+      |> add_to_security_log_multi(user, "status_change", remote_ip, %{status: "published"})
+      |> Repo.transaction()
 
-      iex> Challenges.archivable?(%Challenge{status: "created"})
-      true
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
 
-      iex> Challenges.archivable?(%Challenge{status: "archived"})
-      false
-  """
-  def archivable?(challenge) do
-    challenge.status != "archived"
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
   end
 
-  @doc """
-  Archive a challenge
-
-  Sets status to "archived"
-  """
-  def archive(challenge) do
+  # BOOKMARK: Email functions
+  defp send_pending_challenge_email(challenge) do
     challenge
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_change(:status, "archived")
-    |> Repo.update()
+    |> Emails.pending_challenge_email()
+    |> Mailer.deliver_later()
   end
 
+  defp send_challenge_rejection_emails(challenge) do
+    Enum.map(challenge.challenge_owner_users, fn owner ->
+      owner
+      |> Emails.challenge_rejection_email(challenge)
+      |> Mailer.deliver_later()
+    end)
+  end
+
+  # BOOKMARK: Security log functions
+  defp add_to_security_log_multi(multi, user, type, remote_ip, details \\ nil) do
+    Ecto.Multi.run(multi, :log, fn _repo, %{challenge: challenge} ->
+      add_to_security_log(user, challenge, type, remote_ip, details)
+    end)
+  end
+
+  def add_to_security_log(user, challenge, type, remote_ip, details \\ nil) do
+    SecurityLogs.track(%{
+      originator_id: user.id,
+      originator_role: user.role,
+      originator_identifier: user.email,
+      originator_remote_ip: remote_ip,
+      target_id: challenge.id,
+      target_type: "challenge",
+      target_identifier: challenge.title,
+      action: type,
+      details: details
+    })
+  end
+
+  # BOOKMARK: Misc functions
   def remove_logo(challenge) do
     challenge
     |> Ecto.Changeset.change()
@@ -667,6 +898,7 @@ defmodule ChallengeGov.Challenges do
     |> Repo.update()
   end
 
+  # BOOKMARK: Filter functions
   @impl true
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
@@ -720,6 +952,7 @@ defmodule ChallengeGov.Challenges do
 
   def filter_on_attribute(_, query), do: query
 
+  # BOOKMARK: Order functions
   def order_on_attribute(query, %{"user" => direction}) do
     query = join(query, :left, [c], a in assoc(c, :user))
 

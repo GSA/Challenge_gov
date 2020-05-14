@@ -9,6 +9,10 @@ import "@fortawesome/fontawesome-free/css/all.css";
 
 import "../css/app.css";
 
+// TODO: Add this back after font size fixes
+// import "uswds/dist/css/uswds.css";
+// import "uswds/dist/js/uswds.js";
+
 // webpack automatically bundles all modules in your
 // entry points. Those entry points can be configured
 // in "webpack.config.js".
@@ -22,5 +26,6 @@ import "phoenix_html"
 // Local files can be imported directly using relative paths, for example:
 // import socket from "./socket"
 import "./custom.js";
+import "./scroll_to_anchor.js";
 
 window.$ = jquery;

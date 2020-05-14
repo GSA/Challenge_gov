@@ -27,10 +27,6 @@ config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
 
 config :stein_storage, backend: :test
 
-if File.exists?("config/test.extra.exs") do
-  import_config("test.extra.exs")
-end
-
 if File.exists?("config/test.local.exs") do
   import_config("test.local.exs")
 end

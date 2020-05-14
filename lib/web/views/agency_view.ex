@@ -8,8 +8,9 @@ defmodule Web.AgencyView do
   def avatar_img(agency, opts \\ []) do
     case is_nil(agency) or is_nil(agency.avatar_key) do
       true ->
-        path = Routes.static_path(Web.Endpoint, "/images/teams-card-logo.jpg")
-        img_tag(path, alt: "Agency Logo")
+        url = Routes.static_path(Web.Endpoint, "/images/challenge-logo.png")
+        opts = Keyword.merge([alt: "Challenge Logo"], opts)
+        img_tag(url, opts)
 
       false ->
         url = Storage.url(Avatar.avatar_path(agency, "thumbnail"), signed: [expires_in: 3600])
@@ -21,7 +22,7 @@ defmodule Web.AgencyView do
   def avatar_url(agency) do
     case is_nil(agency) or is_nil(agency.avatar_key) do
       true ->
-        Routes.static_path(Web.Endpoint, "/images/teams-card-logo.jpg")
+        Routes.static_path(Web.Endpoint, "/images/challenge-logo.png")
 
       false ->
         Storage.url(Avatar.avatar_path(agency, "original"), signed: [expires_in: 3600])

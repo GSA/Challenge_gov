@@ -13,7 +13,8 @@ defmodule Web.Admin.DocumentController do
            SupportingDocuments.attach_to_challenge(
              document,
              challenge,
-             Map.get(params, "section")
+             Map.get(params, "section"),
+             Map.get(params, "name")
            ) do
       conn
       |> put_flash(:info, "Document uploaded and attached")

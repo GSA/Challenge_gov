@@ -3,25 +3,16 @@ defmodule Web.Plugs.SessionTimeout do
   Manage session timeout
   """
   alias Web.SessionController
+  alias ChallengeGov.Accounts
+  alias ChallengeGov.Security
 
   def init(opts \\ []) do
-    Keyword.merge([timeout_after_minutes: timeout_interval()], opts)
+    Keyword.merge([timeout_after_minutes: Security.timeout_interval()], opts)
   end
 
   def call(conn, opts) do
+    %{current_user: user} = conn.assigns
+    Accounts.update_last_active(user)
     SessionController.check_session_timeout(conn, opts)
-  end
-
-  # TODO: Handle session timeout defaults and parsing better
-  defp timeout_interval do
-    with timeout_var <- Application.get_env(:challenge_gov, :session_timeout_in_minutes),
-         false <- is_nil(timeout_var),
-         false <- is_integer(timeout_var),
-         {timeout, _} <- Integer.parse(timeout_var) do
-      timeout
-    else
-      _ ->
-        15
-    end
   end
 end

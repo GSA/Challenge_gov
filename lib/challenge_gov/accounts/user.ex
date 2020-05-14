@@ -10,6 +10,7 @@ defmodule ChallengeGov.Accounts.User do
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.SupportingDocuments.Document
+  alias ChallengeGov.Solutions
   alias ChallengeGov.Agencies.Member
 
   @type t :: %__MODULE__{}
@@ -17,9 +18,27 @@ defmodule ChallengeGov.Accounts.User do
   # TODO: Available roles to be able to change a user to need to differ by role attempting the change
   # TODO: Add backend restriction on role modifying. Different roles need different changesets
   @roles [
-    %{id: "super_admin", label: "Super Admin"},
-    %{id: "admin", label: "Admin"},
-    %{id: "challenge_owner", label: "Challenge Owner"}
+    %{id: "super_admin", label: "Super Admin", rank: 1},
+    %{id: "admin", label: "Admin", rank: 2},
+    %{id: "challenge_owner", label: "Challenge Owner", rank: 3},
+    %{id: "solver", label: "Solver", rank: 4}
+  ]
+
+  @doc """
+  pending - newly created account is awaiting approval by an admin
+  active - account is able to login and perform actions on the platform
+  suspended - account is set to this by an admin and can no longer log in. Has access to old data when restored
+  revoked - account is set to this by an admin and can no longer log in. Doesn't have access to old data when restored
+  deactivated - account is set to this after 90 days of no activity and can no longer log in. Has access to old data when restored
+  decertified - account is set to this every 365 days and can no longer log in. Has access to old data when restored
+  """
+  @statuses [
+    "pending",
+    "active",
+    "suspended",
+    "revoked",
+    "deactivated",
+    "decertified"
   ]
 
   schema "users" do
@@ -29,12 +48,13 @@ defmodule ChallengeGov.Accounts.User do
     has_many(:challenge_owner_challenges, through: [:challenge_owners, :challenge])
     has_many(:members, Member)
     has_many(:supporting_documents, Document)
+    has_many(:solution_documents, Solutions.Document)
 
     # Fields
     field(:role, :string, read_after_writes: true)
+    field(:status, :string, default: "pending")
     field(:finalized, :boolean, default: true)
     field(:display, :boolean, default: true)
-    field(:suspended, :boolean, default: false)
 
     field(:email, :string)
     field(:email_confirmation, :string, virtual: true)
@@ -60,7 +80,10 @@ defmodule ChallengeGov.Accounts.User do
     field(:privacy_guidelines, :utc_datetime)
     field(:agency_id, :integer)
 
-    field(:pending, :boolean)
+    field(:last_active, :utc_datetime)
+    field(:active_session, :boolean)
+
+    field(:renewal_request, :string)
 
     timestamps()
   end
@@ -77,14 +100,17 @@ defmodule ChallengeGov.Accounts.User do
       :terms_of_use,
       :privacy_guidelines,
       :agency_id,
-      :pending
+      :status,
+      :active_session,
+      :renewal_request
     ])
     |> validate_required([:email])
     |> validate_format(:email, ~r/.+@.+\..+/)
+    |> validate_inclusion(:status, @statuses)
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
 
-  def put_terms(struct, params) do
+  def timestamp(struct, params) do
     utc_datetime = DateTime.utc_now()
     put_change(struct, params, DateTime.truncate(utc_datetime, :second))
   end
@@ -92,17 +118,15 @@ defmodule ChallengeGov.Accounts.User do
   def terms_changeset(struct, params) do
     struct
     |> cast(params, [
+      :agency_id,
       :first_name,
       :last_name,
-      :email,
       :terms_of_use,
       :privacy_guidelines,
-      :agency_id
+      :status
     ])
-    |> put_terms(:terms_of_use)
-    |> put_terms(:privacy_guidelines)
-    |> validate_format(:email, ~r/.+@.+\..+/)
-    |> unique_constraint(:email, name: :users_lower_email_index)
+    |> timestamp(:terms_of_use)
+    |> timestamp(:privacy_guidelines)
   end
 
   def password_changeset(struct, params) do
@@ -118,6 +142,7 @@ defmodule ChallengeGov.Accounts.User do
     struct
     |> changeset(params)
     |> cast(params, [:email_confirmation])
+    |> put_change(:status, "active")
     |> validate_confirmation(:email, message: "emails must match")
   end
 
@@ -159,6 +184,18 @@ defmodule ChallengeGov.Accounts.User do
     |> maybe_reset_verification()
   end
 
+  def last_active_changeset(struct) do
+    struct
+    |> change()
+    |> timestamp(:last_active)
+  end
+
+  def active_session_changeset(struct, param) do
+    struct
+    |> change()
+    |> put_change(:active_session, param)
+  end
+
   def avatar_changeset(struct, key, extension) do
     struct
     |> change()
@@ -179,4 +216,6 @@ defmodule ChallengeGov.Accounts.User do
   end
 
   def roles, do: @roles
+
+  def statuses, do: @statuses
 end

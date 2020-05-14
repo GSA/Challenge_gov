@@ -1,0 +1,273 @@
+.hero {
+
+  &__wrapper {
+    background-color: #2B608A;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    h3 {
+      margin: 0;
+    }
+  }
+
+  &__content {
+    width: auto;
+    min-width: 60%;
+    max-width: 80%;
+    height: 80%;
+    margin: 30px;
+    border-radius: 10px;
+    background-color: #fff;
+  }
+}
+
+  .main-section {
+    height: auto;
+    width: auto;
+    padding: 15px;
+
+    &__text {
+      height: auto;
+      width: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .logos {
+        margin-bottom: 10px;
+      }
+
+      .agency-logo {
+        height: 100px;
+        margin-right: 10px;
+      }
+
+      .title {
+        margin-bottom: 10px;
+      }
+
+      .tagline {
+        margin-bottom: 10px;
+      }
+
+      .brief_description {
+        font-size: 15px;
+        padding: 0 0 10px 0;
+      }
+    }
+
+    .logo-container {
+      width: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .challenge-logo {
+        max-width: 80%;
+        max-height: 300px;
+        border: 1px solid #C9C9C9;
+        box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
+      }
+
+      .agency-logo {
+        height: 100px;
+        margin: 0 5px;
+      }
+    }
+  }
+
+  .detail-section {
+    padding: 15px 15px 5px 15px;
+    background-color: #F2F2F2;
+    border-radius: 0 0 10px 10px;
+    display: grid;
+
+    &__apply {
+      margin-bottom: 1.5rem;
+
+      .apply-btn {
+        height: 100%;
+        width: 100%;
+        padding: .5rem;
+        align-self: center;
+        color: #000;
+        background-color: #FA9441;
+        border-radius: 7px;
+        border: 1px solid #C9C9C9;
+        box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
+      }
+    }
+
+    &__follow {
+      margin-bottom: 1.5rem;
+
+      .follow-btn {
+        height: 100%;
+        width: 100%;
+        padding: .5rem;
+        align-self: center;
+        color: #2d618a;
+        border-radius: 7px;
+        border: 1px solid #2d618a;
+        box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
+      }
+    }
+
+    .item {
+      margin-bottom: .5em;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      h3 {
+        line-height: 27px;
+        height: 27px;
+        width: auto;
+      }
+
+      p {
+        font-size: 17.5px;
+        display: inline;
+      }
+
+      .info-title {
+        display: inline;
+        font-weight: bold;
+        margin-right: 5px;
+      }
+
+      .info-title {
+        font-weight: bold;
+      }
+
+      .date-qualifier {
+        color: #B50707;
+        font-weight: bold;
+        margin: 0 10px 0 5px;
+      }
+    }
+  }
+
+  // MOBILE
+
+  @media screen
+  and (max-device-width: 425px) {
+
+    .main-section {
+
+      h1 {
+        font-size: .8em;
+      }
+
+      h3 {
+        font-size: .5em;
+      }
+    }
+
+    .detail-section {
+
+      .apply-btn {
+        font-size: 1rem;
+      }      
+      
+      .follow-btn {
+        font-size: 1rem;
+      }
+
+      &__text-block {
+
+        .info-title {
+          font-size: .5em;
+        }
+
+        .item {
+
+          &__types {
+            line-height: .65em;
+
+            p {
+              font-size: .5em;
+            }
+
+          }
+        }
+      }
+    }
+  }
+
+
+  // DESKTOP
+
+  @media screen
+  and (min-device-width: 768px) {
+
+    .main-section {
+      min-height: 12em;
+      padding: 20px;
+      display: flex;
+
+      &__text {
+        width: 40%;
+        height: auto;
+
+        .agency-logo {
+          margin-right: 25px;
+        }
+
+        .brief_description {
+          padding: 0;
+        }
+      }
+
+      .logo-container {
+        width: 60%;
+
+        .agency-logo {
+          height: 150px;
+          margin: 20px 0 20px 20px;
+        }
+      }
+    }
+
+    .detail-section {
+      grid-template-columns: repeat(auto-fit, 50%);
+      grid-template-rows: repeat(4, 1fr);
+      row-gap: .1rem;
+
+      &__apply {
+        grid-row: 1 / span 2 ;
+        grid-column: 1;
+
+        .apply-btn {
+          width: 80%;
+          padding: 0 40px;
+          color: #000;
+          background-color: #FA9441;
+          border-radius: 7px;
+          border: 1px solid #C9C9C9;
+          box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
+        }        
+      }      
+      
+      &__follow {
+        grid-row: 3 / span 4;
+        grid-column: 1;
+
+        .follow-btn {
+          width: 80%;
+          padding: 0 40px;
+        }
+      }
+
+      .item {
+        grid-column: 2;
+      }
+    }
+  }

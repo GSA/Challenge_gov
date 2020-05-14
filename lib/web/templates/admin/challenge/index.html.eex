@@ -1,3 +1,7 @@
+<%= if length(@pending_challenges) > 0 do %>
+  <%= render Web.Admin.ChallengeView, "_pending_challenges.html", conn: @conn, user: @user, challenges: @pending_challenges, pagination: @pending_pagination, sort: %{}, filter: %{} %>
+<% end %>
+
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
@@ -57,22 +61,34 @@
                   <tr>
                     <td><%= challenge.id %></td>
                     <td><%= link(challenge.title, to: Routes.admin_challenge_path(@conn, :show, challenge.id)) %></td>
-                    <td><%= String.capitalize(challenge.status) %></td>
+                    <td><%= status_display_name(challenge) %></td>
                     <td><%= Web.SharedView.readable_date(challenge.start_date) %></td>
                     <td><%= Web.SharedView.readable_date(challenge.end_date) %></td>
                     <td><%= Enum.join(challenge.types || [], ", ") %></td>
                     <%= if Accounts.has_admin_access?(@user) do %>
                       <td>
-                        <%= Enum.map(challenge.challenge_owner_users, fn owner -> %>
-                          <div><%= Web.Admin.UserView.name_link(@conn, owner) %></div>
+                        <%= Enum.map(challenge.challenge_owners, fn owner -> %>
+                          <%= if is_nil(owner.revoked_at) do %>
+                            <div><%= Web.Admin.UserView.name_link(@conn, owner.user) %></div>
+                          <% end %>
                         <% end) %>
                       </td>
                       <td><%= Web.Admin.AgencyView.name_link(@conn, challenge.agency) %></td>
                     <% end %>
                     <td>
-                      <%= link("View", to: Routes.admin_challenge_path(@conn, :show, challenge.id), class: "btn btn-default btn-xs") %>
-                      <%= challenge_edit_link(@conn, challenge) %>
-                      <%= link("Delete", to: Routes.admin_challenge_path(@conn, :delete, challenge.id), method: :delete, class: "btn btn-danger btn-xs", data: [confirm: "Are you sure you want to delete this challenge?"]) %>
+                      <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+                        <%= link("View", to: Routes.admin_challenge_path(@conn, :show, challenge.id), class: "btn btn-default btn-xs mr-2") %>
+                        <%= challenge_edit_link(@conn, challenge, class: "btn btn-default btn-xs") %>
+                        <div class="btn-group btn-group-sm ml-2" role="group">
+                          <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            More options
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <a class="btn btn-link" href="#">Media</a>
+                            <%= challenge_delete_link(@conn, challenge, @user, label: "Delete", class: "btn btn-link text-danger") %>
+                          </div>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 <% end %>

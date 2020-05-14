@@ -15,13 +15,15 @@ defmodule ChallengeGov.Challenges.ChallengeOwner do
   schema "challenge_owners" do
     belongs_to(:challenge, Challenge)
     belongs_to(:user, User)
+    field(:revoked_at, :utc_datetime)
   end
 
   def changeset(struct, params) do
     struct
     |> cast(params, [
       :challenge_id,
-      :user_id
+      :user_id,
+      :revoked_at
     ])
     |> validate_required([
       :challenge_id,
@@ -33,7 +35,8 @@ defmodule ChallengeGov.Challenges.ChallengeOwner do
     struct
     |> cast(params, [
       :agency_id,
-      :challenge_id
+      :challenge_id,
+      :revoked_at
     ])
   end
 end

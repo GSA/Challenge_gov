@@ -1,3 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+
+body {
+  font-family: 'Public Sans', sans-serif;
+  background-color: #dedede;
+}
+
+
 .required {
   color: #ff0000;
 }
@@ -11,6 +20,11 @@
   align-items: center;
   /* color: #ffffff; */
   padding: 15px 15px;
+}
+
+.component-btn {
+  color: #000;
+  background-color: #FA9441;
 }
 
 /* post sign-in screen: lib/web/templates/admin/terms/index.html.eex */
@@ -48,9 +62,8 @@
 }
 
 .checkbox-input {
-  width: 60%;
   max-width: 300px;
-  margin: 20px auto;
+  margin: 20px 70px;
 }
 
 .fc-input {
@@ -76,9 +89,16 @@
 
 /* timeout modal */
 
+.main-sidebar {
+  z-index: 1021;
+}
+
+.navbar {
+  z-index: 1
+}
+
 .timeout-modal {
   position: fixed;
-  z-index: 1;
   left: 0;
   top: 0;
   width: 100%;
@@ -98,6 +118,14 @@
   text-align: center;
   font-size: 17px;
   overflow-y: scroll;
+}
+
+.callout a {
+  color: #007bff;
+
+  &:hover {
+    color: #0056b3;
+  }
 }
 
 @media (min-width: 768px) {
@@ -131,7 +159,7 @@
 
 th {
   white-space: nowrap;
-  
+
   i {
     margin-left: .5em;
   }
@@ -145,8 +173,10 @@ th {
 }
 
 .control-sidebar {
-  width: 40%;
+  width: 25%;
+  height: fit-content;
 }
+
 /* adding users */
 
 .u-input {
@@ -158,4 +188,60 @@ th {
   display: block;
   margin-top: -10px;
   margin-bottom: 10px;
+}
+
+.is-invalid .select2-selection {
+  border-color: var(--danger);
+}
+
+.char-limit-label.is-invalid {
+  color: var(--danger);
+}
+
+label {
+  font-weight: 400 !important;
+}
+
+.form__note {
+  font-size: smaller;
+  font-style: italic;
+}
+
+.form__note--red {
+  color: red;
+}
+
+.challenge_navbar {
+  background-color: #0B4778;
+}
+
+.challenge_sidebar {
+  background-color: #dedede;
+}
+
+/*  Reports */
+
+.ch-report-hr {
+  margin: 1rem 1rem;
+}
+
+.content-sub-1 {
+  margin: 2rem 5rem;
+
+  h4 {
+    margin: 0;
+    align-self: center;
+  }
+
+  .content-sub-2 {
+    margin-top: 4rem;
+  }
+
+  label, .col {
+    padding: 0;
+  }
+
+  .ch-export-btn-wrapper {
+    margin-top: 2rem;
+  }
 }

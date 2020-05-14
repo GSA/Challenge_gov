@@ -21,11 +21,21 @@ defmodule Web.ChallengeView do
   def logo_url(challenge) do
     case is_nil(challenge.logo_key) do
       true ->
-        AgencyView.avatar_url(challenge.agency)
+        nil
 
       false ->
         Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
     end
+  end
+
+  def agency_name(challenge) do
+    if challenge.agency, do: challenge.agency.name
+  end
+
+  def agency_logo(challenge) do
+    if challenge.agency.avatar_key,
+      do: AgencyView.avatar_url(challenge.agency),
+      else: nil
   end
 
   def winner_img(challenge, opts \\ []) do
@@ -43,6 +53,30 @@ defmodule Web.ChallengeView do
         opts = Keyword.merge([alt: "Winner Image"], opts)
         img_tag(url, opts)
     end
+  end
+
+  def winner_img_url(challenge, _opts \\ []) do
+    case is_nil(challenge.winner_image_key) do
+      true ->
+        nil
+
+      false ->
+        Storage.url(WinnerImage.winner_image_path(challenge, "original"),
+          signed: [expires_in: 3600]
+        )
+    end
+  end
+
+  def public_index_url() do
+    Routes.public_challenge_index_url(Web.Endpoint, :index)
+  end
+
+  def public_details_url(challenge) do
+    Routes.public_challenge_details_url(
+      Web.Endpoint,
+      :index,
+      challenge.custom_url || challenge.id
+    )
   end
 
   def disqus_domain() do

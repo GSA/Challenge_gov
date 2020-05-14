@@ -14,7 +14,6 @@ config :challenge_gov,
 # Configures the endpoint
 config :challenge_gov, Web.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "gQktXSHmqFhwR5a0rTW/SGWrvpUYZ1FaRELQsGoctIOiSlQ9qIoe2KYO1i8wDVR5",
   render_errors: [view: Web.ErrorView, accepts: ~w(html json)],
   pubsub: [name: ChallengeGov.PubSub, adapter: Phoenix.PubSub.PG2]
 
@@ -22,6 +21,8 @@ config :challenge_gov, Web.Endpoint,
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+config :logger_json, :backend, metadata: :all
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
@@ -32,6 +33,23 @@ config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Implementation
 config :stein_storage,
   backend: :file,
   file_backend_folder: "uploads/"
+
+config :challenge_gov,
+  session_timeout_in_minutes: 15,
+  account_deactivation_in_days: 90,
+  account_deactivation_warning_one_in_days: 10,
+  account_deactivation_warning_two_in_days: 5,
+  account_decertify_in_days: 365,
+  log_retention_in_days: 180,
+  challenge_owner_assumed_tlds: [".mil"]
+
+config :challenge_gov, ChallengeGov.Scheduler,
+  jobs: [
+    {"0 5 * * *", {ChallengeGov.Accounts, :check_all_last_actives, []}},
+    {"0 5 * * *", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
+    {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}},
+    {"0 0 * * *", {ChallengeGov.CertificationLogs, :check_for_expired_certifications, []}}
+  ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

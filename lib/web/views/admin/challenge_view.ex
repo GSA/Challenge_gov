@@ -13,6 +13,14 @@ defmodule Web.Admin.ChallengeView do
     link(challenge.title, to: Routes.admin_challenge_path(conn, :show, challenge.id))
   end
 
+  def public_name_link(conn, challenge) do
+    link(challenge.title, to: Routes.public_challenge_details_path(conn, :index, challenge.id))
+  end
+
+  def public_name_link_url(conn, challenge) do
+    link(challenge.title, to: Routes.public_challenge_details_url(conn, :index, challenge.id))
+  end
+
   # TODO: Refactor to be more generic
   # Example: Take a path with existing query params and append sort after and no longer need to pass filter
   def sortable_header(conn, sort, filter, column, label) do
@@ -40,7 +48,11 @@ defmodule Web.Admin.ChallengeView do
     end
   end
 
-  def challenge_edit_link(conn, challenge) do
+  def status_display_name(challenge) do
+    Challenges.status_label(challenge.status)
+  end
+
+  def challenge_edit_link(conn, challenge, opts \\ []) do
     route =
       if challenge.status == "draft" do
         Routes.admin_challenge_path(
@@ -53,7 +65,52 @@ defmodule Web.Admin.ChallengeView do
         Routes.admin_challenge_path(conn, :edit, challenge.id)
       end
 
-    link("Edit", to: route, class: "btn btn-default btn-xs")
+    link("Edit", Keyword.merge([to: route], opts))
+  end
+
+  def challenge_full_edit_link(conn, challenge, user, opts \\ []) do
+    if Accounts.has_admin_access?(user) do
+      link(
+        "Full Edit",
+        Keyword.merge([to: Routes.admin_challenge_path(conn, :edit, challenge.id)], opts)
+      )
+    end
+  end
+
+  def challenge_delete_link(conn, challenge, user, opts \\ []) do
+    if (user.role == "challenge_owner" and challenge.status == "draft") or
+         Accounts.has_admin_access?(user) do
+      link(
+        opts[:label] || "Delete",
+        Keyword.merge(
+          [
+            to: Routes.admin_challenge_path(conn, :delete, challenge.id),
+            method: :delete,
+            data: [confirm: "Are you sure you want to delete this challenge?"]
+          ],
+          opts
+        )
+      )
+    end
+  end
+
+  def challenge_rejection_message(challenge) do
+    if challenge.status == "edits_requested" and challenge.rejection_message do
+      content_tag :div, class: "row position-sticky sticky-top" do
+        content_tag :div, class: "col-md-12" do
+          content_tag :div, class: "card card-danger" do
+            [
+              content_tag(:div, class: "card-header") do
+                "Some edits were requested"
+              end,
+              content_tag(:div, class: "card-body") do
+                challenge.rejection_message
+              end
+            ]
+          end
+        end
+      end
+    end
   end
 
   @doc """
@@ -173,7 +230,7 @@ defmodule Web.Admin.ChallengeView do
             select(
               form,
               :status,
-              Challenges.statuses(),
+              Enum.map(Challenges.statuses(), &{&1.label, &1.id}),
               class: "form-control js-select"
             )
           end
@@ -186,48 +243,79 @@ defmodule Web.Admin.ChallengeView do
     sections = Challenges.sections()
     current_section_index = Challenges.section_index(current_section)
 
-    base_classes = "btn btn-link"
+    progressbar_width = current_section_index / length(sections) * 110
 
-    content_tag :div, class: "challenge-progressbar" do
-      Enum.map(sections, fn section ->
-        cond do
-          section.id == current_section ->
-            content_tag(:span, section.label, class: base_classes <> " current-section")
+    base_classes = ""
 
-          action == :new || action == :create ->
-            content_tag(:span, section.label,
-              class: base_classes,
-              disabled: true,
-              aria: [disabled: true]
-            )
+    content_tag :div, class: "challenge-progressbar container" do
+      content_tag :div, class: "row" do
+        [
+          content_tag :div, class: "col-12" do
+            content_tag(:div, class: "progress eqrs-progress") do
+              content_tag(:div, "",
+                class: "progress-bar progress-bar--success",
+                style: "width: #{progressbar_width}%",
+                role: "progressbar"
+              )
+            end
+          end,
+          Enum.map(Enum.with_index(sections), fn {section, index} ->
+            content_tag :div, class: "button-container col" do
+              [
+                cond do
+                  section.id == current_section ->
+                    link(index + 1, to: "#", class: base_classes <> " btn-not-completed_hasFocus")
 
-          Challenges.section_index(section.id) < current_section_index ->
-            link(section.label,
-              to: Routes.admin_challenge_path(conn, :edit, challenge.id, section.id),
-              class: base_classes <> " completed-section"
-            )
+                  action == :new || action == :create ->
+                    link(index + 1,
+                      to: "#",
+                      class: base_classes <> " btn-disabled",
+                      disabled: true,
+                      aria: [disabled: true]
+                    )
 
-          true ->
-            content_tag(:span, section.label,
-              class: base_classes,
-              disabled: true,
-              aria: [disabled: true]
-            )
-        end
-      end)
+                  Challenges.section_index(section.id) < current_section_index ->
+                    link(index + 1,
+                      to: Routes.admin_challenge_path(conn, :edit, challenge.id, section.id),
+                      class: base_classes <> " btn-completed"
+                    )
+
+                  true ->
+                    link(index + 1,
+                      to: "#",
+                      class: base_classes <> " btn-disabled",
+                      disabled: true,
+                      aria: [disabled: true]
+                    )
+                end,
+                content_tag(:p, section.label, class: "section__title")
+              ]
+            end
+          end)
+        ]
+      end
     end
   end
 
   def back_button(conn, challenge) do
     if challenge.id do
-      submit("Back", name: "action", value: "back", class: "btn btn-link")
+      submit("Back", name: "action", value: "back", class: "btn btn-link", formnovalidate: true)
     else
-      link("Back", to: Routes.admin_challenge_path(conn, :index), class: "btn btn-link")
+      link("Back",
+        to: Routes.admin_challenge_path(conn, :index),
+        class: "btn btn-link",
+        formnovalidate: true
+      )
     end
   end
 
   def save_draft_button() do
-    submit("Save Draft", name: "action", value: "save_draft", class: "btn btn-link float-right")
+    submit("Save Draft",
+      name: "action",
+      value: "save_draft",
+      class: "btn btn-link float-right",
+      formnovalidate: true
+    )
   end
 
   def submit_button(section) do

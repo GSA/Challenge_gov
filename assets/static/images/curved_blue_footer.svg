@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1440px" height="338px" viewBox="0 0 1440 338" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 63.1 (101010) - https://sketch.com -->
+    <title>B7EB9CEE-CF8C-4FE4-BAEF-810FA6BA7D91</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <linearGradient x1="0%" y1="47.2452739%" x2="163.565823%" y2="55.9782884%" id="linearGradient-1">
+            <stop stop-color="#0B4778" offset="0%"></stop>
+            <stop stop-color="#009BC2" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Layouts" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1.0-Challenge—Listing-Page_Desktop-HD-v8" transform="translate(0.000000, -4453.000000)" fill="url(#linearGradient-1)">
+            <g id="Group-2" transform="translate(0.000000, 4453.000000)">
+                <path d="M0,0 C240.573507,25.3236222 480.573507,37.9854332 720,37.9854332 C959.426493,37.9854332 1199.42649,25.3236222 1440,0 L1440,338 L0,338 L0,0 Z" id="Rectangle"></path>
+            </g>
+        </g>
+    </g>
+</svg>

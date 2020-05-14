@@ -25,4 +25,29 @@ defmodule Web.Admin.UserView do
         "Verified"
     end
   end
+
+  def certification_info(certification) do
+    now = Timex.to_unix(Timex.now())
+    expiration_date = certification.expires_at
+
+    if Timex.to_unix(expiration_date) <= now do
+      [
+        content_tag(:span, "Certification status: decertified", class: "d-block"),
+        content_tag(
+          :span,
+          "Decertified on #{expiration_date.month}/#{expiration_date.day}/#{expiration_date.year}",
+          class: "d-block"
+        )
+      ]
+    else
+      [
+        content_tag(:span, "Certification status: certified", class: "d-block"),
+        content_tag(
+          :span,
+          "Expires on #{expiration_date.month}/#{expiration_date.day}/#{expiration_date.year}",
+          class: "d-block"
+        )
+      ]
+    end
+  end
 end

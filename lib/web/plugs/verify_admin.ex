@@ -7,8 +7,7 @@ defmodule Web.Plugs.VerifyAdmin do
   import Phoenix.Controller
 
   alias ChallengeGov.Accounts
-  alias Web.ErrorView
-  alias Web.LayoutView
+  alias Web.Router.Helpers, as: Routes
 
   def init(default), do: default
 
@@ -19,10 +18,7 @@ defmodule Web.Plugs.VerifyAdmin do
 
       false ->
         conn
-        |> put_status(:not_found)
-        |> put_layout({LayoutView, "app.html"})
-        |> put_view(ErrorView)
-        |> render("404.html")
+        |> redirect(to: Routes.admin_dashboard_path(conn, :index))
         |> halt()
     end
   end
