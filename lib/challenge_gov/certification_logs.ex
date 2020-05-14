@@ -16,13 +16,6 @@ defmodule ChallengeGov.CertificationLogs do
     |> Repo.insert()
   end
 
-  def del_decert_at_records do
-    CertificationLog
-    |> where([r], is_nil(r.requested_at))
-    |> where([r], is_nil(r.expires_at))
-    |> Repo.delete_all()
-  end
-
   def check_for_expired_certifications do
     two_days_ago = Timex.shift(Timex.now(), days: -2)
 
