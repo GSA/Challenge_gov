@@ -1,3 +1,6 @@
+import "uswds/dist/css/uswds.css";
+import "uswds/dist/js/uswds.js";
+
 // Import External libraries and css
 import jquery from  "jquery";
 import "popper.js";
@@ -14,10 +17,6 @@ import "phoenix_html"
 import "admin-lte/dist/css/adminlte.css";
 import "admin-lte/dist/js/adminlte.js";
 import "@fortawesome/fontawesome-free/css/all.css";
-
-// TODO: Add in after fixing fontsize and selectbox fixes
-// import "uswds/dist/css/uswds.css";
-// import "uswds/dist/js/uswds.js";
 
 // Custom CSS
 import "../css/admin.scss";
