@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-export const SectionResources = ({challenge, section}) => {
+export const SectionResources = ({label, section, challenge}) => {
   const [documents, setDocuments] = useState(challenge.supporting_documents)
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export const SectionResources = ({challenge, section}) => {
     <>
       {(documents.length > 0) ? (
         <>
-          <div className="challenge-tab__header">Additional documents</div>
+          <div className="challenge-tab__header">{label || "Additional documents"}</div>
           <hr/>
           <section className="challenge-tab__resources">
             {renderResources()}

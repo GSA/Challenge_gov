@@ -1,19 +1,12 @@
 import React from 'react'
-import { SectionResources } from "./SectionResources"
+import { ChallengeTab } from "../ChallengeTab"
 
 export const Prizes = ({challenge}) => {
   return (
-    <section className="challenge-tab container">
-      <div className="challenge-tab__header">Prizes</div>
-      <hr/>      
-      <section className="card challenge-tab__content">
-        <div className="card-body">
-          <div>{challenge.prize_total}</div>
-          <div>{challenge.prize_descriptions}</div>
-          <div>{challenge.non_monetary_prizes}</div>
-        </div>
-      </section>
-      <SectionResources challenge={challenge} section="prizes" />
-    </section>
+    <ChallengeTab label="Prizes" downloadsLabel="Additional prize documents" section="prizes" challenge={challenge}>
+      <div>{challenge.prize_total}</div>
+      <div>{challenge.prize_descriptions}</div>
+      <div>{challenge.non_monetary_prizes}</div>
+    </ChallengeTab>
   )
 }

@@ -1,16 +1,11 @@
 import React from 'react'
+import { ChallengeTab } from "../ChallengeTab"
 
 export const Winners = ({challenge}) => {
   return (
-    <section className="challenge-tab container">
-      <div className="challenge-tab__header">Timeline</div>
-      <hr/>      
-      <section className="card challenge-tab__content">
-        <div className="card-body">
-          <div>{challenge.winner_image}</div>
-          <div>{challenge.winner_information}</div>
-        </div>
-      </section>
-    </section>
+    <ChallengeTab label="Winners" downloadsLabel="Additional winner documents" section="winners" challenge={challenge}>
+      <div>{challenge.winner_image}</div>
+      <div>{challenge.winner_information}</div>
+    </ChallengeTab>
   )
 }
