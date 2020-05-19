@@ -1,23 +1,61 @@
-defmodule Mix.Tasks.Importer do
+defmodule Mix.Tasks.ClosedChallengeImporter do
   @moduledoc """
   Importer for archived challenges
   """
   use Mix.Task
 
+  defmodule Parse do
+    def run(string) do
+      parse(Jason.decode(string))
+    end
+    def parse({:ok, map}), do: {:ok, map}
+    def parse({:error, error}) do
+      case backtrack(error.data, error.position) do
+        {:ok, position} ->
+          {first, "\"" <> second} = String.split_at(error.data, position)
+          parse(Jason.decode(first <> "\\\"" <> second))
+        :error ->
+          {:error, error}
+      end
+    end
+    def backtrack(_string, 0), do: :error
+    def backtrack(string, position) do
+      case String.at(string, position - 1) == "\"" do
+        true ->
+          {:ok, position - 1}
+        false ->
+          backtrack(string, position - 1)
+      end
+    end
+  end
 
   def run(_file) do
     Mix.Task.run("app.start")
 
-    case File.read("lib/mix/tasks/sample_data/netlify.json") do
+    # should be starting with parsed file from Eric:
+      # Parse.run(original_feed)
+
+    # Do we need to read and decode again? (read, to get it, decode to make sure it's valid)
+    case File.read!("lib/mix/tasks/sample_data/feed-closed.json") do
       {:ok, binary} ->
-        {:ok, parsed_data} = Jason.decode(binary)
-        IO.inspect parsed_data
-        # create archived challenge
+        case Jason.decode(binary) do
+          {:ok, challenge} ->
+            # create archived challenge
+            create_challenge(challenge)
+
+          {:error, error} ->
+            # then what?
+            IO.inspect error
+        end
 
       {:error, error} ->
         IO.inspect error
     end
+  end
 
+  def create_challenge(challenge) do
+    
+  end
 #
 # # unused:
 #   # challenge-id
