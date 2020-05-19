@@ -9,22 +9,19 @@ export const SectionResources = ({challenge, section}) => {
     return (
       documents.map((document) => {
         return (
-          <div key={document.id}>
-            <a href={document.url}>{document.name || document.display_name}</a>
-          </div>
+          <a className="card challenge-tab__resource" key={document.id} href={document.url}>{document.name || document.display_name}</a>
         )
       })
     )
   }
 
   return (
-    <section className="card challenge-tab__resources">
-      <div className="card-header">
-        Downloads
-      </div>
-      <div className="card-body">
+    <>
+      <div className="challenge-tab__header">Additional documents</div>
+      <hr/>
+      <section className="challenge-tab__resources">
         {renderResources(challenge.supporting_documents, section)}
-      </div>
-    </section>
+      </section>
+    </>
   )
 }

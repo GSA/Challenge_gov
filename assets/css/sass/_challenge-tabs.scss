@@ -35,7 +35,6 @@
   &__header {
     font-weight: bold;
     font-size: 2.5rem;
-
   }
 
   hr {
@@ -43,11 +42,17 @@
     margin-bottom: 3rem;
   }
 
-
   &__content {
     margin-bottom: 3rem;
   }
+
   &__resources {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  &__resource {
+    padding: 4rem;
   }
 
   .card:hover {

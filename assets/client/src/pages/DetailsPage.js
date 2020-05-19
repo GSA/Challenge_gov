@@ -191,7 +191,7 @@ export const DetailsPage = () => {
             <div label="Contact">
               <ContactForm />
             </div>
-            <div label="Winners" disabled={true} >
+            <div label="Winners" disabled={!currentChallenge.winner_information} >
               <Winners challenge={currentChallenge} />
             </div>
           </ChallengeTabs>
