@@ -4,12 +4,12 @@ import { SectionResources } from "./SectionResources"
 export const Timeline = ({challenge}) => {
   const renderEvents = (events) => {
     return (
-      events.map((event) => {
+      events.map((event, index) => {
         return (
           <div key={event.id}>
-            <div>{event.title}</div>
+            <div>{event.occurs_on}: {event.title}</div>
             <div>{event.body}</div>
-            <div>{event.occurs_on}</div>
+            { (events.length - 1 != index) && <hr/> }
           </div>
         )
       })

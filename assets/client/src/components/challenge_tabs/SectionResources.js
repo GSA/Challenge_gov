@@ -1,11 +1,15 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 
 export const SectionResources = ({challenge, section}) => {
-  const renderResources = (documents, section) => {
-    if (section) {
-      documents = documents.filter(document => document.section == section)
-    }
+  const [documents, setDocuments] = useState(challenge.supporting_documents)
 
+  useEffect(() => {
+    if (section) {
+      setDocuments(documents.filter(document => document.section == section))
+    }
+  }, [])
+
+  const renderResources = () => {
     return (
       documents.map((document) => {
         return (
@@ -17,11 +21,16 @@ export const SectionResources = ({challenge, section}) => {
 
   return (
     <>
-      <div className="challenge-tab__header">Additional documents</div>
-      <hr/>
-      <section className="challenge-tab__resources">
-        {renderResources(challenge.supporting_documents, section)}
-      </section>
+      {(documents.length > 0) ? (
+        <>
+          <div className="challenge-tab__header">Additional documents</div>
+          <hr/>
+          <section className="challenge-tab__resources">
+            {renderResources()}
+          </section>
+        </>
+      )
+      : null}
     </>
   )
 }

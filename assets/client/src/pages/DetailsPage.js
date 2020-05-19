@@ -182,9 +182,11 @@ export const DetailsPage = () => {
             <div label="How to enter">
               <HowToEnter challenge={currentChallenge} />
             </div>
-            <div label="Resources">
-              <Resources challenge={currentChallenge} />
-            </div>
+            { currentChallenge.supporting_documents.length > 0 &&
+              <div label="Resources">
+                <Resources challenge={currentChallenge} />
+              </div>
+            }
             <div label="FAQ">
               <FAQ challenge={currentChallenge} />
             </div>
