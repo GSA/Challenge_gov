@@ -48,9 +48,9 @@ export const ContactForm = props => {
 
   return (
     <>
-      <section className="contact-form container py-5">
-        <h3>Contact</h3>
-        <hr/>
+      <section className="challenge-tab container">
+        <div className="challenge-tab__header">Contact</div>
+        <hr/>    
         <div className="p-5">
           <div className="mb-5">Have a question or comment about this challenge? Reach out by completing the form below.</div>
           <form onSubmit={handleSubmit}>

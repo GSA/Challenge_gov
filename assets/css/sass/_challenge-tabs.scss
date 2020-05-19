@@ -1,0 +1,62 @@
+.challenge-tabs {
+  color: #2e2e2e;
+
+  &__list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-grow: 0;
+    padding: 2rem 0rem;
+  }
+
+  &__tab {
+    padding: .5rem 2rem;
+    cursor: pointer;
+
+    &--active {
+      font-weight: bold;
+      border-bottom: 3px solid #FA9441;
+    }
+
+    &--disabled {
+      cursor: not-allowed;
+      color: #999999;
+    }
+  }
+
+  &__content {
+    padding: 2rem;
+  }
+}
+
+.challenge-tab {
+  color: #2e2e2e;
+
+  &__header {
+    font-weight: bold;
+    font-size: 2.5rem;
+
+  }
+
+  hr {
+    border-top: 1px solid #979797;
+    margin-bottom: 3rem;
+  }
+
+
+  &__content {
+    margin-bottom: 3rem;
+  }
+  &__resources {
+  }
+
+  .card:hover {
+    box-shadow: 0 2px 8px 0 $box-shadow-color;
+  }
+  .card-header {
+    padding: 1rem 4rem;
+  }
+  .card-body {
+    padding: 1rem 4rem;
+  }
+}
