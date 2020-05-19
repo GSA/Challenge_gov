@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-import ChallengeTab from './ChallengeTab';
-
 export const ChallengeTabs = ({children}) => {
   const [activeTab, setActiveTab] = useState("Overview")
 
