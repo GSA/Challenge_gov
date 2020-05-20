@@ -1,4 +1,4 @@
-<h3>Edits have been requested to your challenge. Please review it at <%= link("##{@challenge.id} #{@challenge.title}", to: Routes.admin_challenge_url(Endpoint, :show, @challenge.id)) %></h3>
+<h3>Edits have been requested to your challenge. Please review it at <%= link("##{@challenge.id} #{@challenge.title}", to: Routes.challenge_url(Endpoint, :show, @challenge.id)) %></h3>
 <%= if @message != nil or @message != "" do %>
   <h4>The following changes have been requested to your challenge:</h4>
   <p><%= @message %></p>

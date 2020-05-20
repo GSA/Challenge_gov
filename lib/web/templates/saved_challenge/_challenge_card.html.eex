@@ -1,0 +1,9 @@
+<div class="card d-flex justify-content-center">
+  <div class="p-3">
+    <%= link("Remove", to: Routes.saved_challenge_path(@conn, :delete, @saved_challenge.id), method: "delete", data: [confirm: "Are you sure you want to unsave this challenge?"], class: "text-danger float-right") %>
+  </div>
+  <%= ChallengeView.logo_img(@saved_challenge.challenge, class: "card-img-top w-50 m-auto") %>
+  <div class="card-body d-flex justify-content-center">
+    <h3 class="card-title"><%= @saved_challenge.challenge.title %></h3>
+  </div>
+</div>

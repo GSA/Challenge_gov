@@ -15,7 +15,7 @@ defmodule Web.Plugs.CheckUserStatus do
       case user.status do
         "pending" ->
           conn
-          |> redirect(to: Routes.admin_terms_path(conn, :pending))
+          |> redirect(to: Routes.terms_path(conn, :pending))
           |> halt()
 
         "suspended" ->
@@ -36,12 +36,12 @@ defmodule Web.Plugs.CheckUserStatus do
 
         "deactivated" ->
           conn
-          |> redirect(to: Routes.admin_access_path(conn, :reactivation))
+          |> redirect(to: Routes.access_path(conn, :reactivation))
           |> halt()
 
         "decertified" ->
           conn
-          |> redirect(to: Routes.admin_access_path(conn, :recertification))
+          |> redirect(to: Routes.access_path(conn, :recertification))
           |> halt()
 
         "active" ->

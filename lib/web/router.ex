@@ -10,72 +10,51 @@ defmodule Web.Router do
     plug Web.Plugs.FetchUser
   end
 
-  pipeline(:admin) do
-    plug(Web.Plugs.VerifyAdmin)
-  end
-
-  pipeline(:user) do
-    plug(Web.Plugs.VerifyUser)
-  end
-
-  pipeline(:pending) do
-    plug(Web.Plugs.VerifyPendingUser)
-    plug(Web.Plugs.SessionTimeout)
-    plug(:put_layout, {Web.LayoutView, "admin.html"})
-  end
-
-  pipeline(:access) do
-    plug(Web.Plugs.SessionTimeout)
-    plug(:put_layout, {Web.LayoutView, "admin.html"})
-  end
-
-  pipeline(:signed_in) do
-    plug(Web.Plugs.CheckUserStatus)
-    plug(Web.Plugs.SessionTimeout)
-    plug(:put_layout, {Web.LayoutView, "admin.html"})
-  end
-
-  pipeline(:not_signed_in) do
-    plug(Web.Plugs.VerifyNoUser)
-  end
-
   pipeline :api do
     plug :accepts, ["json"]
     plug :fetch_session
     plug(Web.Plugs.FetchUser)
   end
 
-  scope "/public", Web.Public, as: :public do
-    get("/rss.xml", SitemapController, :rss)
+  pipeline :public do
+    plug(:put_layout, {Web.LayoutView, "public.html"})
   end
 
-  scope "/admin", Web.Admin, as: :admin do
-    pipe_through([:browser, :user, :access])
-
-    post("/recertification", AccessController, :request_recertification)
-
-    get("/recertification", AccessController, :recertification)
+  # Session pipelines
+  pipeline(:signed_in) do
+    plug(Web.Plugs.VerifyUser)
+    plug(Web.Plugs.CheckUserStatus)
+    plug(Web.Plugs.SessionTimeout)
   end
 
-  scope "/admin", Web.Admin, as: :admin do
-    pipe_through([:browser, :user, :pending])
-    resources("/terms", TermsController, only: [:new, :create])
-
-    get("/pending", TermsController, :pending)
-
-    get("/reactivation", AccessController, :reactivation)
-
-    post("/reactivation", AccessController, :request_reactivation)
-
-    get("/access", AccessController, :index)
+  pipeline(:signed_out) do
+    plug(Web.Plugs.VerifyNoUser)
   end
 
-  scope "/admin", Web.Admin, as: :admin do
-    pipe_through([:browser, :user, :signed_in])
+  # Status pipelines
+  pipeline(:pending) do
+    plug(Web.Plugs.VerifyPendingUser)
+    plug(Web.Plugs.SessionTimeout)
+  end
+
+  pipeline(:access) do
+    plug(Web.Plugs.SessionTimeout)
+  end
+
+  # Portal Routes
+  scope "/", Web do
+    pipe_through([:browser, :signed_out])
+
+    resources("/sign-in", SessionController, only: [:new, :create], singleton: true)
+    get("/auth/result", SessionController, :result)
+  end
+
+  scope "/", Web do
+    pipe_through([:browser, :signed_in])
+
+    resources("/sign-in", SessionController, only: [:delete], singleton: true)
 
     get("/", DashboardController, :index)
-
-    resources("/documents", DocumentController, only: [:delete])
 
     get("/certification_requested", AccessController, :index)
 
@@ -107,16 +86,13 @@ defmodule Web.Router do
       as: :challenge
     )
 
+    resources("/documents", DocumentController, only: [:delete])
+    resources("/events", EventController, only: [:edit, :update, :delete])
+
     resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
     put("/solutions/:id/submit", SolutionController, :submit)
 
     resources("/saved_challenges", SavedChallengeController, only: [:index, :delete])
-  end
-
-  scope "/admin", Web.Admin, as: :admin do
-    pipe_through([:browser, :admin, :signed_in])
-
-    resources("/events", EventController, only: [:edit, :update, :delete])
 
     get("/reports/security_log", ReportsController, :export_security_log)
     get("/reports/certification_log", ReportsController, :export_certification_log)
@@ -133,6 +109,28 @@ defmodule Web.Router do
     )
   end
 
+  scope "/", Web do
+    pipe_through([:browser, :signed_in, :access])
+
+    post("/recertification", AccessController, :request_recertification)
+
+    get("/recertification", AccessController, :recertification)
+  end
+
+  scope "/", Web do
+    pipe_through([:browser, :signed_in, :pending])
+    resources("/terms", TermsController, only: [:new, :create])
+
+    get("/pending", TermsController, :pending)
+
+    get("/reactivation", AccessController, :reactivation)
+
+    post("/reactivation", AccessController, :request_reactivation)
+
+    get("/access", AccessController, :index)
+  end
+
+  # API Routes
   scope "/api", Web.Api, as: :api do
     pipe_through([:api, :signed_in])
 
@@ -151,28 +149,17 @@ defmodule Web.Router do
     post("/challenges/:challenge_id/contact_form", ContactFormController, :send_email)
   end
 
-  scope "/", Web do
-    pipe_through([:browser, :user])
+  # Public Routes
+  scope "/public", Web.Public, as: :public do
+    pipe_through([:browser, :public])
+    get("/rss.xml", SitemapController, :rss)
 
-    resources("/sign-in", SessionController, only: [:delete], singleton: true)
-  end
-
-  scope "/", Web do
-    pipe_through([:browser, :not_signed_in])
-
-    resources("/sign-in", SessionController, only: [:new, :create], singleton: true)
-    get("/auth/result", SessionController, :result)
+    get("/", PageController, :index)
+    get("/challenges", PageController, :index, as: :challenge_index)
+    get("/challenge/:id", PageController, :index, as: :challenge_details)
   end
 
   if Mix.env() == :dev do
     forward("/emails/sent", Bamboo.SentEmailViewerPlug)
-  end
-
-  scope("/", Web) do
-    pipe_through([:browser])
-
-    get("/", PageController, :index)
-    get("/challenges", PageController, :index, as: :public_challenge_index)
-    get("/challenge/:id", PageController, :index, as: :public_challenge_details)
   end
 end

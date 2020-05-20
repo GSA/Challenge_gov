@@ -4,10 +4,10 @@ import { DetailsPage } from '../pages/DetailsPage'
 export const IndexRoutes = [
   {
     component: App,
-    path: "/challenges"
+    path: "/public/challenges"
   },
   {
     component: DetailsPage,
-    path: "/challenge/:challengeId"
+    path: "/public/challenge/:challengeId"
   }
 ];
