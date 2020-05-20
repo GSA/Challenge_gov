@@ -27,6 +27,8 @@ defmodule ChallengeGov.CertificationLogs do
         [r, user],
         r.user_id == user.id and
           user.status != "decertified" and
+          user.status != "suspended" and
+          user.status != "revoked" and
           user.role != "solver"
       )
       |> where([r], is_nil(r.requested_at))
