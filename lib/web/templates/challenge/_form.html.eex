@@ -73,9 +73,38 @@
         <%= FormView.text_field(f, :fiscal_year, label: "Fiscal Year of Challenge Launch", required: true) do %>
           <span class="help-block">Format <code>FY99</code></span>
         <% end %>
-        <%= FormView.datetime_field(f, :start_date, required: true) %>
-        <%= FormView.datetime_field(f, :end_date, required: true) %>
-        <%= FormView.datetime_field(f, :auto_publish_date, required: true) %>
+
+        <div class="form-group">
+          <%= datetime_local_input(f, :start_date, label: "Start date", 
+            class: Enum.join([FormView.form_control_classes(f, :start_date), "js-datetime-input"], " "), 
+            required: true
+          )%>
+          <%= hidden_input(f, :start_date, label: "Start date") %>
+          <%= error_tag(f, :start_date) %>
+        </div>
+        <br/>
+
+        <div class="form-group">
+          <%= datetime_local_input(f, :end_date, label: "End date", 
+            class: Enum.join([FormView.form_control_classes(f, :end_date), "js-datetime-input"], " "), 
+            required: true
+          )%>
+          <%= hidden_input(f, :end_date, label: "End date") %>
+          <%= error_tag(f, :end_date) %>
+          <%= error_tag(f, :start_and_end_date) %>
+        </div>
+        <br/>
+
+        <div class="form-group">
+          <%= datetime_local_input(f, :auto_publish_date, label: "Publish date", 
+            class: Enum.join([FormView.form_control_classes(f, :auto_publish_date), "js-datetime-input"], " "), 
+            required: true
+          )%>
+          <%= hidden_input(f, :auto_publish_date, label: "Publish date") %>
+          <%= error_tag(f, :auto_publish_date) %>
+        </div>
+        <br/>
+
         <div class="<%= FormView.form_group_classes(f, :multi_phase) %>">
           <%= label(f, :multi_phase, class: "col-md-4") do %>
           Does this Challenge have multiple Phases? <span class="required">*</span>
