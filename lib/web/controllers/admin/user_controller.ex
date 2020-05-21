@@ -177,7 +177,7 @@ defmodule Web.Admin.UserController do
     %{current_user: originator} = conn.assigns
 
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- admin_recertify_user(user, originator, Security.extract_remote_ip(conn)) do
+         {:ok, user} <- Accounts.admin_recertify_user(user, originator, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "User recertified")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
@@ -213,53 +213,6 @@ defmodule Web.Admin.UserController do
       conn
       |> put_flash(:info, "Challenge access restored")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
-    end
-  end
-
-  def admin_recertify_user(user, approver, approver_remote_ip) do
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.run(:user, fn _repo, _changes ->
-        Accounts.activate(user, approver, approver_remote_ip)
-      end)
-      |> Ecto.Multi.run(:renew_terms, fn _repo, _changes ->
-        Accounts.update(user, get_recertify_update_params(user))
-      end)
-      |> Ecto.Multi.run(:certification_record, fn _repo, _changes ->
-        CertificationLogs.track(%{
-          approver_id: approver.id,
-          approver_role: approver.role,
-          approver_identifier: approver.email,
-          approver_remote_ip: approver_remote_ip,
-          user_id: user.id,
-          user_role: user.role,
-          user_identifier: user.email,
-          certified_at: Timex.now(),
-          expires_at: CertificationLogs.calulate_expiry()
-        })
-      end)
-      |> Repo.transaction()
-
-    case result do
-      {:ok, result} ->
-        {:ok, result.user}
-
-      :error ->
-        {:error, :not_recertified}
-    end
-  end
-
-  defp get_recertify_update_params(user) do
-    case user.renewal_request == "certification" do
-      true ->
-        %{
-          "terms_of_use" => nil,
-          "privacy_guidelines" => nil,
-          "renewal_request" => nil
-        }
-
-      false ->
-        %{"terms_of_use" => nil, "privacy_guidelines" => nil}
     end
   end
 end

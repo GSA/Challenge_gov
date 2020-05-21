@@ -16,7 +16,6 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.Mailer
   alias Stein.Filter
   alias Stein.Pagination
-  alias Web.Admin.UserController
 
   import Ecto.Query
 
@@ -596,85 +595,66 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Activate a user. Change status, allows login
   """
+  def activate(%{status: "suspended", id: id}, originator, remote_ip) do
+    with {:ok, user} <- get(id) do
+      case CertificationLogs.get_current_certification(user) do
+        {:ok, certification} ->
+          # could return empty map for a solver, check for expiration
+          if !is_nil(certification.expires_at) and
+               Timex.to_unix(certification.expires_at) < Timex.to_unix(Timex.now()) do
+            decertify(user)
+          else
+            activate(user, originator, remote_ip)
+          end
+
+        {:error, :no_log_found} ->
+          activate(user, originator, remote_ip)
+      end
+    end
+  end
+
+  def activate(%{status: "revoked", id: id}, originator, remote_ip) do
+    with {:ok, user} <- get(id) do
+      if user.role != "solver",
+        do: admin_recertify_user(user, originator, remote_ip)
+    end
+  end
+
   def activate(user, originator, remote_ip) do
     previous_status = user.status
 
-    case determine_status_based_on_certification(previous_status, user, originator, remote_ip) do
-      {:error, decertification_result} ->
-        case decertification_result do
-          {:ok, user} ->
-            {:ok, user}
+    changeset =
+      user
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "active")
+      |> maybe_update_request_renewal(user)
 
-          {:error, changeset} ->
-            {:error, changeset}
-        end
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+        SecurityLogs.track(%{
+          originator_id: originator.id,
+          originator_role: originator.role,
+          originator_identifier: originator.email,
+          originator_remote_ip: remote_ip,
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.email,
+          action: "status_change",
+          details: %{previous_status: previous_status, new_status: "active"}
+        })
+      end)
+      |> Repo.transaction()
 
-      {:ok, "active"} ->
-        changeset =
-          user
-          |> Ecto.Changeset.change()
-          |> Ecto.Changeset.put_change(:status, "active")
-          |> maybe_update_request_renewal(user)
+    case result do
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
-        result =
-          Ecto.Multi.new()
-          |> Ecto.Multi.update(:user, changeset)
-          |> Ecto.Multi.run(:log, fn _repo, _changes ->
-            SecurityLogs.track(%{
-              originator_id: originator.id,
-              originator_role: originator.role,
-              originator_identifier: originator.email,
-              originator_remote_ip: remote_ip,
-              target_id: user.id,
-              target_type: user.role,
-              target_identifier: user.email,
-              action: "status_change",
-              details: %{previous_status: previous_status, new_status: "active"}
-            })
-          end)
-          |> Repo.transaction()
-
-        case result do
-          {:ok, %{user: user}} ->
-            {:ok, user}
-
-          {:error, _type, changeset, _changes} ->
-            {:error, changeset}
-        end
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
     end
   end
-
-  def determine_status_based_on_certification("revoked", user, approver, approver_remote_ip) do
-    if user.role != "solver",
-      do: UserController.admin_recertify_user(user, approver, approver_remote_ip)
-
-    {:ok, "active"}
-  end
-
-  def determine_status_based_on_certification("suspended", user, _approver, _approver_remote_ip) do
-    case CertificationLogs.get_current_certification(user) do
-      {:ok, certification} ->
-        # could return empty map for a solver, check for expiration
-        if !is_nil(certification.expires_at) and
-             Timex.to_unix(certification.expires_at) < Timex.to_unix(Timex.now()) do
-          decertification_result = decertify(user)
-          {:error, decertification_result}
-        else
-          {:ok, "active"}
-        end
-
-      {:error, :no_log_found} ->
-        {:ok, "active"}
-    end
-  end
-
-  def determine_status_based_on_certification(
-        _previous_status,
-        _user,
-        _approver,
-        _approver_remote_ip
-      ),
-      do: {:ok, "active"}
 
   defp maybe_update_request_renewal(struct, user) do
     if user.renewal_request == "activation" do
@@ -830,6 +810,53 @@ defmodule ChallengeGov.Accounts do
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
+    end
+  end
+
+  def admin_recertify_user(user, approver, approver_remote_ip) do
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.run(:user, fn _repo, _changes ->
+        activate(user, approver, approver_remote_ip)
+      end)
+      |> Ecto.Multi.run(:renew_terms, fn _repo, _changes ->
+        __MODULE__.update(user, get_recertify_update_params(user))
+      end)
+      |> Ecto.Multi.run(:certification_record, fn _repo, _changes ->
+        CertificationLogs.track(%{
+          approver_id: approver.id,
+          approver_role: approver.role,
+          approver_identifier: approver.email,
+          approver_remote_ip: approver_remote_ip,
+          user_id: user.id,
+          user_role: user.role,
+          user_identifier: user.email,
+          certified_at: Timex.now(),
+          expires_at: CertificationLogs.calulate_expiry()
+        })
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, result} ->
+        {:ok, result.user}
+
+      :error ->
+        {:error, :not_recertified}
+    end
+  end
+
+  defp get_recertify_update_params(user) do
+    case user.renewal_request == "certification" do
+      true ->
+        %{
+          "terms_of_use" => nil,
+          "privacy_guidelines" => nil,
+          "renewal_request" => nil
+        }
+
+      false ->
+        %{"terms_of_use" => nil, "privacy_guidelines" => nil}
     end
   end
 
