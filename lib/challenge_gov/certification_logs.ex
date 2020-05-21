@@ -16,7 +16,7 @@ defmodule ChallengeGov.CertificationLogs do
     |> Repo.insert()
   end
 
-  def check_for_expired_certifications do
+  def check_all_for_expired_certifications do
     two_days_ago = Timex.shift(Timex.now(), days: -2)
 
     # get records where user is not decertified and expiry is past now
