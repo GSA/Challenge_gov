@@ -596,20 +596,12 @@ defmodule ChallengeGov.Accounts do
   Activate pending user. Check certification, change status, allow login if certified
   """
   def activate(user = %{status: "pending"}, approver, approver_remote_ip) do
-    case CertificationLogs.get_current_certification(user) do
-      {:error, :no_log_found} ->
-        CertificationLogs.certify_user_with_approver(user, approver, approver_remote_ip)
-        activate(user, user.status, approver, approver_remote_ip)
-
-      {:ok, certification} ->
-        # could return empty map for a solver
-        if certification != %{} and
-             Timex.to_unix(certification.expires_at) < Timex.to_unix(Timex.now()) do
-          {:ok, decertified_user} = decertify(user)
-          {:error, :certification_required, decertified_user}
-        else
-          activate(user, user.status, approver, approver_remote_ip)
-        end
+    # pending users get certified on activation unless they are solvers
+    if user.role != "solver" do
+      CertificationLogs.certify_user_with_approver(user, approver, approver_remote_ip)
+      activate(user, user.status, approver, approver_remote_ip)
+    else
+      activate(user, user.status, approver, approver_remote_ip)
     end
   end
 
