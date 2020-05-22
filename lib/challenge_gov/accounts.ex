@@ -595,32 +595,28 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Activate a suspended user. Check certification, change status
   """
-  def activate(%{status: "suspended", id: id}, originator, remote_ip) do
-    with {:ok, user} <- get(id) do
-      case CertificationLogs.get_current_certification(user) do
-        {:ok, certification} ->
-          # could return empty map for a solver, check for expiration
-          if !is_nil(certification.expires_at) and
-               Timex.to_unix(certification.expires_at) < Timex.to_unix(Timex.now()) do
-            decertify(user)
-          else
-            activate(user, user.status, originator, remote_ip)
-          end
-
-        {:error, :no_log_found} ->
+  def activate(user = %{status: "suspended"}, originator, remote_ip) do
+    case CertificationLogs.get_current_certification(user) do
+      {:ok, certification} ->
+        # could return empty map for a solver, check for expiration
+        if !is_nil(certification.expires_at) and
+             Timex.to_unix(certification.expires_at) < Timex.to_unix(Timex.now()) do
+          decertify(user)
+        else
           activate(user, user.status, originator, remote_ip)
-      end
+        end
+
+      {:error, :no_log_found} ->
+        activate(user, user.status, originator, remote_ip)
     end
   end
 
   @doc """
   Activate a revoked user. Renew certification, change status, allow login
   """
-  def activate(%{status: "revoked", id: id}, originator, remote_ip) do
-    with {:ok, user} <- get(id) do
-      if user.role != "solver",
-        do: admin_recertify_user(user, originator, remote_ip)
-    end
+  def activate(user = %{status: "revoked"}, originator, remote_ip) do
+    if user.role != "solver",
+      do: manually_recertify_user(user, originator, remote_ip)
   end
 
   @doc """
@@ -663,7 +659,7 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
-  Activate a suspended user after certification check clears. Change status, allows login
+  Activate a suspended or revoked user after other actions. Change status, allows login
   """
   def activate(user, previous_status, originator, remote_ip) do
     changeset =
@@ -856,11 +852,11 @@ defmodule ChallengeGov.Accounts do
     end
   end
 
-  def admin_recertify_user(user, approver, approver_remote_ip) do
+  def manually_recertify_user(user, approver, approver_remote_ip) do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.run(:user, fn _repo, _changes ->
-        activate(user, approver, approver_remote_ip)
+        activate(user, user.status, approver, approver_remote_ip)
       end)
       |> Ecto.Multi.run(:renew_terms, fn _repo, _changes ->
         __MODULE__.update(user, get_recertify_update_params(user))

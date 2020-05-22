@@ -4,7 +4,6 @@ defmodule Web.Admin.UserController do
   alias ChallengeGov.Accounts
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Challenges
-  alias ChallengeGov.Repo
   alias ChallengeGov.Security
 
   plug(Web.Plugs.FetchPage when action in [:index, :create])
@@ -177,7 +176,8 @@ defmodule Web.Admin.UserController do
     %{current_user: originator} = conn.assigns
 
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.admin_recertify_user(user, originator, Security.extract_remote_ip(conn)) do
+         {:ok, user} <-
+           Accounts.manually_recertify_user(user, originator, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "User recertified")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
