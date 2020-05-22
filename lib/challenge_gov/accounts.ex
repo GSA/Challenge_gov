@@ -593,7 +593,7 @@ defmodule ChallengeGov.Accounts do
   def is_decertified?(_user), do: false
 
   @doc """
-  Activate a user. Change status, allows login
+  Activate a suspended user. Check certification, change status
   """
   def activate(%{status: "suspended", id: id}, originator, remote_ip) do
     with {:ok, user} <- get(id) do
@@ -604,15 +604,18 @@ defmodule ChallengeGov.Accounts do
                Timex.to_unix(certification.expires_at) < Timex.to_unix(Timex.now()) do
             decertify(user)
           else
-            activate(user, originator, remote_ip)
+            activate(user, user.status, originator, remote_ip)
           end
 
         {:error, :no_log_found} ->
-          activate(user, originator, remote_ip)
+          activate(user, user.status, originator, remote_ip)
       end
     end
   end
 
+  @doc """
+  Activate a revoked user. Renew certification, change status, allow login
+  """
   def activate(%{status: "revoked", id: id}, originator, remote_ip) do
     with {:ok, user} <- get(id) do
       if user.role != "solver",
@@ -620,9 +623,49 @@ defmodule ChallengeGov.Accounts do
     end
   end
 
+  @doc """
+  Activate a user. Change status, allows login
+  """
   def activate(user, originator, remote_ip) do
     previous_status = user.status
 
+    changeset =
+      user
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "active")
+      |> maybe_update_request_renewal(user)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+        SecurityLogs.track(%{
+          originator_id: originator.id,
+          originator_role: originator.role,
+          originator_identifier: originator.email,
+          originator_remote_ip: remote_ip,
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.email,
+          action: "status_change",
+          details: %{previous_status: previous_status, new_status: "active"}
+        })
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{user: user}} ->
+        {:ok, user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Activate a suspended user after certification check clears. Change status, allows login
+  """
+  def activate(user, previous_status, originator, remote_ip) do
     changeset =
       user
       |> Ecto.Changeset.change()
