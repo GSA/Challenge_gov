@@ -16,6 +16,30 @@ defmodule ChallengeGov.CertificationLogs do
     |> Repo.insert()
   end
 
+  def certify_user_with_approver(user, approver, approver_remote_ip) do
+    track(%{
+      approver_id: approver.id,
+      approver_role: approver.role,
+      approver_identifier: approver.email,
+      approver_remote_ip: approver_remote_ip,
+      user_id: user.id,
+      user_role: user.role,
+      user_identifier: user.email,
+      certified_at: Timex.now(),
+      expires_at: calulate_expiry()
+    })
+  end
+
+  def certification_request(conn, user) do
+    track(%{
+      user_id: user.id,
+      user_role: user.role,
+      user_identifier: user.email,
+      user_remote_ip: Security.extract_remote_ip(conn),
+      requested_at: Timex.now()
+    })
+  end
+
   def check_for_expired_certifications do
     two_days_ago = Timex.shift(Timex.now(), days: -2)
 
