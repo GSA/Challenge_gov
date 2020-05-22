@@ -12,6 +12,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.NonFederalPartner
+  alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.SupportingDocuments.Document
   alias ChallengeGov.Timeline.Event
 
@@ -95,6 +96,8 @@ defmodule ChallengeGov.Challenges.Challenge do
 
     has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete, on_delete: :delete_all)
 
+    embeds_many(:phases, Phase, on_replace: :delete)
+
     # Array fields. Pseudo associations
     field(:types, {:array, :string}, default: [])
 
@@ -145,6 +148,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     # Virtual Fields
     field(:upload_logo, :boolean, virtual: true)
     field(:logo, :string, virtual: true)
+    field(:is_multi_phase, :boolean, virtual: true)
 
     # Meta Timestamps
     field(:deleted_at, :utc_datetime)
@@ -211,6 +215,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
+    |> cast_embed(:phases, with: &Phase.draft_changeset/2)
   end
 
   def draft_changeset(struct, params = %{"section" => section}) do
@@ -262,6 +267,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :auto_publish_date,
       :upload_logo
     ])
+    |> cast_embed(:phases, with: &Phase.save_changeset/2)
     |> validate_length(:tagline, max: 90)
     |> validate_length(:brief_description, max: 200)
     |> validate_length(:description, max: 4000)
@@ -269,6 +275,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_upload_logo(params)
     |> validate_auto_publish_date(params)
     |> validate_custom_url(params)
+    |> validate_phases(params)
   end
 
   def timeline_changeset(struct, _params) do
@@ -466,18 +473,29 @@ defmodule ChallengeGov.Challenges.Challenge do
     end
   end
 
+  defp validate_auto_publish_date(struct, %{"auto_publish_date" => date}) do
+    {:ok, date} = Timex.parse(date, "{ISO:Extended}")
+    check_auto_publish_date(struct, date)
+  end
+
+  defp validate_auto_publish_date(struct = %{data: %{auto_publish_date: date}}, _params) do
+    check_auto_publish_date(struct, date)
+  end
+
   defp validate_auto_publish_date(struct, params) do
+    check_auto_publish_date(struct, params)
+  end
+
+  defp check_auto_publish_date(struct, date) do
     now = Timex.now()
 
-    with {:ok, time} <- Map.fetch(params, "auto_publish_date"),
-         {:ok, time} <- Timex.parse(time, "{ISO:Extended}"),
-         1 <- Timex.compare(time, now) do
+    with 1 <- Timex.compare(date, now) do
       struct
     else
       tc when tc == -1 or tc == 0 ->
         add_error(struct, :auto_publish_date, "must be in the future")
 
-      _ ->
+      _error ->
         add_error(struct, :auto_publish_date, "is required")
     end
   end
@@ -487,10 +505,10 @@ defmodule ChallengeGov.Challenges.Challenge do
     challenge_title = Map.get(params, "title")
 
     cond do
-      custom_url != "" ->
+      custom_url != "" && custom_url != nil ->
         put_change(struct, :custom_url, create_custom_url_slug(custom_url))
 
-      challenge_title != "" ->
+      challenge_title != "" && challenge_title != nil ->
         put_change(struct, :custom_url, create_custom_url_slug(challenge_title))
 
       true ->
@@ -504,4 +522,58 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> String.downcase()
     |> String.replace(" ", "-")
   end
+
+  defp validate_phases(struct, %{"has_multiple_phases" => true, "phases" => phases}) do
+    phases
+    |> Enum.map(fn {index, phase} ->
+      overlap_check =
+        phases
+        |> Enum.reject(fn {i, _p} -> i === index end)
+        |> Enum.map(fn {_i, p} ->
+          date_range_overlaps(phase, p)
+        end)
+        |> Enum.any?()
+
+      !overlap_check && validate_phase_start_and_end(phase)
+    end)
+    |> Enum.all?()
+    |> case do
+      true ->
+        struct
+
+      false ->
+        add_error(
+          struct,
+          :phase_dates,
+          "Please check your phase dates for overlaps or invalid date ranges"
+        )
+    end
+  end
+
+  defp validate_phases(struct, %{"has_multiple_phases" => false, "phases" => _phases}) do
+    struct
+  end
+
+  # If the
+  defp validate_phase_start_and_end(%{"start_date" => start_date, "end_date" => end_date}) do
+    Timex.compare(start_date, end_date) < 0
+  end
+
+  defp validate_phase_start_and_end(_phase), do: false
+
+  # If there is an overlap return true else false
+  defp date_range_overlaps(%{"start_date" => a_start, "end_date" => a_end}, %{
+         "start_date" => b_start,
+         "end_date" => b_end
+       }) do
+    if (a_start <= b_start && b_start <= a_end) ||
+         (a_start <= b_end && b_end <= a_end) ||
+         (b_start < a_start && a_end < b_end) do
+      true
+    else
+      false
+    end
+  end
+
+  defp date_range_overlaps(_, _), do: true
 end
