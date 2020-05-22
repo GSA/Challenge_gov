@@ -593,6 +593,27 @@ defmodule ChallengeGov.Accounts do
   def is_decertified?(_user), do: false
 
   @doc """
+  Activate pending user. Check certification, change status, allow login if certified
+  """
+  def activate(user = %{status: "pending"}, approver, approver_remote_ip) do
+    case CertificationLogs.get_current_certification(user) do
+      {:error, :no_log_found} ->
+        CertificationLogs.certify_user_with_approver(user, approver, approver_remote_ip)
+        activate(user, user.status, approver, approver_remote_ip)
+
+      {:ok, certification} ->
+        # could return empty map for a solver
+        if certification != %{} and
+             Timex.to_unix(certification.expires_at) < Timex.to_unix(Timex.now()) do
+          {:ok, decertified_user} = decertify(user)
+          {:error, :certification_required, decertified_user}
+        else
+          activate(user, user.status, approver, approver_remote_ip)
+        end
+    end
+  end
+
+  @doc """
   Activate a user. Change status, allows login
   """
   def activate(user, originator, remote_ip) do
@@ -624,7 +645,43 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, %{user: user}} ->
-        maybe_certify_user(user, originator, remote_ip)
+        {:ok, user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Activate users who previously needed extra actions. Change status, allows login
+  """
+  def activate(user, previous_status, originator, remote_ip) do
+    changeset =
+      user
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "active")
+      |> maybe_update_request_renewal(user)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+        SecurityLogs.track(%{
+          originator_id: originator.id,
+          originator_role: originator.role,
+          originator_identifier: originator.email,
+          originator_remote_ip: remote_ip,
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.email,
+          action: "status_change",
+          details: %{previous_status: previous_status, new_status: "active"}
+        })
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{user: user}} ->
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -637,23 +694,6 @@ defmodule ChallengeGov.Accounts do
       Ecto.Changeset.put_change(struct, :renewal_request, nil)
     else
       struct
-    end
-  end
-
-  defp maybe_certify_user(user, approver, approver_remote_ip) do
-    # check for certification history since user could have been active before
-    with {:error, :no_log_found} <- CertificationLogs.get_current_certification(user) do
-      CertificationLogs.track(%{
-        approver_id: approver.id,
-        approver_role: approver.role,
-        approver_identifier: approver.email,
-        approver_remote_ip: approver_remote_ip,
-        user_id: user.id,
-        user_role: user.role,
-        user_identifier: user.email,
-        certified_at: Timex.now(),
-        expires_at: CertificationLogs.calulate_expiry()
-      })
     end
   end
 
