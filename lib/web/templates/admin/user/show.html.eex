@@ -70,7 +70,7 @@
                 <%= link("Suspend user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "suspend"), method: :post, class: "btn btn-default") %>
                 <%= link("Revoke user", to: Routes.admin_user_path(@conn, :toggle, @user.id, action: "revoke"), method: :post, class: "btn btn-default") %>
               <% end %>
-              <%= if !Accounts.is_solver?(@user) do %>
+              <%= if !Accounts.is_solver?(@user) and !Accounts.is_pending?(@user) do %>
                 <p>
                   <%= Web.Admin.UserView.certification_info(@certification)%>
                 </p>
