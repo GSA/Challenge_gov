@@ -169,6 +169,16 @@ defmodule Web.Admin.UserController do
       conn
       |> put_flash(:info, "User activated")
       |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
+    else
+      {:error, :certification_required, user} ->
+        conn
+        |> put_flash(:error, "User not activated, certification renewal is required")
+        |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
+
+      {:error, :not_recertified, user} ->
+        conn
+        |> put_flash(:error, "We encountered a problem recertifying this user, please try again.")
+        |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
     end
   end
 

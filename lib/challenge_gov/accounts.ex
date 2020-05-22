@@ -598,10 +598,11 @@ defmodule ChallengeGov.Accounts do
   def activate(user = %{status: "suspended"}, originator, remote_ip) do
     case CertificationLogs.get_current_certification(user) do
       {:ok, certification} ->
-        # could return empty map for a solver, check for expiration
-        if !is_nil(certification.expires_at) and
+        # could return empty map for a solver
+        if certification != %{} and
              Timex.to_unix(certification.expires_at) < Timex.to_unix(Timex.now()) do
-          decertify(user)
+          {:ok, decertified_user} = decertify(user)
+          {:error, :certification_required, decertified_user}
         else
           activate(user, user.status, originator, remote_ip)
         end
@@ -616,7 +617,8 @@ defmodule ChallengeGov.Accounts do
   """
   def activate(user = %{status: "revoked"}, originator, remote_ip) do
     if user.role != "solver",
-      do: manually_recertify_user(user, originator, remote_ip)
+      do: manually_recertify_user(user, originator, remote_ip),
+      else: activate(user, user.status, originator, remote_ip)
   end
 
   @doc """
@@ -847,8 +849,8 @@ defmodule ChallengeGov.Accounts do
         revoke_challenge_ownership(result.user)
         {:ok, result.user}
 
-      {:error, _type, changeset, _changes} ->
-        {:error, changeset}
+      {:error, _type, _changeset, _changes} ->
+        {:error, :not_decertified}
     end
   end
 
@@ -877,10 +879,10 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, result} ->
-        {:ok, result.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
-      :error ->
+      {:error, _type, _changeset, _changes} ->
         {:error, :not_recertified}
     end
   end
