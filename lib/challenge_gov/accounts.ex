@@ -142,8 +142,8 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
-        {:ok, user.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
@@ -174,8 +174,8 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
-        {:ok, user.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
@@ -372,8 +372,8 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
-        {:ok, user.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
@@ -593,6 +593,19 @@ defmodule ChallengeGov.Accounts do
   def is_decertified?(_user), do: false
 
   @doc """
+  Activate pending user. Check certification, change status, allow login if certified
+  """
+  def activate(user = %{status: "pending"}, approver, approver_remote_ip) do
+    # pending users get certified on activation unless they are solvers
+    if user.role != "solver" do
+      CertificationLogs.certify_user_with_approver(user, approver, approver_remote_ip)
+      activate(user, user.status, approver, approver_remote_ip)
+    else
+      activate(user, user.status, approver, approver_remote_ip)
+    end
+  end
+
+  @doc """
   Activate a suspended user. Check certification, change status
   """
   def activate(user = %{status: "suspended"}, originator, remote_ip) do
@@ -661,7 +674,7 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
-  Activate a suspended or revoked user after other actions. Change status, allows login
+  Activate users who previously needed extra actions. Change status, allows login
   """
   def activate(user, previous_status, originator, remote_ip) do
     changeset =
@@ -735,7 +748,7 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, _result} ->
+      {:ok, %{user: user}} ->
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -773,7 +786,7 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, _result} ->
+      {:ok, %{user: user}} ->
         revoke_challenge_ownership(user)
         {:ok, user}
 
@@ -809,7 +822,7 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
+      {:ok, %{user: user}} ->
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -845,9 +858,9 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, result} ->
-        revoke_challenge_ownership(result.user)
-        {:ok, result.user}
+      {:ok, %{user: user}} ->
+        revoke_challenge_ownership(user)
+        {:ok, user}
 
       {:error, _type, _changeset, _changes} ->
         {:error, :not_decertified}
@@ -864,17 +877,7 @@ defmodule ChallengeGov.Accounts do
         __MODULE__.update(user, get_recertify_update_params(user))
       end)
       |> Ecto.Multi.run(:certification_record, fn _repo, _changes ->
-        CertificationLogs.track(%{
-          approver_id: approver.id,
-          approver_role: approver.role,
-          approver_identifier: approver.email,
-          approver_remote_ip: approver_remote_ip,
-          user_id: user.id,
-          user_role: user.role,
-          user_identifier: user.email,
-          certified_at: Timex.now(),
-          expires_at: CertificationLogs.calulate_expiry()
-        })
+        CertificationLogs.certify_user_with_approver(user, approver, approver_remote_ip)
       end)
       |> Repo.transaction()
 

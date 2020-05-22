@@ -16,6 +16,30 @@ defmodule ChallengeGov.CertificationLogs do
     |> Repo.insert()
   end
 
+  def certify_user_with_approver(user, approver, approver_remote_ip) do
+    track(%{
+      approver_id: approver.id,
+      approver_role: approver.role,
+      approver_identifier: approver.email,
+      approver_remote_ip: approver_remote_ip,
+      user_id: user.id,
+      user_role: user.role,
+      user_identifier: user.email,
+      certified_at: Timex.now(),
+      expires_at: calulate_expiry()
+    })
+  end
+
+  def certification_request(conn, user) do
+    track(%{
+      user_id: user.id,
+      user_role: user.role,
+      user_identifier: user.email,
+      user_remote_ip: Security.extract_remote_ip(conn),
+      requested_at: Timex.now()
+    })
+  end
+
   def check_all_for_expired_certifications do
     two_days_ago = Timex.shift(Timex.now(), days: -2)
 
@@ -53,7 +77,7 @@ defmodule ChallengeGov.CertificationLogs do
   Get most current certification record by user id
   """
   def get_current_certification(user) do
-    case user.role == "solver" do
+    case user.role == "solver" or user.status == "pending" do
       true ->
         {:ok, %{}}
 
@@ -104,7 +128,7 @@ defmodule ChallengeGov.CertificationLogs do
   @doc """
   calculate certification expiry based on decertification env var
   """
-  def calulate_expiry() do
+  def calulate_expiry do
     decertification_interval = Security.decertify_days()
     expiry = Timex.shift(DateTime.utc_now(), days: decertification_interval)
     DateTime.truncate(expiry, :second)
@@ -113,7 +137,7 @@ defmodule ChallengeGov.CertificationLogs do
   @doc """
   Stream certification log for CSV download
   """
-  def stream_all_records() do
+  def stream_all_records do
     CertificationLog
     |> order_by([r], asc: r.id)
     |> Repo.all()

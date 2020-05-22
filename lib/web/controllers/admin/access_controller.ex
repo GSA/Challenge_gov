@@ -36,13 +36,7 @@ defmodule Web.Admin.AccessController do
 
     with {:ok, user} <- Accounts.update_terms(current_user, params),
          {:ok, user} <- Accounts.update(user, %{renewal_request: "certification"}) do
-      CertificationLogs.track(%{
-        user_id: user.id,
-        user_role: user.role,
-        user_identifier: user.email,
-        user_remote_ip: Security.extract_remote_ip(conn),
-        requested_at: Timex.now()
-      })
+      CertificationLogs.certification_request(conn, user)
 
       conn
       |> put_flash(:info, "Success")
