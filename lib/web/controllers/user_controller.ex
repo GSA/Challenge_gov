@@ -122,17 +122,7 @@ defmodule Web.UserController do
               {:ok, certification}
 
             {:error, :no_log_found} ->
-              CertificationLogs.track(%{
-                approver_id: current_user.id,
-                approver_role: current_user.role,
-                approver_identifier: current_user.email,
-                approver_remote_ip: remote_ip,
-                user_id: user.id,
-                user_role: user.role,
-                user_identifier: user.email,
-                certified_at: Timex.now(),
-                expires_at: CertificationLogs.calulate_expiry()
-              })
+              CertificationLogs.certify_user_with_approver(user, current_user, remote_ip)
           end
 
         conn
@@ -228,23 +218,13 @@ defmodule Web.UserController do
         Accounts.update(user, get_recertify_update_params(user))
       end)
       |> Ecto.Multi.run(:certification_record, fn _repo, _changes ->
-        CertificationLogs.track(%{
-          approver_id: approver.id,
-          approver_role: approver.role,
-          approver_identifier: approver.email,
-          approver_remote_ip: approver_remote_ip,
-          user_id: user.id,
-          user_role: user.role,
-          user_identifier: user.email,
-          certified_at: Timex.now(),
-          expires_at: CertificationLogs.calulate_expiry()
-        })
+        CertificationLogs.certify_user_with_approver(user, approver, approver_remote_ip)
       end)
       |> Repo.transaction()
 
     case result do
-      {:ok, result} ->
-        {:ok, result.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
       :error ->
         {:error, :not_recertified}

@@ -1,9 +1,7 @@
 import "uswds/dist/css/uswds.css";
 import "uswds/dist/js/uswds.js";
 
-// We need to import the CSS so that webpack will load it.
-// The MiniCssExtractPlugin is used to separate it out into
-// its own CSS file.
+// Import External libraries and css
 import jquery from  "jquery";
 import "popper.js";
 import "bootstrap/dist/css/bootstrap.css";
@@ -13,12 +11,15 @@ import "select2";
 // Phoenix html dependency
 import "phoenix_html"
 
+// import "../vendor/admin/bootstrap.min.css";
+// import "../vendor/admin/bootstrap.min.js";
+
 import "admin-lte/dist/css/adminlte.css";
 import "admin-lte/dist/js/adminlte.js";
 import "@fortawesome/fontawesome-free/css/all.css";
 
 // Custom CSS
-require("../css/app.scss");
+import "../css/admin.scss";
 import "../css/progress_bar.scss";
 
 // Custom JS
