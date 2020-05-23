@@ -7,7 +7,7 @@
 
   <title><%= page_title(@conn) %></title>
 
-  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+  <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/public.css") %>"/>
 
   <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
 

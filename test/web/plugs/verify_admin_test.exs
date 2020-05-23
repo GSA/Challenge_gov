@@ -11,7 +11,7 @@ defmodule Web.Plugs.VerifyAdminTest do
         conn
         |> assign(:current_user, user)
         |> bypass_through()
-        |> get("/admin")
+        |> get("/")
         |> VerifyAdmin.call([])
 
       refute conn.halted
@@ -24,7 +24,7 @@ defmodule Web.Plugs.VerifyAdminTest do
         conn
         |> assign(:current_user, user)
         |> bypass_through(Web.Router, [:browser])
-        |> get("/admin")
+        |> get("/")
         |> VerifyAdmin.call([])
 
       assert conn.halted
@@ -34,7 +34,7 @@ defmodule Web.Plugs.VerifyAdminTest do
       conn =
         conn
         |> bypass_through(Web.Router, [:browser])
-        |> get("/admin")
+        |> get("/")
         |> VerifyAdmin.call([])
 
       assert conn.halted

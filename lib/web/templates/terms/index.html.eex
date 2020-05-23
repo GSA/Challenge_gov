@@ -1,0 +1,39 @@
+<section class="content-header text-center">
+  <h4 class="mt-5">
+    To complete your registration please submit the following items
+  </h4>
+</section>
+<section class="content registration-content">
+  <div class="row col-md-9 registration-row justify-content-center">
+      <%= form_for(@changeset, Routes.terms_path(@conn, :create), [method: :post], fn f -> %>
+        <%= challenge_owner_fields(f, @changeset) %>
+        <div class="input">
+          <%= label(f, :first_name, class: "label-text") do %>
+            First Name*
+          <% end %>
+          <%= text_input(f, :first_name, required: true, placeholder: "First Name", class: "form-control fc-inpute") %>
+        </div>
+        <div class="input">
+          <%= label(f, :last_name, class: "label-text") do %>
+            Last Name*
+          <% end %>
+          <%= text_input(f, :last_name, required: true, placeholder: "Last Name", class: "form-control fc-input") %>
+        </div>
+        <div class="checkbox-input">
+          <%= Phoenix.HTML.Form.checkbox(f, :accept_terms_of_use, required: true) %>
+          <%= label(f, :accept_terms_of_use, class: "label-text") do %>
+            I accept the <%= link "terms of use", to: "https://www.challenge.gov/terms/", target: "_blank" %>
+          <% end %>
+        </div>
+        <div class="checkbox-input">
+          <%= Phoenix.HTML.Form.checkbox(f, :accept_privacy_guidelines, required: true) %>
+          <%= label(f, :accept_privacy_guidelines, class: "label-text") do %>
+            I accept the <%= link "privacy guidelines", to: "https://www.fastcompany.com/privacy-policy", target: "_blank" %>
+          <% end %>
+        </div>
+        <div class="btn-wrapper">
+          <%= submit("Submit", class: "btn btn-primary") %>
+        </div>
+      <% end) %>
+  </div>
+</section>

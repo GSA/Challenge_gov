@@ -1,0 +1,16 @@
+    <div class="card-header">
+      <h3 class="card-title">Filter</h3>
+    </div>
+    <%= form_for(@conn, Routes.agency_path(@conn, :index), [method: :get, as: :filter], fn f -> %>
+      <div class="card-body">
+        <div class="form-group">
+          <%= label f, :search %>
+          <%= text_input f, :search, value: @filter["search"], class: "form-control" %>
+        </div>
+      </div>
+      <div>
+        <%= submit "Filter", class: "btn btn-primary" %>
+        <%= link "Clear", to: Routes.agency_path(@conn, :index), class: "btn" %>
+      </div>
+    <% end) %>
+  </div>
