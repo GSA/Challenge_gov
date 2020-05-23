@@ -359,7 +359,8 @@ defmodule ChallengeGov.Challenges do
         :federal_partner_agencies,
         :non_federal_partners,
         :agency,
-        :challenge_owner_users
+        :challenge_owner_users,
+        :events
       ])
       |> Repo.one()
 

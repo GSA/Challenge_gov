@@ -6,7 +6,6 @@ $(document).ready(function(){
   });
 
   $("#solution_document_upload").on("click", function(e) {
-    console.log("Click")
     name_input = $("#solution_document_name")
     name = name_input.val()
     file_input = $("#solution_document")

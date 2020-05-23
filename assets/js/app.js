@@ -1,3 +1,6 @@
+import "uswds/dist/css/uswds.css";
+import "uswds/dist/js/uswds.js";
+
 // We need to import the CSS so that webpack will load it.
 // The MiniCssExtractPlugin is used to separate it out into
 // its own CSS file.
@@ -8,10 +11,6 @@ import "bootstrap/dist/js/bootstrap.js";
 import "@fortawesome/fontawesome-free/css/all.css";
 
 import "../css/app.css";
-
-// TODO: Add this back after font size fixes
-// import "uswds/dist/css/uswds.css";
-// import "uswds/dist/js/uswds.js";
 
 // webpack automatically bundles all modules in your
 // entry points. Those entry points can be configured
