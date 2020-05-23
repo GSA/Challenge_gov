@@ -1,212 +1,197 @@
 <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
   <div class="card-body">
-    <div class="accordion" id="accordionWrap">
-
-      <div class="card">
-        <div class="card-header" id="headingOne">
-          <h2 class="mb-0">
-            <button class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-              General Information
-            </button>
-          </h2>
-        </div>
-        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionWrap">
-          <%= challenge_owner_field(f, @user, @action) %>
-          <%= challenge_owners_field(f, @user, @changeset, @action) %>
-          <%= challenge_status_field(f, @user, @action) %>
-          <%= FormView.file_field(f, :logo, label: "Logo") do %>
-            <%= if @data.logo_key do %>
-              <p>Current Logo:</p>
-              <%= logo_img(@data, height: 100) %>
-            <% end %>
+    <div>
+      <div>
+        <%= challenge_owner_field(f, @user, @action) %>
+        <%= challenge_owners_field(f, @user, @changeset, @action) %>
+        <%= challenge_status_field(f, @user, @action) %>
+        <%= FormView.file_field(f, :logo, label: "Logo") do %>
+          <%= if @data.logo_key do %>
+            <p>Current Logo:</p>
+            <%= logo_img(@data, height: 100) %>
           <% end %>
-          <%= FormView.file_field(f, :winner_image, label: "Winner Image") do %>
-            <%= if @data.winner_image_key do %>
-              <p>Current Winner Image:</p>
-              <%= winner_img(@data, height: 100) %>
-            <% end %>
+        <% end %>
+        <%= FormView.file_field(f, :winner_image, label: "Winner Image") do %>
+          <%= if @data.winner_image_key do %>
+            <p>Current Winner Image:</p>
+            <%= winner_img(@data, height: 100) %>
           <% end %>
-          <%= FormView.text_field(f, :challenge_manager, label: "Challenge Manager", required: true) %>
-          <%= FormView.text_field(f, :challenge_manager_email, label: "Challenge Manager Email", required: true) %>
-          <%= FormView.text_field(f, :poc_email, label: "Point of Contact Email", required: true) %>
-          <div class="<%= FormView.form_group_classes(f, :agency_id) %>">
-            <%= label(f, :agency_id, class: "col-md-4") do %>
-              Lead Agency <span class="required">*</span>
-            <% end %>
-            <div class="col-md-8">
-              <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), class: "form-control js-select") %>
-            </div>
-          </div>
-          <!-- agency logo? -->
-          <div class="<%= FormView.form_group_classes(f, :federal_partners) %>">
-            <%= label(f, :federal_partners, class: "col-md-4") do %>
-              Federal Partner Agency
-            <% end %>
-            <div class="col-md-8">
-              <%= multiple_select(f, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partner_agencies, &(&1.id)), class: "form-control js-multiselect") %>
-            </div>
-          </div>
-
-          <h4>Non Federal Partners</h4>
-          <br/>
-          <%= FormView.dynamic_nested_fields(f, :non_federal_partners, [:name]) %>
-
-          <br/>
-
-          <h4>Events</h4>
-          <br/>
-          <%= FormView.dynamic_nested_fields(f, :events, [:title, :body, :occurs_on]) %>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header" id="headingTwo">
-          <h2 class="mb-0">
-            <button class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              Challenge Information
-            </button>
-          </h2>
-        </div>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionWrap">
-          <%= FormView.text_field(f, :title, label: "Challenge Title", required: true) %>
-          <%= FormView.text_field(f, :custom_url, label: "Custom URL") %>
-          <%= FormView.text_field(f, :external_url, label: "External Challenge URL") %>
-          <%= FormView.text_field(f, :tagline, label: "Challenge Tagline") %>
-          <!-- Challenge Tile Image (req)-->
-          <div class="<%= FormView.form_group_classes(f, :type) %>">
-            <%= label(f, :type, class: "col-md-4") do %>
-            Challenge Type <span class="required">*</span>
-            <% end %>
-            <div class="col-md-8">
-              <%= multiple_select(f, :types, Challenges.challenge_types(), selected: @changeset.data.types, class: "form-control js-multiselect") %>
-            </div>
-          </div>
-          <%= FormView.textarea_field(f, :description, label: "Challenge Description", rows: 5, required: true) %>
-          <!-- Upload Additional Description Materials -->
-          <!-- character limit for below: 400 -->
-          <%= FormView.textarea_field(f, :brief_description, label: "Brief Description", rows: 5, required: true) %>
-          <%= FormView.textarea_field(f, :how_to_enter, label: "How to Enter", rows: 5, required: true) %>
-          <%= FormView.text_field(f, :fiscal_year, label: "Fiscal Year of Challenge Launch", required: true) do %>
-            <span class="help-block">Format <code>FY99</code></span>
+        <% end %>
+        <%= FormView.text_field(f, :challenge_manager, label: "Challenge Manager", required: true) %>
+        <%= FormView.text_field(f, :challenge_manager_email, label: "Challenge Manager Email", required: true) %>
+        <%= FormView.text_field(f, :poc_email, label: "Point of Contact Email", required: true) %>
+        <div class="<%= FormView.form_group_classes(f, :agency_id) %>">
+          <%= label(f, :agency_id, class: "col-md-4") do %>
+            Lead Agency <span class="required">*</span>
           <% end %>
-          <%= FormView.datetime_field(f, :start_date, required: true) %>
-          <%= FormView.datetime_field(f, :end_date, required: true) %>
-          <%= FormView.datetime_field(f, :auto_publish_date, required: true) %>
-          <div class="<%= FormView.form_group_classes(f, :multi_phase) %>">
-            <%= label(f, :multi_phase, class: "col-md-4") do %>
-            Does this Challenge have multiple Phases? <span class="required">*</span>
-            <% end %>
-            <div class="col-md-8">
-              <%= Phoenix.HTML.Form.checkbox(f, :yes_multi_phase) %>
-              <%= label f, :yes %>
-              <%= Phoenix.HTML.Form.checkbox(f, :no_multi_phase) %>
-              <%= label f, :no %>
-            </div>
+          <div class="col-md-8">
+            <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), class: "form-control js-select") %>
           </div>
-          <!-- if yes, following 3 appear: -->
-          <%= FormView.text_field(f, :number_of_phases, label: "Number of Phases") %>
-          <%= FormView.textarea_field(f, :phase_descriptions, label: "Phase Descriptions", rows: 5) %>
-          <%= FormView.textarea_field(f, :phase_dates, label: "Phase Dates", rows: 5) %>
-          <!-- Important Dates (default timeline only), add another button-->
-          <div class="<%= FormView.form_group_classes(f, :important_date) %>">
-            <%= label(f, :important_date, class: "col-md-4") do %>
-            Important Dates
-            <% end %>
-            <div class="col-md-8">
-              <%= FormView.text_field(f, :important_date_text, label: "Text") %>
-              <%= FormView.datetime_field(f, :start) %>
-              <%= FormView.datetime_field(f, :end) %><span class="help-block">(optional)</span>
-            </div>
+        </div>
+        <!-- agency logo? -->
+        <div class="<%= FormView.form_group_classes(f, :federal_partners) %>">
+          <%= label(f, :federal_partners, class: "col-md-4") do %>
+            Federal Partner Agency
+          <% end %>
+          <div class="col-md-8">
+            <%= multiple_select(f, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partner_agencies, &(&1.id)), class: "form-control js-multiselect") %>
           </div>
-          <div class="<%= FormView.form_group_classes(f, :important_dates_display) %>">
-            <%= label(f, :important_dates_display, class: "col-md-4") do %>
-            Important Dates Display
-            <% end %>
-            <div class="col-md-8">
-              <%= Phoenix.HTML.Form.checkbox(f, :display_on_timeline) %>
-              <%= label f, :display_on_timeline %>
-              <%= Phoenix.HTML.Form.checkbox(f, :display_as_text) %>
-              <%= label f, :display_as_text %>
-            </div>
+        </div>
+
+        <h4>Non Federal Partners</h4>
+        <br/>
+        <%= FormView.dynamic_nested_fields(f, :non_federal_partners, [:name]) %>
+
+        <br/>
+
+        <h4>Events</h4>
+        <br/>
+        <%= FormView.dynamic_nested_fields(f, :events, [:title, :body, :occurs_on]) %>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <%= FormView.text_field(f, :title, label: "Challenge Title", required: true) %>
+        <%= FormView.text_field(f, :custom_url, label: "Custom URL") %>
+        <%= FormView.text_field(f, :external_url, label: "External Challenge URL") %>
+        <%= FormView.text_field(f, :tagline, label: "Challenge Tagline") %>
+        <!-- Challenge Tile Image (req)-->
+        <div class="<%= FormView.form_group_classes(f, :type) %>">
+          <%= label(f, :type, class: "col-md-4") do %>
+          Challenge Type <span class="required">*</span>
+          <% end %>
+          <div class="col-md-8">
+            <%= multiple_select(f, :types, Challenges.challenge_types(), selected: @changeset.data.types, class: "form-control js-multiselect") %>
           </div>
-          <%= FormView.textarea_field(f, :judging_criteria, label: "Judging Criteria", rows: 5, required: true) %>
-          <!-- Upload Additional Judging Criteria Documents -->
         </div>
-      </div>
+        <%= FormView.textarea_field(f, :description, label: "Challenge Description", rows: 5, required: true) %>
+        <!-- Upload Additional Description Materials -->
+        <!-- character limit for below: 400 -->
+        <%= FormView.textarea_field(f, :brief_description, label: "Brief Description", rows: 5, required: true) %>
+        <%= FormView.textarea_field(f, :how_to_enter, label: "How to Enter", rows: 5, required: true) %>
+        <%= FormView.text_field(f, :fiscal_year, label: "Fiscal Year of Challenge Launch", required: true) do %>
+          <span class="help-block">Format <code>FY99</code></span>
+        <% end %>
 
-      <div class="card">
-        <div class="card-header" id="headingThree">
-          <h2 class="mb-0">
-            <button class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              Award Information
-            </button>
-          </h2>
+        <div class="form-group">
+          <%= datetime_local_input(f, :start_date, label: "Start date", 
+            class: Enum.join([FormView.form_control_classes(f, :start_date), "js-datetime-input"], " "), 
+            required: true
+          )%>
+          <%= hidden_input(f, :start_date, label: "Start date") %>
+          <%= error_tag(f, :start_date) %>
         </div>
-        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionWrap">
-          <%= FormView.text_field(f, :prize_total, label: "Total Cash Prizes Offered", required: true) %>
-          <!-- if 0, next field is required -->
-          <%= FormView.textarea_field(f, :non_monetary_prizes, label: "Non-monetary Prize Offered", rows: 2) %>
-          <%= FormView.textarea_field(f, :prize_description, label: "Prize Description", rows: 5) %>
-        </div>
-      </div>
+        <br/>
 
-      <div class="card">
-        <div class="card-header" id="headingFour">
-          <h2 class="mb-0">
-            <button class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-              Legal Information
-            </button>
-          </h2>
+        <div class="form-group">
+          <%= datetime_local_input(f, :end_date, label: "End date", 
+            class: Enum.join([FormView.form_control_classes(f, :end_date), "js-datetime-input"], " "), 
+            required: true
+          )%>
+          <%= hidden_input(f, :end_date, label: "End date") %>
+          <%= error_tag(f, :end_date) %>
+          <%= error_tag(f, :start_and_end_date) %>
         </div>
-        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionWrap">
-          <%= FormView.textarea_field(f, :eligibility_requirements, label: "Eligibility Requirements", rows: 5, required: true) %>
-          <%= FormView.textarea_field(f, :rules, label: "Rules", rows: 5, required: true) %>
-          <!-- Upload Additional Rules Documents -->
-          <%= FormView.textarea_field(f, :terms_and_conditions, label: "Terms and Conditions", rows: 5) %>
-          <!-- make this select: -->
-          <div class="<%= FormView.form_group_classes(f, :legal_authority) %>">
-            <%= label(f, :legal_authority, class: "col-md-4") do %>
-            Legal Authority <span class="required">*</span>
-            <% end %>
-            <div class="col-md-8">
-              <%= select(f, :legal_authority, Challenges.legal_authority(), class: "form-control js-select") %>
-            </div>
+        <br/>
+
+        <div class="form-group">
+          <%= datetime_local_input(f, :auto_publish_date, label: "Publish date", 
+            class: Enum.join([FormView.form_control_classes(f, :auto_publish_date), "js-datetime-input"], " "), 
+            required: true
+          )%>
+          <%= hidden_input(f, :auto_publish_date, label: "Publish date") %>
+          <%= error_tag(f, :auto_publish_date) %>
+        </div>
+        <br/>
+
+        <div class="<%= FormView.form_group_classes(f, :multi_phase) %>">
+          <%= label(f, :multi_phase, class: "col-md-4") do %>
+          Does this Challenge have multiple Phases? <span class="required">*</span>
+          <% end %>
+          <div class="col-md-8">
+            <%= Phoenix.HTML.Form.checkbox(f, :yes_multi_phase) %>
+            <%= label f, :yes %>
+            <%= Phoenix.HTML.Form.checkbox(f, :no_multi_phase) %>
+            <%= label f, :no %>
           </div>
-          <%= FormView.text_field(f, :other, label: "Other") %>
         </div>
+        <!-- if yes, following 3 appear: -->
+        <%= FormView.text_field(f, :number_of_phases, label: "Number of Phases") %>
+        <%= FormView.textarea_field(f, :phase_descriptions, label: "Phase Descriptions", rows: 5) %>
+        <%= FormView.textarea_field(f, :phase_dates, label: "Phase Dates", rows: 5) %>
+        <!-- Important Dates (default timeline only), add another button-->
+        <div class="<%= FormView.form_group_classes(f, :important_date) %>">
+          <%= label(f, :important_date, class: "col-md-4") do %>
+          Important Dates
+          <% end %>
+          <div class="col-md-8">
+            <%= FormView.text_field(f, :important_date_text, label: "Text") %>
+            <%= FormView.datetime_field(f, :start) %>
+            <%= FormView.datetime_field(f, :end) %><span class="help-block">(optional)</span>
+          </div>
+        </div>
+        <div class="<%= FormView.form_group_classes(f, :important_dates_display) %>">
+          <%= label(f, :important_dates_display, class: "col-md-4") do %>
+          Important Dates Display
+          <% end %>
+          <div class="col-md-8">
+            <%= Phoenix.HTML.Form.checkbox(f, :display_on_timeline) %>
+            <%= label f, :display_on_timeline %>
+            <%= Phoenix.HTML.Form.checkbox(f, :display_as_text) %>
+            <%= label f, :display_as_text %>
+          </div>
+        </div>
+        <%= FormView.textarea_field(f, :judging_criteria, label: "Judging Criteria", rows: 5, required: true) %>
+        <!-- Upload Additional Judging Criteria Documents -->
       </div>
+    </div>
 
-      <div class="card">
-        <div class="card-header" id="headingFive">
-          <h2 class="mb-0">
-            <button class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-              Additional Resources
-            </button>
-          </h2>
-        </div>
-        <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionWrap">
-          <!-- Upload Supplemental Documents: title and upload -->
-          <%= FormView.textarea_field(f, :faq, label: "Frequently Asked Questions", rows: 5) %>
-          <!-- upload faq materials -->
-        </div>
+    <div>
+      <div>
+        <%= FormView.text_field(f, :prize_total, label: "Total Cash Prizes Offered", required: true) %>
+        <!-- if 0, next field is required -->
+        <%= FormView.textarea_field(f, :non_monetary_prizes, label: "Non-monetary Prize Offered", rows: 2) %>
+        <%= FormView.textarea_field(f, :prize_description, label: "Prize Description", rows: 5) %>
       </div>
+    </div>
 
-      <div class="card">
-        <div class="card-header" id="headingSix">
-          <h2 class="mb-0">
-            <button class="btn btn-info collapsed" type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-              Winner Information
-            </button>
-          </h2>
+    <div>
+      <div>
+        <%= FormView.textarea_field(f, :eligibility_requirements, label: "Eligibility Requirements", rows: 5, required: true) %>
+        <%= FormView.textarea_field(f, :rules, label: "Rules", rows: 5, required: true) %>
+        <!-- Upload Additional Rules Documents -->
+        <%= FormView.textarea_field(f, :terms_and_conditions, label: "Terms and Conditions", rows: 5) %>
+        <!-- make this select: -->
+        <div class="<%= FormView.form_group_classes(f, :legal_authority) %>">
+          <%= label(f, :legal_authority, class: "col-md-4") do %>
+          Legal Authority <span class="required">*</span>
+          <% end %>
+          <div class="col-md-8">
+            <%= select(f, :legal_authority, Challenges.legal_authority(), class: "form-control js-select") %>
+          </div>
         </div>
-        <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionWrap">
-          <%= FormView.textarea_field(f, :winner_information, label: "Winner Information", rows: 5) %>
-          <!-- Winner Image -->
-        </div>
+        <%= FormView.text_field(f, :other, label: "Other") %>
       </div>
-<!-- Congressional Reporting -->
+    </div>
+
+    <div>
+      <div>
+        <!-- Upload Supplemental Documents: title and upload -->
+        <%= FormView.textarea_field(f, :faq, label: "Frequently Asked Questions", rows: 5) %>
+        <!-- upload faq materials -->
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <%= FormView.textarea_field(f, :winner_information, label: "Winner Information", rows: 5) %>
+        <!-- Winner Image -->
+      </div>
     </div>
   </div>
+
+  <!-- Congressional Reporting -->
 
   <div class="card-footer">
     <%= submit("Submit", class: "btn btn-primary pull-right") %>
