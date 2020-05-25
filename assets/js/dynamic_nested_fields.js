@@ -62,16 +62,16 @@ $(document).ready(function(){
 
     template.find(".form-collection").children(".nested-form-group").each(function() {
       field = $(this).data("field")
+      label = $(this).find(".template-label")
+      inputs = $(this).find(".template-input")
+      nonCheckboxInputs = $(this).find(".template-input:not(input[type=checkbox])") 
 
-      $(this).find(".template-label")
-        .attr("for", `${parentClass}_${childClass}_${nextIndex}_${field}`)
+      label.attr("for", `${parentClass}_${childClass}_${nextIndex}_${field}`)
 
-      $(this).find(".template-input")
-        .attr("id", `${parentClass}_${childClass}_${nextIndex}_${field}`)
-        .attr("name", `${parentClass}[${childClass}][${nextIndex}][${field}]`)
+      inputs.attr("id", `${parentClass}_${childClass}_${nextIndex}_${field}`)
+            .attr("name", `${parentClass}[${childClass}][${nextIndex}][${field}]`)
 
-      $(this).find(".template-input:not(input[type=checkbox])") 
-        .prop("required", true)
+      nonCheckboxInputs.prop("required", true)
     })
 
     nestedSection.append(form_collection)
