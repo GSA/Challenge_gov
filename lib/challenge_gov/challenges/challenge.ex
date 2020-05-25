@@ -551,8 +551,24 @@ defmodule ChallengeGov.Challenges.Challenge do
     end
   end
 
-  defp validate_phases(struct, %{"is_multi_phase" => "false", "phases" => _phases}) do
-    cast_embed(struct, :phases, with: &Phase.save_changeset/2)
+  defp validate_phases(struct, %{"is_multi_phase" => "false", "phases" => phases}) do
+    struct = cast_embed(struct, :phases, with: &Phase.save_changeset/2)
+
+    {_index, phase} = Enum.at(phases, 0)
+
+    phase
+    |> validate_phase_start_and_end
+    |> case do
+      true ->
+        struct
+
+      false ->
+        add_error(
+          struct,
+          :phase_dates,
+          "Please make sure you end date comes after your start date"
+        )
+    end
   end
 
   defp validate_phases(struct, _params), do: struct
