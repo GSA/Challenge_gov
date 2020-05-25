@@ -66,7 +66,7 @@ $(document).ready(function(){
       $(this).find(".template-label")
         .attr("for", `${parentClass}_${childClass}_${nextIndex}_${field}`)
 
-      $(this).find(".template-input:not(input[type=checkbox])")
+      $(this).find(".template-input")
         .attr("id", `${parentClass}_${childClass}_${nextIndex}_${field}`)
         .attr("name", `${parentClass}[${childClass}][${nextIndex}][${field}]`)
 
