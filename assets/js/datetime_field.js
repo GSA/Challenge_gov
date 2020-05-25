@@ -16,4 +16,10 @@ $(document).ready(function(){
 
     $(this).siblings("input[type=hidden]").val(utc_time)
   })
+
+  $(".js-local-datetime").each(function() {
+    let utc_time = $(this).text()
+    let local_time = moment(utc_time).local().format("llll")
+    $(this).text(local_time)
+  })
 })

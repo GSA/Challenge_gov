@@ -1,0 +1,120 @@
+<div class="col phase-fields collapse">
+  <!-- Phase Form -->
+  <div class="nested-items col">
+    <%= if (Map.has_key?(@form, :data) and length(@form.data.phases) > 0) or 
+      (Map.has_key?(@form.source.changes, :phases) and length(@form.source.changes.phases) > 0) do %>
+      <!-- With phases attached or pending -->
+      <%= inputs_for(@form, :phases, [skip_hidden: true], fn phase_form -> %>
+        <div class="form-collection" data-index="<%= phase_form.index %>">
+          <%= Enum.map(phase_form.hidden, fn {k, v} -> %>
+            <%= hidden_input(phase_form, k, value: v) %>
+          <% end) %>
+
+          <div class="<%= FormView.nested_form_group_classes(@form, :phases, :title, 0) %>">
+            <%= text_input phase_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, phase_form.index)}", required: true %>
+            <%= error_tag(phase_form, :title) %>
+          </div>
+
+          <div class="<%= FormView.nested_form_group_classes(@form, :phases, :start_date, 1) %>">
+            <div class="<%= FormView.form_group_classes(phase_form, :start_date) %>">
+              <%= datetime_local_input(phase_form, :start_date, label: "Start date", 
+                class: Enum.join([FormView.form_control_classes(phase_form, :start_date), "js-datetime-input"], " "), 
+                required: true
+              )%>    
+              <%= hidden_input(phase_form, :start_date, label: "Start date") %>
+              <%= error_tag(phase_form, :start_date) %>
+            </div>
+          </div>
+
+          <div class="<%= FormView.nested_form_group_classes(@form, :phases, :end_date, 2) %>">
+            <div class="<%= FormView.form_group_classes(phase_form, :end_date) %>">
+              <%= datetime_local_input(phase_form, :end_date, label: "End date", 
+                class: Enum.join([FormView.form_control_classes(phase_form, :end_date), "js-datetime-input"], " "), 
+                required: true
+              )%>
+              <%= hidden_input(phase_form, :end_date, label: "End date") %>
+              <%= error_tag(phase_form, :end_date) %>
+            </div>
+          </div>
+
+          <div class="<%= FormView.nested_form_group_classes(@form, :phases, :open_to_submissions, 3) %> row">
+            <%= if phase_form.index == 0 do %>
+              <span><i>Challenge is open to submissions during this period</i></span>
+              <%= hidden_input phase_form, :open_to_submissions, value: true %>
+            <% else %>
+              <%= checkbox phase_form, :open_to_submissions, class: "" %>
+              <%= label(phase_form, :open_to_submissions, "Challenge is open to submissions during this period") %>
+            <% end %>
+          </div>
+          
+          <%= if phase_form.index != 0 do %>
+            <div class="remove-nested-section btn btn-link">Remove</div>
+          <% end %>
+        </div>
+      <% end) %>      
+    <% else %>            
+      <!-- With no phases pending or attached -->
+      <div class="form-collection" data-index="0">
+        <div class="form-group nested-form-group" data-field="title">
+          <input class="form-control template-input" id="challenge_phases_0_title" name="challenge[phases][0][title]" type="text" required="">
+        </div>
+
+        <div class="form-group nested-form-group" data-field="start_date">
+          <div class="form-group">
+            <input class="form-control js-datetime-input" id="challenge_phases_0_start_date" label="Start date" name="challenge_phases_0_start_date]" type="datetime-local">
+            <input id="challenge_phases_0_start_date" label="Start date" name="challenge_phases_0_start_date]" type="hidden">            
+          </div>
+        </div>
+
+        <div class="form-group nested-form-group" data-field="end_date">
+          <div class="form-group">
+            <input class="form-control js-datetime-input" id="challenge_phases_0_end_date" label="End date" name="challenge_phases_0_end_date]" type="datetime-local">
+            <input id="challenge_phases_0_end_date" label="End date" name="challenge_phases_0_end_date]" type="hidden">            
+          </div>
+        </div>
+
+        <div class="form-group nested-form-group row" data-field="open_to_submissions">
+          <input name="challenge_phases_0_open_to_submissions]" type="hidden" value="true">
+          <label class="template-label" for="challenge_phases_0_open_to_submissions">Challenge is open to submissions during this period</label>          
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Add new phase button -->
+  <div class="add-nested-section btn btn-primary" data-parent="challenge" data-child="phases">Add phase</div>
+
+  <!-- Phase Template -->
+  <div class="dynamic-nested-form-template d-none">
+    <div class="form-collection">
+      <div class="<%= FormView.nested_form_group_classes(@form, :phases, :title, -1) %>" data-field="title">
+        <%= text_input(:template, :title, class: "form-control template-input") %>
+      </div>
+
+      <div class="<%= FormView.nested_form_group_classes(@form, :phases, :start_date, -1) %>" data-field="start_date">
+        <div class="<%= FormView.form_group_classes(@form, :start_date) %>">
+          <%= datetime_local_input(:template, :start_date, label: "Start date", 
+            class: Enum.join([FormView.form_control_classes(@form, :start_date), "js-datetime-input"], " ") 
+          )%>    
+          <%= hidden_input(:template, :start_date, label: "Start date") %>
+        </div>
+      </div>
+
+      <div class="<%= FormView.nested_form_group_classes(@form, :phases, :end_date, -1) %>" data-field="end_date">
+        <div class="<%= FormView.form_group_classes(@form, :end_date) %>">
+          <%= datetime_local_input(:template, :end_date, label: "End date", 
+            class: Enum.join([FormView.form_control_classes(@form, :end_date), "js-datetime-input"], " ") 
+          )%>
+          <%= hidden_input(:template, :end_date, label: "End date") %>
+        </div>
+      </div>
+
+      <div class="<%= FormView.nested_form_group_classes(@form, :phases, :open_to_submissions, -1) %> row" data-field="open_to_submissions">
+        <%= checkbox :template, :open_to_submissions, class: "template-input" %>
+        <%= label(:template, :open_to_submissions, "Challenge is open to submissions during this period", class: "template-label") %>
+      </div>
+
+      <div class="remove-nested-section btn btn-link">Remove</div>
+    </div>
+  </div>
+</div>

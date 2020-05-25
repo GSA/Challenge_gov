@@ -2,6 +2,20 @@
 <br/>
 
 <%= inputs_for(@form, :phases, fn ff -> %>
-  <%= ff.data.title %>
-  <%= text_input(ff, :title) %>
+  <div class="ml-3 mb-3">
+    <%= if ff.data.title do %>
+      <div class="row">
+        <span>Title: <%= ff.data.title %></span>
+      </div>
+    <% end %>
+    <div class="row">
+      <span>Start date: <span class="js-local-datetime"><%= ff.data.start_date %></span></span>
+    </div>
+    <div class="row">
+      <span>End date: <span class="js-local-datetime"><%= ff.data.end_date %></span></span>
+    </div>
+    <div class="row">
+      <span>Open to submissions: <%= ff.data.open_to_submissions %></span>
+    </div>
+  </div>
 <% end) %>
