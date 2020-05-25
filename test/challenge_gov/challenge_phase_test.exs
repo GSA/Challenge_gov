@@ -19,13 +19,14 @@ defmodule ChallengeGov.ChallengePhasesTest do
             "challenge" => %{
               "section" => "details",
               "challenge_title" => challenge.title,
-              "upload_logo" => false,
-              "has_multiple_phases" => true,
+              "upload_logo" => "false",
+              "is_multi_phase" => "true",
               "phases" => %{
                 "0" => %{
                   "title" => "Test",
-                  "start_date" => Timex.shift(Timex.now(), hours: 1),
-                  "end_date" => Timex.shift(Timex.now(), hours: 2)
+                  "start_date" => iso_timestamp(),
+                  "end_date" => iso_timestamp(hours: 1),
+                  "open_to_submissions" => true
                 }
               }
             }
@@ -54,7 +55,7 @@ defmodule ChallengeGov.ChallengePhasesTest do
             "challenge" => %{
               "section" => "details",
               "challenge_title" => challenge.title,
-              "upload_logo" => false,
+              "upload_logo" => "false",
               "phases" => %{
                 "0" => %{
                   "title" => "Test"
@@ -83,23 +84,26 @@ defmodule ChallengeGov.ChallengePhasesTest do
             "challenge" => %{
               "section" => "details",
               "challenge_title" => challenge.title,
-              "upload_logo" => false,
-              "has_multiple_phases" => true,
+              "upload_logo" => "false",
+              "is_multi_phase" => "true",
               "phases" => %{
                 "0" => %{
                   "title" => "Test",
-                  "start_date" => Timex.shift(Timex.now(), hours: 1),
-                  "end_date" => Timex.shift(Timex.now(), hours: 2)
+                  "start_date" => iso_timestamp(hours: 1),
+                  "end_date" => iso_timestamp(hours: 2),
+                  "open_to_submissions" => true
                 },
                 "1" => %{
                   "title" => "Test 1",
-                  "start_date" => Timex.shift(Timex.now(), hours: 3),
-                  "end_date" => Timex.shift(Timex.now(), hours: 4)
+                  "start_date" => iso_timestamp(hours: 3),
+                  "end_date" => iso_timestamp(hours: 4),
+                  "open_to_submissions" => true
                 },
                 "2" => %{
                   "title" => "Test 2",
-                  "start_date" => Timex.shift(Timex.now(), hours: 5),
-                  "end_date" => Timex.shift(Timex.now(), hours: 6)
+                  "start_date" => iso_timestamp(hours: 5),
+                  "end_date" => iso_timestamp(hours: 6),
+                  "open_to_submissions" => true
                 }
               }
             }
@@ -125,23 +129,26 @@ defmodule ChallengeGov.ChallengePhasesTest do
             "challenge" => %{
               "section" => "details",
               "challenge_title" => challenge.title,
-              "upload_logo" => false,
-              "has_multiple_phases" => true,
+              "upload_logo" => "false",
+              "is_multi_phase" => "true",
               "phases" => %{
                 "0" => %{
                   "title" => "Test",
-                  "start_date" => Timex.shift(Timex.now(), hours: 1),
-                  "end_date" => Timex.shift(Timex.now(), hours: 2)
+                  "start_date" => iso_timestamp(hours: 1),
+                  "end_date" => iso_timestamp(hours: 2),
+                  "open_to_submissions" => true
                 },
                 "1" => %{
                   "title" => "Test 1",
-                  "start_date" => Timex.shift(Timex.now(), hours: 1),
-                  "end_date" => Timex.shift(Timex.now(), hours: 4)
+                  "start_date" => iso_timestamp(hours: 1),
+                  "end_date" => iso_timestamp(hours: 4),
+                  "open_to_submissions" => true
                 },
                 "2" => %{
                   "title" => "Test 2",
-                  "start_date" => Timex.shift(Timex.now(), hours: 5),
-                  "end_date" => Timex.shift(Timex.now(), hours: 6)
+                  "start_date" => iso_timestamp(hours: 5),
+                  "end_date" => iso_timestamp(hours: 6),
+                  "open_to_submissions" => true
                 }
               }
             }
@@ -165,23 +172,26 @@ defmodule ChallengeGov.ChallengePhasesTest do
             "challenge" => %{
               "section" => "details",
               "challenge_title" => challenge.title,
-              "upload_logo" => false,
-              "has_multiple_phases" => true,
+              "upload_logo" => "false",
+              "is_multi_phase" => "true",
               "phases" => %{
                 "0" => %{
                   "title" => "Test",
-                  "start_date" => Timex.shift(Timex.now(), hours: 2),
-                  "end_date" => Timex.shift(Timex.now(), hours: 1)
+                  "start_date" => iso_timestamp(hours: 2),
+                  "end_date" => iso_timestamp(hours: 1),
+                  "open_to_submissions" => true
                 },
                 "1" => %{
                   "title" => "Test 1",
-                  "start_date" => Timex.shift(Timex.now(), hours: 3),
-                  "end_date" => Timex.shift(Timex.now(), hours: 4)
+                  "start_date" => iso_timestamp(hours: 3),
+                  "end_date" => iso_timestamp(hours: 4),
+                  "open_to_submissions" => true
                 },
                 "2" => %{
                   "title" => "Test 2",
-                  "start_date" => Timex.shift(Timex.now(), hours: 5),
-                  "end_date" => Timex.shift(Timex.now(), hours: 6)
+                  "start_date" => iso_timestamp(hours: 5),
+                  "end_date" => iso_timestamp(hours: 6),
+                  "open_to_submissions" => true
                 }
               }
             }
@@ -207,13 +217,14 @@ defmodule ChallengeGov.ChallengePhasesTest do
             "challenge" => %{
               "section" => "details",
               "challenge_title" => challenge.title,
-              "upload_logo" => false,
-              "has_multiple_phases" => true,
+              "upload_logo" => "false",
+              "is_multi_phase" => "true",
               "phases" => %{
                 "0" => %{
                   "title" => "Test",
-                  "start_date" => Timex.shift(Timex.now(), hours: 1),
-                  "end_date" => Timex.shift(Timex.now(), hours: 2)
+                  "start_date" => iso_timestamp(hours: 1),
+                  "end_date" => iso_timestamp(hours: 2),
+                  "open_to_submissions" => true
                 }
               }
             }
@@ -236,13 +247,14 @@ defmodule ChallengeGov.ChallengePhasesTest do
             "challenge" => %{
               "section" => "details",
               "challenge_title" => challenge.title,
-              "upload_logo" => false,
-              "has_multiple_phases" => true,
+              "upload_logo" => "false",
+              "is_multi_phase" => "true",
               "phases" => %{
                 "0" => %{
                   "title" => "New title",
-                  "start_date" => Timex.shift(Timex.now(), hours: 1),
-                  "end_date" => Timex.shift(Timex.now(), hours: 2)
+                  "start_date" => iso_timestamp(hours: 1),
+                  "end_date" => iso_timestamp(hours: 2),
+                  "open_to_submissions" => true
                 }
               }
             }
@@ -270,23 +282,26 @@ defmodule ChallengeGov.ChallengePhasesTest do
             "challenge" => %{
               "section" => "details",
               "challenge_title" => challenge.title,
-              "upload_logo" => false,
-              "has_multiple_phases" => true,
+              "upload_logo" => "false",
+              "is_multi_phase" => "true",
               "phases" => %{
                 "0" => %{
                   "title" => "Test",
-                  "start_date" => Timex.shift(Timex.now(), hours: 1),
-                  "end_date" => Timex.shift(Timex.now(), hours: 2)
+                  "start_date" => iso_timestamp(hours: 1),
+                  "end_date" => iso_timestamp(hours: 2),
+                  "open_to_submissions" => true
                 },
                 "1" => %{
                   "title" => "Test 1",
-                  "start_date" => Timex.shift(Timex.now(), hours: 3),
-                  "end_date" => Timex.shift(Timex.now(), hours: 4)
+                  "start_date" => iso_timestamp(hours: 3),
+                  "end_date" => iso_timestamp(hours: 4),
+                  "open_to_submissions" => true
                 },
                 "2" => %{
                   "title" => "Test 2",
-                  "start_date" => Timex.shift(Timex.now(), hours: 5),
-                  "end_date" => Timex.shift(Timex.now(), hours: 6)
+                  "start_date" => iso_timestamp(hours: 5),
+                  "end_date" => iso_timestamp(hours: 6),
+                  "open_to_submissions" => true
                 }
               }
             }
@@ -311,26 +326,29 @@ defmodule ChallengeGov.ChallengePhasesTest do
             "challenge" => %{
               "section" => "details",
               "challenge_title" => challenge.title,
-              "upload_logo" => false,
-              "has_multiple_phases" => true,
+              "upload_logo" => "false",
+              "is_multi_phase" => "true",
               "phases" => %{
                 "0" => %{
                   "id" => Enum.at(phase_ids, 0),
                   "title" => "Test 3",
-                  "start_date" => Timex.shift(Timex.now(), hours: 1),
-                  "end_date" => Timex.shift(Timex.now(), hours: 2)
+                  "start_date" => iso_timestamp(hours: 1),
+                  "end_date" => iso_timestamp(hours: 2),
+                  "open_to_submissions" => true
                 },
                 "1" => %{
                   "id" => Enum.at(phase_ids, 1),
                   "title" => "Test 4",
-                  "start_date" => Timex.shift(Timex.now(), hours: 3),
-                  "end_date" => Timex.shift(Timex.now(), hours: 4)
+                  "start_date" => iso_timestamp(hours: 3),
+                  "end_date" => iso_timestamp(hours: 4),
+                  "open_to_submissions" => true
                 },
                 "2" => %{
                   "id" => Enum.at(phase_ids, 2),
                   "title" => "Test 5",
-                  "start_date" => Timex.shift(Timex.now(), hours: 5),
-                  "end_date" => Timex.shift(Timex.now(), hours: 6)
+                  "start_date" => iso_timestamp(hours: 5),
+                  "end_date" => iso_timestamp(hours: 6),
+                  "open_to_submissions" => true
                 }
               }
             }
@@ -345,5 +363,14 @@ defmodule ChallengeGov.ChallengePhasesTest do
       phase_titles = Enum.map(challenge.phases, & &1.title)
       assert phase_titles === ["Test 3", "Test 4", "Test 5"]
     end
+  end
+
+  defp iso_timestamp(opts \\ []) do
+    {:ok, timestamp} =
+      Timex.now()
+      |> Timex.shift(opts)
+      |> Timex.format("{ISO:Extended}")
+
+    timestamp
   end
 end

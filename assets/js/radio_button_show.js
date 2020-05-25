@@ -11,4 +11,29 @@ $(document).ready(function(){
       $(".logo-file-field input").val("")
     }
   })
+  
+  // Adding phases show/hide section
+  if ($(".multi-phase-toggle input[type=radio][value=true]:checked").length > 0) {
+    $(".phase-fields .nested-items").find("input").prop("disabled", false)
+    $(".phase-fields").collapse("show")
+    $(".single-phase-section").collapse("hide")
+  }
+
+  if ($(".multi-phase-toggle input[type=radio][value=false]:checked").length > 0) {
+    $(".phase-fields .nested-items").find("input").prop("disabled", true)
+    $(".phase-fields").collapse("hide")
+    $(".single-phase-section").collapse("show")
+  }
+
+  $(".multi-phase-toggle input[type=radio]").on("click", function() {
+    if ($(this).val() == "true") {
+      $(".phase-fields").collapse("show")
+      $(".single-phase-section").collapse("hide")
+      $(".phase-fields .nested-items").find("input").prop("disabled", false)
+    } else {
+      $(".phase-fields").collapse("hide")
+      $(".single-phase-section").collapse("show")
+      $(".phase-fields .nested-items").find("input").prop("disabled", true)
+    }
+  })
 })

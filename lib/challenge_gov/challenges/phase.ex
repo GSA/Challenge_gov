@@ -13,7 +13,7 @@ defmodule ChallengeGov.Challenges.Phase do
     field(:title, :string)
     field(:start_date, :utc_datetime)
     field(:end_date, :utc_datetime)
-    field(:open_to_submissions, :boolean, default: false)
+    field(:open_to_submissions, :boolean)
 
     timestamps()
   end
@@ -46,7 +46,8 @@ defmodule ChallengeGov.Challenges.Phase do
     struct
     |> save_changeset(params)
     |> validate_required([
-      :title
+      :title,
+      :open_to_submissions
     ])
   end
 end

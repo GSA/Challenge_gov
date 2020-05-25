@@ -146,9 +146,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:rejection_message, :string)
 
     # Virtual Fields
-    field(:upload_logo, :boolean, virtual: true)
     field(:logo, :string, virtual: true)
-    field(:is_multi_phase, :boolean, virtual: true)
+    field(:upload_logo, :boolean)
+    field(:is_multi_phase, :boolean)
 
     # Meta Timestamps
     field(:deleted_at, :utc_datetime)
@@ -211,7 +211,9 @@ defmodule ChallengeGov.Challenges.Challenge do
       :faq,
       :winner_information,
       :types,
-      :auto_publish_date
+      :auto_publish_date,
+      :upload_logo,
+      :is_multi_phase
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
@@ -255,9 +257,6 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   def details_changeset(struct, params) do
     struct
-    |> cast(params, [
-      :upload_logo
-    ])
     |> validate_required([
       :title,
       :tagline,
@@ -265,9 +264,9 @@ defmodule ChallengeGov.Challenges.Challenge do
       :brief_description,
       :description,
       :auto_publish_date,
-      :upload_logo
+      :upload_logo,
+      :is_multi_phase
     ])
-    |> cast_embed(:phases, with: &Phase.save_changeset/2)
     |> validate_length(:tagline, max: 90)
     |> validate_length(:brief_description, max: 200)
     |> validate_length(:description, max: 4000)
@@ -523,7 +522,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> String.replace(" ", "-")
   end
 
-  defp validate_phases(struct, %{"has_multiple_phases" => true, "phases" => phases}) do
+  defp validate_phases(struct, %{"is_multi_phase" => "true", "phases" => phases}) do
+    struct = cast_embed(struct, :phases, with: &Phase.multi_phase_changeset/2)
+
     phases
     |> Enum.map(fn {index, phase} ->
       overlap_check =
@@ -550,13 +551,21 @@ defmodule ChallengeGov.Challenges.Challenge do
     end
   end
 
-  defp validate_phases(struct, %{"has_multiple_phases" => false, "phases" => _phases}) do
-    struct
+  defp validate_phases(struct, %{"is_multi_phase" => "false", "phases" => _phases}) do
+    cast_embed(struct, :phases, with: &Phase.save_changeset/2)
   end
 
-  # If the
+  defp validate_phases(struct, _params), do: struct
+
+  defp validate_phase_start_and_end(%{"start_date" => "", "end_date" => ""}), do: false
+
   defp validate_phase_start_and_end(%{"start_date" => start_date, "end_date" => end_date}) do
-    Timex.compare(start_date, end_date) < 0
+    with {:ok, start_date} <- Timex.parse(start_date, "{ISO:Extended}"),
+         {:ok, end_date} <- Timex.parse(end_date, "{ISO:Extended}") do
+      Timex.compare(start_date, end_date) < 0
+    else
+      _ -> false
+    end
   end
 
   defp validate_phase_start_and_end(_phase), do: false
@@ -566,12 +575,20 @@ defmodule ChallengeGov.Challenges.Challenge do
          "start_date" => b_start,
          "end_date" => b_end
        }) do
-    if (a_start <= b_start && b_start <= a_end) ||
-         (a_start <= b_end && b_end <= a_end) ||
-         (b_start < a_start && a_end < b_end) do
-      true
+    with {:ok, a_start} <- Timex.parse(a_start, "{ISO:Extended}"),
+         {:ok, a_end} <- Timex.parse(a_end, "{ISO:Extended}"),
+         {:ok, b_start} <- Timex.parse(b_start, "{ISO:Extended}"),
+         {:ok, b_end} <- Timex.parse(b_end, "{ISO:Extended}") do
+      if (Timex.compare(a_start, b_start) <= 0 && Timex.compare(b_start, a_end) <= 0) ||
+           (Timex.compare(a_start, b_end) <= 0 && Timex.compare(b_end, a_end) <= 0) ||
+           (Timex.compare(b_start, a_start) < 0 && Timex.compare(a_end, b_end) < 0) do
+        true
+      else
+        false
+      end
     else
-      false
+      _ ->
+        false
     end
   end
 

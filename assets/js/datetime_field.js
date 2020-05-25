@@ -10,7 +10,7 @@ $(document).ready(function(){
   })
 
   // When datetime input changes convert local to utc in a hidden field after it
-  $(".js-datetime-input").on("input", function() {
+  $("body").on("input", ".js-datetime-input", function() {
     let local_time = $(this).val()
     let utc_time = moment(local_time).utc().format()
 
