@@ -60,26 +60,36 @@ $(document).ready(function(){
     form_collection = template.find(".form-collection")
     form_collection.attr("data-index", nextIndex)
 
-    template.find(".form-collection").children(".nested-form-group").each(function() {
+    template.find(".form-collection").find(".nested-form-group").each(function() {
       field = $(this).data("field")
       label = $(this).find(".template-label")
       inputs = $(this).find(".template-input")
       nonCheckboxInputs = $(this).find(".template-input:not(input[type=checkbox])") 
 
-      label.attr("for", `${parentClass}_${childClass}_${nextIndex}_${field}`)
+      newId = `${parentClass}_${childClass}_${nextIndex}_${field}`
+      newName = `${parentClass}[${childClass}][${nextIndex}][${field}]`
 
-      inputs.attr("id", `${parentClass}_${childClass}_${nextIndex}_${field}`)
-            .attr("name", `${parentClass}[${childClass}][${nextIndex}][${field}]`)
+      label.attr("for", newId)
+      if (field == "title") { label.text(`Phase ${nextIndex + 1} title *`) }
+      if (field == "start_date") { label.text(`Phase ${nextIndex + 1} submission start date and time *`) }
+      if (field == "end_date") { label.text(`Phase ${nextIndex + 1} submission end date and time *`) }
+
+      inputs.attr("id", newId)
+            .attr("name", newName)
 
       nonCheckboxInputs.prop("required", true)
     })
+
+    template.find(".remove-nested-section").text(`Remove phase ${nextIndex + 1}`)
 
     nestedSection.append(form_collection)
   })
 
   $(".phase-fields").on("click", ".remove-nested-section", (e) => {
     e.preventDefault()
-    parent = $(e.target).closest(".form-collection")
-    parent.remove()
+    if (window.confirm("Are you sure you want to remove this phase?")) {
+      parent = $(e.target).closest(".form-collection")
+      parent.remove()
+    }
   })
 })
