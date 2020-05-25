@@ -57,4 +57,5 @@
       </div>
     </div>
   <% end %>
+  <small class="form-text text-muted font-italic mt-3">All times listed in local timezone</small>
 </div>

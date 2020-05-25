@@ -5,7 +5,7 @@
       (Map.has_key?(@form.source.changes, :phases) and length(@form.source.changes.phases) > 0) do %>
       <!-- With phases attached or pending -->
       <%= inputs_for(@form, :phases, [skip_hidden: true], fn phase_form -> %>
-        <div class="form-collection mb-5" data-index="<%= phase_form.index %>">
+        <div class="form-collection mb-3" data-index="<%= phase_form.index %>">
           <%= Enum.map(phase_form.hidden, fn {k, v} -> %>
             <%= hidden_input(phase_form, k, value: v) %>
           <% end) %>
@@ -65,7 +65,7 @@
       <% end) %>      
     <% else %>            
       <!-- With no phases pending or attached -->
-      <div class="form-collection mb-5" data-index="0">
+      <div class="form-collection mb-3" data-index="0">
         <div class="form-group nested-form-group row" data-field="title">
           <div class="col">
             <label for="challenge_phases_0_title">Phase 1 title *</label>
@@ -101,12 +101,14 @@
     <% end %>
   </div>
 
+  <small class="form-text text-muted font-italic">All times listed in local timezone</small>
+
   <!-- Add new phase button -->
-  <div class="add-nested-section btn btn-primary" data-parent="challenge" data-child="phases">Add phase</div>
+  <div class="add-nested-section btn btn-primary mt-5" data-parent="challenge" data-child="phases">Add phase</div>
 
   <!-- Phase Template -->
   <div class="dynamic-nested-form-template d-none">
-    <div class="form-collection mb-5">
+    <div class="form-collection mb-3">
       <div class="<%= FormView.nested_form_group_classes(@form, :phases, :title, -1) %> row" data-field="title">
         <div class="col">
           <%= label :template, :title, class: "template-label" %>
