@@ -31,9 +31,14 @@ $(document).ready(function(){
       $(".single-phase-section").collapse("hide")
       $(".phase-fields .nested-items").find("input").prop("disabled", false)
     } else {
-      $(".phase-fields").collapse("hide")
-      $(".single-phase-section").collapse("show")
-      $(".phase-fields .nested-items").find("input").prop("disabled", true)
+      if (window.confirm("This will remove all information from any phases you may have created. Are you sure?")) {
+        $(".phase-fields").collapse("hide")
+        $(".single-phase-section").collapse("show")
+        $(".phase-fields .nested-items").find("input").prop("disabled", true)
+        return true
+      } else {
+        return false
+      }
     }
   })
 })

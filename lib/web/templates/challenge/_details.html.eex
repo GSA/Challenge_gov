@@ -114,10 +114,6 @@
 <div class="form-group">
   <label class="control-label col-md-4"><%= FormView.label_field(@form, :multi_phase, label: "This challenge contains multiple phases", required: true) %></label>
   <div class="col ml-2">
-    <div class="callout callout-danger">
-    <%= error_tag @form, :phase_dates, "invalid-feedback d-block" %>
-    </div>
-    <br/>
     <div class="multi-phase-toggle">
       <div class="row">
         <%= label class: "control-label" do %>
@@ -131,6 +127,9 @@
           No
         <% end %>
       </div>
+    </div>
+    <div>
+      <%= error_tag @form, :phase_dates, "callout callout-danger bg-red d-block my-3" %>
     </div>
     <br/>
 
