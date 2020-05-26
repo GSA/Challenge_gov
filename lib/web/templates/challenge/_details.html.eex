@@ -114,20 +114,25 @@
 <div class="form-group">
   <label class="control-label col-md-4"><%= FormView.label_field(@form, :multi_phase, label: "This challenge contains multiple phases", required: true) %></label>
   <div class="col ml-2">
-    <div class="row">
-      <%= label class: "control-label" do %>
-        <%= radio_button(@form, :multi_phase, true, class: "mr-2", required: true) %>
-        Yes
-      <% end %>
+    <%= error_tag @form, :phase_dates, "invalid-feedback d-block" %>
+    <br/>
+    <div class="multi-phase-toggle">
+      <div class="row">
+        <%= label class: "control-label" do %>
+          <%= radio_button(@form, :is_multi_phase, true, class: "mr-2", required: true) %>
+          Yes
+        <% end %>
+      </div>
+      <div class="row">
+        <%= label class: "control-label" do %>
+          <%= radio_button(@form, :is_multi_phase, false, class: "mr-2", required: true) %>
+          No
+        <% end %>
+      </div>
     </div>
-    <div class="row">
-      <%= label class: "control-label" do %>
-        <%= radio_button(@form, :multi_phase, false, class: "mr-2", required: true) %>
-        No
-      <% end %>
-    </div>
-    <div class="row phase-file-fields collapse">
-      Phase information
-    </div>
+    <br/>
+
+    <%= render Web.ChallengeView, "phases/_single_phase.html", form: @form %>
+    <%= render Web.ChallengeView, "phases/_multi_phase.html", form: @form %>
   </div>
 </div>

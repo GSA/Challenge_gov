@@ -185,9 +185,9 @@ defmodule Web.Api.ChallengeControllerTest do
       "non_federal_partners" => [],
       "number_of_phases" => nil,
       "winner_image" => nil,
-      "tagline" => nil,
+      "tagline" => challenge.tagline,
       "prize_total" => nil,
-      "brief_description" => nil,
+      "brief_description" => challenge.brief_description,
       "phase_descriptions" => nil,
       "federal_partners" => []
     }

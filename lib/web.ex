@@ -31,7 +31,8 @@ defmodule Web do
     quote do
       use Phoenix.View,
         root: "lib/web/templates",
-        namespace: Web
+        namespace: Web,
+        pattern: "**/*"
 
       # Import convenience functions from controllers
       import Phoenix.Controller,

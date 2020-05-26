@@ -475,6 +475,89 @@ defmodule Web.FormView do
     end
   end
 
+  # def nested_inputs(form, field, sub_field) do
+  #   inputs_for(form, field, [], fn fp ->
+  #     text_input(fp, sub_field)
+  #   end)
+  # end
+
+  # def phase_dynamic_nested_fields(form) do
+  #   content_tag(:div, class: "col dynamic-nested-form") do
+  #     [
+  #       content_tag(:div, class: "nested-items") do
+  #         inputs_for(form, :phases, fn child ->
+  #           [
+  #             content_tag :div, class: "form-collection", data: [index: child.index] do
+  #               [
+  #                 content_tag(:div,
+  #                   class: nested_form_group_classes(form, :phases, field, child.index)
+  #                 ) do
+  #                   [
+  #                     label(child, :title, class: "col-md-4"),
+  #                     content_tag(:div, class: "row") do
+  #                       [
+  #                         content_tag(:div, class: "col-md-10") do
+  #                           [
+  #                             text_input(child, field, class: classes),
+  #                             error_tag(child, field)
+  #                           ]
+  #                         end,
+  #                         content_tag(:div, class: "col-md-2") do
+  #                           content_tag(:div, "Remove",
+  #                             class: "remove-nested-section btn btn-link"
+  #                           )
+  #                         end
+  #                       ]
+  #                     end
+  #                   ]
+  #                 end
+  #               end)
+  #             ]
+  #           ]
+  #         end)
+  #       end,
+  #       content_tag(:div, "Add phase")
+  #         class: "add-nested-section btn btn-primary",
+  #         data: [parent: form.name, child: :phases]
+  #       ),
+  #       content_tag(:div, class: "col dynamic-nested-form-template d-none") do
+  #         [
+  #           content_tag(:div, class: "form-collection") do
+  #             [
+  #               Enum.map(Enum.with_index(fields), fn field_with_index ->
+  #                 {field, index} = field_with_index
+
+  #                 content_tag(:div,
+  #                   class: nested_form_group_classes(form, children, field, -1),
+  #                   data: [field: field]
+  #                 ) do
+  #                   [
+  #                     label(:template, field, class: "col-md-4 template-label"),
+  #                     content_tag(:div, class: "row") do
+  #                       [
+  #                         content_tag(:div, class: "col-md-10") do
+  #                           text_input(:template, field, class: "form-control template-input")
+  #                         end,
+  #                         content_tag(:div, class: "col-md-2") do
+  #                           if index < 1 do
+  #                             content_tag(:div, "Remove",
+  #                               class: "remove-nested-section btn btn-link"
+  #                             )
+  #                           end
+  #                         end
+  #                       ]
+  #                     end
+  #                   ]
+  #                 end
+  #               end)
+  #             ]
+  #           end
+  #         ]
+  #       end
+  #     ]
+  #   end
+  # end
+
   @doc """
   Checkbox helper for multiple checkbox situations
   """
