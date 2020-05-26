@@ -3,7 +3,16 @@ defmodule Web.AgencyView do
 
   alias ChallengeGov.Agencies
   alias ChallengeGov.Agencies.Avatar
+  alias Web.FormView
+  alias Web.SharedView
+  alias Web.AgencyView
   alias Stein.Storage
+
+  def name_link(conn, agency) do
+    if agency do
+      link(agency.name, to: Routes.agency_path(conn, :show, agency.id))
+    end
+  end
 
   def avatar_img(agency, opts \\ []) do
     case is_nil(agency) or is_nil(agency.avatar_key) do

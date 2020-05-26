@@ -2,7 +2,7 @@ defmodule Web.EmailView do
   use Web, :view
 
   alias Web.Endpoint
-  alias Web.Admin.ChallengeView
+  alias Web.ChallengeView
   alias Web.SharedView
-  alias Web.Admin.SolutionView
+  alias Web.SolutionView
 end

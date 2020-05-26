@@ -18,7 +18,7 @@ defmodule Web.Plugs.VerifyAdmin do
 
       false ->
         conn
-        |> redirect(to: Routes.admin_dashboard_path(conn, :index))
+        |> redirect(to: Routes.dashboard_path(conn, :index))
         |> halt()
     end
   end

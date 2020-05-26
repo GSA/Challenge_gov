@@ -1,4 +1,4 @@
-defmodule Web.Admin.SolutionControllerTest do
+defmodule Web.SolutionControllerTest do
   use Web.ConnCase
 
   alias ChallengeGov.Solutions
@@ -18,7 +18,7 @@ defmodule Web.Admin.SolutionControllerTest do
 
       SolutionHelpers.create_submitted_solution(%{}, user, challenge_2)
 
-      conn = get(conn, Routes.admin_challenge_solution_path(conn, :index, challenge.id))
+      conn = get(conn, Routes.challenge_solution_path(conn, :index, challenge.id))
 
       %{solutions: solutions, pagination: _pagination} = conn.assigns
 
@@ -51,7 +51,7 @@ defmodule Web.Admin.SolutionControllerTest do
       )
 
       conn =
-        get(conn, Routes.admin_challenge_solution_path(conn, :index, challenge.id),
+        get(conn, Routes.challenge_solution_path(conn, :index, challenge.id),
           filter: %{title: "Filtered"}
         )
 
@@ -65,7 +65,7 @@ defmodule Web.Admin.SolutionControllerTest do
     test "redirect to sign in when signed out", %{conn: conn} do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
-      conn = get(conn, Routes.admin_challenge_solution_path(conn, :index, challenge.id))
+      conn = get(conn, Routes.challenge_solution_path(conn, :index, challenge.id))
 
       assert conn.status === 302
       assert conn.halted
@@ -88,7 +88,7 @@ defmodule Web.Admin.SolutionControllerTest do
           challenge
         )
 
-      conn = get(conn, Routes.admin_solution_path(conn, :show, solution.id))
+      conn = get(conn, Routes.solution_path(conn, :show, solution.id))
       %{solution: fetched_solution} = conn.assigns
 
       assert fetched_solution.id === solution.id
@@ -104,7 +104,7 @@ defmodule Web.Admin.SolutionControllerTest do
 
       Solutions.delete(solution, user)
 
-      conn = get(conn, Routes.admin_solution_path(conn, :show, solution.id))
+      conn = get(conn, Routes.solution_path(conn, :show, solution.id))
 
       assert conn.status === 404
     end
@@ -117,7 +117,7 @@ defmodule Web.Admin.SolutionControllerTest do
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      conn = get(conn, Routes.admin_challenge_solution_path(conn, :new, challenge.id))
+      conn = get(conn, Routes.challenge_solution_path(conn, :new, challenge.id))
 
       %{changeset: changeset} = conn.assigns
 
@@ -139,10 +139,10 @@ defmodule Web.Admin.SolutionControllerTest do
         }
       }
 
-      conn = post(conn, Routes.admin_challenge_solution_path(conn, :create, challenge.id), params)
+      conn = post(conn, Routes.challenge_solution_path(conn, :create, challenge.id), params)
 
       assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :edit, id)
+      assert redirected_to(conn) === Routes.solution_path(conn, :edit, id)
     end
 
     test "creating a solution and review", %{conn: conn} do
@@ -161,10 +161,10 @@ defmodule Web.Admin.SolutionControllerTest do
         }
       }
 
-      conn = post(conn, Routes.admin_challenge_solution_path(conn, :create, challenge.id), params)
+      conn = post(conn, Routes.challenge_solution_path(conn, :create, challenge.id), params)
 
       assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :show, id)
+      assert redirected_to(conn) === Routes.solution_path(conn, :show, id)
     end
 
     test "creating a solution and review with missing params", %{conn: conn} do
@@ -178,7 +178,7 @@ defmodule Web.Admin.SolutionControllerTest do
         "solution" => %{}
       }
 
-      conn = post(conn, Routes.admin_challenge_solution_path(conn, :create, challenge.id), params)
+      conn = post(conn, Routes.challenge_solution_path(conn, :create, challenge.id), params)
 
       %{changeset: changeset} = conn.assigns
 
@@ -198,7 +198,7 @@ defmodule Web.Admin.SolutionControllerTest do
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
-      conn = get(conn, Routes.admin_solution_path(conn, :edit, solution.id))
+      conn = get(conn, Routes.solution_path(conn, :edit, solution.id))
 
       %{solution: solution, changeset: changeset} = conn.assigns
 
@@ -214,7 +214,7 @@ defmodule Web.Admin.SolutionControllerTest do
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      conn = get(conn, Routes.admin_solution_path(conn, :edit, solution.id))
+      conn = get(conn, Routes.solution_path(conn, :edit, solution.id))
 
       %{solution: solution, changeset: changeset} = conn.assigns
 
@@ -231,10 +231,10 @@ defmodule Web.Admin.SolutionControllerTest do
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
-      conn = get(conn, Routes.admin_solution_path(conn, :edit, solution.id))
+      conn = get(conn, Routes.solution_path(conn, :edit, solution.id))
 
       assert get_flash(conn, :error) === "You are not allowed to edit this solution"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
     test "viewing the edit solution form for a solution that was deleted", %{conn: conn} do
@@ -247,19 +247,19 @@ defmodule Web.Admin.SolutionControllerTest do
 
       {:ok, solution} = Solutions.delete(solution, user)
 
-      conn = get(conn, Routes.admin_solution_path(conn, :edit, solution.id))
+      conn = get(conn, Routes.solution_path(conn, :edit, solution.id))
 
       assert get_flash(conn, :error) === "Solution not found"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
     test "viewing the edit solution form for a solution that doesn't exist", %{conn: conn} do
       conn = prep_conn(conn)
 
-      conn = get(conn, Routes.admin_solution_path(conn, :edit, 1))
+      conn = get(conn, Routes.solution_path(conn, :edit, 1))
 
       assert get_flash(conn, :error) === "Solution not found"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
   end
 
@@ -282,13 +282,13 @@ defmodule Web.Admin.SolutionControllerTest do
         }
       }
 
-      conn = put(conn, Routes.admin_solution_path(conn, :update, solution.id), params)
+      conn = put(conn, Routes.solution_path(conn, :update, solution.id), params)
 
       {:ok, solution} = Solutions.get(solution.id)
 
       assert solution.status === "draft"
       assert get_flash(conn, :info) === "Solution saved as draft"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :edit, solution.id)
+      assert redirected_to(conn) === Routes.solution_path(conn, :edit, solution.id)
     end
 
     test "updating a submitted solution and saving as draft", %{conn: conn} do
@@ -309,13 +309,13 @@ defmodule Web.Admin.SolutionControllerTest do
         }
       }
 
-      conn = put(conn, Routes.admin_solution_path(conn, :update, solution.id), params)
+      conn = put(conn, Routes.solution_path(conn, :update, solution.id), params)
 
       {:ok, solution} = Solutions.get(solution.id)
 
       assert solution.status === "draft"
       assert get_flash(conn, :info) === "Solution saved as draft"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :edit, solution.id)
+      assert redirected_to(conn) === Routes.solution_path(conn, :edit, solution.id)
     end
 
     test "updating a solution and sending to review with errors", %{conn: conn} do
@@ -336,7 +336,7 @@ defmodule Web.Admin.SolutionControllerTest do
         }
       }
 
-      conn = put(conn, Routes.admin_solution_path(conn, :update, solution.id), params)
+      conn = put(conn, Routes.solution_path(conn, :update, solution.id), params)
 
       %{changeset: changeset} = conn.assigns
 
@@ -361,12 +361,12 @@ defmodule Web.Admin.SolutionControllerTest do
         }
       }
 
-      conn = put(conn, Routes.admin_solution_path(conn, :update, solution.id), params)
+      conn = put(conn, Routes.solution_path(conn, :update, solution.id), params)
 
       {:ok, solution} = Solutions.get(solution.id)
 
       assert solution.status === "draft"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :show, solution.id)
+      assert redirected_to(conn) === Routes.solution_path(conn, :show, solution.id)
     end
 
     test "attempting to update a solution that you don't own", %{conn: conn} do
@@ -388,10 +388,10 @@ defmodule Web.Admin.SolutionControllerTest do
         }
       }
 
-      conn = put(conn, Routes.admin_solution_path(conn, :update, solution.id), params)
+      conn = put(conn, Routes.solution_path(conn, :update, solution.id), params)
 
       assert get_flash(conn, :error) === "You are not allowed to edit this solution"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
     test "updating a solution to submitted", %{conn: conn} do
@@ -402,12 +402,12 @@ defmodule Web.Admin.SolutionControllerTest do
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
-      conn = put(conn, Routes.admin_solution_path(conn, :submit, solution.id))
+      conn = put(conn, Routes.solution_path(conn, :submit, solution.id))
 
       {:ok, solution} = Solutions.get(solution.id)
 
       assert solution.status === "submitted"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :show, solution.id)
+      assert redirected_to(conn) === Routes.solution_path(conn, :show, solution.id)
     end
 
     test "attempting to update a solution that was deleted", %{conn: conn} do
@@ -430,10 +430,10 @@ defmodule Web.Admin.SolutionControllerTest do
         }
       }
 
-      conn = put(conn, Routes.admin_solution_path(conn, :update, solution.id), params)
+      conn = put(conn, Routes.solution_path(conn, :update, solution.id), params)
 
       assert get_flash(conn, :error) === "This solution does not exist"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
     test "attempting to update a solution that doesn't exist", %{conn: conn} do
@@ -449,10 +449,10 @@ defmodule Web.Admin.SolutionControllerTest do
         }
       }
 
-      conn = put(conn, Routes.admin_solution_path(conn, :update, 1), params)
+      conn = put(conn, Routes.solution_path(conn, :update, 1), params)
 
       assert get_flash(conn, :error) === "This solution does not exist"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
   end
 
@@ -465,11 +465,11 @@ defmodule Web.Admin.SolutionControllerTest do
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
-      conn = delete(conn, Routes.admin_solution_path(conn, :delete, solution.id))
+      conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
       assert get_flash(conn, :info) === "Solution deleted"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
     test "deleting a submitted solution you own", %{conn: conn} do
@@ -480,11 +480,11 @@ defmodule Web.Admin.SolutionControllerTest do
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      conn = delete(conn, Routes.admin_solution_path(conn, :delete, solution.id))
+      conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
       assert get_flash(conn, :info) === "Solution deleted"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
     test "deleting a draft solution as an admin", %{conn: conn} do
@@ -497,11 +497,11 @@ defmodule Web.Admin.SolutionControllerTest do
 
       solution = SolutionHelpers.create_draft_solution(%{}, user_2, challenge)
 
-      conn = delete(conn, Routes.admin_solution_path(conn, :delete, solution.id))
+      conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
       assert get_flash(conn, :info) === "Solution deleted"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
     test "deleting a submitted solution as an admin", %{conn: conn} do
@@ -514,11 +514,11 @@ defmodule Web.Admin.SolutionControllerTest do
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
-      conn = delete(conn, Routes.admin_solution_path(conn, :delete, solution.id))
+      conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
       assert get_flash(conn, :info) === "Solution deleted"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
     test "deleting a deleted solution", %{conn: conn} do
@@ -531,20 +531,20 @@ defmodule Web.Admin.SolutionControllerTest do
 
       {:ok, solution} = Solutions.delete(solution, user)
 
-      conn = delete(conn, Routes.admin_solution_path(conn, :delete, solution.id))
+      conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
       assert get_flash(conn, :error) === "This solution does not exist"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
     test "deleting a solution that doesn't exist", %{conn: conn} do
       conn = prep_conn(conn)
 
-      conn = delete(conn, Routes.admin_solution_path(conn, :delete, 1))
+      conn = delete(conn, Routes.solution_path(conn, :delete, 1))
 
       assert get_flash(conn, :error) === "This solution does not exist"
-      assert redirected_to(conn) === Routes.admin_solution_path(conn, :index)
+      assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
   end
 

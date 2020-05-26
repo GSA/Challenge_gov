@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%= render("_head.html", assigns) %>
+
+  <div id="recaptcha-key" class="d-none"><%= Recaptcha.recaptcha_key() %></div>
+
+  <body>
+    <div class="main-wrapper">
+      <%= render("_header.html", assigns) %>
+
+      <%= render("_top_banner.html", assigns) %>
+
+      <div class="main">
+        <div class="content-area">
+          <%= if flash = get_flash(@conn, :info) do %>
+            <div class="alert alert-primary" role="alert">
+              <%= flash %>
+            </div>
+          <% end %>
+          <%= if flash = get_flash(@conn, :error) do %>
+            <div class="alert alert-danger" role="alert">
+              <%= flash %>
+            </div>
+          <% end %>
+
+          <%= render @view_module, @view_template, assigns %>
+        </div>
+      </div>
+
+      <%= render("_help_section.html", assigns) %>
+
+      <%= render("_footer.html", assigns) %>
+    </div>
+  </body>
+
+  <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/public.js") %>"></script>
+  <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/client.js") %>"></script>
+</html>

@@ -12,6 +12,10 @@ defmodule Web.ErrorView do
     %{errors: errors}
   end
 
+  def render("500-fallthrough.html", _assigns) do
+    "Something fell through and reached an error"
+  end
+
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.
   # def render("500.html", _assigns) do

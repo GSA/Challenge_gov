@@ -8,7 +8,7 @@ defmodule Web.Plugs.VerifyNoUserTest do
       conn =
         conn
         |> bypass_through()
-        |> get("/admin/challenges/new")
+        |> get("/challenges/new")
         |> VerifyNoUser.call([])
 
       refute conn.halted
@@ -21,7 +21,7 @@ defmodule Web.Plugs.VerifyNoUserTest do
         conn
         |> assign(:current_user, user)
         |> bypass_through(Web.Router, [:browser])
-        |> get("/admin/challenges/new")
+        |> get("/challenges/new")
         |> VerifyNoUser.call([])
 
       assert conn.halted

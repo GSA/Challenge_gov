@@ -18,7 +18,7 @@ defmodule Web.Plugs.VerifyNoUser do
       true ->
         conn
         |> put_flash(:info, "You are already signed in.")
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> redirect(to: Routes.dashboard_path(conn, :index))
         |> halt()
     end
   end
