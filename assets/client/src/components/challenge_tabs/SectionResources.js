@@ -13,7 +13,7 @@ export const SectionResources = ({label, section, challenge}) => {
     return (
       documents.map((document) => {
         return (
-          <a className="card challenge-tab__resource" key={document.id} href={document.url}>{document.name || document.display_name}</a>
+          <a className="card challenge-tab__resource" key={document.id} target="_blank" href={document.url}>{document.name || document.display_name}</a>
         )
       })
     )
