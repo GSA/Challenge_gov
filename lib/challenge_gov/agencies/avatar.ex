@@ -11,7 +11,7 @@ defmodule ChallengeGov.Agencies.Avatar do
   @doc """
   Get the storage path for a agency's avatar
   """
-  def avatar_path(size, key, extension), do: "/agencys/#{size}-#{key}#{extension}"
+  def avatar_path(size, key, extension), do: "/agencies/#{size}-#{key}#{extension}"
 
   def avatar_path(agency = %Agency{}, size) do
     avatar_path(size, agency.avatar_key, agency.avatar_extension)
@@ -71,7 +71,6 @@ defmodule ChallengeGov.Agencies.Avatar do
       {:ok, temp_path} ->
         upload(%{path: temp_path}, path)
         File.rm(temp_path)
-
         {:ok, agency}
 
       {:error, :convert} ->

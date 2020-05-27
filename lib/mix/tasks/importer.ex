@@ -3,39 +3,11 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   Importer for archived challenges
   """
   use Mix.Task
-
-  defmodule Parse do
-    def run(string) do
-      parse(Jason.decode(string))
-    end
-    def parse({:ok, map}), do: {:ok, map}
-    def parse({:error, error}) do
-      case backtrack(error.data, error.position) do
-        {:ok, position} ->
-          {first, "\"" <> second} = String.split_at(error.data, position)
-          parse(Jason.decode(first <> "\\\"" <> second))
-        :error ->
-          {:error, error}
-      end
-    end
-    def backtrack(_string, 0), do: :error
-    def backtrack(string, position) do
-      case String.at(string, position - 1) == "\"" do
-        true ->
-          {:ok, position - 1}
-        false ->
-          backtrack(string, position - 1)
-      end
-    end
-  end
+  alias ChallengeGov.Agencies
 
   def run(_file) do
     Mix.Task.run("app.start")
 
-    # should be starting with parsed file from Eric:
-      # Parse.run(original_feed)
-
-    # Do we need to read and decode again? (read, to get it, decode to make sure it's valid)
     case File.read!("lib/mix/tasks/sample_data/feed-closed.json") do
       {:ok, binary} ->
         case Jason.decode(binary) do
@@ -53,94 +25,92 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
     end
   end
 
-  def create_challenge(challenge) do
-    
-  end
-#
-# # unused:
-#   # challenge-id
-#   # partner-agencies-federal
-#   # challenge_status
-#   # partners-non-federal
-#
-#       {ok, _challenge} =
-#         Challenges.create(%{
-#           "user_id" => ,
-#           "agency_id" => ,
-#           "status" => "archived", # or challenge_status?
-#           "challenge_manager" => challenge-manager,
-#           "challenge_manager_email" => challenge-manager-email, #both?
-#           "poc_email" => ,
-#           "agency_name" => agency, # ?
-#           "title" => challenge-title,
-#           "custom_url" => ,
-#           "external_url" => external-url,
-#           "tagline" => tagline,
-#           "description" => description,
-#           "brief_description" => ,
-#           "how_to_enter" => how-to-enter,
-#           "fiscal_year" => fiscal-year,
-#           "start_date" => submission-start,
-#           "end_date" => submission-end,
-#           "multi_phase" => ,
-#           "number_of_phases" => ,
-#           "phase_descriptions" => ,
-#           "phase_dates" => ,
-#           "judging_criteria" => ,
-#           "prize_total" => total-prize-offered-cash,
-#           "non_monetary_prizes" => non-monetary-incentives-awarded,
-#           "prize_description" => ,
-#           "eligibility_requirements" => ,
-#           "rules" => rules,
-#           "terms_and_conditions" => ,
-#           "legal_authority" => legal-authority,
-#           "faq" => ,
-#           "winner_information" => ,
-#           "types" => type-of-challenge,
-#           "auto_publish_date" =>
-#         })
-#     end)
+  def create_challenge(json) do
+    Challenges.create(%{
+      "status" => "closed",
+      "challenge_manager" => json["challenge-manager,"],
+      "challenge_manager_email" => json["challenge-manager-email"],
+      "poc_email" => json["point-of-contact"],
+      "agency_id" => match_agency(json["agency"], json["agency-logo"]),
+      "external_logo" => json["card-image"],
+      "federal_partners" => match_federal_partners(json["partner-agencies-federal"]),
+      "non_federal_partners" => match_non_federal_partners(json["partners-non-federal"]),
+      "title" => json["challenge-title"],
+      "external_url" => json["external-url"],
+      "tagline" => json["tagline"],
+      "description" => json["description"],
+      "how_to_enter" => json["how-to-enter"],
+      "fiscal_year" => json["fiscal-year"],
+      "start_date" => json["submission-start"],
+      "end_date" => json["submission-end"],
+      "judging_criteria" => json["judging"],
+      "prize_total" => json["total-prize-offered-cash"],
+      "non_monetary_prizes" => json["prizes"],
+      "rules" => json["rules"],
+      "legal_authority" => json["legal-authority"],
+      "types" => json["type-of-challenge"]
+    })
   end
 
-  # defp parseJudgingCriteria() do
-  #   # map through and check for empty strings or if data and concat
-  #   criteria = [
-  #     judging-criteria-0,
-  #     judging-criteria-percentage-0,
-  #     judging-criteria-description-0,
-  #     judging-criteria-1,
-  #     judging-criteria-percentage-1,
-  #     judging-criteria-description-1,
-  #     judging-criteria-2,
-  #     judging-criteria-percentage-2,
-  #     judging-criteria-description-2,
-  #     judging-criteria-3,
-  #     judging-criteria-percentage-3,
-  #     judging-criteria-description-3,
-  #     judging-criteria-4,
-  #     judging-criteria-percentage-4,
-  #     judging-criteria-description-4,
-  #     judging-criteria-5,
-  #     judging-criteria-percentage-5,
-  #     judging-criteria-description-5,
-  #     judging-criteria-6,
-  #     judging-criteria-percentage-6,
-  #     judging-criteria-description-6,
-  #     judging-criteria-7,
-  #     judging-criteria-percentage-7,
-  #     judging-criteria-description-7,
-  #     judging-criteria-8,
-  #     judging-criteria-percentage-8,
-  #     judging-criteria-description-8,
-  #     judging-criteria-9,
-  #     judging-criteria-percentage-9,
-  #     judging-criteria-description-9
-  #   ]
-  # end
+  def match_agency(name, logo \\ nil) do
+    case Agencies.get_by_name(name) do
+      {:ok, agency} ->
+        agency.id
 
-  # defp parsePrizeDescription() do
-  # end
-  #
-  # defp parseWinnerInformation do
-  # end
+      {:error, :not_found} ->
+        fuzzy_match_agency(name, logo)
+    end
+  end
+
+  def fuzzy_match_agency(name, logo \\ nil) do
+    agencies = Agencies.all_for_select
+
+    match = Enum.find(agencies, fn x ->
+      String.jaro_distance(x.name, name) >= 0.9
+    end)
+
+    if !is_nil(match) do
+      match.id
+
+    else
+      create_new_agency(name, logo)
+    end
+  end
+
+  defp create_new_agency(name, logo) when is_nil(logo) do
+    Agencies.create(:saved_to_file, %{
+      "name" => "#{name}"
+      })
+  end
+
+  defp create_new_agency(name, logo) do
+    filename = List.last(String.split(logo, "/"))
+    extension = ".#{List.last(String.split(filename, "."))}"
+
+    with {:ok, :saved_to_file} <- :httpc.request(:get, {"https://www.challenge.gov/assets/netlify-uploads/#{filename}", []}, [], [stream: '/tmp/elixir']) do
+      Agencies.create(:saved_to_file, %{
+        "avatar" => %Plug.Upload{
+          content_type: "image/#{extension}",
+          filename: "hhs.png",
+          path: "/tmp/elixir/#{filename}"
+        },
+        "name" => "#{name}"
+        }
+      )
+    end
+  end
+
+  def match_federal_partners(partners) do
+    partner_list = String.split(partners, ",")
+    Enum.map(partner_list, fn x ->
+      match_agency(String.trim(x))
+    end)
+  end
+
+  def match_non_federal_partners(string) do
+    # "EPA Region 7 and 8 states, Regional Tribal Operations Committees"
+    # "California Governor’s Office of Emergency Services, CAL Fire, Cal Guard, MAXAR/Digital Globe"
+
+    # need challenge_id and id...?
+  end
 end

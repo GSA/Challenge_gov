@@ -19,12 +19,15 @@ defmodule Web.ChallengeView do
   end
 
   def logo_url(challenge) do
-    case is_nil(challenge.logo_key) do
+    cond do
+      !is_nil(challenge.external_logo_url) ->
+        challenge.external_logo_url
+
+      !is_nil(challenge.logo_key) ->
+        Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
+
       true ->
         nil
-
-      false ->
-        Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
     end
   end
 
