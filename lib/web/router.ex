@@ -23,7 +23,6 @@ defmodule Web.Router do
   # Session pipelines
   pipeline(:signed_in) do
     plug(Web.Plugs.VerifyUser)
-    plug(Web.Plugs.CheckUserStatus)
     plug(Web.Plugs.SessionTimeout)
   end
 
@@ -32,14 +31,12 @@ defmodule Web.Router do
   end
 
   # Status pipelines
-  pipeline(:pending) do
-    plug(Web.Plugs.VerifyPendingUser)
-    plug(Web.Plugs.SessionTimeout)
+  pipeline(:valid_status) do
+    plug(Web.Plugs.CheckUserStatus)
   end
 
-  pipeline(:access) do
-    plug(Web.Plugs.VerifyUser)
-    plug(Web.Plugs.SessionTimeout)
+  pipeline(:pending) do
+    plug(Web.Plugs.VerifyPendingUser)
   end
 
   # Portal Routes
@@ -54,6 +51,25 @@ defmodule Web.Router do
     pipe_through([:browser, :signed_in])
 
     resources("/sign-in", SessionController, only: [:delete], singleton: true)
+
+    post("/recertification", AccessController, :request_recertification)
+    get("/recertification", AccessController, :recertification)
+
+    get("/reactivation", AccessController, :reactivation)
+    post("/reactivation", AccessController, :request_reactivation)
+
+    get("/access", AccessController, :index)
+  end
+
+  scope "/", Web do
+    pipe_through([:browser, :signed_in, :pending])
+    resources("/terms", TermsController, only: [:new, :create])
+
+    get("/pending", TermsController, :pending)
+  end
+
+  scope "/", Web do
+    pipe_through([:browser, :signed_in, :valid_status])
 
     get("/", DashboardController, :index)
 
@@ -108,27 +124,6 @@ defmodule Web.Router do
     post("/users/:user_id/challenge/:challenge_id", UserController, :restore_challenge_access,
       as: :restore_challenge_access
     )
-  end
-
-  scope "/", Web do
-    pipe_through([:browser, :access])
-
-    post("/recertification", AccessController, :request_recertification)
-
-    get("/recertification", AccessController, :recertification)
-
-    get("/reactivation", AccessController, :reactivation)
-
-    post("/reactivation", AccessController, :request_reactivation)
-
-    get("/access", AccessController, :index)
-  end
-
-  scope "/", Web do
-    pipe_through([:browser, :pending, :signed_in])
-    resources("/terms", TermsController, only: [:new, :create])
-
-    get("/pending", TermsController, :pending)
   end
 
   # API Routes
