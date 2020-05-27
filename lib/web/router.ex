@@ -38,6 +38,7 @@ defmodule Web.Router do
   end
 
   pipeline(:access) do
+    plug(Web.Plugs.VerifyUser)
     plug(Web.Plugs.SessionTimeout)
   end
 
@@ -110,24 +111,24 @@ defmodule Web.Router do
   end
 
   scope "/", Web do
-    pipe_through([:browser, :signed_in, :access])
+    pipe_through([:browser, :access])
 
     post("/recertification", AccessController, :request_recertification)
 
     get("/recertification", AccessController, :recertification)
-  end
-
-  scope "/", Web do
-    pipe_through([:browser, :signed_in, :pending])
-    resources("/terms", TermsController, only: [:new, :create])
-
-    get("/pending", TermsController, :pending)
 
     get("/reactivation", AccessController, :reactivation)
 
     post("/reactivation", AccessController, :request_reactivation)
 
     get("/access", AccessController, :index)
+  end
+
+  scope "/", Web do
+    pipe_through([:browser, :pending, :signed_in])
+    resources("/terms", TermsController, only: [:new, :create])
+
+    get("/pending", TermsController, :pending)
   end
 
   # API Routes
