@@ -37,8 +37,8 @@
         <div class="row">
           <div class="remove-nested-section btn btn-link text-danger">Remove event</div>
         </div>
+        <hr/>
       </div>
-      <hr/>
     <% end) %>      
   </div>
 
