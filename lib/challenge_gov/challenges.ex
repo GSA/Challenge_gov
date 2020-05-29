@@ -95,6 +95,34 @@ defmodule ChallengeGov.Challenges do
     |> Challenge.create_changeset(%{}, user)
   end
 
+  @doc """
+  Import challenges: no user, owner, documents or security logging
+  """
+  def create(challenge_params) do
+    challenge_params =
+      challenge_params
+      |> check_non_federal_partners
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(
+        :challenge, Challenge.changeset(%Challenge{}, challenge_params)
+      )
+      |> attach_federal_partners(challenge_params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, challenge_params)
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, :challenge, changeset, _} ->
+        {:error, changeset}
+    end
+  end
+
   def create(%{"action" => action, "challenge" => challenge_params}, user, remote_ip) do
     challenge_params =
       challenge_params
