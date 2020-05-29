@@ -1,4 +1,6 @@
 $(document).ready(function(){
+  let phaseDeletionWarning = "Removing a phase will delete all content for this phase in other sections of the form (i.e. Judging, Resources, How to Enter). Are you sure you want to remove this phase?"
+
   if ($(".upload-logo input[type=radio][value=true]:checked").length > 0) {
     $(".logo-file-field").collapse("show")
   }
@@ -31,7 +33,7 @@ $(document).ready(function(){
       $(".single-phase-section").collapse("hide")
       $(".phase-fields .nested-items").find("input").prop("disabled", false)
     } else {
-      if (window.confirm("This will remove all information from any phases you may have created. Are you sure?")) {
+      if (window.confirm(phaseDeletionWarning)) {
         $(".phase-fields").collapse("hide")
         $(".single-phase-section").collapse("show")
         $(".phase-fields .nested-items").find("input").prop("disabled", true)

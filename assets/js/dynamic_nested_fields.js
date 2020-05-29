@@ -1,4 +1,6 @@
 $(document).ready(function(){
+  let phaseDeletionWarning = "Removing a phase will delete all content for this phase in other sections of the form (i.e. Judging, Resources, How to Enter). Are you sure you want to remove this phase?"
+
 	$(".js-select").select2({
     width: "100%"
   })
@@ -87,7 +89,7 @@ $(document).ready(function(){
 
   $(".phase-fields").on("click", ".remove-nested-section", (e) => {
     e.preventDefault()
-    if (window.confirm("Are you sure you want to remove this phase?")) {
+    if (window.confirm(phaseDeletionWarning)) {
       parent = $(e.target).closest(".form-collection")
       parent.remove()
     }
