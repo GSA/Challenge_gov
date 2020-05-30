@@ -15,7 +15,7 @@ module.exports = (env, options) => ({
   },
   entry: {
     app: ['./js/app.js'],
-    admin: ['./js/admin.js'],
+    public: ['./js/public.js'],
     client: ['./client/src/index.js']
   },
   output: {

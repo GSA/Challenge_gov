@@ -180,14 +180,14 @@ defmodule Web.Api.ChallengeControllerTest do
       "terms_and_conditions" => nil,
       "non_monetary_prizes" => nil,
       "how_to_enter" => nil,
-      "events" => nil,
+      "events" => [],
       "start_date" => nil,
       "non_federal_partners" => [],
       "number_of_phases" => nil,
       "winner_image" => nil,
-      "tagline" => nil,
+      "tagline" => challenge.tagline,
       "prize_total" => nil,
-      "brief_description" => nil,
+      "brief_description" => challenge.brief_description,
       "phase_descriptions" => nil,
       "federal_partners" => []
     }

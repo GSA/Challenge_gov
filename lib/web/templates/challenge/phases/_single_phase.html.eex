@@ -1,0 +1,61 @@
+<div class="col single-phase-section collapse">
+  <%= if (Map.has_key?(@form, :data) and length(@form.data.phases) > 0) or 
+    (Map.has_key?(@form.source.changes, :phases) and length(@form.source.changes.phases) > 0) do %>
+    <!-- With phases attached or pending -->
+    <%= inputs_for(@form, :phases, [skip_hidden: true], fn phase_form -> %>
+      <%= if phase_form.index === 0 do %>
+        <%= hidden_input phase_form, :title, value: "" %>
+        <%= hidden_input phase_form, :open_to_submissions, value: true %>
+
+        <div class="col">
+          <div class="<%= FormView.nested_form_group_classes(@form, :phases, :start_date, phase_form.index) %>">
+            <div class="<%= FormView.form_group_classes(phase_form, :start_date) %>">
+              <%= label phase_form, :start_date, "Submission start date and time *" %>
+              <%= datetime_local_input(phase_form, :start_date, label: "Start date", 
+                class: Enum.join([FormView.form_control_classes(phase_form, :start_date), "js-datetime-input"], " "), 
+                required: true
+              )%>    
+              <%= hidden_input(phase_form, :start_date, label: "Start date") %>
+              <%= error_tag(phase_form, :start_date) %>
+            </div>
+          </div>
+
+          <div class="<%= FormView.nested_form_group_classes(@form, :phases, :end_date, phase_form.index) %>">
+            <div class="<%= FormView.form_group_classes(phase_form, :end_date) %>">
+              <%= label phase_form, :end_date, "Submission end date and time *" %>
+              <%= datetime_local_input(phase_form, :end_date, label: "End date", 
+                class: Enum.join([FormView.form_control_classes(phase_form, :end_date), "js-datetime-input"], " "), 
+                required: true
+              )%>
+              <%= hidden_input(phase_form, :end_date, label: "End date") %>
+              <%= error_tag(phase_form, :end_date) %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end) %>
+  <% else %>
+    <!-- With no phases pending or attached -->
+    <input id="challenge_phases_0_title" name="challenge[phases][0][title]" type="hidden" value="">
+    <input id="challenge_phases_0_open_to_submissions" name="challenge[phases][0][open_to_submissions]" type="hidden" value="true">
+
+    <div class="col">
+      <div class="form-group nested-form-group">
+        <div class="form-group">
+          <label for="challenge_phases_0_start_date">Phase 1 submission start date and time *</label>
+          <input class="form-control js-datetime-input" id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="datetime-local" required="true">
+          <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">              
+        </div>
+      </div>
+
+      <div class="form-group nested-form-group">
+        <div class="form-group">
+          <label for="challenge_phases_0_start_date">Phase 1 submission end date and time *</label>
+          <input class="form-control js-datetime-input" id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="datetime-local" required="true">
+          <input id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="hidden">              
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <small class="form-text text-muted font-italic mt-3">All times listed in local timezone</small>
+</div>

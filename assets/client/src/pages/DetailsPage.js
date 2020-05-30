@@ -3,7 +3,17 @@ import axios from 'axios'
 import { useParams } from "react-router-dom";
 import moment from 'moment'
 
-import { ContactForm } from "../components/ContactForm"
+import { ChallengeTabs } from "../components/ChallengeTabs"
+import { Overview } from "../components/challenge_tabs/Overview"
+import { Timeline } from "../components/challenge_tabs/Timeline"
+import { Prizes } from "../components/challenge_tabs/Prizes"
+import { Rules } from "../components/challenge_tabs/Rules"
+import { Judging } from "../components/challenge_tabs/Judging"
+import { HowToEnter } from "../components/challenge_tabs/HowToEnter"
+import { Resources } from "../components/challenge_tabs/Resources"
+import { FAQ } from "../components/challenge_tabs/FAQ"
+import { ContactForm } from "../components/challenge_tabs/ContactForm"
+import { Winners } from "../components/challenge_tabs/Winners"
 
 export const DetailsPage = () => {
 
@@ -115,13 +125,13 @@ export const DetailsPage = () => {
                         <button className="apply-btn">Apply on external website <i className="fa fa-external-link-alt ml-3"></i></button>
                       </a>
                       :
-                      <a href={`/admin/challenges/${currentChallenge.id}/solutions/new`}>
+                      <a href={`/challenges/${currentChallenge.id}/solutions/new`}>
                         <button className="apply-btn">Apply for this challenge</button>
                       </a>
                       }
                     </div>
                     <div className="detail-section__follow">
-                      <a href={`/admin/challenges/${currentChallenge.id}/save_challenge/new`}>
+                      <a href={`/challenges/${currentChallenge.id}/save_challenge/new`}>
                         <button className="follow-btn"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
                       </a>
                     </div>
@@ -151,7 +161,42 @@ export const DetailsPage = () => {
               </div>
             </section>
           </section>
-          <ContactForm />
+          <ChallengeTabs>
+            <div label="Overview">
+              <Overview challenge={currentChallenge} />
+            </div>
+            { currentChallenge.events.length > 0 &&
+              <div label="Timeline">
+                <Timeline challenge={currentChallenge} />
+              </div> 
+            }
+            <div label="Prizes">
+              <Prizes challenge={currentChallenge} />
+            </div>
+            <div label="Rules">
+              <Rules challenge={currentChallenge} />
+            </div>
+            <div label="Judging">
+              <Judging challenge={currentChallenge} />
+            </div>
+            <div label="How to enter">
+              <HowToEnter challenge={currentChallenge} />
+            </div>
+            { currentChallenge.supporting_documents.length > 0 &&
+              <div label="Resources">
+                <Resources challenge={currentChallenge} />
+              </div>
+            }
+            <div label="FAQ">
+              <FAQ challenge={currentChallenge} />
+            </div>
+            <div label="Contact">
+              <ContactForm />
+            </div>
+            <div label="Winners" disabled={!currentChallenge.winner_information} >
+              <Winners challenge={currentChallenge} />
+            </div>
+          </ChallengeTabs>
         </div>
       }
     </div>

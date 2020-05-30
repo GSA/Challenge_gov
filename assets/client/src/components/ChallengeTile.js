@@ -15,7 +15,7 @@ export const ChallengeTile = ({data, loading}) => {
       if (challenges.collection.length > 0) {
         return challenges.collection.map(c => (
             <div key={c.id} className="card">
-              <Link to={`/challenge/${c.id}`} aria-label="View challenge details">
+              <Link to={`/public/challenge/${c.id}`} aria-label="View challenge details">
                 <div className="image_wrapper">
                   { c.logo
                     ? <img src={c.logo} alt="Challenge logo" title="Challenge logo"/>

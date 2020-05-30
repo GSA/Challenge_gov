@@ -1,28 +1,35 @@
 defmodule Web.AgencyController do
   use Web, :controller
 
-  alias ChallengeGov.Accounts
   alias ChallengeGov.Agencies
 
-  plug(Web.Plugs.FetchPage, [per: 12] when action in [:index])
+  plug(Web.Plugs.EnsureRole, [:super_admin, :admin] when action in [:index, :show])
+  plug(Web.Plugs.EnsureRole, :super_admin when action not in [:index, :show])
+  plug(Web.Plugs.FetchPage when action in [:index])
 
   action_fallback(Web.FallbackController)
 
-  def index(conn, _params) do
+  def index(conn, params) do
+    %{current_user: user} = conn.assigns
     %{page: page, per: per} = conn.assigns
-    %{page: teams, pagination: pagination} = Agencies.all(page: page, per: per)
+    filter = Map.get(params, "filter", %{})
+    sort = Map.get(params, "sort", %{})
+    %{page: agencies, pagination: pagination} = Agencies.all(filter: filter, page: page, per: per)
 
     conn
-    |> assign(:teams, teams)
+    |> assign(:user, user)
+    |> assign(:agencies, agencies)
+    |> assign(:filter, filter)
+    |> assign(:sort, sort)
     |> assign(:pagination, pagination)
     |> render("index.html")
   end
 
   def show(conn, %{"id" => id}) do
-    with {:ok, team} <- Agencies.get(id) do
+    with {:ok, agency} <- Agencies.get(id) do
       conn
-      |> assign(:team, team)
-      |> assign(:accounts, Accounts.for_inviting_to())
+      |> assign(:agency, agency)
+      |> assign(:members, agency.members)
       |> render("show.html")
     end
   end
@@ -33,21 +40,66 @@ defmodule Web.AgencyController do
     |> render("new.html")
   end
 
-  def create(conn, %{"team" => params}) do
+  def create(conn, %{"agency" => params}) do
     %{current_user: user} = conn.assigns
 
     case Agencies.create(user, params) do
-      {:ok, team} ->
+      {:ok, agency} ->
         conn
-        |> put_flash(:info, "Agency added!")
-        |> redirect(to: Routes.admin_agency_path(conn, :show, team.id))
+        |> put_flash(:info, "Agency created!")
+        |> redirect(to: Routes.agency_path(conn, :show, agency.id))
 
       {:error, changeset} ->
         conn
         |> assign(:changeset, changeset)
-        |> put_flash(:error, "There was an issue creating the team")
         |> put_status(422)
         |> render("new.html")
+    end
+  end
+
+  def edit(conn, %{"id" => id}) do
+    with {:ok, agency} <- Agencies.get(id) do
+      conn
+      |> assign(:agency, agency)
+      |> assign(:changeset, Agencies.edit(agency))
+      |> render("edit.html")
+    end
+  end
+
+  def update(conn, %{"id" => id, "agency" => params}) do
+    {:ok, agency} = Agencies.get(id)
+
+    case Agencies.update(agency, params) do
+      {:ok, agency} ->
+        conn
+        |> put_flash(:info, "Agency updated!")
+        |> redirect(to: Routes.agency_path(conn, :show, agency.id))
+
+      {:error, changeset} ->
+        conn
+        |> assign(:agency, agency)
+        |> assign(:changeset, changeset)
+        |> put_flash(:error, "Agency could not be saved")
+        |> put_status(422)
+        |> render("edit.html")
+    end
+  end
+
+  def delete(conn, %{"id" => id}) do
+    with {:ok, agency} <- Agencies.get(id),
+         {:ok, _agency} <- Agencies.delete(agency) do
+      conn
+      |> put_flash(:info, "Agency deleted!")
+      |> redirect(to: Routes.agency_path(conn, :index))
+    end
+  end
+
+  def remove_logo(conn, %{"id" => id}) do
+    with {:ok, agency} <- Agencies.get(id),
+         {:ok, agency} <- Agencies.remove_logo(agency) do
+      conn
+      |> put_flash(:info, "Logo removed")
+      |> redirect(to: Routes.agency_path(conn, :show, agency.id))
     end
   end
 end

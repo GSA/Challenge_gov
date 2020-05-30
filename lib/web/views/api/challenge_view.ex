@@ -33,7 +33,13 @@ defmodule Web.Api.ChallengeView do
       description: challenge.description,
       eligibility_requirements: challenge.eligibility_requirements,
       end_date: challenge.end_date,
-      events: challenge.non_monetary_prizes,
+      events:
+        render_many(
+          challenge.events,
+          __MODULE__,
+          "event.json",
+          as: :event
+        ),
       external_url: challenge.external_url,
       federal_partners:
         render_many(
@@ -96,6 +102,15 @@ defmodule Web.Api.ChallengeView do
     %{
       id: partner.id,
       name: partner.name
+    }
+  end
+
+  def render("event.json", %{event: event}) do
+    %{
+      id: event.id,
+      title: event.title,
+      body: event.body,
+      occurs_on: event.occurs_on
     }
   end
 end

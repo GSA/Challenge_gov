@@ -7,7 +7,7 @@ defmodule Web.SharedView do
     Map.get(conn.private.plug_session, "session_timeout_at")
   end
 
-  def page_path(path, page, pagination_param \\ nil) do
+  def public_page_path(path, page, pagination_param \\ nil) do
     uri = URI.parse(path)
 
     query =

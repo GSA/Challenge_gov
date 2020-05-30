@@ -91,7 +91,7 @@ defmodule ChallengeGov.SavedChallengesTest do
 
     test "failure saving deleted challenges" do
       user = AccountHelpers.create_user()
-      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com", role: "super_admin"})
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id})
       {:ok, deleted_challenge} = Challenges.delete(challenge, user_2, "")

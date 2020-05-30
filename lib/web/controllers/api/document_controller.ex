@@ -4,7 +4,7 @@ defmodule Web.Api.DocumentController do
   alias ChallengeGov.Challenges
   alias ChallengeGov.SupportingDocuments
 
-  action_fallback(Web.Admin.FallbackController)
+  action_fallback(Web.FallbackController)
 
   def create(conn, %{"challenge_id" => challenge_id, "document" => params}) do
     with {:ok, challenge} <- Challenges.get(challenge_id),

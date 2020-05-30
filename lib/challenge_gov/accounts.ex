@@ -142,8 +142,8 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
-        {:ok, user.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
@@ -174,8 +174,8 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
-        {:ok, user.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
@@ -372,8 +372,8 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
-        {:ok, user.user}
+      {:ok, %{user: user}} ->
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
@@ -593,6 +593,19 @@ defmodule ChallengeGov.Accounts do
   def is_decertified?(_user), do: false
 
   @doc """
+  Activate pending user. Check certification, change status, allow login if certified
+  """
+  def activate(user = %{status: "pending"}, approver, approver_remote_ip) do
+    # pending users get certified on activation unless they are solvers
+    if user.role != "solver" do
+      CertificationLogs.certify_user_with_approver(user, approver, approver_remote_ip)
+      activate(user, user.status, approver, approver_remote_ip)
+    else
+      activate(user, user.status, approver, approver_remote_ip)
+    end
+  end
+
+  @doc """
   Activate a user. Change status, allows login
   """
   def activate(user, originator, remote_ip) do
@@ -623,7 +636,44 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, _result} ->
+      {:ok, %{user: user}} ->
+        {:ok, user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Activate users who previously needed extra actions. Change status, allows login
+  """
+  def activate(user, previous_status, originator, remote_ip) do
+    changeset =
+      user
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_change(:status, "active")
+      |> maybe_update_request_renewal(user)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.run(:log, fn _repo, _changes ->
+        SecurityLogs.track(%{
+          originator_id: originator.id,
+          originator_role: originator.role,
+          originator_identifier: originator.email,
+          originator_remote_ip: remote_ip,
+          target_id: user.id,
+          target_type: user.role,
+          target_identifier: user.email,
+          action: "status_change",
+          details: %{previous_status: previous_status, new_status: "active"}
+        })
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{user: user}} ->
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -669,7 +719,7 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, _result} ->
+      {:ok, %{user: user}} ->
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -707,7 +757,7 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, _result} ->
+      {:ok, %{user: user}} ->
         revoke_challenge_ownership(user)
         {:ok, user}
 
@@ -743,7 +793,7 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, user} ->
+      {:ok, %{user: user}} ->
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -779,9 +829,9 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
-      {:ok, result} ->
-        revoke_challenge_ownership(result.user)
-        {:ok, result.user}
+      {:ok, %{user: user}} ->
+        revoke_challenge_ownership(user)
+        {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}

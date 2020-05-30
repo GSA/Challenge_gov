@@ -1,0 +1,89 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          <span>Users</span>          
+          <a class="btn btn-info" data-widget="control-sidebar" href="#">Filter</a>
+          <%= if is_map(@filter) && map_size(@filter) > 0 do %>
+            <%= link "clear filters", to: Routes.user_path(@conn, :index), class: "btn btn-link" %>
+          <% end %>
+        </h1>
+      </div>
+
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item active">Users</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <%= Enum.map @users, fn (user) -> %>
+                  <tr>
+                    <td><%= user.id %></td>
+                    <td><%= link(AccountView.full_name(user), to: Routes.user_path(@conn, :show, user.id)) %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.role %></td>
+                    <td><%= user.status %></td>
+                    <td>
+                      <%= link("View", to: Routes.user_path(@conn, :show, user.id), class: "btn btn-default btn-xs") %>
+                      <%= link("Edit", to: Routes.user_path(@conn, :edit, user.id), class: "btn btn-default btn-xs") %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <%= SharedView.pagination(path: Routes.user_path(@conn, :index), pagination: @pagination) %>
+        </div>
+      </div> 
+
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Add a User</h3>
+          </div>
+          <%= form_for(@changeset, Routes.user_path(@conn, :create), [method: :post], fn f -> %>
+            <div class="card-body">
+              <%= FormView.text_field(f, :first_name, required: true) %>
+              <%= FormView.text_field(f, :last_name, required: true) %>
+              <%= FormView.email_field(f, :email, required: true) %>
+              <%= FormView.email_field(f, :email_confirmation, required: true) %>
+              <%= FormView.select_field(f, :role, collection: Enum.map(Accounts.roles(@current_user), &{&1.label, &1.id}), required: true) %>
+
+              <div class="btn-wrapper">
+                <%= submit("Submit", class: "btn btn-primary") %>
+              </div>
+            </div>
+          <% end) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,90 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          <span>Pending Challenges</span>
+        </h1>
+      </div>
+
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item active">Challenges</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Type</th>
+                  <%= if Accounts.has_admin_access?(@user) do %>
+                    <th>Owners</th>
+                    <th>Agency</th>
+                  <% end %>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <%= Enum.map @challenges, fn (challenge) -> %>
+                  <tr>
+                    <td><%= challenge.id %></td>
+                    <td><%= link(challenge.title, to: Routes.challenge_path(@conn, :show, challenge.id)) %></td>
+                    <td><%= status_display_name(challenge) %></td>
+                    <td><%= Web.SharedView.readable_date(challenge.start_date) %></td>
+                    <td><%= Web.SharedView.readable_date(challenge.end_date) %></td>
+                    <td><%= Enum.join(challenge.types || [], ", ") %></td>
+                    <%= if Accounts.has_admin_access?(@user) do %>
+                      <td>
+                        <%= Enum.map(challenge.challenge_owner_users, fn owner -> %>
+                          <div><%= Web.UserView.name_link(@conn, owner) %></div>
+                        <% end) %>
+                      </td>
+                      <td><%= Web.AgencyView.name_link(@conn, challenge.agency) %></td>
+                    <% end %>
+                    <td>
+                      <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+                        <%= link("View", to: Routes.challenge_path(@conn, :show, challenge.id), class: "btn btn-default btn-xs mr-2") %>
+                        <%= challenge_edit_link(@conn, challenge, class: "btn btn-default btn-xs") %>
+                        <div class="btn-group btn-group-sm ml-2" role="group">
+                          <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            More options
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <a class="btn btn-link" href="#">Media</a>
+                            <%= challenge_delete_link(@conn, challenge, @user, label: "Delete", class: "btn btn-default btn-xs") %>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <%= SharedView.pagination(path: Routes.challenge_path(@conn, :index, filter: @filter, sort: @sort), pagination: @pagination, pagination_param: "pending") %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
