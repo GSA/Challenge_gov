@@ -106,7 +106,8 @@ defmodule ChallengeGov.Challenges do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(
-        :challenge, Challenge.changeset(%Challenge{}, challenge_params)
+        :challenge,
+        Challenge.changeset(%Challenge{}, challenge_params)
       )
       |> attach_federal_partners(challenge_params)
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
