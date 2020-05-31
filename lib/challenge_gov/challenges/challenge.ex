@@ -131,6 +131,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:phase_descriptions, :string)
     field(:phase_dates, :string)
     field(:judging_criteria, :string)
+    field(:prize_type, :string)
     field(:prize_total, :integer)
     field(:non_monetary_prizes, :string)
     field(:prize_description, :string)
@@ -213,7 +214,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :types,
       :auto_publish_date,
       :upload_logo,
-      :is_multi_phase
+      :is_multi_phase,
+      :prize_type
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
@@ -281,8 +283,12 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
   end
 
-  def prizes_changeset(struct, _params) do
+  def prizes_changeset(struct, params) do
     struct
+    |> validate_required([
+      :prize_type
+    ])
+    |> validate_prizes(params)
   end
 
   def rules_changeset(struct, _params) do
@@ -610,4 +616,21 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   defp date_range_overlaps(_, _), do: true
+
+  defp validate_prizes(struct, %{"prize_type" => "monetary"}) do
+    validate_required(struct, [:prize_total])
+  end
+
+  defp validate_prizes(struct, %{"prize_type" => "non_monetary"}) do
+    validate_required(struct, [:non_monetary_prizes])
+  end
+
+  defp validate_prizes(struct, %{"prize_type" => "both"}) do
+    validate_required(struct, [
+      :prize_total,
+      :non_monetary_prizes
+    ])
+  end
+
+  defp validate_prizes(struct, _params), do: struct
 end
