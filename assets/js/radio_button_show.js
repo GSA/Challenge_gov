@@ -41,4 +41,55 @@ $(document).ready(function(){
       }
     }
   })
+
+  // Prize details show/hide input  
+  const prizeTotalSection = $(".js-prize-total.collapse")
+  const nonMonetaryPrizeSection = $(".js-non-monetary-prize.collapse")
+
+  if ($(".js-prize-detail-toggle input[type=radio][value='monetary']:checked").length > 0) {
+    showMonetaryPrize()
+  }
+
+  if ($(".js-prize-detail-toggle input[type=radio][value='non_monetary']:checked").length > 0) {
+    showNonMonetaryPrize()
+  }
+
+  if ($(".js-prize-detail-toggle input[type=radio][value='both']:checked").length > 0) {
+    showBothPrizes()
+  }
+
+  $(".js-prize-detail-toggle input[type=radio]").on("click", function() {
+    switch ($(this).val()) {
+      case "monetary":
+        return showMonetaryPrize()
+      case "non_monetary":
+        return showNonMonetaryPrize()
+      case "both":
+        return showBothPrizes()
+      default:
+        console.log("Could not show prize inputs")
+        break;
+    }
+  })
+
+  function showMonetaryPrize() {
+    prizeTotalSection.collapse("show")
+    prizeTotalSection.find("input").prop("disabled", false)
+    nonMonetaryPrizeSection.collapse("hide")
+    nonMonetaryPrizeSection.find("input").prop("disabled", true)
+  }
+
+  function showNonMonetaryPrize() {
+    nonMonetaryPrizeSection.collapse("show")
+    nonMonetaryPrizeSection.find("input").prop("disabled", false)
+    prizeTotalSection.collapse("hide")
+    prizeTotalSection.find("input").prop("disabled", true)
+  }
+
+  function showBothPrizes() {
+    prizeTotalSection.collapse("show")
+    prizeTotalSection.find("input").prop("disabled", false)
+    nonMonetaryPrizeSection.collapse("show")
+    nonMonetaryPrizeSection.find("input").prop("disabled", false)
+  }
 })

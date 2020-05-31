@@ -1,2 +1,28 @@
-<h3>Prize Information</h3>
+<h4>Add prize details</h4>
 <br/>
+<p class="form__note"><span class="form__note--red">*</span>Required field</p>
+<br/>
+
+<div class="col js-prize-detail-toggle">
+  <div class="row">
+    <%= radio_button(@form, :prize_type, "monetary", class: "mr-2", required: true) %>
+    <label for="challenge_prize_type_monetary">Cash prize</label>
+  </div>
+  <div class="row">
+    <%= radio_button(@form, :prize_type, "non_monetary", class: "mr-2", required: true) %>
+    <label for="challenge_prize_type_non_monetary">Non-monetary prize</label>
+  </div>
+  <div class="row">
+    <%= radio_button(@form, :prize_type, "both", class: "mr-2", required: true) %>
+    <label for="challenge_prize_type_both">Both a cash prize and non-monetary prize</label>
+  </div>
+</div>
+<br/>
+
+<div class="js-prize-total collapse">
+  <%= FormView.text_field(@form, :prize_total, label: "Total cash prizes offered *") %>
+</div>
+<div class="js-non-monetary-prize collapse">
+  <%= FormView.text_field(@form, :non_monetary_prizes, label: "Non-monetary prize award *") %>
+</div>
+<%= FormView.textarea_field(@form, :prize_description, label: "Prize description / breakdown (optional)") %>

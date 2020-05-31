@@ -144,6 +144,29 @@ defmodule ChallengeGov.ChallengePrizesTest do
       assert !changeset.errors[:non_monetary_prizes]
     end
 
+    test "failure invalid prize total" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+
+      {:error, changeset} =
+        Challenges.update(
+          challenge,
+          %{
+            "action" => "next",
+            "challenge" => %{
+              "section" => "prizes",
+              "prize_type" => "monetary",
+              "prize_total" => "Not a number"
+            }
+          },
+          user,
+          ""
+        )
+
+      assert changeset.errors[:prize_total]
+      assert !changeset.errors[:non_monetary_prizes]
+    end
+
     test "failure non monetary prize missing" do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
