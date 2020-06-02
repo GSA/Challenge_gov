@@ -2,6 +2,17 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   @moduledoc """
   Importer for archived challenges
   """
+  @formats [
+    "{0M}/{0D}/{YYYY} {h12}:{m} {AM}",
+    "{M}/{D}/{YYYY} {h12}:{m} {AM}",
+    "{M}/{0D}/{YYYY} {h12}:{m} {AM}",
+    "{YYYY}/{0M}/{0D} {h12} {am}",
+    "{YYYY}/{M}/{0D} {h12}:{m} {AM}",
+    "{0M}/{0D}/{YYYY} {h12} {am}",
+    "{YYYY}/{M}/{0D} {h12}:{m} {AM}",
+    "{0M}/{0D}/{YYYY}"
+  ]
+
   use Mix.Task
   alias ChallengeGov.Agencies
   alias ChallengeGov.Challenges
@@ -171,71 +182,30 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   defp sanitize_date(""), do: ""
 
   defp sanitize_date(date) do
-    # set all spaces to single spaces
-    single_space_date = String.replace(date, ~r/\s+/, " ")
+    # replace all spaces with single space and rm "."
+    formatted_date =
+      date
+      |> String.replace(~r/\s+/, " ")
+      |> String.replace(~r/\.+/, "")
 
-    # alt to above: find double spaces and replace
-    # single_space_date = String.replace(date, ~r/[ \t]{2,}/, " ")
+    utc_datetime =
+      Enum.find_value(@formats, fn format ->
+        case Timex.parse(formatted_date, format) do
+          {:ok, parsed_time} ->
+            {:ok, utc_datetime} = DateTime.from_naive(parsed_time, "Etc/UTC")
+            utc_datetime
 
-    # rm "."
-    formatted_date = String.replace(single_space_date, ~r/\.+/, "")
-
-    case Timex.parse(formatted_date, "{0M}/{0D}/{YYYY} {h12}:{m} {AM}") do
-      {:ok, parsed_date} ->
-        {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
-        utc_date
-
-      {:error, _error} ->
-        case Timex.parse(formatted_date, "{M}/{D}/{YYYY} {h12}:{m} {AM}") do
-          {:ok, parsed_date} ->
-            {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
-            utc_date
-
-          {:error, _error} ->
-            case Timex.parse(formatted_date, "{M}/{0D}/{YYYY} {h12}:{m} {AM}") do
-              {:ok, parsed_date} ->
-                {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
-                utc_date
-
-              {:error, _error} ->
-                case Timex.parse(formatted_date, "{YYYY}/{0M}/{0D} {h12} {am}") do
-                  {:ok, parsed_date} ->
-                    {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
-                    utc_date
-
-                  {:error, _error} ->
-                    case Timex.parse(formatted_date, "{YYYY}/{M}/{0D} {h12}:{m} {AM}") do
-                      {:ok, parsed_date} ->
-                        {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
-                        utc_date
-
-                      {:error, _error} ->
-                        case Timex.parse(formatted_date, "{0M}/{0D}/{YYYY} {h12} {am}") do
-                          {:ok, parsed_date} ->
-                            {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
-                            utc_date
-
-                          {:error, _error} ->
-                            case Timex.parse(formatted_date, "{YYYY}/{M}/{0D} {h12}:{m} {AM}") do
-                              {:ok, parsed_date} ->
-                                {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
-                                utc_date
-
-                              {:error, _error} ->
-                                case Timex.parse(formatted_date, "{0M}/{0D}/{YYYY}") do
-                                  {:ok, parsed_date} ->
-                                    {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
-                                    utc_date
-
-                                  {:error, _error} ->
-                                    IO.puts("no case for this format")
-                                end
-                            end
-                        end
-                    end
-                end
-            end
+          {:error, _} ->
+            false
         end
+      end)
+
+    case utc_datetime do
+      nil ->
+        ""
+
+      utc_datetime ->
+        utc_datetime
     end
   end
 
