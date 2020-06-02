@@ -229,7 +229,6 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
 
                                   {:error, error} ->
                                     IO.puts("no case for this format")
-                                    IO.inspect(error)
                                 end
                             end
                         end
