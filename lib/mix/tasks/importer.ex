@@ -43,7 +43,7 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
     result =
       Challenges.create(%{
         "user_id" => 0,
-        "status" => "closed",
+        "status" => "archived",
         "challenge_manager" => json["challenge-manager,"],
         "challenge_manager_email" => json["challenge-manager-email"],
         "poc_email" => json["point-of-contact"],
