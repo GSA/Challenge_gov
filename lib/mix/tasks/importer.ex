@@ -17,8 +17,6 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         json["_challenge"]
         |> Enum.with_index()
         |> Enum.map(fn {challenge, _idx} ->
-          IO.inspect challenge["challenge-title"]
-          # if idx == 13, do: IO.inspect challenge
           create_challenge(challenge)
         end)
 
@@ -93,9 +91,12 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   end
 
   defp create_new_agency(name, logo) when is_nil(logo) do
-    Agencies.create(:saved_to_file, %{
-      "name" => "#{name}"
-    })
+    {:ok, agency} =
+      Agencies.create(:saved_to_file, %{
+        name: "#{name}"
+      })
+
+    agency.id
   end
 
   defp create_new_agency(name, logo_url) do
@@ -115,10 +116,12 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
       {:ok, %{status: 200, body: body}} ->
         File.write!(tmp_file, body, [:binary])
 
-        Agencies.create(:saved_to_file, %{avatar: %{path: tmp_file}, name: name})
+        {:ok, agency} = Agencies.create(:saved_to_file, %{avatar: %{path: tmp_file}, name: name})
+        agency.id
 
       _ ->
-        Agencies.create(:saved_to_file, %{name: name})
+        {:ok, agency} = Agencies.create(:saved_to_file, %{name: name})
+        agency.id
     end
   end
 
@@ -129,7 +132,6 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
 
     Enum.map(partner_list, fn x ->
       match_agency(String.trim(x))
-      |> to_string()
     end)
   end
 
@@ -169,15 +171,72 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   defp sanitize_date(""), do: ""
 
   defp sanitize_date(date) do
-    case Timex.parse(date, "{0M}/{0D}/{YYYY} {h12}:{m} {AM}") do
+    # set all spaces to single spaces
+    single_space_date = String.replace(date, ~r/\s+/, " ")
+
+    # alt to above: find double spaces and replace
+    # single_space_date = String.replace(date, ~r/[ \t]{2,}/, " ")
+
+    # rm "."
+    formatted_date = String.replace(single_space_date, ~r/\.+/, "")
+
+    case Timex.parse(formatted_date, "{0M}/{0D}/{YYYY} {h12}:{m} {AM}") do
       {:ok, parsed_date} ->
         {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
         utc_date
 
       {:error, _error} ->
-        {:ok, parsed_date} = Timex.parse(date, "{0M}/{0D}/{YYYY}")
-        {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
-        utc_date
+        case Timex.parse(formatted_date, "{M}/{D}/{YYYY} {h12}:{m} {AM}") do
+          {:ok, parsed_date} ->
+            {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
+            utc_date
+
+          {:error, _error} ->
+            case Timex.parse(formatted_date, "{M}/{0D}/{YYYY} {h12}:{m} {AM}") do
+              {:ok, parsed_date} ->
+                {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
+                utc_date
+
+              {:error, _error} ->
+                case Timex.parse(formatted_date, "{YYYY}/{0M}/{0D} {h12} {am}") do
+                  {:ok, parsed_date} ->
+                    {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
+                    utc_date
+
+                  {:error, _error} ->
+                    case Timex.parse(formatted_date, "{YYYY}/{M}/{0D} {h12}:{m} {AM}") do
+                      {:ok, parsed_date} ->
+                        {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
+                        utc_date
+
+                      {:error, _error} ->
+                        case Timex.parse(formatted_date, "{0M}/{0D}/{YYYY} {h12} {am}") do
+                          {:ok, parsed_date} ->
+                            {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
+                            utc_date
+
+                          {:error, _error} ->
+                            case Timex.parse(formatted_date, "{YYYY}/{M}/{0D} {h12}:{m} {AM}") do
+                              {:ok, parsed_date} ->
+                                {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
+                                utc_date
+
+                              {:error, _error} ->
+                                case Timex.parse(formatted_date, "{0M}/{0D}/{YYYY}") do
+                                  {:ok, parsed_date} ->
+                                    {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
+                                    utc_date
+
+                                  {:error, error} ->
+                                    IO.puts("no case for this format")
+                                    IO.inspect(error)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
     end
   end
 
