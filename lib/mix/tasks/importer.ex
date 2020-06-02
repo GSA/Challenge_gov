@@ -227,7 +227,7 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
                                     {:ok, utc_date} = DateTime.from_naive(parsed_date, "Etc/UTC")
                                     utc_date
 
-                                  {:error, error} ->
+                                  {:error, _error} ->
                                     IO.puts("no case for this format")
                                 end
                             end
