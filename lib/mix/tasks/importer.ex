@@ -94,7 +94,7 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         String.jaro_distance(x.name, name) >= 0.9
       end)
 
-    if !is_nil(match) do
+    if match != nil do
       match.id
     else
       create_new_agency(name, logo)
@@ -224,7 +224,8 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   defp format_types(""), do: ""
 
   defp format_types(types) do
-    String.split(types, ";")
+    types
+    |> String.split(";")
     |> Enum.map(fn x -> String.trim(x) end)
   end
 end
