@@ -18,7 +18,7 @@ defmodule ChallengeGov.ChallengeRulesTest do
             "action" => "next",
             "challenge" => %{
               "section" => "rules",
-              "terms_equal_rules" => false,
+              "terms_equal_rules" => "false",
               "eligibility_requirements" => "Test eligibility",
               "rules" => "Test rules",
               "terms_and_conditions" => "Test terms and conditions",
@@ -93,7 +93,7 @@ defmodule ChallengeGov.ChallengeRulesTest do
             "action" => "next",
             "challenge" => %{
               "section" => "rules",
-              "terms_equal_rules" => true,
+              "terms_equal_rules" => "true",
               "eligibility_requirements" => "Test eligibility",
               "rules" => "Test rules",
               "legal_authority" => "Test legal authority"
@@ -121,7 +121,7 @@ defmodule ChallengeGov.ChallengeRulesTest do
             "action" => "next",
             "challenge" => %{
               "section" => "rules",
-              "terms_equal_rules" => false,
+              "terms_equal_rules" => "false",
               "eligibility_requirements" => "Test eligibility",
               "rules" => "Test rules",
               "legal_authority" => "Test legal authority"

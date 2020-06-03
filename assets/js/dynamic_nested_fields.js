@@ -1,11 +1,5 @@
 $(document).ready(function(){
-	$(".js-select").select2({
-    width: "100%"
-  })
-	$(".js-multiselect").select2({
-    width: "100%"
-  })
-
+  console.log("Hey")
   $(".dynamic-nested-form").on("click", ".add-nested-section", (e) => {
     e.preventDefault()
 

@@ -22,6 +22,7 @@ require("../css/app.scss");
 import "../css/progress_bar.scss";
 
 // Custom JS
+import "./custom_select.js";
 import "./dynamic_nested_fields.js";
 import "./radio_button_show.js";
 import "./character_limit.js";
@@ -31,6 +32,10 @@ import "./section_file_upload.js";
 import "./solution_file_upload.js";
 import "./remove_reports_error.js";
 import "./solution_file_upload.js";
+
+// Wizard specific JS
+import "./challenge_wizard_rules.js";
+
 
 $(".wrapper").prepend(
   `<div id="renew-modal" class="modal timeout-modal">

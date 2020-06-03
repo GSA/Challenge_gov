@@ -621,7 +621,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   defp date_range_overlaps(_, _), do: true
 
-  defp validate_terms(struct, %{"terms_equal_rules" => true, "rules" => rules}),
+  defp validate_terms(struct, %{"terms_equal_rules" => "true", "rules" => rules}),
     do: put_change(struct, :terms_and_conditions, rules)
 
   defp validate_terms(struct, _params), do: validate_required(struct, [:terms_and_conditions])
