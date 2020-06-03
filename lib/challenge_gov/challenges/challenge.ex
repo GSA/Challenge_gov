@@ -306,6 +306,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   def how_to_enter_changeset(struct, _params) do
     struct
+    |> cast_embed(:phases, with: &Phase.how_to_enter_changeset/2)
   end
 
   def resources_changeset(struct, _params) do
