@@ -301,6 +301,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   def judging_changeset(struct, _params) do
     struct
+    |> cast_embed(:phases, with: &Phase.judging_changeset/2)
   end
 
   def how_to_enter_changeset(struct, _params) do

@@ -1,2 +1,36 @@
-<h3>Judging Criteria</h3>
+<h4>Add judging criteria details</h4>
 <br/>
+<p class="form__note"><span class="form__note--red">*</span>Required field</p>
+<br/>
+
+<%= inputs_for(@form, :phases, fn ff -> %>
+  <div class="col">
+    <%= "Phase #{ff.index + 1}: #{ff.data.title}" %> <span class="required">*</span>
+    <%= FormView.textarea_field(ff, :judging_criteria, label: false, limit: 400, required: true) %>
+  </div>
+<% end) %>
+
+<div class="col">
+  <label class="control-label">Upload additional description materials (optional)</label>
+  <div class="col">
+    <label for="challenge_document_name" class="control-label">File name (optional)</label>
+    <input id="challenge_document_name" type="text" class="form-control">
+    <br/>
+    <input id="challenge_document_file" type="file" class="form-file-control">
+    <div id="challenge_document_upload" class="btn btn-primary">Upload file</div>
+  </div>              
+
+  <br/>
+
+  <div id="challenge_uploaded_documents">
+    <%= Enum.map(@documents, fn document -> %>
+      <div class="challenge_uploaded_document">
+        <i class="fa fa-paperclip mr-1"></i>
+        <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %>
+        <%= link to: "", data: [document_id: document.id], class: "challenge_uploaded_document_delete" do %>
+          <i class="fa fa-trash"></i>
+        <% end %>
+      </div>
+    <% end) %>
+  </div>
+</div>

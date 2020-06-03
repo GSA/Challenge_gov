@@ -115,4 +115,11 @@ defmodule ChallengeGov.TestHelpers do
     {:ok, team} = Agencies.create(user, attributes)
     team
   end
+
+  def generate_random_string(length) do
+    length
+    |> :crypto.strong_rand_bytes()
+    |> Base.encode64()
+    |> binary_part(0, length)
+  end
 end
