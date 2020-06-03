@@ -37,7 +37,7 @@
   <br/>
 
   <div id="challenge_uploaded_documents">
-    <%= Enum.map(@changeset.data.supporting_documents, fn document -> %>
+    <%= Enum.map(@documents, fn document -> %>
       <div class="challenge_uploaded_document">
         <i class="fa fa-paperclip mr-1"></i>
         <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %>

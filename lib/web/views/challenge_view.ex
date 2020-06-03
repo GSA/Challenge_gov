@@ -242,6 +242,12 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def documents_for_section(documents, section) do
+    Enum.filter(documents, fn document ->
+      document.section === section
+    end)
+  end
+
   def progress_bar(conn, current_section, challenge, action) do
     sections = Challenges.sections()
     current_section_index = Challenges.section_index(current_section)

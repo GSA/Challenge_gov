@@ -37,7 +37,14 @@
             <%= hidden_input f, :local_timezone, id: "local-timezone-input" %>
 
             <div class="card-body">
-              <%= render Web.ChallengeView, "_#{@section}.html", form: f, changeset: @changeset, data: @changeset.data, path: @path, conn: @conn %>
+              <%= render Web.ChallengeView, "_#{@section}.html", 
+                form: f, 
+                changeset: @changeset, 
+                data: @changeset.data, 
+                documents: documents_for_section(@changeset.data.supporting_documents, @section), 
+                path: @path, 
+                conn: @conn 
+              %>
             </div>
 
             <div class="card-footer">

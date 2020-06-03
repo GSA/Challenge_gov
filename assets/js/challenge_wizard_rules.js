@@ -24,10 +24,12 @@ $(document).ready(function(){
     oldTerms = termsInput.val()
     termsInput.val("")
     termsInput.prop("disabled", true)
+    termsInput.siblings("p").hide()
   }
 
   function boxUnchecked() {
     termsInput.val(oldTerms)
     termsInput.prop("disabled", false)
+    termsInput.siblings("p").show()
   }
 })
