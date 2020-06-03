@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.ClosedChallengeImporter do
+defmodule Mix.Tasks.ClosedImportedChallengeImporter do
   @moduledoc """
   Importer for archived challenges
   """
@@ -16,18 +16,16 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   use Mix.Task
   alias ChallengeGov.Agencies
   alias ChallengeGov.Challenges
-  alias ChallengeGov.HTTPClient
 
   def run(_file) do
     Mix.Task.run("app.start")
 
-    result = File.read!("lib/mix/tasks/sample_data/feed-closed-parsed.json")
+    result = File.read!("lib/mix/tasks/sample_data/feed-closed-imported-parsed.json")
 
     case Jason.decode(result) do
       {:ok, json} ->
         json["_challenge"]
-        |> Enum.with_index()
-        |> Enum.map(fn {challenge, _idx} ->
+        |> Enum.map(fn challenge ->
           create_challenge(challenge)
         end)
 
@@ -43,28 +41,28 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
     result =
       Challenges.create(%{
         "user_id" => 0,
-        "status" => "closed",
-        "challenge_manager" => json["challenge-manager,"],
-        "challenge_manager_email" => json["challenge-manager-email"],
-        "poc_email" => json["point-of-contact"],
-        "agency_id" => match_agency(json["agency"], json["agency-logo"]),
-        "logo" => prep_logo(json["card-image"]),
-        "federal_partners" => match_federal_partners(json["partner-agencies-federal"]),
-        "non_federal_partners" => match_non_federal_partners(json["partners-non-federal"]),
         "title" => json["challenge-title"],
         "external_url" => json["external-url"],
         "tagline" => json["tagline"],
-        "description" => json["description"],
-        "how_to_enter" => json["how-to-enter"],
-        "fiscal_year" => json["fiscal-year"],
+        "legal_authority" => json["legal-authority"],
+        "types" => format_types(json["type-of-challenge"]),
+        "prize_total" => sanitize_prize_amount(json["total-prize-offered-cash"]),
+        "non_monetary_prizes" => json["non-monetary-incentives-awarded"],
+        "prize_description" => format_prize_description(json),
+        "status" => "archived",
+        "agency_id" => match_agency(json["agency"]),
+        "federal_partners" => match_federal_partners(json["partner-agencies-federal"]),
+        "non_federal_partners" => match_non_federal_partners(json["partners-non-federal"]),
+        "challenge_manager_email" => find_manager_email(json),
+        "challenge_manager" => json["challenge-manager,"],
         "start_date" => sanitize_date(json["submission-start"]),
         "end_date" => sanitize_date(json["submission-end"]),
-        "judging_criteria" => json["judging"],
-        "prize_total" => sanitize_prize_amount(json["total-prize-offered-cash"]),
-        "non_monetary_prizes" => json["prizes"],
+        "fiscal_year" => json["fiscal-year"],
+        "description" => json["description"],
+        "how_to_enter" => json["how-to-enter"],
         "rules" => json["rules"],
-        "legal_authority" => json["legal-authority"],
-        "types" => format_types(json["type-of-challenge"])
+        "judging_criteria" => format_judging_criteria(json),
+        "winner_information" => format_winner_information(json)
       })
 
     case result do
@@ -76,17 +74,96 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
     end
   end
 
-  defp match_agency(name, logo \\ nil) do
-    case Agencies.get_by_name(name) do
-      {:ok, agency} ->
-        agency.id
+  # TODO: check that the \n looks right
 
-      {:error, :not_found} ->
-        fuzzy_match_agency(name, logo)
+  defp format_judging_criteria(challenge) do
+    criteria =
+      Enum.map(0..9, fn i ->
+        flag_empty_string(challenge, "judging-criteria-#{i}", " ") <>
+          flag_empty_string(challenge, "judging-criteria-percentage-#{i}", "% ") <>
+          flag_empty_string(challenge, "judging-criteria-description-#{i}", "\n")
+      end)
+
+    criteria
+    |> Enum.filter(fn x -> x != "" end)
+    |> Enum.join()
+  end
+
+  defp format_prize_description(challenge) do
+    prize_data =
+      Enum.map(0..9, fn i ->
+        flag_empty_string(challenge, "prize-name-#{i}", "\n") <>
+          flag_empty_string(challenge, "prize-cash-amount-#{i}", "$", "\n") <>
+          flag_empty_string(challenge, "prize-description-#{i}", "\n")
+      end)
+
+    prize_data
+    |> Enum.filter(fn x -> x != "" end)
+    |> Enum.join()
+  end
+
+  defp format_winner_information(challenge) do
+    winner_information =
+      Enum.map(0..9, fn i ->
+        flag_empty_string(challenge, "winner-name-#{i}", "\n") <>
+          flag_empty_string(challenge, "winner-solution-title-#{i}", "\n") <>
+          flag_empty_string(challenge, "winner-solution-link-#{i}", "\n")
+      end)
+
+    winner_information
+    |> Enum.filter(fn x -> x != "" end)
+    |> Enum.join()
+  end
+
+  defp flag_empty_string(map, key, pre_concat, post_concat) do
+    result = Map.get(map, key)
+
+    case result do
+      "" ->
+        ""
+
+      _ ->
+        "#{pre_concat}#{result}#{post_concat}"
     end
   end
 
-  defp fuzzy_match_agency(name, logo) do
+  defp flag_empty_string(map, key, post_concat) do
+    result = Map.get(map, key)
+
+    case result do
+      "" ->
+        ""
+
+      _ ->
+        "#{result}#{post_concat}"
+    end
+  end
+
+  defp find_manager_email(challenge) do
+    case Map.has_key?(challenge, "challenge-manager-email") do
+      true ->
+        challenge["challenge-manager-email"]
+
+      false ->
+        ""
+    end
+  end
+
+  defp match_agency(name) do
+    if name == "" do
+      nil
+    else
+      case Agencies.get_by_name(name) do
+        {:ok, agency} ->
+          agency.id
+
+        {:error, :not_found} ->
+          fuzzy_match_agency(name)
+      end
+    end
+  end
+
+  defp fuzzy_match_agency(name) do
     agencies = Agencies.all_for_select()
 
     match =
@@ -97,43 +174,17 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
     if match != nil do
       match.id
     else
-      create_new_agency(name, logo)
+      create_new_agency(name)
     end
   end
 
-  defp create_new_agency(name, logo) when is_nil(logo) do
+  defp create_new_agency(name) do
     {:ok, agency} =
       Agencies.create(:saved_to_file, %{
         name: "#{name}"
       })
 
     agency.id
-  end
-
-  defp create_new_agency(name, logo_url) do
-    filename = Path.basename(logo_url)
-    extension = Path.extname(filename)
-
-    {:ok, tmp_file} = Stein.Storage.Temp.create(extname: extension)
-
-    response =
-      Finch.request(
-        HTTPClient,
-        :get,
-        "https://www.challenge.gov/assets/netlify-uploads/#{filename}"
-      )
-
-    case response do
-      {:ok, %{status: 200, body: body}} ->
-        File.write!(tmp_file, body, [:binary])
-
-        {:ok, agency} = Agencies.create(:saved_to_file, %{avatar: %{path: tmp_file}, name: name})
-        agency.id
-
-      _ ->
-        {:ok, agency} = Agencies.create(:saved_to_file, %{name: name})
-        agency.id
-    end
   end
 
   defp match_federal_partners(""), do: ""
@@ -156,27 +207,6 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
     |> Enum.reduce(%{}, fn {partner, idx}, acc ->
       Map.put(acc, to_string(idx), %{"name" => String.trim(partner)})
     end)
-  end
-
-  defp prep_logo(""), do: ""
-
-  defp prep_logo(logo_url) do
-    filename = Path.basename(logo_url)
-    extension = Path.extname(filename)
-
-    {:ok, tmp_file} = Stein.Storage.Temp.create(extname: extension)
-
-    with {:ok, %{status: 200, body: body}} <- Finch.request(HTTPClient, :get, logo_url) do
-      File.write!(tmp_file, body, [:binary])
-
-      %{
-        filename: filename,
-        path: tmp_file
-      }
-    else
-      {:ok, %{status: 404}} ->
-        ""
-    end
   end
 
   defp sanitize_date(""), do: ""
