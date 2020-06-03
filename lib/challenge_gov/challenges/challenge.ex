@@ -145,10 +145,12 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:published_on, :date)
     field(:rejection_message, :string)
 
-    # Virtual Fields
-    field(:logo, :string, virtual: true)
     field(:upload_logo, :boolean)
     field(:is_multi_phase, :boolean)
+    field(:terms_equal_rules, :boolean)
+
+    # Virtual Fields
+    field(:logo, :string, virtual: true)
 
     # Meta Timestamps
     field(:deleted_at, :utc_datetime)
@@ -213,7 +215,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :types,
       :auto_publish_date,
       :upload_logo,
-      :is_multi_phase
+      :is_multi_phase,
+      :terms_equal_rules
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
@@ -285,8 +288,15 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
   end
 
-  def rules_changeset(struct, _params) do
+  def rules_changeset(struct, params) do
     struct
+    |> validate_required([
+      :terms_equal_rules,
+      :eligibility_requirements,
+      :rules,
+      :legal_authority
+    ])
+    |> validate_terms(params)
   end
 
   def judging_changeset(struct, _params) do
@@ -610,4 +620,9 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   defp date_range_overlaps(_, _), do: true
+
+  defp validate_terms(struct, %{"terms_equal_rules" => true, "rules" => rules}),
+    do: put_change(struct, :terms_and_conditions, rules)
+
+  defp validate_terms(struct, _params), do: validate_required(struct, [:terms_and_conditions])
 end
