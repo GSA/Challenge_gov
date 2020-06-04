@@ -144,6 +144,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:auto_publish_date, :utc_datetime)
     field(:published_on, :date)
     field(:rejection_message, :string)
+    field(:how_to_enter_link, :string)
 
     field(:upload_logo, :boolean)
     field(:is_multi_phase, :boolean)
@@ -216,7 +217,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :auto_publish_date,
       :upload_logo,
       :is_multi_phase,
-      :terms_equal_rules
+      :terms_equal_rules,
+      :how_to_enter_link
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
