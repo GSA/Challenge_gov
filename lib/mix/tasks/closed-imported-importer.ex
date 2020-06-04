@@ -148,18 +148,6 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
     "#{string}#{append_string}"
   end
 
-  defp flag_empty_string(map, key, post_concat) do
-    result = Map.get(map, key)
-
-    case result do
-      "" ->
-        ""
-
-      _ ->
-        "#{result}#{post_concat}"
-    end
-  end
-
   defp find_manager_email(challenge) do
     case Map.has_key?(challenge, "challenge-manager-email") do
       true ->
