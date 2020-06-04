@@ -1,2 +1,8 @@
-<h3>Resources</h3>
+<h4>Add resources</h4>
 <br/>
+<p class="form__note"><span class="form__note--red">*</span>Required field</p>
+<br/>
+
+<div class="col">
+  <%= FormView.textarea_field(@form, :faq, label: "Frequently asked questions (optional)", limit: 400) %>
+</div>

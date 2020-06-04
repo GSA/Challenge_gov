@@ -313,6 +313,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   def resources_changeset(struct, _params) do
     struct
+    |> validate_length(:faq, max: 400)
   end
 
   def review_changeset(struct, _params) do
