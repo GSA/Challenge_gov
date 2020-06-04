@@ -25,7 +25,8 @@ defmodule ChallengeGov.ChallengeHowToEnterTest do
                   "id" => Enum.at(phase_ids, 0),
                   "how_to_enter" => "Test how to enter 1"
                 }
-              }
+              },
+              "how_to_enter_link" => "http://www.example.com"
             }
           },
           user,
@@ -36,6 +37,7 @@ defmodule ChallengeGov.ChallengeHowToEnterTest do
 
       assert length(challenge.phases) === 1
       assert Enum.member?(titles, "Test how to enter 1")
+      assert challenge.how_to_enter_link === "http://www.example.com"
     end
 
     test "successfully save draft" do
