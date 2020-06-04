@@ -79,52 +79,73 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
   defp format_judging_criteria(challenge) do
     criteria =
       Enum.map(0..9, fn i ->
-        flag_empty_string(challenge, "judging-criteria-#{i}", " ") <>
-          flag_empty_string(challenge, "judging-criteria-percentage-#{i}", "% ") <>
-          flag_empty_string(challenge, "judging-criteria-description-#{i}", "\n")
+        [
+          Map.get(challenge, "judging-criteria-#{i}"),
+          maybe_append(Map.get(challenge, "judging-criteria-percentage-#{i}"), "%"),
+          Map.get(challenge, "judging-criteria-description-#{i}")
+        ]
       end)
 
     criteria
-    |> Enum.filter(fn x -> x != "" end)
-    |> Enum.join()
+    |> Enum.map(fn fields ->
+      fields
+      |> Enum.reject(fn field -> field == "" end)
+      |> Enum.join("\n")
+    end)
+    |> Enum.reject(fn info -> info == "" end)
+    |> Enum.join("\n\n")
   end
 
   defp format_prize_description(challenge) do
     prize_data =
       Enum.map(0..9, fn i ->
-        flag_empty_string(challenge, "prize-name-#{i}", "\n") <>
-          flag_empty_string(challenge, "prize-cash-amount-#{i}", "$", "\n") <>
-          flag_empty_string(challenge, "prize-description-#{i}", "\n")
+        [
+          Map.get(challenge, "prize-name-#{i}"),
+          maybe_prepend(Map.get(challenge, "prize-cash-amount-#{i}"), "$"),
+          Map.get(challenge, "prize-description-#{i}")
+        ]
       end)
 
     prize_data
-    |> Enum.filter(fn x -> x != "" end)
-    |> Enum.join()
+    |> Enum.map(fn fields ->
+      fields
+      |> Enum.reject(fn field -> field == "" end)
+      |> Enum.join("\n")
+    end)
+    |> Enum.reject(fn info -> info == "" end)
+    |> Enum.join("\n\n")
   end
 
   defp format_winner_information(challenge) do
     winner_information =
       Enum.map(0..9, fn i ->
-        flag_empty_string(challenge, "winner-name-#{i}", "\n") <>
-          flag_empty_string(challenge, "winner-solution-title-#{i}", "\n") <>
-          flag_empty_string(challenge, "winner-solution-link-#{i}", "\n")
+        [
+          Map.get(challenge, "winner-name-#{i}"),
+          Map.get(challenge, "winner-solution-title-#{i}"),
+          Map.get(challenge, "winner-solution-link-#{i}")
+        ]
       end)
 
     winner_information
-    |> Enum.filter(fn x -> x != "" end)
-    |> Enum.join()
+    |> Enum.map(fn fields ->
+      fields
+      |> Enum.reject(fn field -> field == "" end)
+      |> Enum.join("\n")
+    end)
+    |> Enum.reject(fn info -> info == "" end)
+    |> Enum.join("\n\n")
   end
 
-  defp flag_empty_string(map, key, pre_concat, post_concat) do
-    result = Map.get(map, key)
+  defp maybe_prepend("", _prepend_string), do: ""
 
-    case result do
-      "" ->
-        ""
+  defp maybe_prepend(string, prepend_string) do
+    "#{prepend_string}#{string}"
+  end
 
-      _ ->
-        "#{pre_concat}#{result}#{post_concat}"
-    end
+  defp maybe_append("", _append_string), do: ""
+
+  defp maybe_append(string, append_string) do
+    "#{string}#{append_string}"
   end
 
   defp flag_empty_string(map, key, post_concat) do
