@@ -110,6 +110,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:winner_image_key, Ecto.UUID)
     field(:winner_image_extension, :string)
 
+    field(:resource_banner_key, Ecto.UUID)
+    field(:resource_banner_extension, :string)
+
     # Fields
     field(:status, :string, default: "draft")
     field(:last_section, :string)
@@ -147,11 +150,14 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:auto_publish_date, :utc_datetime)
     field(:published_on, :date)
     field(:rejection_message, :string)
+    field(:how_to_enter_link, :string)
+
+    field(:upload_logo, :boolean)
+    field(:is_multi_phase, :boolean)
+    field(:terms_equal_rules, :boolean)
 
     # Virtual Fields
     field(:logo, :string, virtual: true)
-    field(:upload_logo, :boolean)
-    field(:is_multi_phase, :boolean)
 
     # Meta Timestamps
     field(:deleted_at, :utc_datetime)
@@ -217,7 +223,9 @@ defmodule ChallengeGov.Challenges.Challenge do
       :auto_publish_date,
       :upload_logo,
       :is_multi_phase,
-      :prize_type
+      :terms_equal_rules,
+      :prize_type,
+      :how_to_enter_link
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
@@ -295,20 +303,31 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_prizes(params)
   end
 
-  def rules_changeset(struct, _params) do
+  def rules_changeset(struct, params) do
     struct
+    |> validate_required([
+      :terms_equal_rules,
+      :eligibility_requirements,
+      :rules,
+      :legal_authority
+    ])
+    |> validate_terms(params)
   end
 
   def judging_changeset(struct, _params) do
     struct
+    |> cast_embed(:phases, with: &Phase.judging_changeset/2)
   end
 
   def how_to_enter_changeset(struct, _params) do
     struct
+    |> cast_embed(:phases, with: &Phase.how_to_enter_changeset/2)
   end
 
   def resources_changeset(struct, _params) do
     struct
+    |> force_change(:faq, fetch_field!(struct, :faq))
+    |> validate_length(:faq, max: 400)
   end
 
   def review_changeset(struct, _params) do
@@ -429,6 +448,13 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> change()
     |> put_change(:winner_image_key, key)
     |> put_change(:winner_image_extension, extension)
+  end
+
+  def resource_banner_changeset(struct, key, extension) do
+    struct
+    |> change()
+    |> put_change(:resource_banner_key, key)
+    |> put_change(:resource_banner_extension, extension)
   end
 
   # Custom validations
@@ -620,6 +646,11 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   defp date_range_overlaps(_, _), do: true
+
+  defp validate_terms(struct, %{"terms_equal_rules" => "true", "rules" => rules}),
+    do: put_change(struct, :terms_and_conditions, rules)
+
+  defp validate_terms(struct, _params), do: validate_required(struct, [:terms_and_conditions])
 
   defp validate_prizes(struct, %{"prize_type" => "monetary"}) do
     validate_required(struct, [:prize_total])

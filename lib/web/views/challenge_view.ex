@@ -6,6 +6,7 @@ defmodule Web.ChallengeView do
   alias ChallengeGov.Challenges
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
+  alias ChallengeGov.Challenges.ResourceBanner
   alias ChallengeGov.SupportingDocuments
   alias Stein.Storage
   alias Web.AgencyView
@@ -242,6 +243,12 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def documents_for_section(documents, section) do
+    Enum.filter(documents, fn document ->
+      document.section === section
+    end)
+  end
+
   def progress_bar(conn, current_section, challenge, action) do
     sections = Challenges.sections()
     current_section_index = Challenges.section_index(current_section)
@@ -361,6 +368,34 @@ defmodule Web.ChallengeView do
 
       false ->
         Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
+    end
+  end
+
+  def resource_banner_img(challenge, opts \\ []) do
+    case is_nil(challenge.resource_banner_key) do
+      true ->
+        nil
+
+      false ->
+        url =
+          Storage.url(ResourceBanner.resource_banner_path(challenge, "thumbnail"),
+            signed: [expires_in: 3600]
+          )
+
+        opts = Keyword.merge([alt: "Challenge resource banner"], opts)
+        img_tag(url, opts)
+    end
+  end
+
+  def resource_banner_url(challenge) do
+    case is_nil(challenge.resource_banner_key) do
+      true ->
+        nil
+
+      false ->
+        Storage.url(ResourceBanner.resource_banner_path(challenge, "original"),
+          signed: [expires_in: 3600]
+        )
     end
   end
 

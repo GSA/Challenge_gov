@@ -1,13 +1,6 @@
 $(document).ready(function(){
   let phaseDeletionWarning = "Removing a phase will delete all content for this phase in other sections of the form (i.e. Judging, Resources, How to Enter). Are you sure you want to remove this phase?"
 
-	$(".js-select").select2({
-    width: "100%"
-  })
-	$(".js-multiselect").select2({
-    width: "100%"
-  })
-
   // Generic dynamic nested fields
   $(".dynamic-nested-form").on("click", ".add-nested-section", (e) => {
     e.preventDefault()
