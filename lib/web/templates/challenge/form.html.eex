@@ -41,6 +41,7 @@
                 form: f, 
                 changeset: @changeset, 
                 data: @changeset.data, 
+                challenge: @challenge,
                 section: @section,
                 documents: documents_for_section(@changeset.data.supporting_documents, @section), 
                 path: @path, 

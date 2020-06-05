@@ -3,6 +3,23 @@
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 <br/>
 
+<div class="col">
+  <label class="control-label">Upload image (optional)</label>
+  <br/>
+  <p>This image will display at the top of the resources section</p>
+  <%= FormView.file_field(@form, :resource_banner, label: false) do %>
+    <br/>
+    <%= if @data.resource_banner_key do %>
+      <p>Current resource banner:</p>
+      <%= resource_banner_img(@data, height: 100) %>
+      <br/>
+      <%= button("Remove resource banner", to: Routes.challenge_path(@conn, :remove_resource_banner, @challenge.id, section: @section), class: "btn btn-danger mt-3", data: [confirm: "Are you sure?"]) %>
+    <% end %>
+  <% end %>
+</div>
+
+<hr/>
+
 <div class="challenge-file-upload col" data-section=<%= @section %>>
   <label class="control-label">Upload judging documents (optional)</label>
   <div class="col">

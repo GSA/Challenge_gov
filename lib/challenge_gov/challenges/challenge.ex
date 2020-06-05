@@ -108,6 +108,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:winner_image_key, Ecto.UUID)
     field(:winner_image_extension, :string)
 
+    field(:resource_banner_key, Ecto.UUID)
+    field(:resource_banner_extension, :string)
+
     # Fields
     field(:status, :string, default: "draft")
     field(:last_section, :string)
@@ -435,6 +438,13 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> change()
     |> put_change(:winner_image_key, key)
     |> put_change(:winner_image_extension, extension)
+  end
+
+  def resource_banner_changeset(struct, key, extension) do
+    struct
+    |> change()
+    |> put_change(:resource_banner_key, key)
+    |> put_change(:resource_banner_extension, extension)
   end
 
   # Custom validations
