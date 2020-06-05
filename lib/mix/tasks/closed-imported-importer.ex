@@ -54,7 +54,7 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
         "federal_partners" => match_federal_partners(json["partner-agencies-federal"]),
         "non_federal_partners" => match_non_federal_partners(json["partners-non-federal"]),
         "challenge_manager_email" => find_manager_email(json),
-        "challenge_manager" => json["challenge-manager,"],
+        "challenge_manager" => json["challenge-manager"],
         "start_date" => sanitize_date(json["submission-start"]),
         "end_date" => sanitize_date(json["submission-end"]),
         "fiscal_year" => json["fiscal-year"],
