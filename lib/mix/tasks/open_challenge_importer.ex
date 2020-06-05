@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.ClosedChallengeImporter do
+defmodule Mix.Tasks.OpenChallengeImporter do
   @moduledoc """
   Importer for archived challenges
   """
@@ -21,13 +21,12 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   def run(_file) do
     Mix.Task.run("app.start")
 
-    result = File.read!("lib/mix/tasks/sample_data/feed-closed-parsed.json")
+    result = File.read!("lib/mix/tasks/sample_data/feed-open-parsed.json")
 
     case Jason.decode(result) do
       {:ok, json} ->
         json["_challenge"]
-        |> Enum.with_index()
-        |> Enum.map(fn {challenge, _idx} ->
+        |> Enum.map(fn challenge ->
           create_challenge(challenge)
         end)
 
@@ -43,28 +42,28 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
     result =
       Challenges.create(%{
         "user_id" => 0,
-        "status" => "archived",
-        "challenge_manager" => json["challenge-manager,"],
-        "challenge_manager_email" => json["challenge-manager-email"],
-        "poc_email" => json["point-of-contact"],
-        "agency_id" => match_agency(json["agency"], json["agency-logo"]),
+        "title" => json["challenge-title"],
+        "status" => "published",
+        "external_url" => json["external-url"],
         "logo" => prep_logo(json["card-image"]),
+        "agency_id" => match_agency(json["agency"], json["agency-logo"]),
+        "tagline" => json["tagline"],
+        "legal_authority" => json["legal-authority"],
+        "fiscal_year" => json["fiscal-year"],
+        "types" => format_types(json["type-of-challenge"]),
+        "prize_total" => sanitize_prize_amount(json["total-prize-offered-cash"]),
         "federal_partners" => match_federal_partners(json["partner-agencies-federal"]),
         "non_federal_partners" => match_non_federal_partners(json["partners-non-federal"]),
-        "title" => json["challenge-title"],
-        "external_url" => json["external-url"],
-        "tagline" => json["tagline"],
-        "description" => json["description"],
-        "how_to_enter" => json["how-to-enter"],
-        "fiscal_year" => json["fiscal-year"],
+        "challenge_manager" => json["challenge-manager"],
+        "challenge_manager_email" => json["challenge-manager-email"],
+        "poc_email" => json["point-of-contact"],
         "start_date" => sanitize_date(json["submission-start"]),
         "end_date" => sanitize_date(json["submission-end"]),
-        "judging_criteria" => json["judging"],
-        "prize_total" => sanitize_prize_amount(json["total-prize-offered-cash"]),
-        "non_monetary_prizes" => json["prizes"],
+        "description" => json["description"],
+        "prize_description" => json["prizes"],
         "rules" => json["rules"],
-        "legal_authority" => json["legal-authority"],
-        "types" => format_types(json["type-of-challenge"])
+        "judging_criteria" => json["judging"],
+        "how_to_enter" => json["how-to-enter"]
       })
 
     case result do
@@ -225,7 +224,6 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
 
   defp format_types(types) do
     types
-    |> String.split(";")
-    |> Enum.map(fn x -> String.trim(x) end)
+    |> String.split(~r{(?=[A-Z]+)}, trim: true)
   end
 end
