@@ -9,6 +9,7 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
+  alias ChallengeGov.Challenges.ResourceBanner
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.Repo
   alias ChallengeGov.SupportingDocuments
@@ -149,6 +150,9 @@ defmodule ChallengeGov.Challenges do
       |> attach_documents(challenge_params)
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, challenge_params)
+      end)
+      |> Ecto.Multi.run(:resource_banner, fn _repo, %{challenge: challenge} ->
+        ResourceBanner.maybe_upload_resource_banner(challenge, challenge_params)
       end)
       |> add_to_security_log_multi(user, "update", remote_ip, %{action: action, section: section})
       |> Repo.transaction()
@@ -896,6 +900,14 @@ defmodule ChallengeGov.Challenges do
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:winner_image_key, nil)
     |> Ecto.Changeset.put_change(:winner_image_extension, nil)
+    |> Repo.update()
+  end
+
+  def remove_resource_banner(challenge) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:resource_banner_key, nil)
+    |> Ecto.Changeset.put_change(:resource_banner_extension, nil)
     |> Repo.update()
   end
 

@@ -366,4 +366,13 @@ defmodule Web.ChallengeController do
       |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
     end
   end
+
+  def remove_resource_banner(conn, %{"id" => id, "section" => section}) do
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.remove_resource_banner(challenge) do
+      conn
+      |> put_flash(:info, "Resource banner removed")
+      |> redirect(to: Routes.challenge_path(conn, :edit, challenge.id, section))
+    end
+  end
 end
