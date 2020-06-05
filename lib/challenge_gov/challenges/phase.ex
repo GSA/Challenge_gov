@@ -15,6 +15,7 @@ defmodule ChallengeGov.Challenges.Phase do
     field(:end_date, :utc_datetime)
     field(:open_to_submissions, :boolean)
     field(:judging_criteria, :string)
+    field(:how_to_enter, :string)
 
     timestamps()
   end
@@ -26,7 +27,8 @@ defmodule ChallengeGov.Challenges.Phase do
       :start_date,
       :end_date,
       :open_to_submissions,
-      :judging_criteria
+      :judging_criteria,
+      :how_to_enter
     ])
   end
 
@@ -60,5 +62,14 @@ defmodule ChallengeGov.Challenges.Phase do
       :judging_criteria
     ])
     |> validate_length(:judging_criteria, max: 400)
+  end
+
+  def how_to_enter_changeset(struct, params) do
+    struct
+    |> save_changeset(params)
+    |> validate_required([
+      :how_to_enter
+    ])
+    |> validate_length(:how_to_enter, max: 400)
   end
 end
