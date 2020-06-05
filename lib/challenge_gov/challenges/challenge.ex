@@ -13,6 +13,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.NonFederalPartner
   alias ChallengeGov.Challenges.Phase
+  alias ChallengeGov.Challenges.TimelineEvent
   alias ChallengeGov.SupportingDocuments.Document
   alias ChallengeGov.Timeline.Event
 
@@ -97,6 +98,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete, on_delete: :delete_all)
 
     embeds_many(:phases, Phase, on_replace: :delete)
+    embeds_many(:timeline_events, TimelineEvent, on_replace: :delete)
 
     # Array fields. Pseudo associations
     field(:types, {:array, :string}, default: [])
@@ -131,6 +133,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:phase_descriptions, :string)
     field(:phase_dates, :string)
     field(:judging_criteria, :string)
+    field(:prize_type, :string)
     field(:prize_total, :integer)
     field(:non_monetary_prizes, :string)
     field(:prize_description, :string)
@@ -216,11 +219,13 @@ defmodule ChallengeGov.Challenges.Challenge do
       :auto_publish_date,
       :upload_logo,
       :is_multi_phase,
-      :terms_equal_rules
+      :terms_equal_rules,
+      :prize_type
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
     |> cast_embed(:phases, with: &Phase.draft_changeset/2)
+    |> cast_embed(:timeline_events, with: &TimelineEvent.draft_changeset/2)
   end
 
   def draft_changeset(struct, params = %{"section" => section}) do
@@ -282,10 +287,15 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   def timeline_changeset(struct, _params) do
     struct
+    |> cast_embed(:timeline_events, with: &TimelineEvent.save_changeset/2)
   end
 
-  def prizes_changeset(struct, _params) do
+  def prizes_changeset(struct, params) do
     struct
+    |> validate_required([
+      :prize_type
+    ])
+    |> validate_prizes(params)
   end
 
   def rules_changeset(struct, params) do
@@ -625,4 +635,21 @@ defmodule ChallengeGov.Challenges.Challenge do
     do: put_change(struct, :terms_and_conditions, rules)
 
   defp validate_terms(struct, _params), do: validate_required(struct, [:terms_and_conditions])
+
+  defp validate_prizes(struct, %{"prize_type" => "monetary"}) do
+    validate_required(struct, [:prize_total])
+  end
+
+  defp validate_prizes(struct, %{"prize_type" => "non_monetary"}) do
+    validate_required(struct, [:non_monetary_prizes])
+  end
+
+  defp validate_prizes(struct, %{"prize_type" => "both"}) do
+    validate_required(struct, [
+      :prize_total,
+      :non_monetary_prizes
+    ])
+  end
+
+  defp validate_prizes(struct, _params), do: struct
 end
