@@ -5,16 +5,21 @@ $(document).ready(function(){
     jqXHR.setRequestHeader('X-CSRF-Token', csrf_token);
   });
 
-  $("#challenge_document_upload").on("click", function() {
-    section = $("#challenge_section").val()
-    challenge_id = $("#challenge_challenge_id").val()
-    name_input = $("#challenge_document_name")
-    name = name_input.val()
-    file_input = $("#challenge_document_file")
-    file = file_input.prop("files")[0]
+  $(".challenge-file-upload").on("click", ".challenge_document_upload", function() {
+    parentComponent = $(this).parents(".challenge-file-upload")
+
+    challengeId = $("#challenge_challenge_id").val()
+    section = parentComponent.data("section")
+
+    nameInput = $(this).siblings(".challenge_document_name")
+    name = nameInput.val()
+    fileInput = $(this).siblings(".challenge_document_file")
+    file = fileInput.prop("files")[0]
+    challengeDocuments = parentComponent.find(".challenge_uploaded_documents")
+
 
     fd = new FormData()
-    fd.append("challenge_id", challenge_id)
+    fd.append("challenge_id", challengeId)
     fd.append("document[file]", file)
     fd.append("document[section]", section)
     fd.append("document[name]", name)
@@ -27,10 +32,10 @@ $(document).ready(function(){
         contentType: false,
         data: fd,
         success: function(document) {
-          $(name_input).val("")
-          $(file_input).val("")
+          $(nameInput).val("")
+          $(fileInput).val("")
 
-          $("#challenge_uploaded_documents").append(`
+          challengeDocuments.append(`
             <div>
               <i class="fa fa-paperclip mr-1"></i>
               <a href=${document.url} target="_blank">${document.display_name}</a>
@@ -47,7 +52,7 @@ $(document).ready(function(){
     }
   })
 
-  $("#challenge_uploaded_documents").on("click", ".challenge_uploaded_document_delete", function(e) {
+  $(".challenge_uploaded_documents").on("click", ".challenge_uploaded_document_delete", function(e) {
     e.preventDefault()
 
     document_id = $(this).data("document-id")
