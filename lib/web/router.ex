@@ -86,6 +86,10 @@ defmodule Web.Router do
       as: :challenge
     )
 
+    post("/challenges/:id/remove_resource_banner", ChallengeController, :remove_resource_banner,
+      as: :challenge
+    )
+
     resources("/documents", DocumentController, only: [:delete])
     resources("/events", EventController, only: [:edit, :update, :delete])
 

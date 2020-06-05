@@ -1,2 +1,15 @@
-<h3>How to enter</h3>
+<h4>Add how to enter details</h4>
 <br/>
+<p class="form__note"><span class="form__note--red">*</span>Required field</p>
+<br/>
+
+<%= inputs_for(@form, :phases, fn ff -> %>
+  <div class="col">
+    <%= "Phase #{ff.index + 1}: #{ff.data.title}" %> <span class="required">*</span>
+    <%= FormView.textarea_field(ff, :how_to_enter, label: false, limit: 400, required: true) %>
+  </div>
+<% end) %>
+
+<div class="col">
+  <%= FormView.text_field(@form, :how_to_enter_link, label: "External website how-to-enter link (optional)") %>
+</div>
