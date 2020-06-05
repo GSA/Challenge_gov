@@ -256,9 +256,16 @@ defmodule Web.FormView do
         form_control_classes(form, field)
       end
 
+    label =
+      if opts[:label] === false do
+        ""
+      else
+        label_field(form, field, opts)
+      end
+
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label_field(form, field, opts),
+        label,
         content_tag(:div, class: "col") do
           [
             textarea(form, field, Keyword.merge([class: classes], textarea_opts)),
@@ -298,9 +305,16 @@ defmodule Web.FormView do
 
     classes = form_control_file_classes(form, field)
 
+    label =
+      if opts[:label] === false do
+        ""
+      else
+        label(form, field, class: "col-md-4")
+      end
+
     content_tag(:div, class: form_group_classes(form, field)) do
       [
-        label(form, field, class: "col-md-4"),
+        label,
         content_tag(:div, class: "col-md-8") do
           [
             file_input(form, field, class: classes),
