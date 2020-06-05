@@ -232,7 +232,8 @@ defmodule ChallengeGov.Challenges do
       :non_federal_partners,
       :events,
       :user,
-      :challenge_owner_users
+      :challenge_owner_users,
+      :supporting_documents
     ])
   end
 

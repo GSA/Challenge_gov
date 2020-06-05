@@ -19,24 +19,28 @@ $(document).ready(function(){
     $(".phase-fields .nested-items").find("input").prop("disabled", false)
     $(".phase-fields").collapse("show")
     $(".single-phase-section").collapse("hide")
+    $(".single-phase-section").find("input").prop("disabled", true)
   }
 
   if ($(".multi-phase-toggle input[type=radio][value=false]:checked").length > 0) {
     $(".phase-fields .nested-items").find("input").prop("disabled", true)
     $(".phase-fields").collapse("hide")
     $(".single-phase-section").collapse("show")
+    $(".single-phase-section").find("input").prop("disabled", false)
   }
 
   $(".multi-phase-toggle input[type=radio]").on("click", function() {
     if ($(this).val() == "true") {
       $(".phase-fields").collapse("show")
-      $(".single-phase-section").collapse("hide")
       $(".phase-fields .nested-items").find("input").prop("disabled", false)
+      $(".single-phase-section").collapse("hide")
+    $(".single-phase-section").find("input").prop("disabled", true)
     } else {
       if (window.confirm(phaseDeletionWarning)) {
         $(".phase-fields").collapse("hide")
-        $(".single-phase-section").collapse("show")
         $(".phase-fields .nested-items").find("input").prop("disabled", true)
+        $(".single-phase-section").collapse("show")
+        $(".single-phase-section").find("input").prop("disabled", false)
         return true
       } else {
         return false
