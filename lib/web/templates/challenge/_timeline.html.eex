@@ -1,21 +1,76 @@
-<h3>Timeline</h3>
+<h3>Add timeline details</h3>
 <br/>
 
-<%= inputs_for(@form, :phases, fn ff -> %>
-  <div class="ml-3 mb-3">
-    <%= if ff.data.title do %>
-      <div class="row">
-        <span>Title: <%= ff.data.title %></span>
+<p>Add events to your timeline (optional)</p>
+<br/>
+
+<div class="timeline-event-fields">
+  <div class="nested-items col">
+    <%= inputs_for(@form, :timeline_events, [skip_hidden: true], fn timeline_event_form -> %>
+      <div class="form-collection mb-3" data-index="<%= timeline_event_form.index %>">
+        <%= Enum.map(timeline_event_form.hidden, fn {k, v} -> %>
+          <%= hidden_input(timeline_event_form, k, value: v) %>
+        <% end) %>
+
+        <div class="<%= FormView.nested_form_group_classes(@form, :phases, :title, 0) %> row">
+          <div class="col">
+            <%= label timeline_event_form, :title, "Timeline event title *" %>
+            <%= text_input timeline_event_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, timeline_event_form.index)}", required: true %>
+            <%= error_tag(timeline_event_form, :title) %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="<%= FormView.nested_form_group_classes(@form, :phases, :date, 1) %>">
+            <div class="<%= FormView.form_group_classes(timeline_event_form, :date) %> col">
+              <%= label timeline_event_form, :date, "Date *" %>
+              <%= datetime_local_input(timeline_event_form, :date, 
+                class: Enum.join([FormView.form_control_classes(timeline_event_form, :date), "js-datetime-input"], " "), 
+                required: true
+              )%>    
+              <%= hidden_input(timeline_event_form, :date) %>
+              <%= error_tag(timeline_event_form, :date) %>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="remove-nested-section btn btn-link text-danger">Remove event</div>
+        </div>
+        <hr/>
       </div>
-    <% end %>
-    <div class="row">
-      <span>Start date: <span class="js-local-datetime"><%= ff.data.start_date %></span></span>
-    </div>
-    <div class="row">
-      <span>End date: <span class="js-local-datetime"><%= ff.data.end_date %></span></span>
-    </div>
-    <div class="row">
-      <span>Open to submissions: <%= ff.data.open_to_submissions %></span>
+    <% end) %>      
+  </div>
+
+  <!-- Add new timeline event button -->
+  <div class="add-nested-section btn btn-primary mt-5" data-parent="challenge" data-child="timeline_events">Add event</div>
+
+  <!-- Timeline event template -->
+  <div class="dynamic-nested-form-template d-none">
+    <div class="form-collection mb-3">
+      <div class="<%= FormView.nested_form_group_classes(@form, :timeline_events, :title, -1) %> row" data-field="title">
+        <div class="col">
+          <%= label :template, :title, "Timeline event title *", class: "template-label" %>
+          <%= text_input :template, :title, class: "form-control template-input" %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="<%= FormView.nested_form_group_classes(@form, :timeline_events, :date, -1) %>" data-field="date">
+          <div class="<%= FormView.form_group_classes(@form, :date) %> col">
+            <%= label :template, :date, "Date *", class: "template-label" %>
+            <%= datetime_local_input(:template, :date, 
+              class: Enum.join([FormView.form_control_classes(@form, :date), "js-datetime-input template-input"], " ")
+            )%>    
+            <%= hidden_input(:template, :date) %>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="remove-nested-section btn btn-link text-danger">Remove event</div>
+      </div>
+      <hr/>
     </div>
   </div>
-<% end) %>
+</div>

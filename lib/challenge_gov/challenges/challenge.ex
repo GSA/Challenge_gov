@@ -13,6 +13,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.NonFederalPartner
   alias ChallengeGov.Challenges.Phase
+  alias ChallengeGov.Challenges.TimelineEvent
   alias ChallengeGov.SupportingDocuments.Document
   alias ChallengeGov.Timeline.Event
 
@@ -97,6 +98,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete, on_delete: :delete_all)
 
     embeds_many(:phases, Phase, on_replace: :delete)
+    embeds_many(:timeline_events, TimelineEvent, on_replace: :delete)
 
     # Array fields. Pseudo associations
     field(:types, {:array, :string}, default: [])
@@ -218,6 +220,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
     |> cast_embed(:phases, with: &Phase.draft_changeset/2)
+    |> cast_embed(:timeline_events, with: &TimelineEvent.draft_changeset/2)
   end
 
   def draft_changeset(struct, params = %{"section" => section}) do
@@ -279,6 +282,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   def timeline_changeset(struct, _params) do
     struct
+    |> cast_embed(:timeline_events, with: &TimelineEvent.save_changeset/2)
   end
 
   def prizes_changeset(struct, _params) do
