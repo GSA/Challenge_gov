@@ -61,7 +61,7 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         "end_date" => sanitize_date(json["submission-end"]),
         "judging_criteria" => json["judging"],
         "prize_total" => sanitize_prize_amount(json["total-prize-offered-cash"]),
-        "non_monetary_prizes" => json["prizes"],
+        "prize_description" => json["prizes"],
         "rules" => json["rules"],
         "legal_authority" => json["legal-authority"],
         "types" => format_types(json["type-of-challenge"])
