@@ -61,7 +61,7 @@ defmodule ChallengeGov.Challenges.Phase do
     |> validate_required([
       :judging_criteria
     ])
-    |> validate_length(:judging_criteria, max: 400)
+    |> validate_length(:judging_criteria, max: 4000)
   end
 
   def how_to_enter_changeset(struct, params) do

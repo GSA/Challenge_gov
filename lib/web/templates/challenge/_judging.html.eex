@@ -6,7 +6,7 @@
 <%= inputs_for(@form, :phases, fn ff -> %>
   <div class="col">
     <%= "Phase #{ff.index + 1}: #{ff.data.title}" %> <span class="required">*</span>
-    <%= FormView.textarea_field(ff, :judging_criteria, label: false, limit: 400, required: true) %>
+    <%= FormView.textarea_field(ff, :judging_criteria, label: false, limit: 4000, required: true) %>
   </div>
 <% end) %>
 
