@@ -61,6 +61,7 @@ defmodule ChallengeGov.Challenges.Phase do
     |> validate_required([
       :judging_criteria
     ])
+    |> force_change(:judging_criteria, params["judging_criteria"] || struct.judging_criteria)
     |> validate_length(:judging_criteria, max: 4000)
   end
 
@@ -70,6 +71,7 @@ defmodule ChallengeGov.Challenges.Phase do
     |> validate_required([
       :how_to_enter
     ])
-    |> validate_length(:how_to_enter, max: 400)
+    |> force_change(:how_to_enter, params["how_to_enter"] || struct.how_to_enter)
+    |> validate_length(:how_to_enter, max: 4000)
   end
 end
