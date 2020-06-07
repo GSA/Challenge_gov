@@ -75,5 +75,5 @@
 <hr/>
 
 <div class="col">
-  <%= FormView.textarea_field(@form, :faq, label: "Frequently asked questions (optional)", limit: 400) %>
+  <%= FormView.textarea_field(@form, :faq, label: "Frequently asked questions (optional)", limit: 4000) %>
 </div>
