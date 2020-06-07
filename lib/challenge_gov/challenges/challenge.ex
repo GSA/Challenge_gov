@@ -9,6 +9,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Agencies.Agency
+  alias ChallengeGov.Challenges
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.NonFederalPartner
@@ -292,7 +293,9 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   def timeline_changeset(struct, _params) do
     struct
-    |> cast_embed(:timeline_events, with: &TimelineEvent.save_changeset/2)
+    |> cast_embed(:timeline_events,
+      with: {TimelineEvent, :save_changeset, [Challenges.find_start_date(struct.data)]}
+    )
   end
 
   def prizes_changeset(struct, params) do
