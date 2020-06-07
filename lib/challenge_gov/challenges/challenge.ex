@@ -301,6 +301,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :prize_type
     ])
     |> validate_prizes(params)
+    |> validate_length(:prize_description, max: 1500)
   end
 
   def rules_changeset(struct, params) do
