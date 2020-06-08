@@ -248,7 +248,7 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         })
         user
 
-      user ->
+      {:ok, user} ->
         user
     end
   end
