@@ -14,6 +14,7 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   ]
 
   use Mix.Task
+  alias ChallengeGov.Accounts
   alias ChallengeGov.Agencies
   alias ChallengeGov.Challenges
   alias ChallengeGov.HTTPClient
@@ -23,12 +24,14 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
 
     result = File.read!("lib/mix/tasks/sample_data/feed-closed-parsed.json")
 
+    import_user_id = import_user().id
+
     case Jason.decode(result) do
       {:ok, json} ->
         json["_challenge"]
         |> Enum.with_index()
         |> Enum.map(fn {challenge, _idx} ->
-          create_challenge(challenge)
+          create_challenge(challenge, import_user_id)
         end)
 
       {:error, error} ->
@@ -39,10 +42,11 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   @doc """
   Create a challenge based off mapped fields
   """
-  def create_challenge(json) do
+  def create_challenge(json, import_user_id) do
     result =
-      Challenges.create(%{
-        "user_id" => 0,
+      Challenges.import_create(%{
+        "imported" => true,
+        "user_id" => import_user_id,
         "status" => "archived",
         "challenge_manager" => json["challenge-manager"],
         "challenge_manager_email" => json["challenge-manager-email"],
@@ -104,7 +108,8 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   defp create_new_agency(name, logo) when is_nil(logo) do
     {:ok, agency} =
       Agencies.create(:saved_to_file, %{
-        name: "#{name}"
+        name: "#{name}",
+        created_on_import: true
       })
 
     agency.id
@@ -127,11 +132,11 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
       {:ok, %{status: 200, body: body}} ->
         File.write!(tmp_file, body, [:binary])
 
-        {:ok, agency} = Agencies.create(:saved_to_file, %{avatar: %{path: tmp_file}, name: name})
+        {:ok, agency} = Agencies.create(:saved_to_file, %{avatar: %{path: tmp_file}, name: name, created_on_import: true})
         agency.id
 
       _ ->
-        {:ok, agency} = Agencies.create(:saved_to_file, %{name: name})
+        {:ok, agency} = Agencies.create(:saved_to_file, %{name: name, created_on_import: true})
         agency.id
     end
   end
@@ -227,5 +232,24 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
     types
     |> String.split(";")
     |> Enum.map(fn x -> String.trim(x) end)
+  end
+
+  def import_user() do
+    case Accounts.get_by_email("importer@challenge.gov") do
+      {:error, :not_found} ->
+        {:ok, user} = Accounts.system_create(%{
+          email: "importer@challenge.gov",
+          first_name: "Importer",
+          last_name: "User",
+          role: "challenge_owner",
+          terms_of_use: DateTime.truncate(DateTime.utc_now(), :second),
+          privacy_guidelines: DateTime.truncate(DateTime.utc_now(), :second),
+          status: "active"
+        })
+        user
+
+      user ->
+        user
+    end
   end
 end

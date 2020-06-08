@@ -98,7 +98,7 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Import challenges: no user, owner, documents or security logging
   """
-  def create(challenge_params) do
+  def import_create(challenge_params) do
     challenge_params =
       challenge_params
       |> check_non_federal_partners
@@ -107,7 +107,7 @@ defmodule ChallengeGov.Challenges do
       Ecto.Multi.new()
       |> Ecto.Multi.insert(
         :challenge,
-        Challenge.changeset(%Challenge{}, challenge_params)
+        Challenge.import_changeset(%Challenge{}, challenge_params)
       )
       |> attach_federal_partners(challenge_params)
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
