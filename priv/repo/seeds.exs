@@ -21,7 +21,7 @@ defmodule Helpers do
   def create_super_admin(email, first_name, last_name) do
     case Accounts.get_by_email(email) do
       {:error, :not_found} ->
-        Accounts.create(%{
+        Accounts.system_create(%{
           email: email,
           first_name: first_name,
           last_name: last_name,

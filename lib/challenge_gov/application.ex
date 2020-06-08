@@ -9,6 +9,7 @@ defmodule ChallengeGov.Application do
     # List all child processes to be supervised
     children = [
       ChallengeGov.Repo,
+      {Finch, name: ChallengeGov.HTTPClient},
       Web.Endpoint,
       ChallengeGov.Scheduler
     ]

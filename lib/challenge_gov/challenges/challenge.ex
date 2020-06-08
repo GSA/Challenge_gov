@@ -160,6 +160,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     # Virtual Fields
     field(:logo, :string, virtual: true)
 
+    field(:imported, :boolean)
+
     # Meta Timestamps
     field(:deleted_at, :utc_datetime)
     timestamps()
@@ -232,6 +234,51 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_assoc(:events)
     |> cast_embed(:phases, with: &Phase.draft_changeset/2)
     |> cast_embed(:timeline_events, with: &TimelineEvent.draft_changeset/2)
+  end
+
+  def import_changeset(struct, params) do
+    struct
+    |> cast(params, [
+      :user_id,
+      :agency_id,
+      :status,
+      :challenge_manager,
+      :challenge_manager_email,
+      :poc_email,
+      :agency_name,
+      :title,
+      :custom_url,
+      :external_url,
+      :tagline,
+      :description,
+      :brief_description,
+      :how_to_enter,
+      :fiscal_year,
+      :start_date,
+      :end_date,
+      :multi_phase,
+      :number_of_phases,
+      :phase_descriptions,
+      :phase_dates,
+      :judging_criteria,
+      :prize_total,
+      :non_monetary_prizes,
+      :prize_description,
+      :eligibility_requirements,
+      :rules,
+      :terms_and_conditions,
+      :legal_authority,
+      :faq,
+      :winner_information,
+      :types,
+      :auto_publish_date,
+      :upload_logo,
+      :is_multi_phase,
+      :imported
+    ])
+    |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
+    |> cast_assoc(:events)
+    |> cast_embed(:phases, with: &Phase.draft_changeset/2)
   end
 
   def draft_changeset(struct, params = %{"section" => section}) do

@@ -83,7 +83,7 @@
           <div class="card-body">
             <ul>
               <%= Enum.map(@agency.challenges, fn challenge -> %>
-                <li><%= name_link(@conn, challenge) %></li>
+                <li><%= Web.ChallengeView.name_link(@conn, challenge) %></li>
               <% end) %>
             </ul>
           </div>
@@ -100,7 +100,7 @@
           <div class="card-body">
             <ul>
               <%= Enum.map(@agency.federal_partner_challenges, fn challenge -> %>
-                <li><%= name_link(@conn, challenge) %></li>
+                <li><%= Web.ChallengeView.name_link(@conn, challenge) %></li>
               <% end) %>
             </ul>
           </div>

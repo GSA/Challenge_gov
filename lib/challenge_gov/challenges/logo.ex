@@ -27,7 +27,7 @@ defmodule ChallengeGov.Challenges.Logo do
         {to_string(key), value}
       end)
 
-    case Map.has_key?(params, "logo") do
+    case Map.has_key?(params, "logo") and Map.get(params, "logo") != "" do
       true ->
         upload_logo(challenge, Map.get(params, "logo"))
 
