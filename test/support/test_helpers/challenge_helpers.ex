@@ -2,8 +2,11 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
   @moduledoc """
   Helper factory functions for challenges
   """
+
   alias ChallengeGov.Challenges
   alias ChallengeGov.Repo
+
+  alias ChallengeGov.TestHelpers
 
   defp default_attributes(attributes) do
     Map.merge(
@@ -43,8 +46,8 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
             "is_multi_phase" => "false",
             "phases" => %{
               "0" => %{
-                "start_date" => iso_timestamp(),
-                "end_date" => iso_timestamp(hours: 1)
+                "start_date" => TestHelpers.iso_timestamp(),
+                "end_date" => TestHelpers.iso_timestamp(hours: 1)
               }
             }
           }
@@ -72,20 +75,20 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
             "phases" => %{
               "0" => %{
                 "title" => "Test",
-                "start_date" => iso_timestamp(hours: 1),
-                "end_date" => iso_timestamp(hours: 2),
+                "start_date" => TestHelpers.iso_timestamp(hours: 1),
+                "end_date" => TestHelpers.iso_timestamp(hours: 2),
                 "open_to_submissions" => true
               },
               "1" => %{
                 "title" => "Test 1",
-                "start_date" => iso_timestamp(hours: 3),
-                "end_date" => iso_timestamp(hours: 4),
+                "start_date" => TestHelpers.iso_timestamp(hours: 3),
+                "end_date" => TestHelpers.iso_timestamp(hours: 4),
                 "open_to_submissions" => true
               },
               "2" => %{
                 "title" => "Test 2",
-                "start_date" => iso_timestamp(hours: 5),
-                "end_date" => iso_timestamp(hours: 6),
+                "start_date" => TestHelpers.iso_timestamp(hours: 5),
+                "end_date" => TestHelpers.iso_timestamp(hours: 6),
                 "open_to_submissions" => true
               }
             }
@@ -96,14 +99,5 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
       )
 
     challenge
-  end
-
-  defp iso_timestamp(opts \\ []) do
-    {:ok, timestamp} =
-      Timex.now()
-      |> Timex.shift(opts)
-      |> Timex.format("{ISO:Extended}")
-
-    timestamp
   end
 end

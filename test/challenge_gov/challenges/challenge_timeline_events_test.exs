@@ -3,13 +3,14 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
   use Bamboo.Test
 
   alias ChallengeGov.Challenges
+  alias ChallengeGov.TestHelpers
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
 
   describe "adding timeline events" do
     test "successfully" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       {:ok, _updated_challenge} =
         Challenges.update(
@@ -21,7 +22,7 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
               "timeline_events" => %{
                 "0" => %{
                   "title" => "Test",
-                  "date" => iso_timestamp()
+                  "date" => TestHelpers.iso_timestamp()
                 }
               }
             }
@@ -40,7 +41,7 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
 
     test "successfully as draft" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       {:ok, _updated_challenge} =
         Challenges.update(
@@ -67,7 +68,7 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
 
     test "successfully adding multiple" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       {:ok, _updated_challenge} =
         Challenges.update(
@@ -79,15 +80,15 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
               "timeline_events" => %{
                 "0" => %{
                   "title" => "Test",
-                  "date" => iso_timestamp(hours: 1)
+                  "date" => TestHelpers.iso_timestamp(hours: 1)
                 },
                 "1" => %{
                   "title" => "Test 1",
-                  "date" => iso_timestamp(hours: 3)
+                  "date" => TestHelpers.iso_timestamp(hours: 3)
                 },
                 "2" => %{
                   "title" => "Test 2",
-                  "date" => iso_timestamp(hours: 5)
+                  "date" => TestHelpers.iso_timestamp(hours: 5)
                 }
               }
             }
@@ -101,9 +102,9 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
       assert length(challenge.timeline_events) === 3
     end
 
-    test "failure from missing titles" do
+    test "failure with one before start_date" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       {:error, changeset} =
         Challenges.update(
@@ -114,15 +115,107 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
               "section" => "timeline",
               "timeline_events" => %{
                 "0" => %{
-                  "date" => iso_timestamp(hours: 1)
+                  "title" => "Test",
+                  "date" => TestHelpers.iso_timestamp(hours: -1)
                 },
                 "1" => %{
-                  "title" => "",
-                  "date" => iso_timestamp(hours: 1)
+                  "title" => "Test 1",
+                  "date" => TestHelpers.iso_timestamp(hours: 3)
                 },
                 "2" => %{
                   "title" => "Test 2",
-                  "date" => iso_timestamp(hours: 5)
+                  "date" => TestHelpers.iso_timestamp(hours: 5)
+                }
+              }
+            }
+          },
+          user,
+          ""
+        )
+
+      timeline_changes = changeset.changes.timeline_events
+      assert length(timeline_changes) === 3
+
+      Enum.map(timeline_changes, fn change ->
+        if length(change.errors) > 0 do
+          if change.changes[:title] === "Test" do
+            assert change.errors[:date]
+          else
+            assert !change.errors[:date]
+          end
+        end
+      end)
+    end
+
+    test "failure with multiple before start_date" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      {:error, changeset} =
+        Challenges.update(
+          challenge,
+          %{
+            "action" => "next",
+            "challenge" => %{
+              "section" => "timeline",
+              "timeline_events" => %{
+                "0" => %{
+                  "title" => "Test",
+                  "date" => TestHelpers.iso_timestamp(hours: -1)
+                },
+                "1" => %{
+                  "title" => "Test 1",
+                  "date" => TestHelpers.iso_timestamp(hours: -1)
+                },
+                "2" => %{
+                  "title" => "Test 2",
+                  "date" => TestHelpers.iso_timestamp(hours: 5)
+                }
+              }
+            }
+          },
+          user,
+          ""
+        )
+
+      timeline_changes = changeset.changes.timeline_events
+      assert length(timeline_changes) === 3
+
+      Enum.map(timeline_changes, fn change ->
+        if length(change.errors) > 0 do
+          case change.changes[:title] do
+            t when t === "Test" or t === "Test 1" ->
+              assert change.errors[:date]
+
+            _ ->
+              assert !change.errors[:date]
+          end
+        end
+      end)
+    end
+
+    test "failure from missing titles" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      {:error, changeset} =
+        Challenges.update(
+          challenge,
+          %{
+            "action" => "next",
+            "challenge" => %{
+              "section" => "timeline",
+              "timeline_events" => %{
+                "0" => %{
+                  "date" => TestHelpers.iso_timestamp(hours: 1)
+                },
+                "1" => %{
+                  "title" => "",
+                  "date" => TestHelpers.iso_timestamp(hours: 1)
+                },
+                "2" => %{
+                  "title" => "Test 2",
+                  "date" => TestHelpers.iso_timestamp(hours: 5)
                 }
               }
             }
@@ -143,7 +236,7 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
 
     test "failure from missing date" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       {:error, changeset} =
         Challenges.update(
@@ -162,7 +255,7 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
                 },
                 "2" => %{
                   "title" => "Test 2",
-                  "date" => iso_timestamp(hours: 5)
+                  "date" => TestHelpers.iso_timestamp(hours: 5)
                 }
               }
             }
@@ -185,7 +278,7 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
   describe "modifying timeline events" do
     test "successfully" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       {:ok, challenge} =
         Challenges.update(
@@ -197,7 +290,7 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
               "timeline_events" => %{
                 "0" => %{
                   "title" => "Test",
-                  "date" => iso_timestamp(hours: 1)
+                  "date" => TestHelpers.iso_timestamp(hours: 1)
                 }
               }
             }
@@ -222,7 +315,7 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
               "timeline_events" => %{
                 "0" => %{
                   "title" => "New title",
-                  "date" => iso_timestamp(hours: 2)
+                  "date" => TestHelpers.iso_timestamp(hours: 2)
                 }
               }
             }
@@ -240,7 +333,7 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
 
     test "successfully modifying multiple" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       {:ok, challenge} =
         Challenges.update(
@@ -252,15 +345,15 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
               "timeline_events" => %{
                 "0" => %{
                   "title" => "Test",
-                  "date" => iso_timestamp(hours: 1)
+                  "date" => TestHelpers.iso_timestamp(hours: 1)
                 },
                 "1" => %{
                   "title" => "Test 1",
-                  "date" => iso_timestamp(hours: 3)
+                  "date" => TestHelpers.iso_timestamp(hours: 3)
                 },
                 "2" => %{
                   "title" => "Test 2",
-                  "date" => iso_timestamp(hours: 5)
+                  "date" => TestHelpers.iso_timestamp(hours: 5)
                 }
               }
             }
@@ -288,17 +381,17 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
                 "0" => %{
                   "id" => Enum.at(phase_ids, 0),
                   "title" => "Test 3",
-                  "date" => iso_timestamp(hours: 1)
+                  "date" => TestHelpers.iso_timestamp(hours: 1)
                 },
                 "1" => %{
                   "id" => Enum.at(phase_ids, 1),
                   "title" => "Test 4",
-                  "date" => iso_timestamp(hours: 3)
+                  "date" => TestHelpers.iso_timestamp(hours: 3)
                 },
                 "2" => %{
                   "id" => Enum.at(phase_ids, 2),
                   "title" => "Test 5",
-                  "date" => iso_timestamp(hours: 5)
+                  "date" => TestHelpers.iso_timestamp(hours: 5)
                 }
               }
             }
@@ -313,14 +406,5 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
       event_titles = Enum.map(challenge.timeline_events, & &1.title)
       assert event_titles === ["Test 3", "Test 4", "Test 5"]
     end
-  end
-
-  defp iso_timestamp(opts \\ []) do
-    {:ok, timestamp} =
-      Timex.now()
-      |> Timex.shift(opts)
-      |> Timex.format("{ISO:Extended}")
-
-    timestamp
   end
 end

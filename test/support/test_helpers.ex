@@ -122,4 +122,13 @@ defmodule ChallengeGov.TestHelpers do
     |> Base.encode64()
     |> binary_part(0, length)
   end
+
+  def iso_timestamp(opts \\ []) do
+    {:ok, timestamp} =
+      Timex.now()
+      |> Timex.shift(opts)
+      |> Timex.format("{ISO:Extended}")
+
+    timestamp
+  end
 end

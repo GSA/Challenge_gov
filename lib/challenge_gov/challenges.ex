@@ -610,6 +610,16 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  # BOOKMARK: Helper functions
+  def find_start_date(challenge) do
+    first_phase =
+      challenge.phases
+      |> Enum.sort(fn a, b -> Timex.compare(a.start_date, b.start_date) < 0 end)
+      |> Enum.at(0)
+
+    first_phase.start_date
+  end
+
   @doc """
   Create a new status event when the status changes
   """
