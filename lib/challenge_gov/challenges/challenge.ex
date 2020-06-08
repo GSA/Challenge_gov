@@ -304,6 +304,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :prize_type
     ])
     |> validate_prizes(params)
+    |> force_change(:prize_description, fetch_field!(struct, :prize_description))
+    |> validate_length(:prize_description, max: 1500)
   end
 
   def rules_changeset(struct, params) do
@@ -330,7 +332,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   def resources_changeset(struct, _params) do
     struct
     |> force_change(:faq, fetch_field!(struct, :faq))
-    |> validate_length(:faq, max: 400)
+    |> validate_length(:faq, max: 4000)
   end
 
   def review_changeset(struct, _params) do

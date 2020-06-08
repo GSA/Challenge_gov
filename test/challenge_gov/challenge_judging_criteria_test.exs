@@ -109,7 +109,7 @@ defmodule ChallengeGov.ChallengeJudgingCriteriaTest do
 
       phase_ids = Enum.map(challenge.phases, & &1.id)
 
-      length = 401
+      length = 4001
       judging_criteria = TestHelpers.generate_random_string(length)
 
       {:error, changeset} =
@@ -278,7 +278,7 @@ defmodule ChallengeGov.ChallengeJudgingCriteriaTest do
 
       phase_ids = Enum.map(challenge.phases, & &1.id)
 
-      length = 401
+      length = 4001
       judging_criteria = TestHelpers.generate_random_string(length)
 
       {:error, changeset} =

@@ -53,25 +53,32 @@
 
 <div class="col">
   <label class="control-label"><%= FormView.label_field @form, :upload_logo, label: "Upload challenge logo", required: true %></label>
-  <p>
-    This logo will appear on the challenge tile on the homepage and on the challenge details page in the the header.
-  </p>
-  <div class="col ml-2 upload-logo">
-    <div class="row">
-      <%= label class: "control-label" do %>
-        <%= radio_button(@form, :upload_logo, true, class: "mr-2", required: true) %>
-        Upload my own logo
-      <% end %>
+  <div class="ml-3">
+    <p>
+      This logo will appear on the challenge tile on the homepage and on the challenge details page in the the header.
+    </p>
+    <div class="col upload-logo">
+      <div class="row">
+        <%= label class: "control-label" do %>
+          <%= radio_button(@form, :upload_logo, true, class: "mr-2", required: true) %>
+          Upload my own logo
+        <% end %>
+      </div>
+      <div class="row">
+        <%= label class: "control-label" do %>
+          <%= radio_button(@form, :upload_logo, false, class: "mr-2", required: true) %>
+          Use default challenge.gov logo
+        <% end %>
+      </div>
+      <div class="row logo-file-field collapse">
+        <%= FormView.file_field(@form, :logo, label: "Logo", required: true) %>
+      </div>
     </div>
-    <div class="row">
-      <%= label class: "control-label" do %>
-        <%= radio_button(@form, :upload_logo, false, class: "mr-2", required: true) %>
-        Use default challenge.gov logo
-      <% end %>
-    </div>
-    <div class="row logo-file-field collapse">
-      <%= FormView.file_field(@form, :logo, label: "Logo", required: true) %>
-    </div>
+    <%= if @data.logo_key do %>
+      <p>Current logo:</p>
+      <%= logo_img(@data, height: 100) %>
+      <br/>
+    <% end %>
   </div>
 </div>
 
