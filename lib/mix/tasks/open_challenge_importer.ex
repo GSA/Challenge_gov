@@ -131,7 +131,13 @@ defmodule Mix.Tasks.OpenChallengeImporter do
       {:ok, %{status: 200, body: body}} ->
         File.write!(tmp_file, body, [:binary])
 
-        {:ok, agency} = Agencies.create(:saved_to_file, %{avatar: %{path: tmp_file}, name: name, created_on_import: true})
+        {:ok, agency} =
+          Agencies.create(:saved_to_file, %{
+            avatar: %{path: tmp_file},
+            name: name,
+            created_on_import: true
+          })
+
         agency.id
 
       _ ->
@@ -235,15 +241,17 @@ defmodule Mix.Tasks.OpenChallengeImporter do
   def import_user() do
     case Accounts.get_by_email("importer@challenge.gov") do
       {:error, :not_found} ->
-        {:ok, user} = Accounts.system_create(%{
-          email: "importer@challenge.gov",
-          first_name: "Importer",
-          last_name: "User",
-          role: "challenge_owner",
-          terms_of_use: DateTime.truncate(DateTime.utc_now(), :second),
-          privacy_guidelines: DateTime.truncate(DateTime.utc_now(), :second),
-          status: "active"
-        })
+        {:ok, user} =
+          Accounts.system_create(%{
+            email: "importer@challenge.gov",
+            first_name: "Importer",
+            last_name: "User",
+            role: "challenge_owner",
+            terms_of_use: DateTime.truncate(DateTime.utc_now(), :second),
+            privacy_guidelines: DateTime.truncate(DateTime.utc_now(), :second),
+            status: "active"
+          })
+
         user
 
       {:ok, user} ->
