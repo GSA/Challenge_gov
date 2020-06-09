@@ -9,6 +9,8 @@
           <%= Enum.map(phase_form.hidden, fn {k, v} -> %>
             <%= hidden_input(phase_form, k, value: v) %>
           <% end) %>
+          <%= hidden_input(phase_form, :judging_criteria) %>
+          <%= hidden_input(phase_form, :how_to_enter) %>
 
           <div class="<%= FormView.nested_form_group_classes(@form, :phases, :title, 0) %> row">
             <div class="col">

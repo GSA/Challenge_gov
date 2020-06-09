@@ -21,7 +21,7 @@
 <hr/>
 
 <div class="challenge-file-upload col" data-section=<%= @section %>>
-  <label class="control-label">Upload judging documents (optional)</label>
+  <label class="control-label">Upload supporting documents (optional)</label>
   <div class="col">
     <label for="challenge_document_name" class="control-label">File name (optional)</label>
     <input class="challenge_document_name form-control" type="text">

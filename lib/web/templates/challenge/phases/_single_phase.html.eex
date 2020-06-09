@@ -6,6 +6,8 @@
       <%= if phase_form.index === 0 do %>
         <%= hidden_input phase_form, :title, value: "" %>
         <%= hidden_input phase_form, :open_to_submissions, value: true %>
+        <%= hidden_input phase_form, :judging_criteria %>
+        <%= hidden_input phase_form, :how_to_enter %>
 
         <div class="col">
           <div class="<%= FormView.nested_form_group_classes(@form, :phases, :start_date, phase_form.index) %>">
