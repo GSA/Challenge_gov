@@ -1,4 +1,7 @@
-<h5>Judging</h5>
+<div class="display-flex flex-row flex-justify"> 
+  <h5>Judging</h5>
+  <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "judging"), class: "btn btn-link") %>
+</div>
 <br/>
 <div>
   <%= Enum.map(@challenge.phases, fn phase -> %>

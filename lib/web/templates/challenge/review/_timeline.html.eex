@@ -1,4 +1,7 @@
-<h5>Timeline</h5>
+<div class="display-flex flex-row flex-justify">
+  <h5>Timeline</h5>
+  <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "timeline"), class: "btn btn-link") %>
+</div>
 <br/>
 <div>
   <%= Enum.map(@challenge.timeline_events, fn event -> %>

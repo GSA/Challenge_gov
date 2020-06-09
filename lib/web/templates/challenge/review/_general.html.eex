@@ -1,4 +1,7 @@
-<h5>General Info</h5>
+<div class="display-flex flex-row flex-justify">
+  <h5>General Info</h5>
+  <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "general"), class: "btn btn-link") %>
+</div>
 <br/>
 <div>
   <div class="text-bold">Challenge manager of record:</div>

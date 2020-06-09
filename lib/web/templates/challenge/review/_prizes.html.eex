@@ -1,4 +1,7 @@
-<h5>Prizes</h5>
+<div class="display-flex flex-row flex-justify"> 
+  <h5>Prizes</h5>
+  <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "prizes"), class: "btn btn-link") %>
+</div>
 <br/>
 <div>
   <div class="text-bold">Prize type:</div>
