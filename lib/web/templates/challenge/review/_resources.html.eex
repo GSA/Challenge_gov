@@ -1,0 +1,25 @@
+<h5>Resources</h5>
+<br/>
+<div>
+  <div class="text-bold">Resource banner:</div>
+  <%= resource_banner_img(@challenge) %>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Resource documents:</div>
+  <%= Enum.map(documents_for_section(@challenge.supporting_documents, "resources"), fn document -> %>
+    <div><%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %></div>
+  <% end) %>
+</div>
+<br/>
+<div>
+  <div class="text-bold">FAQ documents:</div>
+  <%= Enum.map(documents_for_section(@challenge.supporting_documents, "faq"), fn document -> %>
+    <div><%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %></div>
+  <% end) %>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Frequently asked questions:</div>
+  <div><%= @challenge.faq %></div>
+</div>

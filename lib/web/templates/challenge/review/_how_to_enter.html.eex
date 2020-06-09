@@ -1,0 +1,19 @@
+<h5>How to enter</h5>
+<br/>
+<div>
+  <%= Enum.map(@challenge.phases, fn phase -> %>
+    <div>
+      <span class="text-bold">Phase:</span>
+      <span><%= phase.title %></span>
+    </div>
+    <div>
+      <div class="text-bold">How to enter:</div>
+      <%= phase.how_to_enter %>
+    </div>
+    <br/>
+  <% end) %>
+</div>
+<div>
+  <div class="text-bold">How to enter link:</div>
+  <div><%= @challenge.how_to_enter_link %></div>
+</div>

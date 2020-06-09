@@ -1,0 +1,40 @@
+<h5>General Info</h5>
+<br/>
+<div>
+  <div class="text-bold">Challenge manager of record:</div>
+  <div><%= @challenge.challenge_manager %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Challenge manager email:</div>
+  <div><%= @challenge.challenge_manager_email %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Point of contact email:</div>
+  <div><%= @challenge.poc_email %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Lead agency:</div>
+  <div><%= Web.AgencyView.name_link(@conn, @challenge.agency) %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Federal partners:</div>
+  <%= Enum.map(@challenge.federal_partner_agencies, fn partner -> %>
+    <div><%= Web.AgencyView.name_link(@conn, partner) %></div>
+  <% end) %>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Non federal partners:</div>
+  <%= Enum.map(@challenge.non_federal_partners, fn partner -> %>
+    <div><%= partner %></div>
+  <% end) %>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Fiscal year:</div>
+  <%= @challenge.fiscal_year %>
+</div>

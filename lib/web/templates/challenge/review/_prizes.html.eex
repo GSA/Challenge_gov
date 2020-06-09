@@ -1,0 +1,21 @@
+<h5>Prizes</h5>
+<br/>
+<div>
+  <div class="text-bold">Prize type:</div>
+  <div><%= @challenge.prize_type %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Prize total:</div>
+  <div><%= @challenge.prize_total %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Non monetoary prizes:</div>
+  <div><%= @challenge.non_monetary_prizes %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Prize description:</div>
+  <div><%= @challenge.prize_description %></div>
+</div>
