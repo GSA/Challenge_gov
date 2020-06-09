@@ -524,25 +524,25 @@ defmodule ChallengeGov.Challenges.Challenge do
     end
   end
 
-  defp validate_upload_logo(struct, params) do
-    case Map.get(params, "upload_logo") do
-      "true" ->
-        validate_logo(struct, params)
+  defp validate_upload_logo(struct, params = %{"upload_logo" => "true"}),
+    do: validate_logo(struct, params)
 
-      _ ->
-        struct
-    end
+  # TODO: Make this situation properly delete the uploaded file instead of just severing the connection
+  defp validate_upload_logo(struct, %{"upload_logo" => "false"}) do
+    struct
+    |> put_change(:logo_key, nil)
+    |> put_change(:logo_extension, nil)
   end
 
-  defp validate_logo(struct, params) do
-    case Map.get(params, "logo") do
-      nil ->
-        add_error(struct, :logo, "Must upload a logo")
+  defp validate_logo(struct, %{"logo" => logo}) when is_nil(logo),
+    do: add_error(struct, :logo, "Must upload a logo")
 
-      _ ->
-        struct
-    end
-  end
+  defp validate_logo(struct, %{"logo" => _logo}), do: struct
+
+  defp validate_logo(struct = %{data: %{logo_key: logo_key}}, _params) when is_nil(logo_key),
+    do: add_error(struct, :logo, "Must upload a logo")
+
+  defp validate_logo(struct, _params), do: struct
 
   defp validate_start_and_end_dates(struct, params) do
     with {:ok, start_date} <- Map.fetch(params, "start_date"),
