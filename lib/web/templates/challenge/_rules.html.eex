@@ -5,8 +5,8 @@
 
 <%= FormView.textarea_field(@form, :eligibility_requirements, label: "Eligibility requirements", limit: 400, required: true) %>
 <%= FormView.textarea_field(@form, :rules, label: "Rules", limit: 400, required: true) %>
+<%= FormView.checkbox_field(@form, :terms_equal_rules, label: "Terms and conditions same as rules", class: "js-terms-equal-rules", required: true) %>
 <%= FormView.textarea_field(@form, :terms_and_conditions, label: "Terms and conditions", limit: 400, required: true) %>
-<%= FormView.checkbox_field(@form, :terms_equal_rules, label: "Same as rules", class: "js-terms-equal-rules", required: true) %>
 <%= FormView.select_field(@form, :legal_authority, collection: Challenges.legal_authority(), label: "Legal authority", prompt: "Choose a legal authority", required: true) %>
 
 <br/>

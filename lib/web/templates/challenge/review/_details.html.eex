@@ -1,0 +1,89 @@
+<div class="display-flex flex-row flex-justify">
+  <h5>Details</h5>
+  <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "details"), class: "btn btn-link") %>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Challenge title:</div>
+  <div><%= @challenge.title %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Challenge tagline:</div>
+  <div><%= @challenge.tagline %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Challenge types:</div>
+  <div><%= Enum.join(@challenge.types || [], ", ") %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Custom url:</div>
+  <div>http://www.challenge.gov/challenge/<%= @challenge.custom_url %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">External url:</div>
+  <div><%= @challenge.external_url %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Brief description:</div>
+  <div><%= @challenge.brief_description %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Description:</div>
+  <div><%= @challenge.description %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Supporting documents:</div>
+  <%= Enum.map(documents_for_section(@challenge.supporting_documents, "details"), fn document -> %>
+    <div><%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %></div>
+  <% end) %>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Uploading own logo:</div>
+  <div><%= @challenge.upload_logo %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Logo:</div>
+  <%= logo_img(@challenge) %>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Auto publish date:</div>
+  <div class="js-local-datetime"><%= @challenge.auto_publish_date %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Multi phase challenge:</div>
+  <div><%= @challenge.multi_phase %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Phases:</div>
+  <%= Enum.map(@challenge.phases, fn phase -> %>
+    <div>
+      <span class="text-bold">Title: </span>
+      <span><%= phase.title %></span>
+    </div>
+    <div>
+      <span class="text-bold">Start date: </span>
+      <span class="js-local-datetime"><%= phase.start_date %></span>
+    </div>
+    <div>
+      <span class="text-bold">End date: </span>
+      <span class="js-local-datetime"><%= phase.end_date %></span>
+    </div>
+    <div>
+      <span class="text-bold">Open to submissions: </span>
+      <span><%= phase.open_to_submissions %></span>
+    </div>
+    <br/>
+  <% end) %>
+</div>
