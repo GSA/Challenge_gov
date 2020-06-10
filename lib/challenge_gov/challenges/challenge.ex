@@ -233,7 +233,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
     |> cast_embed(:phases, with: &Phase.draft_changeset/2)
-    |> cast_embed(:timeline_events, with: &TimelineEvent.draft_changeset/2)
+    |> validate_timeline_events_draft(params)
   end
 
   def import_changeset(struct, params) do
@@ -338,11 +338,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_phases(params)
   end
 
-  def timeline_changeset(struct, _params) do
+  def timeline_changeset(struct, params) do
     struct
-    |> cast_embed(:timeline_events,
-      with: {TimelineEvent, :save_changeset, [Challenges.find_start_date(struct.data)]}
-    )
+    |> validate_timeline_events(params)
   end
 
   def prizes_changeset(struct, params) do
@@ -698,6 +696,25 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   defp date_range_overlaps(_, _), do: true
+
+  defp validate_timeline_events(struct, %{"timeline_events" => ""}),
+    do: put_change(struct, :timeline_events, [])
+
+  defp validate_timeline_events(struct, %{"timeline_events" => _timeline_events}),
+    do:
+      cast_embed(struct, :timeline_events,
+        with: {TimelineEvent, :save_changeset, [Challenges.find_start_date(struct.data)]}
+      )
+
+  defp validate_timeline_events(struct, _), do: struct
+
+  defp validate_timeline_events_draft(struct, %{"timeline_events" => ""}),
+    do: put_change(struct, :timeline_events, [])
+
+  defp validate_timeline_events_draft(struct, %{"timeline_events" => _timeline_events}),
+    do: cast_embed(struct, :timeline_events, with: &TimelineEvent.draft_changeset/2)
+
+  defp validate_timeline_events_draft(struct, _), do: struct
 
   defp validate_terms(struct, %{"terms_equal_rules" => "true", "rules" => rules}),
     do: put_change(struct, :terms_and_conditions, rules)
