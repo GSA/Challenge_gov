@@ -234,6 +234,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_assoc(:events)
     |> cast_embed(:phases, with: &Phase.draft_changeset/2)
     |> validate_timeline_events_draft(params)
+    |> validate_terms_draft(params)
   end
 
   def import_changeset(struct, params) do
@@ -720,6 +721,11 @@ defmodule ChallengeGov.Challenges.Challenge do
     do: put_change(struct, :terms_and_conditions, rules)
 
   defp validate_terms(struct, _params), do: validate_required(struct, [:terms_and_conditions])
+
+  defp validate_terms_draft(struct, %{"terms_equal_rules" => "true", "rules" => rules}),
+    do: put_change(struct, :terms_and_conditions, rules)
+
+  defp validate_terms_draft(struct, _params), do: struct
 
   defp validate_prizes(struct, %{"prize_type" => "monetary"}) do
     validate_required(struct, [:prize_total])
