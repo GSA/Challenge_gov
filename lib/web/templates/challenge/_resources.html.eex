@@ -4,6 +4,12 @@
 <br/>
 
 <div class="col">
+  <%= FormView.textarea_field(@form, :faq, label: "Frequently asked questions (optional)", limit: 4000) %>
+</div>
+
+<hr/>
+
+<div class="col">
   <label class="control-label">Upload image (optional)</label>
   <br/>
   <p>This image will display at the top of the resources section</p>
@@ -70,10 +76,4 @@
       </div>
     <% end) %>
   </div>
-</div>
-
-<hr/>
-
-<div class="col">
-  <%= FormView.textarea_field(@form, :faq, label: "Frequently asked questions (optional)", limit: 4000) %>
 </div>
