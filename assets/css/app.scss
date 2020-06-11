@@ -190,8 +190,12 @@ th {
   margin-bottom: 10px;
 }
 
-.is-invalid .select2-selection {
-  border-color: var(--danger);
+.is-invalid {
+  .select2-selection,
+  .ql-container,
+  .ql-toolbar {
+    border-color: var(--danger);
+  }
 }
 
 .char-limit-label.is-invalid {

@@ -20,5 +20,5 @@
 <br/>
 <div>
   <div class="text-bold">Prize description:</div>
-  <div><%= @challenge.prize_description %></div>
+  <div><%= raw(@challenge.prize_description) %></div>
 </div>

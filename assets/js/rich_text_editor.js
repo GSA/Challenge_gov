@@ -5,29 +5,32 @@ import { QuillDeltaToHtmlConverter } from "quill-delta-to-html"
 $(".rt-textarea").each(function(textarea) {
   let element = this
   let quill = new Quill(element, {
-    theme: 'snow'
+    theme: 'snow',
+    placeholder: "Enter text..."
   });
 
   let fieldName = $(this).data("input")
-  console.log(fieldName)
   let richTextInput = $(`#${fieldName}`)
   let deltaInput = $(`#${fieldName}_delta`)
   let initialDelta = JSON.parse(deltaInput.val() || "{}")
-
-  console.log(initialDelta)
 
   quill.setContents(initialDelta)
 
   quill.on("text-change", function(delta, oldDelta, source) {
     let cfg = {}
     let converter = new QuillDeltaToHtmlConverter(quill.getContents().ops, cfg)
+    let length = quill.getText().trim().length
 
-    console.log(quill.getContents())
-    console.log(converter.convert())
-    console.log(deltaInput)
-    console.log(richTextInput)
-
-    deltaInput.val(JSON.stringify(quill.getContents()))
-    richTextInput.val(converter.convert())
+    if (length === 0) {
+      clearInputs()
+    } else {
+      deltaInput.val(JSON.stringify(quill.getContents()))
+      richTextInput.val(converter.convert())
+    }
   })
+
+  function clearInputs() {
+    deltaInput.val("")
+    richTextInput.val("")
+  }
 })

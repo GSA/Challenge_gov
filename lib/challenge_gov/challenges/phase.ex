@@ -15,7 +15,9 @@ defmodule ChallengeGov.Challenges.Phase do
     field(:end_date, :utc_datetime)
     field(:open_to_submissions, :boolean)
     field(:judging_criteria, :string)
+    field(:judging_criteria_delta, :string)
     field(:how_to_enter, :string)
+    field(:how_to_enter_delta, :string)
 
     timestamps()
   end
@@ -28,7 +30,9 @@ defmodule ChallengeGov.Challenges.Phase do
       :end_date,
       :open_to_submissions,
       :judging_criteria,
-      :how_to_enter
+      :judging_criteria_delta,
+      :how_to_enter,
+      :how_to_enter_delta
     ])
   end
 

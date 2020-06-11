@@ -26,9 +26,7 @@
   <%= FormView.text_field(@form, :non_monetary_prizes, label: "Non-monetary prize award *") %>
 </div>
 
-<div class="mx-2">
+<div class="col">
   <label for="challenge_prize_description">Prize description / breakdown (optional)</label>
-  <div class="rt-textarea" data-input="challenge_prize_description"></div>
-  <%= hidden_input @form, :prize_description %>
-  <%= hidden_input @form, :prize_description_delta %>
+  <%= FormView.rt_textarea_field(@form, :prize_description) %>
 </div>

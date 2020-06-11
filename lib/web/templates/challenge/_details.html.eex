@@ -21,10 +21,9 @@
 <%= FormView.text_field(@form, :external_url, label: "Existing external challenge link (optional)") %>
 <%= FormView.textarea_field(@form, :brief_description, label: "Short description (help text: Appears in challenge details header)", limit: 200, required: true) %>
 
-<div class="mx-2">
-  <div class="rt-textarea" data-input="challenge_description"></div>
-  <%= hidden_input @form, :description %>
-  <%= hidden_input @form, :description_delta %>
+<div class="col">
+  <label><%= "Long description" %> <span class="required">*</span></label>
+  <%= FormView.rt_textarea_field(@form, :description) %>
 </div>
 
 <hr/>
