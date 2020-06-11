@@ -70,7 +70,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     "Procurement Authority",
     "Other Transactions Authority",
     "Agency Partnership Authority",
-    "Public-Private Partnership Authority"
+    "Public-Private Partnership Authority",
+    "Other"
   ]
 
   @sections [

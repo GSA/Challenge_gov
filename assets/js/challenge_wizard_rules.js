@@ -32,4 +32,36 @@ $(document).ready(function(){
     termsInput.prop("disabled", false)
     termsInput.siblings("p").show()
   }
+
+  // Legal authority select box
+  let legalAuthoritySelect = $("select#challenge_legal_authority")
+  let legalAuthorityInput = $("input#challenge_legal_authority")
+  let legalAuthorityOptions = legalAuthoritySelect.children("option").map(function() {
+    return $(this).val()
+  }).get()
+  
+  if (!legalAuthorityOptions.includes(legalAuthorityInput.val())) {
+    showLegalAuthorityOtherField()
+  } else {
+    hideLegalAuthorityOtherField()
+  }
+
+  legalAuthoritySelect.on("change", function() {
+    if ($(this).val() === "Other") {
+      showLegalAuthorityOtherField()
+    } else {
+      hideLegalAuthorityOtherField()
+    }
+  })
+
+  function showLegalAuthorityOtherField() {
+    legalAuthoritySelect.val("Other")
+    legalAuthorityInput.prop("disabled", false)
+    legalAuthorityInput.parents(".form-group").show()
+  }
+
+  function hideLegalAuthorityOtherField() {
+    legalAuthorityInput.prop("disabled", true)
+    legalAuthorityInput.parents(".form-group").hide()
+  }
 })
