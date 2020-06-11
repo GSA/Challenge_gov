@@ -127,6 +127,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:tagline, :string)
     field(:type, :string)
     field(:description, :string)
+    field(:description_delta, :string)
     field(:brief_description, :string)
     field(:how_to_enter, :string)
     field(:fiscal_year, :string)
@@ -141,11 +142,13 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:prize_total, :integer)
     field(:non_monetary_prizes, :string)
     field(:prize_description, :string)
+    field(:prize_description_delta, :string)
     field(:eligibility_requirements, :string)
     field(:rules, :string)
     field(:terms_and_conditions, :string)
     field(:legal_authority, :string)
     field(:faq, :string)
+    field(:faq_delta, :string)
     field(:winner_information, :string)
     field(:captured_on, :date)
     field(:auto_publish_date, :utc_datetime)
@@ -203,6 +206,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :external_url,
       :tagline,
       :description,
+      :description_delta,
       :brief_description,
       :how_to_enter,
       :fiscal_year,
@@ -216,11 +220,13 @@ defmodule ChallengeGov.Challenges.Challenge do
       :prize_total,
       :non_monetary_prizes,
       :prize_description,
+      :prize_description_delta,
       :eligibility_requirements,
       :rules,
       :terms_and_conditions,
       :legal_authority,
       :faq,
+      :faq_delta,
       :winner_information,
       :types,
       :auto_publish_date,

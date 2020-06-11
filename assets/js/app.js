@@ -10,6 +10,9 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
 import "select2";
 
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+
 // Phoenix html dependency
 import "phoenix_html"
 
@@ -31,7 +34,7 @@ import "./custom_url_generator.js";
 import "./section_file_upload.js";
 import "./solution_file_upload.js";
 import "./remove_reports_error.js";
-import "./solution_file_upload.js";
+import "./rich_text_editor.js";
 
 // Wizard specific JS
 import "./challenge_wizard_rules.js";

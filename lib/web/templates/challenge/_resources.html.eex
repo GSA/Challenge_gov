@@ -3,6 +3,15 @@
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 <br/>
 
+<div class="mx-2">
+  <label for="challenge_faq">Prize description / breakdown (optional)</label>
+  <div class="rt-textarea" data-input="challenge_faq"></div>
+  <%= hidden_input @form, :faq %>
+  <%= hidden_input @form, :faq_delta %>
+</div>
+<br/>
+<hr/>
+
 <div class="col">
   <label class="control-label">Upload image (optional)</label>
   <br/>
@@ -70,10 +79,4 @@
       </div>
     <% end) %>
   </div>
-</div>
-
-<hr/>
-
-<div class="col">
-  <%= FormView.textarea_field(@form, :faq, label: "Frequently asked questions (optional)", limit: 4000) %>
 </div>
