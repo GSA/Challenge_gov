@@ -7,9 +7,9 @@ defmodule Web.DocumentView do
 
   def name(document) do
     if !is_nil(document.name) and document.name != "" do
-      "#{document.filename} (#{document.name})"
+      "#{document.name} (#{document.extension})"
     else
-      document.filename
+      "#{document.filename} (#{document.extension})"
     end
   end
 end

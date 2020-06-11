@@ -1,3 +1,5 @@
+<%= hidden_input @form, :timeline_events, value: [] %>
+
 <h3>Add timeline details</h3>
 <br/>
 
@@ -62,7 +64,7 @@
             <%= datetime_local_input(:template, :date, 
               class: Enum.join([FormView.form_control_classes(@form, :date), "js-datetime-input template-input"], " ")
             )%>    
-            <%= hidden_input(:template, :date) %>
+            <%= hidden_input(:template, :date, class: "template-input") %>
           </div>
         </div>
       </div>
