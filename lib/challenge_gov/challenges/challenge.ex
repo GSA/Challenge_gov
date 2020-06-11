@@ -70,7 +70,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     "Procurement Authority",
     "Other Transactions Authority",
     "Agency Partnership Authority",
-    "Public-Private Partnership Authority"
+    "Public-Private Partnership Authority",
+    "Other"
   ]
 
   @sections [
@@ -233,7 +234,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
     |> cast_embed(:phases, with: &Phase.draft_changeset/2)
-    |> cast_embed(:timeline_events, with: &TimelineEvent.draft_changeset/2)
+    |> validate_timeline_events_draft(params)
+    |> validate_terms_draft(params)
   end
 
   def import_changeset(struct, params) do
@@ -338,11 +340,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_phases(params)
   end
 
-  def timeline_changeset(struct, _params) do
+  def timeline_changeset(struct, params) do
     struct
-    |> cast_embed(:timeline_events,
-      with: {TimelineEvent, :save_changeset, [Challenges.find_start_date(struct.data)]}
-    )
+    |> validate_timeline_events(params)
   end
 
   def prizes_changeset(struct, params) do
@@ -524,25 +524,25 @@ defmodule ChallengeGov.Challenges.Challenge do
     end
   end
 
-  defp validate_upload_logo(struct, params) do
-    case Map.get(params, "upload_logo") do
-      "true" ->
-        validate_logo(struct, params)
+  defp validate_upload_logo(struct, params = %{"upload_logo" => "true"}),
+    do: validate_logo(struct, params)
 
-      _ ->
-        struct
-    end
+  # TODO: Make this situation properly delete the uploaded file instead of just severing the connection
+  defp validate_upload_logo(struct, %{"upload_logo" => "false"}) do
+    struct
+    |> put_change(:logo_key, nil)
+    |> put_change(:logo_extension, nil)
   end
 
-  defp validate_logo(struct, params) do
-    case Map.get(params, "logo") do
-      nil ->
-        add_error(struct, :logo, "Must upload a logo")
+  defp validate_logo(struct, %{"logo" => logo}) when is_nil(logo),
+    do: add_error(struct, :logo, "Must upload a logo")
 
-      _ ->
-        struct
-    end
-  end
+  defp validate_logo(struct, %{"logo" => _logo}), do: struct
+
+  defp validate_logo(struct = %{data: %{logo_key: logo_key}}, _params) when is_nil(logo_key),
+    do: add_error(struct, :logo, "Must upload a logo")
+
+  defp validate_logo(struct, _params), do: struct
 
   defp validate_start_and_end_dates(struct, params) do
     with {:ok, start_date} <- Map.fetch(params, "start_date"),
@@ -699,10 +699,34 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   defp date_range_overlaps(_, _), do: true
 
+  defp validate_timeline_events(struct, %{"timeline_events" => ""}),
+    do: put_change(struct, :timeline_events, [])
+
+  defp validate_timeline_events(struct, %{"timeline_events" => _timeline_events}),
+    do:
+      cast_embed(struct, :timeline_events,
+        with: {TimelineEvent, :save_changeset, [Challenges.find_start_date(struct.data)]}
+      )
+
+  defp validate_timeline_events(struct, _), do: struct
+
+  defp validate_timeline_events_draft(struct, %{"timeline_events" => ""}),
+    do: put_change(struct, :timeline_events, [])
+
+  defp validate_timeline_events_draft(struct, %{"timeline_events" => _timeline_events}),
+    do: cast_embed(struct, :timeline_events, with: &TimelineEvent.draft_changeset/2)
+
+  defp validate_timeline_events_draft(struct, _), do: struct
+
   defp validate_terms(struct, %{"terms_equal_rules" => "true", "rules" => rules}),
     do: put_change(struct, :terms_and_conditions, rules)
 
   defp validate_terms(struct, _params), do: validate_required(struct, [:terms_and_conditions])
+
+  defp validate_terms_draft(struct, %{"terms_equal_rules" => "true", "rules" => rules}),
+    do: put_change(struct, :terms_and_conditions, rules)
+
+  defp validate_terms_draft(struct, _params), do: struct
 
   defp validate_prizes(struct, %{"prize_type" => "monetary"}) do
     validate_required(struct, [:prize_total])
