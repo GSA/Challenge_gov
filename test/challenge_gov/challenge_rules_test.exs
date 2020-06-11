@@ -96,6 +96,7 @@ defmodule ChallengeGov.ChallengeRulesTest do
               "terms_equal_rules" => "true",
               "eligibility_requirements" => "Test eligibility",
               "rules" => "Test rules",
+              "rules_delta" => "Test rules",
               "legal_authority" => "Test legal authority"
             }
           },

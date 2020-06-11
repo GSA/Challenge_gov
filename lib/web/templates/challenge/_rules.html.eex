@@ -3,10 +3,23 @@
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 <br/>
 
-<%= FormView.textarea_field(@form, :eligibility_requirements, label: "Eligibility requirements", required: true) %>
-<%= FormView.textarea_field(@form, :rules, label: "Rules", required: true) %>
+<div class="col">
+  <label><%= "Eligibility requirements" %> <span class="required">*</span></label>
+  <%= FormView.rt_textarea_field(@form, :eligibility_requirements) %>
+</div>
+
+<div class="col">
+  <label><%= "Rules" %> <span class="required">*</span></label>
+  <%= FormView.rt_textarea_field(@form, :rules) %>
+</div>
+
 <%= FormView.checkbox_field(@form, :terms_equal_rules, label: "Terms and conditions same as rules", class: "js-terms-equal-rules", required: true) %>
-<%= FormView.textarea_field(@form, :terms_and_conditions, label: "Terms and conditions", required: true) %>
+
+<div class="col">
+  <label><%= "Terms and conditions" %> <span class="required">*</span></label>
+  <%= FormView.rt_textarea_field(@form, :terms_and_conditions) %>
+</div>
+
 <%= FormView.select_field(@form, :legal_authority, collection: Challenges.legal_authority(), label: "Legal authority", prompt: "Choose a legal authority", required: true) %>
 <%= FormView.text_field(@form, :legal_authority, label: "Enter other legal authority name") %>
 
