@@ -40,7 +40,7 @@ defmodule ChallengeGov.MixProject do
       {:elixir_uuid, "~> 1.2"},
       {:finch, "~> 0.2"},
       {:gettext, "~> 0.11"},
-      {:httpoison, "~> 1.5"},
+      {:httpoison, "~> 1.7"},
       {:jason, "~> 1.0"},
       {:joken, "~> 2.0"},
       {:logger_json, "~> 4.0"},
