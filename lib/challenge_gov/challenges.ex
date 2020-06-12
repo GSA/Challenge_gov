@@ -383,22 +383,10 @@ defmodule ChallengeGov.Challenges do
   Get a challenge
   """
   def get(id) do
-    challenge =
-      Challenge
-      |> where([c], is_nil(c.deleted_at))
-      |> where([c], c.id == ^id)
-      |> preload([
-        :supporting_documents,
-        :user,
-        :federal_partner_agencies,
-        :non_federal_partners,
-        :agency,
-        :challenge_owner_users,
-        :events
-      ])
-      |> Repo.one()
-
-    case challenge do
+    Challenge
+    |> where([c], c.id == ^id)
+    |> get_query()
+    |> case do
       nil ->
         {:error, :not_found}
 
@@ -406,6 +394,38 @@ defmodule ChallengeGov.Challenges do
         challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
         {:ok, challenge}
     end
+  end
+
+  @doc """
+  Get a challenge by uuid
+  """
+  def get_by_uuid(uuid) do
+    Challenge
+    |> where([c], c.uuid == ^uuid)
+    |> get_query()
+    |> case do
+      nil ->
+        {:error, :not_found}
+
+      challenge ->
+        challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
+        {:ok, challenge}
+    end
+  end
+
+  defp get_query(struct) do
+    struct
+    |> where([c], is_nil(c.deleted_at))
+    |> preload([
+      :supporting_documents,
+      :user,
+      :federal_partner_agencies,
+      :non_federal_partners,
+      :agency,
+      :challenge_owner_users,
+      :events
+    ])
+    |> Repo.one()
   end
 
   @doc """
