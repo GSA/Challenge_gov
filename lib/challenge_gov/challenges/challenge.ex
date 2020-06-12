@@ -87,6 +87,8 @@ defmodule ChallengeGov.Challenges.Challenge do
   ]
 
   schema "challenges" do
+    field(:uuid, Ecto.UUID)
+
     # Associations
     belongs_to(:user, User)
     belongs_to(:agency, Agency)

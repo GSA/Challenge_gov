@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%= render("_head.html", assigns) %>
+
+  <div id="recaptcha-key" class="d-none"><%= Recaptcha.recaptcha_key() %></div>
+
+  <body>
+    <div class="main-wrapper">
+      <%= render @view_module, @view_template, assigns %>
+    </div>
+  </body>
+
+  <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/public.js") %>"></script>
+  <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/preview.js") %>"></script>
+</html>

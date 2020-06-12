@@ -145,6 +145,7 @@ defmodule Web.Router do
   scope "/api", Web.Api, as: :api do
     pipe_through([:api])
 
+    get("/challenges/preview/:uuid", ChallengeController, :preview)
     resources("/challenges", ChallengeController, only: [:index, :show])
     post("/challenges/:challenge_id/contact_form", ContactFormController, :send_email)
   end
@@ -153,6 +154,8 @@ defmodule Web.Router do
   scope "/public", Web.Public, as: :public do
     pipe_through([:browser, :public])
     get("/rss.xml", SitemapController, :rss)
+
+    get("/previews/challenges/:challenge_uuid", PreviewController, :index)
 
     get("/", PageController, :index)
     get("/challenges", PageController, :index, as: :challenge_index)
