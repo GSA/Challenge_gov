@@ -195,16 +195,23 @@ defmodule Web.ChallengeController do
     with {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
          {:ok, challenge} <-
            Challenges.update(challenge, params, user, Security.extract_remote_ip(conn)) do
-      if action == "save_draft" do
-        conn
-        |> put_flash(:info, "Challenge saved as draft")
-        |> redirect(to: Routes.challenge_path(conn, :edit, challenge.id, section))
-      end
+      case action do
+        "save_draft" ->
+          conn
+          |> put_flash(:info, "Challenge saved as draft")
+          |> redirect(to: Routes.challenge_path(conn, :edit, challenge.id, section))
 
-      if to_section do
-        redirect(conn, to: Routes.challenge_path(conn, :edit, challenge.id, to_section.id))
-      else
-        redirect(conn, to: Routes.challenge_path(conn, :index))
+        "submit" ->
+          conn
+          |> put_flash(:info, "Challenge submitted")
+          |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
+
+        _ ->
+          if to_section do
+            redirect(conn, to: Routes.challenge_path(conn, :edit, challenge.id, to_section.id))
+          else
+            redirect(conn, to: Routes.challenge_path(conn, :index))
+          end
       end
     else
       {:error, changeset} ->
