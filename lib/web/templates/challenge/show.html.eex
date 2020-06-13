@@ -60,6 +60,7 @@
                 <%= challenge_full_edit_link(@conn, @challenge, @user, class: "btn btn-primary") %>
               <% end %>
 
+              <%= link "Preview", to: Routes.public_preview_path(@conn, :index, @challenge.uuid), target: "_blank", class: "btn btn-info" %>
               <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-danger") %>
             </div>
           </div>
