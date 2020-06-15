@@ -80,6 +80,32 @@ defmodule ChallengeGov.ChallengePrizesTest do
       assert updated_challenge.non_monetary_prizes === "Test non monetary prize"
     end
 
+    test "failure from prize description length" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+
+      length = 1501
+      prize_description = TestHelpers.generate_random_string(length)
+
+      {:error, changeset} =
+        Challenges.update(
+          challenge,
+          %{
+            "action" => "next",
+            "challenge" => %{
+              "section" => "prizes",
+              "prize_type" => "non_monetary",
+              "non_monetary_prizes" => "test non monetary prize",
+              "prize_description" => prize_description
+            }
+          },
+          user,
+          ""
+        )
+
+      assert changeset.errors[:prize_description]
+    end
+
     test "failure prize type missing" do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})

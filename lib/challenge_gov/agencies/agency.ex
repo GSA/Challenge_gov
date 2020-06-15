@@ -23,6 +23,8 @@ defmodule ChallengeGov.Agencies.Agency do
     field(:description, :string)
     field(:deleted_at, :utc_datetime)
 
+    field(:created_on_import, :boolean)
+
     field(:avatar_key, Ecto.UUID)
     field(:avatar_extension, :string)
 
@@ -34,7 +36,7 @@ defmodule ChallengeGov.Agencies.Agency do
 
   def create_changeset(struct, params) do
     struct
-    |> cast(params, [:name, :description])
+    |> cast(params, [:name, :description, :created_on_import])
     |> validate_required([:name])
   end
 

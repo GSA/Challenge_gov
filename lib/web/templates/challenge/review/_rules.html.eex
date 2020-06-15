@@ -1,0 +1,36 @@
+<div class="display-flex flex-row flex-justify"> 
+  <h5>Rules</h5>
+  <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "rules"), class: "btn btn-link") %>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Eligibility requirements:</div>
+  <div><%= @challenge.eligibility_requirements %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Terms same as rules:</div>
+  <div><%= @challenge.terms_equal_rules %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Rules:</div>
+  <div><%= @challenge.rules %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Terms and conditions:</div>
+  <div><%= @challenge.terms_and_conditions %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Legal authority:</div>
+  <div><%= @challenge.legal_authority %></div>
+</div>
+<br/>
+<div>
+  <div class="text-bold">Supporting documents:</div>
+  <%= Enum.map(documents_for_section(@challenge.supporting_documents, "rules"), fn document -> %>
+    <div><%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %></div>
+  <% end) %>
+</div>

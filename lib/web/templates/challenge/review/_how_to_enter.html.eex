@@ -1,0 +1,22 @@
+<div class="display-flex flex-row flex-justify"> 
+  <h5>How to enter</h5>
+  <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "how_to_enter"), class: "btn btn-link") %>
+</div>
+<br/>
+<div>
+  <%= Enum.map(@challenge.phases, fn phase -> %>
+    <div>
+      <span class="text-bold">Phase:</span>
+      <span><%= phase.title %></span>
+    </div>
+    <div>
+      <div class="text-bold">How to enter:</div>
+      <%= phase.how_to_enter %>
+    </div>
+    <br/>
+  <% end) %>
+</div>
+<div>
+  <div class="text-bold">How to enter link:</div>
+  <div><%= @challenge.how_to_enter_link %></div>
+</div>

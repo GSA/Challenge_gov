@@ -24,17 +24,34 @@ defmodule ChallengeGov.Challenges.TimelineEvent do
     ])
   end
 
-  def save_changeset(struct, params) do
+  def save_changeset(struct, params, start_date) do
     struct
     |> changeset(params)
     |> validate_required([
       :title,
       :date
     ])
+    |> validate_date_after_start(params, start_date)
   end
 
   def draft_changeset(struct, params) do
     struct
     |> changeset(params)
   end
+
+  # TODO: Verify date is after start_date
+  defp validate_date_after_start(struct, %{"date" => date}, start_date) do
+    with {:ok, date} <- Timex.parse(date, "{ISO:Extended}"),
+         1 <- Timex.compare(date, start_date) do
+      struct
+    else
+      tc when tc == -1 or tc == 0 ->
+        add_error(struct, :date, "must be after challenge start date")
+
+      _error ->
+        add_error(struct, :date, "is invalid")
+    end
+  end
+
+  defp validate_date_after_start(struct, _params, _start_date), do: struct
 end

@@ -183,6 +183,28 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Create an account as a system
+  """
+  def system_create(params) do
+    changeset =
+      %User{}
+      |> User.create_changeset(params)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(:user, changeset)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{user: user}} ->
+        {:ok, user}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
   Register an account
   """
   def register(params) do

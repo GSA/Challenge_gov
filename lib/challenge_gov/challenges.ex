@@ -96,6 +96,35 @@ defmodule ChallengeGov.Challenges do
     |> Challenge.create_changeset(%{}, user)
   end
 
+  @doc """
+  Import challenges: no user, owner, documents or security logging
+  """
+  def import_create(challenge_params) do
+    challenge_params =
+      challenge_params
+      |> check_non_federal_partners
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(
+        :challenge,
+        Challenge.import_changeset(%Challenge{}, challenge_params)
+      )
+      |> attach_federal_partners(challenge_params)
+      |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
+        Logo.maybe_upload_logo(challenge, challenge_params)
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{challenge: challenge}} ->
+        {:ok, challenge}
+
+      {:error, :challenge, changeset, _} ->
+        {:error, changeset}
+    end
+  end
+
   def create(%{"action" => action, "challenge" => challenge_params}, user, remote_ip) do
     challenge_params =
       challenge_params
@@ -354,22 +383,10 @@ defmodule ChallengeGov.Challenges do
   Get a challenge
   """
   def get(id) do
-    challenge =
-      Challenge
-      |> where([c], is_nil(c.deleted_at))
-      |> where([c], c.id == ^id)
-      |> preload([
-        :supporting_documents,
-        :user,
-        :federal_partner_agencies,
-        :non_federal_partners,
-        :agency,
-        :challenge_owner_users,
-        :events
-      ])
-      |> Repo.one()
-
-    case challenge do
+    Challenge
+    |> where([c], c.id == ^id)
+    |> get_query()
+    |> case do
       nil ->
         {:error, :not_found}
 
@@ -377,6 +394,38 @@ defmodule ChallengeGov.Challenges do
         challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
         {:ok, challenge}
     end
+  end
+
+  @doc """
+  Get a challenge by uuid
+  """
+  def get_by_uuid(uuid) do
+    Challenge
+    |> where([c], c.uuid == ^uuid)
+    |> get_query()
+    |> case do
+      nil ->
+        {:error, :not_found}
+
+      challenge ->
+        challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
+        {:ok, challenge}
+    end
+  end
+
+  defp get_query(struct) do
+    struct
+    |> where([c], is_nil(c.deleted_at))
+    |> preload([
+      :supporting_documents,
+      :user,
+      :federal_partner_agencies,
+      :non_federal_partners,
+      :agency,
+      :challenge_owner_users,
+      :events
+    ])
+    |> Repo.one()
   end
 
   @doc """
@@ -608,6 +657,16 @@ defmodule ChallengeGov.Challenges do
         create_status_event(challenge)
         {:ok, challenge}
     end
+  end
+
+  # BOOKMARK: Helper functions
+  def find_start_date(challenge) do
+    first_phase =
+      challenge.phases
+      |> Enum.sort(fn a, b -> Timex.compare(a.start_date, b.start_date) < 0 end)
+      |> Enum.at(0)
+
+    first_phase.start_date
   end
 
   @doc """

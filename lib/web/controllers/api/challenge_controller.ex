@@ -35,4 +35,20 @@ defmodule Web.Api.ChallengeController do
         |> render("not_found.json")
     end
   end
+
+  def preview(conn, %{"uuid" => uuid}) do
+    with {:ok, uuid} <- Ecto.UUID.cast(uuid),
+         {:ok, challenge} <- Challenges.get_by_uuid(uuid) do
+      conn
+      |> assign(:challenge, challenge)
+      |> put_status(:ok)
+      |> render("show.json")
+    else
+      _ ->
+        conn
+        |> put_status(:not_found)
+        |> put_view(ErrorView)
+        |> render("not_found.json")
+    end
+  end
 end
