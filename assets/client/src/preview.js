@@ -5,7 +5,7 @@ import { BrowserRouter, Redirect, Switch, Route } from "react-router-dom";
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
-import { DetailsPage } from "./pages/DetailsPage"
+import { PreviewPage } from "./pages/PreviewPage"
 
 const getRoutes = () => {
   return IndexRoutes.map((prop, i) => {
@@ -37,7 +37,7 @@ const renderPreview = () => (
   <BrowserRouter>
     <Route
       path={"/public/previews/challenges/:challengeId"}
-      render={(props) => <DetailsPage {...props} preview={true} /> }
+      component={PreviewPage}
       exact={true}
     />
   </BrowserRouter>
