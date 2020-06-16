@@ -396,8 +396,17 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_length(:faq, max: 4000)
   end
 
-  def review_changeset(struct, _params) do
+  def review_changeset(struct, params) do
     struct
+    |> general_changeset(params)
+    |> details_changeset(params)
+    |> timeline_changeset(params)
+    |> prizes_changeset(params)
+    |> rules_changeset(params)
+    |> judging_changeset(params)
+    |> how_to_enter_changeset(params)
+    |> resources_changeset(params)
+    |> submit_changeset()
   end
 
   # TODO: Add user usage back in if needing to track submitter
@@ -547,6 +556,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> put_change(:logo_key, nil)
     |> put_change(:logo_extension, nil)
   end
+
+  defp validate_upload_logo(struct, _params), do: struct
 
   defp validate_logo(struct, %{"logo" => logo}) when is_nil(logo),
     do: add_error(struct, :logo, "Must upload a logo")

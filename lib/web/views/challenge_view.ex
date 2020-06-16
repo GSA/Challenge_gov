@@ -340,7 +340,7 @@ defmodule Web.ChallengeView do
 
   def submit_button(section) do
     if section == Enum.at(Challenges.sections(), -1).id do
-      submit("Submit", name: "action", value: "next", class: "usa-button float-right")
+      submit("Submit", name: "action", value: "submit", class: "usa-button float-right")
     else
       submit("Next", name: "action", value: "next", class: "usa-button float-right")
     end
