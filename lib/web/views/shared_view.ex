@@ -97,4 +97,10 @@ defmodule Web.SharedView do
   def string_to_link(string, opts \\ []) do
     link(string, Keyword.merge([to: string], opts))
   end
+
+  def render_safe_html(html) do
+    html
+    |> HtmlSanitizeEx.basic_html()
+    |> raw
+  end
 end

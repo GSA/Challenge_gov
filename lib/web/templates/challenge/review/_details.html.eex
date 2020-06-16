@@ -35,7 +35,7 @@
 <br/>
 <div>
   <div class="text-bold">Description:</div>
-  <div><%= @challenge.description %></div>
+  <div><%= SharedView.render_safe_html(@challenge.description) %></div>
 </div>
 <br/>
 <div>

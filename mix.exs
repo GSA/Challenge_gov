@@ -41,6 +41,7 @@ defmodule ChallengeGov.MixProject do
       {:finch, "~> 0.2"},
       {:gettext, "~> 0.11"},
       {:httpoison, "~> 1.7"},
+      {:html_sanitize_ex, "~> 1.3.0-rc3"},
       {:jason, "~> 1.0"},
       {:joken, "~> 2.0"},
       {:logger_json, "~> 4.0"},

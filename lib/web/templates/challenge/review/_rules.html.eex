@@ -5,7 +5,7 @@
 <br/>
 <div>
   <div class="text-bold">Eligibility requirements:</div>
-  <div><%= @challenge.eligibility_requirements %></div>
+  <div><%= SharedView.render_safe_html(@challenge.eligibility_requirements) %></div>
 </div>
 <br/>
 <div>
@@ -15,12 +15,12 @@
 <br/>
 <div>
   <div class="text-bold">Rules:</div>
-  <div><%= @challenge.rules %></div>
+  <div><%= SharedView.render_safe_html(@challenge.rules) %></div>
 </div>
 <br/>
 <div>
   <div class="text-bold">Terms and conditions:</div>
-  <div><%= @challenge.terms_and_conditions %></div>
+  <div><%= SharedView.render_safe_html(@challenge.terms_and_conditions) %></div>
 </div>
 <br/>
 <div>

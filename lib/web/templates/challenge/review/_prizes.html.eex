@@ -20,5 +20,5 @@
 <br/>
 <div>
   <div class="text-bold">Prize description:</div>
-  <div><%= @challenge.prize_description %></div>
+  <div><%= SharedView.render_safe_html(@challenge.prize_description) %></div>
 </div>
