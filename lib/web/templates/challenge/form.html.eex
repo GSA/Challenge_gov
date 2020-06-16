@@ -52,7 +52,8 @@
             <div class="card-footer">
               <%= back_button(@conn, @changeset.data) %>
               <%= submit_button(@section) %>
-              <%= save_draft_button() %>
+              <%= preview_challenge_button(@conn, @challenge, @section) %>
+              <%= save_draft_button(@section) %>
             </div>
           </div>
         <% end) %>

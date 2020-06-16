@@ -15,7 +15,7 @@ import { FAQ } from "../components/challenge_tabs/FAQ"
 import { ContactForm } from "../components/challenge_tabs/ContactForm"
 import { Winners } from "../components/challenge_tabs/Winners"
 
-export const DetailsPage = () => {
+export const DetailsPage = (props) => {
 
   const [currentChallenge, setCurrentChallenge] = useState()
   const [loadingState, setLoadingState] = useState(false)
@@ -29,9 +29,11 @@ export const DetailsPage = () => {
     $(".help-section").hide()
     $(".footer").hide()
 
+    let challengeApiPath = base_url + `/api/challenges/${(props.preview ? "preview/" : "")}${challengeId}`
+
     setLoadingState(true)
     axios
-      .get(base_url + `/api/challenges/${challengeId}`)
+      .get(challengeApiPath)
       .then(res => {
         setCurrentChallenge(res.data)
         setLoadingState(false)

@@ -30,8 +30,8 @@ defmodule Web.Api.ChallengeView do
       agency_logo: ChallengeView.agency_logo(challenge),
       brief_description: challenge.brief_description,
       custom_url: challenge.custom_url,
-      description: challenge.description,
-      eligibility_requirements: challenge.eligibility_requirements,
+      description: HtmlSanitizeEx.basic_html(challenge.description),
+      eligibility_requirements: HtmlSanitizeEx.basic_html(challenge.eligibility_requirements),
       end_date: challenge.end_date,
       events:
         render_many(
@@ -49,10 +49,10 @@ defmodule Web.Api.ChallengeView do
           as: :agency
         ),
       fiscal_year: challenge.fiscal_year,
-      faq: challenge.faq,
-      how_to_enter: challenge.how_to_enter,
+      faq: HtmlSanitizeEx.basic_html(challenge.faq),
+      how_to_enter: HtmlSanitizeEx.basic_html(challenge.how_to_enter),
       id: challenge.id,
-      judging_criteria: challenge.judging_criteria,
+      judging_criteria: HtmlSanitizeEx.basic_html(challenge.judging_criteria),
       legal_authority: challenge.legal_authority,
       logo: ChallengeView.logo_url(challenge),
       multi_phase: challenge.multi_phase,
@@ -68,9 +68,9 @@ defmodule Web.Api.ChallengeView do
       phase_dates: challenge.phase_dates,
       phase_descriptions: challenge.phase_descriptions,
       poc_email: challenge.poc_email,
-      prize_description: challenge.prize_description,
+      prize_description: HtmlSanitizeEx.basic_html(challenge.prize_description),
       prize_total: challenge.prize_total,
-      rules: challenge.rules,
+      rules: HtmlSanitizeEx.basic_html(challenge.rules),
       start_date: challenge.custom_url,
       status: challenge.status,
       supporting_documents:
@@ -80,7 +80,7 @@ defmodule Web.Api.ChallengeView do
           "show.json"
         ),
       tagline: challenge.tagline,
-      terms_and_conditions: challenge.terms_and_conditions,
+      terms_and_conditions: HtmlSanitizeEx.basic_html(challenge.terms_and_conditions),
       title: challenge.title,
       types: challenge.types,
       winner_information: challenge.winner_information,

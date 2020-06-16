@@ -319,13 +319,23 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def save_draft_button() do
+  def save_draft_button(_section) do
     submit("Save Draft",
       name: "action",
       value: "save_draft",
       class: "btn btn-link float-right",
       formnovalidate: true
     )
+  end
+
+  def preview_challenge_button(conn, challenge, section) do
+    if section == Enum.at(Challenges.sections(), -1).id do
+      link("Preview",
+        to: Routes.public_preview_path(conn, :index, challenge.uuid),
+        class: "usa-button float-right",
+        target: "_blank"
+      )
+    end
   end
 
   def submit_button(section) do
