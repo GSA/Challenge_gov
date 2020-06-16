@@ -48,7 +48,7 @@ export const ChallengeDetails = ({challenge, preview}) => {
 
   return (
     challenge ? (
-      <div>
+      <div className="w-100">
         <section className="hero__wrapper" aria-label="Challenge overview details">
           <section className="hero__content">
             <div className="main-section">
