@@ -4,9 +4,10 @@
 <br/>
 
 <div class="col">
-  <%= FormView.textarea_field(@form, :faq, label: "Frequently asked questions (optional)", limit: 4000) %>
+  <label for="challenge_prize_description">Frequently asked questions (optional)</label>
+  <%= FormView.rt_textarea_field(@form, :faq) %>
 </div>
-
+<br/>
 <hr/>
 
 <div class="col">

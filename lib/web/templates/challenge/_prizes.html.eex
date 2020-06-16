@@ -25,4 +25,8 @@
 <div class="js-non-monetary-prize collapse">
   <%= FormView.text_field(@form, :non_monetary_prizes, label: "Non-monetary prize award *") %>
 </div>
-<%= FormView.textarea_field(@form, :prize_description, label: "Prize description / breakdown (optional)", limit: 1500) %>
+
+<div class="col">
+  <label for="challenge_prize_description">Prize description / breakdown (optional)</label>
+  <%= FormView.rt_textarea_field(@form, :prize_description) %>
+</div>

@@ -130,6 +130,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:tagline, :string)
     field(:type, :string)
     field(:description, :string)
+    field(:description_delta, :string)
     field(:brief_description, :string)
     field(:how_to_enter, :string)
     field(:fiscal_year, :string)
@@ -144,11 +145,16 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:prize_total, :integer)
     field(:non_monetary_prizes, :string)
     field(:prize_description, :string)
+    field(:prize_description_delta, :string)
     field(:eligibility_requirements, :string)
+    field(:eligibility_requirements_delta, :string)
     field(:rules, :string)
+    field(:rules_delta, :string)
     field(:terms_and_conditions, :string)
+    field(:terms_and_conditions_delta, :string)
     field(:legal_authority, :string)
     field(:faq, :string)
+    field(:faq_delta, :string)
     field(:winner_information, :string)
     field(:captured_on, :date)
     field(:auto_publish_date, :utc_datetime)
@@ -206,6 +212,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :external_url,
       :tagline,
       :description,
+      :description_delta,
       :brief_description,
       :how_to_enter,
       :fiscal_year,
@@ -219,11 +226,16 @@ defmodule ChallengeGov.Challenges.Challenge do
       :prize_total,
       :non_monetary_prizes,
       :prize_description,
+      :prize_description_delta,
       :eligibility_requirements,
+      :eligibility_requirements_delta,
       :rules,
+      :rules_delta,
       :terms_and_conditions,
+      :terms_and_conditions_delta,
       :legal_authority,
       :faq,
+      :faq_delta,
       :winner_information,
       :types,
       :auto_publish_date,
@@ -720,13 +732,27 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   defp validate_timeline_events_draft(struct, _), do: struct
 
-  defp validate_terms(struct, %{"terms_equal_rules" => "true", "rules" => rules}),
-    do: put_change(struct, :terms_and_conditions, rules)
+  defp validate_terms(struct, %{
+         "terms_equal_rules" => "true",
+         "rules" => rules,
+         "rules_delta" => rules_delta
+       }) do
+    struct
+    |> put_change(:terms_and_conditions, rules)
+    |> put_change(:terms_and_conditions_delta, rules_delta)
+  end
 
   defp validate_terms(struct, _params), do: validate_required(struct, [:terms_and_conditions])
 
-  defp validate_terms_draft(struct, %{"terms_equal_rules" => "true", "rules" => rules}),
-    do: put_change(struct, :terms_and_conditions, rules)
+  defp validate_terms_draft(struct, %{
+         "terms_equal_rules" => "true",
+         "rules" => rules,
+         "rules_delta" => rules_delta
+       }) do
+    struct
+    |> put_change(:terms_and_conditions, rules)
+    |> put_change(:terms_and_conditions_delta, rules_delta)
+  end
 
   defp validate_terms_draft(struct, _params), do: struct
 
