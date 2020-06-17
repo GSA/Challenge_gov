@@ -1,0 +1,80 @@
+// LOADER CSS
+.cards__loader-wrapper {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 4rem;
+  margin: auto;
+  padding: 20px;
+}
+
+.card__loader--image {
+  height: 200px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px 0 $box-shadow-color;
+  background: linear-gradient(128deg, lightgray, lightgray, white, lightgray, lightgray);
+  background-size: 400% 400%;
+  background-position: bottom right;
+  animation: shimmer 2s ease-in-out 0s infinite;
+}
+
+.card__loader--text {
+  height: 25px;
+  border-radius: 100px;
+  box-shadow: 0 2px 8px 0 $box-shadow-color;
+  background: linear-gradient(128deg, lightgray, lightgray, white, lightgray, lightgray);
+  background-size: 400% 400%;
+  background-position: bottom right;
+  animation: shimmer 2s ease-in-out 0s infinite;
+}
+
+.line-1 {
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.line-2 {
+  margin-top: 10px;
+  margin-right: 75px;
+}
+
+.line-3 {
+  margin-top: 10px;
+  margin-right: 50px;
+}
+
+//ANIMATIONS
+@keyframes shimmer {
+    0%{background-position: bottom right}
+    50%{background-position: top left}
+    100%{background-position: top left}
+}
+
+// TABLET
+@media screen
+and (min-device-width: 375px) {
+  .cards__loader-wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// DESKTOP
+@media screen
+and (min-device-width: 768px) {
+  .cards {
+    max-width: 1200px;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  }
+
+  .cards__loader-wrapper {
+    max-width: 1200px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// MOBILE
+@media screen
+and (max-device-width: 425px) {
+  html {
+    font-size: larger;
+  }
+}

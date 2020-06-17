@@ -58,7 +58,7 @@
       }
 
       .brief_description {
-        font-size: 15px;
+        // font-size: 15px;
         padding: 0 0 10px 0;
       }
     }
@@ -133,7 +133,7 @@
       }
 
       p {
-        font-size: 17.5px;
+        // font-size: 17.5px;
         display: inline;
       }
 
@@ -163,39 +163,36 @@
     .main-section {
 
       h1 {
-        font-size: .8em;
+        // font-size: .8em;
       }
 
       h3 {
-        font-size: .5em;
+        // font-size: .5em;
       }
     }
 
     .detail-section {
 
       .apply-btn {
-        font-size: 1rem;
+        // font-size: 1rem;
       }      
       
       .follow-btn {
-        font-size: 1rem;
+        // font-size: 1rem;
       }
 
       &__text-block {
-
         .info-title {
-          font-size: .5em;
+          // font-size: .5em;
         }
 
         .item {
-
           &__types {
-            line-height: .65em;
+            // line-height: .65em;
 
             p {
-              font-size: .5em;
+              // font-size: .5em;
             }
-
           }
         }
       }

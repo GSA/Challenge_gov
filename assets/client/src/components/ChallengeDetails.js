@@ -69,8 +69,8 @@ export const ChallengeDetails = ({challenge, preview}) => {
                     }
                   </div>
                 }
-                <h1 className="title">{challenge.title}</h1>
-                <h3 className="tagline">{challenge.tagline}</h3>
+                <h4 className="title">{challenge.title}</h4>
+                <h5 className="tagline">{challenge.tagline}</h5>
                 <p className="brief_description">{challenge.brief_description}</p>
               </div>
               <div className="logo-container">
