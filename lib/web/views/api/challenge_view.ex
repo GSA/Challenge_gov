@@ -65,6 +65,12 @@ defmodule Web.Api.ChallengeView do
         ),
       non_monetary_prizes: challenge.non_monetary_prizes,
       number_of_phases: challenge.number_of_phases,
+      phases:
+        render_many(
+          challenge.phases,
+          Web.Api.PhaseView,
+          "show.json"
+        ),
       phase_dates: challenge.phase_dates,
       phase_descriptions: challenge.phase_descriptions,
       poc_email: challenge.poc_email,

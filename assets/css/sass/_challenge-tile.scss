@@ -3,16 +3,8 @@ $box-shadow-color-darker: rgba(0,94,162,0.50);
 $font-color: #2E2E2E;
 $background-color-secondary: #EFF6FB;
 
-
-html {
-  font-size: 62.5%;
-}
-
-
 body {
-  font-size: 1.8rem;
   font-family: 'Public Sans', sans-serif;
-
 }
 
 p {
@@ -60,7 +52,7 @@ p {
   background-color: #fff;
 
   &:hover {
-  box-shadow: 0 2px 25px 0 $box-shadow-color-darker;
+    box-shadow: 0 2px 25px 0 $box-shadow-color-darker;
   }
 }
 

@@ -51,9 +51,9 @@ export const ContactForm = props => {
       <section className="challenge-tab container">
         <div className="challenge-tab__header">Contact</div>
         <hr/>    
-        <div className="p-5">
+        <div>
           <div className="mb-5">Have a question or comment about this challenge? Reach out by completing the form below.</div>
-          <form className="usa-form" onSubmit={handleSubmit}>
+          <form className="usa-form w-100" onSubmit={handleSubmit}>
             <div className="form-group">
               <input type="hidden" className={`form-control ${errors.recaptcha ? "is-invalid" : ""}`}/>
               {errors.recaptcha && <div className="invalid-feedback">{errors.recaptcha}</div> }

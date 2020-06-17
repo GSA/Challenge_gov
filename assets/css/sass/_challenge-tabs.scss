@@ -49,15 +49,21 @@
   &__resources {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
+    grid-gap: 1rem;
   }
 
   &__resource {
-    padding: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+
+    &:hover {
+      box-shadow: 0 2px 8px 0 $box-shadow-color;
+      text-decoration: none;
+    }
   }
 
-  .card:hover {
-    box-shadow: 0 2px 8px 0 $box-shadow-color;
-  }
   .card-header {
     padding: 1rem 4rem;
   }
