@@ -13,6 +13,8 @@ import { FAQ } from "../components/challenge_tabs/FAQ"
 import { ContactForm } from "../components/challenge_tabs/ContactForm"
 import { Winners } from "../components/challenge_tabs/Winners"
 
+import { documentsForSection } from "../helpers/documentHelpers"
+
 export const ChallengeDetails = ({challenge, preview}) => {
   const renderEndDate = (date) => {
     const fiveDaysFromNow = moment().add(5,'d').utc().format()
@@ -158,9 +160,11 @@ export const ChallengeDetails = ({challenge, preview}) => {
               <Resources challenge={challenge} />
             </div>
           }
-          <div label="FAQ">
-            <FAQ challenge={challenge} />
-          </div>
+          { (challenge.faq || documentsForSection(challenge, "faq") > 0) &&
+            <div label="FAQ">
+              <FAQ challenge={challenge} />
+            </div>
+          }
           <div label="Contact">
             <ContactForm />
           </div>

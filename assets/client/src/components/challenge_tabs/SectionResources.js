@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react'
+import { documentsForSection } from "../../helpers/documentHelpers"
 
 export const SectionResources = ({label, section, challenge}) => {
   const [documents, setDocuments] = useState(challenge.supporting_documents)
 
   useEffect(() => {
     if (section) {
-      setDocuments(documents.filter(document => document.section == section))
+      setDocuments(documentsForSection(challenge, section))
     }
   }, [])
 
