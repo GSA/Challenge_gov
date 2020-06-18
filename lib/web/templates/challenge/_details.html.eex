@@ -11,11 +11,9 @@
 
 <div class="form-group">
   <%= label @form, :custom_url, "Custom url (optional)", class: "col-md-4" %>
-  <div class="col-md-8">
-    <p>If no custom URL is provided, the challenge URL will default to the challenge title.</p>
-    <span>http://www.challenge.gov/challenge/</span><span id="custom-url-example"></span>
-    <%= text_input @form, :custom_url, class: "form-control", placeholder: "my-custom-challenge-name" %>
-  </div>
+  <p>If no custom URL is provided, the challenge URL will default to the challenge title.</p>
+  <span>http://www.challenge.gov/challenge/</span><span id="custom-url-example"></span>
+  <%= FormView.text_field(@form, :custom_url, label: nil, placeholder: "my-custom-challenge-name") %>
 </div>
 
 <%= FormView.text_field(@form, :external_url, label: "Existing external challenge link (optional)") %>

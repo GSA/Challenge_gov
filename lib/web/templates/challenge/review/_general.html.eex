@@ -33,7 +33,7 @@
 <div>
   <div class="text-bold">Non federal partners:</div>
   <%= Enum.map(@challenge.non_federal_partners, fn partner -> %>
-    <div><%= partner %></div>
+    <div><%= partner.name %></div>
   <% end) %>
 </div>
 <br/>

@@ -250,6 +250,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_embed(:phases, with: &Phase.draft_changeset/2)
     |> validate_timeline_events_draft(params)
     |> validate_terms_draft(params)
+    |> unique_constraint(:custom_url, name: "challenges_custom_url_index")
   end
 
   def import_changeset(struct, params) do
@@ -432,7 +433,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :auto_publish_date
     ])
     |> foreign_key_constraint(:agency)
-    |> unique_constraint(:custom_url)
+    |> unique_constraint(:custom_url, name: "challenges_custom_url_index")
     |> validate_inclusion(:status, status_ids())
     |> validate_auto_publish_date(params)
     |> validate_start_and_end_dates(params)
@@ -458,7 +459,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :auto_publish_date
     ])
     |> foreign_key_constraint(:agency)
-    |> unique_constraint(:custom_url)
+    |> unique_constraint(:custom_url, name: "challenges_custom_url_index")
     |> validate_inclusion(:status, status_ids())
     |> validate_auto_publish_date(params)
     |> validate_start_and_end_dates(params)

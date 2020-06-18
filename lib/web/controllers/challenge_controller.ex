@@ -127,6 +127,7 @@ defmodule Web.ChallengeController do
         |> assign(:user, user)
         |> assign(:action, action_name(conn))
         |> assign(:changeset, changeset)
+        |> put_flash(:error, "An error occured")
         |> put_status(422)
         |> render("new.html")
     end
@@ -222,6 +223,7 @@ defmodule Web.ChallengeController do
         |> assign(:action, action_name(conn))
         |> assign(:section, section)
         |> assign(:changeset, changeset)
+        |> put_flash(:error, "An error occured")
         |> render("form.html")
 
       {:error, :not_permitted} ->
@@ -249,6 +251,7 @@ defmodule Web.ChallengeController do
         |> assign(:action, action_name(conn))
         |> assign(:challenge, challenge)
         |> assign(:changeset, changeset)
+        |> put_flash(:error, "An error occured")
         |> render("edit.html")
 
       {:error, :not_permitted} ->
