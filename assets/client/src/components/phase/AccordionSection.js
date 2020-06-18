@@ -27,7 +27,7 @@ export const AccordionSection = ({phase, index, children}) => {
         <button className="usa-accordion__button"
           aria-expanded={phaseIsCurrent(phase)}
           aria-controls={`a${index}`}>
-          <span>{`Phase ${index + 1}: ${phase.title}`}</span>
+          <span>{`Phase ${index + 1}${phase.title ? ": " + phase.title : ""}`}</span>
           {renderPhaseText(phase)}
         </button>
       </h2>

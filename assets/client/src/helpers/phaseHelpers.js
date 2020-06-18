@@ -12,8 +12,13 @@ export const phaseInFuture = (phase) => {
   return moment().isBefore(phase.start_date)
 }
 
+export const isSinglePhase = (challenge) => {
+  return challenge.phases.length === 1
+}
+
 export default {
   phaseInPast,
   phaseIsCurrent,
-  phaseInFuture
+  phaseInFuture,
+  isSinglePhase
 }
