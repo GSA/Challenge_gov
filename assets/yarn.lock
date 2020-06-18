@@ -1564,10 +1564,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.5.0.tgz#4e498dbf355795a611a87ae5ef811a8660d42662"
   integrity sha512-Onhn+z72D2O2Pb2ql2xukJ55rglumsVo1H6Fmyi8mlU9SvKdBk/pUSUAiBY/d9bAOF7VVWajX3sths/+g6ZiAQ==
 
-"@types/node@^13.9.1":
-  version "13.13.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.1.tgz#1ba94c5a177a1692518bfc7b41aec0aa1a14354e"
-  integrity sha512-uysqysLJ+As9jqI5yqjwP3QJrhOcUwBjHUlUxPxjbplwKoILvXVsmYWEhfmAQlrPfbRZmhJB007o4L9sKqtHqQ==
+"@types/node@^13.13.12":
+  version "13.13.12"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.12.tgz#9c72e865380a7dc99999ea0ef20fc9635b503d20"
+  integrity sha512-zWz/8NEPxoXNT9YyF2osqyA9WjssZukYpgI4UYZpOjcyqwIUqWGkcCionaEb9Ki+FULyPyvNFpg/329Kd2/pbw==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -14061,12 +14061,12 @@ use@^3.1.0:
   resolved "https://registry.yarnpkg.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
   integrity sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==
 
-uswds@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/uswds/-/uswds-2.6.0.tgz#69aa3d80cb81f1ca99ccf59fae6a76b1c5c2ce8a"
-  integrity sha512-5Q8ijTMBJdJSoiU01RTTk/eGVkjeKBsIOTiY1l5xq8M0wURKWeHzfh0a/Lj4vozwbh1h0onrvPJkyaklHKtFOQ==
+uswds@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/uswds/-/uswds-2.7.1.tgz#43f719fb3ef450e3faef722d336b29a39f6eee3b"
+  integrity sha512-RzczCK4TfnJud6WFj7pV6er5BQ0qQviM/GZgyDkYT6ZvOIXR0khbk7WZR72a+vy75fEiAzJut4N/x5/UZq0ZrA==
   dependencies:
-    "@types/node" "^13.9.1"
+    "@types/node" "^13.13.12"
     classlist-polyfill "^1.0.3"
     del "^5.1.0"
     domready "^1.0.8"
