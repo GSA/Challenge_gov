@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react'
+import { documentsForSection } from "../../helpers/documentHelpers"
 
 export const SectionResources = ({label, section, challenge}) => {
   const [documents, setDocuments] = useState(challenge.supporting_documents)
 
   useEffect(() => {
     if (section) {
-      setDocuments(documents.filter(document => document.section == section))
+      setDocuments(documentsForSection(challenge, section))
     }
   }, [])
 
@@ -13,7 +14,7 @@ export const SectionResources = ({label, section, challenge}) => {
     return (
       documents.map((document) => {
         return (
-          <a className="card challenge-tab__resource" key={document.id} target="_blank" href={document.url}>{document.name || document.display_name}</a>
+          <a className="card challenge-tab__resource" key={document.id} target="_blank" href={document.url}>{document.display_name}</a>
         )
       })
     )

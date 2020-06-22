@@ -12,6 +12,8 @@ import { Resources } from "../components/challenge_tabs/Resources"
 import { FAQ } from "../components/challenge_tabs/FAQ"
 import { ContactForm } from "../components/challenge_tabs/ContactForm"
 import { Winners } from "../components/challenge_tabs/Winners"
+import { documentsForSection } from "../helpers/documentHelpers"
+import { getPreviousPhase, getCurrentPhase, getNextPhase, phaseInPast, phaseIsCurrent, phaseInFuture, phaseNumber, isSinglePhase, formatDateTime, formatDate } from '../helpers/phaseHelpers'
 
 export const ChallengeDetails = ({challenge, preview}) => {
   const renderEndDate = (date) => {
@@ -46,6 +48,137 @@ export const ChallengeDetails = ({challenge, preview}) => {
     })
   }
 
+  const renderApplyButton = (challenge) => {
+    // Button states
+    // Disabled
+    // - Before challenge is open
+    // Enabled
+    // - Challenge has started and is external
+    // - Challenge has a current open to submission phase
+    // Enabled to some (login button)
+    // - Challenge not external
+    // - Challenge is not in a current open phase
+    // - Challenge is not in a current phase and next phase isn't open
+    // Hidden
+    // - Phase is not external and is closed
+    let phases = challenge.phases
+    let currentPhase = getCurrentPhase(phases)
+    let nextPhase = getNextPhase(phases)
+
+    let applyButtonUrl = challenge.external_url ? challenge.external_url : `/challenges/${challenge.id}/solutions/new`
+    let applyButtonText = []
+    let applyButtonAttr = {href: applyButtonUrl}
+    let applyButtonShow = "show"
+
+    if (!currentPhase && nextPhase) {
+      applyButtonText = `Apply starting ${formatDate(nextPhase.start_date)}`
+      applyButtonAttr.href = null
+      applyButtonAttr.disabled = true
+    } else if (!currentPhase && !nextPhase) {
+      if (challenge.external_url) {
+        applyButtonText = ["Apply on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
+        applyButtonAttr.href = challenge.external_url
+        applyButtonAttr.target = "_blank"
+      } else {
+        applyButtonShow = "hide"
+      }
+    } else if (currentPhase) {
+      if (challenge.external_url) {
+        applyButtonText = ["Apply on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
+        applyButtonAttr.target = "_blank"
+      } else if (currentPhase.open_to_submissions) {
+        applyButtonText = "Apply for this challenge"
+      } else {
+        applyButtonShow = "login"
+      }
+    }
+
+    switch (applyButtonShow) {
+      case "show": 
+        return (
+          <div className="detail-section__apply">
+            <a {...applyButtonAttr}>
+              <button className="apply-btn">{applyButtonText}</button>
+            </a>
+          </div>
+        )
+      case "login":
+        return (
+          <div className="detail-section__apply">
+            <p><span>Winners of a previous phase <a {...applyButtonAttr}>login</a> to continue.</span></p>
+          </div>
+        )
+      case "hide":
+        return null
+    }
+  }
+
+  const submissionPeriod = (phases) => {
+    let previousPhase = getPreviousPhase(phases)
+    let previousPhaseNumber = phaseNumber(phases, previousPhase)
+    let currentPhase = getCurrentPhase(phases)
+    let currentPhaseNumber = phaseNumber(phases, currentPhase)
+    let nextPhase = getNextPhase(phases)
+    let nextPhaseNumber = phaseNumber(phases, nextPhase)
+
+    let submissionPeriodText = ""
+
+    if (isSinglePhase(challenge)) {
+      let phase = phases[0]
+      if (phaseInFuture(phases[0])) {
+        submissionPeriodText += `Coming soon / Open on ${formatDateTime(phase.start_date)}`
+      } else if (phaseIsCurrent(phase)) {
+        submissionPeriodText += `Opens until ${formatDateTime(phase.end_date)}`
+      } else if (phaseInPast(phase)) {
+        submissionPeriodText += `Closed on ${formatDateTime(phase.end_date)}`
+      }
+    } else {
+      if (currentPhase) {
+        submissionPeriodText += `Phase ${currentPhaseNumber} open until ${formatDateTime(currentPhase.end_date)}`
+      } else {
+        if (!previousPhase && nextPhase) {
+          submissionPeriodText += `Phase ${nextPhaseNumber} opens on ${formatDateTime(nextPhase.start_date)}`
+        }
+        if (previousPhase && nextPhase) {
+          submissionPeriodText += `Phase ${previousPhaseNumber} closed / Phase ${nextPhaseNumber} opens on ${formatDateTime(nextPhase.start_date)}`
+        }
+        if (previousPhase && !nextPhase) {
+          submissionPeriodText += "Closed to submissions"
+        }
+      }
+    }
+
+    return submissionPeriodText
+  }
+
+  const renderWhoCanApply = (challenge) => {
+    let phases = challenge.phases
+    let previousPhase = getPreviousPhase(phases)
+    let previousPhaseNumber = phaseNumber(phases, previousPhase)
+    let currentPhase = getCurrentPhase(phases)
+    let nextPhase = getNextPhase(phases)
+
+    if (!currentPhase && !nextPhase) {
+      return null
+    } else if (currentPhase) {
+      if (currentPhase.open_to_submissions) {
+        return (
+          <div className="item">
+            <p className="info-title">Who can apply: </p>
+            <span>Open to all eligible</span>
+          </div>
+        )
+      } else {
+        return (
+          <div className="item">
+            <p className="info-title">Who can apply: </p>
+            <span>Phase {previousPhaseNumber} winners</span>
+          </div>
+        )
+      }
+    }
+  }
+
   return (
     challenge ? (
       <div className="w-100">
@@ -69,8 +202,8 @@ export const ChallengeDetails = ({challenge, preview}) => {
                     }
                   </div>
                 }
-                <h1 className="title">{challenge.title}</h1>
-                <h3 className="tagline">{challenge.tagline}</h3>
+                <h4 className="title">{challenge.title}</h4>
+                <h5 className="tagline">{challenge.tagline}</h5>
                 <p className="brief_description">{challenge.brief_description}</p>
               </div>
               <div className="logo-container">
@@ -88,34 +221,17 @@ export const ChallengeDetails = ({challenge, preview}) => {
               </div>
             </div>
             <div className="detail-section">
-              { challenge.end_date >  moment().utc().format() &&
-                <>
-                  <div className="detail-section__apply">
-                    { challenge.external_url ? 
-                    <a href={`${challenge.external_url}`} target="_blank">
-                      <button className="apply-btn">Apply on external website <i className="fa fa-external-link-alt ml-3"></i></button>
-                    </a>
-                    :
-                    <a href={`/challenges/${challenge.id}/solutions/new`}>
-                      <button className="apply-btn">Apply for this challenge</button>
-                    </a>
-                    }
-                  </div>
-                  <div className="detail-section__follow">
-                    <a href={`/challenges/${challenge.id}/save_challenge/new`}>
-                      <button className="follow-btn"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
-                    </a>
-                  </div>
-                </>
-              }
+              {renderApplyButton(challenge)}
+              <div className="detail-section__follow">
+                <a href={`/challenges/${challenge.id}/save_challenge/new`}>
+                  <button className="follow-btn"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
+                </a>
+              </div>
               <div className="item">
                 <p className="info-title">Submission period:</p>
-                { challenge.end_date >  moment().utc().format()
-                  ? <p>Open</p>
-                  : <p>Closed</p>
-                }
+                {submissionPeriod(challenge.phases)}
               </div>
-              {renderEndDate(challenge.end_date)}
+              {renderWhoCanApply(challenge)}
               <div className="item">
                 { challenge.types.length > 1
                   ? <p className="info-title">Challenge types:</p>
@@ -158,9 +274,11 @@ export const ChallengeDetails = ({challenge, preview}) => {
               <Resources challenge={challenge} />
             </div>
           }
-          <div label="FAQ">
-            <FAQ challenge={challenge} />
-          </div>
+          { (challenge.faq || documentsForSection(challenge, "faq") > 0) &&
+            <div label="FAQ">
+              <FAQ challenge={challenge} />
+            </div>
+          }
           <div label="Contact">
             <ContactForm />
           </div>

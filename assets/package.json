@@ -20,6 +20,8 @@
     "create-react-app": "^3.3.0",
     "file-loader": "^3.0.1",
     "jquery": "^3.3.1",
+    "moment": "^2.27.0",
+    "moment-timezone": "^0.5.31",
     "node-quill-converter": "^0.3.3",
     "node-sass": "^4.13.1",
     "phoenix": "1.4.10",
@@ -34,7 +36,7 @@
     "reactstrap": "^8.4.1",
     "select2": "^4.0.13",
     "url-loader": "^1.1.2",
-    "uswds": "^2.6.0",
+    "uswds": "^2.7.1",
     "yarn": "^1.13.0"
   },
   "devDependencies": {

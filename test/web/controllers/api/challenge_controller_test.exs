@@ -189,7 +189,8 @@ defmodule Web.Api.ChallengeControllerTest do
       "prize_total" => nil,
       "brief_description" => challenge.brief_description,
       "phase_descriptions" => nil,
-      "federal_partners" => []
+      "federal_partners" => [],
+      "phases" => []
     }
   end
 end

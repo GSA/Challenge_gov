@@ -1,7 +1,10 @@
 /* This file is for your main application css. */
-
-@import "style.css";
+@import "style.scss";
 @import "sass/main.scss";
+@import "sass/help_section.scss";
+@import "sass/tile-loader.scss";
+
+// Public federalist layout css
 @import "sass/header.scss";
 @import "sass/footer.scss";
 @import "sass/top_banner.scss";

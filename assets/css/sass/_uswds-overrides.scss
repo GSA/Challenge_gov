@@ -1,0 +1,47 @@
+.usa-form {
+  max-width: unset
+}
+
+.usa-accordion {
+  $self: &;
+
+  &__button {
+    display: flex;
+    justify-content: space-between;
+
+    &:after {
+      position: absolute;
+      right: 1.25rem;
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      content: "\f104";
+    }
+
+    &[aria-expanded=true] {
+      &:after {
+        content: "\f107";
+      }
+    }
+
+    span:first-child {
+      flex: 2;
+      margin-right: 1rem;
+    }
+
+    span:nth-child(2) {
+      flex: 1;
+      text-align: right;
+    }
+  }
+
+  .phase__text {
+    font-style: italic;
+
+    &--closed {
+      color: #B50909;
+    }
+    &--open {
+      color: #4D8055;
+    }
+  }
+}

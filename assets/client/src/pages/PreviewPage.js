@@ -29,7 +29,7 @@ export const PreviewPage = () => {
   }, [])
 
   return (
-    <div className="p-5">
+    <div className="py-5">
       <div className="row mb-5">
         <div className="col-md-4">
           <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
@@ -39,7 +39,9 @@ export const PreviewPage = () => {
         </div>
       </div>
       <div className="row">
-        <ChallengeDetails challenge={currentChallenge} preview={true} loading={loadingState} />
+        <div className="col">
+          <ChallengeDetails challenge={currentChallenge} preview={true} loading={loadingState} />
+        </div>
       </div>
     </div>
   )
