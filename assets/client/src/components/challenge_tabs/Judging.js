@@ -3,7 +3,7 @@ import React from 'react'
 import { ChallengeTab } from "../ChallengeTab"
 import { Accordion } from "../phase/Accordion"
 import { AccordionSection } from "../phase/AccordionSection"
-import { isSinglePhase } from "../../helpers/phaseHelpers"
+import { isSinglePhase, phaseNumber, getPreviousPhase, getCurrentPhase, getNextPhase } from "../../helpers/phaseHelpers"
 
 export const Judging = ({challenge}) => {
   const renderPhaseData = (phases) => {
