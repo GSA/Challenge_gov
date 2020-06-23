@@ -37,7 +37,7 @@
             <%= hidden_input f, :local_timezone, id: "local-timezone-input" %>
 
             <div class="card-body">
-              <%= render Web.ChallengeView, "_#{@section}.html", 
+              <%= render Web.ChallengeView, "wizard/_#{@section}.html", 
                 form: f, 
                 changeset: @changeset, 
                 data: @changeset.data, 

@@ -74,7 +74,7 @@ defmodule Web.ChallengeController do
     |> assign(:action, action_name(conn))
     |> assign(:section, "general")
     |> assign(:challenge, nil)
-    |> render("form.html")
+    |> render("wizard.html")
   end
 
   def create(conn, params = %{"action" => action, "challenge" => %{"section" => section}}) do
@@ -108,7 +108,7 @@ defmodule Web.ChallengeController do
         |> assign(:changeset, changeset)
         |> assign(:challenge, nil)
         |> put_status(422)
-        |> render("form.html")
+        |> render("wizard.html")
     end
   end
 
@@ -145,7 +145,7 @@ defmodule Web.ChallengeController do
       |> assign(:action, action_name(conn))
       |> assign(:section, section)
       |> assign(:changeset, Challenges.edit(challenge))
-      |> render("form.html")
+      |> render("wizard.html")
     else
       {:error, :not_permitted} ->
         conn
@@ -224,7 +224,7 @@ defmodule Web.ChallengeController do
         |> assign(:section, section)
         |> assign(:changeset, changeset)
         |> put_flash(:error, "An error occured")
-        |> render("form.html")
+        |> render("wizard.html")
 
       {:error, :not_permitted} ->
         conn
