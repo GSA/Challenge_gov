@@ -1,6 +1,7 @@
 defmodule Web.Api.ChallengeView do
   use Web, :view
 
+  alias ChallengeGov.Challenges
   alias Web.Api.PaginationView
   alias Web.ChallengeView
 
@@ -19,7 +20,7 @@ defmodule Web.Api.ChallengeView do
       agency_name: ChallengeView.agency_name(challenge),
       agency_logo: ChallengeView.agency_logo(challenge),
       logo: ChallengeView.logo_url(challenge),
-      open_until: challenge.end_date
+      open_until: Challenges.find_end_date(challenge)
     }
   end
 
@@ -65,6 +66,7 @@ defmodule Web.Api.ChallengeView do
         ),
       non_monetary_prizes: challenge.non_monetary_prizes,
       number_of_phases: challenge.number_of_phases,
+      open_until: Challenges.find_end_date(challenge),
       phases:
         render_many(
           challenge.phases,

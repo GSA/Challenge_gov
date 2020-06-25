@@ -663,10 +663,17 @@ defmodule ChallengeGov.Challenges do
   def find_start_date(challenge) do
     first_phase =
       challenge.phases
-      |> Enum.sort(fn a, b -> Timex.compare(a.start_date, b.start_date) < 0 end)
-      |> Enum.at(0)
+      |> Enum.min_by(fn phase -> phase.start_date end, fn -> nil end)
 
-    first_phase.start_date
+    if !is_nil(first_phase), do: first_phase.start_date
+  end
+
+  def find_end_date(challenge) do
+    last_phase =
+      challenge.phases
+      |> Enum.max_by(fn phase -> phase.end_date end, fn -> nil end)
+
+    if !is_nil(last_phase), do: last_phase.end_date
   end
 
   @doc """
