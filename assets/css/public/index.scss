@@ -1,9 +1,19 @@
+@import "../shared";
+
+// Public federalist layout css
+@import "header";
+@import "footer";
+@import "top_banner";
+@import "help_section";
+
 @import "challenge-tile";
 @import "challenge-tabs";
 @import "details-page";
 @import "contact-form";
 @import "preview";
-@import "uswds-overrides";
+
+@import "misc";
+@import "tile-loader";
 
 body {
   background-color: #fcfcfc;
@@ -13,4 +23,3 @@ body {
   max-width: 1440px;
   margin: auto;
 }
-
