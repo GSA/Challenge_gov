@@ -65,7 +65,13 @@ export const ChallengeDetails = ({challenge, preview}) => {
     let currentPhase = getCurrentPhase(phases)
     let nextPhase = getNextPhase(phases)
 
-    let applyButtonUrl = challenge.external_url ? challenge.external_url : `/challenges/${challenge.id}/solutions/new`
+    let applyButtonUrl = null
+    if (challenge.external_url) {
+      applyButtonUrl = challenge.external_url
+    } else if (!preview) {
+      applyButtonUrl = `/challenges/${challenge.id}/solutions/new`
+    }
+
     let applyButtonText = []
     let applyButtonAttr = {href: applyButtonUrl}
     let applyButtonShow = "show"
@@ -223,7 +229,7 @@ export const ChallengeDetails = ({challenge, preview}) => {
             <div className="detail-section">
               {renderApplyButton(challenge)}
               <div className="detail-section__follow">
-                <a href={`/challenges/${challenge.id}/save_challenge/new`}>
+                <a href={preview ? null : `/challenges/${challenge.id}/save_challenge/new`}>
                   <button className="follow-btn"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
                 </a>
               </div>
@@ -280,7 +286,7 @@ export const ChallengeDetails = ({challenge, preview}) => {
             </div>
           }
           <div label="Contact">
-            <ContactForm />
+            <ContactForm preview={preview} />
           </div>
           <div label="Winners" disabled={!challenge.winner_information} >
             <Winners challenge={challenge} />

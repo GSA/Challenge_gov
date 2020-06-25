@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from 'axios'
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 
-export const ContactForm = props => {
+export const ContactForm = ({preview}) => {
   const [email, setEmail] = useState("")
   const [body, setBody] = useState("")
   const [recaptchaToken, setRecaptchaToken] = useState("")
@@ -60,15 +60,15 @@ export const ContactForm = props => {
             </div>
             <div className="form-group">
               <label className="usa-label" htmlFor="contactEmail">Email address <span>*</span></label>
-              <input id="contactEmail" className="usa-input" type="email" value={email} onChange={e => setEmail(e.target.value)} className={`form-control ${errors.email ? "is-invalid" : ""}`} required/>
+              <input id="contactEmail" className="usa-input" type="email" value={email} onChange={e => setEmail(e.target.value)} className={`form-control ${errors.email ? "is-invalid" : ""}`} disabled={preview} required/>
               {errors.email && <div className="invalid-feedback">{errors.email}</div> }
             </div>
             <div className="form-group">
               <label className="usa-label" htmlFor="contactBody">Question or comment <span>*</span></label>
-              <textarea id="contactBody" className="usa-textarea" value={body} onChange={e => setBody(e.target.value)} className={`form-control ${errors.body ? "is-invalid" : ""}`} required/>
+              <textarea id="contactBody" className="usa-textarea" value={body} onChange={e => setBody(e.target.value)} className={`form-control ${errors.body ? "is-invalid" : ""}`} disabled={preview} required/>
               {errors.body && <div className="invalid-feedback">{errors.body}</div> }
             </div>
-            <button className="contact-form__submit usa-button">Submit</button>
+            <button className="contact-form__submit usa-button" disabled={preview}>Submit</button>
           </form>
           <div className="contact-form__bottom">
             <div>This site is protected by reCAPTCHA and Google</div>
