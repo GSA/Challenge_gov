@@ -1,8 +1,8 @@
-$(document).ready(function(){
-  const checkbox = $("#challenge_terms_equal_rules")
-  const termsInput = $("#challenge_terms_and_conditions")
-  const richTextInput = termsInput.siblings(".rt-textarea").data("quill")
+const checkbox = $("#challenge_terms_equal_rules")
+const termsInput = $("#challenge_terms_and_conditions")
+const richTextInput = termsInput.siblings(".rt-textarea").data("quill")
 
+if (richTextInput) {
   let oldTerms = termsInput.val()
   let oldTermsRichText = richTextInput.getContents()
 
@@ -46,7 +46,7 @@ $(document).ready(function(){
   let legalAuthorityOptions = legalAuthoritySelect.children("option").map(function() {
     return $(this).val()
   }).get()
-  
+
   if (!legalAuthorityOptions.includes(legalAuthorityInput.val())) {
     showLegalAuthorityOtherField()
   } else {
@@ -71,4 +71,4 @@ $(document).ready(function(){
     legalAuthorityInput.prop("disabled", true)
     legalAuthorityInput.parents(".form-group").hide()
   }
-})
+}

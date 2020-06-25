@@ -1,16 +1,14 @@
-$(document).ready(function(){
-  $(".scroll-to-anchor").on("click", function(e) {
-    e.preventDefault()
-    anchorName = $(this).data("anchor");
-    anchorHash = `#${anchorName}`
+$(".scroll-to-anchor").on("click", function(e) {
+  e.preventDefault()
+  anchorName = $(this).data("anchor");
+  anchorHash = `#${anchorName}`
 
-    window.location.hash = "";
-    window.location.hash = anchorHash;
+  window.location.hash = "";
+  window.location.hash = anchorHash;
 
-    // scrollLocation = $(anchorHash).offset().top 
+  // scrollLocation = $(anchorHash).offset().top 
 
-    // $(".main-wrapper").animate({scrollTop: scrollLocation}, 1000, function() {
-    //   console.log("Finished")
-    // })
-  })
+  // $(".main-wrapper").animate({scrollTop: scrollLocation}, 1000, function() {
+  //   console.log("Finished")
+  // })
 })

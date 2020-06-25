@@ -6,14 +6,16 @@
 @import "top_banner";
 @import "help_section";
 
+// React client css
 @import "challenge-tile";
 @import "challenge-tabs";
 @import "details-page";
 @import "contact-form";
 @import "preview";
-
-@import "misc";
 @import "tile-loader";
+
+// Other css
+@import "misc";
 
 body {
   background-color: #fcfcfc;

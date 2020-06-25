@@ -1,0 +1,1 @@
+$("#local-timezone-input").val(Intl.DateTimeFormat().resolvedOptions().timeZone)

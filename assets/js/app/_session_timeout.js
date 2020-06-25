@@ -85,5 +85,3 @@ setInterval(() => {
   }
 
 }, 1000);
-
-$("#local-timezone-input").val(Intl.DateTimeFormat().resolvedOptions().timeZone)
