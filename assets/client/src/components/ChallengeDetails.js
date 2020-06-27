@@ -76,26 +76,22 @@ export const ChallengeDetails = ({challenge, preview}) => {
     let applyButtonAttr = {href: applyButtonUrl}
     let applyButtonShow = "show"
 
-    if (!currentPhase && nextPhase) {
-      applyButtonText = `Apply starting ${formatDate(nextPhase.start_date)}`
-      applyButtonAttr.href = null
-      applyButtonAttr.disabled = true
-    } else if (!currentPhase && !nextPhase) {
-      if (challenge.external_url) {
-        applyButtonText = ["Apply on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
-        applyButtonAttr.href = challenge.external_url
-        applyButtonAttr.target = "_blank"
-      } else {
+    if (challenge.external_url) {
+      applyButtonText = ["View on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
+      applyButtonAttr.target = "_blank"
+    } else {
+      if (!currentPhase && nextPhase) {
+        applyButtonText = `Apply starting ${formatDate(nextPhase.start_date)}`
+        applyButtonAttr.href = null
+        applyButtonAttr.disabled = true
+      } else if (!currentPhase && !nextPhase) {
         applyButtonShow = "hide"
-      }
-    } else if (currentPhase) {
-      if (challenge.external_url) {
-        applyButtonText = ["Apply on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
-        applyButtonAttr.target = "_blank"
-      } else if (currentPhase.open_to_submissions) {
-        applyButtonText = "Apply for this challenge"
-      } else {
-        applyButtonShow = "login"
+      } else if (currentPhase) {
+        if (currentPhase.open_to_submissions) {
+          applyButtonText = "Apply for this challenge"
+        } else {
+          applyButtonShow = "login"
+        }
       }
     }
 
