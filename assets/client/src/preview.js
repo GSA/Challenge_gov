@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../../css/sass/main.scss'
 import { BrowserRouter, Redirect, Switch, Route } from "react-router-dom";
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
 import { PreviewPage } from "./pages/PreviewPage"
+
+import '../../css/public/index.scss'
 
 const getRoutes = () => {
   return IndexRoutes.map((prop, i) => {

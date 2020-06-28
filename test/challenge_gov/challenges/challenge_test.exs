@@ -29,4 +29,28 @@ defmodule ChallengeGov.ChallengeTest do
       assert Timex.equal?(start_date, first_date)
     end
   end
+
+  describe "find end date" do
+    test "successfully from single phase" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      end_date = Challenges.find_end_date(challenge)
+      last_date = Timex.shift(Timex.now(), hours: 1)
+
+      assert length(challenge.phases) === 1
+      assert Timex.equal?(end_date, last_date)
+    end
+
+    test "successfully from multi phase" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_multi_phase_challenge(user, %{user_id: user.id})
+
+      end_date = Challenges.find_end_date(challenge)
+      last_date = Timex.shift(Timex.now(), hours: 6)
+
+      assert length(challenge.phases) === 3
+      assert Timex.equal?(end_date, last_date)
+    end
+  end
 end

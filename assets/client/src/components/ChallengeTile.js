@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from "react-router-dom";
 import moment from "moment"
+import {formatDateTime} from "../helpers/phaseHelpers"
 
 export const ChallengeTile = ({challenge, preview}) => {
   return (
@@ -22,7 +23,7 @@ export const ChallengeTile = ({challenge, preview}) => {
             <p className="card__title test" aria-label="Challenge title">{challenge.title}</p>
             <p className="card__agency-name" aria-label="Agency name">{challenge.agency_name}</p>
             <p className="card__tagline" aria-label="Challenge tagline">{challenge.tagline}</p>
-            <p className="card__date">{moment(challenge.open_until).format("llll")}</p>
+            <p className="card__date">{formatDateTime(challenge.open_until)}</p>
           </div>
         </Link>
       </div>

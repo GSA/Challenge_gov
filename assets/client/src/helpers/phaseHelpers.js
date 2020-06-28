@@ -53,11 +53,8 @@ export const phaseNumber = (phases, phase) => {
 }
 
 export const formatDateTime = (date) => {
-  let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  let time = new Date();
-  let timeZoneOffset = time.getTimezoneOffset();
-  let timeZoneAbbr = moment.tz.zone(timeZone).abbr(timeZoneOffset);
-  return moment(date).local().format("MM/DD/YY hh:mm A ") + timeZoneAbbr
+  let timeZone = moment.tz.guess(true)
+  return moment.tz(date, timeZone).format("MM/DD/YY hh:mm A z")
 }
 
 export const formatDate = (date) => {

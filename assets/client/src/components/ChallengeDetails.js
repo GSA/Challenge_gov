@@ -65,31 +65,33 @@ export const ChallengeDetails = ({challenge, preview}) => {
     let currentPhase = getCurrentPhase(phases)
     let nextPhase = getNextPhase(phases)
 
-    let applyButtonUrl = challenge.external_url ? challenge.external_url : `/challenges/${challenge.id}/solutions/new`
+    let applyButtonUrl = null
+    if (challenge.external_url) {
+      applyButtonUrl = challenge.external_url
+    } else if (!preview) {
+      applyButtonUrl = `/challenges/${challenge.id}/solutions/new`
+    }
+
     let applyButtonText = []
     let applyButtonAttr = {href: applyButtonUrl}
     let applyButtonShow = "show"
 
-    if (!currentPhase && nextPhase) {
-      applyButtonText = `Apply starting ${formatDate(nextPhase.start_date)}`
-      applyButtonAttr.href = null
-      applyButtonAttr.disabled = true
-    } else if (!currentPhase && !nextPhase) {
-      if (challenge.external_url) {
-        applyButtonText = ["Apply on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
-        applyButtonAttr.href = challenge.external_url
-        applyButtonAttr.target = "_blank"
-      } else {
+    if (challenge.external_url) {
+      applyButtonText = ["View on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
+      applyButtonAttr.target = "_blank"
+    } else {
+      if (!currentPhase && nextPhase) {
+        applyButtonText = `Apply starting ${formatDate(nextPhase.start_date)}`
+        applyButtonAttr.href = null
+        applyButtonAttr.disabled = true
+      } else if (!currentPhase && !nextPhase) {
         applyButtonShow = "hide"
-      }
-    } else if (currentPhase) {
-      if (challenge.external_url) {
-        applyButtonText = ["Apply on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
-        applyButtonAttr.target = "_blank"
-      } else if (currentPhase.open_to_submissions) {
-        applyButtonText = "Apply for this challenge"
-      } else {
-        applyButtonShow = "login"
+      } else if (currentPhase) {
+        if (currentPhase.open_to_submissions) {
+          applyButtonText = "Apply for this challenge"
+        } else {
+          applyButtonShow = "login"
+        }
       }
     }
 
@@ -223,7 +225,7 @@ export const ChallengeDetails = ({challenge, preview}) => {
             <div className="detail-section">
               {renderApplyButton(challenge)}
               <div className="detail-section__follow">
-                <a href={`/challenges/${challenge.id}/save_challenge/new`}>
+                <a href={preview ? null : `/challenges/${challenge.id}/save_challenge/new`}>
                   <button className="follow-btn"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
                 </a>
               </div>
@@ -280,7 +282,7 @@ export const ChallengeDetails = ({challenge, preview}) => {
             </div>
           }
           <div label="Contact">
-            <ContactForm />
+            <ContactForm preview={preview} />
           </div>
           <div label="Winners" disabled={!challenge.winner_information} >
             <Winners challenge={challenge} />
