@@ -34,7 +34,7 @@ defmodule ChallengeGov.Agencies do
       Agency
       |> where([t], is_nil(t.deleted_at))
       |> Filter.filter(opts[:filter], __MODULE__)
-      |> preload(members: ^member_query())
+      |> preload([:parent, members: ^member_query()])
 
     Pagination.paginate(Repo, query, opts)
   end
@@ -53,7 +53,7 @@ defmodule ChallengeGov.Agencies do
     agency =
       Agency
       |> where([t], t.id == ^id and is_nil(t.deleted_at))
-      |> preload([:federal_partner_challenges, :challenges, members: ^member_query()])
+      |> preload([:parent, :federal_partner_challenges, :challenges, members: ^member_query()])
       |> Repo.one()
 
     case agency do
