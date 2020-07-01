@@ -25,7 +25,7 @@ defmodule ChallengeGov.Agencies do
   def edit(agency), do: Agency.create_changeset(agency, %{})
 
   @doc """
-  Get all accounts
+  Get all agencies
   """
   def all(opts \\ []) do
     opts = Enum.into(opts, %{})
@@ -34,7 +34,7 @@ defmodule ChallengeGov.Agencies do
       Agency
       |> where([t], is_nil(t.deleted_at))
       |> Filter.filter(opts[:filter], __MODULE__)
-      |> preload([:parent, members: ^member_query()])
+      |> preload([:parent, :sub_agencies, members: ^member_query()])
 
     Pagination.paginate(Repo, query, opts)
   end
@@ -53,7 +53,13 @@ defmodule ChallengeGov.Agencies do
     agency =
       Agency
       |> where([t], t.id == ^id and is_nil(t.deleted_at))
-      |> preload([:parent, :federal_partner_challenges, :challenges, members: ^member_query()])
+      |> preload([
+        :parent,
+        :sub_agencies,
+        :federal_partner_challenges,
+        :challenges,
+        members: ^member_query()
+      ])
       |> Repo.one()
 
     case agency do

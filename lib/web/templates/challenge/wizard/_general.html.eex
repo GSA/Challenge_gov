@@ -7,11 +7,16 @@
 <%= FormView.text_field(@form, :challenge_manager, label: "Challenge manager of record (does not appear on public listing)", required: true) %>
 <%= FormView.email_field(@form, :challenge_manager_email, label: "Challenge manager email (does not appear on public listing)", placeholder: "challenge_manager@example.com", required: true) %>
 <%= FormView.email_field(@form, :poc_email, label: "Point of contact email", placeholder: "point_of_contact@example.com", required: true) %>          
+<hr/>
 <%= FormView.select_field(@form, :agency_id, collection: Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), label: "Lead agency name", prompt: "Choose an agency", required: true) %>
+<%= FormView.select_field(@form, :sub_agency_id, collection: Enum.map(@form.data.agency.sub_agencies, &{&1.name, &1.id}), label: "Sub-agency name (optional)", prompt: "Choose a sub-agency") %>
+<hr/>
 <%= FormView.multiselect_field(@form, :federal_partners, collection: Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partner_agencies, &(&1.id)), label: "Federal partners (optional)") %>
+<hr/>
 <div class="form-group">
   <label class="col-md-4">Non federal partners (optional)</label>
   <br/>
   <%= FormView.dynamic_nested_fields(@form, :non_federal_partners, [:name]) %>
 </div>
+<hr/>
 <%= FormView.text_field(@form, :fiscal_year, label: "Fiscal year (does not appear on public listing)", placeholder: "FY20", required: true) %>

@@ -145,6 +145,8 @@ defmodule Web.Router do
   scope "/api", Web.Api, as: :api do
     pipe_through([:api])
 
+    get("/agencies/:agency_id/sub_agencies", AgencyController, :sub_agencies)
+
     get("/challenges/preview/:uuid", ChallengeController, :preview)
     resources("/challenges", ChallengeController, only: [:index, :show])
     post("/challenges/:challenge_id/contact_form", ContactFormController, :send_email)

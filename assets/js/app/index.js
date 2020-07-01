@@ -10,6 +10,7 @@ import "./_rich_text_editor.js";
 import "./_session_timeout.js";
 import "./_section_file_upload.js";
 import "./_solution_file_upload.js";
+import "./_sub_agency_select.js";
 import "./_timezone.js";
 
 // Wizard specific JS (Depedent on some above JS)

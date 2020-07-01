@@ -262,7 +262,8 @@ defmodule ChallengeGov.Challenges do
       :events,
       :user,
       :challenge_owner_users,
-      :supporting_documents
+      :supporting_documents,
+      agency: [:sub_agencies]
     ])
   end
 
