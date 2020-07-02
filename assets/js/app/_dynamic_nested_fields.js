@@ -132,3 +132,50 @@ $(".timeline-event-fields").on("click", ".remove-nested-section", (e) => {
     parent.remove()
   }
 })
+
+// Challenge timeline events dynamic nested fields  
+$("#js-federal-partners").on("click", ".add-nested-section", (e) => {
+  e.preventDefault()
+
+  template = $(e.target).siblings(".dynamic-nested-form-template").clone()
+
+  nestedSection = $(e.target).siblings(".nested-items")
+  nestedItems = $(e.target).siblings(".nested-items").children(".form-collection")
+
+  lastIndex = nestedItems.last().data("index")
+  nextIndex = lastIndex + 1 || 0
+
+  parentClass = $(e.target).data("parent")
+  childClass = $(e.target).data("child")
+
+  form_collection = template.find(".form-collection")
+  form_collection.attr("data-index", nextIndex)
+
+  template.find(".form-collection").find(".nested-form-group").each(function() {
+    field = $(this).data("field")
+    label = $(this).find(".template-label")
+    inputs = $(this).find(".template-input")
+
+    newId = `${parentClass}_${childClass}_${nextIndex}_${field}`
+    newName = `${parentClass}[${childClass}][${nextIndex}][${field}]`
+
+    label.attr("for", newId)
+
+    inputs.attr("id", newId)
+          .attr("name", newName)
+
+    if (field === "agency_id") {
+      inputs.prop("required", true)
+    }
+  })
+
+  nestedSection.append(form_collection)
+})
+
+$("#js-federal-partners").on("click", ".remove-nested-section", (e) => {
+  e.preventDefault()
+  if (window.confirm("Are you sure you want to remove this federal partner?")) {
+    parent = $(e.target).closest(".form-collection")
+    parent.remove()
+  }
+})

@@ -100,7 +100,6 @@ defmodule Helpers do
               parent_id: parent_id
             ]
 
-          IO.inspect(agencies_to_insert)
           # Agencies.create(%{
           #   name: title,
           #   api_id: api_id,

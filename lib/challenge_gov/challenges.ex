@@ -257,12 +257,12 @@ defmodule ChallengeGov.Challenges do
 
   defp challenge_form_preload(challenge) do
     Repo.preload(challenge, [
-      :federal_partner_agencies,
       :non_federal_partners,
       :events,
       :user,
       :challenge_owner_users,
       :supporting_documents,
+      federal_partner_agencies: [:sub_agencies],
       agency: [:sub_agencies]
     ])
   end
@@ -480,9 +480,7 @@ defmodule ChallengeGov.Challenges do
     attach_federal_partners(multi, %{"federal_partners" => []})
   end
 
-  defp attach_federal_partners(multi, %{"federal_partners" => ids}) do
-    ids = Enum.uniq(ids)
-
+  defp attach_federal_partners(multi, %{"federal_partners" => federal_partners}) do
     multi =
       Ecto.Multi.run(multi, :delete_agencies, fn _repo, changes ->
         {:ok,
@@ -491,19 +489,30 @@ defmodule ChallengeGov.Challenges do
          )}
       end)
 
-    Enum.reduce(ids, multi, fn agency_id, multi ->
-      Ecto.Multi.run(multi, {:agency, agency_id}, fn _repo, changes ->
-        %FederalPartner{}
-        |> FederalPartner.changeset(%{
-          agency_id: agency_id,
-          challenge_id: changes.challenge.id
-        })
-        |> Repo.insert()
+    Enum.reduce(federal_partners, multi, fn {id, federal_partner}, multi ->
+      %{"agency_id" => agency_id, "sub_agency_id" => sub_agency_id} = federal_partner
+
+      Ecto.Multi.run(multi, {:id, id, :agency, agency_id, :sub_agency, sub_agency_id}, fn _repo,
+                                                                                          changes ->
+        maybe_create_federal_partner(agency_id, sub_agency_id, changes)
       end)
     end)
   end
 
   defp attach_federal_partners(multi, _params), do: multi
+
+  defp maybe_create_federal_partner(agency_id, sub_agency_id, changes)
+       when not is_nil(agency_id) and agency_id !== "" do
+    %FederalPartner{}
+    |> FederalPartner.changeset(%{
+      agency_id: agency_id,
+      sub_agency_id: sub_agency_id,
+      challenge_id: changes.challenge.id
+    })
+    |> Repo.insert()
+  end
+
+  defp maybe_create_federal_partner(_agency_id, _sub_agency_id, _changes), do: {:ok, nil}
 
   # Attach challenge owners functions
   defp attach_initial_owner(multi, user) do

@@ -15,12 +15,14 @@ defmodule ChallengeGov.Challenges.FederalPartner do
   schema "federal_partners" do
     belongs_to(:challenge, Challenge)
     belongs_to(:agency, Agency)
+    belongs_to(:sub_agency, Agency)
   end
 
   def changeset(struct, params) do
     struct
     |> cast(params, [
       :agency_id,
+      :sub_agency_id,
       :challenge_id
     ])
     |> validate_required([
@@ -33,6 +35,7 @@ defmodule ChallengeGov.Challenges.FederalPartner do
     struct
     |> cast(params, [
       :agency_id,
+      :sub_agency_id,
       :challenge_id
     ])
   end
