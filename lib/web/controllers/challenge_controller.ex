@@ -216,7 +216,7 @@ defmodule Web.ChallengeController do
                 href: "mailto: team@challenge.gov",
                 target: "_blank"
               ),
-              ") with your question and Challenge ID number."
+              ") with your question and Challenge ID number #{challenge.id}."
             ]
           )
           |> redirect(to: Routes.challenge_path(conn, :index))

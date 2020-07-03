@@ -188,6 +188,7 @@ defmodule ChallengeGov.Challenges do
 
     case result do
       {:ok, %{challenge: challenge}} ->
+        maybe_send_submission_confirmation(challenge, action)
         {:ok, challenge}
 
       {:error, _type, changeset, _changes} ->
@@ -507,16 +508,17 @@ defmodule ChallengeGov.Challenges do
   # Attach challenge owners functions
   defp attach_initial_owner(multi, user) do
     Ecto.Multi.run(multi, {:user, user.id}, fn _repo, changes ->
-      if user.role == "challenge_owner" do
-        %ChallengeOwner{}
-        |> ChallengeOwner.changeset(%{
-          user_id: user.id,
-          challenge_id: changes.challenge.id
-        })
-        |> Repo.insert()
-      else
-        {:ok, user}
-      end
+      # if user.role == "challenge_owner" do
+      %ChallengeOwner{}
+      |> ChallengeOwner.changeset(%{
+        user_id: user.id,
+        challenge_id: changes.challenge.id
+      })
+      |> Repo.insert()
+
+      # else
+      # {:ok, user}
+      # end
     end)
   end
 
@@ -931,6 +933,16 @@ defmodule ChallengeGov.Challenges do
       |> Mailer.deliver_later()
     end)
   end
+
+  defp maybe_send_submission_confirmation(challenge, action) when action === "submit" do
+    Enum.map(challenge.challenge_owner_users, fn owner ->
+      owner
+      |> Emails.challenge_submission(challenge)
+      |> Mailer.deliver_later()
+    end)
+  end
+
+  defp maybe_send_submission_confirmation(_challenge, _action), do: nil
 
   # BOOKMARK: Security log functions
   defp add_to_security_log_multi(multi, user, type, remote_ip, details \\ nil) do
