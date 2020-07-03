@@ -125,7 +125,7 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def create(%{"action" => action, "challenge" => challenge_params}, user, remote_ip) do
+  def create(%{"action" => action, "challenge" => challenge_params}, user, remote_ip \\ nil) do
     challenge_params =
       challenge_params
       |> check_non_federal_partners
@@ -163,6 +163,8 @@ defmodule ChallengeGov.Challenges do
     |> challenge_form_preload()
     |> Challenge.update_changeset(%{})
   end
+
+  def update(challenge, params, user, remote_ip \\ nil)
 
   def update(challenge, %{"action" => action, "challenge" => challenge_params}, user, remote_ip) do
     section = Map.get(challenge_params, "section")

@@ -7,6 +7,7 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
   alias ChallengeGov.Repo
 
   alias ChallengeGov.TestHelpers
+  alias ChallengeGov.TestHelpers.AgencyHelpers
 
   defp default_attributes(attributes) do
     Map.merge(
@@ -15,6 +16,17 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
         tagline: "Test tagline",
         brief_description: "Test brief description",
         description: "Test desription for a challenge",
+        terms_and_conditions: "Test terms",
+        terms_equal_rules: false,
+        eligibility_requirements: "Test eligibility",
+        rules: "Test rules",
+        legal_authority: "Test legal authority",
+        prize_type: "both",
+        challenge_manager: "Test challenge manager",
+        challenge_manager_email: "test@example.com",
+        poc_email: "test_poc@example.com",
+        agency_id: AgencyHelpers.create_agency().id,
+        fiscal_year: "FY20",
         status: "published",
         auto_publish_date: Timex.shift(Timex.now(), hours: 1)
       },
@@ -22,17 +34,26 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
     )
   end
 
-  def create_challenge(attributes \\ %{}) do
+  def create_challenge(attributes \\ %{}, user \\ nil) do
     {:ok, challenge} =
       %Challenges.Challenge{}
       |> Challenges.Challenge.changeset(default_attributes(attributes))
       |> Repo.insert()
 
+    if !is_nil(user) do
+      %Challenges.ChallengeOwner{}
+      |> Challenges.ChallengeOwner.changeset(%{
+        user_id: user.id,
+        challenge_id: challenge.id
+      })
+      |> Repo.insert()
+    end
+
     Repo.preload(challenge, [:agency])
   end
 
   def create_single_phase_challenge(user, attributes \\ %{}) do
-    challenge = create_challenge(attributes)
+    challenge = create_challenge(attributes, user)
 
     {:ok, challenge} =
       Challenges.update(
@@ -60,7 +81,7 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
   end
 
   def create_multi_phase_challenge(user, attributes \\ %{}) do
-    challenge = create_challenge(attributes)
+    challenge = create_challenge(attributes, user)
 
     {:ok, challenge} =
       Challenges.update(
