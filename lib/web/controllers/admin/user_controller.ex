@@ -1,4 +1,4 @@
-defmodule Web.UserController do
+defmodule Web.Admin.UserController do
   use Web, :controller
 
   alias ChallengeGov.Accounts
@@ -6,8 +6,6 @@ defmodule Web.UserController do
   alias ChallengeGov.Challenges
   alias ChallengeGov.Security
 
-  plug(Web.Plugs.EnsureRole, [:super_admin, :admin] when action in [:index, :show])
-  plug(Web.Plugs.EnsureRole, :super_admin when action not in [:index, :show])
   plug(Web.Plugs.FetchPage when action in [:index, :create])
 
   def index(conn, params) do
@@ -49,14 +47,14 @@ defmodule Web.UserController do
          {:ok, _} <- Accounts.create(user_params, originator, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "User has been added!")
-      |> redirect(to: Routes.user_path(conn, :index))
+      |> redirect(to: Routes.admin_user_path(conn, :index))
     else
       {:ok, user} ->
         {:ok, user}
 
         conn
         |> put_flash(:error, "A user with that email already exists")
-        |> redirect(to: Routes.user_path(conn, :index))
+        |> redirect(to: Routes.admin_user_path(conn, :index))
 
       {:error, changeset} ->
         %{current_user: current_user} = conn.assigns
@@ -160,12 +158,12 @@ defmodule Web.UserController do
          {:ok, user} <- Accounts.activate(user, originator, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "User activated")
-      |> redirect(to: Routes.user_path(conn, :show, user.id))
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
     else
       {:error, :certification_required, user} ->
         conn
         |> put_flash(:error, "User not activated, certification renewal is required")
-        |> redirect(to: Routes.user_path(conn, :show, user.id))
+        |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
     end
   end
 
@@ -177,7 +175,7 @@ defmodule Web.UserController do
            Accounts.manually_recertify_user(user, originator, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "User recertified")
-      |> redirect(to: Routes.user_path(conn, :show, user.id))
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
     end
   end
 
@@ -188,7 +186,7 @@ defmodule Web.UserController do
          {:ok, user} <- Accounts.suspend(user, originator, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "User suspended")
-      |> redirect(to: Routes.user_path(conn, :show, user.id))
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
     end
   end
 
@@ -199,7 +197,7 @@ defmodule Web.UserController do
          {:ok, user} <- Accounts.revoke(user, originator, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "User revoked")
-      |> redirect(to: Routes.user_path(conn, :show, user.id))
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
     end
   end
 
@@ -209,7 +207,7 @@ defmodule Web.UserController do
          _ <- Challenges.restore_access(user, challenge) do
       conn
       |> put_flash(:info, "Challenge access restored")
-      |> redirect(to: Routes.user_path(conn, :show, user.id))
+      |> redirect(to: Routes.admin_user_path(conn, :show, user.id))
     end
   end
 end

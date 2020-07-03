@@ -40,7 +40,7 @@ defmodule ChallengeGov.CertificationLogs do
     })
   end
 
-  def check_for_expired_certifications do
+  def check_all_for_expired_certifications do
     two_days_ago = Timex.shift(Timex.now(), days: -2)
 
     # get records where user is not decertified and expiry is past now
@@ -51,6 +51,8 @@ defmodule ChallengeGov.CertificationLogs do
         [r, user],
         r.user_id == user.id and
           user.status != "decertified" and
+          user.status != "suspended" and
+          user.status != "revoked" and
           user.role != "solver"
       )
       |> where([r], is_nil(r.requested_at))

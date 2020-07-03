@@ -628,6 +628,35 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Activate a suspended user. Check certification, change status
+  """
+  def activate(user = %{status: "suspended"}, originator, remote_ip) do
+    case CertificationLogs.get_current_certification(user) do
+      {:ok, certification} ->
+        # could return empty map for a solver
+        if certification != %{} and
+             Timex.to_unix(certification.expires_at) < Timex.to_unix(Timex.now()) do
+          {:ok, decertified_user} = decertify(user)
+          {:error, :certification_required, decertified_user}
+        else
+          activate(user, user.status, originator, remote_ip)
+        end
+
+      {:error, :no_log_found} ->
+        activate(user, user.status, originator, remote_ip)
+    end
+  end
+
+  @doc """
+  Activate a revoked user. Renew certification, change status, allow login
+  """
+  def activate(user = %{status: "revoked"}, originator, remote_ip) do
+    if user.role != "solver",
+      do: manually_recertify_user(user, originator, remote_ip),
+      else: activate(user, user.status, originator, remote_ip)
+  end
+
+  @doc """
   Activate a user. Change status, allows login
   """
   def activate(user, originator, remote_ip) do
@@ -855,8 +884,45 @@ defmodule ChallengeGov.Accounts do
         revoke_challenge_ownership(user)
         {:ok, user}
 
-      {:error, _type, changeset, _changes} ->
-        {:error, changeset}
+      {:error, _type, _changeset, _changes} ->
+        {:error, :not_decertified}
+    end
+  end
+
+  def manually_recertify_user(user, approver, approver_remote_ip) do
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.run(:user, fn _repo, _changes ->
+        activate(user, user.status, approver, approver_remote_ip)
+      end)
+      |> Ecto.Multi.run(:renew_terms, fn _repo, _changes ->
+        __MODULE__.update(user, get_recertify_update_params(user))
+      end)
+      |> Ecto.Multi.run(:certification_record, fn _repo, _changes ->
+        CertificationLogs.certify_user_with_approver(user, approver, approver_remote_ip)
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{user: user}} ->
+        {:ok, user}
+
+      {:error, _type, _changeset, _changes} ->
+        {:error, :not_recertified}
+    end
+  end
+
+  defp get_recertify_update_params(user) do
+    case user.renewal_request == "certification" do
+      true ->
+        %{
+          "terms_of_use" => nil,
+          "privacy_guidelines" => nil,
+          "renewal_request" => nil
+        }
+
+      false ->
+        %{"terms_of_use" => nil, "privacy_guidelines" => nil}
     end
   end
 

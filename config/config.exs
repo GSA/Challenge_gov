@@ -48,7 +48,7 @@ config :challenge_gov, ChallengeGov.Scheduler,
     {"0 5 * * *", {ChallengeGov.Accounts, :check_all_last_actives, []}},
     {"0 5 * * *", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
     {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}},
-    {"0 0 * * *", {ChallengeGov.CertificationLogs, :check_for_expired_certifications, []}}
+    {"0 0 * * *", {ChallengeGov.CertificationLogs, :check_all_for_expired_certifications, []}}
   ]
 
 # Import environment specific config. This must remain at the bottom
