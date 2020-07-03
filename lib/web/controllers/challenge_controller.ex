@@ -204,8 +204,22 @@ defmodule Web.ChallengeController do
 
         "submit" ->
           conn
-          |> put_flash(:info, "Challenge submitted")
-          |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
+          |> put_flash(
+            :info,
+            [
+              "Your challenge was submitted on ",
+              Phoenix.HTML.Tag.content_tag(:span, "", class: "js-current-local-date"),
+              " at ",
+              Phoenix.HTML.Tag.content_tag(:span, "", class: "js-current-local-time"),
+              ". Next, a GSA Admin will review your challenge to approve or post comments with questions for you to respond to before publishing. If you have any questions or concerns, please contact a GSA Admin (",
+              Phoenix.HTML.Tag.content_tag(:a, "team@challenge.gov",
+                href: "mailto: team@challenge.gov",
+                target: "_blank"
+              ),
+              ") with your question and Challenge ID number."
+            ]
+          )
+          |> redirect(to: Routes.challenge_path(conn, :index))
 
         _ ->
           if to_section do
