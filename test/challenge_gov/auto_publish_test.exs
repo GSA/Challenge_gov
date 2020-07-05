@@ -3,6 +3,7 @@ defmodule ChallengeGov.AutoPublishTest do
   use Bamboo.Test
 
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Emails
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
 
@@ -17,10 +18,22 @@ defmodule ChallengeGov.AutoPublishTest do
   describe "publish all challenges ready to be published and send emails" do
     test "successfully" do
       setup_challenges()
+      challenges_for_publish = Challenges.all_ready_for_publish()
+
       assert length(Challenges.all_unpaginated(%{filter: %{"status" => "published"}})) === 2
       assert length(Challenges.all_ready_for_publish()) === 2
+
       Challenges.check_for_auto_publish()
+
       assert length(Challenges.all_unpaginated(%{filter: %{"status" => "published"}})) === 4
+
+      Enum.map(challenges_for_publish, fn challenge ->
+        {:ok, challenge} = Challenges.get(challenge.id)
+
+        Enum.map(challenge.challenge_owner_users, fn owner ->
+          assert_delivered_email(Emails.challenge_auto_published(owner, challenge))
+        end)
+      end)
     end
   end
 

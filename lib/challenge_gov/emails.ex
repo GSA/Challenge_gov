@@ -32,6 +32,14 @@ defmodule ChallengeGov.Emails do
     |> render("challenge_submission.html")
   end
 
+  def challenge_auto_published(user, challenge) do
+    base_email()
+    |> to(user.email)
+    |> subject("Challenge.gov - Your challenge has been auto published")
+    |> assign(:challenge, challenge)
+    |> render("challenge_auto_publish.html")
+  end
+
   def new_solution_submission(user, solution) do
     base_email()
     |> to(user.email)

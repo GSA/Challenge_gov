@@ -1017,8 +1017,27 @@ defmodule ChallengeGov.Challenges do
       challenge
       |> Challenge.publish_changeset()
       |> Repo.update()
+      |> email_challenge_owners("challenge_auto_publish")
     end)
   end
+
+  defp email_challenge_owners({:ok, challenge}, template) do
+    challenge = Repo.preload(challenge, [:challenge_owner_users])
+
+    Enum.map(challenge.challenge_owner_users, fn owner ->
+      case template do
+        "challenge_auto_publish" ->
+          owner
+          |> Emails.challenge_auto_published(challenge)
+          |> Mailer.deliver_later()
+
+        _ ->
+          nil
+      end
+    end)
+  end
+
+  defp email_challenge_owners(_, _), do: nil
 
   # BOOKMARK: Filter functions
   @impl true
