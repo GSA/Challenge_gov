@@ -278,6 +278,15 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  def all_unpaginated(opts \\ []) do
+    Challenge
+    |> preload([:agency, :user])
+    |> where([c], is_nil(c.deleted_at))
+    |> order_by([c], asc: c.end_date, asc: c.id)
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.all()
+  end
+
   # BOOKMARK: Querying functions 
   @doc """
   Get all challenges
@@ -303,6 +312,16 @@ defmodule ChallengeGov.Challenges do
     |> where([c], is_nil(c.deleted_at))
     |> where([c], c.status == "published" or c.status == "archived")
     |> order_by([c], asc: c.end_date, asc: c.id)
+    |> Repo.all()
+  end
+
+  def all_ready_for_publish() do
+    now = DateTime.utc_now()
+
+    Challenge
+    |> where([c], is_nil(c.deleted_at))
+    |> where([c], c.status == "approved")
+    |> where([c], fragment("? <= ?", c.auto_publish_date, ^now))
     |> Repo.all()
   end
 
@@ -996,6 +1015,34 @@ defmodule ChallengeGov.Challenges do
     |> Ecto.Changeset.put_change(:resource_banner_extension, nil)
     |> Repo.update()
   end
+
+  # BOOKMARK: Recurring tasks
+  def check_for_auto_publish do
+    Enum.map(all_ready_for_publish(), fn challenge ->
+      challenge
+      |> Challenge.publish_changeset()
+      |> Repo.update()
+      |> email_challenge_owners("challenge_auto_publish")
+    end)
+  end
+
+  defp email_challenge_owners({:ok, challenge}, template) do
+    challenge = Repo.preload(challenge, [:challenge_owner_users])
+
+    Enum.map(challenge.challenge_owner_users, fn owner ->
+      case template do
+        "challenge_auto_publish" ->
+          owner
+          |> Emails.challenge_auto_published(challenge)
+          |> Mailer.deliver_later()
+
+        _ ->
+          nil
+      end
+    end)
+  end
+
+  defp email_challenge_owners(_, _), do: nil
 
   # BOOKMARK: Filter functions
   @impl true

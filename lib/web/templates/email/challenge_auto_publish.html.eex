@@ -1,0 +1,1 @@
+<div>Your challenge was auto published <%= @challenge.published_on %>. If you have any questions or concerns, please contact a GSA Admin (team@challenge.gov) with your question and Challenge ID number <%= @challenge.id %>.</div>

@@ -18,7 +18,7 @@ config :challenge_gov, ChallengeGov.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :challenge_gov, ChallengeGov.Mailer,
-  from: "idea-portal@example.com",
+  from: "challenge_gov@example.com",
   adapter: Bamboo.TestAdapter
 
 config :bcrypt_elixir, :log_rounds, 4
