@@ -1,0 +1,1 @@
+<div>Your challenge was submitted <%= @challenge.updated_at %>. Next, a GSA Admin will review your challenge to approve or post comments with questions for you to respond to before publishing. If you have any questions or concerns, please contact a GSA Admin (team@challenge.gov) with your question and Challenge ID number <%= @challenge.id %>.</div>

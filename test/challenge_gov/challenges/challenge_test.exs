@@ -3,8 +3,29 @@ defmodule ChallengeGov.ChallengeTest do
   use Bamboo.Test
 
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Emails
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
+
+  describe "submit challenge" do
+    test "successfully" do
+      user = AccountHelpers.create_user()
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(user, %{
+          user_id: user.id,
+          status: "draft",
+          challenge_owners: [user.id]
+        })
+
+      params = %{"action" => "submit", "challenge" => %{"section" => "review"}}
+
+      {:ok, challenge} = Challenges.update(challenge, params, user)
+
+      assert challenge.status === "gsa_review"
+      assert_delivered_email(Emails.challenge_submission(user, challenge))
+    end
+  end
 
   describe "find start date" do
     test "successfully from single phase" do

@@ -1,1 +1,2 @@
-$("#local-timezone-input").val(Intl.DateTimeFormat().resolvedOptions().timeZone)
+let localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+$("#local-timezone-input").val(localTimezone)

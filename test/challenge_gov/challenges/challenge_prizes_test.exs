@@ -116,6 +116,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
           %{
             "action" => "next",
             "challenge" => %{
+              "prize_type" => nil,
               "section" => "prizes"
             }
           },

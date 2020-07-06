@@ -10,7 +10,7 @@
             </table>
           </div>
 
-          <%= Web.SharedView.pagination(path: Routes.challenge_path(@conn, :index, filter: @filter, sort: @sort), pagination: @pagination, pagination_param: "pending") %>
+          <%= Web.SharedView.pagination(path: Routes.challenge_path(@conn, :index, filter: @filter, sort: @sort), pagination: @pagination) %>
         </div>
       </div>
     </div>

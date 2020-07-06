@@ -37,7 +37,15 @@ defmodule ChallengeGov.ChallengeRulesTest do
 
     test "successfully save as draft missing data" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          eligibility_requirements: nil,
+          rules: nil,
+          terms_and_conditions: nil,
+          legal_authority: nil
+        })
 
       {:ok, updated_challenge} =
         Challenges.update(
@@ -68,7 +76,12 @@ defmodule ChallengeGov.ChallengeRulesTest do
           %{
             "action" => "next",
             "challenge" => %{
-              "section" => "rules"
+              "section" => "rules",
+              "terms_equal_rules" => nil,
+              "eligibility_requirements" => nil,
+              "rules" => nil,
+              "terms_and_conditions" => nil,
+              "legal_authority" => nil
             }
           },
           user,
@@ -125,7 +138,8 @@ defmodule ChallengeGov.ChallengeRulesTest do
               "terms_equal_rules" => "false",
               "eligibility_requirements" => "Test eligibility",
               "rules" => "Test rules",
-              "legal_authority" => "Test legal authority"
+              "legal_authority" => "Test legal authority",
+              "terms_and_conditions" => nil
             }
           },
           user,

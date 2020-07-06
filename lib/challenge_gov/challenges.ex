@@ -125,7 +125,7 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def create(%{"action" => action, "challenge" => challenge_params}, user, remote_ip) do
+  def create(%{"action" => action, "challenge" => challenge_params}, user, remote_ip \\ nil) do
     challenge_params =
       challenge_params
       |> check_non_federal_partners
@@ -164,6 +164,8 @@ defmodule ChallengeGov.Challenges do
     |> Challenge.update_changeset(%{})
   end
 
+  def update(challenge, params, user, remote_ip \\ nil)
+
   def update(challenge, %{"action" => action, "challenge" => challenge_params}, user, remote_ip) do
     section = Map.get(challenge_params, "section")
 
@@ -188,6 +190,7 @@ defmodule ChallengeGov.Challenges do
 
     case result do
       {:ok, %{challenge: challenge}} ->
+        maybe_send_submission_confirmation(challenge, action)
         {:ok, challenge}
 
       {:error, _type, changeset, _changes} ->
@@ -517,16 +520,12 @@ defmodule ChallengeGov.Challenges do
   # Attach challenge owners functions
   defp attach_initial_owner(multi, user) do
     Ecto.Multi.run(multi, {:user, user.id}, fn _repo, changes ->
-      if user.role == "challenge_owner" do
-        %ChallengeOwner{}
-        |> ChallengeOwner.changeset(%{
-          user_id: user.id,
-          challenge_id: changes.challenge.id
-        })
-        |> Repo.insert()
-      else
-        {:ok, user}
-      end
+      %ChallengeOwner{}
+      |> ChallengeOwner.changeset(%{
+        user_id: user.id,
+        challenge_id: changes.challenge.id
+      })
+      |> Repo.insert()
     end)
   end
 
@@ -941,6 +940,16 @@ defmodule ChallengeGov.Challenges do
       |> Mailer.deliver_later()
     end)
   end
+
+  defp maybe_send_submission_confirmation(challenge, action) when action === "submit" do
+    Enum.map(challenge.challenge_owner_users, fn owner ->
+      owner
+      |> Emails.challenge_submission(challenge)
+      |> Mailer.deliver_later()
+    end)
+  end
+
+  defp maybe_send_submission_confirmation(_challenge, _action), do: nil
 
   # BOOKMARK: Security log functions
   defp add_to_security_log_multi(multi, user, type, remote_ip, details \\ nil) do
