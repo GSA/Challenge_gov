@@ -437,15 +437,12 @@ defmodule ChallengeGov.Challenges.Challenge do
       :tagline,
       :description,
       :brief_description,
-      :start_date,
-      :end_date,
       :auto_publish_date
     ])
     |> foreign_key_constraint(:agency)
     |> unique_constraint(:custom_url, name: "challenges_custom_url_index")
     |> validate_inclusion(:status, status_ids())
     |> validate_auto_publish_date(params)
-    |> validate_start_and_end_dates(params)
   end
 
   def update_changeset(struct, params) do
@@ -463,15 +460,12 @@ defmodule ChallengeGov.Challenges.Challenge do
       :tagline,
       :description,
       :brief_description,
-      :start_date,
-      :end_date,
       :auto_publish_date
     ])
     |> foreign_key_constraint(:agency)
     |> unique_constraint(:custom_url, name: "challenges_custom_url_index")
     |> validate_inclusion(:status, status_ids())
     |> validate_auto_publish_date(params)
-    |> validate_start_and_end_dates(params)
   end
 
   # to allow change to admin info?
@@ -564,21 +558,21 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   defp validate_logo(struct, _params), do: struct
 
-  defp validate_start_and_end_dates(struct, params) do
-    with {:ok, start_date} <- Map.fetch(params, "start_date"),
-         {:ok, end_date} <- Map.fetch(params, "end_date"),
-         {:ok, start_date} <- Timex.parse(start_date, "{ISO:Extended}"),
-         {:ok, end_date} <- Timex.parse(end_date, "{ISO:Extended}"),
-         1 <- Timex.compare(end_date, start_date) do
-      struct
-    else
-      tc when tc == -1 or tc == 0 ->
-        add_error(struct, :end_date, "must come after start date")
+  # defp validate_start_and_end_dates(struct, params) do
+  #   with {:ok, start_date} <- Map.fetch(params, "start_date"),
+  #        {:ok, end_date} <- Map.fetch(params, "end_date"),
+  #        {:ok, start_date} <- Timex.parse(start_date, "{ISO:Extended}"),
+  #        {:ok, end_date} <- Timex.parse(end_date, "{ISO:Extended}"),
+  #        1 <- Timex.compare(end_date, start_date) do
+  #     struct
+  #   else
+  #     tc when tc == -1 or tc == 0 ->
+  #       add_error(struct, :end_date, "must come after start date")
 
-      _ ->
-        add_error(struct, :start_and_end_date, "start and end date are required")
-    end
-  end
+  #     _ ->
+  #       add_error(struct, :start_and_end_date, "start and end date are required")
+  #   end
+  # end
 
   defp validate_auto_publish_date(struct, %{"auto_publish_date" => date}) when not is_nil(date) do
     {:ok, date} = Timex.parse(date, "{ISO:Extended}")
