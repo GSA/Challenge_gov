@@ -28,6 +28,7 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
         agency_id: AgencyHelpers.create_agency().id,
         fiscal_year: "FY20",
         status: "published",
+        primary_type: Enum.at(Challenges.challenge_types(), 0),
         auto_publish_date: Timex.shift(Timex.now(), hours: 1)
       },
       attributes

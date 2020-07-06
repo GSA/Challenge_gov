@@ -7,7 +7,43 @@
 
 <%= FormView.text_field(@form, :title, label: "Challenge title", required: true) %>
 <%= FormView.text_field(@form, :tagline, label: "Tagline (help text: Appears on challenge tiles)", limit: 90, required: true) %>
-<%= FormView.multiselect_field(@form, :types, collection: Challenges.challenge_types(), selected: @changeset.data.types, label: "Challenge type", required: true) %>
+
+<hr/>
+
+<%= FormView.select_field(@form, :primary_type, collection: Challenges.challenge_types(), class: "js-challenge-type", label: "Primary challenge type ", prompt: "", required: true) %>
+<div class="<%= FormView.form_group_classes(@form, :types) %>">
+  <label for="challenge_types" class="col">Additional challenge type (optional)</label>
+  <div class="col">
+    <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
+      <option></option>
+      <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 0)) %>
+    </select>
+    <%= error_tag(@form, :types) %>
+  </div>
+</div>
+<div class="<%= FormView.form_group_classes(@form, :types) %>">
+  <label for="challenge_types" class="col">Additional challenge type (optional)</label>
+  <div class="col">
+    <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
+      <option></option>
+      <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 1)) %>
+    </select>
+    <%= error_tag(@form, :types) %>
+  </div>
+</div>
+<div class="<%= FormView.form_group_classes(@form, :types) %>">
+  <label for="challenge_types" class="col">Additional challenge type (optional)</label>
+  <div class="col">
+    <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
+      <option></option>
+      <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 2)) %>
+    </select>
+    <%= error_tag(@form, :types) %>
+  </div>
+</div>
+<%= FormView.text_field(@form, :other_type, label: "Other challenge type (optional)", limit: 45, required: true) %>
+
+<hr/>
 
 <div class="form-group">
   <%= label @form, :custom_url, "Custom url (optional)", class: "col-md-4" %>

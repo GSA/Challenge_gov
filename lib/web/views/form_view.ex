@@ -187,7 +187,7 @@ defmodule Web.FormView do
               form,
               field,
               opts[:collection],
-              Keyword.merge([class: "js-select #{classes}"], select_opts)
+              Keyword.merge([class: "js-select #{opts[:class]} #{classes}"], select_opts)
             ),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
