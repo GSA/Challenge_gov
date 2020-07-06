@@ -10,11 +10,11 @@
 
 <hr/>
 
-<%= FormView.select_field(@form, :primary_type, collection: Challenges.challenge_types(), label: "Primary challenge type ", prompt: "", required: true) %>
+<%= FormView.select_field(@form, :primary_type, collection: Challenges.challenge_types(), class: "js-challenge-type", label: "Primary challenge type ", prompt: "", required: true) %>
 <div class="<%= FormView.form_group_classes(@form, :types) %>">
   <label for="challenge_types" class="col">Additional challenge type (optional)</label>
   <div class="col">
-    <select id="challenge_types" class="js-select <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
+    <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
       <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 0)) %>
     </select>
@@ -24,7 +24,7 @@
 <div class="<%= FormView.form_group_classes(@form, :types) %>">
   <label for="challenge_types" class="col">Additional challenge type (optional)</label>
   <div class="col">
-    <select id="challenge_types" class="js-select <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
+    <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
       <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 1)) %>
     </select>
@@ -34,7 +34,7 @@
 <div class="<%= FormView.form_group_classes(@form, :types) %>">
   <label for="challenge_types" class="col">Additional challenge type (optional)</label>
   <div class="col">
-    <select id="challenge_types" class="js-select <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
+    <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
       <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 2)) %>
     </select>
