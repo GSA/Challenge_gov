@@ -15,7 +15,9 @@ NimbleCSV.define(ChallengeGov.CSVParser, separator: ",", escape: "\"")
 alias ChallengeGov.Accounts
 alias ChallengeGov.Agencies
 alias ChallengeGov.CertificationLogs
+alias ChallengeGov.Challenges.Challenge
 alias ChallengeGov.CSVParser
+alias ChallengeGov.Repo
 
 defmodule Helpers do
   def create_super_admin(nil, nil, nil) do
@@ -162,6 +164,18 @@ defmodule Helpers do
   end
 
   defp maybe_import_agency(name, acronym, parent_agency), do: {:error, :no_name}
+
+  def set_initial_challenge_uuids do
+    Challenge
+    |> Repo.all()
+    |> Enum.map(fn challenge ->
+      if is_nil(challenge.uuid) do
+        challenge
+        |> Ecto.Changeset.change(%{uuid: Ecto.UUID.generate()})
+        |> Repo.update()
+      end
+    end)
+  end
 end
 
 defmodule Seeds do
@@ -181,6 +195,7 @@ defmodule Seeds do
     import_agencies_csv("priv/repo/agencies_updated.csv")
 
     # import_agencies_api("https://usagov.platform.gsa.gov/usaapi/api/v1/usagov/directory_records/federal.json")
+    set_initial_challenge_uuids()
   end
 end
 
