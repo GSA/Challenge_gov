@@ -203,7 +203,7 @@ defmodule ChallengeGov.Challenges do
   """
   def update(challenge, params, current_user, remote_ip) do
     # TODO: Refactor the current_user permissions checking for updating challenge owner
-    challenge = Repo.preload(challenge, [:non_federal_partners, :events])
+    challenge = challenge_form_preload(challenge)
 
     params =
       params

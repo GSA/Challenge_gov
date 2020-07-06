@@ -28,21 +28,59 @@
             <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), class: "form-control js-select") %>
           </div>
         </div>
-        <!-- agency logo? -->
-        <div class="<%= FormView.form_group_classes(f, :federal_partners) %>">
-          <%= label(f, :federal_partners, class: "col-md-4") do %>
-            Federal Partner Agency
-          <% end %>
-          <div class="col-md-8">
-            <%= multiple_select(f, :federal_partners, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), selected: Enum.map(@changeset.data.federal_partner_agencies, &(&1.id)), class: "form-control js-multiselect") %>
-          </div>
+
+        <%= FormView.select_field(f, :agency_id, collection: Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), label: "Lead agency name", prompt: "Choose an agency", required: true) %>
+        <%= FormView.select_field(f, :sub_agency_id, collection: Enum.map(f.data.agency.sub_agencies, &{&1.name, &1.id}), label: "Sub-agency name (optional)", prompt: "Choose a sub-agency") %>
+        <hr/>
+        <div class="form-group">
+          <h4>Federal Partners</h4>
+          <br/>
+          <%= render Web.ChallengeView, "dynamic_fields/_federal_partners.html", form: f %>
         </div>
+        <hr/>
 
         <h4>Non Federal Partners</h4>
         <br/>
         <%= FormView.dynamic_nested_fields(f, :non_federal_partners, [:name]) %>
 
         <br/>
+
+        <hr/>
+
+        <%= FormView.select_field(f, :primary_type, collection: Challenges.challenge_types(), class: "js-challenge-type", label: "Primary challenge type ", prompt: "", required: true) %>
+        <div class="<%= FormView.form_group_classes(f, :types) %>">
+          <label for="challenge_types" class="col">Additional challenge type (optional)</label>
+          <div class="col">
+            <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(f, :types) %>" name="challenge[types][]">
+              <option></option>
+              <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 0)) %>
+            </select>
+            <%= error_tag(f, :types) %>
+          </div>
+        </div>
+        <div class="<%= FormView.form_group_classes(f, :types) %>">
+          <label for="challenge_types" class="col">Additional challenge type (optional)</label>
+          <div class="col">
+            <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(f, :types) %>" name="challenge[types][]">
+              <option></option>
+              <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 1)) %>
+            </select>
+            <%= error_tag(f, :types) %>
+          </div>
+        </div>
+        <div class="<%= FormView.form_group_classes(f, :types) %>">
+          <label for="challenge_types" class="col">Additional challenge type (optional)</label>
+          <div class="col">
+            <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(f, :types) %>" name="challenge[types][]">
+              <option></option>
+              <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 2)) %>
+            </select>
+            <%= error_tag(f, :types) %>
+          </div>
+        </div>
+        <%= FormView.text_field(f, :other_type, label: "Other challenge type (optional)", limit: 45, required: true) %>
+
+        <hr/>
 
         <h4>Events</h4>
         <br/>
@@ -56,15 +94,7 @@
         <%= FormView.text_field(f, :custom_url, label: "Custom URL") %>
         <%= FormView.text_field(f, :external_url, label: "External Challenge URL") %>
         <%= FormView.text_field(f, :tagline, label: "Challenge Tagline") %>
-        <!-- Challenge Tile Image (req)-->
-        <div class="<%= FormView.form_group_classes(f, :type) %>">
-          <%= label(f, :type, class: "col-md-4") do %>
-          Challenge Type <span class="required">*</span>
-          <% end %>
-          <div class="col-md-8">
-            <%= multiple_select(f, :types, Challenges.challenge_types(), selected: @changeset.data.types, class: "form-control js-multiselect") %>
-          </div>
-        </div>
+
         <%= FormView.textarea_field(f, :description, label: "Challenge Description", rows: 5, required: true) %>
         <!-- Upload Additional Description Materials -->
         <!-- character limit for below: 400 -->
@@ -73,27 +103,6 @@
         <%= FormView.text_field(f, :fiscal_year, label: "Fiscal Year of Challenge Launch", required: true) do %>
           <span class="help-block">Format <code>FY99</code></span>
         <% end %>
-
-        <div class="form-group">
-          <%= datetime_local_input(f, :start_date, label: "Start date", 
-            class: Enum.join([FormView.form_control_classes(f, :start_date), "js-datetime-input"], " "), 
-            required: true
-          )%>
-          <%= hidden_input(f, :start_date, label: "Start date") %>
-          <%= error_tag(f, :start_date) %>
-        </div>
-        <br/>
-
-        <div class="form-group">
-          <%= datetime_local_input(f, :end_date, label: "End date", 
-            class: Enum.join([FormView.form_control_classes(f, :end_date), "js-datetime-input"], " "), 
-            required: true
-          )%>
-          <%= hidden_input(f, :end_date, label: "End date") %>
-          <%= error_tag(f, :end_date) %>
-          <%= error_tag(f, :start_and_end_date) %>
-        </div>
-        <br/>
 
         <div class="form-group">
           <%= datetime_local_input(f, :auto_publish_date, label: "Publish date", 
@@ -116,10 +125,6 @@
             <%= label f, :no %>
           </div>
         </div>
-        <!-- if yes, following 3 appear: -->
-        <%= FormView.text_field(f, :number_of_phases, label: "Number of Phases") %>
-        <%= FormView.textarea_field(f, :phase_descriptions, label: "Phase Descriptions", rows: 5) %>
-        <%= FormView.textarea_field(f, :phase_dates, label: "Phase Dates", rows: 5) %>
         <!-- Important Dates (default timeline only), add another button-->
         <div class="<%= FormView.form_group_classes(f, :important_date) %>">
           <%= label(f, :important_date, class: "col-md-4") do %>
