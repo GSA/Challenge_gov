@@ -10,10 +10,13 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
+NimbleCSV.define(ChallengeGov.CSVParser, separator: ",", escape: "\"")
+
 alias ChallengeGov.Accounts
 alias ChallengeGov.Agencies
 alias ChallengeGov.CertificationLogs
 alias ChallengeGov.Challenges.Challenge
+alias ChallengeGov.CSVParser
 alias ChallengeGov.Repo
 
 defmodule Helpers do
@@ -73,6 +76,95 @@ defmodule Helpers do
     end)
   end
 
+  def import_agencies_api(url) do
+    {:ok, %{body: body, status_code: 200}} = HTTPoison.get(url)
+    data = Jason.decode!(body)
+    count = data["metadata"]["count"]
+
+    {:ok, %{body: body, status_code: 200}} = HTTPoison.get(url <> "?page_size=#{count}")
+    data = Jason.decode!(body)
+
+    num_inserted = 0
+    agencies_to_insert = []
+
+    Enum.each(data["results"], fn agency ->
+      api_id = agency["id"]
+      title = agency["title"]
+      parent = Enum.at(agency["parent"], 0)
+      parent_id = String.to_integer(parent["id"])
+
+      case Agencies.get_by_name(title) do
+        {:error, :not_found} ->
+          agencies_to_insert ++
+            [
+              name: title,
+              api_id: api_id,
+              parent_id: parent_id
+            ]
+
+          # Agencies.create(%{
+          #   name: title,
+          #   api_id: api_id,
+          #   parent_id: parent_id
+          # })
+          num_inserted = num_inserted + 1
+
+        _ ->
+          nil
+      end
+    end)
+
+    IO.puts("Inserted #{num_inserted} agencies")
+  end
+
+  def import_agencies_csv(file) do
+    Mix.Task.run("app.start")
+
+    {:ok, binary} = File.read(file)
+    parsed = CSVParser.parse_string(binary)
+
+    Enum.map(parsed, fn row ->
+      [acronym, top_agency_name, sub_agency_name] = row
+
+      {:ok, top_agency} = maybe_import_agency(top_agency_name, acronym)
+      maybe_import_agency(sub_agency_name, acronym, top_agency)
+    end)
+  end
+
+  defp maybe_import_agency(name, acronym) when name !== "" do
+    case Agencies.get_by_name(name) do
+      {:error, :not_found} ->
+        IO.puts("Imported #{name}")
+
+        Agencies.create(%{
+          acronym: acronym,
+          name: name
+        })
+
+      {:ok, agency} ->
+        {:ok, agency}
+    end
+  end
+
+  defp maybe_import_agency(name, acronym, parent_agency)
+       when name !== "" and not is_nil(parent_agency) do
+    case Agencies.get_by_name(name) do
+      {:error, :not_found} ->
+        IO.puts("Imported #{name}")
+
+        Agencies.create(%{
+          parent_id: parent_agency.id,
+          acronym: acronym,
+          name: name
+        })
+
+      {:ok, agency} ->
+        {:ok, agency}
+    end
+  end
+
+  defp maybe_import_agency(name, acronym, parent_agency), do: {:error, :no_name}
+
   def set_initial_challenge_uuids do
     Challenge
     |> Repo.all()
@@ -98,6 +190,11 @@ defmodule Seeds do
 
     create_agencies("priv/repo/agencies.txt")
     create_user_certifications()
+    # create_admin("admin@example.com")
+    # create_agencies("priv/repo/agencies.txt")
+    import_agencies_csv("priv/repo/agencies_updated.csv")
+
+    # import_agencies_api("https://usagov.platform.gsa.gov/usaapi/api/v1/usagov/directory_records/federal.json")
     set_initial_challenge_uuids()
   end
 end

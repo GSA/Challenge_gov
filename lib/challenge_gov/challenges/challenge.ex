@@ -92,6 +92,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     # Associations
     belongs_to(:user, User)
     belongs_to(:agency, Agency)
+    belongs_to(:sub_agency, Agency)
     has_many(:events, Event, on_replace: :delete, on_delete: :delete_all)
     has_many(:supporting_documents, Document, on_delete: :delete_all)
     has_many(:challenge_owners, ChallengeOwner, on_delete: :delete_all)
@@ -202,6 +203,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast(params, [
       :user_id,
       :agency_id,
+      :sub_agency_id,
       :status,
       :challenge_manager,
       :challenge_manager_email,
@@ -328,6 +330,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :fiscal_year
     ])
     |> cast_assoc(:non_federal_partners)
+    |> force_change(:fiscal_year, fetch_field!(struct, :fiscal_year))
     |> validate_format(:challenge_manager_email, ~r/.+@.+\..+/)
     |> validate_format(:poc_email, ~r/.+@.+\..+/)
     |> validate_format(:fiscal_year, ~r/\bFY[0-9]{2}\b/)

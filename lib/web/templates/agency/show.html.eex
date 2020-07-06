@@ -40,6 +40,12 @@
               <dd><%= @agency.name %></dd>
               <br/>
 
+              <%= if parent = @agency.parent do %>
+                <dt>Parent Agency</dd>
+                <dd><%= link(parent.name, to: Routes.agency_path(@conn, :show, parent.id)) %></dd>
+                <br/>
+              <% end %>
+
               <dt>Description</dd>
               <dd><%= @agency.description %></dd>
               <br/>

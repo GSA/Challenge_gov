@@ -1,0 +1,63 @@
+<div id="js-federal-partners" class="col">
+  <div class="nested-items col">
+    <%= inputs_for(@form, :federal_partners, [skip_hidden: true], fn fp -> %>
+      <div class="form-collection row mb-3" data-index="<%= fp.index %>">
+        <div class="col-10">
+          <div class="<%= FormView.nested_form_group_classes(@form, :fp, :agency_id, 0) %> row">
+            <div class="col">
+              <%= label fp, :agency_id do %>
+                Lead agency name
+                <span class="required">*</span>
+              <% end %>
+              <%= select fp, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), prompt: "Choose an agency", class: "form-control js-agency-select #{FormView.nested_form_control_classes(@form, :federal_partners, :agency_id, fp.index)}", required: true %>
+              <%= error_tag(fp, :agency_id) %>
+            </div>
+          </div>
+
+          <div class="<%= FormView.nested_form_group_classes(@form, :fp, :sub_agency_id, 0) %> row">
+            <div class="col">
+              <%= label fp, :sub_agency_id, "Sub-agency name (optional)" %>
+              <%= select fp, :sub_agency_id, Enum.map(fp.data.agency.sub_agencies, &{&1.name, &1.id}), prompt: "Choose a sub-agency", class: "form-control js-sub-agency-select #{FormView.nested_form_control_classes(@form, :federal_partners, :sub_agency_id, fp.index)}" %>
+              <%= error_tag(fp, :sub_agency_id) %>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-2">
+          <div class="remove-nested-section btn btn-link">Remove</div>
+        </div>
+      </div>
+    <% end) %>
+  </div>
+
+  <!-- Add new federal partner button -->
+  <div class="add-nested-section btn btn-primary" data-parent="challenge" data-child="federal_partners">Add federal partner</div>
+
+  <!-- Add new federal partner button -->
+  <div class="dynamic-nested-form-template d-none">    
+    <div class="form-collection row mb-3">
+      <div class="col-10">
+        <div class="<%= FormView.nested_form_group_classes(@form, :federal_partners, :agency_id, -1) %> row" data-field="agency_id">
+          <div class="col">
+            <%= label :template, :agency_id, class: "template-label" do %>
+              Lead agency name
+              <span class="required">*</span>
+            <% end %>
+            <%= select(:template, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), prompt: "Choose an agency", class: "form-control js-agency-select template-input") %>
+          </div>
+        </div>
+
+        <div class="<%= FormView.nested_form_group_classes(@form, :federal_partners, :sub_agency_id, -1) %> row" data-field="sub_agency_id">
+          <div class="col">
+            <%= label :template, :sub_agency_id, "Sub-agency name (optional)", class: "template-label" %>
+            <%= select(:template, :sub_agency_id, [], prompt: "Choose a sub-agency", class: "form-control js-sub-agency-select template-input") %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-2">
+        <div class="remove-nested-section btn btn-link">Remove</div>
+      </div>
+    </div>
+  </div>
+</div>

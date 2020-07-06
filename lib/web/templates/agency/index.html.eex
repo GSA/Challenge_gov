@@ -37,6 +37,7 @@
                 <tr>
                   <th>ID</th>
                   <th>Name</th>
+                  <th>Parent Agency</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -45,6 +46,9 @@
                   <tr>
                     <td><%= agency.id %></td>
                     <td><%= link(agency.name, to: Routes.agency_path(@conn, :show, agency.id)) %></td>
+                    <td>
+                      <%= if agency.parent, do: link(agency.parent.name, to: Routes.agency_path(@conn, :show, agency.parent.id)) %>
+                    </td>
                     <td>
                       <%= link("View", to: Routes.agency_path(@conn, :show, agency.id), class: "btn btn-default btn-xs") %>
                       <%= link("Edit", to: Routes.agency_path(@conn, :edit, agency.id), class: "btn btn-default btn-xs") %>

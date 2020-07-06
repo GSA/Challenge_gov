@@ -15,34 +15,48 @@ defmodule ChallengeGov.Agencies.Agency do
 
   schema "agencies" do
     # Associations
+    belongs_to(:parent, __MODULE__)
+    has_many(:sub_agencies, __MODULE__, foreign_key: :parent_id)
     has_many(:federal_partners, FederalPartner)
     has_many(:federal_partner_challenges, through: [:federal_partners, :challenge])
-
-    # Fields
-    field(:name, :string)
-    field(:description, :string)
-    field(:deleted_at, :utc_datetime)
-
-    field(:created_on_import, :boolean)
-
-    field(:avatar_key, Ecto.UUID)
-    field(:avatar_extension, :string)
-
     has_many(:members, Member)
     has_many(:challenges, Challenge)
 
+    # Fields
+    field(:acronym, :string)
+    field(:created_on_import, :boolean)
+    field(:description, :string)
+    field(:deleted_at, :utc_datetime)
+    field(:name, :string)
+
+    # Images
+    field(:avatar_key, Ecto.UUID)
+    field(:avatar_extension, :string)
+
+    # Misc
     timestamps()
   end
 
   def create_changeset(struct, params) do
     struct
-    |> cast(params, [:name, :description, :created_on_import])
+    |> cast(params, [
+      :acronym,
+      :created_on_import,
+      :description,
+      :name,
+      :parent_id
+    ])
     |> validate_required([:name])
   end
 
   def update_changeset(struct, params) do
     struct
-    |> cast(params, [:name, :description])
+    |> cast(params, [
+      :acronym,
+      :description,
+      :name,
+      :parent_id
+    ])
     |> validate_required([:name])
   end
 
