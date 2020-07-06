@@ -105,7 +105,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     embeds_many(:timeline_events, TimelineEvent, on_replace: :delete)
 
     # Array fields. Pseudo associations
+    field(:primary_type, :string)
     field(:types, {:array, :string}, default: [])
+    field(:other_type, :string)
 
     # Images
     field(:logo_key, Ecto.UUID)
@@ -237,7 +239,9 @@ defmodule ChallengeGov.Challenges.Challenge do
       :faq,
       :faq_delta,
       :winner_information,
+      :primary_type,
       :types,
+      :other_type,
       :auto_publish_date,
       :upload_logo,
       :is_multi_phase,
@@ -338,7 +342,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_required([
       :title,
       :tagline,
-      :types,
+      :primary_type,
       :brief_description,
       :description,
       :auto_publish_date,
@@ -348,7 +352,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_length(:tagline, max: 90)
     |> validate_length(:brief_description, max: 200)
     |> validate_length(:description, max: 4000)
-    |> validate_types(params)
+    |> validate_length(:other_type, max: 45)
+    |> validate_inclusion(:primary_type, @challenge_types)
+    |> validate_subset(:types, @challenge_types)
     |> validate_upload_logo(params)
     |> validate_auto_publish_date(params)
     |> validate_custom_url(params)
@@ -531,21 +537,6 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> change()
     |> put_change(:resource_banner_key, key)
     |> put_change(:resource_banner_extension, extension)
-  end
-
-  # Custom validations
-  # TODO: Make this check that the types added are valid
-  defp validate_types(struct, params) do
-    case Map.get(params, "types") do
-      "" ->
-        add_error(struct, :types, "Must choose a challenge type")
-
-      types when is_list(types) ->
-        struct
-
-      _ ->
-        struct
-    end
   end
 
   defp validate_upload_logo(struct, params = %{"upload_logo" => "true"}),
