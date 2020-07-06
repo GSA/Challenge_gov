@@ -510,17 +510,12 @@ defmodule ChallengeGov.Challenges do
   # Attach challenge owners functions
   defp attach_initial_owner(multi, user) do
     Ecto.Multi.run(multi, {:user, user.id}, fn _repo, changes ->
-      # if user.role == "challenge_owner" do
       %ChallengeOwner{}
       |> ChallengeOwner.changeset(%{
         user_id: user.id,
         challenge_id: changes.challenge.id
       })
       |> Repo.insert()
-
-      # else
-      # {:ok, user}
-      # end
     end)
   end
 
