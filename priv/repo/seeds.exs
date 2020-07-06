@@ -13,6 +13,8 @@
 alias ChallengeGov.Accounts
 alias ChallengeGov.Agencies
 alias ChallengeGov.CertificationLogs
+alias ChallengeGov.Challenges.Challenge
+alias ChallengeGov.Repo
 
 defmodule Helpers do
   def create_super_admin(nil, nil, nil) do
@@ -70,6 +72,18 @@ defmodule Helpers do
       end
     end)
   end
+
+  def set_initial_challenge_uuids do
+    Challenge
+    |> Repo.all()
+    |> Enum.map(fn challenge ->
+      if is_nil(challenge.uuid) do
+        challenge
+        |> Ecto.Changeset.change(%{uuid: Ecto.UUID.generate()})
+        |> Repo.update()
+      end
+    end)
+  end
 end
 
 defmodule Seeds do
@@ -84,6 +98,7 @@ defmodule Seeds do
 
     create_agencies("priv/repo/agencies.txt")
     create_user_certifications()
+    set_initial_challenge_uuids()
   end
 end
 
