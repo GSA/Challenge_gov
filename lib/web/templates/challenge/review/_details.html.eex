@@ -15,7 +15,7 @@
 <br/>
 <div>
   <div class="text-bold">Challenge types:</div>
-  <div><%= Enum.join(@challenge.types || [], ", ") %></div>
+  <div><%= types(@challenge) %></div>
 </div>
 <br/>
 <div>

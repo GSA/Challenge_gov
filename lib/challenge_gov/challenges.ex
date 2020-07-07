@@ -266,6 +266,7 @@ defmodule ChallengeGov.Challenges do
       :challenge_owner_users,
       :supporting_documents,
       :sub_agency,
+      federal_partners: [:agency, :sub_agency],
       federal_partner_agencies: [:sub_agencies],
       agency: [:sub_agencies]
     ])
@@ -279,6 +280,7 @@ defmodule ChallengeGov.Challenges do
       :challenge_owner_users,
       :supporting_documents,
       :sub_agency,
+      federal_partners: [:agency, :sub_agency],
       federal_partner_agencies: [:sub_agencies],
       agency: [:sub_agencies]
     ])
@@ -461,7 +463,8 @@ defmodule ChallengeGov.Challenges do
       :agency,
       :sub_agency,
       :challenge_owner_users,
-      :events
+      :events,
+      federal_partners: [:agency, :sub_agency]
     ])
     |> Repo.one()
   end
