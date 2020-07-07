@@ -409,15 +409,33 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def agency_name(challenge) do
-    if challenge.agency, do: challenge.agency.name
+  def types(%{primary_type: primary_type, types: types, other_type: other_type}) do
+    primary_type = primary_type || ""
+    types = types || []
+    other_type = other_type || ""
+
+    [[primary_type], types, [other_type]]
+    |> Enum.concat()
+    |> Enum.filter(fn type -> type !== "" end)
+    |> Enum.join(", ")
   end
 
-  def agency_logo(challenge) do
-    if challenge.agency.avatar_key,
-      do: AgencyView.avatar_url(challenge.agency),
-      else: nil
-  end
+  def agency(%{sub_agency: sub_agency}) when not is_nil(sub_agency), do: sub_agency
+  def agency(%{agency: agency}) when not is_nil(agency), do: agency
+  def agency(_challenge), do: nil
+
+  def agency_name(%{sub_agency: %{name: name}}), do: name
+  def agency_name(%{agency: %{name: name}}), do: name
+  def agency_name(_challenge), do: ""
+
+  def agency_logo(%{sub_agency: sub_agency = %{avatar_key: avatar_key}})
+      when not is_nil(avatar_key),
+      do: AgencyView.avatar_url(sub_agency)
+
+  def agency_logo(%{agency: agency = %{avatar_key: avatar_key}}) when not is_nil(avatar_key),
+    do: AgencyView.avatar_url(agency)
+
+  def agency_logo(_challenge), do: nil
 
   def winner_img(challenge, opts \\ []) do
     case is_nil(challenge.winner_image_key) do

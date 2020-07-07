@@ -265,6 +265,20 @@ defmodule ChallengeGov.Challenges do
       :user,
       :challenge_owner_users,
       :supporting_documents,
+      :sub_agency,
+      federal_partner_agencies: [:sub_agencies],
+      agency: [:sub_agencies]
+    ])
+  end
+
+  defp base_preload(challenge) do
+    preload(challenge, [
+      :non_federal_partners,
+      :events,
+      :user,
+      :challenge_owner_users,
+      :supporting_documents,
+      :sub_agency,
       federal_partner_agencies: [:sub_agencies],
       agency: [:sub_agencies]
     ])
@@ -294,7 +308,7 @@ defmodule ChallengeGov.Challenges do
   def all(opts \\ []) do
     query =
       Challenge
-      |> preload([:agency, :user])
+      |> base_preload()
       |> where([c], is_nil(c.deleted_at))
       |> where([c], c.status == "published")
       |> order_by([c], asc: c.end_date, asc: c.id)
@@ -308,7 +322,7 @@ defmodule ChallengeGov.Challenges do
   """
   def all_for_sitemap() do
     Challenge
-    |> preload([:agency, :user])
+    |> base_preload()
     |> where([c], is_nil(c.deleted_at))
     |> where([c], c.status == "published" or c.status == "archived")
     |> order_by([c], asc: c.end_date, asc: c.id)
@@ -331,7 +345,7 @@ defmodule ChallengeGov.Challenges do
   def admin_all(opts \\ []) do
     query =
       Challenge
-      |> preload([:agency, :user])
+      |> base_preload()
       |> where([c], is_nil(c.deleted_at))
       |> order_by([c], desc: c.status, desc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
@@ -356,7 +370,7 @@ defmodule ChallengeGov.Challenges do
 
     query =
       start_query
-      |> preload([:agency, :user, :challenge_owner_users])
+      |> base_preload()
       |> order_on_attribute(opts[:sort])
       |> Filter.filter(opts[:filter], __MODULE__)
 
@@ -380,7 +394,7 @@ defmodule ChallengeGov.Challenges do
 
     query =
       start_query
-      |> preload([:agency, :user, :challenge_owner_users])
+      |> base_preload()
       |> order_on_attribute(opts[:sort])
       |> Filter.filter(opts[:filter], __MODULE__)
 
@@ -445,6 +459,7 @@ defmodule ChallengeGov.Challenges do
       :federal_partner_agencies,
       :non_federal_partners,
       :agency,
+      :sub_agency,
       :challenge_owner_users,
       :events
     ])

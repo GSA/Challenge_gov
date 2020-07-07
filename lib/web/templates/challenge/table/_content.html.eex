@@ -6,7 +6,7 @@
       <td><%= status_display_name(challenge) %></td>
       <td><%= Web.SharedView.readable_date(challenge.start_date) %></td>
       <td><%= Web.SharedView.readable_date(challenge.end_date) %></td>
-      <td><%= Enum.join(challenge.types || [], ", ") %></td>
+      <td><%= Web.ChallengeView.types(challenge) %></td>
       <%= if Accounts.has_admin_access?(@user) do %>
         <td>
           <%= Enum.map(challenge.challenge_owners, fn owner -> %>
@@ -15,7 +15,7 @@
             <% end %>
           <% end) %>
         </td>
-        <td><%= Web.AgencyView.name_link(@conn, challenge.agency) %></td>
+        <td><%= Web.AgencyView.name_link(@conn, Web.ChallengeView.agency(challenge)) %></td>
       <% end %>
       <td>
         <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
