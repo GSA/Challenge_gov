@@ -20,17 +20,9 @@
         <%= FormView.text_field(f, :challenge_manager, label: "Challenge Manager", required: true) %>
         <%= FormView.text_field(f, :challenge_manager_email, label: "Challenge Manager Email", required: true) %>
         <%= FormView.text_field(f, :poc_email, label: "Point of Contact Email", required: true) %>
-        <div class="<%= FormView.form_group_classes(f, :agency_id) %>">
-          <%= label(f, :agency_id, class: "col-md-4") do %>
-            Lead Agency <span class="required">*</span>
-          <% end %>
-          <div class="col-md-8">
-            <%= select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), class: "form-control js-select") %>
-          </div>
-        </div>
 
         <%= FormView.select_field(f, :agency_id, collection: Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), label: "Lead agency name", prompt: "Choose an agency", required: true) %>
-        <%= FormView.select_field(f, :sub_agency_id, collection: Enum.map(f.data.agency.sub_agencies, &{&1.name, &1.id}), label: "Sub-agency name (optional)", prompt: "Choose a sub-agency") %>
+        <%= FormView.select_field(f, :sub_agency_id, collection: Enum.map(AgencyView.sub_agencies(f.data.agency), &{&1.name, &1.id}), label: "Sub-agency name (optional)", prompt: "Choose a sub-agency") %>
         <hr/>
         <div class="form-group">
           <h4>Federal Partners</h4>
@@ -78,7 +70,7 @@
             <%= error_tag(f, :types) %>
           </div>
         </div>
-        <%= FormView.text_field(f, :other_type, label: "Other challenge type (optional)", limit: 45, required: true) %>
+        <%= FormView.text_field(f, :other_type, label: "Other challenge type (optional)", limit: 45) %>
 
         <hr/>
 
@@ -93,7 +85,7 @@
         <%= FormView.text_field(f, :title, label: "Challenge Title", required: true) %>
         <%= FormView.text_field(f, :custom_url, label: "Custom URL") %>
         <%= FormView.text_field(f, :external_url, label: "External Challenge URL") %>
-        <%= FormView.text_field(f, :tagline, label: "Challenge Tagline") %>
+        <%= FormView.text_field(f, :tagline, label: "Challenge Tagline", required: true) %>
 
         <%= FormView.textarea_field(f, :description, label: "Challenge Description", rows: 5, required: true) %>
         <!-- Upload Additional Description Materials -->

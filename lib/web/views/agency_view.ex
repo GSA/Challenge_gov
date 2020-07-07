@@ -48,4 +48,7 @@ defmodule Web.AgencyView do
     Map.has_key?(conn.assigns, :current_user) &&
       Agencies.member?(team, conn.assigns.current_user)
   end
+
+  def sub_agencies(%{sub_agencies: sub_agencies}), do: sub_agencies
+  def sub_agencies(_agency), do: []
 end

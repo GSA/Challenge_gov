@@ -41,7 +41,7 @@
     <%= error_tag(@form, :types) %>
   </div>
 </div>
-<%= FormView.text_field(@form, :other_type, label: "Other challenge type (optional)", limit: 45, required: true) %>
+<%= FormView.text_field(@form, :other_type, label: "Other challenge type (optional)", limit: 45) %>
 
 <hr/>
 

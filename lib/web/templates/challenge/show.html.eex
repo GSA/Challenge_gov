@@ -105,7 +105,7 @@
               <br/>
 
               <dt>Agency Name</dd>
-              <dd><%= Web.AgencyView.name_link(@conn, @challenge.agency) %></dd>
+              <dd><%= Web.AgencyView.name_link(@conn, Web.ChallengeView.agency(@challenge)) %></dd>
               <br/>
 
               <dt>Start Date</dd>
