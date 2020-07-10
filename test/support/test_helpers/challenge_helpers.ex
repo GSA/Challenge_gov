@@ -50,7 +50,7 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
       |> Repo.insert()
     end
 
-    Repo.preload(challenge, [:agency])
+    Repo.preload(challenge, [:agency, :sub_agency])
   end
 
   def create_single_phase_challenge(user, attributes \\ %{}) do
