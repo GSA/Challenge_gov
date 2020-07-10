@@ -53,7 +53,7 @@ defmodule Web.ChallengeController do
     end
   end
 
-  def new(conn, %{"non_wizard" => _value}) do
+  def new(conn, %{"non_wizard" => "true"}) do
     %{current_user: user} = conn.assigns
 
     conn
