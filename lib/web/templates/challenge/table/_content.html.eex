@@ -2,7 +2,7 @@
   <%= Enum.map @challenges, fn (challenge) -> %>
     <tr>
       <td><%= challenge.id %></td>
-      <td><%= link(challenge.title, to: Routes.challenge_path(@conn, :show, challenge.id)) %></td>
+      <td><%= challenge.title %></td>
       <td><%= status_display_name(challenge) %></td>
       <td><%= Web.SharedView.readable_date(challenge.start_date) %></td>
       <td><%= Web.SharedView.readable_date(challenge.end_date) %></td>

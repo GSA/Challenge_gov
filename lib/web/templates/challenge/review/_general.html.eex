@@ -20,13 +20,13 @@
 <br/>
 <div>
   <div class="text-bold">Lead agency:</div>
-  <div><%= Web.AgencyView.name_link(@conn, agency(@challenge)) %></div>
+  <div><%= agency_name(@challenge) %></div>
 </div>
 <br/>
 <div>
   <div class="text-bold">Federal partners:</div>
   <%= Enum.map(@challenge.federal_partners, fn partner -> %>
-    <div><%= Web.AgencyView.name_link(@conn, agency(partner)) %></div>
+    <div><%= agency_name(partner) %></div>
   <% end) %>
 </div>
 <br/>

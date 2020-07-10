@@ -424,7 +424,7 @@ defmodule Web.ChallengeView do
   def agency(%{agency: agency}) when not is_nil(agency), do: agency
   def agency(_challenge), do: nil
 
-  def agency_name(%{sub_agency: %{name: name}}), do: name
+  def agency_name(%{agency: %{name: an}, sub_agency: %{name: san}}), do: "#{an} - #{san}"
   def agency_name(%{agency: %{name: name}}), do: name
   def agency_name(_challenge), do: ""
 
