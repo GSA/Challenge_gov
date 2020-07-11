@@ -14,7 +14,7 @@
 </div>
 <br/>
 <div>
-  <div class="text-bold">Non monetoary prizes:</div>
+  <div class="text-bold">Non monetary prizes:</div>
   <div><%= @challenge.non_monetary_prizes %></div>
 </div>
 <br/>

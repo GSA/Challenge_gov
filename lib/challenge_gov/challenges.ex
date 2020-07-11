@@ -13,7 +13,6 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.Repo
   alias ChallengeGov.SupportingDocuments
-  # alias ChallengeGov.Timeline
   alias ChallengeGov.Timeline.Event
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
@@ -32,9 +31,6 @@ defmodule ChallengeGov.Challenges do
   def legal_authority(), do: Challenge.legal_authority()
 
   @doc false
-  def sections(), do: Challenge.sections()
-
-  @doc false
   def statuses(), do: Challenge.statuses()
 
   @doc false
@@ -50,41 +46,19 @@ defmodule ChallengeGov.Challenges do
 
   # BOOKMARK: Wizard functionality helpers
   @doc false
-  def section_index(section) do
-    sections = sections()
-    Enum.find_index(sections, fn s -> s.id == section end)
-  end
+  def sections(), do: Challenge.sections()
 
   @doc false
-  def next_section(section) do
-    sections = sections()
-
-    curr_index = section_index(section)
-
-    if curr_index < length(sections) do
-      Enum.at(sections, curr_index + 1)
-    end
-  end
+  def section_index(section), do: Challenge.section_index(section)
 
   @doc false
-  def prev_section(section) do
-    sections = sections()
-
-    curr_index = section_index(section)
-
-    if curr_index > 0 do
-      Enum.at(sections, curr_index - 1)
-    end
-  end
+  def next_section(section), do: Challenge.next_section(section)
 
   @doc false
-  def to_section(section, action) do
-    case action do
-      "next" -> next_section(section)
-      "back" -> prev_section(section)
-      _ -> nil
-    end
-  end
+  def prev_section(section), do: Challenge.prev_section(section)
+
+  @doc false
+  def to_section(section, action), do: Challenge.to_section(section, action)
 
   # BOOKMARK: Create and update functions
   @doc """
@@ -251,10 +225,10 @@ defmodule ChallengeGov.Challenges do
 
     case action do
       a when a == "back" or a == "save_draft" ->
-        Challenge.draft_changeset(struct, params)
+        Challenge.draft_changeset(struct, params, action)
 
       _ ->
-        Challenge.section_changeset(struct, params)
+        Challenge.section_changeset(struct, params, action)
     end
   end
 

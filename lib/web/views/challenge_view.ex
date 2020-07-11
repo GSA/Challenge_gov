@@ -319,13 +319,15 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def save_draft_button(_section) do
-    submit("Save Draft",
-      name: "action",
-      value: "save_draft",
-      class: "btn btn-link float-right",
-      formnovalidate: true
-    )
+  def save_draft_button(section) do
+    if section != Enum.at(Challenges.sections(), -1).id do
+      submit("Save Draft",
+        name: "action",
+        value: "save_draft",
+        class: "btn btn-link float-right",
+        formnovalidate: true
+      )
+    end
   end
 
   def preview_challenge_button(conn, challenge, section) do

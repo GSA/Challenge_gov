@@ -20,72 +20,6 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   @type t :: %__MODULE__{}
 
-  @doc """
-  - Challenge owner starts the form → saves it as a draft - Draft
-  - Challenge owner submit for review from PMO - GSA Review
-    - (2a) GSA Admin approves the challenge (waiting to be published according to date specified)- Approved
-    - (2b) GSA Admin requests edits from Challenge Owner (i.e. date is wrong)- Edits Requested**
-  - Challenge Owner updates the edits and re-submit to GSA Admin - GSA Review
-  - Challenge goes Live - Published 
-  - Challenge is archived - Archived
-  - Published status but updating Winners & FAQ and submitted to GSA Admin - GSA Review
-  - Challenge Owner updates an Archived challenge posting - goes to "GSA Review" -> GSA Admin approves -> status back to Archived
-  """
-  @statuses [
-    %{id: "draft", label: "Draft"},
-    %{id: "gsa_review", label: "GSA review"},
-    %{id: "approved", label: "Approved"},
-    %{id: "edits_requested", label: "Edits requested"},
-    %{id: "unpublished", label: "Unpublished"},
-    %{id: "published", label: "Published"},
-    %{id: "archived", label: "Archived"}
-  ]
-
-  def status_ids() do
-    Enum.map(@statuses, & &1.id)
-  end
-
-  @challenge_types [
-    "Software and apps",
-    "Creative (multimedia & design)",
-    "Ideas",
-    "Technology demonstration and hardware",
-    "Nominations",
-    "Business plans",
-    "Analytics, visualizations, algorithms",
-    "Scientific"
-  ]
-
-  @legal_authority [
-    "America COMPETES",
-    "Agency Prize Authority - DOT",
-    "Direct Prize Authority",
-    "Direct Prize Authority - DOD",
-    "Direct Prize Authority - DOE",
-    "Direct Prize Authority - USAID",
-    "Space Act",
-    "Grants and Cooperative Agreements",
-    "Necessary Expense Doctrine",
-    "Authority to Provide Non-Monetary Support to Prize Competitions",
-    "Procurement Authority",
-    "Other Transactions Authority",
-    "Agency Partnership Authority",
-    "Public-Private Partnership Authority",
-    "Other"
-  ]
-
-  @sections [
-    %{id: "general", label: "General Info"},
-    %{id: "details", label: "Details"},
-    %{id: "timeline", label: "Timeline"},
-    %{id: "prizes", label: "Prizes"},
-    %{id: "rules", label: "Rules"},
-    %{id: "judging", label: "Judging"},
-    %{id: "how_to_enter", label: "How to enter"},
-    %{id: "resources", label: "Resources"},
-    %{id: "review", label: "Review and submit"}
-  ]
-
   schema "challenges" do
     field(:uuid, Ecto.UUID, autogenerate: true)
 
@@ -179,25 +113,133 @@ defmodule ChallengeGov.Challenges.Challenge do
     timestamps()
   end
 
+  # - Challenge owner starts the form → saves it as a draft - Draft
+  # - Challenge owner submit for review from PMO - GSA Review
+  #   - (2a) GSA Admin approves the challenge (waiting to be published according to date specified)- Approved
+  #   - (2b) GSA Admin requests edits from Challenge Owner (i.e. date is wrong)- Edits Requested**
+  # - Challenge Owner updates the edits and re-submit to GSA Admin - GSA Review
+  # - Challenge goes Live - Published 
+  # - Challenge is archived - Archived
+  # - Published status but updating Winners & FAQ and submitted to GSA Admin - GSA Review
+  # - Challenge Owner updates an Archived challenge posting - goes to "GSA Review" -> GSA Admin approves -> status back to Archived
+  @statuses [
+    %{id: "draft", label: "Draft"},
+    %{id: "gsa_review", label: "GSA review"},
+    %{id: "approved", label: "Approved"},
+    %{id: "edits_requested", label: "Edits requested"},
+    %{id: "unpublished", label: "Unpublished"},
+    %{id: "published", label: "Published"},
+    %{id: "archived", label: "Archived"}
+  ]
+
   @doc """
   List of all challenge statuses
   """
   def statuses(), do: @statuses
+
+  def status_ids() do
+    Enum.map(@statuses, & &1.id)
+  end
+
+  @challenge_types [
+    "Software and apps",
+    "Creative (multimedia & design)",
+    "Ideas",
+    "Technology demonstration and hardware",
+    "Nominations",
+    "Business plans",
+    "Analytics, visualizations, algorithms",
+    "Scientific"
+  ]
 
   @doc """
   List of all challenge types
   """
   def challenge_types(), do: @challenge_types
 
+  @legal_authority [
+    "America COMPETES",
+    "Agency Prize Authority - DOT",
+    "Direct Prize Authority",
+    "Direct Prize Authority - DOD",
+    "Direct Prize Authority - DOE",
+    "Direct Prize Authority - USAID",
+    "Space Act",
+    "Grants and Cooperative Agreements",
+    "Necessary Expense Doctrine",
+    "Authority to Provide Non-Monetary Support to Prize Competitions",
+    "Procurement Authority",
+    "Other Transactions Authority",
+    "Agency Partnership Authority",
+    "Public-Private Partnership Authority",
+    "Other"
+  ]
+
   @doc """
   List of all legal authority options
   """
   def legal_authority(), do: @legal_authority
 
+  @sections [
+    %{id: "general", label: "General Info"},
+    %{id: "details", label: "Details"},
+    %{id: "timeline", label: "Timeline"},
+    %{id: "prizes", label: "Prizes"},
+    %{id: "rules", label: "Rules"},
+    %{id: "judging", label: "Judging"},
+    %{id: "how_to_enter", label: "How to enter"},
+    %{id: "resources", label: "Resources"},
+    %{id: "review", label: "Review and submit"}
+  ]
+
   @doc """
   List of all valid sections
   """
   def sections(), do: @sections
+
+  @doc false
+  def section_index(section) do
+    sections = sections()
+    Enum.find_index(sections, fn s -> s.id == section end)
+  end
+
+  @doc false
+  def curr_section(section) do
+    sections = sections()
+    curr_index = section_index(section)
+    Enum.at(sections, curr_index)
+  end
+
+  @doc false
+  def next_section(section) do
+    sections = sections()
+
+    curr_index = section_index(section)
+
+    if curr_index < length(sections) do
+      Enum.at(sections, curr_index + 1)
+    end
+  end
+
+  @doc false
+  def prev_section(section) do
+    sections = sections()
+
+    curr_index = section_index(section)
+
+    if curr_index > 0 do
+      Enum.at(sections, curr_index - 1)
+    end
+  end
+
+  @doc false
+  def to_section(section, action) do
+    case action do
+      "next" -> next_section(section)
+      "back" -> prev_section(section)
+      _ -> curr_section(section)
+    end
+  end
 
   # TODO: user_id, agency_id, and status should be locked behind admin only changeset
   def changeset(struct, params) do
@@ -304,25 +346,48 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_embed(:phases, with: &Phase.draft_changeset/2)
   end
 
-  def draft_changeset(struct, params = %{"section" => section}) do
+  def draft_changeset(struct, params = %{"section" => section}, action) do
     struct
     |> changeset(params)
     |> put_change(:status, "draft")
-    |> put_change(:last_section, section)
+    |> put_change(:last_section, to_section(section, action).id)
   end
 
-  def section_changeset(struct, params = %{"section" => section}) do
-    struct =
-      struct
-      |> changeset(params)
-      |> put_change(:last_section, section)
-
-    if section do
-      apply(__MODULE__, String.to_atom("#{section}_changeset"), [struct, params])
-    else
-      struct
-    end
+  def section_changeset(struct, params = %{"section" => section}, action) do
+    struct
+    |> changeset(params)
+    |> put_change(:last_section, to_section(section, action).id)
+    |> section_changeset_selector(params)
   end
+
+  defp section_changeset_selector(struct, params = %{"section" => "general"}),
+    do: general_changeset(struct, params)
+
+  defp section_changeset_selector(struct, params = %{"section" => "details"}),
+    do: details_changeset(struct, params)
+
+  defp section_changeset_selector(struct, params = %{"section" => "timeline"}),
+    do: timeline_changeset(struct, params)
+
+  defp section_changeset_selector(struct, params = %{"section" => "prizes"}),
+    do: prizes_changeset(struct, params)
+
+  defp section_changeset_selector(struct, params = %{"section" => "rules"}),
+    do: rules_changeset(struct, params)
+
+  defp section_changeset_selector(struct, params = %{"section" => "judging"}),
+    do: judging_changeset(struct, params)
+
+  defp section_changeset_selector(struct, params = %{"section" => "how_to_enter"}),
+    do: how_to_enter_changeset(struct, params)
+
+  defp section_changeset_selector(struct, params = %{"section" => "resources"}),
+    do: resources_changeset(struct, params)
+
+  defp section_changeset_selector(struct, params = %{"section" => "review"}),
+    do: review_changeset(struct, params)
+
+  defp section_changeset_selector(struct, _), do: struct
 
   def general_changeset(struct, _params) do
     struct
