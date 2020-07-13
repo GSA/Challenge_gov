@@ -69,7 +69,8 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
             "phases" => %{
               "0" => %{
                 "start_date" => TestHelpers.iso_timestamp(),
-                "end_date" => TestHelpers.iso_timestamp(hours: 1)
+                "end_date" => TestHelpers.iso_timestamp(hours: 1),
+                "open_to_submissions" => "true"
               }
             }
           }
@@ -99,19 +100,19 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
                 "title" => "Test",
                 "start_date" => TestHelpers.iso_timestamp(hours: 1),
                 "end_date" => TestHelpers.iso_timestamp(hours: 2),
-                "open_to_submissions" => true
+                "open_to_submissions" => "true"
               },
               "1" => %{
                 "title" => "Test 1",
                 "start_date" => TestHelpers.iso_timestamp(hours: 3),
                 "end_date" => TestHelpers.iso_timestamp(hours: 4),
-                "open_to_submissions" => true
+                "open_to_submissions" => "true"
               },
               "2" => %{
                 "title" => "Test 2",
                 "start_date" => TestHelpers.iso_timestamp(hours: 5),
                 "end_date" => TestHelpers.iso_timestamp(hours: 6),
-                "open_to_submissions" => true
+                "open_to_submissions" => "false"
               }
             }
           }

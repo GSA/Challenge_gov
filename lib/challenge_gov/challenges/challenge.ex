@@ -298,6 +298,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_embed(:phases, with: &Phase.draft_changeset/2)
     |> validate_timeline_events_draft(params)
     |> validate_terms_draft(params)
+    |> maybe_set_start_end_dates(params)
     |> unique_constraint(:custom_url, name: "challenges_custom_url_index")
   end
 
@@ -689,6 +690,55 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> String.downcase()
     |> String.replace(" ", "-")
   end
+
+  defp maybe_set_start_end_dates(struct, %{"phases" => phases}) do
+    struct
+    |> set_start_date(phases)
+    |> set_end_date(phases)
+  end
+
+  defp maybe_set_start_end_dates(struct, _params), do: struct
+
+  defp set_start_date(struct, phases) do
+    if Enum.any?(phases, fn {_, phase} -> dates_exist?(phase) end) do
+      {_, start_phase} =
+        phases
+        |> Enum.filter(fn {_, p} -> p["open_to_submissions"] === "true" end)
+        |> Enum.min_by(fn {_, p} -> p["start_date"] end)
+
+      {:ok, start_date} =
+        start_phase
+        |> Map.fetch!("start_date")
+        |> Timex.parse("{ISO:Extended}")
+
+      put_change(struct, :start_date, DateTime.truncate(start_date, :second))
+    else
+      struct
+    end
+  end
+
+  defp set_end_date(struct, phases) do
+    if Enum.any?(phases, fn {_, phase} -> dates_exist?(phase) end) do
+      {_, end_phase} =
+        phases
+        |> Enum.filter(fn {_, p} -> p["open_to_submissions"] === "true" end)
+        |> Enum.max_by(fn {_, p} -> p["end_date"] end)
+
+      {:ok, end_date} =
+        end_phase
+        |> Map.fetch!("end_date")
+        |> Timex.parse("{ISO:Extended}")
+
+      put_change(struct, :end_date, DateTime.truncate(end_date, :second))
+    else
+      struct
+    end
+  end
+
+  defp dates_exist?(%{"open_to_submissions" => "true", "start_date" => _, "end_date" => _}),
+    do: true
+
+  defp dates_exist?(_phase), do: false
 
   defp validate_phases(struct, %{"is_multi_phase" => "true", "phases" => phases}) do
     struct = cast_embed(struct, :phases, with: &Phase.multi_phase_changeset/2)

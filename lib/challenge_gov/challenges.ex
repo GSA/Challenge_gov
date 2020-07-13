@@ -681,19 +681,11 @@ defmodule ChallengeGov.Challenges do
 
   # BOOKMARK: Helper functions
   def find_start_date(challenge) do
-    first_phase =
-      challenge.phases
-      |> Enum.min_by(fn phase -> phase.start_date end, fn -> nil end)
-
-    if !is_nil(first_phase), do: first_phase.start_date
+    challenge.start_date
   end
 
   def find_end_date(challenge) do
-    last_phase =
-      challenge.phases
-      |> Enum.max_by(fn phase -> phase.end_date end, fn -> nil end)
-
-    if !is_nil(last_phase), do: last_phase.end_date
+    challenge.end_date
   end
 
   @doc """
