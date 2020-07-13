@@ -293,6 +293,19 @@ defmodule ChallengeGov.Challenges do
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
   end
 
+  def all_public(opts \\ []) do
+    query =
+      Challenge
+      |> base_preload()
+      |> where([c], is_nil(c.deleted_at))
+      |> where([c], c.status == "published")
+      |> where([c], c.end_date >= ^DateTime.utc_now())
+      |> order_by([c], asc: c.end_date, asc: c.id)
+      |> Filter.filter(opts[:filter], __MODULE__)
+
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
   @doc """
   Get all public challenges non paginated for sitemap
   """

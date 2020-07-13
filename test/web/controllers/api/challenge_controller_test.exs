@@ -10,28 +10,28 @@ defmodule Web.Api.ChallengeControllerTest do
       user = AccountHelpers.create_user()
       agency = AgencyHelpers.create_agency()
 
-      ChallengeHelpers.create_challenge(%{
+      ChallengeHelpers.create_single_phase_challenge(user, %{
         user_id: user.id,
         agency_id: agency.id,
         title: "Test Title 1",
         status: "published"
       })
 
-      ChallengeHelpers.create_challenge(%{
+      ChallengeHelpers.create_single_phase_challenge(user, %{
         user_id: user.id,
         agency_id: agency.id,
         title: "Test Title 2",
         status: "published"
       })
 
-      ChallengeHelpers.create_challenge(%{
+      ChallengeHelpers.create_single_phase_challenge(user, %{
         user_id: user.id,
         agency_id: agency.id,
         title: "Test Title 3",
         status: "archived"
       })
 
-      ChallengeHelpers.create_challenge(%{
+      ChallengeHelpers.create_single_phase_challenge(user, %{
         user_id: user.id,
         agency_id: agency.id,
         title: "Test Title 4",
