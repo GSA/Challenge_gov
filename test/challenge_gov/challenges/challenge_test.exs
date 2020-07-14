@@ -74,4 +74,16 @@ defmodule ChallengeGov.ChallengeTest do
       assert Timex.equal?(end_date, last_date)
     end
   end
+
+  describe "create announcement" do
+    test "successfully" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      {:ok, challenge} = Challenges.create_announcement(challenge, "Test announcement")
+
+      assert challenge.announcement === "Test announcement"
+      assert challenge.announcement_datetime === DateTime.truncate(DateTime.utc_now(), :second)
+    end
+  end
 end

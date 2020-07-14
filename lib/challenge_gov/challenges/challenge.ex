@@ -98,6 +98,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:published_on, :date)
     field(:rejection_message, :string)
     field(:how_to_enter_link, :string)
+    field(:announcement, :string)
+    field(:announcement_datetime, :utc_datetime)
 
     field(:upload_logo, :boolean)
     field(:is_multi_phase, :boolean)
@@ -291,7 +293,9 @@ defmodule ChallengeGov.Challenges.Challenge do
       :is_multi_phase,
       :terms_equal_rules,
       :prize_type,
-      :how_to_enter_link
+      :how_to_enter_link,
+      :announcement,
+      :announcement_datetime
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
@@ -532,6 +536,13 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> unique_constraint(:custom_url, name: "challenges_custom_url_index")
     |> validate_inclusion(:status, status_ids())
     |> validate_auto_publish_date(params)
+  end
+
+  def announcement_changeset(struct, announcement) do
+    struct
+    |> change()
+    |> put_change(:announcement, announcement)
+    |> put_change(:announcement_datetime, DateTime.truncate(DateTime.utc_now(), :second))
   end
 
   # to allow change to admin info?

@@ -191,7 +191,9 @@ defmodule Web.Api.ChallengeControllerTest do
       "phase_descriptions" => nil,
       "federal_partners" => [],
       "phases" => [],
-      "open_until" => nil
+      "open_until" => nil,
+      "announcement" => nil,
+      "announcement_datetime" => nil
     }
   end
 end

@@ -29,6 +29,8 @@ defmodule Web.Api.ChallengeView do
       agency_id: challenge.agency_id,
       agency_name: ChallengeView.agency_name(challenge),
       agency_logo: ChallengeView.agency_logo(challenge),
+      announcement: challenge.announcement,
+      announcement_datetime: challenge.announcement_datetime,
       brief_description: challenge.brief_description,
       custom_url: challenge.custom_url,
       description: HtmlSanitizeEx.basic_html(challenge.description),

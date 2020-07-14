@@ -3,6 +3,7 @@ defmodule Web.ChallengeControllerTest do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.TestHelpers.AccountHelpers
+  alias ChallengeGov.TestHelpers.AgencyHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
 
   describe "index for challenges" do
@@ -122,6 +123,55 @@ defmodule Web.ChallengeControllerTest do
 
     test "redirect to sign in when signed out", %{conn: conn} do
       conn = get(conn, Routes.challenge_path(conn, :new))
+
+      assert conn.status === 302
+      assert conn.halted
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
+  end
+
+  describe "create an announcement" do
+    test "successfully", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      agency = AgencyHelpers.create_agency()
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          agency_id: agency.id,
+          title: "Test Title 1",
+          description: "Test description 1",
+          status: "pending"
+        })
+
+      conn =
+        post(conn, Routes.challenge_path(conn, :create_announcement, challenge.id),
+          announcement: "Test announcement"
+        )
+
+      assert get_flash(conn, :info) === "Challenge announcement posted"
+      assert redirected_to(conn) === Routes.challenge_path(conn, :show, challenge.id)
+    end
+
+    test "redirect to sign in when signed out", %{conn: conn} do
+      user = AccountHelpers.create_user(%{email: "user@example.com"})
+      agency = AgencyHelpers.create_agency()
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          agency_id: agency.id,
+          title: "Test Title 1",
+          description: "Test description 1",
+          status: "pending"
+        })
+
+      conn =
+        post(conn, Routes.challenge_path(conn, :create_announcement, challenge.id),
+          announcement: "Test announcement"
+        )
 
       assert conn.status === 302
       assert conn.halted

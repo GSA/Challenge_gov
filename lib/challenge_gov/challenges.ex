@@ -942,6 +942,12 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  def create_announcement(challenge, announcement) do
+    challenge
+    |> Challenge.announcement_changeset(announcement)
+    |> Repo.update()
+  end
+
   # BOOKMARK: Email functions
   defp send_pending_challenge_email(challenge) do
     challenge
