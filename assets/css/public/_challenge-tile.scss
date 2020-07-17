@@ -118,3 +118,16 @@ p {
   }
 }
 
+.usa-tag {
+  &--coming-soon {
+    background-color: #4d8055;
+  }
+
+  &--closing-soon {
+    background-color: #ffbe2e;
+  }
+
+  &--important-update {
+    background-color: #fa9441;
+  }
+}

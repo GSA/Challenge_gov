@@ -176,7 +176,7 @@ defmodule Web.Api.ChallengeControllerTest do
       "rules" => "Test rules",
       "types" => [],
       "agency_logo" => nil,
-      "logo" => nil,
+      "logo" => "/images/challenge-logo.png",
       "terms_and_conditions" => "Test terms",
       "non_monetary_prizes" => nil,
       "how_to_enter" => "",
@@ -191,7 +191,9 @@ defmodule Web.Api.ChallengeControllerTest do
       "phase_descriptions" => nil,
       "federal_partners" => [],
       "phases" => [],
-      "open_until" => nil
+      "open_until" => nil,
+      "announcement" => nil,
+      "announcement_datetime" => nil
     }
   end
 end
