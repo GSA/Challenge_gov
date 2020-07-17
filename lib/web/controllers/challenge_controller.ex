@@ -6,6 +6,11 @@ defmodule Web.ChallengeController do
 
   plug Web.Plugs.FetchPage when action in [:index]
 
+  plug(
+    Web.Plugs.EnsureRole,
+    [:super_admin, :admin, :challenge_owner] when action not in [:index, :show]
+  )
+
   action_fallback(Web.FallbackController)
 
   def index(conn, params) do

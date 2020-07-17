@@ -46,7 +46,7 @@
                 <%= link("Request Edits", to: "#", class: "btn btn-danger", data: [toggle: "modal", target: "#rejection-modal"] ) %>
               <% end %>
               <%#= if Challenges.can_post_announcement?(@challenge, @user) do  %>
-                <%= link("Add Update", to: "#", class: "btn btn-primary", data: [toggle: "modal", target: "#announcement-modal"] ) %>
+                <%= link("Add/Edit Update", to: "#", class: "btn btn-primary", data: [toggle: "modal", target: "#announcement-modal"] ) %>
               <%# end %>
               <%= if Challenges.is_submittable?(@challenge, @user) do  %>
                 <%= link("Submit", to: Routes.challenge_path(@conn, :submit, @challenge.id), method: :post, class: "btn btn-primary", data: [confirm: "Are you sure you want to submit this challenge for approval?"]) %>
@@ -420,8 +420,8 @@
           <%= FormView.textarea_field(f, :announcement, label: "Banner update text", style: "width: 100%;", limit: 150, rows: 10, value: @challenge.announcement) %>
         </div>
         <div class="modal-footer">
-          <%= link("Remove update", to: Routes.challenge_path(@conn, :remove_announcement, @challenge.id), method: :post, class: "btn btn-primary", data: [confirm: "Are you sure you want to remove this update?"] ) %>
-          <button type="button" class="btn btn-link" data-dismiss="modal" aria-label="Close">Cancel</button>
+          <%= remove_update_button(@conn, @challenge) %>
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" aria-label="Close">Cancel</button>
           <%= submit("Publish", class: "btn btn-primary", data: [confirm: "Are you sure you want to post this update?"] ) %>
         </div>
       </div>

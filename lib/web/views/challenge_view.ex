@@ -361,6 +361,18 @@ defmodule Web.ChallengeView do
   def next_section(section), do: Challenges.next_section(section)
   def prev_section(section), do: Challenges.prev_section(section)
 
+  def remove_update_button(conn, challenge = %{announcement: announcement})
+      when not is_nil(announcement),
+      do:
+        link("Remove update",
+          to: Routes.challenge_path(conn, :remove_announcement, challenge.id),
+          method: :post,
+          class: "btn btn-outline-danger",
+          data: [confirm: "Are you sure you want to remove this update?"]
+        )
+
+  def remove_update_button(_conn, _challenge), do: nil
+
   def logo_img(challenge, opts \\ []) do
     case is_nil(challenge.logo_key) do
       true ->

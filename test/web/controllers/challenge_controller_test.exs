@@ -11,7 +11,7 @@ defmodule Web.ChallengeControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com", role: "challenge_owner"})
 
       _challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
       _challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
@@ -48,7 +48,7 @@ defmodule Web.ChallengeControllerTest do
       assert filter === %{}
       assert sort === %{}
 
-      assert html_response(conn, 200) =~ "Saved challenges"
+      assert html_response(conn, 200) =~ "Challenges"
     end
 
     test "redirect to sign in when signed out", %{conn: conn} do
@@ -180,7 +180,7 @@ defmodule Web.ChallengeControllerTest do
   end
 
   defp prep_conn(conn) do
-    user = AccountHelpers.create_user()
+    user = AccountHelpers.create_user(%{role: "admin"})
     assign(conn, :current_user, user)
   end
 end
