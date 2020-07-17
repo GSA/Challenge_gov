@@ -14,6 +14,7 @@ import { ContactForm } from "../components/challenge_tabs/ContactForm"
 import { Winners } from "../components/challenge_tabs/Winners"
 import { documentsForSection } from "../helpers/documentHelpers"
 import { getPreviousPhase, getCurrentPhase, getNextPhase, phaseInPast, phaseIsCurrent, phaseInFuture, phaseNumber, isSinglePhase, formatDateTime, formatDate } from '../helpers/phaseHelpers'
+import { ChallengeAnnouncement } from './ChallengeAnnouncement'
 
 export const ChallengeDetails = ({challenge, preview}) => {
   const renderEndDate = (date) => {
@@ -184,6 +185,7 @@ export const ChallengeDetails = ({challenge, preview}) => {
   return (
     challenge ? (
       <div className="w-100">
+        <ChallengeAnnouncement challenge={challenge} />
         <section className="hero__wrapper" aria-label="Challenge overview details">
           <section className="hero__content">
             <div className="main-section">

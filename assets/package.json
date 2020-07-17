@@ -36,7 +36,7 @@
     "reactstrap": "^8.4.1",
     "select2": "^4.0.13",
     "url-loader": "^1.1.2",
-    "uswds": "^2.7.1",
+    "uswds": "^2.8.0",
     "yarn": "^1.13.0"
   },
   "devDependencies": {

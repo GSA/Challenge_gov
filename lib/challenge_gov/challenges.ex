@@ -293,6 +293,19 @@ defmodule ChallengeGov.Challenges do
     Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
   end
 
+  def all_public(opts \\ []) do
+    query =
+      Challenge
+      |> base_preload()
+      |> where([c], is_nil(c.deleted_at))
+      |> where([c], c.status == "published")
+      |> where([c], c.end_date >= ^DateTime.utc_now())
+      |> order_by([c], asc: c.end_date, asc: c.id)
+      |> Filter.filter(opts[:filter], __MODULE__)
+
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
   @doc """
   Get all public challenges non paginated for sitemap
   """
@@ -681,19 +694,11 @@ defmodule ChallengeGov.Challenges do
 
   # BOOKMARK: Helper functions
   def find_start_date(challenge) do
-    first_phase =
-      challenge.phases
-      |> Enum.min_by(fn phase -> phase.start_date end, fn -> nil end)
-
-    if !is_nil(first_phase), do: first_phase.start_date
+    challenge.start_date
   end
 
   def find_end_date(challenge) do
-    last_phase =
-      challenge.phases
-      |> Enum.max_by(fn phase -> phase.end_date end, fn -> nil end)
-
-    if !is_nil(last_phase), do: last_phase.end_date
+    challenge.end_date
   end
 
   @doc """
@@ -935,6 +940,18 @@ defmodule ChallengeGov.Challenges do
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
+  end
+
+  def create_announcement(challenge, announcement) do
+    challenge
+    |> Challenge.create_announcement_changeset(announcement)
+    |> Repo.update()
+  end
+
+  def remove_announcement(challenge) do
+    challenge
+    |> Challenge.remove_announcement_changeset()
+    |> Repo.update()
   end
 
   # BOOKMARK: Email functions

@@ -3,6 +3,7 @@ defmodule Web.ChallengeControllerTest do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.TestHelpers.AccountHelpers
+  alias ChallengeGov.TestHelpers.AgencyHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
 
   describe "index for challenges" do
@@ -10,7 +11,7 @@ defmodule Web.ChallengeControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com", role: "challenge_owner"})
 
       _challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
       _challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
@@ -47,7 +48,7 @@ defmodule Web.ChallengeControllerTest do
       assert filter === %{}
       assert sort === %{}
 
-      assert html_response(conn, 200) =~ "Saved challenges"
+      assert html_response(conn, 200) =~ "Challenges"
     end
 
     test "redirect to sign in when signed out", %{conn: conn} do
@@ -129,8 +130,57 @@ defmodule Web.ChallengeControllerTest do
     end
   end
 
+  describe "create an announcement" do
+    test "successfully", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      agency = AgencyHelpers.create_agency()
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          agency_id: agency.id,
+          title: "Test Title 1",
+          description: "Test description 1",
+          status: "pending"
+        })
+
+      conn =
+        post(conn, Routes.challenge_path(conn, :create_announcement, challenge.id),
+          announcement: "Test announcement"
+        )
+
+      assert get_flash(conn, :info) === "Challenge announcement posted"
+      assert redirected_to(conn) === Routes.challenge_path(conn, :show, challenge.id)
+    end
+
+    test "redirect to sign in when signed out", %{conn: conn} do
+      user = AccountHelpers.create_user(%{email: "user@example.com"})
+      agency = AgencyHelpers.create_agency()
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          agency_id: agency.id,
+          title: "Test Title 1",
+          description: "Test description 1",
+          status: "pending"
+        })
+
+      conn =
+        post(conn, Routes.challenge_path(conn, :create_announcement, challenge.id),
+          announcement: "Test announcement"
+        )
+
+      assert conn.status === 302
+      assert conn.halted
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
+  end
+
   defp prep_conn(conn) do
-    user = AccountHelpers.create_user()
+    user = AccountHelpers.create_user(%{role: "admin"})
     assign(conn, :current_user, user)
   end
 end
