@@ -1,5 +1,5 @@
 // USWDS
-import "uswds/dist/css/uswds.css";
+import "uswds/dist/scss/uswds.scss";
 import "uswds/dist/js/uswds.js";
 
 // Bootstrap

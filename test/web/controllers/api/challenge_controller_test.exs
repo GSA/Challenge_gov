@@ -176,7 +176,7 @@ defmodule Web.Api.ChallengeControllerTest do
       "rules" => "Test rules",
       "types" => [],
       "agency_logo" => nil,
-      "logo" => nil,
+      "logo" => "/images/challenge-logo.png",
       "terms_and_conditions" => "Test terms",
       "non_monetary_prizes" => nil,
       "how_to_enter" => "",
