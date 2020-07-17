@@ -17,5 +17,6 @@ require("../css/public/index.scss");
 
 // Import JS
 import "./public/index.js";
+import "./shared/index.js";
 
 window.$ = jquery;

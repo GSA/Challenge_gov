@@ -388,6 +388,21 @@ defmodule Web.ChallengeController do
     end
   end
 
+  def remove_announcement(conn, %{"id" => id}) do
+    with {id, _} <- Integer.parse(id),
+         {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.remove_announcement(challenge) do
+      conn
+      |> put_flash(:info, "Challenge announcement removed")
+      |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
+    else
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:info, "Something went wrong")
+        |> redirect(to: Routes.challenge_path(conn, :show, id))
+    end
+  end
+
   def remove_logo(conn, %{"id" => id}) do
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.remove_logo(challenge) do

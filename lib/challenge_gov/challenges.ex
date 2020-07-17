@@ -944,7 +944,13 @@ defmodule ChallengeGov.Challenges do
 
   def create_announcement(challenge, announcement) do
     challenge
-    |> Challenge.announcement_changeset(announcement)
+    |> Challenge.create_announcement_changeset(announcement)
+    |> Repo.update()
+  end
+
+  def remove_announcement(challenge) do
+    challenge
+    |> Challenge.remove_announcement_changeset()
     |> Repo.update()
   end
 

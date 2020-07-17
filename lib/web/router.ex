@@ -107,7 +107,8 @@ defmodule Web.Router do
       as: :challenge
     )
 
-    post("/challenges/:id/announcement", ChallengeController, :create_announcement)
+    post("/challenges/:id/create_announcement", ChallengeController, :create_announcement)
+    post("/challenges/:id/remove_announcement", ChallengeController, :remove_announcement)
 
     resources("/documents", DocumentController, only: [:delete])
     resources("/events", EventController, only: [:edit, :update, :delete])

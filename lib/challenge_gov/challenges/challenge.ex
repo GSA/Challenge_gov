@@ -538,11 +538,18 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_auto_publish_date(params)
   end
 
-  def announcement_changeset(struct, announcement) do
+  def create_announcement_changeset(struct, announcement) do
     struct
     |> change()
     |> put_change(:announcement, announcement)
     |> put_change(:announcement_datetime, DateTime.truncate(DateTime.utc_now(), :second))
+  end
+
+  def remove_announcement_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:announcement, nil)
+    |> put_change(:announcement_datetime, nil)
   end
 
   # to allow change to admin info?

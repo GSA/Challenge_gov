@@ -27,3 +27,4 @@ require("../css/app/index.scss");
 
 // Import JS
 import "./app/index.js";
+import "./shared/index.js";
