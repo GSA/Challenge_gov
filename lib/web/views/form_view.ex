@@ -247,7 +247,7 @@ defmodule Web.FormView do
   """
   def textarea_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
-    textarea_opts = Keyword.take(opts, [:value, :rows, :limit, :required])
+    textarea_opts = Keyword.take(opts, [:value, :rows, :limit, :required, :maxlength])
 
     char_limit_label =
       if textarea_opts[:limit] do

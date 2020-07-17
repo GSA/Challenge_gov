@@ -543,6 +543,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> change()
     |> put_change(:announcement, announcement)
     |> put_change(:announcement_datetime, DateTime.truncate(DateTime.utc_now(), :second))
+    |> validate_length(:announcement, max: 150)
   end
 
   def remove_announcement_changeset(struct) do

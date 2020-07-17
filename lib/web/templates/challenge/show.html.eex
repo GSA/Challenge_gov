@@ -417,7 +417,7 @@
         </div>
         <div class="modal-body">
           <p>Your update will display on the Challenge for 2 weeks from the date you publish it.</p>
-          <%= FormView.textarea_field(f, :announcement, label: "Banner update text", style: "width: 100%;", limit: 150, rows: 10, value: @challenge.announcement) %>
+          <%= FormView.textarea_field(f, :announcement, label: "Banner update text", style: "width: 100%;", limit: 150, rows: 10, maxlength: 150, value: @challenge.announcement) %>
         </div>
         <div class="modal-footer">
           <%= remove_update_button(@conn, @challenge) %>
