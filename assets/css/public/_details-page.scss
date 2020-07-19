@@ -6,15 +6,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
-    p {
-      margin: 0;
-      padding: 0;
-    }
-
-    h3 {
-      margin: 0;
-    }
   }
 
   &__content {
@@ -24,7 +15,6 @@
     height: 80%;
     margin: 30px;
     border-radius: 10px;
-    background-color: #fff;
   }
 }
 
@@ -32,6 +22,16 @@
     height: auto;
     width: auto;
     padding: 15px;
+    background-color: #fff;
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    h3 {
+      margin: 0;
+    }
 
     &__text {
       height: auto;
@@ -90,6 +90,15 @@
     border-radius: 0 0 10px 10px;
     display: grid;
     row-gap: .5rem;
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    h3 {
+      margin: 0;
+    }
 
     &__apply {
       // margin-bottom: 1.5rem;

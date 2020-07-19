@@ -185,9 +185,9 @@ export const ChallengeDetails = ({challenge, preview}) => {
   return (
     challenge ? (
       <div className="w-100">
-        <ChallengeAnnouncement challenge={challenge} />
         <section className="hero__wrapper" aria-label="Challenge overview details">
           <section className="hero__content">
+            <ChallengeAnnouncement challenge={challenge} />
             <div className="main-section">
               <div className="main-section__text">
                 { challenge.logo &&
