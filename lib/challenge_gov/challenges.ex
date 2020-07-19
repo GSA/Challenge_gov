@@ -13,7 +13,6 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.Repo
   alias ChallengeGov.SupportingDocuments
-  # alias ChallengeGov.Timeline
   alias ChallengeGov.Timeline.Event
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
@@ -32,9 +31,6 @@ defmodule ChallengeGov.Challenges do
   def legal_authority(), do: Challenge.legal_authority()
 
   @doc false
-  def sections(), do: Challenge.sections()
-
-  @doc false
   def statuses(), do: Challenge.statuses()
 
   @doc false
@@ -50,41 +46,19 @@ defmodule ChallengeGov.Challenges do
 
   # BOOKMARK: Wizard functionality helpers
   @doc false
-  def section_index(section) do
-    sections = sections()
-    Enum.find_index(sections, fn s -> s.id == section end)
-  end
+  def sections(), do: Challenge.sections()
 
   @doc false
-  def next_section(section) do
-    sections = sections()
-
-    curr_index = section_index(section)
-
-    if curr_index < length(sections) do
-      Enum.at(sections, curr_index + 1)
-    end
-  end
+  def section_index(section), do: Challenge.section_index(section)
 
   @doc false
-  def prev_section(section) do
-    sections = sections()
-
-    curr_index = section_index(section)
-
-    if curr_index > 0 do
-      Enum.at(sections, curr_index - 1)
-    end
-  end
+  def next_section(section), do: Challenge.next_section(section)
 
   @doc false
-  def to_section(section, action) do
-    case action do
-      "next" -> next_section(section)
-      "back" -> prev_section(section)
-      _ -> nil
-    end
-  end
+  def prev_section(section), do: Challenge.prev_section(section)
+
+  @doc false
+  def to_section(section, action), do: Challenge.to_section(section, action)
 
   # BOOKMARK: Create and update functions
   @doc """
@@ -251,10 +225,10 @@ defmodule ChallengeGov.Challenges do
 
     case action do
       a when a == "back" or a == "save_draft" ->
-        Challenge.draft_changeset(struct, params)
+        Challenge.draft_changeset(struct, params, action)
 
       _ ->
-        Challenge.section_changeset(struct, params)
+        Challenge.section_changeset(struct, params, action)
     end
   end
 
@@ -313,6 +287,19 @@ defmodule ChallengeGov.Challenges do
       |> base_preload()
       |> where([c], is_nil(c.deleted_at))
       |> where([c], c.status == "published")
+      |> order_by([c], asc: c.end_date, asc: c.id)
+      |> Filter.filter(opts[:filter], __MODULE__)
+
+    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+  end
+
+  def all_public(opts \\ []) do
+    query =
+      Challenge
+      |> base_preload()
+      |> where([c], is_nil(c.deleted_at))
+      |> where([c], c.status == "published")
+      |> where([c], c.end_date >= ^DateTime.utc_now())
       |> order_by([c], asc: c.end_date, asc: c.id)
       |> Filter.filter(opts[:filter], __MODULE__)
 
@@ -707,19 +694,11 @@ defmodule ChallengeGov.Challenges do
 
   # BOOKMARK: Helper functions
   def find_start_date(challenge) do
-    first_phase =
-      challenge.phases
-      |> Enum.min_by(fn phase -> phase.start_date end, fn -> nil end)
-
-    if !is_nil(first_phase), do: first_phase.start_date
+    challenge.start_date
   end
 
   def find_end_date(challenge) do
-    last_phase =
-      challenge.phases
-      |> Enum.max_by(fn phase -> phase.end_date end, fn -> nil end)
-
-    if !is_nil(last_phase), do: last_phase.end_date
+    challenge.end_date
   end
 
   @doc """
@@ -961,6 +940,18 @@ defmodule ChallengeGov.Challenges do
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
+  end
+
+  def create_announcement(challenge, announcement) do
+    challenge
+    |> Challenge.create_announcement_changeset(announcement)
+    |> Repo.update()
+  end
+
+  def remove_announcement(challenge) do
+    challenge
+    |> Challenge.remove_announcement_changeset()
+    |> Repo.update()
   end
 
   # BOOKMARK: Email functions

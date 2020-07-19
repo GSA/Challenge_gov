@@ -6,6 +6,11 @@ defmodule Web.ChallengeController do
 
   plug Web.Plugs.FetchPage when action in [:index]
 
+  plug(
+    Web.Plugs.EnsureRole,
+    [:super_admin, :admin, :challenge_owner] when action not in [:index, :show]
+  )
+
   action_fallback(Web.FallbackController)
 
   def index(conn, params) do
@@ -370,6 +375,36 @@ defmodule Web.ChallengeController do
       conn
       |> put_flash(:info, "Challenge unarchived")
       |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
+    end
+  end
+
+  def create_announcement(conn, %{"id" => id, "announcement" => announcement}) do
+    with {id, _} <- Integer.parse(id),
+         {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.create_announcement(challenge, announcement) do
+      conn
+      |> put_flash(:info, "Challenge announcement posted")
+      |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
+    else
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:info, "Something went wrong")
+        |> redirect(to: Routes.challenge_path(conn, :show, id))
+    end
+  end
+
+  def remove_announcement(conn, %{"id" => id}) do
+    with {id, _} <- Integer.parse(id),
+         {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.remove_announcement(challenge) do
+      conn
+      |> put_flash(:info, "Challenge announcement removed")
+      |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
+    else
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:info, "Something went wrong")
+        |> redirect(to: Routes.challenge_path(conn, :show, id))
     end
   end
 

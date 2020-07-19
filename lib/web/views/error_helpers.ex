@@ -50,6 +50,16 @@ defmodule Web.ErrorHelpers do
     end
   end
 
+  def all_errors(%{errors: errors}) when is_list(errors) and length(errors) > 0 do
+    content_tag(:ul, class: "callout callout-danger", style: "list-style: none") do
+      Enum.map(errors, fn {error_key, {error_msg, _}} ->
+        content_tag(:li, "#{humanize(error_key)} #{error_msg}")
+      end)
+    end
+  end
+
+  def all_errors(_), do: nil
+
   @doc """
   Translates an error message using gettext.
   """

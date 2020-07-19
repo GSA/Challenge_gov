@@ -20,7 +20,10 @@ defmodule Web.Api.ChallengeView do
       agency_name: ChallengeView.agency_name(challenge),
       agency_logo: ChallengeView.agency_logo(challenge),
       logo: ChallengeView.logo_url(challenge),
-      open_until: Challenges.find_end_date(challenge)
+      open_until: Challenges.find_end_date(challenge),
+      start_date: challenge.start_date,
+      end_date: challenge.end_date,
+      announcement_datetime: challenge.announcement_datetime
     }
   end
 
@@ -29,6 +32,8 @@ defmodule Web.Api.ChallengeView do
       agency_id: challenge.agency_id,
       agency_name: ChallengeView.agency_name(challenge),
       agency_logo: ChallengeView.agency_logo(challenge),
+      announcement: challenge.announcement,
+      announcement_datetime: challenge.announcement_datetime,
       brief_description: challenge.brief_description,
       custom_url: challenge.custom_url,
       description: HtmlSanitizeEx.basic_html(challenge.description),
@@ -79,7 +84,7 @@ defmodule Web.Api.ChallengeView do
       prize_description: HtmlSanitizeEx.basic_html(challenge.prize_description),
       prize_total: challenge.prize_total,
       rules: HtmlSanitizeEx.basic_html(challenge.rules),
-      start_date: challenge.custom_url,
+      start_date: challenge.start_date,
       status: challenge.status,
       supporting_documents:
         render_many(

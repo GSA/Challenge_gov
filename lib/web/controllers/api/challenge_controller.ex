@@ -9,7 +9,7 @@ defmodule Web.Api.ChallengeController do
   def index(conn, _params) do
     %{page: page, per: per} = conn.assigns
 
-    %{page: page, pagination: pagination} = Challenges.all(page: page, per: per)
+    %{page: page, pagination: pagination} = Challenges.all_public(page: page, per: per)
 
     conn
     |> assign(:challenges, page)

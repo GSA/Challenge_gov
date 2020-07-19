@@ -68,10 +68,22 @@ defmodule ChallengeGov.ChallengeTest do
       challenge = ChallengeHelpers.create_multi_phase_challenge(user, %{user_id: user.id})
 
       end_date = Challenges.find_end_date(challenge)
-      last_date = Timex.shift(Timex.now(), hours: 6)
+      last_date = Timex.shift(Timex.now(), hours: 4)
 
       assert length(challenge.phases) === 3
       assert Timex.equal?(end_date, last_date)
+    end
+  end
+
+  describe "create announcement" do
+    test "successfully" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      {:ok, challenge} = Challenges.create_announcement(challenge, "Test announcement")
+
+      assert challenge.announcement === "Test announcement"
+      assert challenge.announcement_datetime === DateTime.truncate(DateTime.utc_now(), :second)
     end
   end
 end

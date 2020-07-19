@@ -319,13 +319,15 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def save_draft_button(_section) do
-    submit("Save Draft",
-      name: "action",
-      value: "save_draft",
-      class: "btn btn-link float-right",
-      formnovalidate: true
-    )
+  def save_draft_button(section) do
+    if section != Enum.at(Challenges.sections(), -1).id do
+      submit("Save Draft",
+        name: "action",
+        value: "save_draft",
+        class: "btn btn-link float-right",
+        formnovalidate: true
+      )
+    end
   end
 
   def preview_challenge_button(conn, challenge, section) do
@@ -359,6 +361,18 @@ defmodule Web.ChallengeView do
   def next_section(section), do: Challenges.next_section(section)
   def prev_section(section), do: Challenges.prev_section(section)
 
+  def remove_update_button(conn, challenge = %{announcement: announcement})
+      when not is_nil(announcement),
+      do:
+        link("Remove update",
+          to: Routes.challenge_path(conn, :remove_announcement, challenge.id),
+          method: :post,
+          class: "btn btn-outline-danger",
+          data: [confirm: "Are you sure you want to remove this update?"]
+        )
+
+  def remove_update_button(_conn, _challenge), do: nil
+
   def logo_img(challenge, opts \\ []) do
     case is_nil(challenge.logo_key) do
       true ->
@@ -374,7 +388,7 @@ defmodule Web.ChallengeView do
   def logo_url(challenge) do
     case is_nil(challenge.logo_key) do
       true ->
-        nil
+        Routes.static_path(Web.Endpoint, "/images/challenge-logo.png")
 
       false ->
         Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
