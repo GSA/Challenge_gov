@@ -17,7 +17,6 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias Stein.Filter
-  alias Stein.Pagination
 
   import Ecto.Query
 
@@ -282,28 +281,24 @@ defmodule ChallengeGov.Challenges do
   Get all challenges
   """
   def all(opts \\ []) do
-    query =
-      Challenge
-      |> base_preload()
-      |> where([c], is_nil(c.deleted_at))
-      |> where([c], c.status == "published")
-      |> order_by([c], asc: c.end_date, asc: c.id)
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    Challenge
+    |> base_preload()
+    |> where([c], is_nil(c.deleted_at))
+    |> where([c], c.status == "published")
+    |> order_by([c], asc: c.end_date, asc: c.id)
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   def all_public(opts \\ []) do
-    query =
-      Challenge
-      |> base_preload()
-      |> where([c], is_nil(c.deleted_at))
-      |> where([c], c.status == "published")
-      |> where([c], c.end_date >= ^DateTime.utc_now())
-      |> order_by([c], asc: c.end_date, asc: c.id)
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    Challenge
+    |> base_preload()
+    |> where([c], is_nil(c.deleted_at))
+    |> where([c], c.status == "published")
+    |> where([c], c.end_date >= ^DateTime.utc_now())
+    |> order_by([c], asc: c.end_date, asc: c.id)
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   @doc """
@@ -332,14 +327,12 @@ defmodule ChallengeGov.Challenges do
   Get all challenges
   """
   def admin_all(opts \\ []) do
-    query =
-      Challenge
-      |> base_preload()
-      |> where([c], is_nil(c.deleted_at))
-      |> order_by([c], desc: c.status, desc: c.id)
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    Challenge
+    |> base_preload()
+    |> where([c], is_nil(c.deleted_at))
+    |> order_by([c], desc: c.status, desc: c.id)
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   @doc """
@@ -357,13 +350,11 @@ defmodule ChallengeGov.Challenges do
         |> where([c], is_nil(c.deleted_at) and c.status == "gsa_review")
       end
 
-    query =
-      start_query
-      |> base_preload()
-      |> order_on_attribute(opts[:sort])
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    start_query
+    |> base_preload()
+    |> order_on_attribute(opts[:sort])
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   @doc """
@@ -381,28 +372,11 @@ defmodule ChallengeGov.Challenges do
         |> where([c], is_nil(c.deleted_at))
       end
 
-    query =
-      start_query
-      |> base_preload()
-      |> order_on_attribute(opts[:sort])
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
-  end
-
-  @doc """
-  Get all challenges
-  """
-  def admin_counts() do
-    challenges =
-      Challenge
-      |> Repo.all()
-
-    pending = Enum.count(challenges, &(&1.status === "pending"))
-    created = Enum.count(challenges, &(&1.status === "created"))
-    archived = Enum.count(challenges, &(&1.status === "archived"))
-
-    %{pending: pending, created: created, archived: archived}
+    start_query
+    |> base_preload()
+    |> order_on_attribute(opts[:sort])
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   @doc """

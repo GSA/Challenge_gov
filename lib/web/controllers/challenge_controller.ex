@@ -27,8 +27,6 @@ defmodule Web.ChallengeController do
 
     challenges = Challenges.all_for_user(user, filter: filter, sort: sort, page: page, per: per)
 
-    counts = Challenges.admin_counts()
-
     conn
     |> assign(:user, user)
     |> assign(:pending_challenges, pending_challenges.page)
@@ -37,9 +35,6 @@ defmodule Web.ChallengeController do
     |> assign(:pagination, challenges.pagination)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
-    |> assign(:pending_count, counts.pending)
-    |> assign(:created_count, counts.created)
-    |> assign(:archived_count, counts.archived)
     |> render("index.html")
   end
 

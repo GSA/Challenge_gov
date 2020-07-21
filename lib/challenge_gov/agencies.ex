@@ -8,7 +8,6 @@ defmodule ChallengeGov.Agencies do
   alias ChallengeGov.Agencies.Member
   alias ChallengeGov.Agencies.Agency
   alias Stein.Filter
-  alias Stein.Pagination
 
   import Ecto.Query
 
@@ -30,13 +29,11 @@ defmodule ChallengeGov.Agencies do
   def all(opts \\ []) do
     opts = Enum.into(opts, %{})
 
-    query =
-      Agency
-      |> where([t], is_nil(t.deleted_at))
-      |> Filter.filter(opts[:filter], __MODULE__)
-      |> preload([:parent, :sub_agencies, members: ^member_query()])
-
-    Pagination.paginate(Repo, query, opts)
+    Agency
+    |> where([t], is_nil(t.deleted_at))
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> preload([:parent, :sub_agencies, members: ^member_query()])
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   def all_for_select() do

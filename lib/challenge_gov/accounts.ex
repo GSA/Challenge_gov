@@ -15,7 +15,6 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias Stein.Filter
-  alias Stein.Pagination
 
   import Ecto.Query
 
@@ -44,9 +43,9 @@ defmodule ChallengeGov.Accounts do
   def all(opts \\ []) do
     opts = Enum.into(opts, %{})
 
-    query = Filter.filter(User, opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    User
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   @doc """
@@ -62,13 +61,11 @@ defmodule ChallengeGov.Accounts do
   def public(opts \\ []) do
     opts = Enum.into(opts, %{})
 
-    query =
-      User
-      |> where([u], u.finalized == true)
-      |> where([u], u.display == true)
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    User
+    |> where([u], u.finalized == true)
+    |> where([u], u.display == true)
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   @doc """

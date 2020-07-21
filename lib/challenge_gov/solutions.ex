@@ -10,24 +10,17 @@ defmodule ChallengeGov.Solutions do
   alias ChallengeGov.Repo
   alias ChallengeGov.SecurityLogs
   alias Stein.Filter
-  alias Stein.Pagination
 
   import Ecto.Query
 
   @behaviour Stein.Filter
 
   def all(opts \\ []) do
-    query =
-      Solution
-      |> base_preload
-      |> where([s], is_nil(s.deleted_at))
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    if !is_nil(opts[:page]) and !is_nil(opts[:per]) do
-      Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
-    else
-      Repo.all(query)
-    end
+    Solution
+    |> base_preload
+    |> where([s], is_nil(s.deleted_at))
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   def get(id) do
