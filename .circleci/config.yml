@@ -140,7 +140,7 @@ jobs:
           at: ~/project
       - cloudfoundry/install:
           endpoint: 'https://api.fr.cloud.gov'
-          org: sandbox-gsa
+          org: gsa-10x-prototyping
           space: daniel.ivovich
       - run: cf push challenge-portal-dev
 
@@ -154,7 +154,7 @@ jobs:
           at: ~/project
       - cloudfoundry/install:
           endpoint: 'https://api.fr.cloud.gov'
-          org: sandbox-gsa
+          org: gsa-10x-prototyping
           space: daniel.ivovich
       - run: cf push challenge-portal-staging
 
