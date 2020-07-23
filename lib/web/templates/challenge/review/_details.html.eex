@@ -62,7 +62,7 @@
 <br/>
 <div>
   <div class="text-bold">Multi phase challenge:</div>
-  <div><%= @challenge.multi_phase %></div>
+  <div><%= @challenge.is_multi_phase %></div>
 </div>
 <br/>
 <div>

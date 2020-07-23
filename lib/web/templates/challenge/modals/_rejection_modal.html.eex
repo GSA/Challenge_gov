@@ -1,0 +1,20 @@
+<div class="modal fade" id="rejection-modal" tabindex="-1" role="dialog" aria-labelledby="rejection-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <%= form_for(@conn, Routes.challenge_path(@conn, :reject, @challenge.id), fn f -> %>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rejection-modal-label">What would you like changed?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <%= textarea f, :rejection_message, style: "width: 100%;", rows: 10, value: @challenge.rejection_message %>
+        </div>
+        <div class="modal-footer">
+          <%= submit("Request Edits", class: "btn btn-danger", data: [confirm: "Are you sure you want to reject this challenge?"] ) %>
+        </div>
+      </div>
+    <% end) %>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-<h4>Review and submit</h4>
+<h4><%= @title || "Review and submit" %></h4>
 <hr/>
 <%= render Web.ChallengeView, "review/_general.html", conn: @conn, challenge: @challenge %>
 <hr/>
