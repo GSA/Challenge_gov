@@ -268,9 +268,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def all_unpaginated(opts \\ []) do
-    Challenge
-    |> preload([:agency, :user])
-    |> where([c], is_nil(c.deleted_at))
+    base_query()
     |> order_by([c], asc: c.end_date, asc: c.id)
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.all()
@@ -281,9 +279,7 @@ defmodule ChallengeGov.Challenges do
   Get all challenges
   """
   def all(opts \\ []) do
-    Challenge
-    |> base_preload()
-    |> where([c], is_nil(c.deleted_at))
+    base_query()
     |> where([c], c.status == "published")
     |> order_by([c], asc: c.end_date, asc: c.id)
     |> Filter.filter(opts[:filter], __MODULE__)
@@ -291,9 +287,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def all_public(opts \\ []) do
-    Challenge
-    |> base_preload()
-    |> where([c], is_nil(c.deleted_at))
+    base_query()
     |> where([c], c.status == "published")
     |> where([c], c.end_date >= ^DateTime.utc_now())
     |> order_by([c], asc: c.end_date, asc: c.id)
@@ -305,21 +299,16 @@ defmodule ChallengeGov.Challenges do
   Get all public challenges non paginated for sitemap
   """
   def all_for_sitemap() do
-    Challenge
-    |> base_preload()
-    |> where([c], is_nil(c.deleted_at))
+    base_query()
     |> where([c], c.status == "published" or c.status == "archived")
     |> order_by([c], asc: c.end_date, asc: c.id)
     |> Repo.all()
   end
 
   def all_ready_for_publish() do
-    now = DateTime.utc_now()
-
-    Challenge
-    |> where([c], is_nil(c.deleted_at))
+    base_query()
     |> where([c], c.status == "approved")
-    |> where([c], fragment("? <= ?", c.auto_publish_date, ^now))
+    |> where([c], fragment("? <= ?", c.auto_publish_date, ^DateTime.utc_now()))
     |> Repo.all()
   end
 
@@ -327,9 +316,7 @@ defmodule ChallengeGov.Challenges do
   Get all challenges
   """
   def admin_all(opts \\ []) do
-    Challenge
-    |> base_preload()
-    |> where([c], is_nil(c.deleted_at))
+    base_query()
     |> order_by([c], desc: c.status, desc: c.id)
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.paginate(opts[:page], opts[:per])
@@ -339,19 +326,9 @@ defmodule ChallengeGov.Challenges do
   Get all challenges for a user
   """
   def all_pending_for_user(user, opts \\ []) do
-    start_query =
-      if user.role == "challenge_owner" do
-        Challenge
-        |> where([c], is_nil(c.deleted_at) and c.status == "gsa_review")
-        |> join(:inner, [c], co in assoc(c, :challenge_owners))
-        |> where([c, co], co.user_id == ^user.id and is_nil(co.revoked_at))
-      else
-        Challenge
-        |> where([c], is_nil(c.deleted_at) and c.status == "gsa_review")
-      end
-
-    start_query
-    |> base_preload()
+    user
+    |> base_all_for_user_query()
+    |> where([c], c.status == "gsa_review")
     |> order_on_attribute(opts[:sort])
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.paginate(opts[:page], opts[:per])
@@ -361,23 +338,26 @@ defmodule ChallengeGov.Challenges do
   Get all challenges for a user
   """
   def all_for_user(user, opts \\ []) do
-    start_query =
-      if user.role == "challenge_owner" do
-        Challenge
-        |> where([c], is_nil(c.deleted_at))
-        |> join(:inner, [c], co in assoc(c, :challenge_owners))
-        |> where([c, co], co.user_id == ^user.id and is_nil(co.revoked_at))
-      else
-        Challenge
-        |> where([c], is_nil(c.deleted_at))
-      end
-
-    start_query
-    |> base_preload()
+    user
+    |> base_all_for_user_query()
     |> order_on_attribute(opts[:sort])
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.paginate(opts[:page], opts[:per])
   end
+
+  defp base_query() do
+    Challenge
+    |> where([c], is_nil(c.deleted_at))
+    |> base_preload
+  end
+
+  defp base_all_for_user_query(%{id: id, role: "challenge_owner"}) do
+    base_query()
+    |> join(:inner, [c], co in assoc(c, :challenge_owners))
+    |> where([c, co], co.user_id == ^id and is_nil(co.revoked_at))
+  end
+
+  defp base_all_for_user_query(_), do: base_query()
 
   @doc """
   Get a challenge
