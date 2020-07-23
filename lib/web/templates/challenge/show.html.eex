@@ -31,18 +31,9 @@
     </div>
     <%= challenge_rejection_message(@challenge) %>
 
-    <%= render Web.ChallengeView, "_internal_info.html", conn: @conn, challenge: @challenge %>
-    <%= render Web.ChallengeView, "_winner_info.html", conn: @conn, challenge: @challenge %>
-
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-body">
-            <%= render Web.ChallengeView, "wizard/_review.html", conn: @conn, challenge: @challenge, title: "Challenge info" %>
-          </div>
-        </div>
-      </div>
-    </div>
+    <%= render Web.ChallengeView, "show/_internal_info.html", conn: @conn, challenge: @challenge %>
+    <%= render Web.ChallengeView, "show/_winner_info.html", conn: @conn, challenge: @challenge %>
+    <%= render Web.ChallengeView, "show/_info.html", conn: @conn, challenge: @challenge %>
   </div>
 </section>
 
