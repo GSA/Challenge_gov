@@ -42,6 +42,7 @@ defmodule ChallengeGov.Agencies do
   def all_for_select() do
     Agency
     |> where([a], is_nil(a.deleted_at))
+    |> where([a], is_nil(a.parent_id))
     |> order_by(:name)
     |> Repo.all()
   end

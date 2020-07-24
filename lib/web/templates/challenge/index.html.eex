@@ -10,7 +10,7 @@
           <span>Challenges</span>
           <div class="btn-group">
             <%= link "New", to: Routes.challenge_path(@conn, :new), class: "btn btn-primary" %>
-            <%= link "New (Non Wizard)", to: Routes.challenge_path(@conn, :new, non_wizard: true), class: "btn btn-danger" %>
+            <%# link "New (Non Wizard)", to: Routes.challenge_path(@conn, :new, non_wizard: true), class: "btn btn-danger" %>
           </div>
           <a class="btn btn-info" data-widget="control-sidebar" href="#">Filter</a>
           <%= if is_map(@filter) && map_size(@filter) > 0 do %>

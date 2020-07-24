@@ -188,7 +188,7 @@ defmodule Seeds do
       System.get_env("FIRST_USER_LN")
     )
 
-    create_agencies("priv/repo/agencies.txt")
+    # create_agencies("priv/repo/agencies.txt")
     create_user_certifications()
     # create_admin("admin@example.com")
     # create_agencies("priv/repo/agencies.txt")
