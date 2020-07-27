@@ -754,6 +754,15 @@ defmodule ChallengeGov.Challenges.Challenge do
     end
   end
 
+  defp dates_exist?(%{"open_to_submissions" => "true", "start_date" => "", "end_date" => ""}),
+    do: false
+
+  defp dates_exist?(%{"open_to_submissions" => "true", "start_date" => "", "end_date" => _}),
+    do: false
+
+  defp dates_exist?(%{"open_to_submissions" => "true", "start_date" => _, "end_date" => ""}),
+    do: false
+
   defp dates_exist?(%{"open_to_submissions" => "true", "start_date" => _, "end_date" => _}),
     do: true
 

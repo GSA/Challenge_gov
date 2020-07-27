@@ -30,7 +30,7 @@
           <%= default_enter_action("next") %>
           <%= progress_bar(@conn, @section, @changeset.data, @action) %>
 
-          <%= Web.ErrorHelpers.all_errors(@changeset) %>
+          <%#= Web.ErrorHelpers.all_errors(@changeset) %>
 
           <div class="card">
             <%= hidden_input f, :section, value: @section %>
