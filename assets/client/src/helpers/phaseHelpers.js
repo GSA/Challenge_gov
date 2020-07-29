@@ -48,6 +48,10 @@ export const isSinglePhase = (challenge) => {
   return challenge.phases.length === 1
 }
 
+export const isPhaseless = (challenge) => {
+  return challenge.phases.length === 0
+}
+
 export const phaseNumber = (phases, phase) => {
   return phases.indexOf(phase) + 1
 }
@@ -59,6 +63,14 @@ export const formatDateTime = (date) => {
 
 export const formatDate = (date) => {
   return moment(date).local().format("MM/DD/YY")
+}
+
+export const formatTime = (date) => {
+  return moment(date).local().format("hh:mm A z")
+}
+
+export const daysInMinutes = (days) => {
+  return moment.duration(days, 'days').as('minutes')
 }
 
 export default {

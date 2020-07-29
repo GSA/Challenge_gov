@@ -1,10 +1,10 @@
 import React from 'react';
 import moment from 'moment';
-import {formatDate} from "../helpers/phaseHelpers"
+import {formatDate, daysInMinutes} from "../helpers/phaseHelpers"
 
 export const ChallengeAnnouncement = ({challenge}) => {
   const checkAnnouncementDate = ({announcement_datetime}) => {
-    return moment().diff(announcement_datetime, 'days') <= 14
+    return moment().diff(announcement_datetime, 'minutes') <= daysInMinutes(14)
   }
 
   return (    

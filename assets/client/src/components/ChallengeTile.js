@@ -1,21 +1,25 @@
 import React from 'react'
 import { Link } from "react-router-dom";
 import moment from "moment"
-import {formatDateTime} from "../helpers/phaseHelpers"
+import {getCurrentPhase, getNextPhase, phaseNumber, formatDateTime, formatTime, isSinglePhase, isPhaseless, daysInMinutes} from "../helpers/phaseHelpers"
 
 export const ChallengeTile = ({challenge, preview}) => {
   const renderTags = ({start_date, end_date, announcement_datetime}) => {
+    const startDateDiff = moment().diff(start_date, 'minutes')
+    const endDateDiff = moment().diff(end_date, 'minutes')
+    const announcementDateDiff = moment().diff(announcement_datetime, 'minutes')
+
     let tags = []
 
-    if (moment().diff(start_date, 'days') <= 0) {
+    if (startDateDiff < 0) {
       tags.push(<div key={"coming_soon"} className="usa-tag usa-tag--coming-soon">Coming soon</div>)
     }
 
-    if (moment().diff(end_date, 'days') >= -7 && moment().diff(end_date, 'days') < 1) {
+    if (endDateDiff >= daysInMinutes(-7) && endDateDiff < 0) {
       tags.push(<div key={"closing_soon"} className="usa-tag usa-tag--closing-soon">Closing soon</div>)
     }
 
-    if (moment().diff(announcement_datetime, 'days') <= 7) {
+    if (announcementDateDiff <= daysInMinutes(7)) {
       tags.push(<div key={"important_update"} className="usa-tag usa-tag--important-update">Important update</div>)
     }
 
@@ -25,6 +29,61 @@ export const ChallengeTile = ({challenge, preview}) => {
           {tags}
         </div>
       )
+    }
+  }
+
+  const renderDate = (challenge) => {
+    const {start_date, end_date, phases} = challenge
+    const startDateDiff = moment().diff(start_date, 'minutes')
+    const endDateDiff = moment().diff(end_date, 'minutes')
+
+    if (isPhaseless(challenge)) {
+      return handlePhaselessChallengeDate(challenge)
+    } else {
+      let currentPhase = getCurrentPhase(phases)
+      let nextPhase = getNextPhase(phases)
+
+      if (startDateDiff < 0) {
+        return `Opens on ${formatDateTime(start_date)}`
+      }
+
+      if (endDateDiff >= 0) {
+        return "Closed to submissions"
+      }
+
+      if (currentPhase) {
+        if (isSinglePhase(challenge)) {
+          return `Open until ${formatDateTime(end_date)}`
+        } else {
+          return `Phase ${phaseNumber(phases, currentPhase)} open until ${formatDateTime(currentPhase.end_date)}`
+        }
+      }
+
+      if (nextPhase) {
+        return `Phase ${phaseNumber(phases, nextPhase)} opens on ${formatDateTime(nextPhase.start_date)}`
+      }
+    }
+  }
+
+  // TODO: This is potentially temporary until the importer handles adding phases to imported challenges
+  const handlePhaselessChallengeDate = ({start_date, end_date}) => {
+    const startDateDiff = moment().diff(start_date, 'minutes')
+    const endDateDiff = moment().diff(end_date, 'minutes')
+
+    if (startDateDiff < 0) {
+      return `Opens on ${formatDateTime(start_date)}`
+    }
+
+    if (startDateDiff >= 0 && endDateDiff < daysInMinutes(-1)) {
+      return `Open until ${formatDateTime(end_date)}`
+    }
+
+    if (endDateDiff >= daysInMinutes(-1) && endDateDiff < 0) {
+      return `Closes today at ${formatTime(end_date)}`
+    }
+
+    if (endDateDiff >= 0) {
+      return "Closed to submissions"
     }
   }
 
@@ -47,7 +106,7 @@ export const ChallengeTile = ({challenge, preview}) => {
             <p className="card__title test" aria-label="Challenge title">{challenge.title}</p>
             <p className="card__agency-name" aria-label="Agency name">{challenge.agency_name}</p>
             <p className="card__tagline" aria-label="Challenge tagline">{challenge.tagline}</p>
-            <p className="card__date">{formatDateTime(challenge.open_until)}</p>
+            <p className="card__date">{renderDate(challenge)}</p>
             {renderTags(challenge)}
           </div>
         </Link>
