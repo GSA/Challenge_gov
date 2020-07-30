@@ -183,6 +183,7 @@
     </div>
     <br/>
 
+    <%= existing_phase_data_boolean(@form) %>
     <%= render Web.ChallengeView, "phases/_single_phase.html", form: @form %>
     <%= render Web.ChallengeView, "phases/_multi_phase.html", form: @form %>
   </div>

@@ -15,5 +15,6 @@ import "./_solution_file_upload.js";
 import "./_sub_agency_select.js";
 import "./_timezone.js";
 
-// Wizard specific JS (Depedent on some above JS)
+// Wizard specific JS (Dependent on some above JS)
+import "./_challenge_wizard_details.js"; 
 import "./_challenge_wizard_rules.js"; // Dependent on _rich_text_editor.js

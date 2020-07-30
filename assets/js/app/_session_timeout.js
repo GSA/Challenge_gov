@@ -1,6 +1,4 @@
-console.log("JS ran")
 if ($("#session_timeout").length > 0) {
-  console.log("Listeners attached")
   let doRenewSession = false
 
   $(".wrapper").prepend(

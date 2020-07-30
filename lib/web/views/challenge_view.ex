@@ -280,6 +280,15 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def existing_phase_data_boolean(form) do
+    content_tag(
+      :div,
+      Enum.any?(form.data.phases, &(!is_nil(&1.judging_criteria) || !is_nil(&1.how_to_enter))),
+      id: "existing-phase-data-boolean",
+      style: "display: none;"
+    )
+  end
+
   def documents_for_section(documents, section) do
     Enum.filter(documents, fn document ->
       document.section === section
