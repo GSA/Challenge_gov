@@ -195,6 +195,43 @@ defmodule Web.ChallengeView do
     )
   end
 
+  def wizard_challenge_owners_field(form, user, changeset) do
+    content_tag :div, class: FormView.form_group_classes(form, :challenge_owners) do
+      [
+        label(form, :challenge_owners, class: "col-md-4") do
+          [
+            "Challenge Owners ",
+            content_tag(:span, "*", class: "required")
+          ]
+        end,
+        content_tag(:div, class: "col-md-8") do
+          [
+            multiple_select(
+              form,
+              :challenge_owners,
+              Enum.map(
+                Accounts.all_for_select(),
+                &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}
+              ),
+              selected: initial_challenge_owners(form, user, changeset),
+              class: "form-control js-multiselect",
+              disabled: !Accounts.has_admin_access?(user)
+            ),
+            error_tag(form, :challenge_owners)
+          ]
+        end
+      ]
+    end
+  end
+
+  defp initial_challenge_owners(form, user, changeset) do
+    if Accounts.is_challenge_owner?(user) and Enum.empty?(form.data.challenge_owners) do
+      user.id
+    else
+      Enum.map(changeset.data.challenge_owner_users, & &1.id)
+    end
+  end
+
   @doc """
   Hidden federal partners field to keep existing federal partners from being wiped if none are passed
   """

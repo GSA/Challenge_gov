@@ -3,6 +3,7 @@
 
 <h3>Add general information</h3>
 <br/>
+<%= wizard_challenge_owners_field(@form, @user, @changeset) %>
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 <%= FormView.text_field(@form, :challenge_manager, label: "Challenge manager of record (does not appear on public listing)", required: true) %>
 <%= FormView.email_field(@form, :challenge_manager_email, label: "Challenge manager email (does not appear on public listing)", placeholder: "challenge_manager@example.com", required: true) %>

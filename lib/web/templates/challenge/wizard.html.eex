@@ -41,8 +41,10 @@
             <div class="card-body">
               <%= render Web.ChallengeView, "wizard/_#{@section}.html", 
                 form: f, 
+                action: @action,
                 changeset: @changeset, 
                 data: @changeset.data, 
+                user: @user,
                 challenge: @challenge,
                 section: @section,
                 documents: documents_for_section(@changeset.data.supporting_documents, @section), 
