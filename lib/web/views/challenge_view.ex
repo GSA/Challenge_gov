@@ -53,8 +53,24 @@ defmodule Web.ChallengeView do
   end
 
   def status_display_name(challenge) do
-    Challenges.status_label(challenge.status)
+    [Challenges.status_label(challenge.status), published_sub_status_display(challenge, true)]
   end
+
+  def published_sub_status_display(challenge, attached \\ false)
+
+  def published_sub_status_display(challenge = %{status: "published"}, attached) do
+    sub_status =
+      cond do
+        Challenges.is_archived_new?(challenge) -> "archived"
+        Challenges.is_closed?(challenge) -> "closed"
+        Challenges.is_open?(challenge) -> "open"
+        true -> ""
+      end
+
+    [if(attached and sub_status !== "", do: ", ", else: ""), sub_status]
+  end
+
+  def published_sub_status_display(_challenge, _attached), do: ""
 
   def challenge_edit_link(conn, challenge, opts \\ []) do
     route =

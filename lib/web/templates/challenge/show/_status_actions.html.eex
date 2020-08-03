@@ -1,0 +1,29 @@
+<div class="card">
+  <div class="card-body">
+    <h4>Status</h4>
+    <p><%= status_display_name(@challenge) %></p>
+    <div class="btn-toolbar">  
+      <%= if Challenges.is_approvable?(@challenge, @user) do  %>
+        <%= link("Approve", to: Routes.challenge_path(@conn, :approve, @challenge.id), method: :post, class: "btn btn-primary") %>
+      <% end %>
+      <%= if Challenges.is_publishable?(@challenge, @user) do  %>
+        <%= link("Publish", to: Routes.challenge_path(@conn, :publish, @challenge.id), method: :post, class: "btn btn-primary") %>
+      <% end %>
+      <%= if Challenges.is_unpublishable?(@challenge, @user) do  %>
+        <%= link("Unpublish", to: Routes.challenge_path(@conn, :unpublish, @challenge.id), method: :post, class: "btn btn-danger", data: [confirm: "Are you sure you want to unpublish this challenge?"]) %>
+      <% end %>
+      <%= if Challenges.is_submittable?(@challenge, @user) do  %>
+        <%= link("Submit", to: Routes.challenge_path(@conn, :submit, @challenge.id), method: :post, class: "btn btn-primary", data: [confirm: "Are you sure you want to submit this challenge for approval?"]) %>
+      <% end %>
+      <%= if Challenges.is_archivable?(@challenge, @user) do  %>
+        <%= link("Archive", to: Routes.challenge_path(@conn, :archive, @challenge.id), method: :post, class: "btn btn-default", data: [confirm: "Are you sure you want to archive this challenge?"] ) %>
+      <% end %>
+      <%= if Challenges.is_unarchivable?(@challenge, @user) do  %>
+        <%= link("Unarchive", to: Routes.challenge_path(@conn, :unarchive, @challenge.id), method: :post, class: "btn btn-default", data: [confirm: "Are you sure you want to archive this challenge?"] ) %>
+      <% end %>
+      <%= if Challenges.can_request_edits?(@challenge, @user) do  %>
+        <%= link("Request Edits", to: "#", class: "btn btn-danger", data: [toggle: "modal", target: "#rejection-modal"] ) %>
+      <% end %>
+    </div>
+  </div>
+</div>

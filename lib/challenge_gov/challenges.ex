@@ -679,6 +679,29 @@ defmodule ChallengeGov.Challenges do
   def is_unpublished?(%{status: "unpublished"}), do: true
   def is_unpublished?(_user), do: false
 
+  def is_open?(%{start_date: start_date, end_date: end_date})
+      when not is_nil(start_date) and not is_nil(end_date) do
+    now = DateTime.utc_now()
+    DateTime.compare(now, start_date) === :gt and DateTime.compare(now, end_date) === :lt
+  end
+
+  def is_open?(_challenge), do: false
+
+  def is_closed?(%{end_date: end_date}) when not is_nil(end_date) do
+    now = DateTime.utc_now()
+    DateTime.compare(now, end_date) === :gt
+  end
+
+  def is_closed?(_challenge), do: false
+
+  def is_archived_new?(%{phases: phases}) when not length(phases) == 0 do
+    now = DateTime.utc_now()
+    phases_end_date = Enum.max_by(phases, & &1.end_date).end_date
+    DateTime.compare(now, phases_end_date) === :gt
+  end
+
+  def is_archived_new?(_challenge), do: false
+
   def is_archived?(%{status: "archived"}), do: true
   def is_archived?(_user), do: false
 

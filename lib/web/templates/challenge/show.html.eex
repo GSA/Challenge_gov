@@ -24,11 +24,15 @@
 
 <section class="content">
   <div class="container-fluid">
-    <div class="row mb-3">
-      <div class="col-md-12 d-flex justify-content-end">
-        <%= render Web.ChallengeView, "_button_bar.html", conn: @conn, challenge: @challenge, user: @user %>
+    <div class="row challenge-show-actions">
+      <div class="col-md-6">
+        <%= render Web.ChallengeView, "show/_status_actions.html", conn: @conn, challenge: @challenge, user: @user %>
+      </div>
+      <div class="col-md-6">
+        <%= render Web.ChallengeView, "show/_other_actions.html", conn: @conn, challenge: @challenge, user: @user %>
       </div>
     </div>
+
     <%= challenge_rejection_message(@challenge) %>
 
     <%= render Web.ChallengeView, "show/_internal_info.html", conn: @conn, challenge: @challenge %>
