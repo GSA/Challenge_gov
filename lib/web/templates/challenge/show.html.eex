@@ -35,9 +35,9 @@
 
     <%= challenge_rejection_message(@challenge) %>
 
-    <%= render Web.ChallengeView, "show/_internal_info.html", conn: @conn, challenge: @challenge %>
+    <%#= render Web.ChallengeView, "show/_internal_info.html", conn: @conn, challenge: @challenge %>
     <%= render Web.ChallengeView, "show/_winner_info.html", conn: @conn, challenge: @challenge %>
-    <%= render Web.ChallengeView, "show/_info.html", conn: @conn, challenge: @challenge %>
+    <%= render Web.ChallengeView, "show/_info.html", conn: @conn, challenge: @challenge, user: @user %>
   </div>
 </section>
 

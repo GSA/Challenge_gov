@@ -3,6 +3,17 @@
   <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "general"), class: "btn btn-link") %>
 </div>
 <br/>
+<dt>Owners</dd>
+<dd>
+  <ul>
+    <%= Enum.map(@challenge.challenge_owners, fn owner -> %>
+      <%= if is_nil(owner.revoked_at) do %>
+        <li><%= Web.UserView.name_link(@conn, owner.user) %></li>
+      <% end %>
+    <% end) %>
+  </ul>
+</dd>
+<br/>
 <div>
   <div class="text-bold">Challenge manager of record:</div>
   <div><%= @challenge.challenge_manager %></div>
