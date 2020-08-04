@@ -1,0 +1,21 @@
+<%= if @challenge.winner_information || @challenge. winner_image_key do %>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h4>Winner info</h4>
+          <hr/>
+          <dt>Winner Information</dd>
+          <dd><%= @challenge.winner_information %></dd>
+
+          <dt>Winner Image</dd>
+          <dd><%= winner_img(@challenge, height: 150) %></dd>
+          <%= if @challenge.winner_image_key do %>
+            <br/>
+            <%= button("Remove Winner Image", to: Routes.challenge_path(@conn, :remove_winner_image, @challenge.id), class: "btn btn-danger", data: [confirm: "Are you sure?"]) %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

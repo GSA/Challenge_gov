@@ -188,6 +188,10 @@ th {
   margin-bottom: 10px;
 }
 
+.select2-selection__choice {
+  color: black !important;
+}
+
 .is-invalid {
   .select2-selection,
   .ql-container,
@@ -250,4 +254,30 @@ label {
 
 .ql-disabled {
   background-color: #e9ecef;
+}
+
+.btn-toolbar {
+  a {
+    margin-right: .5rem;
+  }
+  a:last-child {
+    margin-right: 0;
+  }
+}
+
+.challenge-show-actions {
+  .card {
+    min-height: 10rem;
+  }
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  h4 {
+    flex-grow: 1;
+  }
+  .btn {
+    margin-bottom: .5rem;
+  }
 }

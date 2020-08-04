@@ -30,6 +30,11 @@ defmodule Web.Router do
     plug(Web.Plugs.VerifyNoUser)
   end
 
+  pipeline(:signed_in_api) do
+    plug(Web.Plugs.VerifyUser, for: :api)
+    plug(Web.Plugs.SessionTimeout)
+  end
+
   # Status pipelines
   pipeline(:valid_status) do
     plug(Web.Plugs.CheckUserStatus)
@@ -135,7 +140,7 @@ defmodule Web.Router do
 
   # API Routes
   scope "/api", Web.Api, as: :api do
-    pipe_through([:api, :signed_in])
+    pipe_through([:api, :signed_in_api])
 
     resources("/documents", DocumentController, only: [:create, :delete])
     resources("/solution_documents", SolutionDocumentController, only: [:create, :delete])

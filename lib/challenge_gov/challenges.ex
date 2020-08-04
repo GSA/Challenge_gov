@@ -17,7 +17,6 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias Stein.Filter
-  alias Stein.Pagination
 
   import Ecto.Query
 
@@ -269,9 +268,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def all_unpaginated(opts \\ []) do
-    Challenge
-    |> preload([:agency, :user])
-    |> where([c], is_nil(c.deleted_at))
+    base_query()
     |> order_by([c], asc: c.end_date, asc: c.id)
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.all()
@@ -282,49 +279,36 @@ defmodule ChallengeGov.Challenges do
   Get all challenges
   """
   def all(opts \\ []) do
-    query =
-      Challenge
-      |> base_preload()
-      |> where([c], is_nil(c.deleted_at))
-      |> where([c], c.status == "published")
-      |> order_by([c], asc: c.end_date, asc: c.id)
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    base_query()
+    |> where([c], c.status == "published")
+    |> order_by([c], asc: c.end_date, asc: c.id)
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   def all_public(opts \\ []) do
-    query =
-      Challenge
-      |> base_preload()
-      |> where([c], is_nil(c.deleted_at))
-      |> where([c], c.status == "published")
-      |> where([c], c.end_date >= ^DateTime.utc_now())
-      |> order_by([c], asc: c.end_date, asc: c.id)
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    base_query()
+    |> where([c], c.status == "published")
+    |> where([c], c.end_date >= ^DateTime.utc_now())
+    |> order_by([c], asc: c.end_date, asc: c.id)
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   @doc """
   Get all public challenges non paginated for sitemap
   """
   def all_for_sitemap() do
-    Challenge
-    |> base_preload()
-    |> where([c], is_nil(c.deleted_at))
+    base_query()
     |> where([c], c.status == "published" or c.status == "archived")
     |> order_by([c], asc: c.end_date, asc: c.id)
     |> Repo.all()
   end
 
   def all_ready_for_publish() do
-    now = DateTime.utc_now()
-
-    Challenge
-    |> where([c], is_nil(c.deleted_at))
+    base_query()
     |> where([c], c.status == "approved")
-    |> where([c], fragment("? <= ?", c.auto_publish_date, ^now))
+    |> where([c], fragment("? <= ?", c.auto_publish_date, ^DateTime.utc_now()))
     |> Repo.all()
   end
 
@@ -332,78 +316,48 @@ defmodule ChallengeGov.Challenges do
   Get all challenges
   """
   def admin_all(opts \\ []) do
-    query =
-      Challenge
-      |> base_preload()
-      |> where([c], is_nil(c.deleted_at))
-      |> order_by([c], desc: c.status, desc: c.id)
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    base_query()
+    |> order_by([c], desc: c.status, desc: c.id)
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   @doc """
   Get all challenges for a user
   """
   def all_pending_for_user(user, opts \\ []) do
-    start_query =
-      if user.role == "challenge_owner" do
-        Challenge
-        |> where([c], is_nil(c.deleted_at) and c.status == "gsa_review")
-        |> join(:inner, [c], co in assoc(c, :challenge_owners))
-        |> where([c, co], co.user_id == ^user.id and is_nil(co.revoked_at))
-      else
-        Challenge
-        |> where([c], is_nil(c.deleted_at) and c.status == "gsa_review")
-      end
-
-    query =
-      start_query
-      |> base_preload()
-      |> order_on_attribute(opts[:sort])
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    user
+    |> base_all_for_user_query()
+    |> where([c], c.status == "gsa_review")
+    |> order_on_attribute(opts[:sort])
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   @doc """
   Get all challenges for a user
   """
   def all_for_user(user, opts \\ []) do
-    start_query =
-      if user.role == "challenge_owner" do
-        Challenge
-        |> where([c], is_nil(c.deleted_at))
-        |> join(:inner, [c], co in assoc(c, :challenge_owners))
-        |> where([c, co], co.user_id == ^user.id and is_nil(co.revoked_at))
-      else
-        Challenge
-        |> where([c], is_nil(c.deleted_at))
-      end
-
-    query =
-      start_query
-      |> base_preload()
-      |> order_on_attribute(opts[:sort])
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
+    user
+    |> base_all_for_user_query()
+    |> order_on_attribute(opts[:sort])
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
-  @doc """
-  Get all challenges
-  """
-  def admin_counts() do
-    challenges =
-      Challenge
-      |> Repo.all()
-
-    pending = Enum.count(challenges, &(&1.status === "pending"))
-    created = Enum.count(challenges, &(&1.status === "created"))
-    archived = Enum.count(challenges, &(&1.status === "archived"))
-
-    %{pending: pending, created: created, archived: archived}
+  defp base_query() do
+    Challenge
+    |> where([c], is_nil(c.deleted_at))
+    |> base_preload
   end
+
+  defp base_all_for_user_query(%{id: id, role: "challenge_owner"}) do
+    base_query()
+    |> join(:inner, [c], co in assoc(c, :challenge_owners))
+    |> where([c, co], co.user_id == ^id and is_nil(co.revoked_at))
+  end
+
+  defp base_all_for_user_query(_), do: base_query()
 
   @doc """
   Get a challenge
@@ -725,6 +679,37 @@ defmodule ChallengeGov.Challenges do
   def is_unpublished?(%{status: "unpublished"}), do: true
   def is_unpublished?(_user), do: false
 
+  def is_open?(challenge = %{start_date: start_date, end_date: end_date})
+      when not is_nil(start_date) and not is_nil(end_date) do
+    now = DateTime.utc_now()
+
+    is_published?(challenge) and DateTime.compare(now, start_date) === :gt and
+      DateTime.compare(now, end_date) === :lt
+  end
+
+  def is_open?(_challenge), do: false
+
+  def is_closed?(challenge = %{end_date: end_date}) when not is_nil(end_date) do
+    now = DateTime.utc_now()
+    is_published?(challenge) and DateTime.compare(now, end_date) === :gt
+  end
+
+  def is_closed?(_challenge), do: false
+
+  def is_archived_new?(challenge = %{phases: phases}) when length(phases) > 0 do
+    now = DateTime.utc_now()
+
+    phases_end_date =
+      Enum.max_by(phases, fn p ->
+        d = p.end_date
+        {d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond}
+      end).end_date
+
+    is_published?(challenge) and DateTime.compare(now, phases_end_date) === :gt
+  end
+
+  def is_archived_new?(_challenge), do: false
+
   def is_archived?(%{status: "archived"}), do: true
   def is_archived?(_user), do: false
 
@@ -753,7 +738,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def can_request_edits?(challenge) do
-    in_review?(challenge) or has_edits_requested?(challenge) or is_published?(challenge) or
+    in_review?(challenge) or has_edits_requested?(challenge) or is_open?(challenge) or
       is_approved?(challenge)
   end
 
@@ -778,7 +763,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_publishable?(challenge) do
-    is_approved?(challenge) or is_unpublished?(challenge)
+    is_approved?(challenge)
   end
 
   def is_publishable?(challenge, user) do
@@ -786,7 +771,8 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_unpublishable?(challenge) do
-    is_approved?(challenge) or is_published?(challenge) or is_archived?(challenge)
+    (is_approved?(challenge) or is_published?(challenge) or is_archived?(challenge)) and
+      !(is_closed?(challenge) or is_archived_new?(challenge))
   end
 
   def is_unpublishable?(challenge, user) do
@@ -806,7 +792,7 @@ defmodule ChallengeGov.Challenges do
   def submit(challenge, user, remote_ip) do
     changeset =
       challenge
-      |> Challenge.submit_changeset()
+      |> Challenge.section_changeset(%{"section" => "review"}, "submit")
 
     result =
       Ecto.Multi.new()
@@ -819,7 +805,7 @@ defmodule ChallengeGov.Challenges do
         send_pending_challenge_email(challenge)
         {:ok, challenge}
 
-      {:error, changeset} ->
+      {:error, :challenge, changeset, _changes} ->
         {:error, changeset}
     end
   end

@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <h4>Internal info</h4>
+        <hr/>
+        
+        <dt>Submitter</dt>
+        <dd><%= link(@challenge.user.email, to: Routes.user_path(@conn, :show, @challenge.user_id)) %></dd>
+        <br/>
+
+        <dt>Owners</dd>
+        <dd>
+          <ul>
+            <%= Enum.map(@challenge.challenge_owners, fn owner -> %>
+              <%= if is_nil(owner.revoked_at) do %>
+                <li><%= Web.UserView.name_link(@conn, owner.user) %></li>
+              <% end %>
+            <% end) %>
+          </ul>
+        </dd>
+        <br/>
+
+        <dt>Status</dd>
+        <dd><%= status_display_name(@challenge) %></dd>
+        <br/>
+
+        <dt>Start Date</dd>
+        <dd><%= SharedView.readable_datetime(@challenge.start_date) %></dd>
+        <br/>
+
+        <dt>End Date</dd>
+        <dd><%= SharedView.readable_datetime(@challenge.end_date) %></dd>
+        <br/>
+
+        <dt>Published On</dd>
+        <dd><%= SharedView.readable_date(@challenge.published_on) %></dd>
+      </div>
+    </div>
+  </div>
+</div>    

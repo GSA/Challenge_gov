@@ -23,7 +23,13 @@ defmodule Web.Api.ChallengeView do
       open_until: Challenges.find_end_date(challenge),
       start_date: challenge.start_date,
       end_date: challenge.end_date,
-      announcement_datetime: challenge.announcement_datetime
+      announcement_datetime: challenge.announcement_datetime,
+      phases:
+        render_many(
+          challenge.phases,
+          Web.Api.PhaseView,
+          "show.json"
+        )
     }
   end
 

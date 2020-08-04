@@ -10,6 +10,18 @@ defmodule Web.Plugs.VerifyUser do
 
   def init(default), do: default
 
+  def call(conn, for: :api) do
+    case Map.has_key?(conn.assigns, :current_user) do
+      true ->
+        conn
+
+      false ->
+        conn
+        |> send_resp(401, "")
+        |> halt()
+    end
+  end
+
   def call(conn, _opts) do
     case Map.has_key?(conn.assigns, :current_user) do
       true ->

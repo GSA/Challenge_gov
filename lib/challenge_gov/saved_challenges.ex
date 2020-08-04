@@ -6,24 +6,17 @@ defmodule ChallengeGov.SavedChallenges do
   alias ChallengeGov.Challenges
   alias ChallengeGov.SavedChallenges.SavedChallenge
   alias Stein.Filter
-  alias Stein.Pagination
 
   import Ecto.Query
 
   @behaviour Stein.Filter
 
   def all(user, opts \\ []) do
-    query =
-      SavedChallenge
-      |> base_preload
-      |> where([sc], sc.user_id == ^user.id)
-      |> Filter.filter(opts[:filter], __MODULE__)
-
-    if !is_nil(opts[:page]) and !is_nil(opts[:per]) do
-      Pagination.paginate(Repo, query, %{page: opts[:page], per: opts[:per]})
-    else
-      Repo.all(query)
-    end
+    SavedChallenge
+    |> base_preload
+    |> where([sc], sc.user_id == ^user.id)
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
   end
 
   def get(id) do

@@ -1,17 +1,17 @@
-<h4>Review and submit</h4>
+<h4><%= @title %></h4>
 <hr/>
-<%= render Web.ChallengeView, "review/_general.html", conn: @conn, challenge: @challenge %>
+<%= render Web.ChallengeView, "review/_general.html", conn: @conn, challenge: @challenge, user: @user %>
 <hr/>
-<%= render Web.ChallengeView, "review/_details.html", conn: @conn, challenge: @challenge %>
+<%= render Web.ChallengeView, "review/_details.html", conn: @conn, challenge: @challenge, user: @user %>
 <hr/>
-<%= render Web.ChallengeView, "review/_timeline.html", conn: @conn, challenge: @challenge %>
+<%= render Web.ChallengeView, "review/_timeline.html", conn: @conn, challenge: @challenge, user: @user %>
 <hr/>
-<%= render Web.ChallengeView, "review/_prizes.html", conn: @conn, challenge: @challenge %>
+<%= render Web.ChallengeView, "review/_prizes.html", conn: @conn, challenge: @challenge, user: @user %>
 <hr/>
-<%= render Web.ChallengeView, "review/_rules.html", conn: @conn, challenge: @challenge %>
+<%= render Web.ChallengeView, "review/_rules.html", conn: @conn, challenge: @challenge, user: @user %>
 <hr/>
-<%= render Web.ChallengeView, "review/_judging.html", conn: @conn, challenge: @challenge %>
+<%= render Web.ChallengeView, "review/_judging.html", conn: @conn, challenge: @challenge, user: @user %>
 <hr/>
-<%= render Web.ChallengeView, "review/_how_to_enter.html", conn: @conn, challenge: @challenge %>
+<%= render Web.ChallengeView, "review/_how_to_enter.html", conn: @conn, challenge: @challenge, user: @user %>
 <hr/>
-<%= render Web.ChallengeView, "review/_resources.html", conn: @conn, challenge: @challenge %>
+<%= render Web.ChallengeView, "review/_resources.html", conn: @conn, challenge: @challenge, user: @user %>

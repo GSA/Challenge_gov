@@ -47,12 +47,18 @@
 
 <div class="form-group">
   <%= label @form, :custom_url, "Custom url (optional)", class: "col-md-4" %>
-  <p>If no custom URL is provided, the challenge URL will default to the challenge title.</p>
-  <span>http://www.challenge.gov/challenge/</span><span id="custom-url-example"></span>
+  <div class="ml-2">
+    <p>If no custom URL is provided, the challenge URL will default to the challenge title.</p>
+    <span>http://www.challenge.gov/challenge/</span><span id="custom-url-example"></span>
+  </div>
   <%= FormView.text_field(@form, :custom_url, label: nil, placeholder: "my-custom-challenge-name") %>
 </div>
 
-<%= FormView.text_field(@form, :external_url, label: "Existing external challenge link (optional)") %>
+<p class="ml-2 mb-0">Existing external challenge link (optional)</p>
+<%= FormView.text_field(@form, :external_url, label: "If the challenge is hosted external from the Challenge.gov platform, enter the link for users to visit that website.") %>
+
+<hr/>
+
 <%= FormView.textarea_field(@form, :brief_description, label: "Short description (help text: Appears in challenge details header)", limit: 200, required: true) %>
 
 <div class="col">
@@ -178,6 +184,7 @@
     </div>
     <br/>
 
+    <%= existing_phase_data_boolean(@form) %>
     <%= render Web.ChallengeView, "phases/_single_phase.html", form: @form %>
     <%= render Web.ChallengeView, "phases/_multi_phase.html", form: @form %>
   </div>

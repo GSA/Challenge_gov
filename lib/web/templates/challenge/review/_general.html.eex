@@ -1,7 +1,20 @@
 <div class="display-flex flex-row flex-justify">
   <h5>General Info</h5>
-  <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "general"), class: "btn btn-link") %>
+  <%= if Accounts.has_admin_access?(@user) or !Challenges.is_archived_new?(@challenge) do %>
+    <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "general"), class: "btn btn-link") %>
+  <% end %>
 </div>
+<br/>
+<dt>Owners</dd>
+<dd>
+  <ul>
+    <%= Enum.map(@challenge.challenge_owners, fn owner -> %>
+      <%= if is_nil(owner.revoked_at) do %>
+        <li><%= Web.UserView.name_link(@conn, owner.user) %></li>
+      <% end %>
+    <% end) %>
+  </ul>
+</dd>
 <br/>
 <div>
   <div class="text-bold">Challenge manager of record:</div>
