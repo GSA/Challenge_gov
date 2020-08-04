@@ -1,6 +1,8 @@
 <div class="display-flex flex-row flex-justify">
   <h5>Details</h5>
-  <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "details"), class: "btn btn-link") %>
+  <%= if Accounts.has_admin_access?(@user) or !Challenges.is_archived_new?(@challenge) do %>
+    <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "details"), class: "btn btn-link") %>
+  <% end %>
 </div>
 <br/>
 <div>

@@ -679,25 +679,33 @@ defmodule ChallengeGov.Challenges do
   def is_unpublished?(%{status: "unpublished"}), do: true
   def is_unpublished?(_user), do: false
 
-  def is_open?(%{start_date: start_date, end_date: end_date})
+  def is_open?(challenge = %{start_date: start_date, end_date: end_date})
       when not is_nil(start_date) and not is_nil(end_date) do
     now = DateTime.utc_now()
-    DateTime.compare(now, start_date) === :gt and DateTime.compare(now, end_date) === :lt
+
+    is_published?(challenge) and DateTime.compare(now, start_date) === :gt and
+      DateTime.compare(now, end_date) === :lt
   end
 
   def is_open?(_challenge), do: false
 
-  def is_closed?(%{end_date: end_date}) when not is_nil(end_date) do
+  def is_closed?(challenge = %{end_date: end_date}) when not is_nil(end_date) do
     now = DateTime.utc_now()
-    DateTime.compare(now, end_date) === :gt
+    is_published?(challenge) and DateTime.compare(now, end_date) === :gt
   end
 
   def is_closed?(_challenge), do: false
 
-  def is_archived_new?(%{phases: phases}) when not length(phases) == 0 do
+  def is_archived_new?(challenge = %{phases: phases}) when length(phases) > 0 do
     now = DateTime.utc_now()
-    phases_end_date = Enum.max_by(phases, & &1.end_date).end_date
-    DateTime.compare(now, phases_end_date) === :gt
+
+    phases_end_date =
+      Enum.max_by(phases, fn p ->
+        d = p.end_date
+        {d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond}
+      end).end_date
+
+    is_published?(challenge) and DateTime.compare(now, phases_end_date) === :gt
   end
 
   def is_archived_new?(_challenge), do: false
@@ -730,7 +738,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def can_request_edits?(challenge) do
-    in_review?(challenge) or has_edits_requested?(challenge) or is_published?(challenge) or
+    in_review?(challenge) or has_edits_requested?(challenge) or is_open?(challenge) or
       is_approved?(challenge)
   end
 
@@ -755,7 +763,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_publishable?(challenge) do
-    is_approved?(challenge) or is_unpublished?(challenge)
+    is_approved?(challenge)
   end
 
   def is_publishable?(challenge, user) do
@@ -763,7 +771,8 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_unpublishable?(challenge) do
-    is_approved?(challenge) or is_published?(challenge) or is_archived?(challenge)
+    (is_approved?(challenge) or is_published?(challenge) or is_archived?(challenge)) and
+      !(is_closed?(challenge) or is_archived_new?(challenge))
   end
 
   def is_unpublishable?(challenge, user) do

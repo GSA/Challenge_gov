@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <div class="card">
       <div class="card-body">
-        <%= render Web.ChallengeView, "wizard/_review.html", conn: @conn, challenge: @challenge, title: "Challenge info" %>
+        <%= render Web.ChallengeView, "wizard/_review.html", conn: @conn, challenge: @challenge, user: @user, title: "Challenge info" %>
       </div>
     </div>
   </div>

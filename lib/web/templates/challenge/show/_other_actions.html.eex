@@ -2,16 +2,25 @@
   <div class="card-body">
     <h4>Other actions</h4>
     <div class="btn-toolbar">
-      <%= link "Preview", to: Routes.public_preview_path(@conn, :index, @challenge.uuid), target: "_blank", class: "btn btn-info" %>
-      <%= if Challenges.is_editable?(@challenge, @user) do %>
-        <%= challenge_edit_link(@conn, @challenge, class: "btn btn-primary") %>
-        <%= challenge_full_edit_link(@conn, @challenge, @user, class: "btn btn-primary") %>
+      <%= if Accounts.has_admin_access?(@user) or !(Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge)) do %>
+        <%= link "Preview", to: Routes.public_preview_path(@conn, :index, @challenge.uuid), target: "_blank", class: "btn btn-info" %>
+        <%= if Challenges.is_editable?(@challenge, @user) do %>
+          <%= challenge_edit_link(@conn, @challenge, class: "btn btn-primary") %>
+        <% end %>
+        <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-danger") %>
       <% end %>
+
+      <%= if Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge) do %>
+        <%= link("Add winners", to: "#", class: "btn btn-primary disabled", disabled: true) %>
+      <% end %>
+
       <%= if Accounts.has_admin_access?(@user) do %>
-        <%= link("Submit Solution", to: Routes.challenge_solution_path(@conn, :new, @challenge.id), class: "btn btn-primary") %>
+        <%= link("Submit solution", to: Routes.challenge_solution_path(@conn, :new, @challenge.id), class: "btn btn-primary") %>
       <% end %>
-      <%= link("Add/Edit Announcement", to: "#", class: "btn btn-primary", data: [toggle: "modal", target: "#announcement-modal"] ) %>
-      <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-danger") %>
+
+      <%= if Accounts.has_admin_access?(@user) and Challenges.is_open?(@challenge) do %>
+        <%= link("Add/Edit announcement", to: "#", class: "btn btn-primary", data: [toggle: "modal", target: "#announcement-modal"] ) %>
+      <% end %>
     </div>
   </div>
 </div>
