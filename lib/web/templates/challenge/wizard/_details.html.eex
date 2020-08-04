@@ -54,6 +54,7 @@
   <%= FormView.text_field(@form, :custom_url, label: nil, placeholder: "my-custom-challenge-name") %>
 </div>
 
+<p class="ml-2 mb-0">Existing external challenge link (optional)</p>
 <%= FormView.text_field(@form, :external_url, label: "If the challenge is hosted external from the Challenge.gov platform, enter the link for users to visit that website.") %>
 
 <hr/>
