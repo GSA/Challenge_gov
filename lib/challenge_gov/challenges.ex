@@ -783,7 +783,7 @@ defmodule ChallengeGov.Challenges do
   def submit(challenge, user, remote_ip) do
     changeset =
       challenge
-      |> Challenge.submit_changeset()
+      |> Challenge.section_changeset(%{"section" => "review"}, "submit")
 
     result =
       Ecto.Multi.new()
@@ -796,7 +796,7 @@ defmodule ChallengeGov.Challenges do
         send_pending_challenge_email(challenge)
         {:ok, challenge}
 
-      {:error, changeset} ->
+      {:error, :challenge, changeset, _changes} ->
         {:error, changeset}
     end
   end

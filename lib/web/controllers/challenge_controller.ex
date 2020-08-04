@@ -347,6 +347,11 @@ defmodule Web.ChallengeController do
       conn
       |> put_flash(:info, "Challenge submitted")
       |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
+    else
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:error, "Please check that all steps have been filled out correctly")
+        |> redirect(to: Routes.challenge_path(conn, :show, id))
     end
   end
 
