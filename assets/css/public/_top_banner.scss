@@ -7,13 +7,17 @@
   color: #fcfcfc;
   background-color: #EFF6FB;
 
+  .row {
+    align-items: center;
+  }
+
   .container-fluid {
-    margin-top: -4rem;
+    // margin-top: -4rem;
   }
 
   &__description {
     padding: 5rem 0 5rem 5rem;
-    font-size: 3.5rem;
+    font-size: 2.5rem;
 
     p {
       margin-bottom: 3rem;
@@ -25,9 +29,9 @@
       width: 60%;
       border: none;
       background-color: #FA9441;
-      padding: 2rem 1rem;
+      padding: 1rem .5rem;
       border-radius: 10px;
-      font-size: 2.5rem;
+      font-size: 1.5rem;
       color: #000000;
 
       &:hover {
@@ -48,11 +52,11 @@
 
 .banner-steps {
   margin: 0 3rem;
-  padding: 4rem 2rem;
+  padding: 3rem 2rem;
   background-color: rgba(0,0,0,.4);
 
   &__header {
-    font-size: 3rem;
+    font-size: 2rem;
     text-align: center;
   }
 
@@ -74,7 +78,7 @@
     margin: auto;
     border-radius: 50%;
     border: 1px solid #fcfcfc;
-    font-size: 6rem;
+    font-size: 3rem;
   }
   &__arrow {
     width: 36px;
@@ -96,6 +100,6 @@
 
   &__description {
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.25rem;
   }
 }
