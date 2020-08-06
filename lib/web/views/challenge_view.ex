@@ -53,8 +53,18 @@ defmodule Web.ChallengeView do
   end
 
   def status_display_name(challenge) do
-    [Challenges.status_label(challenge.status), published_sub_status_display(challenge, true)]
+    [
+      Challenges.status_label(challenge.status),
+      status_auto_publish_date(challenge),
+      published_sub_status_display(challenge, true)
+    ]
   end
+
+  defp status_auto_publish_date(%{status: "approved", auto_publish_date: auto_publish_date})
+       when not is_nil(auto_publish_date),
+       do: " (Publishes #{SharedView.readable_datetime(auto_publish_date)})"
+
+  defp status_auto_publish_date(_), do: ""
 
   def published_sub_status_display(challenge, attached \\ false)
 
