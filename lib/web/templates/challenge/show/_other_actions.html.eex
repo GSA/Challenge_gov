@@ -18,7 +18,7 @@
         <%= link("Submit solution", to: Routes.challenge_solution_path(@conn, :new, @challenge.id), class: "btn btn-primary") %>
       <% end %>
 
-      <%= if Accounts.has_admin_access?(@user) and Challenges.is_open?(@challenge) do %>
+      <%= if Challenges.is_published?(@challenge) do %>
         <%= link("Add/Edit announcement", to: "#", class: "btn btn-primary", data: [toggle: "modal", target: "#announcement-modal"] ) %>
       <% end %>
     </div>
