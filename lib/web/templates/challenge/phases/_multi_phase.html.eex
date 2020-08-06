@@ -62,7 +62,7 @@
           
           <div class="row">
             <%= if phase_form.index != 0 do %>
-              <div class="remove-nested-section btn btn-link text-danger">Remove phase <%= phase_form.index + 1 %></div>
+              <a class="remove-nested-section btn btn-link text-danger">Remove phase <%= phase_form.index + 1 %></a>
             <% end %>
           </div>
         </div>
@@ -151,7 +151,7 @@
       </div>
 
       <div class="row">
-        <div class="remove-nested-section btn btn-link text-danger"></div>
+        <a class="remove-nested-section btn btn-link text-danger"></a>
       </div>
     </div>
   </div>
