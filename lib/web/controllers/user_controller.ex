@@ -7,8 +7,8 @@ defmodule Web.UserController do
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
 
-  plug(Web.Plugs.EnsureRole, [:super_admin, :admin] when action in [:index, :show])
-  plug(Web.Plugs.EnsureRole, :super_admin when action not in [:index, :show])
+  plug(Web.Plugs.EnsureRole, [:super_admin, :admin] when action in [:index, :show, :toggle])
+  plug(Web.Plugs.EnsureRole, :super_admin when action not in [:index, :show, :toggle])
   plug(Web.Plugs.FetchPage when action in [:index, :create])
 
   def index(conn, params) do
