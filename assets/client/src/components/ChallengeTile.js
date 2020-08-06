@@ -13,9 +13,7 @@ export const ChallengeTile = ({challenge, preview}) => {
 
     if (startDateDiff < 0) {
       tags.push(<div key={"coming_soon"} className="usa-tag usa-tag--coming-soon">Coming soon</div>)
-    }
-
-    if (endDateDiff >= daysInMinutes(-7) && endDateDiff < 0) {
+    } else if (endDateDiff >= daysInMinutes(-7) && endDateDiff < 0) {
       tags.push(<div key={"closing_soon"} className="usa-tag usa-tag--closing-soon">Closing soon</div>)
     }
 
