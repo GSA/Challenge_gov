@@ -131,7 +131,7 @@ defmodule Web.ChallengeView do
           content_tag :div, class: "card card-danger" do
             [
               content_tag(:div, class: "card-header") do
-                "Some edits were requested"
+                "Edits have been requested for this challenge. Please review your challenge and make any necessary edits prior to re-submitting."
               end,
               content_tag(:div, class: "card-body") do
                 challenge.rejection_message
