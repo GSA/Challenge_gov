@@ -219,7 +219,7 @@ defmodule Web.ChallengeController do
               ") with your question and Challenge ID number #{challenge.id}."
             ]
           )
-          |> redirect(to: Routes.challenge_path(conn, :index))
+          |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
 
         _ ->
           if to_section do

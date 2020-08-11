@@ -1,0 +1,14 @@
+.dashboard-card {
+  .card {
+    min-height: 7rem;
+  }
+
+  &__title {
+    margin-bottom: 0;
+  }
+
+  &__icon-container {
+    width: 52px; 
+    text-align: center;
+  }
+}

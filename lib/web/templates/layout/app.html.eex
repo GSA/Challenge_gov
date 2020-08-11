@@ -61,7 +61,7 @@
                 <%= if Accounts.role_at_or_below(current_user(@conn), "solver") do %>
                   <li class="nav-item">
                     <%= link(to: Routes.solution_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "solutions")}") do %>
-                      <i class="nav-icon fas fa-flask"></i>
+                      <i class="nav-icon icon-submissions"></i>
                       <p>Solutions</p>
                     <% end %>
                   </li>

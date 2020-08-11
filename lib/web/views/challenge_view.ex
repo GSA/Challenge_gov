@@ -53,8 +53,18 @@ defmodule Web.ChallengeView do
   end
 
   def status_display_name(challenge) do
-    [Challenges.status_label(challenge.status), published_sub_status_display(challenge, true)]
+    [
+      Challenges.status_label(challenge.status),
+      status_auto_publish_date(challenge),
+      published_sub_status_display(challenge, true)
+    ]
   end
+
+  defp status_auto_publish_date(%{status: "approved", auto_publish_date: auto_publish_date})
+       when not is_nil(auto_publish_date),
+       do: " (Publishes #{SharedView.readable_datetime(auto_publish_date)})"
+
+  defp status_auto_publish_date(_), do: ""
 
   def published_sub_status_display(challenge, attached \\ false)
 
@@ -121,7 +131,7 @@ defmodule Web.ChallengeView do
           content_tag :div, class: "card card-danger" do
             [
               content_tag(:div, class: "card-header") do
-                "Some edits were requested"
+                "Edits have been requested for this challenge. Please review your challenge and make any necessary edits prior to re-submitting."
               end,
               content_tag(:div, class: "card-body") do
                 challenge.rejection_message

@@ -726,7 +726,8 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_submittable?(challenge, user) do
-    is_challenge_owner?(user, challenge) and is_submittable?(challenge)
+    (Accounts.has_admin_access?(user) or is_challenge_owner?(user, challenge)) and
+      is_submittable?(challenge)
   end
 
   def is_approvable?(challenge) do

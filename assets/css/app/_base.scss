@@ -257,6 +257,7 @@ label {
 }
 
 .btn-toolbar {
+  height: 38px;
   a {
     margin-right: .5rem;
   }
@@ -279,5 +280,18 @@ label {
   }
   .btn {
     margin-bottom: .5rem;
+  }
+}
+
+.btn-link.text-danger {
+  cursor: pointer;
+}
+
+.nav-icon {
+  &.icon-submissions {
+    display: inline-block;
+    height: 19px;
+    background: url("/images/sidebar_icons/submissions.svg") no-repeat center;
+    background-size: contain;
   }
 }
