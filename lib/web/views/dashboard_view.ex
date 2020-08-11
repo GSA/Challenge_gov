@@ -43,4 +43,133 @@ defmodule Web.DashboardView do
       ]
     end
   end
+
+  def dashboard_card_links(user) do
+    cond do
+      Accounts.has_admin_access?(user) ->
+        admin_card_links()
+
+      Accounts.is_challenge_owner?(user) ->
+        challenge_owner_card_links()
+
+      Accounts.is_solver?(user) ->
+        solver_card_links()
+
+      true ->
+        content_tag(:div, "")
+    end
+  end
+
+  defp admin_card_links() do
+    [
+      content_tag :div, class: "row" do
+        [
+          render("_card_link.html",
+            target: "/challenges",
+            icon: "/images/dashboard_icons/medals.svg",
+            title: "Challenge management",
+            description: "Manage and view all open and archived challenges."
+          ),
+          render("_card_link.html",
+            target: "/users",
+            icon: "/images/dashboard_icons/users.svg",
+            title: "User management",
+            description: "View and edit user roles, permissions, and activities on the platform."
+          )
+        ]
+      end,
+      content_tag :div, class: "row" do
+        [
+          render("_card_link.html",
+            target: "/reports",
+            icon: "/images/dashboard_icons/reporting.svg",
+            title: "Reporting",
+            description: "Conduct reporting activities."
+          ),
+          render("_card_link.html",
+            target: "#",
+            icon: "/images/dashboard_icons/analytics.svg",
+            title: "Analytics",
+            description: "View web analytics related to your challenges."
+          )
+        ]
+      end,
+      content_tag :div, class: "row" do
+        [
+          render("_card_link.html",
+            target: "#",
+            icon: "/images/dashboard_icons/reporting.svg",
+            title: "Site management",
+            description: "Manage content and perform site management tasks."
+          )
+        ]
+      end
+    ]
+  end
+
+  defp challenge_owner_card_links() do
+    [
+      content_tag :div, class: "row" do
+        [
+          render("_card_link.html",
+            target: "/challenges",
+            icon: "/images/dashboard_icons/medals.svg",
+            title: "Challenge management",
+            description: "Manage and view all open and archived challenges."
+          ),
+          render("_card_link.html",
+            target: "/challenges/new",
+            icon: "/images/dashboard_icons/plus.svg",
+            title: "Create a new challenge",
+            description: nil
+          )
+        ]
+      end,
+      content_tag :div, class: "row" do
+        [
+          render("_card_link.html",
+            target: "/reports",
+            icon: "/images/dashboard_icons/reporting.svg",
+            title: "Reporting",
+            description: "Conduct reporting activities."
+          ),
+          render("_card_link.html",
+            target: "#",
+            icon: "/images/dashboard_icons/analytics.svg",
+            title: "Analytics",
+            description: "View web analytics related to your challenges."
+          )
+        ]
+      end,
+      content_tag :div, class: "row" do
+        [
+          render("_card_link.html",
+            target: "#",
+            icon: "/images/dashboard_icons/toolkit.svg",
+            title: "Agency toolkit",
+            description: "View the Prizes and Challenges Toolkit to learn more."
+          )
+        ]
+      end
+    ]
+  end
+
+  defp solver_card_links() do
+    content_tag :div, class: "row" do
+      [
+        render("_card_link.html",
+          target: "/solutions",
+          icon: "/images/dashboard_icons/submissions.svg",
+          title: "My submissions",
+          description: "view my challenges submissions."
+        ),
+        render("_card_link.html",
+          target: "/saved_challenges",
+          icon: "/images/dashboard_icons/medals.svg",
+          title: "My saved challenges",
+          description: "Challenges I've saved."
+        )
+      ]
+    end
+  end
 end

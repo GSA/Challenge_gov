@@ -1,8 +1,7 @@
 <section class="content">
-  <div>Welcome to the dashboard</div>
-  <p>
-    <%= if !Accounts.is_solver?(@current_user) do %>
-      <%= recertification_warning(@conn, @current_user)%>
-    <% end %>
-  </p>
+  <%= if !Accounts.is_solver?(@current_user) do %>
+    <%= recertification_warning(@conn, @current_user)%>
+  <% end %>
+
+  <%= dashboard_card_links(@current_user) %>
 </section>
