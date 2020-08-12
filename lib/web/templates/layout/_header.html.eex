@@ -1,4 +1,4 @@
-<nav class="header navbar navbar-expand-lg navbar-light bg-light">
+<nav class="header navbar navbar-expand-lg navbar-light">
   <%= link(to: Routes.public_page_path(@conn, :index), class: "navbar-brand", href: "#") do %>
     <img src='<%= Routes.static_path(@conn, "/images/challenge-logo.png") %>' alt="Challenge Gov Logo" title="Challenge Gov" class="header__challenge-logo">
   <% end %>

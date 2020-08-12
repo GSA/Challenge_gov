@@ -1,25 +1,31 @@
 <div class="container-fluid help-section">
   <div class="row help-section__header">
-    Work for a government agency and need help getting started?
+    Are you a public innovator and need help getting started?
   </div>
 
   <div class="row help-section__content">
     <div class="col help-section__agency-toolkit">
       <span>&nbsp;</span>
-      <img src="/images/tool_icon.svg">
-      <p>Our toolkit is full of helpful information.</p>
-      <a href="#">View agency toolkit</a>
+      <div class="help-section__image">
+        <img src="/images/tool_icon.svg">
+      </div>
+      <p>Our innovator toolkit is full of helpful information.</p>
+      <a href="#">View innovator toolkit</a>
     </div>
     <div class="col help-section__noteworthy">
-      <span>New and noteworthy</span>
-      <img src="/images/star_pin.svg">
-      <p>USAID challenges inspire innovation around the world.</p>
-      <a href="#">Learn more</a>
+      <span>Subscribe to our newsletter</span>
+      <div class="help-section__image">
+        <img src="/images/mail_icon.svg">
+      </div>
+      <p>Sign up to receiving information about prize competitions.</p>
+      <a href="#">Subscribe</a>
     </div>
     <div class="col help-section__create-account">
       <span>&nbsp;</span>
-      <img src="/images/account_icon.svg">
-      <p>Ready to post a challenge? Create an account to get started.</p>
+      <div class="help-section__image">
+        <img src="/images/account_icon.svg">
+      </div>
+      <p>Ready to engage with a prize competition or challenge? Create an account to get started</p>
       <a href="#">Create account</a>
     </div>
   </div>

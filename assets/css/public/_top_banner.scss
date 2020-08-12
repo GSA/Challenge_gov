@@ -1,18 +1,29 @@
 .top-banner {
   display: flex;
   align-items: center;
-  height: 546px;
-  padding-bottom: 4rem;
-  background-image: url(/images/curved_blue_banner.svg);
-  color: #fcfcfc;
-  background-color: #EFF6FB;
+  min-height: 20rem;
+  background: linear-gradient(131.95deg, #FA9441 0%, #FFBE2E 170.81%);
+  clip-path: ellipse(100% 55% at 48% 44%);
 
   .row {
     align-items: center;
   }
 
+  &__container {
+    height: 100%;
+    width: 100%;
+    background-image: url(http://craigmertan.com/miscellaneous/gsa-phyllotaxis.svg);
+    background-repeat: no-repeat;
+    background-size: auto 115%;
+    background-position: 90% 10%;
+    padding-top: 3rem;
+    padding-bottom: 6rem;
+  }
+
   .container-fluid {
-    // margin-top: -4rem;
+    max-width: 1440px;
+    margin: auto;
+    margin-top: 1rem;
   }
 
   &__description {
@@ -22,27 +33,24 @@
     p {
       margin-bottom: 3rem;
     }
-    span {
-      color: #FA9441;
-    }
     button {
       width: 60%;
       border: none;
-      background-color: #FA9441;
+      background-color: #005EA2;
       padding: 1rem .5rem;
       border-radius: 10px;
       font-size: 1.5rem;
-      color: #000000;
+      color: #ffffff;
 
       &:hover {
-        background: #FA801B;
+        background: #1a4480;
         box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.3), 0 2px 10px 0 rgba(0, 0, 0, 0.2);
         transform: translateY(-1%);
         transition: 0.15s;
       }
       
       &:active {
-        background: #E17B28;
+        background: #162e51;
         box-shadow: none;
         transform: none;
       }
@@ -53,7 +61,9 @@
 .banner-steps {
   margin: 0 3rem;
   padding: 3rem 2rem;
-  background-color: rgba(0,0,0,.4);
+  // background-color: rgba(0,0,0,.4);
+  background: #ffffff;
+  border-radius: 5px;
 
   &__header {
     font-size: 2rem;
@@ -77,18 +87,21 @@
     width: 99px;
     margin: auto;
     border-radius: 50%;
-    border: 1px solid #fcfcfc;
+    color: #005EA2;
+    border: 3px solid #005EA2;
     font-size: 3rem;
   }
   &__arrow {
     width: 36px;
     height: 28px;
     background-image: url(/images/right_arrow.svg);
-    // background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   &__descriptions {
     margin-top: 1rem;
+    align-items: flex-start !important;
 
     :first-child {
       padding-left: 0;
