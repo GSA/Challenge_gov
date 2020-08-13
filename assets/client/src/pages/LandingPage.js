@@ -46,14 +46,14 @@ export const LandingPage = () => {
             </linearGradient>
           </defs>
           <g fill="none" fillRule="evenodd">
-            <path fill="#EFF6FB" d="M2-2412h1440V83H2z"/>
+            <path fill="#FFFFFF" d="M2-2412h1440V83H2z"/>
             <g transform="translate(0 -3641)">
               <use fill="#000" filter="url(#a)" xlinkHref="#b"/>
               <use fill="url(#c)" xlinkHref="#b"/>
             </g>
             <g transform="translate(0 -3641)">
               <use fill="#000" filter="url(#d)" xlinkHref="#e"/>
-              <use fill="#EFF6FB" xlinkHref="#e"/>
+              <use fill="#FFFFFF" xlinkHref="#e"/>
             </g>
           </g>
         </svg>
