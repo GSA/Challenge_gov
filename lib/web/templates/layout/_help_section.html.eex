@@ -17,7 +17,7 @@
       <div class="help-section__image">
         <img src="/images/mail_icon.svg">
       </div>
-      <p>Sign up to receiving information about prize competitions.</p>
+      <p>Sign up to receive information about prize competitions.</p>
       <a href="#">Subscribe</a>
     </div>
     <div class="col help-section__create-account">
@@ -25,7 +25,7 @@
       <div class="help-section__image">
         <img src="/images/account_icon.svg">
       </div>
-      <p>Ready to engage with a prize competition or challenge? Create an account to get started</p>
+      <p>Ready to engage with a prize competition or challenge?<br/>Create an account to get started</p>
       <a href="#">Create account</a>
     </div>
   </div>
