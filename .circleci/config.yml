@@ -178,7 +178,7 @@ workflows:
             - assets
           filters:
             branches:
-              only: master
+              only: main
       - release-approval:
           type: approval
           requires:
