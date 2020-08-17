@@ -14,11 +14,23 @@
     margin-bottom: 2rem;
     padding: 1rem 0rem;
     align-self: center;
-    color: #000;
-    background-color: #FA9441;
-    border-radius: 7px;
-    border: 1px solid #C9C9C9;
-    box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
+    color: #FFF;
+    background-color: #005EA2;
+    border-radius: 7px;    
+
+    &:hover {
+      background: #1a4480;
+      box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.3), 0 2px 10px 0 rgba(0, 0, 0, 0.2);
+      transform: translateY(-1%);
+      transition: 0.15s;
+      text-decoration: none;
+    }
+    
+    &:active {
+      background: #162e51;
+      box-shadow: none;
+      transform: none;
+    }
   }
 
   &__bottom {

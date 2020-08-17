@@ -27,6 +27,8 @@
         </div>
       </div>
 
+      <div class="section-divider"></div>
+
       <%= render("_help_section.html", assigns) %>
 
       <%= render("_footer.html", assigns) %>

@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from "react-router-dom";
 import moment from "moment"
 import {getCurrentPhase, getNextPhase, phaseNumber, formatDateTime, formatTime, isSinglePhase, isPhaseless, daysInMinutes} from "../helpers/phaseHelpers"
+import {truncateString} from '../helpers/stringHelpers'
 
 export const ChallengeTile = ({challenge, preview}) => {
   const renderTags = ({start_date, end_date, announcement_datetime}) => {
@@ -100,17 +101,17 @@ export const ChallengeTile = ({challenge, preview}) => {
                 />
             }
           </div>
-          <div className="card__text-wrapper">
-            <p className="card__title test" aria-label="Challenge title">{challenge.title}</p>
-            <p className="card__agency-name" aria-label="Agency name">{challenge.agency_name}</p>
-            <p className="card__tagline" aria-label="Challenge tagline">{challenge.tagline}</p>
-            <p className="card__date">{renderDate(challenge)}</p>
+          <div className="challenge-tile__text-wrapper">
+            <p className="challenge-tile__title test" aria-label="Challenge title">{truncateString(challenge.title, 90)}</p>
+            <p className="challenge-tile__agency-name" aria-label="Agency name">{truncateString(challenge.agency_name, 90)}</p>
+            <p className="challenge-tile__tagline" aria-label="Challenge tagline">{truncateString(challenge.tagline, 90)}</p>
+            <p className="challenge-tile__date">{renderDate(challenge)}</p>
             {renderTags(challenge)}
           </div>
         </Link>
       </div>
     ) : (
-      <div className="card__loader--image"></div>
+      <div className="challenge-tile__loader--image"></div>
     )
   )
 }

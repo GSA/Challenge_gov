@@ -15,6 +15,7 @@ export const DetailsPage = (props) => {
     // TODO: Temporary hiding of layout on chal details until the layout is moved
     $(".top-banner").hide()
     $(".help-section").hide()
+    $(".section-divider").hide()
     $(".footer").hide()
 
     let challengeApiPath = base_url + `/api/challenges/${challengeId}`

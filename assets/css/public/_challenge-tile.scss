@@ -35,7 +35,9 @@ p {
   }
 }
 
-.card {
+.challenge-tile {
+  max-width: 405px;
+
   &__section {
     &--sort {
       // text-align: right;
@@ -51,7 +53,7 @@ p {
   }
 
   &__title {
-    font-size: 1.3rem;
+    font-size: 1.125rem;
     font-weight: bold;
     margin: 0;
     min-height: 6rem;
@@ -63,21 +65,24 @@ p {
   }
 
   &__agency-name {
-    font-size: 1.2rem;
+    font-size: .875rem;
     min-height: 4rem;
     margin: 0;
     color: $font-color;
   }
 
   &__tagline {
-    font-size: 1.2rem;
-    min-height: 8rem;
+    font-size: 1rem;
+    height: 6rem;
     margin: 0;
     color: $font-color;
+    // text-overflow: ellipsis;
+    // overflow: hidden;
+    // white-space: nowrap;
   }
 
   &__date {
-    font-size: 1.2rem;
+    font-size: .875rem;
     color: $font-color;
   }
 
