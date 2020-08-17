@@ -1,11 +1,15 @@
 .footer {
-  max-width: 1440px;
-  margin: auto;
+  .container-fluid {
+    max-width: 1440px;
+    margin: auto;
+  }
   
   height: 338px;
   padding: 6rem 7rem 0rem 7rem;
   color: #ffffff;
-  background-image: url(/images/curved_blue_footer.svg);
+  background-image: url(/images/footer-rectangle.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
 
   &__challenge-logo {
     height: 22px;
@@ -32,7 +36,7 @@
 
   &__social_link {
     margin-right: 2rem;
-    font-size: 3rem;
+    font-size: 2rem;
   }
 
   hr {

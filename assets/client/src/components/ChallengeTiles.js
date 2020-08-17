@@ -9,6 +9,7 @@ export const ChallengeTiles = ({data, loading}) => {
     // TODO: Temporary showing of layout on chal details until the layout is moved
     $(".top-banner").show()
     $(".help-section").show()
+    $(".section-divider").show()
     $(".footer").show()
 
     if (challenges.collection) {

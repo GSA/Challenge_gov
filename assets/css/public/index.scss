@@ -18,10 +18,23 @@
 @import "misc";
 
 html, body {
-  background-color: #EFF6FB
+  background-color: #fafafa;
 }
 
-.main {
+// TODO: Move these to appropriate files
+.section-divider {
+  width: 100%;
+  height: 14rem;
+  background-image: url("/images/section-divider.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin: auto;
+  margin-top: 2rem;
+}
+
+.grecaptcha-badge { visibility: hidden; }
+
+.App { 
   max-width: 1440px;
   margin: auto;
 }
