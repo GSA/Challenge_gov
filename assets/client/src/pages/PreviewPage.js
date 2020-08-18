@@ -29,8 +29,8 @@ export const PreviewPage = () => {
   }, [])
 
   return (
-    <div className="py-5">
-      <div className="row mb-5">
+    <div className="challenge-preview py-5">
+      <div className="challenge-preview__top row mb-5">
         <div className="col-md-4">
           <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
         </div>
