@@ -1,10 +1,17 @@
-.challenge-preview-banner {
-  height: 100%;
+.challenge-preview {
+  &__top {
+    max-width: 1440px;
+    margin: auto;
+  }
 
-  .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  &__banner {
+    height: 100%;
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
