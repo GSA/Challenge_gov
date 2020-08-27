@@ -44,6 +44,54 @@ defmodule Web.DashboardView do
     end
   end
 
+  def dashboard_header(user) do
+    wrapper_classes = "col pl-4 pt-5"
+
+    cond do
+      Accounts.has_admin_access?(user) ->
+        admin_header(wrapper_classes)
+
+      Accounts.is_challenge_owner?(user) ->
+        challenge_owner_header(wrapper_classes)
+
+      Accounts.is_solver?(user) ->
+        solver_header(wrapper_classes)
+
+      true ->
+        content_tag(:div, "")
+    end
+  end
+
+  defp admin_header(wrapper_classes) do
+    content_tag :div, class: wrapper_classes do
+      [
+        content_tag(:h3, "Welcome to the Challenge.gov portal."),
+        content_tag(:p, "Engage with the features below to manage your workflows.")
+      ]
+    end
+  end
+
+  defp challenge_owner_header(wrapper_classes) do
+    content_tag :div, class: wrapper_classes do
+      [
+        content_tag(:h3, "Welcome to the Challenge.gov portal."),
+        content_tag(:p, "Engage with the features below to manage your workflows.")
+      ]
+    end
+  end
+
+  defp solver_header(wrapper_classes) do
+    content_tag :div, class: wrapper_classes do
+      [
+        content_tag(:h3, "Welcome to the Challenge.gov submission portal."),
+        content_tag(
+          :p,
+          "Use the features below to engage with challenges and manage your submissions."
+        )
+      ]
+    end
+  end
+
   def dashboard_card_links(user) do
     cond do
       Accounts.has_admin_access?(user) ->
