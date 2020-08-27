@@ -2,6 +2,7 @@ defmodule Web.Endpoint do
   use Phoenix.Endpoint, otp_app: :challenge_gov
 
   plug RemoteIp
+  plug CORSPlug
 
   socket "/socket", Web.UserSocket,
     websocket: true,
