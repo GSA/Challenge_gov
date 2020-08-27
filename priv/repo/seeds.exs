@@ -77,11 +77,11 @@ defmodule Helpers do
   end
 
   def import_agencies_api(url) do
-    {:ok, %{body: body, status_code: 200}} = HTTPoison.get(url)
+    {:ok, %{body: body, status_code: 200}} = Mojito.get(url)
     data = Jason.decode!(body)
     count = data["metadata"]["count"]
 
-    {:ok, %{body: body, status_code: 200}} = HTTPoison.get(url <> "?page_size=#{count}")
+    {:ok, %{body: body, status_code: 200}} = Mojito.get(url <> "?page_size=#{count}")
     data = Jason.decode!(body)
 
     num_inserted = 0
