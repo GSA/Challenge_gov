@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { ChallengeTiles } from '../components/ChallengeTiles'
 import axios from 'axios'
+import { ApiUrlContext } from '..'
 
 export const LandingPage = () => {
   const [currentChallenges, setCurrentChallenges] = useState([])
   const [loadingState, setLoadingState] = useState(false)
 
-  const base_url = window.location.origin
+  const apiUrl = useContext(ApiUrlContext)
+
+  $(".usa-hero").show()
 
   useEffect(() => {
     setLoadingState(true)
     axios
-      .get(base_url + "/api/challenges")
+      .get(apiUrl + "/api/challenges")
       .then(res => {
         setCurrentChallenges(res.data)
         setLoadingState(false)

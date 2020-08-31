@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Redirect, Switch, Route } from "react-router-dom";
+import { HashRouter, Redirect, Switch, Route } from "react-router-dom";
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
@@ -33,13 +33,20 @@ const Application = () => {
   )
 }
 
-const renderRouter = () => (
-  <BrowserRouter>
-    <Application />
-  </BrowserRouter>
+const renderRouter = (apiUrl) => (
+  <ApiUrlContext.Provider value={apiUrl}>
+    <HashRouter>
+      <Application />
+    </HashRouter>
+  </ApiUrlContext.Provider>
 )
 
-ReactDOM.render(renderRouter(), document.getElementById('root'));
+const rootElement = document.getElementById('challenge-gov-react-app')
+const apiUrl = rootElement.getAttribute('data-api-url')
+
+export const ApiUrlContext = React.createContext(apiUrl)
+
+ReactDOM.render(renderRouter(apiUrl), rootElement);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import moment from "moment"
 
 import { ChallengeTabs } from "../components/ChallengeTabs"
@@ -15,8 +15,11 @@ import { Winners } from "../components/challenge_tabs/Winners"
 import { documentsForSection } from "../helpers/documentHelpers"
 import { getPreviousPhase, getCurrentPhase, getNextPhase, phaseInPast, phaseIsCurrent, phaseInFuture, phaseNumber, isSinglePhase, formatDateTime, formatDate } from '../helpers/phaseHelpers'
 import { ChallengeAnnouncement } from './ChallengeAnnouncement'
+import { ApiUrlContext } from '..'
 
 export const ChallengeDetails = ({challenge, preview}) => {
+  const apiUrl = useContext(ApiUrlContext)
+
   const renderEndDate = (date) => {
     const fiveDaysFromNow = moment().add(5,'d').utc().format()
     const withinFiveDays = moment(date).diff(fiveDaysFromNow) <= 0
@@ -70,7 +73,7 @@ export const ChallengeDetails = ({challenge, preview}) => {
     if (challenge.external_url) {
       applyButtonUrl = challenge.external_url
     } else if (!preview) {
-      applyButtonUrl = `/challenges/${challenge.id}/solutions/new`
+      applyButtonUrl = apiUrl + `/challenges/${challenge.id}/solutions/new`
     }
 
     let applyButtonText = []
@@ -194,7 +197,7 @@ export const ChallengeDetails = ({challenge, preview}) => {
                   <div className="logos">
                     <img
                       className="agency-logo"
-                      src={challenge.agency_logo}
+                      src={apiUrl + challenge.agency_logo}
                       alt={`${challenge.agency_name} logo`}
                       title="Challenge agency logo" />
                     { (challenge.federal_partners.length > 0 && challenge.federal_partners[0].logo) &&
@@ -214,11 +217,11 @@ export const ChallengeDetails = ({challenge, preview}) => {
                 { challenge.logo
                   ? <img
                       className="challenge-logo"
-                      src={challenge.logo} alt="challenge logo"
+                      src={apiUrl + challenge.logo} alt="challenge logo"
                       title="challenge logo"/>
                   : <img
                       className="agency-logo"
-                      src={challenge.agency_logo}
+                      src={apiUrl + challenge.agency_logo}
                       alt={`${challenge.agency_name} logo`}
                       title="Challenge agency logo" />
                 }

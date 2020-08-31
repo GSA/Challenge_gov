@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios'
 import { useParams } from "react-router-dom";
 
 import { ChallengeDetails } from '../components/ChallengeDetails';
+import { ApiUrlContext } from '..'
 
 export const DetailsPage = (props) => {
   const [currentChallenge, setCurrentChallenge] = useState()
   const [loadingState, setLoadingState] = useState(true)
 
   let { challengeId } = useParams();
-  const base_url = window.location.origin
+  const apiUrl = useContext(ApiUrlContext)
 
   useEffect(() => {
     // TODO: Temporary hiding of layout on chal details until the layout is moved
@@ -17,8 +18,9 @@ export const DetailsPage = (props) => {
     $(".help-section").hide()
     $(".section-divider").hide()
     $(".footer").hide()
+    $(".usa-hero").hide()
 
-    let challengeApiPath = base_url + `/api/challenges/${challengeId}`
+    let challengeApiPath = apiUrl + `/api/challenges/${challengeId}`
     axios
       .get(challengeApiPath)
       .then(res => {

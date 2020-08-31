@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import { useParams } from "react-router-dom";
 import axios from 'axios'
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
+import { ApiUrlContext } from '../..'
 
 export const ContactForm = ({preview}) => {
   const [email, setEmail] = useState("")
@@ -11,7 +12,7 @@ export const ContactForm = ({preview}) => {
   const [modalIsOpen, setIsOpen] = useState(false);
 
   let { challengeId } = useParams();
-  const base_url = window.location.origin
+  const apiUrl = useContext(ApiUrlContext)
 
   useEffect(() => {
     const recaptcha_key = document.getElementById("recaptcha-key").innerHTML
@@ -29,7 +30,7 @@ export const ContactForm = ({preview}) => {
     e.preventDefault()
 
     axios
-      .post(base_url + `/api/challenges/${challengeId}/contact_form`, { email, body, recaptchaToken })
+      .post(apiUrl + `/api/challenges/${challengeId}/contact_form`, { email, body, recaptchaToken })
       .then(res => {
         setIsOpen(true);
         setEmail("")
