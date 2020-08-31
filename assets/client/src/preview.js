@@ -5,6 +5,7 @@ import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
 import { PreviewPage } from "./pages/PreviewPage"
+import { ApiUrlContext } from "./ApiUrlContext"
 
 import '../../css/public/index.scss'
 
@@ -35,13 +36,15 @@ const Application = () => {
 }
 
 const renderPreview = () => (
-  <BrowserRouter>
-    <Route
-      path={"/public/previews/challenges/:challengeId"}
-      component={PreviewPage}
-      exact={true}
-    />
-  </BrowserRouter>
+  <ApiUrlContext.Provider value={window.location.origin}>
+    <BrowserRouter>
+      <Route
+        path={"/public/previews/challenges/:challengeId"}
+        component={PreviewPage}
+        exact={true}
+      />
+    </BrowserRouter>
+  </ApiUrlContext.Provider>
 )
 
 ReactDOM.render(renderPreview(), document.getElementById('preview'));

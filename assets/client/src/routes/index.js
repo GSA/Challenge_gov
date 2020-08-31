@@ -4,10 +4,11 @@ import { DetailsPage } from '../pages/DetailsPage'
 export const IndexRoutes = [
   {
     component: App,
-    path: "/public/challenges"
+    path: "/",
+    exact: true
   },
   {
     component: DetailsPage,
-    path: "/public/challenge/:challengeId"
+    path: "/challenge/:challengeId"
   }
 ];
