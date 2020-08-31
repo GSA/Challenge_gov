@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useParams } from "react-router-dom";
 
 import { ChallengeDetails } from '../components/ChallengeDetails';
-import { ApiUrlContext } from '..'
+import { ApiUrlContext } from '../ApiUrlContext'
 
 export const DetailsPage = (props) => {
   const [currentChallenge, setCurrentChallenge] = useState()

@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react'
 import { useParams } from "react-router-dom";
 import axios from 'axios'
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
-import { ApiUrlContext } from '../..'
+import { ApiUrlContext } from '../../ApiUrlContext'
 
 export const ContactForm = ({preview}) => {
   const [email, setEmail] = useState("")

@@ -4,6 +4,7 @@ import { HashRouter, Redirect, Switch, Route } from "react-router-dom";
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
+import { ApiUrlContext } from "./ApiUrlContext"
 
 import '../../css/public/index.scss'
 
@@ -43,8 +44,6 @@ const renderRouter = (apiUrl) => (
 
 const rootElement = document.getElementById('challenge-gov-react-app')
 const apiUrl = rootElement.getAttribute('data-api-url')
-
-export const ApiUrlContext = React.createContext(apiUrl)
 
 ReactDOM.render(renderRouter(apiUrl), rootElement);
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { ChallengeTiles } from '../components/ChallengeTiles'
 import axios from 'axios'
-import { ApiUrlContext } from '..'
+import { ApiUrlContext } from '../ApiUrlContext'
 
 export const LandingPage = () => {
   const [currentChallenges, setCurrentChallenges] = useState([])

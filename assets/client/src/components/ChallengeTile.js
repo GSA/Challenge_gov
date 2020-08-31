@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import moment from "moment"
 import {getCurrentPhase, getNextPhase, phaseNumber, formatDateTime, formatTime, isSinglePhase, isPhaseless, daysInMinutes} from "../helpers/phaseHelpers"
 import {truncateString} from '../helpers/stringHelpers'
-import { ApiUrlContext } from '..'
+import { ApiUrlContext } from '../ApiUrlContext'
 
 export const ChallengeTile = ({challenge, preview}) => {
   const apiUrl = useContext(ApiUrlContext)

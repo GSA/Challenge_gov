@@ -15,7 +15,7 @@ import { Winners } from "../components/challenge_tabs/Winners"
 import { documentsForSection } from "../helpers/documentHelpers"
 import { getPreviousPhase, getCurrentPhase, getNextPhase, phaseInPast, phaseIsCurrent, phaseInFuture, phaseNumber, isSinglePhase, formatDateTime, formatDate } from '../helpers/phaseHelpers'
 import { ChallengeAnnouncement } from './ChallengeAnnouncement'
-import { ApiUrlContext } from '..'
+import { ApiUrlContext } from '../ApiUrlContext'
 
 export const ChallengeDetails = ({challenge, preview}) => {
   const apiUrl = useContext(ApiUrlContext)
