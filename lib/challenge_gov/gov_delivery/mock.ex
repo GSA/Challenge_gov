@@ -26,7 +26,7 @@ defmodule ChallengeGov.GovDelivery.Mock do
   end
 
   @impl true
-  def remove_topic(_id) do
+  def remove_topic(_challenge) do
     case Process.get(:govdelivery) do
       nil ->
         {:not_found}

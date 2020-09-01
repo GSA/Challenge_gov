@@ -5,49 +5,16 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   @behaviour ChallengeGov.GovDelivery
 
-  def list_topics() do
-    response =
-      Mojito.get(
-        ChallengeGov.GovDelivery.list_topics_endpoint(),
-        [auth_headers()]
-      )
-
-    case response do
-      {:ok, %{body: body, status_code: 200}} ->
-        {:ok, body}
-
-      {:ok, %{body: body, status_code: code}} ->
-        {:error, %{body: body, status_code: code}}
-
-      e ->
-        {:error, e}
-    end
-  end
-
-  def list_categories() do
-    response =
-      Mojito.get(
-        ChallengeGov.GovDelivery.list_categories_endpoint(),
-        [auth_headers()]
-      )
-
-    case response do
-      {:ok, %{body: body, status_code: 200}} ->
-        {:ok, body}
-
-      {:ok, %{body: body, status_code: code}} ->
-        {:error, %{body: body, status_code: code}}
-
-      e ->
-        {:error, e}
-    end
-  end
-
   @impl true
-  def remove_topic(id) do
+  def remove_topic(challenge) do
+    endpoint =
+      challenge.id
+      |> code()
+      |> ChallengeGov.GovDelivery.remove_topic_endpoint()
+
     response =
       Mojito.delete(
-        ChallengeGov.GovDelivery.remove_topic_endpoint(code(id)),
+        endpoint,
         [auth_headers()]
       )
 
@@ -79,13 +46,41 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
     case response do
       {:ok, %{status_code: 200}} ->
-        {:ok, :added}
+        set_category(challenge)
 
       {:ok, %{body: body, status_code: code}} ->
         {:error, %{body: body, status_code: code}}
 
       e ->
         {:error, e}
+    end
+  end
+
+  def set_category(challenge) do
+    endpoint =
+      challenge.id
+      |> code()
+      |> ChallengeGov.GovDelivery.set_topic_categories_endpoint()
+
+    response =
+      Mojito.put(
+        endpoint,
+        [
+          auth_headers(),
+          {"content-type", "application/xml; charset: utf-8"}
+        ],
+        xml_categories_for_challenge()
+      )
+
+    case response do
+      {:ok, %{status_code: 200}} ->
+        {:ok, :added}
+
+      {:ok, %{body: body, status_code: code}} ->
+        {:category_error, %{body: body, status_code: code}}
+
+      e ->
+        {:category_error, e}
     end
   end
 
@@ -101,7 +96,14 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       {:code, nil, code(challenge.id)},
       {:name, nil, challenge.title},
       {"short-name", nil, challenge.title},
-      {:description, nil, challenge.tagline},
+      {:description, nil, challenge.tagline}
+    ]
+
+    XmlBuilder.generate({:topic, nil, elements}, format: :none, encoding: "UTF-8")
+  end
+
+  defp xml_categories_for_challenge() do
+    elements = [
       {:categories, %{type: "array"}, categories()}
     ]
 
