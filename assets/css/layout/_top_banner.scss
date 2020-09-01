@@ -1,0 +1,117 @@
+.top-banner {
+  display: flex;
+  align-items: center;
+  min-height: 20rem;
+  background: linear-gradient(131.95deg, #FA9441 0%, #FFBE2E 170.81%);
+  clip-path: ellipse(100% 55% at 48% 44%);
+
+  .row {
+    align-items: center;
+  }
+
+  &__container {
+    height: 100%;
+    width: 100%;
+    background-image: url(/images/gsa-phyllotaxis.svg);
+    background-repeat: no-repeat;
+    background-size: auto 115%;
+    background-position: 80% 10%;
+    padding-top: 3rem;
+    padding-bottom: 6rem;
+  }
+
+  .container-fluid {
+    max-width: 1440px;
+    margin: auto;
+    margin-top: 1rem;
+  }
+
+  &__description {
+    padding: 5rem 0 5rem 5rem;
+    font-size: 2.5rem;
+
+    p {
+      margin-bottom: 3rem;
+    }
+    button {
+      width: 60%;
+      border: none;
+      background-color: #005EA2;
+      padding: 1rem .5rem;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      color: #ffffff;
+
+      &:hover {
+        background: #1a4480;
+        box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.3), 0 2px 10px 0 rgba(0, 0, 0, 0.2);
+        transform: translateY(-1%);
+        transition: 0.15s;
+      }
+      
+      &:active {
+        background: #162e51;
+        box-shadow: none;
+        transform: none;
+      }
+    }
+  }
+}
+
+.banner-steps {
+  margin: 0 3rem;
+  padding: 3rem 2rem;
+  background: #ffffff;
+  border-radius: 5px;
+
+  &__header {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  hr {
+    margin-bottom: 1rem;
+    border-color: #fcfcfc;
+  }
+
+  &__numbers {
+    display: flex;
+    align-items: center;
+  }
+  &__number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 99px;
+    width: 99px;
+    margin: auto;
+    border-radius: 50%;
+    color: #005EA2;
+    border: 3px solid #005EA2;
+    font-size: 3rem;
+  }
+  &__arrow {
+    width: 36px;
+    height: 28px;
+    background-image: url(/images/right_arrow.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  &__descriptions {
+    margin-top: 1rem;
+    align-items: flex-start !important;
+
+    :first-child {
+      padding-left: 0;
+    }
+    :last-child {
+      padding-right: 0;
+    }
+  }
+
+  &__description {
+    text-align: center;
+    font-size: 1.25rem;
+  }
+}
