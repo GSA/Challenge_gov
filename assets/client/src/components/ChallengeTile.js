@@ -6,7 +6,7 @@ import {truncateString} from '../helpers/stringHelpers'
 import { ApiUrlContext } from '../ApiUrlContext'
 
 export const ChallengeTile = ({challenge, preview}) => {
-  const apiUrl = useContext(ApiUrlContext)
+  const { imageBase } = useContext(ApiUrlContext)
 
   const renderTags = ({start_date, end_date, announcement_datetime}) => {
     const startDateDiff = moment().diff(start_date, 'minutes')
@@ -95,9 +95,9 @@ export const ChallengeTile = ({challenge, preview}) => {
         <Link to={preview ? "#" : `/challenge/${challenge.id}`} aria-label="View challenge details">
           <div className="image_wrapper">
             { challenge.logo
-              ? <img src={apiUrl + challenge.logo} alt="Challenge logo" title="Challenge logo" className="w-100"/>
+              ? <img src={imageBase + challenge.logo} alt="Challenge logo" title="Challenge logo" className="w-100"/>
               : <img
-                  src={apiUrl + challenge.agency_logo}
+                  src={imageBase + challenge.agency_logo}
                   alt="Challenge agency logo"
                   title="Challenge agency logo"
                   className="w-100"

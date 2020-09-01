@@ -34,8 +34,11 @@ const Application = () => {
   )
 }
 
-const renderRouter = (apiUrl) => (
-  <ApiUrlContext.Provider value={apiUrl}>
+const renderRouter = () => (
+  <ApiUrlContext.Provider value={{
+    apiUrl: apiUrl || window.location.origin,
+    imageBase: imageBase || ""
+  }}>
     <HashRouter>
       <Application />
     </HashRouter>
@@ -44,8 +47,9 @@ const renderRouter = (apiUrl) => (
 
 const rootElement = document.getElementById('challenge-gov-react-app')
 const apiUrl = rootElement.getAttribute('data-api-url')
+const imageBase = rootElement.getAttribute('data-image-base')
 
-ReactDOM.render(renderRouter(apiUrl), rootElement);
+ReactDOM.render(renderRouter(), rootElement);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

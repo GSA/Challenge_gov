@@ -18,7 +18,7 @@ import { ChallengeAnnouncement } from './ChallengeAnnouncement'
 import { ApiUrlContext } from '../ApiUrlContext'
 
 export const ChallengeDetails = ({challenge, preview}) => {
-  const apiUrl = useContext(ApiUrlContext)
+  const { apiUrl, imageBase } = useContext(ApiUrlContext)
 
   const renderEndDate = (date) => {
     const fiveDaysFromNow = moment().add(5,'d').utc().format()
@@ -197,7 +197,7 @@ export const ChallengeDetails = ({challenge, preview}) => {
                   <div className="logos">
                     <img
                       className="agency-logo"
-                      src={apiUrl + challenge.agency_logo}
+                      src={imageBase + challenge.agency_logo}
                       alt={`${challenge.agency_name} logo`}
                       title="Challenge agency logo" />
                     { (challenge.federal_partners.length > 0 && challenge.federal_partners[0].logo) &&
@@ -217,11 +217,11 @@ export const ChallengeDetails = ({challenge, preview}) => {
                 { challenge.logo
                   ? <img
                       className="challenge-logo"
-                      src={apiUrl + challenge.logo} alt="challenge logo"
+                      src={imageBase + challenge.logo} alt="challenge logo"
                       title="challenge logo"/>
                   : <img
                       className="agency-logo"
-                      src={apiUrl + challenge.agency_logo}
+                      src={imageBase + challenge.agency_logo}
                       alt={`${challenge.agency_name} logo`}
                       title="Challenge agency logo" />
                 }

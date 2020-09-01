@@ -6,9 +6,9 @@
 
   <body>
     <div class="main-wrapper">
-      <%= render("_header.html", assigns) %>
+      <%#= render("_header.html", assigns) %>
 
-      <%= render("_top_banner.html", assigns) %>
+      <%#= render("_top_banner.html", assigns) %>
 
       <div class="main">
         <div class="content-area">
@@ -27,11 +27,11 @@
         </div>
       </div>
 
-      <div class="section-divider"></div>
+      <%# <div class="section-divider"></div> %>
 
-      <%= render("_help_section.html", assigns) %>
+      <%#= render("_help_section.html", assigns) %>
 
-      <%= render("_footer.html", assigns) %>
+      <%#= render("_footer.html", assigns) %>
     </div>
   </body>
 

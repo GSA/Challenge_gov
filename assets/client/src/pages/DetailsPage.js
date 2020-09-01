@@ -10,7 +10,7 @@ export const DetailsPage = (props) => {
   const [loadingState, setLoadingState] = useState(true)
 
   let { challengeId } = useParams();
-  const apiUrl = useContext(ApiUrlContext)
+  const { apiUrl } = useContext(ApiUrlContext)
 
   useEffect(() => {
     // TODO: Temporary hiding of layout on chal details until the layout is moved
