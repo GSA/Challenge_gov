@@ -5,6 +5,44 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   @behaviour ChallengeGov.GovDelivery
 
+  def list_topics() do
+    response =
+      Mojito.get(
+        ChallengeGov.GovDelivery.list_topics_endpoint(),
+        [auth_headers()]
+      )
+
+    case response do
+      {:ok, %{body: body, status_code: 200}} ->
+        {:ok, body}
+
+      {:ok, %{body: body, status_code: code}} ->
+        {:error, %{body: body, status_code: code}}
+
+      e ->
+        {:error, e}
+    end
+  end
+
+  def list_categories() do
+    response =
+      Mojito.get(
+        ChallengeGov.GovDelivery.list_categories_endpoint(),
+        [auth_headers()]
+      )
+
+    case response do
+      {:ok, %{body: body, status_code: 200}} ->
+        {:ok, body}
+
+      {:ok, %{body: body, status_code: code}} ->
+        {:error, %{body: body, status_code: code}}
+
+      e ->
+        {:error, e}
+    end
+  end
+
   @impl true
   def remove_topic(id) do
     response =
@@ -32,7 +70,10 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     response =
       Mojito.post(
         ChallengeGov.GovDelivery.create_topic_endpoint(),
-        [auth_headers()],
+        [
+          auth_headers(),
+          {"content-type", "application/xml; charset: utf-8"}
+        ],
         body
       )
 
@@ -60,11 +101,11 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       {:code, nil, code(challenge.id)},
       {:name, nil, challenge.title},
       {"short-name", nil, challenge.title},
-      {:description, %{nil: true}, nil},
+      {:description, nil, challenge.tagline},
       {:categories, %{type: "array"}, categories()}
     ]
 
-    XmlBuilder.generate({:topic, nil, elements}, format: :none)
+    XmlBuilder.generate({:topic, nil, elements}, format: :none, encoding: "UTF-8")
   end
 
   defp categories() do

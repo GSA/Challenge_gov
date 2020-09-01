@@ -57,8 +57,20 @@ defmodule ChallengeGov.GovDelivery do
     "#{endpoint()}/api/account/#{account_code()}/topics.xml"
   end
 
+  def update_topic_endpoint(topic_code) do
+    "#{endpoint()}/api/account/#{account_code()}/topics/#{topic_code}.xml"
+  end
+
   def remove_topic_endpoint(code) do
     "#{endpoint()}/api/account/#{account_code()}/topics/#{code}.xml"
+  end
+
+  def list_topics_endpoint() do
+    "#{endpoint()}/api/account/#{account_code()}/topics.xml"
+  end
+
+  def list_categories_endpoint() do
+    "#{endpoint()}/api/account/#{account_code()}/categories.xml"
   end
 
   @doc """
@@ -73,5 +85,19 @@ defmodule ChallengeGov.GovDelivery do
   """
   def remove_topic(id) do
     @module.remove_topic(id)
+  end
+
+  @doc """
+  List all topics
+  """
+  def list_topics() do
+    @module.list_topics()
+  end
+
+  @doc """
+  List categories
+  """
+  def list_categories() do
+    @module.list_categories()
   end
 end
