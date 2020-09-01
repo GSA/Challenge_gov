@@ -7,7 +7,7 @@ export const LandingPage = () => {
   const [currentChallenges, setCurrentChallenges] = useState([])
   const [loadingState, setLoadingState] = useState(false)
 
-  const apiUrl = useContext(ApiUrlContext)
+  const { apiUrl } = useContext(ApiUrlContext)
 
   $(".usa-hero").show()
 

@@ -12,7 +12,7 @@ export const ContactForm = ({preview}) => {
   const [modalIsOpen, setIsOpen] = useState(false);
 
   let { challengeId } = useParams();
-  const apiUrl = useContext(ApiUrlContext)
+  const { apiUrl } = useContext(ApiUrlContext)
 
   useEffect(() => {
     const recaptcha_key = document.getElementById("recaptcha-key").innerHTML

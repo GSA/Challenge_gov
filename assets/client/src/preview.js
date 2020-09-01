@@ -36,7 +36,10 @@ const Application = () => {
 }
 
 const renderPreview = () => (
-  <ApiUrlContext.Provider value={window.location.origin}>
+  <ApiUrlContext.Provider value={{
+    apiUrl: window.location.origin,
+    imageBase: window.location.origin
+  }}>
     <BrowserRouter>
       <Route
         path={"/public/previews/challenges/:challengeId"}
