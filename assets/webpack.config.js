@@ -16,6 +16,7 @@ module.exports = (env, options) => ({
   entry: {
     app: ['./js/app.js'],
     public: ['./js/public.js'],
+    layout: ['./js/layout.js'],
     client: ['./client/src/index.js'],
     preview: ['./client/src/preview.js']
   },
