@@ -20,6 +20,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
     case response do
       {:ok, %{status_code: 200}} ->
+        ChallengeGov.Challenges.clear_gov_delivery_topic(challenge)
         {:ok, :removed}
 
       {:ok, %{body: body, status_code: code}} ->
@@ -46,7 +47,60 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
     case response do
       {:ok, %{status_code: 200}} ->
+        ChallengeGov.Challenges.store_gov_delivery_topic(challenge, code(challenge.id))
         set_category(challenge)
+
+      {:ok, %{body: body, status_code: code}} ->
+        {:error, %{body: body, status_code: code}}
+
+      e ->
+        {:error, e}
+    end
+  end
+
+  @impl true
+  def subscribe_user_general(user) do
+    body = xml_subscribe_general(user)
+
+    response =
+      Mojito.post(
+        ChallengeGov.GovDelivery.subscribe_endpoint(),
+        [
+          auth_headers(),
+          {"content-type", "application/xml; charset: utf-8"}
+        ],
+        body
+      )
+
+    case response do
+      {:ok, %{status_code: 200}} ->
+        {:ok, :subscribed}
+
+      {:ok, %{body: body, status_code: code}} ->
+        {:error, %{body: body, status_code: code}}
+
+      e ->
+        {:error, e}
+    end
+  end
+
+  @impl true
+  def subscribe_user_challenge(user, challenge) do
+    body = xml_subscribe_challenge(user, challenge)
+
+    response =
+      Mojito.post(
+        ChallengeGov.GovDelivery.subscribe_endpoint(),
+        [
+          auth_headers(),
+          {"content-type", "application/xml; charset: utf-8"}
+        ],
+        body
+      )
+
+    case response do
+      {:ok, %{status_code: 200}} ->
+        {:ok, :subscribed}
 
       {:ok, %{body: body, status_code: code}} ->
         {:error, %{body: body, status_code: code}}
@@ -123,7 +177,47 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     ]
   end
 
+  defp xml_subscribe_general(user) do
+    general_topic = [
+      {
+        :topic,
+        nil,
+        [
+          {:code, nil, ChallengeGov.GovDelivery.news_topic_code()}
+        ]
+      }
+    ]
+
+    elements = [
+      {:email, nil, user.email},
+      {"send-notifications", %{type: "boolean"}, "true"},
+      {:topics, %{type: "array"}, general_topic}
+    ]
+
+    XmlBuilder.generate({:subscriber, nil, elements}, format: :none, encoding: "UTF-8")
+  end
+
+  defp xml_subscribe_challenge(user, challenge) do
+    general_topic = [
+      {
+        :topic,
+        nil,
+        [
+          {:code, nil, code(challenge.id)}
+        ]
+      }
+    ]
+
+    elements = [
+      {:email, nil, user.email},
+      {"send-notifications", %{type: "boolean"}, "true"},
+      {:topics, %{type: "array"}, general_topic}
+    ]
+
+    XmlBuilder.generate({:subscriber, nil, elements}, format: :none, encoding: "UTF-8")
+  end
+
   defp code(id) do
-    "CHAL_TEST-#{id}"
+    "#{ChallengeGov.GovDelivery.challenge_topic_prefix_code()}-#{id}"
   end
 end

@@ -50,6 +50,7 @@ config :challenge_gov, ChallengeGov.GovDelivery,
   url: {:system, "GOV_DELIVERY_URL"},
   account_code: {:system, "GOV_DELIVERY_ACCOUNT_CODE"},
   challenge_category_code: {:system, "GOV_DELIVERY_CATEGORY_CODE"},
+  challenge_topic_prefix_code: {:system, "GOV_DELIVERY_TOPIC_PREFIX_CODE"},
   news_topic_code: {:system, "GOV_DELIVERY_TOPIC_CODE"}
 
 config :challenge_gov, ChallengeGov.Mailer,

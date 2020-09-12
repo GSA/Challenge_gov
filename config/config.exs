@@ -50,7 +50,8 @@ config :challenge_gov, ChallengeGov.Scheduler,
     {"0 5 * * *", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
     {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}},
     {"0 0 * * *", {ChallengeGov.CertificationLogs, :check_for_expired_certifications, []}},
-    {"* * * * *", {ChallengeGov.Challenges, :check_for_auto_publish, []}}
+    {"* * * * *", {ChallengeGov.Challenges, :check_for_auto_publish, []}},
+    {"* * * * *", {ChallengeGov.GovDelivery, :check_topics, []}}
   ]
 
 # Import environment specific config. This must remain at the bottom

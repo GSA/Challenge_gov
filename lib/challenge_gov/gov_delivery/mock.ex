@@ -47,6 +47,14 @@ defmodule ChallengeGov.GovDelivery.Mock do
     end
   end
 
+  @impl true
+  def subscribe_user_general(_user) do
+  end
+
+  @impl true
+  def subscribe_user_challenge(_user, _challenge) do
+  end
+
   defmodule FakeGovDelivery do
     @moduledoc false
 
