@@ -309,6 +309,7 @@ defmodule ChallengeGov.Challenges do
         c.archive_date <= ^DateTime.utc_now()
     )
     |> order_by([c], asc: c.end_date, asc: c.id)
+    |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.paginate(opts[:page], opts[:per])
   end
 
@@ -716,6 +717,8 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_closed?(_challenge), do: false
+
+  def is_archived_new?(%{status: "archived"}), do: true
 
   def is_archived_new?(%{sub_status: "archived"}), do: true
 

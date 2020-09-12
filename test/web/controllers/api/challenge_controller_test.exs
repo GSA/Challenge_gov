@@ -1,6 +1,8 @@
 defmodule Web.Api.ChallengeControllerTest do
   use Web.ConnCase
 
+  alias ChallengeGov.Challenges
+
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.AgencyHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
@@ -219,7 +221,8 @@ defmodule Web.Api.ChallengeControllerTest do
       "phases" => [],
       "open_until" => nil,
       "announcement" => nil,
-      "announcement_datetime" => nil
+      "announcement_datetime" => nil,
+      "is_archived" => Challenges.is_archived_new?(challenge)
     }
   end
 end
