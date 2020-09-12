@@ -48,6 +48,32 @@ defmodule Web.Api.ChallengeControllerTest do
     end
   end
 
+  describe "retrieving JSON list of archived challenges" do
+    test "successfully", %{conn: conn} do
+      user = AccountHelpers.create_user()
+
+      ChallengeHelpers.create_single_phase_challenge(user, %{
+        user_id: user.id
+      })
+
+      ChallengeHelpers.create_multi_phase_challenge(user, %{user_id: user.id})
+
+      ChallengeHelpers.create_open_multi_phase_challenge(user, %{user_id: user.id})
+
+      ChallengeHelpers.create_closed_multi_phase_challenge(user, %{user_id: user.id})
+
+      ChallengeHelpers.create_archived_multi_phase_challenge(user, %{user_id: user.id})
+
+      conn = get(conn, Routes.api_challenge_path(conn, :index, archived: true))
+      assert length(json_response(conn, 200)["collection"]) === 1
+    end
+
+    test "no results", %{conn: conn} do
+      conn = get(conn, Routes.api_challenge_path(conn, :index), archived: true)
+      assert length(json_response(conn, 200)["collection"]) === 0
+    end
+  end
+
   describe "retrieving JSON details of a challenge" do
     test "successfully with published challenge", %{conn: conn} do
       user = AccountHelpers.create_user()

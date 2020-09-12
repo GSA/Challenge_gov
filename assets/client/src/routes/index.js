@@ -8,6 +8,11 @@ export const IndexRoutes = [
     exact: true
   },
   {
+    component: App,
+    path: "/challenges/archived",
+    exact: true
+  },
+  {
     component: DetailsPage,
     path: "/challenge/:challengeId"
   }

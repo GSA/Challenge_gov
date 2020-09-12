@@ -8,13 +8,14 @@ export const LandingPage = () => {
   const [loadingState, setLoadingState] = useState(false)
 
   const { apiUrl } = useContext(ApiUrlContext)
+  const challengesPath = window.location.hash === "#/challenges/archived" ? "/api/challenges?archived=true" : "/api/challenges"
 
   $(".usa-hero").show()
 
   useEffect(() => {
     setLoadingState(true)
     axios
-      .get(apiUrl + "/api/challenges")
+      .get(apiUrl + challengesPath)
       .then(res => {
         setCurrentChallenges(res.data)
         setLoadingState(false)
