@@ -8,12 +8,16 @@ import { ApiUrlContext } from '../ApiUrlContext'
 export const ChallengeTile = ({challenge, preview}) => {
   const { imageBase } = useContext(ApiUrlContext)
 
-  const renderTags = ({start_date, end_date, announcement_datetime}) => {
+  const renderTags = ({is_archived, start_date, end_date, announcement_datetime}) => {
     const startDateDiff = moment().diff(start_date, 'minutes')
     const endDateDiff = moment().diff(end_date, 'minutes')
     const announcementDateDiff = moment().diff(announcement_datetime, 'minutes')
 
     let tags = []
+
+    if (is_archived) {
+      tags.push(<div key={"archived"} className="usa-tag usa-tag--archived">Archived</div>)
+    }
 
     if (startDateDiff < 0) {
       tags.push(<div key={"coming_soon"} className="usa-tag usa-tag--coming-soon">Coming soon</div>)

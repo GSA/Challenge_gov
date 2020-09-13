@@ -123,6 +123,10 @@ p {
 }
 
 .usa-tag {
+  &--archived {
+    background-color: #2C608A;
+  }
+
   &--coming-soon {
     background-color: #4d8055;
   }
