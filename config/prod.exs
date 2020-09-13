@@ -51,7 +51,8 @@ config :challenge_gov, ChallengeGov.GovDelivery,
   account_code: {:system, "GOV_DELIVERY_ACCOUNT_CODE"},
   challenge_category_code: {:system, "GOV_DELIVERY_CATEGORY_CODE"},
   challenge_topic_prefix_code: {:system, "GOV_DELIVERY_TOPIC_PREFIX_CODE"},
-  news_topic_code: {:system, "GOV_DELIVERY_TOPIC_CODE"}
+  news_topic_code: {:system, "GOV_DELIVERY_TOPIC_CODE"},
+  public_subscribe_base: {:system, "GOV_DELIVERY_TOPIC_SUBSCRIBE_URL"}
 
 config :challenge_gov, ChallengeGov.Mailer,
   from: System.get_env("MAILER_FROM_ADDRESS"),

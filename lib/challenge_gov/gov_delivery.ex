@@ -67,6 +67,10 @@ defmodule ChallengeGov.GovDelivery do
     ChallengeGov.config(Application.get_env(:challenge_gov, __MODULE__)[:news_topic_code])
   end
 
+  def public_subscribe_url_base() do
+    ChallengeGov.config(Application.get_env(:challenge_gov, __MODULE__)[:public_subscribe_base])
+  end
+
   def create_topic_endpoint() do
     "#{endpoint()}/api/account/#{account_code()}/topics.xml"
   end
@@ -124,5 +128,14 @@ defmodule ChallengeGov.GovDelivery do
     |> Enum.each(fn challenge ->
       remove_topic(challenge)
     end)
+  end
+
+  @doc """
+  Get gov delivery topic subscribe url
+  """
+  def public_subscribe_link(%{gov_delivery_topic: nil}), do: nil
+
+  def public_subscribe_link(%{gov_delivery_topic: topic}) do
+    "#{public_subscribe_url_base()}#{topic}"
   end
 end

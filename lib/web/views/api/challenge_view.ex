@@ -2,6 +2,7 @@ defmodule Web.Api.ChallengeView do
   use Web, :view
 
   alias ChallengeGov.Challenges
+  alias ChallengeGov.GovDelivery
   alias Web.Api.PaginationView
   alias Web.ChallengeView
 
@@ -103,7 +104,8 @@ defmodule Web.Api.ChallengeView do
       title: challenge.title,
       types: challenge.types,
       winner_information: challenge.winner_information,
-      winner_image: ChallengeView.winner_img_url(challenge)
+      winner_image: ChallengeView.winner_img_url(challenge),
+      gov_delivery_topic_subscribe_link: GovDelivery.public_subscribe_link(challenge)
     }
   end
 

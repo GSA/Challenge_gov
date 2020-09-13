@@ -1,6 +1,7 @@
 defmodule Web.Api.ChallengeControllerTest do
   use Web.ConnCase
 
+  alias ChallengeGov.Challenges
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.AgencyHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
@@ -82,6 +83,34 @@ defmodule Web.Api.ChallengeControllerTest do
         })
 
       expected_json = expected_show_json(challenge)
+
+      conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.id))
+      assert json_response(conn, 200) === expected_json
+    end
+
+    test "with a gov delivery topic", %{conn: conn} do
+      user = AccountHelpers.create_user()
+      agency = AgencyHelpers.create_agency()
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          agency_id: agency.id,
+          title: "Test Title 1",
+          description: "Test description 1",
+          status: "published"
+        })
+
+      {:ok, challenge} = Challenges.store_gov_delivery_topic(challenge, "CHAL_TEST-1")
+
+      expected_json = expected_show_json(challenge)
+
+      expected_json =
+        Map.put(
+          expected_json,
+          "gov_delivery_topic_subscribe_link",
+          "https://stage-public.govdelivery.com/accounts/USGSATTS/subscriber/new?topic_id=CHAL_TEST-1"
+        )
 
       conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.id))
       assert json_response(conn, 200) === expected_json
@@ -193,7 +222,8 @@ defmodule Web.Api.ChallengeControllerTest do
       "phases" => [],
       "open_until" => nil,
       "announcement" => nil,
-      "announcement_datetime" => nil
+      "announcement_datetime" => nil,
+      "gov_delivery_topic_subscribe_link" => nil
     }
   end
 end

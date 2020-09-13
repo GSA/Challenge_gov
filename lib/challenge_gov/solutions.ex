@@ -3,12 +3,13 @@ defmodule ChallengeGov.Solutions do
   Context for Solutions
   """
 
-  alias ChallengeGov.Solutions.Solution
-  alias ChallengeGov.SolutionDocuments
   alias ChallengeGov.Emails
+  alias ChallengeGov.GovDelivery
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
   alias ChallengeGov.SecurityLogs
+  alias ChallengeGov.SolutionDocuments
+  alias ChallengeGov.Solutions.Solution
   alias Stein.Filter
 
   import Ecto.Query
@@ -62,6 +63,8 @@ defmodule ChallengeGov.Solutions do
     |> Repo.transaction()
     |> case do
       {:ok, %{solution: solution}} ->
+        GovDelivery.subscribe_user_general(user)
+        GovDelivery.subscribe_user_challenge(user, challenge)
         {:ok, solution}
 
       {:error, _type, changeset, _changes} ->

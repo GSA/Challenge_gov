@@ -1,16 +1,23 @@
 defmodule ChallengeGov.GovDelivery.Implementation do
   @moduledoc """
   Implementation details for GovDelivery
+
+  We never actually care about the return values
+
+  Everything is best effort to maintain the GovDelivery state
   """
 
   @behaviour ChallengeGov.GovDelivery
+
+  alias ChallengeGov.Challenges
+  alias ChallengeGov.GovDelivery
 
   @impl true
   def remove_topic(challenge) do
     endpoint =
       challenge.id
       |> code()
-      |> ChallengeGov.GovDelivery.remove_topic_endpoint()
+      |> GovDelivery.remove_topic_endpoint()
 
     response =
       Mojito.delete(
@@ -20,7 +27,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
     case response do
       {:ok, %{status_code: 200}} ->
-        ChallengeGov.Challenges.clear_gov_delivery_topic(challenge)
+        Challenges.clear_gov_delivery_topic(challenge)
         {:ok, :removed}
 
       {:ok, %{body: body, status_code: code}} ->
@@ -37,7 +44,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
     response =
       Mojito.post(
-        ChallengeGov.GovDelivery.create_topic_endpoint(),
+        GovDelivery.create_topic_endpoint(),
         [
           auth_headers(),
           {"content-type", "application/xml; charset: utf-8"}
@@ -47,7 +54,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
     case response do
       {:ok, %{status_code: 200}} ->
-        ChallengeGov.Challenges.store_gov_delivery_topic(challenge, code(challenge.id))
+        Challenges.store_gov_delivery_topic(challenge, code(challenge.id))
         set_category(challenge)
 
       {:ok, %{body: body, status_code: code}} ->
@@ -64,7 +71,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
     response =
       Mojito.post(
-        ChallengeGov.GovDelivery.subscribe_endpoint(),
+        GovDelivery.subscribe_endpoint(),
         [
           auth_headers(),
           {"content-type", "application/xml; charset: utf-8"}
@@ -90,7 +97,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
     response =
       Mojito.post(
-        ChallengeGov.GovDelivery.subscribe_endpoint(),
+        GovDelivery.subscribe_endpoint(),
         [
           auth_headers(),
           {"content-type", "application/xml; charset: utf-8"}
@@ -114,7 +121,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     endpoint =
       challenge.id
       |> code()
-      |> ChallengeGov.GovDelivery.set_topic_categories_endpoint()
+      |> GovDelivery.set_topic_categories_endpoint()
 
     response =
       Mojito.put(
@@ -140,8 +147,8 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   defp auth_headers() do
     Mojito.Headers.auth_header(
-      ChallengeGov.GovDelivery.username(),
-      ChallengeGov.GovDelivery.password()
+      GovDelivery.username(),
+      GovDelivery.password()
     )
   end
 
@@ -171,7 +178,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
          {
            :code,
            nil,
-           ChallengeGov.GovDelivery.challenge_topic_category_code()
+           GovDelivery.challenge_topic_category_code()
          }
        ]}
     ]
@@ -183,7 +190,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
         :topic,
         nil,
         [
-          {:code, nil, ChallengeGov.GovDelivery.news_topic_code()}
+          {:code, nil, GovDelivery.news_topic_code()}
         ]
       }
     ]
@@ -218,6 +225,6 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   end
 
   defp code(id) do
-    "#{ChallengeGov.GovDelivery.challenge_topic_prefix_code()}-#{id}"
+    "#{GovDelivery.challenge_topic_prefix_code()}-#{id}"
   end
 end
