@@ -5,26 +5,41 @@ import { ChallengeTile } from "./ChallengeTile"
 
 export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleYearChange}) => {
 
-  const renderChallengeTiles = (challenges) => {
-    // TODO: Temporary showing of layout on chal details until the layout is moved
-    $(".top-banner").show()
-    $(".help-section").show()
-    $(".section-divider").show()
-    $(".footer").show()
+  const renderChallengeTiles = () => {
+    if (loading) {
+      return (
+        <div className="cards__loader-wrapper" aria-label="Loading active challenges">
+          {[1,2,3,4,5,6].map(numOfPlaceholders => (
+            <div key={numOfPlaceholders}>
+              <div className="card__loader--image"></div>
+              <div className="card__loader--text line-1"></div>
+              <div className="card__loader--text line-2"></div>
+              <div className="card__loader--text line-3"></div>
+            </div>
+          ))}
+        </div>
+      )
+    } else {
+      if (data.collection) {
+        if (data.collection.length > 0) {
+          return (
+            <div className="cards">
+              {data.collection.map(c => (
+                  <ChallengeTile key={c.id} challenge={c} />
+              ))}
+            </div>
+          )
+        }
 
-    if (challenges.collection) {
-      if (challenges.collection.length > 0) {
-        return challenges.collection.map(c => (
-          <ChallengeTile key={c.id} challenge={c} />
-        ))
-      }
-
-      if (challenges.collection.length == 0) {
-        return (
-          <p className="cards__none">
-            There are no current challenges. Please check back again soon!
-          </p>
-        )
+        if (data.collection.length == 0) {
+          return (
+            <div className="cards">
+              <p className="cards__none">
+                There are no current challenges. Please check back again soon!
+              </p>
+            </div>
+          )
+        }
       }
     }
   }
@@ -82,31 +97,11 @@ export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleY
 
   return (
     <section id="active-challenges" className="cards__section">
-      {loading
-        ? (
-          <div className="cards__loader-wrapper" aria-label="Loading active challenges">
-            {[1,2,3,4,5,6].map(numOfPlaceholders => (
-              <div key={numOfPlaceholders}>
-                <div className="card__loader--image"></div>
-                <div className="card__loader--text line-1"></div>
-                <div className="card__loader--text line-2"></div>
-                <div className="card__loader--text line-3"></div>
-              </div>
-            ))}
-          </div>
-        )
-        : (
-          <section className="cards__section">
-            {renderHeader()}
-            {renderSubHeader()}
-            {renderYearFilter()}
-            {renderSortText()}
-            <div className="cards">
-              {renderChallengeTiles(data)}
-            </div>
-          </section>
-        )
-      }
+      {renderHeader()}
+      {renderSubHeader()}
+      {renderYearFilter()}
+      {renderSortText()}
+      {renderChallengeTiles()}
     </section>
   )
 }

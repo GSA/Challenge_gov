@@ -13,7 +13,17 @@ export const LandingPage = () => {
   const { apiUrl } = useContext(ApiUrlContext)
   const challengesPath = isArchived ? "/api/challenges?archived=true" : "/api/challenges"
 
-  $(".usa-hero").show()
+  // TODO: Temporary showing of layout on chal details until the layout is moved
+  if (isArchived) {
+    $(".top-banner").hide()
+    $(".usa-hero").hide()
+  } else {
+    $(".top-banner").show()
+    $(".usa-hero").show()
+  }
+  $(".help-section").show()
+  $(".section-divider").show()
+  $(".footer").show()
 
   useEffect(() => {
     let yearFilter = isArchived ? `&filter[year]=${selectedYear}` : ""

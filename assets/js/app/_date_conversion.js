@@ -9,7 +9,6 @@ $(".js-local-date").each(function() {
 })
 
 $(".js-local-datetime").each(function() {
-  console.log($(this))
   let timeZone = moment.tz.guess(true)
   let utc_time = $(this).text()
   let local_time = moment.tz(utc_time, timeZone).format("MM/DD/YY hh:mm A z")
