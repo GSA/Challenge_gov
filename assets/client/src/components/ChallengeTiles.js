@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import moment from "moment"
 import { ChallengeTile } from "./ChallengeTile"
 
-export const ChallengeTiles = ({data, loading}) => {
+export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleYearChange}) => {
 
   const renderChallengeTiles = (challenges) => {
     // TODO: Temporary showing of layout on chal details until the layout is moved
@@ -13,7 +13,6 @@ export const ChallengeTiles = ({data, loading}) => {
     $(".footer").show()
 
     if (challenges.collection) {
-
       if (challenges.collection.length > 0) {
         return challenges.collection.map(c => (
           <ChallengeTile key={c.id} challenge={c} />
@@ -26,6 +25,57 @@ export const ChallengeTiles = ({data, loading}) => {
             There are no current challenges. Please check back again soon!
           </p>
         )
+      }
+    }
+  }
+
+  const renderHeader = () => {
+    return (
+      <h2 className="mb-5">
+        {isArchived ? "Archived challenges" : "Active challenges"}
+      </h2>
+    )
+  }
+  
+  const renderSubHeader = () => {
+    return isArchived ?
+      (
+        <p>
+          Challenges on this page are either closed to submissions (completed) or only open to select winners of a pervious competition phase.
+        </p>
+      )
+      : null
+  }
+
+  const renderYearFilter = () => {
+    const startYear = 2009
+    const currentYear = moment().year()
+    const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
+
+    const years = range(currentYear, startYear, -1)
+
+    if (isArchived) {
+      return (
+        <div className="cards__year-filter">
+          <div>Filter by year:</div>
+          <select value={selectedYear} onChange={handleYearChange}>
+            {
+              years.map(year => {
+                return <option key={year}>{year}</option>
+              })
+            }
+          </select>
+        </div>
+      )
+    } 
+  }
+
+  const renderSortText = () => {
+    if (isArchived) {
+      return <p className="card__section--sort"><i>Challenges sorted by those most recently closed to open submissions</i></p>
+    } else {
+      if (data.collection && data.collection.length >= 1) {
+        return <p className="card__section--sort"><i>Challenges sorted by those closing soonest</i></p>
       }
     }
   }
@@ -47,11 +97,10 @@ export const ChallengeTiles = ({data, loading}) => {
         )
         : (
           <section className="cards__section">
-            <h2>Active challenges</h2>
-            {
-              (data.collection && data.collection.length >= 1) &&
-              <p className="card__section--sort">Challenges sorted by those closing soonest</p>
-            }
+            {renderHeader()}
+            {renderSubHeader()}
+            {renderYearFilter()}
+            {renderSortText()}
             <div className="cards">
               {renderChallengeTiles(data)}
             </div>
