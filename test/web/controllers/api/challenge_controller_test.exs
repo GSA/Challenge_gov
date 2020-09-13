@@ -70,6 +70,38 @@ defmodule Web.Api.ChallengeControllerTest do
       assert length(json_response(conn, 200)["collection"]) === 2
     end
 
+    test "success: filter by year", %{conn: conn} do
+      user = AccountHelpers.create_user()
+
+      now = Timex.now()
+
+      ChallengeHelpers.create_challenge(%{
+        user_id: user.id,
+        start_date: Timex.set(now, month: 1, year: 2018),
+        end_date: Timex.set(now, month: 2, year: 2018),
+        archive_date: Timex.set(now, month: 3, year: 2018)
+      })
+
+      ChallengeHelpers.create_challenge(%{
+        user_id: user.id,
+        start_date: Timex.set(now, month: 1, year: 2019),
+        end_date: Timex.set(now, month: 2, year: 2019),
+        archive_date: Timex.set(now, month: 3, year: 2019)
+      })
+
+      ChallengeHelpers.create_challenge(%{
+        user_id: user.id,
+        start_date: Timex.shift(now, hours: 1),
+        end_date: Timex.shift(now, hours: 2),
+        archive_date: Timex.shift(now, hours: 2)
+      })
+
+      conn =
+        get(conn, Routes.api_challenge_path(conn, :index, archived: true, filter: %{year: 2019}))
+
+      assert length(json_response(conn, 200)["collection"]) === 1
+    end
+
     test "no results", %{conn: conn} do
       conn = get(conn, Routes.api_challenge_path(conn, :index), archived: true)
       assert length(json_response(conn, 200)["collection"]) === 0

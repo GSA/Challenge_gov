@@ -1123,6 +1123,11 @@ defmodule ChallengeGov.Challenges do
     end)
   end
 
+  def filter_on_attribute({"year", value}, query) do
+    {value, _} = Integer.parse(value)
+    where(query, [c], fragment("date_part('year', ?) = ?", c.start_date, ^value))
+  end
+
   def filter_on_attribute({"agency_id", value}, query) do
     where(query, [c], c.agency_id == ^value)
   end

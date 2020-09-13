@@ -6,10 +6,12 @@ defmodule Web.Api.ChallengeController do
 
   plug Web.Plugs.FetchPage when action in [:index]
 
-  def index(conn, %{"archived" => "true"}) do
+  def index(conn, params = %{"archived" => "true"}) do
     %{page: page, per: per} = conn.assigns
+    filter = Map.get(params, "filter", %{})
 
-    %{page: page, pagination: pagination} = Challenges.all_archived(page: page, per: per)
+    %{page: page, pagination: pagination} =
+      Challenges.all_archived(filter: filter, page: page, per: per)
 
     conn
     |> assign(:challenges, page)
