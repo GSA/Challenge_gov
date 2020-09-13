@@ -25,6 +25,7 @@ defmodule Web.Api.ChallengeView do
       end_date: challenge.end_date,
       announcement_datetime: challenge.announcement_datetime,
       is_archived: Challenges.is_archived_new?(challenge),
+      is_closed: Challenges.is_closed?(challenge),
       phases:
         render_many(
           challenge.phases,
@@ -66,6 +67,7 @@ defmodule Web.Api.ChallengeView do
       how_to_enter: HtmlSanitizeEx.basic_html(challenge.how_to_enter),
       id: challenge.id,
       is_archived: Challenges.is_archived_new?(challenge),
+      is_closed: Challenges.is_closed?(challenge),
       judging_criteria: HtmlSanitizeEx.basic_html(challenge.judging_criteria),
       legal_authority: challenge.legal_authority,
       logo: ChallengeView.logo_url(challenge),

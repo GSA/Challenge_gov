@@ -67,7 +67,7 @@ defmodule Web.Api.ChallengeControllerTest do
       ChallengeHelpers.create_archived_multi_phase_challenge(user, %{user_id: user.id})
 
       conn = get(conn, Routes.api_challenge_path(conn, :index, archived: true))
-      assert length(json_response(conn, 200)["collection"]) === 1
+      assert length(json_response(conn, 200)["collection"]) === 2
     end
 
     test "no results", %{conn: conn} do
@@ -222,7 +222,8 @@ defmodule Web.Api.ChallengeControllerTest do
       "open_until" => nil,
       "announcement" => nil,
       "announcement_datetime" => nil,
-      "is_archived" => Challenges.is_archived_new?(challenge)
+      "is_archived" => Challenges.is_archived_new?(challenge),
+      "is_closed" => Challenges.is_closed?(challenge)
     }
   end
 end
