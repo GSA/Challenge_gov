@@ -47,7 +47,7 @@ defmodule ChallengeGov.ChallengeTest do
       first_date = Timex.shift(Timex.now(), hours: 1)
 
       assert length(challenge.phases) === 3
-      assert Timex.equal?(start_date, first_date)
+      assert Timex.equal?(start_date, first_date, :minute)
     end
   end
 
