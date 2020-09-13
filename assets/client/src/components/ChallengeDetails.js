@@ -49,7 +49,7 @@ export const ChallengeDetails = ({challenge, preview}) => {
     })
   }
 
-  const renderApplyButton = (challenge) => {
+  const renderFollowButton = (challenge) => {
     if (challenge.gov_delivery_topic_subscribe_link) {
       return (
         <a href={preview ? null : challenge.gov_delivery_topic_subscribe_link}>
