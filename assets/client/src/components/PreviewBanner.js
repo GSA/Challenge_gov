@@ -4,7 +4,7 @@ import moment from 'moment'
 export const PreviewBanner = ({challenge}) => {
   return (
     challenge ? (
-      <div className="challenge-preview-banner card p-5">
+      <div className="challenge-preview__banner card p-5">
         <div className="card-body">
           <h1 className="card-title">Preview of challenge #{challenge.id}: {challenge.title}</h1>
           <br/>

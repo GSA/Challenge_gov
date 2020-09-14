@@ -1,0 +1,22 @@
+.header {
+  max-width: 1440px;
+  margin: auto;
+
+  &__challenge-logo {
+    height: 50px;
+  }
+
+  &__login {
+    padding: .25rem 2rem;
+    border: 1px solid #2E2E2E;
+    border-radius: 5px;
+    color: #2E2E2E;
+    transition: 0.2s;
+
+    &:hover {
+      color: #ffffff;
+      background-color: #2E2E2E;
+      text-decoration: none;
+    }
+  }
+}

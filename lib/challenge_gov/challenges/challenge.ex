@@ -56,6 +56,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
     # Fields
     field(:status, :string, default: "draft")
+    field(:sub_status, :string)
     field(:last_section, :string)
     field(:challenge_manager, :string)
     field(:challenge_manager_email, :string)
@@ -73,6 +74,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:fiscal_year, :string)
     field(:start_date, :utc_datetime)
     field(:end_date, :utc_datetime)
+    field(:archive_date, :utc_datetime)
     field(:multi_phase, :boolean)
     field(:number_of_phases, :string)
     field(:phase_descriptions, :string)
@@ -143,6 +145,17 @@ defmodule ChallengeGov.Challenges.Challenge do
   def status_ids() do
     Enum.map(@statuses, & &1.id)
   end
+
+  @doc """
+  Sub statuses that a published challenge can have
+  """
+  @sub_statuses [
+    "open",
+    "closed",
+    "archived"
+  ]
+
+  def sub_statuses(), do: @sub_statuses
 
   @challenge_types [
     "Software and apps",
@@ -252,6 +265,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :agency_id,
       :sub_agency_id,
       :status,
+      :sub_status,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
@@ -313,6 +327,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :user_id,
       :agency_id,
       :status,
+      :sub_status,
       :challenge_manager,
       :challenge_manager_email,
       :poc_email,
@@ -715,6 +730,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
     |> set_start_date(phases)
     |> set_end_date(phases)
+    |> set_archive_date(phases)
   end
 
   defp maybe_set_start_end_dates(struct, _params), do: struct
@@ -750,6 +766,23 @@ defmodule ChallengeGov.Challenges.Challenge do
         |> Timex.parse("{ISO:Extended}")
 
       put_change(struct, :end_date, DateTime.truncate(end_date, :second))
+    else
+      struct
+    end
+  end
+
+  defp set_archive_date(struct, phases) do
+    if Enum.any?(phases, fn {_, phase} -> dates_exist?(phase) end) do
+      {_, end_phase} =
+        phases
+        |> Enum.max_by(fn {_, p} -> p["end_date"] end)
+
+      {:ok, end_date} =
+        end_phase
+        |> Map.fetch!("end_date")
+        |> Timex.parse("{ISO:Extended}")
+
+      put_change(struct, :archive_date, DateTime.truncate(end_date, :second))
     else
       struct
     end

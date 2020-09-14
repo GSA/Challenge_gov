@@ -86,4 +86,43 @@ defmodule ChallengeGov.ChallengeTest do
       assert challenge.announcement_datetime === DateTime.truncate(DateTime.utc_now(), :second)
     end
   end
+
+  describe "set published sub statuses" do
+    test "successfully" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      multi_phase_challenge =
+        ChallengeHelpers.create_multi_phase_challenge(user, %{user_id: user.id})
+
+      open_multi_phase_challenge =
+        ChallengeHelpers.create_open_multi_phase_challenge(user, %{user_id: user.id})
+
+      closed_multi_phase_challenge =
+        ChallengeHelpers.create_closed_multi_phase_challenge(user, %{user_id: user.id})
+
+      archived_multi_phase_challenge =
+        ChallengeHelpers.create_archived_multi_phase_challenge(user, %{user_id: user.id})
+
+      assert challenge.sub_status === nil
+      assert multi_phase_challenge.sub_status === nil
+      assert open_multi_phase_challenge.sub_status === nil
+      assert closed_multi_phase_challenge.sub_status === nil
+      assert archived_multi_phase_challenge.sub_status === nil
+
+      Challenges.set_sub_statuses()
+
+      {:ok, challenge} = Challenges.get(challenge.id)
+      {:ok, multi_phase_challenge} = Challenges.get(multi_phase_challenge.id)
+      {:ok, open_multi_phase_challenge} = Challenges.get(open_multi_phase_challenge.id)
+      {:ok, closed_multi_phase_challenge} = Challenges.get(closed_multi_phase_challenge.id)
+      {:ok, archived_multi_phase_challenge} = Challenges.get(archived_multi_phase_challenge.id)
+
+      assert challenge.sub_status === "open"
+      assert multi_phase_challenge.sub_status === nil
+      assert open_multi_phase_challenge.sub_status === "open"
+      assert closed_multi_phase_challenge.sub_status === "closed"
+      assert archived_multi_phase_challenge.sub_status === "archived"
+    end
+  end
 end

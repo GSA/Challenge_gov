@@ -51,7 +51,8 @@ config :challenge_gov, ChallengeGov.Scheduler,
     {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}},
     {"0 0 * * *", {ChallengeGov.CertificationLogs, :check_for_expired_certifications, []}},
     {"* * * * *", {ChallengeGov.Challenges, :check_for_auto_publish, []}},
-    {"* * * * *", {ChallengeGov.GovDelivery, :check_topics, []}}
+    {"* * * * *", {ChallengeGov.GovDelivery, :check_topics, []}},
+    {"* * * * *", {ChallengeGov.Challenges, :set_sub_statuses, []}}
   ]
 
 # Import environment specific config. This must remain at the bottom

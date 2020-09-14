@@ -1,17 +1,36 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { ChallengeTiles } from '../components/ChallengeTiles'
 import axios from 'axios'
+import { ApiUrlContext } from '../ApiUrlContext'
+import moment from "moment"
 
 export const LandingPage = () => {
   const [currentChallenges, setCurrentChallenges] = useState([])
   const [loadingState, setLoadingState] = useState(false)
+  const [isArchived] = useState(window.location.hash === "#/challenges/archived")
+  const [selectedYear, setSelectedYear] = useState(moment().year())
 
-  const base_url = window.location.origin
+  const { apiUrl } = useContext(ApiUrlContext)
+  const challengesPath = isArchived ? "/api/challenges?archived=true" : "/api/challenges"
+
+  // TODO: Temporary showing of layout on chal details until the layout is moved
+  if (isArchived) {
+    $(".top-banner").hide()
+    $(".usa-hero").hide()
+  } else {
+    $(".top-banner").show()
+    $(".usa-hero").show()
+  }
+  $(".help-section").show()
+  $(".section-divider").show()
+  $(".footer").show()
 
   useEffect(() => {
+    let yearFilter = isArchived ? `&filter[year]=${selectedYear}` : ""
+    
     setLoadingState(true)
     axios
-      .get(base_url + "/api/challenges")
+      .get(apiUrl + challengesPath + yearFilter)
       .then(res => {
         setCurrentChallenges(res.data)
         setLoadingState(false)
@@ -20,12 +39,16 @@ export const LandingPage = () => {
         setLoadingState(false)
         console.log({e})
       })
-  }, [])
+  }, [selectedYear])
+
+  const handleYearChange = (e) => {
+    setSelectedYear(e.target.value)
+  }
 
   return (
     <div>
       <div>
-        <ChallengeTiles data={currentChallenges} loading={loadingState}/>
+        <ChallengeTiles data={currentChallenges} loading={loadingState} isArchived={isArchived} selectedYear={selectedYear} handleYearChange={handleYearChange} />
       </div>
     </div>
   )

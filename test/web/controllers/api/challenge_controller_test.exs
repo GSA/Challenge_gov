@@ -49,6 +49,64 @@ defmodule Web.Api.ChallengeControllerTest do
     end
   end
 
+  describe "retrieving JSON list of archived challenges" do
+    test "successfully", %{conn: conn} do
+      user = AccountHelpers.create_user()
+
+      ChallengeHelpers.create_single_phase_challenge(user, %{
+        user_id: user.id
+      })
+
+      ChallengeHelpers.create_multi_phase_challenge(user, %{user_id: user.id})
+
+      ChallengeHelpers.create_open_multi_phase_challenge(user, %{user_id: user.id})
+
+      ChallengeHelpers.create_closed_multi_phase_challenge(user, %{user_id: user.id})
+
+      ChallengeHelpers.create_archived_multi_phase_challenge(user, %{user_id: user.id})
+
+      conn = get(conn, Routes.api_challenge_path(conn, :index, archived: true))
+      assert length(json_response(conn, 200)["collection"]) === 2
+    end
+
+    test "success: filter by year", %{conn: conn} do
+      user = AccountHelpers.create_user()
+
+      now = Timex.now()
+
+      ChallengeHelpers.create_challenge(%{
+        user_id: user.id,
+        start_date: Timex.set(now, month: 1, year: 2018),
+        end_date: Timex.set(now, month: 2, year: 2018),
+        archive_date: Timex.set(now, month: 3, year: 2018)
+      })
+
+      ChallengeHelpers.create_challenge(%{
+        user_id: user.id,
+        start_date: Timex.set(now, month: 1, year: 2019),
+        end_date: Timex.set(now, month: 2, year: 2019),
+        archive_date: Timex.set(now, month: 3, year: 2019)
+      })
+
+      ChallengeHelpers.create_challenge(%{
+        user_id: user.id,
+        start_date: Timex.shift(now, hours: 1),
+        end_date: Timex.shift(now, hours: 2),
+        archive_date: Timex.shift(now, hours: 2)
+      })
+
+      conn =
+        get(conn, Routes.api_challenge_path(conn, :index, archived: true, filter: %{year: 2019}))
+
+      assert length(json_response(conn, 200)["collection"]) === 1
+    end
+
+    test "no results", %{conn: conn} do
+      conn = get(conn, Routes.api_challenge_path(conn, :index), archived: true)
+      assert length(json_response(conn, 200)["collection"]) === 0
+    end
+  end
+
   describe "retrieving JSON details of a challenge" do
     test "successfully with published challenge", %{conn: conn} do
       user = AccountHelpers.create_user()
@@ -204,8 +262,8 @@ defmodule Web.Api.ChallengeControllerTest do
       "poc_email" => "test_poc@example.com",
       "rules" => "Test rules",
       "types" => [],
-      "agency_logo" => "/images/agency-logo-placeholder.svg",
-      "logo" => "/images/challenge-logo-2_1.svg",
+      "agency_logo" => Routes.static_url(Web.Endpoint, "/images/agency-logo-placeholder.svg"),
+      "logo" => Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.svg"),
       "terms_and_conditions" => "Test terms",
       "non_monetary_prizes" => nil,
       "how_to_enter" => "",
@@ -223,7 +281,9 @@ defmodule Web.Api.ChallengeControllerTest do
       "open_until" => nil,
       "announcement" => nil,
       "announcement_datetime" => nil,
-      "gov_delivery_topic_subscribe_link" => nil
+      "gov_delivery_topic_subscribe_link" => nil,
+      "is_archived" => Challenges.is_archived_new?(challenge),
+      "is_closed" => Challenges.is_closed?(challenge)
     }
   end
 end

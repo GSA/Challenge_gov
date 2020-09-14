@@ -1,16 +1,23 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { Link } from "react-router-dom";
 import moment from "moment"
 import {getCurrentPhase, getNextPhase, phaseNumber, formatDateTime, formatTime, isSinglePhase, isPhaseless, daysInMinutes} from "../helpers/phaseHelpers"
 import {truncateString} from '../helpers/stringHelpers'
+import { ApiUrlContext } from '../ApiUrlContext'
 
 export const ChallengeTile = ({challenge, preview}) => {
-  const renderTags = ({start_date, end_date, announcement_datetime}) => {
+  const { imageBase } = useContext(ApiUrlContext)
+
+  const renderTags = ({is_archived, start_date, end_date, announcement_datetime}) => {
     const startDateDiff = moment().diff(start_date, 'minutes')
     const endDateDiff = moment().diff(end_date, 'minutes')
     const announcementDateDiff = moment().diff(announcement_datetime, 'minutes')
 
     let tags = []
+
+    if (is_archived) {
+      tags.push(<div key={"archived"} className="usa-tag usa-tag--archived">Archived</div>)
+    }
 
     if (startDateDiff < 0) {
       tags.push(<div key={"coming_soon"} className="usa-tag usa-tag--coming-soon">Coming soon</div>)
@@ -89,12 +96,12 @@ export const ChallengeTile = ({challenge, preview}) => {
   return (
     challenge ? (
       <div key={challenge.id} className="challenge-tile card">
-        <Link to={preview ? "#" : `/public/challenge/${challenge.id}`} aria-label="View challenge details">
+        <Link to={preview ? "#" : `/challenge/${challenge.id}`} aria-label="View challenge details">
           <div className="image_wrapper">
             { challenge.logo
-              ? <img src={challenge.logo} alt="Challenge logo" title="Challenge logo" className="w-100"/>
+              ? <img src={imageBase + challenge.logo} alt="Challenge logo" title="Challenge logo" className="w-100"/>
               : <img
-                  src={challenge.agency_logo}
+                  src={imageBase + challenge.agency_logo}
                   alt="Challenge agency logo"
                   title="Challenge agency logo"
                   className="w-100"

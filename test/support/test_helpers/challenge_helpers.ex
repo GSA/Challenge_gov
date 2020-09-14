@@ -123,4 +123,118 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
 
     challenge
   end
+
+  def create_open_multi_phase_challenge(user, attributes \\ %{}) do
+    challenge = create_challenge(attributes, user)
+
+    {:ok, challenge} =
+      Challenges.update(
+        challenge,
+        %{
+          "action" => "next",
+          "challenge" => %{
+            "section" => "details",
+            "challenge_title" => challenge.title,
+            "upload_logo" => "false",
+            "is_multi_phase" => "true",
+            "phases" => %{
+              "0" => %{
+                "title" => "Test",
+                "start_date" => TestHelpers.iso_timestamp(),
+                "end_date" => TestHelpers.iso_timestamp(hours: 1),
+                "open_to_submissions" => "true"
+              },
+              "1" => %{
+                "title" => "Test 1",
+                "start_date" => TestHelpers.iso_timestamp(hours: 2),
+                "end_date" => TestHelpers.iso_timestamp(hours: 3),
+                "open_to_submissions" => "true"
+              },
+              "2" => %{
+                "title" => "Test 2",
+                "start_date" => TestHelpers.iso_timestamp(hours: 4),
+                "end_date" => TestHelpers.iso_timestamp(hours: 5),
+                "open_to_submissions" => "false"
+              }
+            }
+          }
+        },
+        user,
+        ""
+      )
+
+    challenge
+  end
+
+  def create_closed_multi_phase_challenge(user, attributes \\ %{}) do
+    challenge = create_challenge(attributes, user)
+
+    {:ok, challenge} =
+      Challenges.update(
+        challenge,
+        %{
+          "action" => "next",
+          "challenge" => %{
+            "section" => "details",
+            "challenge_title" => challenge.title,
+            "upload_logo" => "false",
+            "is_multi_phase" => "true",
+            "phases" => %{
+              "0" => %{
+                "title" => "Test",
+                "start_date" => TestHelpers.iso_timestamp(hours: -2),
+                "end_date" => TestHelpers.iso_timestamp(hours: -1),
+                "open_to_submissions" => "true"
+              },
+              "1" => %{
+                "title" => "Test 2",
+                "start_date" => TestHelpers.iso_timestamp(),
+                "end_date" => TestHelpers.iso_timestamp(hours: 1),
+                "open_to_submissions" => "false"
+              }
+            }
+          }
+        },
+        user,
+        ""
+      )
+
+    challenge
+  end
+
+  def create_archived_multi_phase_challenge(user, attributes \\ %{}) do
+    challenge = create_challenge(attributes, user)
+
+    {:ok, challenge} =
+      Challenges.update(
+        challenge,
+        %{
+          "action" => "next",
+          "challenge" => %{
+            "section" => "details",
+            "challenge_title" => challenge.title,
+            "upload_logo" => "false",
+            "is_multi_phase" => "true",
+            "phases" => %{
+              "0" => %{
+                "title" => "Test",
+                "start_date" => TestHelpers.iso_timestamp(hours: -4),
+                "end_date" => TestHelpers.iso_timestamp(hours: -3),
+                "open_to_submissions" => "true"
+              },
+              "1" => %{
+                "title" => "Test 2",
+                "start_date" => TestHelpers.iso_timestamp(hours: -2),
+                "end_date" => TestHelpers.iso_timestamp(hours: -1),
+                "open_to_submissions" => "false"
+              }
+            }
+          }
+        },
+        user,
+        ""
+      )
+
+    challenge
+  end
 end

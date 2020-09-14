@@ -1,8 +1,10 @@
 export const truncateString = (str, len) => {
-  if (str.length <= len) {
-    return str
+  if (str) {
+    if (str.length <= len) {
+      return str
+    }
+    return str.slice(0, len) + '...'
   }
-  return str.slice(0, len) + '...'
 }
 
 export default {

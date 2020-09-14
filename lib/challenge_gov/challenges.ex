@@ -33,6 +33,9 @@ defmodule ChallengeGov.Challenges do
   def statuses(), do: Challenge.statuses()
 
   @doc false
+  def sub_statuses(), do: Challenge.sub_statuses()
+
+  @doc false
   def status_label(status) do
     status_data = Enum.find(statuses(), fn s -> s.id == status end)
 
@@ -288,9 +291,25 @@ defmodule ChallengeGov.Challenges do
 
   def all_public(opts \\ []) do
     base_query()
-    |> where([c], c.status == "published")
+    |> where([c], c.status == "published" or c.sub_status == "open")
     |> where([c], c.end_date >= ^DateTime.utc_now())
     |> order_by([c], asc: c.end_date, asc: c.id)
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.paginate(opts[:page], opts[:per])
+  end
+
+  @doc """
+  Gets all archived or sub_status archived challenges
+  """
+  def all_archived(opts \\ []) do
+    base_query()
+    |> where(
+      [c],
+      (c.status == "published" and (c.sub_status == "archived" or c.sub_status == "closed")) or
+        c.status == "archived" or
+        c.archive_date <= ^DateTime.utc_now() or c.end_date <= ^DateTime.utc_now()
+    )
+    |> order_by([c], desc: c.end_date, asc: c.id)
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.paginate(opts[:page], opts[:per])
   end
@@ -699,6 +718,8 @@ defmodule ChallengeGov.Challenges do
   def is_unpublished?(%{status: "unpublished"}), do: true
   def is_unpublished?(_user), do: false
 
+  def is_open?(%{sub_status: "open"}), do: true
+
   def is_open?(challenge = %{start_date: start_date, end_date: end_date})
       when not is_nil(start_date) and not is_nil(end_date) do
     now = DateTime.utc_now()
@@ -709,12 +730,23 @@ defmodule ChallengeGov.Challenges do
 
   def is_open?(_challenge), do: false
 
+  def is_closed?(%{sub_status: "closed"}), do: true
+
   def is_closed?(challenge = %{end_date: end_date}) when not is_nil(end_date) do
     now = DateTime.utc_now()
     is_published?(challenge) and DateTime.compare(now, end_date) === :gt
   end
 
   def is_closed?(_challenge), do: false
+
+  def is_archived_new?(%{status: "archived"}), do: true
+
+  def is_archived_new?(%{sub_status: "archived"}), do: true
+
+  def is_archived_new?(challenge = %{archive_date: archive_date}) when not is_nil(archive_date) do
+    now = DateTime.utc_now()
+    is_published?(challenge) and DateTime.compare(now, archive_date) === :gt
+  end
 
   def is_archived_new?(challenge = %{phases: phases}) when length(phases) > 0 do
     now = DateTime.utc_now()
@@ -732,6 +764,39 @@ defmodule ChallengeGov.Challenges do
 
   def is_archived?(%{status: "archived"}), do: true
   def is_archived?(_user), do: false
+
+  def set_sub_statuses() do
+    Challenge
+    |> where([c], c.status == "published")
+    |> Repo.all()
+    |> Enum.reduce(Ecto.Multi.new(), fn challenge, multi ->
+      Ecto.Multi.update(multi, {:challenge, challenge.id}, set_sub_status(challenge))
+    end)
+    |> Repo.transaction()
+  end
+
+  def set_sub_status(challenge) do
+    cond do
+      is_archived_new?(challenge) ->
+        challenge
+        |> Ecto.Changeset.change()
+        |> Ecto.Changeset.put_change(:sub_status, "archived")
+
+      is_closed?(challenge) ->
+        challenge
+        |> Ecto.Changeset.change()
+        |> Ecto.Changeset.put_change(:sub_status, "closed")
+
+      is_open?(challenge) ->
+        challenge
+        |> Ecto.Changeset.change()
+        |> Ecto.Changeset.put_change(:sub_status, "open")
+
+      true ->
+        challenge
+        |> Ecto.Changeset.change()
+    end
+  end
 
   # BOOKMARK: Advanced status functions
   @doc """
@@ -1090,6 +1155,11 @@ defmodule ChallengeGov.Challenges do
     Enum.reduce(values, query, fn value, query ->
       where(query, [c], fragment("? @> ?::jsonb", c.types, ^[value]))
     end)
+  end
+
+  def filter_on_attribute({"year", value}, query) do
+    {value, _} = Integer.parse(value)
+    where(query, [c], fragment("date_part('year', ?) = ?", c.start_date, ^value))
   end
 
   def filter_on_attribute({"agency_id", value}, query) do
