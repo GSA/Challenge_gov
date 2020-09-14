@@ -93,18 +93,18 @@ if ($("#session_timeout").length > 0) {
         return renewSession()
       }
 
-      // $.ajax({
-      //   url: "/api/session/logout",
-      //   type: "post",
-      //   processData: false,
-      //   contentType: false,
-      //   success: function(res) {
-      //     location.replace("/sign-in/new?inactive=true")
-      //   },
-      //   error: function(err) {
-      //     console.log("Something went wrong")
-      //   }
-      // })
+      $.ajax({
+        url: "/api/session/logout",
+        type: "post",
+        processData: false,
+        contentType: false,
+        success: function(res) {
+          location.replace("/sign-in/new?inactive=true")
+        },
+        error: function(err) {
+          console.log("Something went wrong")
+        }
+      })
     }
 
   }, 1000);
