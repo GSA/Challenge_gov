@@ -15,7 +15,6 @@ p {
 .cards {
   display: grid;
   // grid-template-columns: repeat(auto-fit, minmax(42.5rem, 1fr));
-  grid-gap: 2rem;
   margin: auto;
   padding: 20px;
 
@@ -24,6 +23,8 @@ p {
   }
 
   &__section {
+    max-width: 1200px;
+    margin: auto;
     padding-top: 2rem;
 
     h2 {
@@ -32,6 +33,12 @@ p {
       text-align: center;
     }
 
+  }
+
+  &__year-filter {
+    margin: auto;
+    margin-bottom: 1rem;
+    text-align: center;
   }
 }
 
@@ -123,6 +130,10 @@ p {
 }
 
 .usa-tag {
+  &--archived {
+    background-color: #2C608A;
+  }
+
   &--coming-soon {
     background-color: #4d8055;
   }
