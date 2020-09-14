@@ -21,7 +21,7 @@ defmodule ChallengeGov.Recaptcha.Implementation do
 
     body = {:form, [secret: key, response: token]}
 
-    response = HTTPoison.post("https://www.google.com/recaptcha/api/siteverify", body)
+    response = Mojito.post("https://www.google.com/recaptcha/api/siteverify", [], body)
 
     case response do
       {:ok, %{body: body, status_code: 200}} ->

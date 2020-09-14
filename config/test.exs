@@ -24,6 +24,18 @@ config :challenge_gov, ChallengeGov.Mailer,
 config :bcrypt_elixir, :log_rounds, 4
 
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
+config :challenge_gov, :gov_delivery, module: ChallengeGov.GovDelivery.Mock
+
+config :challenge_gov, ChallengeGov.GovDelivery,
+  username: "user@domain.com",
+  password: "password",
+  url: "https://stage-api.govdelivery.com",
+  account_code: "USGSATTS",
+  challenge_category_code: "CHAL_ALL_TEST",
+  challenge_topic_prefix_code: "CHAL_TEST",
+  news_topic_code: "CHAL_NEWS_TEST",
+  public_subscribe_base:
+    "https://stage-public.govdelivery.com/accounts/USGSATTS/subscriber/new?topic_id="
 
 config :stein_storage, backend: :test
 

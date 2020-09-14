@@ -1,4 +1,4 @@
-defmodule ChallenegGov.CertificationLogs.CertificationLog do
+defmodule ChallengeGov.CertificationLogs.CertificationLog do
   @moduledoc """
   Certification Log schema
   """

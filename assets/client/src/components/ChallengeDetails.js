@@ -52,6 +52,18 @@ export const ChallengeDetails = ({challenge, preview}) => {
     })
   }
 
+  const renderFollowButton = (challenge) => {
+    if (challenge.gov_delivery_topic_subscribe_link) {
+      return (
+        <a href={preview ? null : challenge.gov_delivery_topic_subscribe_link}>
+          <button className="follow-btn"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
+            </a>
+      )
+    } else {
+      return null
+    }
+  }
+
   const renderApplyButton = (challenge) => {
     // Button states
     // Disabled
@@ -231,8 +243,9 @@ export const ChallengeDetails = ({challenge, preview}) => {
               {renderApplyButton(challenge)}
               <div className="detail-section__follow">
                 <a href={preview ? null : `/challenges/${challenge.id}/save_challenge/new`}>
-                  <button className="follow-btn"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
+                  <button className="follow-btn"><i className="far fa-bookmark mr-3"></i>Save challenge</button>
                 </a>
+                {renderFollowButton(challenge)}
               </div>
               <div className="item">
                 <p className="info-title">Submission period:</p>

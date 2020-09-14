@@ -29,6 +29,7 @@ config :phoenix, :json_library, Jason
 config :bamboo, :json_library, Jason
 
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Implementation
+config :challenge_gov, :gov_delivery, module: ChallengeGov.GovDelivery.Implementation
 
 config :stein_storage,
   backend: :file,
@@ -50,6 +51,7 @@ config :challenge_gov, ChallengeGov.Scheduler,
     {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}},
     {"0 0 * * *", {ChallengeGov.CertificationLogs, :check_for_expired_certifications, []}},
     {"* * * * *", {ChallengeGov.Challenges, :check_for_auto_publish, []}},
+    {"* * * * *", {ChallengeGov.GovDelivery, :check_topics, []}},
     {"* * * * *", {ChallengeGov.Challenges, :set_sub_statuses, []}}
   ]
 

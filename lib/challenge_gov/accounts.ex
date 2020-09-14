@@ -8,12 +8,12 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.ChallengeOwner
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
   alias ChallengeGov.Recaptcha
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
-  alias ChallengeGov.Emails
-  alias ChallengeGov.Mailer
   alias Stein.Filter
 
   import Ecto.Query

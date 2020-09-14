@@ -6,7 +6,7 @@ defmodule ChallengeGov.CertificationLogs do
   import Ecto.Query
   require Logger
   alias ChallengeGov.Accounts
-  alias ChallenegGov.CertificationLogs.CertificationLog
+  alias ChallengeGov.CertificationLogs.CertificationLog
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
 

@@ -324,6 +324,26 @@ defmodule ChallengeGov.Challenges do
     |> Repo.all()
   end
 
+  @doc """
+  Get all published challenges for govdelivery topics
+  """
+  def all_for_govdelivery() do
+    base_query()
+    |> where([c], c.status == "published")
+    |> where([c], is_nil(c.gov_delivery_topic))
+    |> Repo.all()
+  end
+
+  @doc """
+  Get all archived challenges for removal from govdelivery topics
+  """
+  def all_for_removal_from_govdelivery() do
+    base_query()
+    |> where([c], c.status == "archived")
+    |> where([c], not is_nil(c.gov_delivery_topic))
+    |> Repo.all()
+  end
+
   def all_ready_for_publish() do
     base_query()
     |> where([c], c.status == "approved")
@@ -1058,6 +1078,20 @@ defmodule ChallengeGov.Challenges do
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:logo_key, nil)
     |> Ecto.Changeset.put_change(:logo_extension, nil)
+    |> Repo.update()
+  end
+
+  def store_gov_delivery_topic(challenge, topic) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:gov_delivery_topic, topic)
+    |> Repo.update()
+  end
+
+  def clear_gov_delivery_topic(challenge) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:gov_delivery_topic, nil)
     |> Repo.update()
   end
 

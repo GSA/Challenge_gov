@@ -2,8 +2,10 @@ defmodule ChallengeGov.SavedChallenges do
   @moduledoc """
   Context for saved challenges
   """
-  alias ChallengeGov.Repo
+
   alias ChallengeGov.Challenges
+  alias ChallengeGov.GovDelivery
+  alias ChallengeGov.Repo
   alias ChallengeGov.SavedChallenges.SavedChallenge
   alias Stein.Filter
 
@@ -35,9 +37,15 @@ defmodule ChallengeGov.SavedChallenges do
 
   def create(user, challenge) do
     if is_nil(challenge.deleted_at) and Challenges.is_public?(challenge) do
-      %SavedChallenge{}
-      |> SavedChallenge.changeset(user, challenge)
-      |> Repo.insert()
+      result =
+        %SavedChallenge{}
+        |> SavedChallenge.changeset(user, challenge)
+        |> Repo.insert()
+
+      GovDelivery.subscribe_user_general(user)
+      GovDelivery.subscribe_user_challenge(user, challenge)
+
+      result
     else
       {:error, :not_saved}
     end

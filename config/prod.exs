@@ -44,6 +44,16 @@ config :challenge_gov, :recaptcha,
   secret_key: {:system, "RECAPTCHA_SECRET_KEY"},
   key: {:system, "RECAPTCHA_SITE_KEY"}
 
+config :challenge_gov, ChallengeGov.GovDelivery,
+  username: {:system, "GOV_DELIVERY_API_USERNAME"},
+  password: {:system, "GOV_DELIVERY_API_PASSWORD"},
+  url: {:system, "GOV_DELIVERY_URL"},
+  account_code: {:system, "GOV_DELIVERY_ACCOUNT_CODE"},
+  challenge_category_code: {:system, "GOV_DELIVERY_CATEGORY_CODE"},
+  challenge_topic_prefix_code: {:system, "GOV_DELIVERY_TOPIC_PREFIX_CODE"},
+  news_topic_code: {:system, "GOV_DELIVERY_TOPIC_CODE"},
+  public_subscribe_base: {:system, "GOV_DELIVERY_TOPIC_SUBSCRIBE_URL"}
+
 config :challenge_gov, ChallengeGov.Mailer,
   from: System.get_env("MAILER_FROM_ADDRESS"),
   adapter: Bamboo.SMTPAdapter,

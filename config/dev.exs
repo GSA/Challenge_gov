@@ -94,6 +94,7 @@ config :challenge_gov, ChallengeGov.Mailer,
   adapter: Bamboo.LocalAdapter
 
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
+config :challenge_gov, :gov_delivery, module: ChallengeGov.GovDelivery.Mock
 
 if File.exists?("config/dev.local.exs") do
   import_config("dev.local.exs")
