@@ -329,7 +329,7 @@ defmodule ChallengeGov.Challenges do
   """
   def all_for_govdelivery() do
     base_query()
-    |> where([c], c.status == "published")
+    |> where([c], c.status == "published" and c.sub_status != "archived")
     |> where([c], is_nil(c.gov_delivery_topic))
     |> Repo.all()
   end
@@ -339,7 +339,10 @@ defmodule ChallengeGov.Challenges do
   """
   def all_for_removal_from_govdelivery() do
     base_query()
-    |> where([c], c.status == "archived")
+    |> where(
+      [c],
+      c.status == "archived" or (c.status == "published" and c.sub_status == "archived")
+    )
     |> where([c], not is_nil(c.gov_delivery_topic))
     |> Repo.all()
   end
