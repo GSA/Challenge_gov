@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
+import { Tooltip } from 'reactstrap'
 import moment from "moment"
 
 import { ChallengeTabs } from "../components/ChallengeTabs"
@@ -19,6 +20,9 @@ import { ApiUrlContext } from '../ApiUrlContext'
 
 export const ChallengeDetails = ({challenge, preview}) => {
   const { apiUrl, imageBase } = useContext(ApiUrlContext)
+  const [followTooltipOpen, setFollowTooltipOpen] = useState(false)
+
+  const toggleFollowTooltip = () => setFollowTooltipOpen(!followTooltipOpen)
 
   const renderEndDate = (date) => {
     const fiveDaysFromNow = moment().add(5,'d').utc().format()
@@ -53,15 +57,45 @@ export const ChallengeDetails = ({challenge, preview}) => {
   }
 
   const renderFollowButton = (challenge) => {
+    return <button className="follow-btn" id="followChallengeButton"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
+  }
+
+  const renderSubscribeButton = () => {
     if (challenge.gov_delivery_topic_subscribe_link) {
       return (
-        <a href={preview ? null : challenge.gov_delivery_topic_subscribe_link}>
-          <button className="follow-btn"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
+        <>
+          <div className="follow-tooltip__section">
+            <h4>Follow challenge as guest</h4>
+            <p>Receive challenge updates to your email. No sign-in required</p>
+            <a href={preview ? null : challenge.gov_delivery_topic_subscribe_link}>
+              <button className="follow-tooltip__button">Follow challenge</button>
             </a>
+          </div>
+          <div className="follow-tooltip__divider">Or</div>
+        </>
       )
-    } else {
-      return null
     }
+  }
+
+  const renderSaveButton = () => {
+    return (
+      <div className="follow-tooltip__section">
+        <h4>Save challenges to your account</h4>
+        <p>Sign in to save a challenge and receive updates. Free login.gov account required.</p>
+        <a href={preview ? null : apiUrl + `/challenges/${challenge.id}/save_challenge/new`}>
+          <button className="follow-tooltip__button">Save challenge</button>
+        </a>
+      </div>
+    )
+  }
+
+  const renderFollowTooltip = () => {
+    return (
+      <Tooltip placement="bottom" trigger="click" isOpen={followTooltipOpen} target="followChallengeButton" toggle={toggleFollowTooltip} autohide={false} className="follow-tooltip" innerClassName="follow-tooltip__inner" arrowClassName="follow-tooltip__arrow">
+        {renderSubscribeButton()}
+        {renderSaveButton()}
+      </Tooltip>
+    )
   }
 
   const renderApplyButton = (challenge) => {
@@ -242,10 +276,8 @@ export const ChallengeDetails = ({challenge, preview}) => {
             <div className="detail-section">
               {renderApplyButton(challenge)}
               <div className="detail-section__follow">
-                <a href={preview ? null : `/challenges/${challenge.id}/save_challenge/new`}>
-                  <button className="follow-btn"><i className="far fa-bookmark mr-3"></i>Save challenge</button>
-                </a>
                 {renderFollowButton(challenge)}
+                {renderFollowTooltip()}
               </div>
               <div className="item">
                 <p className="info-title">Submission period:</p>
