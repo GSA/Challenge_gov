@@ -305,9 +305,10 @@ defmodule ChallengeGov.Challenges do
     base_query()
     |> where(
       [c],
-      (c.status == "published" and (c.sub_status == "archived" or c.sub_status == "closed")) or
-        c.status == "archived" or
-        c.archive_date <= ^DateTime.utc_now() or c.end_date <= ^DateTime.utc_now()
+      (c.status == "published" and
+         (c.sub_status == "archived" or c.sub_status == "closed" or
+            (c.archive_date <= ^DateTime.utc_now() or c.end_date <= ^DateTime.utc_now()))) or
+        c.status == "archived"
     )
     |> order_by([c], desc: c.end_date, asc: c.id)
     |> Filter.filter(opts[:filter], __MODULE__)
