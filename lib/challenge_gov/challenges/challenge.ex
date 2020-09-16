@@ -443,7 +443,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_length(:description, max: 4000)
     |> validate_length(:other_type, max: 45)
     |> validate_inclusion(:primary_type, @challenge_types)
-    |> validate_subset(:types, @challenge_types)
+    |> maybe_validate_types(params)
     |> validate_upload_logo(params)
     |> validate_auto_publish_date(params)
     |> validate_custom_url(params)
@@ -636,6 +636,18 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> put_change(:resource_banner_key, key)
     |> put_change(:resource_banner_extension, extension)
   end
+
+  defp maybe_validate_types(struct, %{"types" => types}) do
+    Enum.reduce(types, struct, fn type, struct ->
+      if type != "" and !Enum.member?(@challenge_types, type) do
+        add_error(struct, :types, "A value selected for an optional challenge type is invalid")
+      else
+        struct
+      end
+    end)
+  end
+
+  defp maybe_validate_types(struct, _params), do: struct
 
   defp validate_upload_logo(struct, params = %{"upload_logo" => "true"}),
     do: validate_logo(struct, params)
