@@ -743,6 +743,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> set_start_date(phases)
     |> set_end_date(phases)
     |> set_archive_date(phases)
+    |> put_change(:sub_status, nil)
   end
 
   defp maybe_set_start_end_dates(struct, _params), do: struct

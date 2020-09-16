@@ -745,7 +745,7 @@ defmodule ChallengeGov.Challenges do
 
   def is_archived_new?(%{status: "archived"}), do: true
 
-  def is_archived_new?(%{sub_status: "archived"}), do: true
+  def is_archived_new?(%{status: "published", sub_status: "archived"}), do: true
 
   def is_archived_new?(challenge = %{archive_date: archive_date}) when not is_nil(archive_date) do
     now = DateTime.utc_now()
