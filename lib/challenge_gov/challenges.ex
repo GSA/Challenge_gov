@@ -310,7 +310,7 @@ defmodule ChallengeGov.Challenges do
             (c.archive_date <= ^DateTime.utc_now() or c.end_date <= ^DateTime.utc_now()))) or
         c.status == "archived"
     )
-    |> order_by([c], desc: c.end_date, asc: c.id)
+    |> order_by([c], asc: c.end_date, asc: c.id)
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.paginate(opts[:page], opts[:per])
   end
@@ -1163,7 +1163,7 @@ defmodule ChallengeGov.Challenges do
 
   def filter_on_attribute({"year", value}, query) do
     {value, _} = Integer.parse(value)
-    where(query, [c], fragment("date_part('year', ?) = ?", c.start_date, ^value))
+    where(query, [c], fragment("date_part('year', ?) = ?", c.end_date, ^value))
   end
 
   def filter_on_attribute({"agency_id", value}, query) do
