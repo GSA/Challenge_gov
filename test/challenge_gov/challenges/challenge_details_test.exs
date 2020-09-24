@@ -72,4 +72,41 @@ defmodule ChallengeGov.ChallengeDetailsTest do
       assert changeset.errors[:other_type]
     end
   end
+
+  describe "adding phases" do
+    test "success - changing phases resets sub_status" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      {:ok, challenge} = Challenges.update(challenge, %{"sub_status" => "archived"}, user, "")
+
+      assert challenge.sub_status === "archived"
+
+      {:ok, updated_challenge} =
+        Challenges.update(
+          challenge,
+          %{
+            "action" => "next",
+            "challenge" => %{
+              "section" => "details",
+              "phases" => %{
+                "0" => %{
+                  "end_date" => "2020-10-01 03:59:00Z",
+                  "how_to_enter" => "<p>ASDFASDF</p>",
+                  "how_to_enter_delta" => "{\"ops\":[{\"insert\":\"ASDFASDF\\n\"}]}",
+                  "judging_criteria" => "",
+                  "judging_criteria_delta" => "",
+                  "open_to_submissions" => "true",
+                  "start_date" => "2020-09-15 09:00:00Z",
+                  "title" => ""
+                }
+              }
+            }
+          },
+          user,
+          ""
+        )
+
+      assert updated_challenge.sub_status === nil
+    end
+  end
 end

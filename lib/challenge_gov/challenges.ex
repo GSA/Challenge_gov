@@ -305,11 +305,12 @@ defmodule ChallengeGov.Challenges do
     base_query()
     |> where(
       [c],
-      (c.status == "published" and (c.sub_status == "archived" or c.sub_status == "closed")) or
-        c.status == "archived" or
-        c.archive_date <= ^DateTime.utc_now() or c.end_date <= ^DateTime.utc_now()
+      (c.status == "published" and
+         (c.sub_status == "archived" or c.sub_status == "closed" or
+            (c.archive_date <= ^DateTime.utc_now() or c.end_date <= ^DateTime.utc_now()))) or
+        c.status == "archived"
     )
-    |> order_by([c], desc: c.end_date, asc: c.id)
+    |> order_by([c], asc: c.end_date, asc: c.id)
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.paginate(opts[:page], opts[:per])
   end
@@ -744,7 +745,7 @@ defmodule ChallengeGov.Challenges do
 
   def is_archived_new?(%{status: "archived"}), do: true
 
-  def is_archived_new?(%{sub_status: "archived"}), do: true
+  def is_archived_new?(%{status: "published", sub_status: "archived"}), do: true
 
   def is_archived_new?(challenge = %{archive_date: archive_date}) when not is_nil(archive_date) do
     now = DateTime.utc_now()
@@ -1162,7 +1163,7 @@ defmodule ChallengeGov.Challenges do
 
   def filter_on_attribute({"year", value}, query) do
     {value, _} = Integer.parse(value)
-    where(query, [c], fragment("date_part('year', ?) = ?", c.start_date, ^value))
+    where(query, [c], fragment("date_part('year', ?) = ?", c.end_date, ^value))
   end
 
   def filter_on_attribute({"agency_id", value}, query) do

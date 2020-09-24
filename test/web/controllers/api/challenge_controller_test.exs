@@ -53,6 +53,8 @@ defmodule Web.Api.ChallengeControllerTest do
     test "successfully", %{conn: conn} do
       user = AccountHelpers.create_user()
 
+      now = Timex.now()
+
       ChallengeHelpers.create_single_phase_challenge(user, %{
         user_id: user.id
       })
@@ -64,6 +66,14 @@ defmodule Web.Api.ChallengeControllerTest do
       ChallengeHelpers.create_closed_multi_phase_challenge(user, %{user_id: user.id})
 
       ChallengeHelpers.create_archived_multi_phase_challenge(user, %{user_id: user.id})
+
+      ChallengeHelpers.create_challenge(%{
+        user_id: user.id,
+        status: "draft",
+        start_date: Timex.set(now, month: 1, year: 2018),
+        end_date: Timex.set(now, month: 2, year: 2018),
+        archive_date: Timex.set(now, month: 3, year: 2018)
+      })
 
       conn = get(conn, Routes.api_challenge_path(conn, :index, archived: true))
       assert length(json_response(conn, 200)["collection"]) === 2
