@@ -438,6 +438,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :upload_logo,
       :is_multi_phase
     ])
+    |> validate_length(:title, max: 90)
     |> validate_length(:tagline, max: 90)
     |> validate_length(:brief_description, max: 200)
     |> validate_length(:description, max: 4000)
