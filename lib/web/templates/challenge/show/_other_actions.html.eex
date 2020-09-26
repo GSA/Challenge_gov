@@ -4,6 +4,8 @@
     <div class="btn-toolbar">
       <%= if Accounts.has_admin_access?(@user) or !(Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge)) do %>
         <%= link "Preview", to: Routes.public_preview_path(@conn, :index, @challenge.uuid), target: "_blank", class: "btn btn-info" %>
+        <%= link "JSON", to: Routes.export_path(@conn, :export_challenge, @challenge.id, "json"), target: "_blank", class: "btn btn-info" %>
+        <%= link "CSV", to: Routes.export_path(@conn, :export_challenge, @challenge.id, "csv"), target: "_blank", class: "btn btn-info" %>
         <%= if Challenges.is_editable?(@challenge, @user) do %>
           <%= challenge_edit_link(@conn, @challenge, class: "btn btn-primary") %>
         <% end %>
