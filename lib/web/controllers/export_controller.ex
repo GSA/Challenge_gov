@@ -11,7 +11,7 @@ defmodule Web.ExportController do
 
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
-         {:ok, content} <- format_content(challenge, format) do
+         {:ok, content} <- ExportView.format_content(challenge, format) do
       send_download(conn, {:binary, content}, filename: "#{id}.#{format}")
     else
       {:error, :invalid_format} ->
@@ -19,23 +19,20 @@ defmodule Web.ExportController do
         |> put_flash(:error, "Invalid export format")
         |> redirect(to: Routes.dashboard_path(conn, :index))
 
-      _ ->
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "Challenge not found")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
+
+      {:error, :not_permitted} ->
         conn
         |> put_flash(:error, "You are not authorized to export this challenge")
         |> redirect(to: Routes.dashboard_path(conn, :index))
-    end
-  end
-
-  defp format_content(challenge, format) do
-    case format do
-      "json" ->
-        {:ok, ExportView.challenge_json(challenge)}
-
-      "csv" ->
-        {:ok, ExportView.challenge_csv(challenge)}
 
       _ ->
-        {:error, :invalid_format}
+        conn
+        |> put_flash(:error, "Something went wrong")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
     end
   end
 end
