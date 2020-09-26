@@ -7,20 +7,35 @@ defmodule Web.ExportController do
   plug(Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_owner])
 
   def export_challenge(conn, %{"id" => id, "format" => format}) do
-    {:ok, challenge} = Challenges.get(id)
+    %{current_user: user} = conn.assigns
 
-    content =
-      case format do
-        "json" ->
-          ExportView.challenge_json(challenge)
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
+         {:ok, content} <- format_content(challenge, format) do
+      send_download(conn, {:binary, content}, filename: "#{id}.#{format}")
+    else
+      {:error, :invalid_format} ->
+        conn
+        |> put_flash(:error, "Invalid export format")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
 
-        "csv" ->
-          ExportView.challenge_csv(challenge)
+      _ ->
+        conn
+        |> put_flash(:error, "You are not authorized to export this challenge")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
+    end
+  end
 
-        _ ->
-          "Invalid format"
-      end
+  defp format_content(challenge, format) do
+    case format do
+      "json" ->
+        {:ok, ExportView.challenge_json(challenge)}
 
-    send_download(conn, {:binary, content}, filename: "#{id}.#{format}")
+      "csv" ->
+        {:ok, ExportView.challenge_csv(challenge)}
+
+      _ ->
+        {:error, :invalid_format}
+    end
   end
 end
