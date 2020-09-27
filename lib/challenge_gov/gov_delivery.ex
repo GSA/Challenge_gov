@@ -13,6 +13,7 @@ defmodule ChallengeGov.GovDelivery do
   @callback add_topic(challenge()) :: tuple()
   @callback subscribe_user_general(user()) :: tuple()
   @callback subscribe_user_challenge(user(), challenge()) :: tuple()
+  @callback send_bulletin(challenge(), binary(), binary()) :: tuple()
 
   @module Application.get_env(:challenge_gov, :gov_delivery)[:module]
 
@@ -87,6 +88,10 @@ defmodule ChallengeGov.GovDelivery do
     "#{endpoint()}/api/account/#{account_code()}/subscriptions.xml"
   end
 
+  def send_bulletin_endpoint() do
+    "#{endpoint()}/api/account/#{account_code()}/bulletins/send_now"
+  end
+
   @doc """
   Add challenge as a topic
   """
@@ -113,6 +118,13 @@ defmodule ChallengeGov.GovDelivery do
   """
   def subscribe_user_challenge(user, challenge) do
     @module.subscribe_user_challenge(user, challenge)
+  end
+
+  @doc """
+  Subscribe User
+  """
+  def send_bulletin(challenge, subject, body) do
+    @module.send_bulletin(challenge, subject, body)
   end
 
   @doc """

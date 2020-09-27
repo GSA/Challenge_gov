@@ -277,7 +277,7 @@ defmodule ChallengeGov.Challenges do
     |> Repo.all()
   end
 
-  # BOOKMARK: Querying functions 
+  # BOOKMARK: Querying functions
   @doc """
   Get all challenges
   """
@@ -649,6 +649,19 @@ defmodule ChallengeGov.Challenges do
   def allowed_to_edit(user, challenge) do
     if is_challenge_owner?(user, challenge) or
          Accounts.has_admin_access?(user) do
+      {:ok, challenge}
+    else
+      {:error, :not_permitted}
+    end
+  end
+
+  @doc """
+  Checks if a user can send a bulletin
+  """
+  def can_send_bulletin(user, challenge) do
+    if allowed_to_edit(user, challenge) and
+         challenge.gov_delivery_topic != nil and
+         challenge.gov_delivery_topic != "" do
       {:ok, challenge}
     else
       {:error, :not_permitted}
