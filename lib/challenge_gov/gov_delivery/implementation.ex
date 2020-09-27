@@ -132,7 +132,11 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
     case response do
       {:ok, %{status_code: 200, body: body}} ->
-        result = xpath(body, ~x"//topic/subscribers-count/text()") |> to_string()
+        result =
+          body
+          |> xpath(~x"//topic/subscribers-count/text()")
+          |> to_string()
+
         {:ok, parse_count_result(result)}
 
       {:ok, %{body: body, status_code: code}} ->
