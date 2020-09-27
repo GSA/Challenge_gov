@@ -103,6 +103,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:announcement, :string)
     field(:announcement_datetime, :utc_datetime)
     field(:gov_delivery_topic, :string)
+    field(:gov_delivery_subscribers, :integer, default: 0)
 
     field(:upload_logo, :boolean)
     field(:is_multi_phase, :boolean)
