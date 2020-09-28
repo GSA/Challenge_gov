@@ -348,6 +348,15 @@ defmodule ChallengeGov.Challenges do
     |> Repo.all()
   end
 
+  @doc """
+  Get all challenges with govdelivery topics
+  """
+  def all_in_govdelivery() do
+    base_query()
+    |> where([c], not is_nil(c.gov_delivery_topic))
+    |> Repo.all()
+  end
+
   def all_ready_for_publish() do
     base_query()
     |> where([c], c.status == "approved")
@@ -1099,6 +1108,15 @@ defmodule ChallengeGov.Challenges do
     |> Repo.update()
   end
 
+  def update_subscribe_count(challenge, {:ok, count}) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:gov_delivery_subscribers, count)
+    |> Repo.update()
+  end
+
+  def update_subscribe_count(_challenge, _result), do: nil
+
   def store_gov_delivery_topic(challenge, topic) do
     challenge
     |> Ecto.Changeset.change()
@@ -1110,6 +1128,7 @@ defmodule ChallengeGov.Challenges do
     challenge
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:gov_delivery_topic, nil)
+    |> Ecto.Changeset.put_change(:gov_delivery_subscribers, 0)
     |> Repo.update()
   end
 

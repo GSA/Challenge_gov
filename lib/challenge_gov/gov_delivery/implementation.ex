@@ -12,6 +12,8 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery
 
+  import SweetXml
+
   @impl true
   def remove_topic(challenge) do
     endpoint =
@@ -143,6 +145,34 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     end
   end
 
+  @impl true
+  def get_topic_subscribe_count(challenge) do
+    response =
+      Mojito.get(
+        GovDelivery.topic_details_endpoint(code(challenge.id)),
+        [
+          auth_headers(),
+          {"content-type", "application/xml; charset: utf-8"}
+        ]
+      )
+
+    case response do
+      {:ok, %{status_code: 200, body: body}} ->
+        result =
+          body
+          |> xpath(~x"//topic/subscribers-count/text()")
+          |> to_string()
+
+        {:ok, parse_count_result(result)}
+
+      {:ok, %{body: body, status_code: code}} ->
+        {:error, %{body: body, status_code: code}}
+
+      e ->
+        {:error, e}
+    end
+  end
+
   def set_category(challenge) do
     endpoint =
       challenge.id
@@ -176,6 +206,18 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       GovDelivery.username(),
       GovDelivery.password()
     )
+  end
+
+  defp parse_count_result(nil), do: 0
+
+  defp parse_count_result(string) do
+    case Integer.parse(string) do
+      :error ->
+        0
+
+      {num, _remain} ->
+        num
+    end
   end
 
   defp xml_topic_from_challenge(challenge) do

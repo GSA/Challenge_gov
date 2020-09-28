@@ -52,6 +52,7 @@ config :challenge_gov, ChallengeGov.Scheduler,
     {"0 0 * * *", {ChallengeGov.CertificationLogs, :check_for_expired_certifications, []}},
     {"* * * * *", {ChallengeGov.Challenges, :check_for_auto_publish, []}},
     {"* * * * *", {ChallengeGov.GovDelivery, :check_topics, []}},
+    {"0 * * * *", {ChallengeGov.GovDelivery, :update_subscriber_counts, []}},
     {"* * * * *", {ChallengeGov.Challenges, :set_sub_statuses, []}}
   ]
 
