@@ -120,6 +120,32 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   end
 
   @impl true
+  def send_bulletin(challenge, subject, body) do
+    body = xml_send_bulletin(challenge, subject, body)
+
+    response =
+      Mojito.post(
+        GovDelivery.send_bulletin_endpoint(),
+        [
+          auth_headers(),
+          {"content-type", "application/xml; charset: utf-8"}
+        ],
+        body
+      )
+
+    case response do
+      {:ok, %{status_code: 200}} ->
+        {:ok, :sent}
+
+      {:ok, %{body: body, status_code: code}} ->
+        {:send_error, %{body: body, status_code: code}}
+
+      e ->
+        {:send_error, e}
+    end
+  end
+
+  @impl true
   def get_topic_subscribe_count(challenge) do
     response =
       Mojito.get(
@@ -264,6 +290,26 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     ]
 
     XmlBuilder.generate({:subscriber, nil, elements}, format: :none, encoding: "UTF-8")
+  end
+
+  defp xml_send_bulletin(challenge, subject, body) do
+    challenge_topic = [
+      {
+        :topic,
+        nil,
+        [
+          {:code, nil, code(challenge.id)}
+        ]
+      }
+    ]
+
+    elements = [
+      {:subject, nil, subject},
+      {:body, nil, {:cdata, body}},
+      {:topics, %{type: "array"}, challenge_topic}
+    ]
+
+    XmlBuilder.generate({:bulletin, nil, elements}, format: :none, encoding: "UTF-8")
   end
 
   defp code(id) do

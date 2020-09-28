@@ -87,6 +87,8 @@ defmodule Web.Router do
 
       resources("/events", EventController, only: [:new, :create])
 
+      resources("/bulletin", BulletinController, only: [:new, :create])
+
       resources("/solutions", SolutionController, only: [:index, :new, :create])
 
       resources("/save_challenge", SavedChallengeController, only: [:new, :create])
