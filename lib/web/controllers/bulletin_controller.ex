@@ -2,6 +2,7 @@ defmodule Web.BulletinController do
   use Web, :controller
 
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Challenges.Bulletin
 
   def new(conn, %{"challenge_id" => id}) do
     %{current_user: user} = conn.assigns
@@ -9,6 +10,7 @@ defmodule Web.BulletinController do
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.can_send_bulletin(user, challenge) do
       conn
+      |> assign(:changeset, Bulletin.create_changeset(%{}, %{}))
       |> assign(:challenge, challenge)
       |> render("new.html")
     else

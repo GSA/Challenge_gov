@@ -659,7 +659,8 @@ defmodule ChallengeGov.Challenges do
   Checks if a user can send a bulletin
   """
   def can_send_bulletin(user, challenge) do
-    if allowed_to_edit(user, challenge) and
+    if (is_challenge_owner?(user, challenge) or
+          Accounts.has_admin_access?(user)) and
          challenge.gov_delivery_topic != nil and
          challenge.gov_delivery_topic != "" do
       {:ok, challenge}
