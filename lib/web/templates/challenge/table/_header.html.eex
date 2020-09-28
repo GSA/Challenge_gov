@@ -1,12 +1,13 @@
 <thead>
   <tr>
-    <%= if @sortable === true do %>                  
+    <%= if @sortable === true do %>
       <%= sortable_header(@conn, @sort, @filter, "id", "ID") %>
       <%= sortable_header(@conn, @sort, @filter, "title", "Name") %>
       <%= sortable_header(@conn, @sort, @filter, "status", "Status") %>
       <%= sortable_header(@conn, @sort, @filter, "start_date", "Start Date") %>
       <%= sortable_header(@conn, @sort, @filter, "end_date", "End Date") %>
       <th>Type</th>
+      <th>Subscribers</th>
       <%= if Accounts.has_admin_access?(@user) do %>
         <th>Owners</th>
         <%= sortable_header(@conn, @sort, @filter, "agency", "Agency") %>
@@ -19,6 +20,7 @@
       <th>Start Date</th>
       <th>End Date</th>
       <th>Type</th>
+      <th>Subscribers</th>
       <%= if Accounts.has_admin_access?(@user) do %>
         <th>Owners</th>
         <th>Agency</th>

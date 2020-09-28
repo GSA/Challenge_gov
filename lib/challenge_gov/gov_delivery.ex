@@ -3,8 +3,8 @@ defmodule ChallengeGov.GovDelivery do
   Integration with GovDelivery
   """
 
-  alias ChallengeGov.Challenges
   alias ChallengeGov.Accounts
+  alias ChallengeGov.Challenges
 
   @type challenge() :: Challenges.Challenge.t()
   @type user() :: Accounts.User.t()
@@ -13,6 +13,7 @@ defmodule ChallengeGov.GovDelivery do
   @callback add_topic(challenge()) :: tuple()
   @callback subscribe_user_general(user()) :: tuple()
   @callback subscribe_user_challenge(user(), challenge()) :: tuple()
+  @callback get_topic_subscribe_count(challenge()) :: tuple()
 
   @module Application.get_env(:challenge_gov, :gov_delivery)[:module]
 
@@ -83,6 +84,10 @@ defmodule ChallengeGov.GovDelivery do
     "#{endpoint()}/api/account/#{account_code()}/topics/#{code}.xml"
   end
 
+  def topic_details_endpoint(code) do
+    "#{endpoint()}/api/account/#{account_code()}/topics/#{code}.xml"
+  end
+
   def subscribe_endpoint() do
     "#{endpoint()}/api/account/#{account_code()}/subscriptions.xml"
   end
@@ -95,7 +100,7 @@ defmodule ChallengeGov.GovDelivery do
   end
 
   @doc """
-  Add challenge as a topic
+  Remove challenge as a topic
   """
   def remove_topic(challenge) do
     @module.remove_topic(challenge)
@@ -116,6 +121,13 @@ defmodule ChallengeGov.GovDelivery do
   end
 
   @doc """
+  Get the count of subscribers on a topic
+  """
+  def get_topic_subscribe_count(challenge) do
+    @module.get_topic_subscribe_count(challenge)
+  end
+
+  @doc """
   Ensure all topics are correct in GovDelivery
   """
   def check_topics do
@@ -127,6 +139,17 @@ defmodule ChallengeGov.GovDelivery do
     Challenges.all_for_removal_from_govdelivery()
     |> Enum.each(fn challenge ->
       remove_topic(challenge)
+    end)
+  end
+
+  @doc """
+  Update all counts
+  """
+  def update_subscriber_counts do
+    Challenges.all_in_govdelivery()
+    |> Enum.each(fn challenge ->
+      result = get_topic_subscribe_count(challenge)
+      Challenges.update_subscribe_count(challenge, result)
     end)
   end
 

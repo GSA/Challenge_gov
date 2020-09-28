@@ -7,6 +7,7 @@
       <td><%= Web.SharedView.readable_date(challenge.start_date) %></td>
       <td><%= Web.SharedView.readable_date(challenge.end_date) %></td>
       <td><%= challenge.primary_type %></td>
+      <td><%= challenge.gov_delivery_subscribers %></td>
       <%= if Accounts.has_admin_access?(@user) do %>
         <td>
           <%= Enum.map(challenge.challenge_owners, fn owner -> %>
