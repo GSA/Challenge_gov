@@ -136,10 +136,10 @@ defmodule ChallengeGov.GovDelivery.Implementation do
         {:ok, :sent}
 
       {:ok, %{body: body, status_code: code}} ->
-        {:error, %{body: body, status_code: code}}
+        {:send_error, %{body: body, status_code: code}}
 
       e ->
-        {:error, e}
+        {:send_error, e}
     end
   end
 

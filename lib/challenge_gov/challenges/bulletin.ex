@@ -9,11 +9,12 @@ defmodule ChallengeGov.Challenges.Bulletin do
 
   schema "" do
     field :body, :string, virtual: true
+    field :body_delta, :string, virtual: true
     field :subject, :string, virtual: true
   end
 
   def create_changeset(struct, params) do
     struct
-    |> cast(params, [:subject, :body])
+    |> cast(params, [:subject, :body, :body_delta])
   end
 end

@@ -30,7 +30,7 @@
         <%= form_for(@changeset, @path, [class: "form-horizontal"], fn f -> %>
           <div class="card">
             <div class="card-body">
-              <%= FormView.textarea_field(f, :subject, label: "Subject", limit: 350, required: false) %>
+              <%= FormView.text_field(f, :subject, label: "Subject", limit: 350, required: false) %>
               <hr/>
               <div class="col">
                 <label><%= "Body" %> <span class="required">*</span></label>
