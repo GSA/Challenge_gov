@@ -105,47 +105,71 @@ defmodule Web.ExportView do
   end
 
   defp phase_headers(challenge) do
-    Enum.reduce(1..length(challenge.phases), [], fn phase_number, headers ->
-      Enum.concat(headers, [
-        "Phase #{phase_number} title",
-        "Phase #{phase_number} start date",
-        "Phase #{phase_number} end date",
-        "Phase #{phase_number} open to submissions",
-        "Phase #{phase_number} judging criteria",
-        "Phase #{phase_number} how to enter"
-      ])
-    end)
+    phases = challenge.phases
+
+    if length(phases) > 0 do
+      Enum.reduce(1..length(phases), [], fn phase_number, headers ->
+        Enum.concat(headers, [
+          "Phase #{phase_number} title",
+          "Phase #{phase_number} start date",
+          "Phase #{phase_number} end date",
+          "Phase #{phase_number} open to submissions",
+          "Phase #{phase_number} judging criteria",
+          "Phase #{phase_number} how to enter"
+        ])
+      end)
+    else
+      []
+    end
   end
 
   defp phase_data(challenge) do
-    Enum.reduce(challenge.phases, [], fn phase, headers ->
-      Enum.concat(headers, [
-        phase.title,
-        phase.start_date,
-        phase.end_date,
-        phase.open_to_submissions,
-        phase.judging_criteria,
-        phase.how_to_enter
-      ])
-    end)
+    phases = challenge.phases
+
+    if length(phases) > 0 do
+      Enum.reduce(phases, [], fn phase, headers ->
+        Enum.concat(headers, [
+          phase.title,
+          phase.start_date,
+          phase.end_date,
+          phase.open_to_submissions,
+          phase.judging_criteria,
+          phase.how_to_enter
+        ])
+      end)
+    else
+      []
+    end
   end
 
   defp timeline_headers(challenge) do
-    Enum.reduce(1..length(challenge.timeline_events), [], fn event_number, headers ->
-      Enum.concat(headers, [
-        "Timeline event #{event_number} title",
-        "Timeline event #{event_number} date"
-      ])
-    end)
+    events = challenge.timeline_events
+
+    if length(events) > 0 do
+      Enum.reduce(1..length(events), [], fn event_number, headers ->
+        Enum.concat(headers, [
+          "Timeline event #{event_number} title",
+          "Timeline event #{event_number} date"
+        ])
+      end)
+    else
+      []
+    end
   end
 
   defp timeline_data(challenge) do
-    Enum.reduce(challenge.timeline_events, [], fn event, headers ->
-      Enum.concat(headers, [
-        event.title,
-        event.date
-      ])
-    end)
+    events = challenge.timeline_events
+
+    if length(events) > 0 do
+      Enum.reduce(events, [], fn event, headers ->
+        Enum.concat(headers, [
+          event.title,
+          event.date
+        ])
+      end)
+    else
+      []
+    end
   end
 
   def challenge_json(challenge) do
