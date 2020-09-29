@@ -71,8 +71,8 @@ defmodule Web.Api.ChallengeControllerTest do
         user_id: user.id,
         status: "draft",
         start_date: Timex.set(now, month: 1, year: 2018),
-        end_date: Timex.set(now, month: 2, year: 2018),
-        archive_date: Timex.set(now, month: 3, year: 2018)
+        end_date: Timex.set(now, month: 3, year: 2018),
+        archive_date: Timex.set(now, month: 4, year: 2018)
       })
 
       conn = get(conn, Routes.api_challenge_path(conn, :index, archived: true))
@@ -87,15 +87,15 @@ defmodule Web.Api.ChallengeControllerTest do
       ChallengeHelpers.create_challenge(%{
         user_id: user.id,
         start_date: Timex.set(now, month: 1, year: 2018),
-        end_date: Timex.set(now, month: 2, year: 2018),
-        archive_date: Timex.set(now, month: 3, year: 2018)
+        end_date: Timex.set(now, month: 3, year: 2018),
+        archive_date: Timex.set(now, month: 4, year: 2018)
       })
 
       ChallengeHelpers.create_challenge(%{
         user_id: user.id,
         start_date: Timex.set(now, month: 1, year: 2019),
-        end_date: Timex.set(now, month: 2, year: 2019),
-        archive_date: Timex.set(now, month: 3, year: 2019)
+        end_date: Timex.set(now, month: 3, year: 2019),
+        archive_date: Timex.set(now, month: 4, year: 2019)
       })
 
       ChallengeHelpers.create_challenge(%{
