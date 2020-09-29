@@ -25,4 +25,12 @@ defmodule ChallengeGov.GovDelivery.Mock do
   @impl true
   def subscribe_user_challenge(_user, _challenge) do
   end
+
+  @impl true
+  def send_bulletin(_challenge, _subject, _body) do
+  end
+
+  @impl true
+  def get_topic_subscribe_count(_challenge) do
+  end
 end

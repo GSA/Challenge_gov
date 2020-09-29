@@ -7,6 +7,31 @@ defmodule ChallengeGov.ChallengeDetailsTest do
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
 
+  describe "submitting challenge" do
+    test "failure: validations" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      {:error, changeset} =
+        Challenges.update(
+          challenge,
+          %{
+            "action" => "next",
+            "challenge" => %{
+              "section" => "details",
+              "title" => TestHelpers.generate_random_string(91),
+              "tagline" => TestHelpers.generate_random_string(91)
+            }
+          },
+          user,
+          ""
+        )
+
+      assert changeset.errors[:title]
+      assert changeset.errors[:tagline]
+    end
+  end
+
   describe "adding types" do
     test "successfully" do
       user = AccountHelpers.create_user()
