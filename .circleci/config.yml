@@ -74,7 +74,7 @@ jobs:
       - restore_cache:
           key: v3-build-cache-{{ .Branch }}
       - run: mix compile --force --warnings-as-errors
-      - run: mix deps.audit
+      - run: mix deps.audit  --ignore-package-names sweet_xml
       - run: mix format --check-formatted
       - run: mix credo --all --format=oneline
 

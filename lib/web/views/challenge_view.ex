@@ -25,6 +25,28 @@ defmodule Web.ChallengeView do
     link(challenge.title, to: Routes.public_challenge_details_url(conn, :index, challenge.id))
   end
 
+  def challenge_owners_list(challenge) do
+    challenge.challenge_owner_users
+    |> Enum.map(&"#{&1.first_name} #{&1.last_name} (#{&1.email})")
+    |> Enum.join(", ")
+  end
+
+  def federal_partners_list(challenge) do
+    challenge.federal_partners
+    |> Enum.map(&agency_name(&1))
+    |> Enum.join(", ")
+  end
+
+  def non_federal_partners_list(challenge) do
+    challenge.non_federal_partners
+    |> Enum.map(& &1.name)
+    |> Enum.join(", ")
+  end
+
+  def custom_url(challenge) do
+    "http://www.challenge.gov/challenge/#{challenge.custom_url}"
+  end
+
   # TODO: Refactor to be more generic
   # Example: Take a path with existing query params and append sort after and no longer need to pass filter
   def sortable_header(conn, sort, filter, column, label) do

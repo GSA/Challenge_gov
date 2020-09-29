@@ -5,7 +5,7 @@ import { Accordion } from "../phase/Accordion"
 import { AccordionSection } from "../phase/AccordionSection"
 import { isSinglePhase } from '../../helpers/phaseHelpers'
 
-export const HowToEnter = ({challenge}) => {
+export const HowToEnter = ({challenge, print}) => {
   const renderPhaseData = (phases) => {
     if (isSinglePhase(challenge)) {
       return (
@@ -19,7 +19,7 @@ export const HowToEnter = ({challenge}) => {
           {
             phases.map((phase, index) => {
               return (
-                <AccordionSection key={phase.id} phase={phase} index={index}>
+                <AccordionSection key={phase.id} phase={phase} index={index} print={print}>
                   <div dangerouslySetInnerHTML={{ __html: phase.how_to_enter }}></div>
                 </AccordionSection>
               )

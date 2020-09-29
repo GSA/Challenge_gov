@@ -19,6 +19,8 @@ export const ChallengeAnnouncement = ({challenge}) => {
   }
 
   const renderClosedBanner = ({is_closed, is_archived}) => {
+    if (checkAnnouncementDate(challenge)) return null
+
     if (is_archived) {
       return renderAnnouncement({body: "This challenge is closed to submissions."})
     } else if (is_closed) {

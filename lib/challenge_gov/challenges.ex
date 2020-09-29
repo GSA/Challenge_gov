@@ -279,7 +279,7 @@ defmodule ChallengeGov.Challenges do
     |> Repo.all()
   end
 
-  # BOOKMARK: Querying functions 
+  # BOOKMARK: Querying functions
   @doc """
   Get all challenges
   """
@@ -346,6 +346,15 @@ defmodule ChallengeGov.Challenges do
       [c],
       c.status == "archived" or (c.status == "published" and c.sub_status == "archived")
     )
+    |> where([c], not is_nil(c.gov_delivery_topic))
+    |> Repo.all()
+  end
+
+  @doc """
+  Get all challenges with govdelivery topics
+  """
+  def all_in_govdelivery() do
+    base_query()
     |> where([c], not is_nil(c.gov_delivery_topic))
     |> Repo.all()
   end
@@ -656,6 +665,20 @@ defmodule ChallengeGov.Challenges do
   def allowed_to_edit(user, challenge) do
     if is_challenge_owner?(user, challenge) or
          Accounts.has_admin_access?(user) do
+      {:ok, challenge}
+    else
+      {:error, :not_permitted}
+    end
+  end
+
+  @doc """
+  Checks if a user can send a bulletin
+  """
+  def can_send_bulletin(user, challenge) do
+    if (is_challenge_owner?(user, challenge) or
+          Accounts.has_admin_access?(user)) and
+         challenge.gov_delivery_topic != nil and
+         challenge.gov_delivery_topic != "" do
       {:ok, challenge}
     else
       {:error, :not_permitted}
@@ -1092,6 +1115,15 @@ defmodule ChallengeGov.Challenges do
     |> Repo.update()
   end
 
+  def update_subscribe_count(challenge, {:ok, count}) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:gov_delivery_subscribers, count)
+    |> Repo.update()
+  end
+
+  def update_subscribe_count(_challenge, _result), do: nil
+
   def store_gov_delivery_topic(challenge, topic) do
     challenge
     |> Ecto.Changeset.change()
@@ -1103,6 +1135,7 @@ defmodule ChallengeGov.Challenges do
     challenge
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:gov_delivery_topic, nil)
+    |> Ecto.Changeset.put_change(:gov_delivery_subscribers, 0)
     |> Repo.update()
   end
 

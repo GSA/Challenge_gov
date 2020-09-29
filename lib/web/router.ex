@@ -87,6 +87,8 @@ defmodule Web.Router do
 
       resources("/events", EventController, only: [:new, :create])
 
+      resources("/bulletin", BulletinController, only: [:new, :create])
+
       resources("/solutions", SolutionController, only: [:index, :new, :create])
 
       resources("/save_challenge", SavedChallengeController, only: [:new, :create])
@@ -122,6 +124,8 @@ defmodule Web.Router do
     put("/solutions/:id/submit", SolutionController, :submit)
 
     resources("/saved_challenges", SavedChallengeController, only: [:index, :delete])
+
+    get("/exports/challenges/:id/:format", ExportController, :export_challenge)
 
     get("/reports/security_log", ReportsController, :export_security_log)
     get("/reports/certification_log", ReportsController, :export_certification_log)

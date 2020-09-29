@@ -5,7 +5,7 @@
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 <br/>
 
-<%= FormView.text_field(@form, :title, label: "Challenge title", required: true) %>
+<%= FormView.text_field(@form, :title, label: "Challenge title", limit: 90, required: true) %>
 <%= FormView.text_field(@form, :tagline, label: "Tagline (help text: Appears on challenge tiles)", limit: 90, required: true) %>
 
 <hr/>

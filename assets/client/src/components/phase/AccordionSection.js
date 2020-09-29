@@ -3,7 +3,7 @@ import moment from 'moment'
 
 import {phaseInPast, phaseIsCurrent, phaseInFuture} from "../../helpers/phaseHelpers"
 
-export const AccordionSection = ({phase, index, children}) => {
+export const AccordionSection = ({phase, index, children, print}) => {
   const renderPhaseText = (phase) => {
     let phaseText = ""
     let phaseClass = "phase__text phase__text"
@@ -31,7 +31,7 @@ export const AccordionSection = ({phase, index, children}) => {
           {renderPhaseText(phase)}
         </button>
       </h2>
-      <div id={`a${index}`} className="usa-accordion__content" hidden={!phaseIsCurrent(phase)}>
+      <div id={`a${index}`} className="usa-accordion__content" hidden={!phaseIsCurrent(phase) && !print}>
         {children}
       </div>
     </div>

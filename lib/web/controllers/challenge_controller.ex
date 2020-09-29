@@ -41,7 +41,8 @@ defmodule Web.ChallengeController do
   def show(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, challenge} <- Challenges.get(id) do
+    with {:ok, challenge} <- Challenges.get(id),
+         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       Challenges.add_to_security_log(user, challenge, "read", Security.extract_remote_ip(conn))
 
       conn
@@ -50,6 +51,16 @@ defmodule Web.ChallengeController do
       |> assign(:events, challenge.events)
       |> assign(:supporting_documents, challenge.supporting_documents)
       |> render("show.html")
+    else
+      {:error, :not_permitted} ->
+        conn
+        |> put_flash(:error, "You are not allowed to view this challenge")
+        |> redirect(to: Routes.challenge_path(conn, :index))
+
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "Challenge not found")
+        |> redirect(to: Routes.challenge_path(conn, :index))
     end
   end
 
