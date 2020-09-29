@@ -237,6 +237,7 @@ defmodule ChallengeGov.Challenges do
   defp challenge_form_preload(challenge) do
     Repo.preload(challenge, [
       :non_federal_partners,
+      :phases,
       :events,
       :user,
       :challenge_owner_users,
@@ -251,6 +252,7 @@ defmodule ChallengeGov.Challenges do
   defp base_preload(challenge) do
     preload(challenge, [
       :non_federal_partners,
+      :phases,
       :events,
       :user,
       :challenge_owner_users,
@@ -414,7 +416,9 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
+        challenge =
+          Repo.preload(challenge, [:phases, events: from(e in Event, order_by: e.occurs_on)])
+
         {:ok, challenge}
     end
   end
@@ -431,7 +435,9 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
+        challenge =
+          Repo.preload(challenge, [:phases, events: from(e in Event, order_by: e.occurs_on)])
+
         {:ok, challenge}
     end
   end
@@ -442,6 +448,7 @@ defmodule ChallengeGov.Challenges do
     |> preload([
       :supporting_documents,
       :user,
+      :phases,
       :federal_partner_agencies,
       :non_federal_partners,
       :agency,

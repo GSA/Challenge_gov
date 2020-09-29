@@ -36,7 +36,8 @@ defmodule ChallengeGov.Challenges.Challenge do
 
     has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete, on_delete: :delete_all)
 
-    embeds_many(:phases, Phase, on_replace: :delete)
+    has_many(:phases, Phase, on_replace: :delete)
+
     embeds_many(:timeline_events, TimelineEvent, on_replace: :delete)
 
     # Array fields. Pseudo associations
@@ -314,7 +315,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
-    |> cast_embed(:phases, with: &Phase.draft_changeset/2)
+    |> cast_assoc(:phases, with: &Phase.draft_changeset/2)
     |> validate_timeline_events_draft(params)
     |> validate_terms_draft(params)
     |> maybe_set_start_end_dates(params)
@@ -364,7 +365,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
-    |> cast_embed(:phases, with: &Phase.draft_changeset/2)
+    |> cast_assoc(:phases, with: &Phase.draft_changeset/2)
   end
 
   def draft_changeset(struct, params = %{"section" => section}, action) do
@@ -478,12 +479,12 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   def judging_changeset(struct, _params) do
     struct
-    |> cast_embed(:phases, with: &Phase.judging_changeset/2)
+    |> cast_assoc(:phases, with: &Phase.judging_changeset/2)
   end
 
   def how_to_enter_changeset(struct, _params) do
     struct
-    |> cast_embed(:phases, with: &Phase.how_to_enter_changeset/2)
+    |> cast_assoc(:phases, with: &Phase.how_to_enter_changeset/2)
   end
 
   def resources_changeset(struct, _params) do
@@ -816,7 +817,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   defp dates_exist?(_phase), do: false
 
   defp validate_phases(struct, %{"is_multi_phase" => "true", "phases" => phases}) do
-    struct = cast_embed(struct, :phases, with: &Phase.multi_phase_changeset/2)
+    struct = cast_assoc(struct, :phases, with: &Phase.multi_phase_changeset/2)
 
     phases
     |> Enum.map(fn {index, phase} ->
@@ -845,7 +846,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   defp validate_phases(struct, %{"is_multi_phase" => "false", "phases" => phases}) do
-    struct = cast_embed(struct, :phases, with: &Phase.save_changeset/2)
+    struct = cast_assoc(struct, :phases, with: &Phase.save_changeset/2)
 
     {_index, phase} = Enum.at(phases, 0)
 
