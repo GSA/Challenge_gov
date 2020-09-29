@@ -125,6 +125,8 @@ defmodule Web.Router do
 
     resources("/saved_challenges", SavedChallengeController, only: [:index, :delete])
 
+    get("/exports/challenges/:id/:format", ExportController, :export_challenge)
+
     get("/reports/security_log", ReportsController, :export_security_log)
     get("/reports/certification_log", ReportsController, :export_certification_log)
     get("/reports", ReportsController, :new)

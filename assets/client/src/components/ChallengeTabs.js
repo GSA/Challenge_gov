@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export const ChallengeTabs = ({children}) => {
+export const ChallengeTabs = ({children, print}) => {
   const [activeTab, setActiveTab] = useState("Overview")
 
   const handleTabClick = (label, disabled) => { 
@@ -32,8 +32,8 @@ export const ChallengeTabs = ({children}) => {
     return disabled ? " challenge-tabs__tab--disabled disabled" : ""
   }
 
-  return (
-    <div className="challenge-tabs">
+  const renderTabLabels = () => {
+    return (
       <ul className="challenge-tabs__list">
         {React.Children.map(children, (child) => {
           if (child) {
@@ -48,18 +48,30 @@ export const ChallengeTabs = ({children}) => {
           }
         })}
       </ul>
+    )
+  }
+
+  const renderTabContent = () => {
+    return (
       <div className="challenge-tabs__content">
         {
           React.Children.map(children, (child) => {
             if (child) {
               const { label, children } = child.props;
 
-              if (label !== activeTab) return undefined;
+              if (label !== activeTab && (!print || label === "Contact")) return null;
               return children;
             }
           })
         }
       </div>
+    )
+  }
+
+  return (
+    <div className="challenge-tabs">
+      {renderTabLabels()}
+      {renderTabContent()}
     </div>
   )
 }

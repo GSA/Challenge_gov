@@ -18,7 +18,7 @@ import { getPreviousPhase, getCurrentPhase, getNextPhase, phaseInPast, phaseIsCu
 import { ChallengeAnnouncement } from './ChallengeAnnouncement'
 import { ApiUrlContext } from '../ApiUrlContext'
 
-export const ChallengeDetails = ({challenge, preview}) => {
+export const ChallengeDetails = ({challenge, preview, print}) => {
   const { apiUrl, imageBase } = useContext(ApiUrlContext)
   const [followTooltipOpen, setFollowTooltipOpen] = useState(false)
 
@@ -300,7 +300,7 @@ export const ChallengeDetails = ({challenge, preview}) => {
             </div>
           </section>
         </section>
-        <ChallengeTabs>
+        <ChallengeTabs print={print}>
           <div label="Overview">
             <Overview challenge={challenge} />
           </div>
@@ -316,10 +316,10 @@ export const ChallengeDetails = ({challenge, preview}) => {
             <Rules challenge={challenge} />
           </div>
           <div label="Judging">
-            <Judging challenge={challenge} />
+            <Judging challenge={challenge} print={print} />
           </div>
           <div label="How to enter">
-            <HowToEnter challenge={challenge} />
+            <HowToEnter challenge={challenge} print={print} />
           </div>
           { challenge.supporting_documents.length > 0 &&
             <div label="Resources">

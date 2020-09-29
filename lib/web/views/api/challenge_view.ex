@@ -37,6 +37,36 @@ defmodule Web.Api.ChallengeView do
   end
 
   def render("show.json", %{challenge: challenge}) do
+    to_json(challenge)
+  end
+
+  def render("federal_partner_agencies.json", %{agency: agency}) do
+    logo = if agency.avatar_key, do: Web.AgencyView.avatar_url(agency), else: nil
+
+    %{
+      id: agency.id,
+      name: agency.name,
+      logo: logo
+    }
+  end
+
+  def render("non_federal_partners.json", %{partner: partner}) do
+    %{
+      id: partner.id,
+      name: partner.name
+    }
+  end
+
+  def render("event.json", %{event: event}) do
+    %{
+      id: event.id,
+      title: event.title,
+      body: event.body,
+      occurs_on: event.occurs_on
+    }
+  end
+
+  def to_json(challenge) do
     %{
       agency_id: challenge.agency_id,
       agency_name: ChallengeView.agency_name(challenge),
@@ -111,32 +141,6 @@ defmodule Web.Api.ChallengeView do
       winner_image: ChallengeView.winner_img_url(challenge),
       gov_delivery_topic_subscribe_link: GovDelivery.public_subscribe_link(challenge),
       gov_delivery_subscriber_count: challenge.gov_delivery_subscribers
-    }
-  end
-
-  def render("federal_partner_agencies.json", %{agency: agency}) do
-    logo = if agency.avatar_key, do: Web.AgencyView.avatar_url(agency), else: nil
-
-    %{
-      id: agency.id,
-      name: agency.name,
-      logo: logo
-    }
-  end
-
-  def render("non_federal_partners.json", %{partner: partner}) do
-    %{
-      id: partner.id,
-      name: partner.name
-    }
-  end
-
-  def render("event.json", %{event: event}) do
-    %{
-      id: event.id,
-      title: event.title,
-      body: event.body,
-      occurs_on: event.occurs_on
     }
   end
 end
