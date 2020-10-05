@@ -22,7 +22,7 @@
 <br/>
 <div>
   <div class="text-bold">Custom url:</div>
-  <div>http://www.challenge.gov/challenge/<%= @challenge.custom_url %></div>
+  <div>https://www.challenge.gov/#/challenge/<%= @challenge.custom_url %></div>
 </div>
 <br/>
 <div>

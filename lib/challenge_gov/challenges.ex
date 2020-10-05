@@ -415,9 +415,22 @@ defmodule ChallengeGov.Challenges do
   Get a challenge
   """
   def get(id) do
-    Challenge
-    |> where([c], c.id == ^id)
-    |> get_query()
+    with false <- is_integer(id),
+         {id, _} <- Integer.parse(id) do
+      Challenge
+      |> where([c], c.id == ^id)
+      |> get_query()
+    else
+      true ->
+        Challenge
+        |> where([c], c.id == ^id)
+        |> get_query()
+
+      :error ->
+        Challenge
+        |> where([c], c.custom_url == ^id)
+        |> get_query()
+    end
     |> case do
       nil ->
         {:error, :not_found}

@@ -32,10 +32,8 @@ defmodule Web.Api.ChallengeController do
     |> render("index.json")
   end
 
-  # TODO: Find better way to handle non valid IDs
   def show(conn, %{"id" => id}) do
-    with {id, _} <- Integer.parse(id),
-         {:ok, challenge} <- Challenges.get(id),
+    with {:ok, challenge} <- Challenges.get(id),
          true <- Challenges.is_public?(challenge) do
       conn
       |> assign(:challenge, challenge)
