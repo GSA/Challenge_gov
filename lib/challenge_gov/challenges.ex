@@ -10,12 +10,13 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
   alias ChallengeGov.Challenges.ResourceBanner
-  alias ChallengeGov.SecurityLogs
-  alias ChallengeGov.Repo
-  alias ChallengeGov.SupportingDocuments
-  alias ChallengeGov.Timeline.Event
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
+  alias ChallengeGov.Repo
+  alias ChallengeGov.SavedChallenges
+  alias ChallengeGov.SecurityLogs
+  alias ChallengeGov.SupportingDocuments
+  alias ChallengeGov.Timeline.Event
   alias Stein.Filter
 
   import Ecto.Query
@@ -1119,6 +1120,13 @@ defmodule ChallengeGov.Challenges do
     |> Ecto.Changeset.put_change(:logo_key, nil)
     |> Ecto.Changeset.put_change(:logo_extension, nil)
     |> Repo.update()
+  end
+
+  def subscriber_count(challenge) do
+    max(
+      SavedChallenges.count_for_challenge(challenge),
+      challenge.gov_delivery_subscribers
+    )
   end
 
   def update_subscribe_count(challenge, {:ok, count}) do

@@ -312,7 +312,7 @@ defmodule Web.Api.ChallengeControllerTest do
       "announcement" => nil,
       "announcement_datetime" => nil,
       "gov_delivery_topic_subscribe_link" => nil,
-      "gov_delivery_subscriber_count" => 0,
+      "subscriber_count" => 0,
       "is_archived" => Challenges.is_archived_new?(challenge),
       "is_closed" => Challenges.is_closed?(challenge)
     }

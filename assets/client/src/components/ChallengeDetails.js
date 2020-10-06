@@ -57,7 +57,11 @@ export const ChallengeDetails = ({challenge, preview, print}) => {
   }
 
   const renderFollowButton = (challenge) => {
-    return <button className="follow-btn" id="followChallengeButton"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
+    if (challenge.subscriber_count > 0) {
+      return <button className="follow-btn" id="followChallengeButton"><i className="far fa-bookmark mr-3"></i>Follow challenge ({ challenge.subscriber_count })</button>
+    } else {
+      return <button className="follow-btn" id="followChallengeButton"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
+    }
   }
 
   const renderSubscribeButton = () => {
@@ -68,7 +72,7 @@ export const ChallengeDetails = ({challenge, preview, print}) => {
             <h4>Follow challenge as guest</h4>
             <p>Receive challenge updates to your email. No sign-in required</p>
             <a href={preview ? null : challenge.gov_delivery_topic_subscribe_link}>
-              <button className="follow-tooltip__button">Follow challenge ({ challenge.gov_delivery_subscriber_count })</button>
+              <button className="follow-tooltip__button">Follow challenge</button>
             </a>
           </div>
           <div className="follow-tooltip__divider">Or</div>
