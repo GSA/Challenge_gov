@@ -11,6 +11,10 @@
       <%= label f, :status, "Status" %>
       <%= select(f, :status, Enum.map(Challenges.statuses(), &{&1.label, &1.id}), value: @filter["status"], prompt: "Choose a status", class: "form-control js-select") %>
     </div>
+    <div class="form-group">
+      <%= label f, :sub_status, "Sub status" %>
+      <%= select(f, :sub_status, Challenges.sub_statuses(), value: @filter["sub_status"], prompt: "Choose a sub status", class: "form-control js-select") %>
+    </div>
     <%= if Accounts.has_admin_access?(@user) do %>
       <div class="form-group">
         <%= label f, :user_ids, "Owners" %>

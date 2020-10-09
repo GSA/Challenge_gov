@@ -1183,15 +1183,34 @@ defmodule ChallengeGov.Challenges do
 
   defp email_challenge_owners(_, _), do: nil
 
+  # Used in search filter
+  defp maybe_filter_id(query, id) do
+    case Integer.parse(id) do
+      {id, _} ->
+        or_where(query, [c], c.id == ^id)
+
+      _ ->
+        query
+    end
+  end
+
   # BOOKMARK: Filter functions
   @impl true
   def filter_on_attribute({"search", value}, query) do
+    original_value = value
     value = "%" <> value <> "%"
-    where(query, [c], ilike(c.title, ^value) or ilike(c.description, ^value))
+
+    query
+    |> where([c], ilike(c.title, ^value) or ilike(c.description, ^value))
+    |> maybe_filter_id(original_value)
   end
 
   def filter_on_attribute({"status", value}, query) do
     where(query, [c], c.status == ^value)
+  end
+
+  def filter_on_attribute({"sub_status", value}, query) do
+    where(query, [c], c.sub_status == ^value)
   end
 
   # TODO: Refactor this to use jsonb column more elegantly

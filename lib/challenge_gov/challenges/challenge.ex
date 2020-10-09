@@ -367,6 +367,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
     |> cast_assoc(:phases, with: &Phase.draft_changeset/2)
+    |> validate_phases(params)
   end
 
   def draft_changeset(struct, params = %{"section" => section}, action) do

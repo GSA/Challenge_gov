@@ -12,10 +12,10 @@ defmodule ChallengeGov.Repo.Migrations.MigrateChallengePhases do
       add(:end_date, :utc_datetime)
       add(:open_to_submissions, :boolean)
 
-      add(:judging_criteria, :string)
-      add(:judging_criteria_delta, :string)
-      add(:how_to_enter, :string)
-      add(:how_to_enter_delta, :string)
+      add(:judging_criteria, :text)
+      add(:judging_criteria_delta, :text)
+      add(:how_to_enter, :text)
+      add(:how_to_enter_delta, :text)
 
       timestamps()
     end
