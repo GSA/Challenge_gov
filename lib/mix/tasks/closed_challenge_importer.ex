@@ -51,15 +51,12 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         "tagline" => json["tagline"],
         "description" => json["description"],
         "fiscal_year" => json["fiscal-year"],
-        "start_date" =>
-          ImportHelper.format_date(json["submission-start"], json["fiscal-year"], "start"),
-        "end_date" =>
-          ImportHelper.format_date(json["submission-end"], json["fiscal-year"], "end"),
         "prize_total" => ImportHelper.sanitize_prize_amount(json["total-prize-offered-cash"]),
         "prize_description" => json["prizes"],
         "rules" => json["rules"],
         "legal_authority" => json["legal-authority"],
         "types" => ImportHelper.format_types(json["type-of-challenge"]),
+        "is_multi_phase" => false,
         "phases" => %{
           "0" => %{
             "open_to_submissions" => true,

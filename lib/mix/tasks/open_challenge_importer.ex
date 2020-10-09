@@ -53,13 +53,10 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         "challenge_manager" => json["challenge-manager"],
         "challenge_manager_email" => json["challenge-manager-email"],
         "poc_email" => json["point-of-contact"],
-        "start_date" =>
-          ImportHelper.format_date(json["submission-start"], json["fiscal-year"], "start"),
-        "end_date" =>
-          ImportHelper.format_date(json["submission-end"], json["fiscal-year"], "end"),
         "description" => json["description"],
         "prize_description" => json["prizes"],
         "rules" => json["rules"],
+        "is_multi_phase" => false,
         "phases" => %{
           "0" => %{
             "open_to_submissions" => true,

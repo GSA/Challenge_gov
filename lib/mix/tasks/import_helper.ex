@@ -205,15 +205,21 @@ defmodule Mix.Tasks.ImportHelper do
     case id do
       "start" ->
         year = get_earliest_fiscal_year(fiscal_year) - 1
-        Timex.to_datetime({{year, 10, 1}, {0, 0, 0}})
+
+        {{year, 10, 1}, {0, 0, 0}}
+        |> Timex.to_datetime()
+        |> Timex.format!("{ISO:Extended}")
 
       "end" ->
         year = get_latest_fiscal_year(fiscal_year)
-        Timex.to_datetime({{year, 9, 30}, {0, 0, 0}})
+
+        {{year, 9, 30}, {0, 0, 0}}
+        |> Timex.to_datetime()
+        |> Timex.format!("{ISO:Extended}")
     end
   end
 
-  defp approximate_date(date, _fiscal_year, _id), do: date
+  defp approximate_date(date, _fiscal_year, _id), do: Timex.format!(date, "{ISO:Extended}")
 
   defp get_earliest_fiscal_year(fiscal_years) do
     fiscal_years

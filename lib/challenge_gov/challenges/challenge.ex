@@ -368,6 +368,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_assoc(:events)
     |> cast_assoc(:phases, with: &Phase.draft_changeset/2)
     |> validate_phases(params)
+    |> maybe_set_start_end_dates(params)
   end
 
   def draft_changeset(struct, params = %{"section" => section}, action) do
@@ -756,7 +757,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     if Enum.any?(phases, fn {_, phase} -> dates_exist?(phase) end) do
       {_, start_phase} =
         phases
-        |> Enum.filter(fn {_, p} -> p["open_to_submissions"] === "true" end)
+        |> Enum.filter(fn {_, p} ->
+          p["open_to_submissions"] === "true" or p["open_to_submissions"] === true
+        end)
         |> Enum.min_by(fn {_, p} -> p["start_date"] end)
 
       {:ok, start_date} =
@@ -774,7 +777,9 @@ defmodule ChallengeGov.Challenges.Challenge do
     if Enum.any?(phases, fn {_, phase} -> dates_exist?(phase) end) do
       {_, end_phase} =
         phases
-        |> Enum.filter(fn {_, p} -> p["open_to_submissions"] === "true" end)
+        |> Enum.filter(fn {_, p} ->
+          p["open_to_submissions"] === "true" or p["open_to_submissions"] === true
+        end)
         |> Enum.max_by(fn {_, p} -> p["end_date"] end)
 
       {:ok, end_date} =
@@ -814,7 +819,19 @@ defmodule ChallengeGov.Challenges.Challenge do
   defp dates_exist?(%{"open_to_submissions" => "true", "start_date" => _, "end_date" => ""}),
     do: false
 
+  defp dates_exist?(%{"open_to_submissions" => true, "start_date" => "", "end_date" => ""}),
+    do: false
+
+  defp dates_exist?(%{"open_to_submissions" => true, "start_date" => "", "end_date" => _}),
+    do: false
+
+  defp dates_exist?(%{"open_to_submissions" => true, "start_date" => _, "end_date" => ""}),
+    do: false
+
   defp dates_exist?(%{"open_to_submissions" => "true", "start_date" => _, "end_date" => _}),
+    do: true
+
+  defp dates_exist?(%{"open_to_submissions" => true, "start_date" => _, "end_date" => _}),
     do: true
 
   defp dates_exist?(_phase), do: false

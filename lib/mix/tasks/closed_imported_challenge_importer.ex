@@ -51,14 +51,11 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
           ImportHelper.match_non_federal_partners(json["partners-non-federal"]),
         "challenge_manager_email" => find_manager_email(json),
         "challenge_manager" => json["challenge-manager"],
-        "start_date" =>
-          ImportHelper.format_date(json["submission-start"], json["fiscal-year"], "start"),
-        "end_date" =>
-          ImportHelper.format_date(json["submission-end"], json["fiscal-year"], "end"),
         "fiscal_year" => json["fiscal-year"],
         "description" => json["description"],
         "rules" => json["rules"],
         "winner_information" => format_winner_information(json),
+        "is_multi_phase" => false,
         "phases" => %{
           "0" => %{
             "open_to_submissions" => true,
