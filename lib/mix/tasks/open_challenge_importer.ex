@@ -44,7 +44,9 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         "tagline" => json["tagline"],
         "legal_authority" => json["legal-authority"],
         "fiscal_year" => json["fiscal-year"],
-        "types" => ImportHelper.format_types(json["type-of-challenge"]),
+        "primary_type" => Enum.at(ImportHelper.format_types(json["type-of-challenge"]), 0),
+        "types" => Enum.slice(ImportHelper.format_types(json["type-of-challenge"]), 1..3),
+        "other_type" => Enum.join(ImportHelper.format_types(json["type-of-challenge"]), ";"),
         "prize_total" => ImportHelper.sanitize_prize_amount(json["total-prize-offered-cash"]),
         "federal_partners" =>
           ImportHelper.match_federal_partners(json["partner-agencies-federal"]),

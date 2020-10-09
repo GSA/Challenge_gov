@@ -166,7 +166,7 @@ defmodule Mix.Tasks.ImportHelper do
   end
 
   # Types Helper
-  def format_types(""), do: ""
+  def format_types(""), do: []
 
   def format_types(types) do
     types

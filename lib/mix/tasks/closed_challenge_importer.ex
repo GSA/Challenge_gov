@@ -55,7 +55,9 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         "prize_description" => json["prizes"],
         "rules" => json["rules"],
         "legal_authority" => json["legal-authority"],
-        "types" => ImportHelper.format_types(json["type-of-challenge"]),
+        "primary_type" => Enum.at(ImportHelper.format_types(json["type-of-challenge"]), 0),
+        "types" => Enum.slice(ImportHelper.format_types(json["type-of-challenge"]), 1..3),
+        "other_type" => Enum.join(ImportHelper.format_types(json["type-of-challenge"]), ";"),
         "is_multi_phase" => false,
         "phases" => %{
           "0" => %{
