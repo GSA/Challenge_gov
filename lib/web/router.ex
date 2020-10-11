@@ -140,6 +140,8 @@ defmodule Web.Router do
     post("/users/:user_id/challenge/:challenge_id", UserController, :restore_challenge_access,
       as: :restore_challenge_access
     )
+
+    resources("/site_content", SiteContentController, [:index, :show, :edit, :update])
   end
 
   # API Routes

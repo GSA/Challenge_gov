@@ -1,0 +1,18 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <%= render Web.SiteContentView, "table/_header.html", conn: @conn, user: @user, filter: @filter, sort: @sort, sortable: @sortable %>
+              <%= render Web.SiteContentView, "table/_content.html", conn: @conn, user: @user, site_content: @site_content %>
+            </table>
+          </div>
+
+          <%= Web.SharedView.pagination(path: Routes.site_content_path(@conn, :index, filter: @filter, sort: @sort), pagination: @pagination) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
