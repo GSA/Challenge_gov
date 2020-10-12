@@ -40,7 +40,8 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         "poc_email" => json["point-of-contact"],
         "agency_id" =>
           ImportHelper.match_agency(json["agency"], json["agency-logo"])["agency_id"],
-        "sub_agency_id" => ImportHelper.match_agency(json["agency"])["sub_agency_id"],
+        "sub_agency_id" =>
+          ImportHelper.match_agency(json["agency"], json["agency-logo"])["sub_agency_id"],
         "logo" => ImportHelper.prep_logo(json["card-image"]),
         "federal_partners" =>
           ImportHelper.match_federal_partners(json["partner-agencies-federal"]),

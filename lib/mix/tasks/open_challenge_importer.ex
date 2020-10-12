@@ -40,7 +40,8 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         "logo" => ImportHelper.prep_logo(json["card-image"]),
         "agency_id" =>
           ImportHelper.match_agency(json["agency"], json["agency-logo"])["agency_id"],
-        "sub_agency_id" => ImportHelper.match_agency(json["agency"])["sub_agency_id"],
+        "sub_agency_id" =>
+          ImportHelper.match_agency(json["agency"], json["agency-logo"])["sub_agency_id"],
         "tagline" => json["tagline"],
         "legal_authority" => json["legal-authority"],
         "fiscal_year" => json["fiscal-year"],

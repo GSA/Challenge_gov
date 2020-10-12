@@ -104,11 +104,11 @@ defmodule Mix.Tasks.ImportHelper do
             created_on_import: true
           })
 
-        agency.id
+        generate_agency_id_map(agency)
 
       _ ->
         {:ok, agency} = Agencies.create(:saved_to_file, %{name: name, created_on_import: true})
-        agency.id
+        generate_agency_id_map(agency)
     end
   end
 
