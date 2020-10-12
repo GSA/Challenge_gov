@@ -345,6 +345,10 @@ defmodule ChallengeGov.Challenges do
       [c],
       c.status == "archived" or (c.status == "published" and c.sub_status == "archived")
     )
+    |> where(
+      [c],
+      c.archive_date < ^Timex.shift(DateTime.utc_now(), months: -3)
+    )
     |> where([c], not is_nil(c.gov_delivery_topic))
     |> Repo.all()
   end
