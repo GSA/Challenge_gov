@@ -26,42 +26,53 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
-          <%= default_enter_action("next") %>
-          <%= progress_bar(@conn, @section, @changeset.data, @action) %>
-
-          <%#= Web.ErrorHelpers.all_errors(@changeset) %>
-
+        <%= if @show_info == "true" do %>
           <div class="card">
-            <%= hidden_input f, :section, value: @section %>
-            <%= hidden_input f, :user_id, value: @user.id %>
-            <%= hidden_input f, :challenge_id, value: if @challenge, do: @challenge.id, else: nil %>
-            <%= hidden_input f, :local_timezone, id: "local-timezone-input" %>
-
             <div class="card-body">
-              <%= render Web.ChallengeView, "wizard/_#{@section}.html", 
-                form: f, 
-                action: @action,
-                changeset: @changeset, 
-                data: @changeset.data, 
-                user: @user,
-                challenge: @challenge,
-                section: @section,
-                documents: documents_for_section(@changeset.data.supporting_documents, @section), 
-                path: @path, 
-                conn: @conn,
-                title: "Review and submit"
-              %>
+              <%= SharedView.render_safe_html(@wizard_info.content) %>
             </div>
-
             <div class="card-footer">
-              <%= back_button(@conn, @changeset.data) %>
-              <%= submit_button(@section) %>
-              <%= preview_challenge_button(@conn, @challenge, @section) %>
-              <%= save_draft_button(@section) %>
+              <%= link "Next", to: Routes.challenge_path(@conn, :new), class: "usa-button float-right" %>
             </div>
           </div>
-        <% end) %>
+        <% else %>
+          <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
+            <%= default_enter_action("next") %>
+            <%= progress_bar(@conn, @section, @changeset.data, @action) %>
+
+            <%#= Web.ErrorHelpers.all_errors(@changeset) %>
+
+            <div class="card">
+              <%= hidden_input f, :section, value: @section %>
+              <%= hidden_input f, :user_id, value: @user.id %>
+              <%= hidden_input f, :challenge_id, value: if @challenge, do: @challenge.id, else: nil %>
+              <%= hidden_input f, :local_timezone, id: "local-timezone-input" %>
+
+              <div class="card-body">
+                <%= render Web.ChallengeView, "wizard/_#{@section}.html", 
+                  form: f, 
+                  action: @action,
+                  changeset: @changeset, 
+                  data: @changeset.data, 
+                  user: @user,
+                  challenge: @challenge,
+                  section: @section,
+                  documents: documents_for_section(@changeset.data.supporting_documents, @section), 
+                  path: @path, 
+                  conn: @conn,
+                  title: "Review and submit"
+                %>
+              </div>
+
+              <div class="card-footer">
+                <%= back_button(@conn, @changeset.data) %>
+                <%= submit_button(@section) %>
+                <%= preview_challenge_button(@conn, @challenge, @section) %>
+                <%= save_draft_button(@section) %>
+              </div>
+            </div>
+          <% end) %>
+        <% end %>
       </div>
     </div>
   </div>
