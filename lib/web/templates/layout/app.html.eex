@@ -105,6 +105,12 @@
                     <p>Reports</p>
                     <% end %>
                   </li>
+                  <li class="nav-item">
+                    <%= link(to: Routes.site_content_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "site_content")}") do %>
+                    <i class="nav-icon fas fa-list-alt"></i>
+                    <p>Site Management</p>
+                    <% end %>
+                  </li>
                 </ul>
               </nav>
             <% end %>
@@ -138,7 +144,7 @@
 
       <aside class="control-sidebar control-sidebar-light">
         <div class="p-3">
-          <%= if action_name(@conn) == :index and @view_module != Web.DashboardView and @view_module != Web.AccessView do %>
+          <%= if action_name(@conn) == :index and @view_module != Web.DashboardView and @view_module != Web.AccessView and @view_module != Web.SiteContentView do %>
             <%= render @view_module, "_filter.html", conn: @conn, user: @user, filter: @filter, sort: @sort %>
           <% end%>
         </div>

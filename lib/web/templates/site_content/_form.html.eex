@@ -1,0 +1,9 @@
+<%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
+  <div class="card-body">
+    <%= FormView.rt_textarea_field(f, :content) %>
+  </div>            
+
+  <div class="card-footer">
+    <%= submit("Submit", class: "btn btn-primary pull-right") %>
+  </div>
+<% end) %>

@@ -9,7 +9,7 @@
         <h1 class="m-0 text-dark">
           <span>Challenges</span>
           <div class="btn-group">
-            <%= link "New", to: Routes.challenge_path(@conn, :new), class: "btn btn-primary" %>
+            <%= link "New", to: Routes.challenge_path(@conn, :new, show_info: true), class: "btn btn-primary" %>
           </div>
           <a class="btn btn-info" data-widget="control-sidebar" href="#">Filter</a>
           <%= if is_map(@filter) && map_size(@filter) > 0 do %>
