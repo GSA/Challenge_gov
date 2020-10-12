@@ -49,7 +49,7 @@
   <%= label @form, :custom_url, "Custom url (optional)", class: "col-md-4" %>
   <div class="ml-2">
     <p>If no custom URL is provided, the challenge URL will default to the challenge title.</p>
-    <span>http://www.challenge.gov/challenge/</span><span id="custom-url-example"></span>
+    <span>https://www.challenge.gov/#/challenge/</span><span id="custom-url-example"></span>
   </div>
   <%= FormView.text_field(@form, :custom_url, label: nil, placeholder: "my-custom-challenge-name") %>
 </div>
