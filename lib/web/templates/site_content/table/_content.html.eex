@@ -1,0 +1,11 @@
+<tbody>
+  <%= Enum.map @site_content, fn (content) -> %>
+    <tr>
+      <td><%= content.section %> </td>
+      <td>
+        <%= link("View", to: Routes.site_content_path(@conn, :show, content.section), class: "btn btn-default btn-xs mr-2") %>
+        <%= link("Edit", to: Routes.site_content_path(@conn, :edit, content.section), class: "btn btn-default btn-xs mr-2") %>
+      </td>
+    </tr>
+  <% end %>
+</tbody>

@@ -10,12 +10,13 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
   alias ChallengeGov.Challenges.ResourceBanner
-  alias ChallengeGov.SecurityLogs
-  alias ChallengeGov.Repo
-  alias ChallengeGov.SupportingDocuments
-  alias ChallengeGov.Timeline.Event
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
+  alias ChallengeGov.Repo
+  alias ChallengeGov.SavedChallenges
+  alias ChallengeGov.SecurityLogs
+  alias ChallengeGov.SupportingDocuments
+  alias ChallengeGov.Timeline.Event
   alias Stein.Filter
 
   import Ecto.Query
@@ -346,6 +347,10 @@ defmodule ChallengeGov.Challenges do
       [c],
       c.status == "archived" or (c.status == "published" and c.sub_status == "archived")
     )
+    |> where(
+      [c],
+      c.archive_date < ^Timex.shift(DateTime.utc_now(), months: -3)
+    )
     |> where([c], not is_nil(c.gov_delivery_topic))
     |> Repo.all()
   end
@@ -417,9 +422,22 @@ defmodule ChallengeGov.Challenges do
   Get a challenge
   """
   def get(id) do
-    Challenge
-    |> where([c], c.id == ^id)
-    |> get_query()
+    with false <- is_integer(id),
+         {id, _} <- Integer.parse(id) do
+      Challenge
+      |> where([c], c.id == ^id)
+      |> get_query()
+    else
+      true ->
+        Challenge
+        |> where([c], c.id == ^id)
+        |> get_query()
+
+      :error ->
+        Challenge
+        |> where([c], c.custom_url == ^id)
+        |> get_query()
+    end
     |> case do
       nil ->
         {:error, :not_found}
@@ -1113,6 +1131,13 @@ defmodule ChallengeGov.Challenges do
     |> Ecto.Changeset.put_change(:logo_key, nil)
     |> Ecto.Changeset.put_change(:logo_extension, nil)
     |> Repo.update()
+  end
+
+  def subscriber_count(challenge) do
+    max(
+      SavedChallenges.count_for_challenge(challenge),
+      challenge.gov_delivery_subscribers
+    )
   end
 
   def update_subscribe_count(challenge, {:ok, count}) do

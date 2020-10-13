@@ -71,6 +71,13 @@ defmodule ChallengeGov.SavedChallenges do
     preload(saved_challenge, [:user, challenge: [:agency]])
   end
 
+  def count_for_challenge(challenge) do
+    SavedChallenge
+    |> select([sc], count(sc))
+    |> where([sc], sc.challenge_id == ^challenge.id)
+    |> Repo.one()
+  end
+
   @impl true
   def filter_on_attribute({"user_id", value}, query) do
     where(query, [sc], sc.user_id == ^value)

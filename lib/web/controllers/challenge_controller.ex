@@ -3,6 +3,7 @@ defmodule Web.ChallengeController do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.Security
+  alias ChallengeGov.SiteContent
 
   plug Web.Plugs.FetchPage when action in [:index]
 
@@ -75,8 +76,11 @@ defmodule Web.ChallengeController do
   end
 
   # TODO: Make an old "new" to keep access to old challenge form for now
-  def new(conn, _params) do
+  def new(conn, params) do
     %{current_user: user} = conn.assigns
+
+    show_info = Map.get(params, "show_info", false)
+    {:ok, wizard_info} = SiteContent.get("challenge_wizard_info")
 
     conn
     |> assign(:user, user)
@@ -84,6 +88,8 @@ defmodule Web.ChallengeController do
     |> assign(:path, Routes.challenge_path(conn, :create))
     |> assign(:action, action_name(conn))
     |> assign(:section, "general")
+    |> assign(:show_info, show_info)
+    |> assign(:wizard_info, wizard_info)
     |> assign(:challenge, nil)
     |> render("wizard.html")
   end

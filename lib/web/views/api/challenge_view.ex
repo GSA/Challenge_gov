@@ -18,6 +18,7 @@ defmodule Web.Api.ChallengeView do
       id: challenge.id,
       title: challenge.title,
       tagline: challenge.tagline,
+      custom_url: challenge.custom_url,
       agency_name: ChallengeView.agency_name(challenge),
       agency_logo: ChallengeView.agency_logo(challenge),
       logo: ChallengeView.logo_url(challenge),
@@ -140,7 +141,7 @@ defmodule Web.Api.ChallengeView do
       winner_information: challenge.winner_information,
       winner_image: ChallengeView.winner_img_url(challenge),
       gov_delivery_topic_subscribe_link: GovDelivery.public_subscribe_link(challenge),
-      gov_delivery_subscriber_count: challenge.gov_delivery_subscribers
+      subscriber_count: Challenges.subscriber_count(challenge)
     }
   end
 end

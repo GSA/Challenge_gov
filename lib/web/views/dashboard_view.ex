@@ -145,7 +145,7 @@ defmodule Web.DashboardView do
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: "#",
+            target: "site_content",
             icon: "/images/dashboard_icons/reporting.svg",
             title: "Site management",
             description: "Manage content and perform site management tasks."

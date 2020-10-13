@@ -184,6 +184,26 @@ defmodule Web.Api.ChallengeControllerTest do
       assert json_response(conn, 200) === expected_json
     end
 
+    test "successfully with custom url", %{conn: conn} do
+      user = AccountHelpers.create_user()
+      agency = AgencyHelpers.create_agency()
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          agency_id: agency.id,
+          title: "Test Title 1",
+          description: "Test description 1",
+          custom_url: "test-url",
+          status: "published"
+        })
+
+      expected_json = Map.merge(expected_show_json(challenge), %{"custom_url" => "test-url"})
+
+      conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.custom_url))
+      assert json_response(conn, 200) === expected_json
+    end
+
     test "not found because challenge id doesn't exist", %{conn: conn} do
       user = AccountHelpers.create_user()
       agency = AgencyHelpers.create_agency()
@@ -292,7 +312,7 @@ defmodule Web.Api.ChallengeControllerTest do
       "announcement" => nil,
       "announcement_datetime" => nil,
       "gov_delivery_topic_subscribe_link" => nil,
-      "gov_delivery_subscriber_count" => 0,
+      "subscriber_count" => 0,
       "is_archived" => Challenges.is_archived_new?(challenge),
       "is_closed" => Challenges.is_closed?(challenge)
     }

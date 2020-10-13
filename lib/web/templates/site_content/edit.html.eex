@@ -1,0 +1,36 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          Edit Content: <%= @content.section %>
+        </h1>
+      </div>
+
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item"><%= link("Site Management", to: Routes.site_content_path(@conn, :index)) %></li>
+          <li class="breadcrumb-item"><%= link(@content.section, to: Routes.site_content_path(@conn, :show, @content.section)) %></li>
+          <li class="breadcrumb-item active">Edit</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">        
+          <%= render Web.SiteContentView, "_form.html", changeset: @changeset, data: @changeset.data, path: Routes.site_content_path(@conn, :update, @content.section) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
