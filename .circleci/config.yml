@@ -138,12 +138,8 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project
-      - run:
-        name: "Set CF_PASSWORD for DEV"
-        command: echo 'export CF_PASSWORD=$CF_PASSWORD_DEV' >> $BASH_ENV
-      - run:
-        name: "Set CF_USERNAME for DEV"
-        command: echo 'export CF_USERNAME=$CF_USERNAME_DEV' >> $BASH_ENV
+      - run: echo 'export CF_PASSWORD=$CF_PASSWORD_DEV' >> $BASH_ENV
+      - run: echo 'export CF_USERNAME=$CF_USERNAME_DEV' >> $BASH_ENV
       - cloudfoundry/install:
           endpoint: 'https://api.fr.cloud.gov'
           org: gsa-tts-innovation-challenge
@@ -158,12 +154,8 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project
-      - run:
-        name: "Set CF_PASSWORD for STAGING"
-        command: echo 'export CF_PASSWORD=$CF_PASSWORD_STAGING' >> $BASH_ENV
-      - run:
-        name: "Set CF_USERNAME for STAGING"
-        command: echo 'export CF_USERNAME=$CF_USERNAME_STAGING' >> $BASH_ENV
+      - run: echo 'export CF_PASSWORD=$CF_PASSWORD_STAGING' >> $BASH_ENV
+      - run: echo 'export CF_USERNAME=$CF_USERNAME_STAGING' >> $BASH_ENV
       - cloudfoundry/install:
           endpoint: 'https://api.fr.cloud.gov'
           org: gsa-tts-innovation-challenge
