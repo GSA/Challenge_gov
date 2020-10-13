@@ -7,9 +7,14 @@ defmodule ChallengeGov.Challenges.Phase do
 
   import Ecto.Changeset
 
+  alias ChallengeGov.Challenges.Challenge
+
   @type t :: %__MODULE__{}
 
-  embedded_schema do
+  schema "phases" do
+    belongs_to(:challenge, Challenge)
+
+    field(:uuid, Ecto.UUID, autogenerate: true)
     field(:title, :string)
     field(:start_date, :utc_datetime)
     field(:end_date, :utc_datetime)

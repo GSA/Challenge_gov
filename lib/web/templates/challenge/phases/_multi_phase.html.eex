@@ -81,23 +81,23 @@
           <div class="form-group nested-form-group" data-field="start_date">
             <div class="form-group col">
               <label for="challenge_phases_0_start_date">Phase 1 submission start date and time *</label>
-              <input class="form-control js-datetime-input" id="challenge_phases_0_start_date" label="Start date" name="challenge_phases_0_start_date]" type="datetime-local">
-              <input id="challenge_phases_0_start_date" label="Start date" name="challenge_phases_0_start_date]" type="hidden">            
+              <input class="form-control js-datetime-input" id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="datetime-local">
+              <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">            
             </div>
           </div>
 
           <div class="form-group nested-form-group" data-field="end_date">
             <div class="form-group col">
               <label for="challenge_phases_0_start_date">Phase 1 submission end date and time *</label>
-              <input class="form-control js-datetime-input" id="challenge_phases_0_end_date" label="End date" name="challenge_phases_0_end_date]" type="datetime-local">
-              <input id="challenge_phases_0_end_date" label="End date" name="challenge_phases_0_end_date]" type="hidden">            
+              <input class="form-control js-datetime-input" id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="datetime-local">
+              <input id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="hidden">            
             </div>
           </div>
         </div>
 
         <div class="form-group nested-form-group row" data-field="open_to_submissions">
           <div class="col">
-            <input name="challenge_phases_0_open_to_submissions]" type="hidden" value="true">
+            <input name="challenge[phases][0][open_to_submissions]" type="hidden" value="true">
             <label class="template-label" for="challenge_phases_0_open_to_submissions">Challenge is open to submissions during this period</label>          
           </div>
         </div>

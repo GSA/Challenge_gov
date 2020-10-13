@@ -16,7 +16,7 @@
   <div class="col">
     <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
-      <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 0)) %>
+      <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types || [], 0)) %>
     </select>
     <%= error_tag(@form, :types) %>
   </div>
@@ -26,7 +26,7 @@
   <div class="col">
     <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
-      <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 1)) %>
+      <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types || [], 1)) %>
     </select>
     <%= error_tag(@form, :types) %>
   </div>
@@ -36,7 +36,7 @@
   <div class="col">
     <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
-      <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 2)) %>
+      <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types || [], 2)) %>
     </select>
     <%= error_tag(@form, :types) %>
   </div>
