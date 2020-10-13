@@ -124,6 +124,7 @@ defmodule Web.ChallengeController do
         |> assign(:section, section)
         |> assign(:changeset, changeset)
         |> assign(:challenge, nil)
+        |> assign(:show_info, false)
         |> put_status(422)
         |> render("wizard.html")
     end
@@ -160,6 +161,7 @@ defmodule Web.ChallengeController do
       |> assign(:challenge, challenge)
       |> assign(:path, Routes.challenge_path(conn, :update, id))
       |> assign(:action, action_name(conn))
+      |> assign(:show_info, false)
       |> assign(:section, section)
       |> assign(:changeset, Challenges.edit(challenge))
       |> render("wizard.html")
@@ -254,6 +256,7 @@ defmodule Web.ChallengeController do
         |> assign(:action, action_name(conn))
         |> assign(:section, section)
         |> assign(:changeset, changeset)
+        |> assign(:show_info, false)
         |> put_flash(:error, "An error occured")
         |> render("wizard.html")
 
