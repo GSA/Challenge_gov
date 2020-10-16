@@ -6,10 +6,16 @@ defmodule Web.Api.ChallengeView do
   alias Web.Api.PaginationView
   alias Web.ChallengeView
 
-  def render("index.json", assigns = %{challenges: challenges}) do
+  def render("index.json", assigns = %{challenges: challenges, pagination: _pagination}) do
     %{
       collection: render_many(challenges, __MODULE__, "card.json", assigns),
       pagination: render(PaginationView, "pagination.json", assigns)
+    }
+  end
+
+  def render("index.json", assigns = %{challenges: challenges}) do
+    %{
+      collection: render_many(challenges, __MODULE__, "card.json", assigns)
     }
   end
 

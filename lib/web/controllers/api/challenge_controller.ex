@@ -7,27 +7,21 @@ defmodule Web.Api.ChallengeController do
   plug Web.Plugs.FetchPage when action in [:index]
 
   def index(conn, params = %{"archived" => "true"}) do
-    %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
 
-    %{page: page, pagination: pagination} =
-      Challenges.all_archived(filter: filter, page: page, per: per)
+    challenges = Challenges.all_archived(filter: filter)
 
     conn
-    |> assign(:challenges, page)
-    |> assign(:pagination, pagination)
+    |> assign(:challenges, challenges)
     |> assign(:base_url, Routes.api_challenge_url(conn, :index, archived: true))
     |> render("index.json")
   end
 
   def index(conn, _params) do
-    %{page: page, per: per} = conn.assigns
-
-    %{page: page, pagination: pagination} = Challenges.all_public(page: page, per: per)
+    challenges = Challenges.all_public()
 
     conn
-    |> assign(:challenges, page)
-    |> assign(:pagination, pagination)
+    |> assign(:challenges, challenges)
     |> assign(:base_url, Routes.api_challenge_url(conn, :index))
     |> render("index.json")
   end
