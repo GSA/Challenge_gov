@@ -32,6 +32,7 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
   def create_challenge(json, import_user_id) do
     result =
       Challenges.import_create(%{
+        "id" => json["challenge-id"],
         "imported" => true,
         "user_id" => import_user_id,
         "title" => json["challenge-title"],

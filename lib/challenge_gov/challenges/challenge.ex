@@ -326,6 +326,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   def import_changeset(struct, params) do
     struct
     |> cast(params, [
+      :id,
       :user_id,
       :agency_id,
       :status,
@@ -366,6 +367,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :is_multi_phase,
       :imported
     ])
+    |> unique_constraint(:id, name: :challenges_pkey)
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
     |> cast_assoc(:phases, with: &Phase.draft_changeset/2)
