@@ -48,6 +48,7 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         "non_federal_partners" =>
           ImportHelper.match_non_federal_partners(json["partners-non-federal"]),
         "title" => json["challenge-title"],
+        "custom_url" => ImportHelper.parse_custom_url(json["permalink"]),
         "external_url" => json["external-url"],
         "tagline" => json["tagline"],
         "description" => json["description"],

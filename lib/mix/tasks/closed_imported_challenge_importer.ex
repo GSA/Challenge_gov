@@ -35,6 +35,7 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
         "imported" => true,
         "user_id" => import_user_id,
         "title" => json["challenge-title"],
+        "custom_url" => ImportHelper.parse_custom_url(json["permalink"]),
         "external_url" => json["external-url"],
         "tagline" => json["tagline"],
         "legal_authority" => json["legal-authority"],
