@@ -371,6 +371,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
     |> cast_assoc(:phases, with: &Phase.draft_changeset/2)
+    |> unique_constraint(:custom_url, name: "challenges_custom_url_index")
     |> validate_phases(params)
     |> maybe_set_start_end_dates(params)
   end

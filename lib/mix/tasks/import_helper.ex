@@ -165,6 +165,17 @@ defmodule Mix.Tasks.ImportHelper do
     number
   end
 
+  # Custom URL Helper
+  def parse_custom_url(permalink) do
+    case Regex.named_captures(~r/\/challenge\/(?<link>.*)\//, permalink) do
+      nil ->
+        nil
+
+      capture ->
+        capture["link"]
+    end
+  end
+
   # Types Helper
   def format_types(""), do: []
 

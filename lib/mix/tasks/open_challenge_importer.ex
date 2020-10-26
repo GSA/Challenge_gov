@@ -37,6 +37,7 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         "user_id" => import_user_id,
         "title" => json["challenge-title"],
         "status" => "published",
+        "custom_url" => ImportHelper.parse_custom_url(json["permalink"]),
         "external_url" => json["external-url"],
         "logo" => ImportHelper.prep_logo(json["card-image"]),
         "agency_id" =>
