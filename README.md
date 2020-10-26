@@ -119,6 +119,25 @@ The ChallengeGov runs each pull request (and every commit on the `master` branch
 
 Passing CI on master deploys to the dev environment via Cloud Foundry as part of the Drone build.
 
+## Importing Data
+
+Run importers in order of Open, Closed, ClosedImported. Afterward set the challlenges_seq_id to the max challenge-id.
+
+Commands to run:
+
+```
+$ iex -S mix run
+> Mix.Tasks.OpenChallengeImporter.run("")
+> Mix.Tasks.ClosedChallengeImporter.run("")
+> Mix.Tasks.ClosedImportedChallengeImporter.run("")
+```
+
+In psql after imports:
+
+```
+SELECT setval('challenges_id_seq', max(id)) FROM challenges;
+```
+
 ## Learn more about Phoenix
 
   * Official website: http://www.phoenixframework.org/
