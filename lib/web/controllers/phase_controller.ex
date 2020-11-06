@@ -14,6 +14,7 @@ defmodule Web.PhaseController do
          phases <- Phases.all(filter: %{"challenge_id" => challenge.id}) do
       conn
       |> assign(:user, user)
+      |> assign(:challenge, challenge)
       |> assign(:phases, phases)
       |> render("index.html")
     else
@@ -41,10 +42,11 @@ defmodule Web.PhaseController do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
-         {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge),
+         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
          {:ok, phase} <- Phases.get(id) do
       conn
       |> assign(:user, user)
+      |> assign(:challenge, challenge)
       |> assign(:phase, phase)
       |> render("show.html")
     else

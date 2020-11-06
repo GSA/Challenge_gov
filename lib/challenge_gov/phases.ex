@@ -1,4 +1,8 @@
 defmodule ChallengeGov.Phases do
+  @moduledoc """
+  Context for Phases
+  """
+
   alias ChallengeGov.Repo
   alias ChallengeGov.Challenges.Phase
   alias Stein.Filter

@@ -1,0 +1,7 @@
+<h1>Phase Show</h1>
+<ul>
+  <li><%= @phase.title %></li>
+  <li><%= @phase.start_date %></li>
+  <li><%= @phase.end_date %></li>
+  <li><%= @phase.open_to_submissions %></li>
+</ul>

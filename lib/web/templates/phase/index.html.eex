@@ -1,0 +1,8 @@
+<h1>Phase Index</h1>
+<ul>
+  <%= Enum.map(@phases, fn phase -> %>
+    <li>
+      <%= link("Phase #{phase.id}", to: Routes.challenge_phase_path(@conn, :show, @challenge.id, phase.id)) %>
+    </li>
+  <% end) %>
+</ul>

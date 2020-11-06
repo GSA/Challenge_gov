@@ -27,6 +27,7 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
               <a class="btn btn-link" href="#">Media</a>
+              <%= challenge_solutions_link(@conn, challenge, @user, class: "btn btn-link") %>
               <%= link "Preview", to: Routes.public_preview_path(@conn, :index, challenge.uuid), target: "_blank", class: "btn btn-link" %>
               <%= link "Print", to: Routes.public_preview_path(@conn, :index, challenge.uuid, print: true), target: "_blank", class: "btn btn-link" %>
               <%= link "Download JSON", to: Routes.export_path(@conn, :export_challenge, challenge.id, "json"), target: "_blank", class: "btn btn-link" %>

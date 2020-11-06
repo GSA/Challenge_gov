@@ -104,6 +104,32 @@ defmodule Web.ChallengeView do
 
   def published_sub_status_display(_challenge, _attached), do: ""
 
+  def challenge_solutions_link(conn, challenge, user, opts \\ []) do
+    if (user.role == "challenge_owner" or
+          Accounts.has_admin_access?(user)) and length(challenge.phases) > 0 do
+      link_location =
+        if length(challenge.phases) > 1,
+          do: Routes.challenge_phase_path(conn, :index, challenge.id),
+          else:
+            Routes.challenge_phase_path(
+              conn,
+              :show,
+              challenge.id,
+              Enum.at(challenge.phases, 0).id
+            )
+
+      link(
+        opts[:label] || "View submissions",
+        Keyword.merge(
+          [
+            to: link_location
+          ],
+          opts
+        )
+      )
+    end
+  end
+
   def challenge_edit_link(conn, challenge, opts \\ []) do
     route =
       if challenge.status == "draft" do
