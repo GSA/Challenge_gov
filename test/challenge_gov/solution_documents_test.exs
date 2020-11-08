@@ -27,7 +27,7 @@ defmodule ChallengeGov.SolutionDocumentsTest do
   describe "attaching to a solution" do
     test "successfully" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
       document =
@@ -41,7 +41,7 @@ defmodule ChallengeGov.SolutionDocumentsTest do
 
     test "already assigned" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
       solution_1 = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
       solution_2 = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -55,7 +55,7 @@ defmodule ChallengeGov.SolutionDocumentsTest do
 
     test "attempting to assign another user's solution" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       user_1 = AccountHelpers.create_user(%{email: "user1@example.com"})
       solution_1 = SolutionHelpers.create_submitted_solution(%{}, user_1, challenge)

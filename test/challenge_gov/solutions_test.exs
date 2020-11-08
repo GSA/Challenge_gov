@@ -12,7 +12,8 @@ defmodule ChallengeGov.SolutionsTest do
   describe "creating a solution" do
     test "saving as draft with no data" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
 
       {:ok, solution} =
         Solutions.create_draft(
@@ -21,7 +22,8 @@ defmodule ChallengeGov.SolutionsTest do
             "solution" => %{}
           },
           user,
-          challenge
+          challenge,
+          phase
         )
 
       assert solution.submitter_id === user.id
@@ -32,7 +34,8 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "saving as draft with data" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
 
       {:ok, solution} =
         Solutions.create_draft(
@@ -43,7 +46,8 @@ defmodule ChallengeGov.SolutionsTest do
             "external_url" => "www.example.com"
           },
           user,
-          challenge
+          challenge,
+          phase
         )
 
       assert solution.submitter_id === user.id
@@ -57,7 +61,8 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "submitting with no data" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
 
       {:error, changeset} =
         Solutions.create_review(
@@ -66,7 +71,8 @@ defmodule ChallengeGov.SolutionsTest do
             "solution" => %{}
           },
           user,
-          challenge
+          challenge,
+          phase
         )
 
       assert changeset.errors[:title]
@@ -76,7 +82,8 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "submitting with data" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
 
       {:ok, solution} =
         Solutions.create_review(
@@ -87,7 +94,8 @@ defmodule ChallengeGov.SolutionsTest do
             "external_url" => "www.example.com"
           },
           user,
-          challenge
+          challenge,
+          phase
         )
 
       {:ok, solution} = Solutions.submit(solution)
@@ -105,9 +113,10 @@ defmodule ChallengeGov.SolutionsTest do
   describe "updating a solution" do
     test "update draft removing data" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
 
-      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
+      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge, phase)
 
       {:ok, updated_solution} =
         Solutions.update_draft(
@@ -126,7 +135,7 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "update draft changing data" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
@@ -149,7 +158,7 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "update draft to submitted no other changes" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
@@ -166,7 +175,7 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "update draft to submitted with invalid change" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
@@ -184,7 +193,7 @@ defmodule ChallengeGov.SolutionsTest do
       user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
 
       challenge =
-        ChallengeHelpers.create_challenge(%{
+        ChallengeHelpers.create_single_phase_challenge(user, %{
           user_id: user.id,
           challenge_owners: [user.id, user_2.id]
         })
@@ -217,7 +226,7 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "update submitted with invalid value" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -234,7 +243,7 @@ defmodule ChallengeGov.SolutionsTest do
   describe "deleting a solution" do
     test "successfully" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -247,7 +256,7 @@ defmodule ChallengeGov.SolutionsTest do
   describe "fetching multiple solutions" do
     test "all solutions" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -266,7 +275,7 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "all solutions paginated" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -286,7 +295,7 @@ defmodule ChallengeGov.SolutionsTest do
     test "filter by submitter id" do
       user = AccountHelpers.create_user()
       user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
@@ -305,8 +314,8 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "filter by challenge id" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
-      challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      challenge_2 = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       SolutionHelpers.create_submitted_solution(%{}, user, challenge_2)
 
@@ -325,7 +334,7 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "filter by search param" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -416,7 +425,7 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "filter by title" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       SolutionHelpers.create_submitted_solution(
         %{
@@ -448,7 +457,7 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "filter by brief description" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       SolutionHelpers.create_submitted_solution(
         %{
@@ -480,7 +489,7 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "filter by description" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       SolutionHelpers.create_submitted_solution(
         %{
@@ -512,7 +521,7 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "filter by external url" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       SolutionHelpers.create_submitted_solution(
         %{
@@ -546,7 +555,7 @@ defmodule ChallengeGov.SolutionsTest do
   describe "fetching a solution" do
     test "successfully by id" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -557,7 +566,7 @@ defmodule ChallengeGov.SolutionsTest do
 
     test "not found because of deletion" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -574,10 +583,10 @@ defmodule ChallengeGov.SolutionsTest do
   describe "security log" do
     test "tracks an event when a solution is submitted" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      log_event = List.first(SecurityLogs.all())
+      log_event = Enum.at(SecurityLogs.all(), 1)
 
       assert log_event.action === "submit"
       assert log_event.originator_id === user.id

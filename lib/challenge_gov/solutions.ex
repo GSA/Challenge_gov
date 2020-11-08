@@ -53,9 +53,9 @@ defmodule ChallengeGov.Solutions do
     Repo.preload(solution, [:submitter, :documents, challenge: [:agency]])
   end
 
-  def create_draft(params, user, challenge) do
+  def create_draft(params, user, challenge, phase) do
     params = attach_default_multi_params(params)
-    changeset = Solution.draft_changeset(%Solution{}, params, user, challenge)
+    changeset = Solution.draft_changeset(%Solution{}, params, user, challenge, phase)
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:solution, changeset)
@@ -75,9 +75,9 @@ defmodule ChallengeGov.Solutions do
     end
   end
 
-  def create_review(params, user, challenge) do
+  def create_review(params, user, challenge, phase) do
     params = attach_default_multi_params(params)
-    changeset = Solution.review_changeset(%Solution{}, params, user, challenge)
+    changeset = Solution.review_changeset(%Solution{}, params, user, challenge, phase)
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:solution, changeset)

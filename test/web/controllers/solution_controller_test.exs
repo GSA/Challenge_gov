@@ -11,8 +11,8 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
-      challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      challenge_2 = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -29,8 +29,8 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
-      challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      challenge_2 = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       SolutionHelpers.create_submitted_solution(
         %{
@@ -64,7 +64,7 @@ defmodule Web.SolutionControllerTest do
 
     test "redirect to sign in when signed out", %{conn: conn} do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
       conn = get(conn, Routes.challenge_solution_path(conn, :index, challenge.id))
 
       assert conn.status === 302
@@ -77,7 +77,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution =
         SolutionHelpers.create_submitted_solution(
@@ -98,7 +98,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -115,7 +115,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       conn = get(conn, Routes.challenge_solution_path(conn, :new, challenge.id))
 
@@ -130,7 +130,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       params = %{
         "action" => "draft",
@@ -149,7 +149,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       params = %{
         "action" => "review",
@@ -171,7 +171,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       params = %{
         "action" => "review",
@@ -194,7 +194,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
@@ -210,7 +210,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -227,7 +227,7 @@ defmodule Web.SolutionControllerTest do
       %{current_user: user} = conn.assigns
       user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
@@ -241,7 +241,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
@@ -268,7 +268,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
@@ -295,7 +295,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -322,7 +322,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -347,7 +347,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -374,7 +374,7 @@ defmodule Web.SolutionControllerTest do
       %{current_user: user} = conn.assigns
       user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
@@ -398,7 +398,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
@@ -414,7 +414,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -461,7 +461,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
@@ -476,7 +476,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
@@ -493,7 +493,7 @@ defmodule Web.SolutionControllerTest do
 
       user_2 = AccountHelpers.create_user()
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_draft_solution(%{}, user_2, challenge)
 
@@ -510,7 +510,7 @@ defmodule Web.SolutionControllerTest do
 
       user_2 = AccountHelpers.create_user()
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
@@ -525,7 +525,7 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 

@@ -105,11 +105,17 @@ defmodule Web.SolutionController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
-    with {:ok, solution} <- Solutions.create_draft(solution_params, user, challenge) do
+    with {:ok, phase} <- Challenges.current_phase(challenge),
+         {:ok, solution} <- Solutions.create_draft(solution_params, user, challenge, phase) do
       conn
       |> put_flash(:info, "Solution saved as draft")
       |> redirect(to: Routes.solution_path(conn, :edit, solution.id))
     else
+      {:error, :no_current_phase} ->
+        conn
+        |> put_flash(:error, "No current phase found")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
+
       {:error, changeset} ->
         create_error(conn, changeset, user, challenge)
     end
@@ -123,10 +129,16 @@ defmodule Web.SolutionController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
-    with {:ok, solution} <- Solutions.create_review(solution_params, user, challenge) do
+    with {:ok, phase} <- Challenges.current_phase(challenge),
+         {:ok, solution} <- Solutions.create_review(solution_params, user, challenge, phase) do
       conn
       |> redirect(to: Routes.solution_path(conn, :show, solution.id))
     else
+      {:error, :no_current_phase} ->
+        conn
+        |> put_flash(:error, "No current phase found")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
+
       {:error, changeset} ->
         create_error(conn, changeset, user, challenge)
     end

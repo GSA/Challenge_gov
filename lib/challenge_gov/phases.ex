@@ -29,6 +29,13 @@ defmodule ChallengeGov.Phases do
     end
   end
 
+  def is_current?(%{start_date: start_date, end_date: end_date}) do
+    now = DateTime.utc_now()
+    now >= start_date && now <= end_date
+  end
+
+  def is_current?(_phase), do: false
+
   def filter_on_attribute({"challenge_id", value}, query) do
     where(query, [c], c.challenge_id == ^value)
   end
