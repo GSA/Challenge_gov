@@ -13,12 +13,15 @@ defmodule ChallengeGov.Phases do
 
   def all(opts \\ []) do
     Phase
+    |> preload([:solutions])
+    |> order_by(asc: :start_date)
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.all()
   end
 
   def get(id) do
     Phase
+    |> preload([:solutions])
     |> Repo.get(id)
     |> case do
       nil ->
@@ -35,6 +38,20 @@ defmodule ChallengeGov.Phases do
   end
 
   def is_current?(_phase), do: false
+
+  def is_past?(%{end_date: end_date}) do
+    now = DateTime.utc_now()
+    now > end_date
+  end
+
+  def is_past?(_phase), do: false
+
+  def is_future?(%{start_date: start_date}) do
+    now = DateTime.utc_now()
+    now < start_date
+  end
+
+  def is_future?(_phase), do: false
 
   def filter_on_attribute({"challenge_id", value}, query) do
     where(query, [c], c.challenge_id == ^value)

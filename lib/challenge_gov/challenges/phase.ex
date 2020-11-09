@@ -8,11 +8,13 @@ defmodule ChallengeGov.Challenges.Phase do
   import Ecto.Changeset
 
   alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.Solutions.Solution
 
   @type t :: %__MODULE__{}
 
   schema "phases" do
     belongs_to(:challenge, Challenge)
+    has_many(:solutions, Solution)
 
     field(:uuid, Ecto.UUID, autogenerate: true)
     field(:title, :string)
