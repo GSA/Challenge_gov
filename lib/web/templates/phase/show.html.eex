@@ -1,7 +1,35 @@
-<h1>Phase Show</h1>
-<ul>
-  <li><%= @phase.title %></li>
-  <li><%= @phase.start_date %></li>
-  <li><%= @phase.end_date %></li>
-  <li><%= @phase.open_to_submissions %></li>
-</ul>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item"><%= link("Challenges", to: Routes.challenge_path(@conn, :index)) %></li>
+          <li class="breadcrumb-item"><%= link(@challenge.title, to: Routes.challenge_path(@conn, :show, @challenge.id)) %></li>
+          <%= if length(@challenge.phases) > 1 do %>
+            <li class="breadcrumb-item"><%= link("Phases", to: Routes.challenge_phase_path(@conn, :index, @challenge.id)) %></li>
+            <li class="breadcrumb-item active"><%= @phase.title %></li>
+          <% else %>
+            <li class="breadcrumb-item active"><%= @phase.title %></li>
+          <% end %>
+        </ol>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <%= if length(@challenge.phases) > 1 do %>
+          <h2>Solutions for Phase: <span class="font-italic"><%= @phase.title %></span> of Challenge: <span class="font-italic"><%= @challenge.title %></span></h2>
+        <% else %>
+          <h2>Solutions for <span class="font-italic"><%= @challenge.title %></span></h2>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render Web.PhaseView, "solution_table/_table.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, solutions: @solutions, pagination: @pagination, sort: @sort, filter: @filter %>

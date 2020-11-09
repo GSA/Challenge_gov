@@ -294,6 +294,10 @@ defmodule ChallengeGov.Solutions do
     where(query, [c], c.challenge_id == ^value)
   end
 
+  def filter_on_attribute({"phase_id", value}, query) do
+    where(query, [c], c.phase_id == ^value)
+  end
+
   def filter_on_attribute({"title", value}, query) do
     value = "%" <> value <> "%"
     where(query, [s], ilike(s.title, ^value))

@@ -1,7 +1,6 @@
 defmodule Web.PhaseControllerTest do
   use Web.ConnCase
 
-  alias ChallengeGov.Repo
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
 
@@ -138,10 +137,7 @@ defmodule Web.PhaseControllerTest do
       user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_owner"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 
-      phase =
-        challenge.phases
-        |> Enum.at(0)
-        |> Repo.preload([:solutions])
+      phase = Enum.at(challenge.phases, 0)
 
       conn = get(conn, Routes.challenge_phase_path(conn, :show, challenge.id, phase.id))
 
@@ -151,7 +147,7 @@ defmodule Web.PhaseControllerTest do
       } = conn.assigns
 
       assert user === user_in_assigns
-      assert phase === phase_in_assigns
+      assert phase.id === phase_in_assigns.id
       assert html_response(conn, 200)
     end
 
@@ -162,10 +158,7 @@ defmodule Web.PhaseControllerTest do
       user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_owner"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 
-      phase =
-        challenge.phases
-        |> Enum.at(0)
-        |> Repo.preload([:solutions])
+      phase = Enum.at(challenge.phases, 0)
 
       conn = get(conn, Routes.challenge_phase_path(conn, :show, challenge.id, phase.id))
 
@@ -175,7 +168,7 @@ defmodule Web.PhaseControllerTest do
       } = conn.assigns
 
       assert user === user_in_assigns
-      assert phase === phase_in_assigns
+      assert phase.id === phase_in_assigns.id
       assert html_response(conn, 200)
     end
 
@@ -185,10 +178,7 @@ defmodule Web.PhaseControllerTest do
 
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
-      phase =
-        challenge.phases
-        |> Enum.at(0)
-        |> Repo.preload([:solutions])
+      phase = Enum.at(challenge.phases, 0)
 
       conn = get(conn, Routes.challenge_phase_path(conn, :show, challenge.id, phase.id))
 
@@ -198,7 +188,7 @@ defmodule Web.PhaseControllerTest do
       } = conn.assigns
 
       assert user === user_in_assigns
-      assert phase === phase_in_assigns
+      assert phase.id === phase_in_assigns.id
       assert html_response(conn, 200)
     end
 

@@ -1,11 +1,7 @@
 <div class="content-header">
   <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h2>View submissions for <%= @challenge.title %></h2>
-      </div>
-
-      <div class="col-sm-6">
+    <div class="row">
+      <div class="col">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item">
             <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
@@ -16,6 +12,12 @@
           <li class="breadcrumb-item"><%= link(@challenge.title, to: Routes.challenge_path(@conn, :show, @challenge.id)) %></li>
           <li class="breadcrumb-item active">Phases</li>
         </ol>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h2>View submissions for <%= @challenge.title %></h2>
       </div>
     </div>
   </div>

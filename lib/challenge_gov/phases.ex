@@ -13,7 +13,7 @@ defmodule ChallengeGov.Phases do
 
   def all(opts \\ []) do
     Phase
-    |> preload([:solutions])
+    |> base_query
     |> order_by(asc: :start_date)
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.all()
@@ -21,7 +21,7 @@ defmodule ChallengeGov.Phases do
 
   def get(id) do
     Phase
-    |> preload([:solutions])
+    |> base_query
     |> Repo.get(id)
     |> case do
       nil ->
@@ -30,6 +30,11 @@ defmodule ChallengeGov.Phases do
       phase ->
         {:ok, phase}
     end
+  end
+
+  defp base_query(query) do
+    query
+    |> preload([:challenge, :solutions])
   end
 
   def is_current?(%{start_date: start_date, end_date: end_date}) do

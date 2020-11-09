@@ -3,6 +3,9 @@ defmodule Web.PhaseController do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.Phases
+  alias ChallengeGov.Solutions
+
+  plug Web.Plugs.FetchPage when action in [:show]
 
   plug Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_owner]
 
@@ -38,16 +41,27 @@ defmodule Web.PhaseController do
     end
   end
 
-  def show(conn, %{"challenge_id" => challenge_id, "id" => id}) do
+  def show(conn, params = %{"challenge_id" => challenge_id, "id" => id}) do
     %{current_user: user} = conn.assigns
+    %{page: page, per: per} = conn.assigns
+
+    filter = Map.get(params, "filter", %{})
+    sort = Map.get(params, "sort", %{})
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
          {:ok, phase} <- Phases.get(id) do
+      %{page: solutions, pagination: pagination} =
+        Solutions.all(filter: %{"phase_id" => phase.id}, page: page, per: per)
+
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
       |> assign(:phase, phase)
+      |> assign(:solutions, solutions)
+      |> assign(:pagination, pagination)
+      |> assign(:sort, sort)
+      |> assign(:filter, filter)
       |> render("show.html")
     else
       {:error, :not_permitted} ->

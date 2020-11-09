@@ -1,0 +1,13 @@
+<tbody>
+  <%= Enum.map @solutions, fn (solution) -> %>
+    <tr>
+      <td><%= solution.id %></td>
+      <td><%= solution.title %></td>
+      <td class="js-local-datetime"><%= solution.updated_at %></td>
+      <td>last_messaged_placeholder</td>
+      <td>topic_placeholder</td>
+      <td>selected_for_judging</td>
+      <td>other_actions</td>
+    </tr>
+  <% end %>
+</tbody>
