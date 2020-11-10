@@ -57,10 +57,16 @@ defmodule Web.PhaseView do
     {text, status_to_set} =
       case solution.judging_status do
         "selected" ->
-          {"Selected", "unselect"}
+          {
+            content_tag(:div, "Selected", class: "btn btn-primary btn-xs"),
+            "unselect"
+          }
 
         "not_selected" ->
-          {"Select", "select"}
+          {
+            content_tag(:div, "Add", class: "btn btn-secondary btn-xs"),
+            "select"
+          }
 
         _ ->
           {"Error", "error"}
