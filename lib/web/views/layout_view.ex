@@ -70,6 +70,14 @@ defmodule Web.LayoutView do
         ""
     end
   end
+
+  def load_filter_panel(conn, view_module) do
+    action_name(conn) == :index and
+      view_module != Web.DashboardView and
+      view_module != Web.AccessView and
+      view_module != Web.SiteContentView and
+      view_module != Web.PhaseView
+  end
 end
 
 defmodule Web.PageTitle do

@@ -82,6 +82,35 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
     challenge
   end
 
+  def create_closed_single_phase_challenge(user, attributes \\ %{}) do
+    challenge = create_challenge(attributes, user)
+
+    {:ok, challenge} =
+      Challenges.update(
+        challenge,
+        %{
+          "action" => "next",
+          "challenge" => %{
+            "section" => "details",
+            "challenge_title" => challenge.title,
+            "upload_logo" => "false",
+            "is_multi_phase" => "false",
+            "phases" => %{
+              "0" => %{
+                "start_date" => TestHelpers.iso_timestamp(hours: -2),
+                "end_date" => TestHelpers.iso_timestamp(hours: -1),
+                "open_to_submissions" => "true"
+              }
+            }
+          }
+        },
+        user,
+        ""
+      )
+
+    challenge
+  end
+
   def create_multi_phase_challenge(user, attributes \\ %{}) do
     challenge = create_challenge(attributes, user)
 

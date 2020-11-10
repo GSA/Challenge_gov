@@ -94,6 +94,10 @@ defmodule Web.SharedView do
     |> readable_datetime
   end
 
+  def local_datetime_tag(datetime, tag_type \\ "div") do
+    content_tag(tag_type, datetime, class: "js-local-datetime")
+  end
+
   def string_to_link(string, opts \\ []) do
     link(string, Keyword.merge([to: string], opts))
   end

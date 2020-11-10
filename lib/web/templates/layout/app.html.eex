@@ -144,7 +144,7 @@
 
       <aside class="control-sidebar control-sidebar-light">
         <div class="p-3">
-          <%= if action_name(@conn) == :index and @view_module != Web.DashboardView and @view_module != Web.AccessView and @view_module != Web.SiteContentView do %>
+          <%= if load_filter_panel(@conn, @view_module) do %>
             <%= render @view_module, "_filter.html", conn: @conn, user: @user, filter: @filter, sort: @sort %>
           <% end%>
         </div>

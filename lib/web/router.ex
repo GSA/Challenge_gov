@@ -89,7 +89,12 @@ defmodule Web.Router do
 
       resources("/bulletin", BulletinController, only: [:new, :create])
 
+      resources("/phases", PhaseController, only: [:index, :show]) do
+        resources("/solutions", SolutionController, only: [:index, :show, :new, :create])
+      end
+
       resources("/solutions", SolutionController, only: [:index, :new, :create])
+      put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
 
       resources("/save_challenge", SavedChallengeController, only: [:new, :create])
     end

@@ -75,6 +75,49 @@ defmodule ChallengeGov.ChallengeTest do
     end
   end
 
+  describe "find current phase" do
+    test "success: single phase challenge" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      {:ok, phase} = Challenges.current_phase(challenge)
+
+      assert phase
+    end
+
+    test "success: multi phase challenge" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_open_multi_phase_challenge(user, %{user_id: user.id})
+
+      {:ok, phase} = Challenges.current_phase(challenge)
+
+      assert phase
+    end
+
+    test "failure: no current phase in single phase" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_closed_single_phase_challenge(user, %{user_id: user.id})
+
+      assert {:error, :no_current_phase} === Challenges.current_phase(challenge)
+    end
+
+    test "failure: no current phase in multi phase" do
+      user = AccountHelpers.create_user()
+
+      challenge =
+        ChallengeHelpers.create_archived_multi_phase_challenge(user, %{user_id: user.id})
+
+      assert {:error, :no_current_phase} === Challenges.current_phase(challenge)
+    end
+
+    test "failure: no phases" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id}, user)
+
+      assert {:error, :no_current_phase} === Challenges.current_phase(challenge)
+    end
+  end
+
   describe "create announcement" do
     test "successfully" do
       user = AccountHelpers.create_user()

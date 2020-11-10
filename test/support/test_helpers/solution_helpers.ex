@@ -18,28 +18,34 @@ defmodule ChallengeGov.TestHelpers.SolutionHelpers do
     )
   end
 
-  def create_draft_solution(attributes \\ %{}, user, challenge) do
+  def create_draft_solution(attributes \\ %{}, user, challenge, phase \\ nil) do
+    phase = phase || Enum.at(challenge.phases, 0)
+
     {:ok, solution} =
       %Solution{}
-      |> Solution.draft_changeset(default_attributes(attributes), user, challenge)
+      |> Solution.draft_changeset(default_attributes(attributes), user, challenge, phase)
       |> Repo.insert()
 
     solution
   end
 
-  def create_review_solution(attributes \\ %{}, user, challenge) do
+  def create_review_solution(attributes \\ %{}, user, challenge, phase \\ nil) do
+    phase = phase || Enum.at(challenge.phases, 0)
+
     {:ok, solution} =
       %Solution{}
-      |> Solution.review_changeset(default_attributes(attributes), user, challenge)
+      |> Solution.review_changeset(default_attributes(attributes), user, challenge, phase)
       |> Repo.insert()
 
     solution
   end
 
-  def create_submitted_solution(attributes \\ %{}, user, challenge) do
+  def create_submitted_solution(attributes \\ %{}, user, challenge, phase \\ nil) do
+    phase = phase || Enum.at(challenge.phases, 0)
+
     {:ok, solution} =
       attributes
-      |> create_review_solution(user, challenge)
+      |> create_review_solution(user, challenge, phase)
       |> Solutions.submit()
 
     solution

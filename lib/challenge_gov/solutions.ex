@@ -21,6 +21,7 @@ defmodule ChallengeGov.Solutions do
     |> base_preload
     |> where([s], is_nil(s.deleted_at))
     |> Filter.filter(opts[:filter], __MODULE__)
+    |> order_on_attribute(opts[:sort])
     |> Repo.paginate(opts[:page], opts[:per])
   end
 
@@ -53,9 +54,9 @@ defmodule ChallengeGov.Solutions do
     Repo.preload(solution, [:submitter, :documents, challenge: [:agency]])
   end
 
-  def create_draft(params, user, challenge) do
+  def create_draft(params, user, challenge, phase) do
     params = attach_default_multi_params(params)
-    changeset = Solution.draft_changeset(%Solution{}, params, user, challenge)
+    changeset = Solution.draft_changeset(%Solution{}, params, user, challenge, phase)
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:solution, changeset)
@@ -75,9 +76,9 @@ defmodule ChallengeGov.Solutions do
     end
   end
 
-  def create_review(params, user, challenge) do
+  def create_review(params, user, challenge, phase) do
     params = attach_default_multi_params(params)
-    changeset = Solution.review_changeset(%Solution{}, params, user, challenge)
+    changeset = Solution.review_changeset(%Solution{}, params, user, challenge, phase)
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:solution, changeset)
@@ -245,6 +246,23 @@ defmodule ChallengeGov.Solutions do
 
   defp preserve_document_ids_on_error(changeset, _params), do: changeset
 
+  def update_judging_status(solution, judging_status) do
+    case judging_status do
+      "select" ->
+        solution
+        |> Solution.select_for_judging_changeset()
+        |> Repo.update()
+
+      "unselect" ->
+        solution
+        |> Solution.unselect_for_judging_changeset()
+        |> Repo.update()
+
+      _ ->
+        {:error, :invalid_judging_status}
+    end
+  end
+
   @doc false
   def statuses(), do: Solution.statuses()
 
@@ -294,6 +312,10 @@ defmodule ChallengeGov.Solutions do
     where(query, [c], c.challenge_id == ^value)
   end
 
+  def filter_on_attribute({"phase_id", value}, query) do
+    where(query, [c], c.phase_id == ^value)
+  end
+
   def filter_on_attribute({"title", value}, query) do
     value = "%" <> value <> "%"
     where(query, [s], ilike(s.title, ^value))
@@ -318,4 +340,27 @@ defmodule ChallengeGov.Solutions do
     value = "%" <> value <> "%"
     where(query, [s], ilike(s.status, ^value))
   end
+
+  def order_on_attribute(query, sort_columns)
+      when is_map(sort_columns) and map_size(sort_columns) > 0 do
+    columns_to_sort =
+      Enum.reduce(sort_columns, [], fn {column, direction}, acc ->
+        column = String.to_atom(column)
+
+        case direction do
+          "asc" ->
+            acc ++ [asc_nulls_last: column]
+
+          "desc" ->
+            acc ++ [desc_nulls_last: column]
+
+          _ ->
+            []
+        end
+      end)
+
+    order_by(query, [c], ^columns_to_sort)
+  end
+
+  def order_on_attribute(query, _), do: order_by(query, [c], desc_nulls_last: :id)
 end

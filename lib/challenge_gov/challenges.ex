@@ -12,6 +12,7 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.ResourceBanner
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
+  alias ChallengeGov.Phases
   alias ChallengeGov.Repo
   alias ChallengeGov.SavedChallenges
   alias ChallengeGov.SecurityLogs
@@ -745,6 +746,22 @@ defmodule ChallengeGov.Challenges do
   def find_end_date(challenge) do
     challenge.end_date
   end
+
+  def current_phase(%{phases: phases}) when length(phases) > 0 do
+    phases
+    |> Enum.find(fn phase ->
+      Phases.is_current?(phase)
+    end)
+    |> case do
+      nil ->
+        {:error, :no_current_phase}
+
+      phase ->
+        {:ok, phase}
+    end
+  end
+
+  def current_phase(_challenge), do: {:error, :no_current_phase}
 
   @doc """
   Create a new status event when the status changes
