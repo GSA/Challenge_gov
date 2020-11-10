@@ -6,7 +6,16 @@ defmodule Web.SolutionController do
   alias ChallengeGov.Solutions
   alias ChallengeGov.Security
 
-  plug(Web.Plugs.EnsureRole, [:solver] when action not in [:index, :show, :delete])
+  plug(
+    Web.Plugs.EnsureRole,
+    [:solver] when action not in [:index, :show, :delete, :update_judging_status]
+  )
+
+  plug(
+    Web.Plugs.EnsureRole,
+    [:admin, :super_admin, :challenge_owner] when action in [:update_judging_status]
+  )
+
   plug Web.Plugs.FetchPage when action in [:index]
 
   action_fallback(Web.FallbackController)
@@ -271,6 +280,35 @@ defmodule Web.SolutionController do
         |> assign(:path, Routes.solution_path(conn, :update, id))
         |> assign(:changeset, changeset)
         |> render("edit.html")
+    end
+  end
+
+  def update_judging_status(conn, %{
+        "challenge_id" => challenge_id,
+        "id" => id,
+        "judging_status" => judging_status
+      }) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, challenge} <- Challenges.get(challenge_id),
+         {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge),
+         {:ok, solution} <- Solutions.get(id),
+         {:ok, _solution} <- Solutions.update_judging_status(solution, judging_status),
+         {"referer", referer} <- List.keyfind(conn.req_headers, "referer", 0) do
+      conn
+      |> redirect(external: referer)
+    else
+      {:error, :not_permitted} ->
+        conn
+        |> assign(:user, user)
+        |> put_flash(:error, "You do not have permissions on this challenge")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
+
+      _ ->
+        conn
+        |> assign(:user, user)
+        |> put_flash(:error, "Something went wrong")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
     end
   end
 

@@ -52,4 +52,30 @@ defmodule Web.PhaseView do
       end
     end
   end
+
+  def render_select_for_judging_button(conn, challenge, solution) do
+    {text, status_to_set} =
+      case solution.judging_status do
+        "selected" ->
+          {"Selected", "unselect"}
+
+        "not_selected" ->
+          {"Select", "select"}
+
+        _ ->
+          {"Error", "error"}
+      end
+
+    link(text,
+      to:
+        Routes.challenge_solution_path(
+          conn,
+          :update_judging_status,
+          challenge.id,
+          solution.id,
+          status_to_set
+        ),
+      method: :put
+    )
+  end
 end

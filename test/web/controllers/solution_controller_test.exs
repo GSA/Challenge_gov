@@ -456,6 +456,177 @@ defmodule Web.SolutionControllerTest do
     end
   end
 
+  describe "updating judging status" do
+    test "success: selecting for judging", %{conn: conn} do
+      conn = prep_conn_admin(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
+
+      referer = Routes.challenge_phase_path(conn, :show, challenge.id, phase.id)
+      conn = Plug.Conn.update_req_header(conn, "referer", referer, &(&1 <> "; charset=utf-8"))
+
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+      assert solution.judging_status === "not_selected"
+
+      conn =
+        put(
+          conn,
+          Routes.challenge_solution_path(
+            conn,
+            :update_judging_status,
+            challenge.id,
+            solution.id,
+            "select"
+          )
+        )
+
+      assert redirected_to(conn) === referer
+
+      {:ok, updated_solution} = Solutions.get(solution.id)
+      assert updated_solution.judging_status === "selected"
+    end
+
+    test "success: unselecting for judging", %{conn: conn} do
+      conn = prep_conn_admin(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
+
+      referer = Routes.challenge_phase_path(conn, :show, challenge.id, phase.id)
+      conn = Plug.Conn.update_req_header(conn, "referer", referer, &(&1 <> "; charset=utf-8"))
+
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+      {:ok, solution} = Solutions.update_judging_status(solution, "select")
+      assert solution.judging_status === "selected"
+
+      conn =
+        put(
+          conn,
+          Routes.challenge_solution_path(
+            conn,
+            :update_judging_status,
+            challenge.id,
+            solution.id,
+            "unselect"
+          )
+        )
+
+      assert redirected_to(conn) === referer
+
+      {:ok, updated_solution} = Solutions.get(solution.id)
+      assert updated_solution.judging_status === "not_selected"
+    end
+
+    test "failure: invalid status", %{conn: conn} do
+      conn = prep_conn_admin(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
+
+      referer = Routes.challenge_phase_path(conn, :show, challenge.id, phase.id)
+      conn = Plug.Conn.update_req_header(conn, "referer", referer, &(&1 <> "; charset=utf-8"))
+
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+      assert solution.judging_status === "not_selected"
+
+      conn =
+        put(
+          conn,
+          Routes.challenge_solution_path(
+            conn,
+            :update_judging_status,
+            challenge.id,
+            solution.id,
+            "invalid"
+          )
+        )
+
+      assert get_flash(conn, :error) === "Something went wrong"
+      assert redirected_to(conn) === Routes.dashboard_path(conn, :index)
+
+      {:ok, updated_solution} = Solutions.get(solution.id)
+      assert updated_solution.judging_status === "not_selected"
+    end
+
+    test "failure: solver not authorized", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
+
+      referer = Routes.challenge_phase_path(conn, :show, challenge.id, phase.id)
+      conn = Plug.Conn.update_req_header(conn, "referer", referer, &(&1 <> "; charset=utf-8"))
+
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+      assert solution.judging_status === "not_selected"
+
+      conn =
+        put(
+          conn,
+          Routes.challenge_solution_path(
+            conn,
+            :update_judging_status,
+            challenge.id,
+            solution.id,
+            "select"
+          )
+        )
+
+      assert get_flash(conn, :error) === "You are not authorized"
+      assert redirected_to(conn) === Routes.dashboard_path(conn, :index)
+
+      {:ok, updated_solution} = Solutions.get(solution.id)
+      assert updated_solution.judging_status === "not_selected"
+    end
+
+    test "failure: challenge owner not authorized", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: user} = conn.assigns
+
+      different_challenge_owner =
+        AccountHelpers.create_user(%{
+          email: "challenge_owner@example.com",
+          role: "challenge_owner"
+        })
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(different_challenge_owner, %{
+          user_id: user.id
+        })
+
+      phase = Enum.at(challenge.phases, 0)
+
+      referer = Routes.challenge_phase_path(conn, :show, challenge.id, phase.id)
+      conn = Plug.Conn.update_req_header(conn, "referer", referer, &(&1 <> "; charset=utf-8"))
+
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+      assert solution.judging_status === "not_selected"
+
+      conn =
+        put(
+          conn,
+          Routes.challenge_solution_path(
+            conn,
+            :update_judging_status,
+            challenge.id,
+            solution.id,
+            "select"
+          )
+        )
+
+      assert get_flash(conn, :error) === "You do not have permissions on this challenge"
+      assert redirected_to(conn) === Routes.dashboard_path(conn, :index)
+
+      {:ok, updated_solution} = Solutions.get(solution.id)
+      assert updated_solution.judging_status === "not_selected"
+    end
+  end
+
   describe "delete action" do
     test "deleting a draft solution you own", %{conn: conn} do
       conn = prep_conn(conn)
@@ -555,6 +726,11 @@ defmodule Web.SolutionControllerTest do
 
   defp prep_conn_admin(conn) do
     user = AccountHelpers.create_user(%{email: "admin@example.com", role: "admin"})
+    assign(conn, :current_user, user)
+  end
+
+  defp prep_conn_challenge_owner(conn) do
+    user = AccountHelpers.create_user(%{email: "admin@example.com", role: "challenge_owner"})
     assign(conn, :current_user, user)
   end
 end

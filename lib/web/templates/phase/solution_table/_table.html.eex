@@ -6,7 +6,7 @@
           <div class="table-responsive">
             <table class="table table-striped">
               <%= render Web.PhaseView, "solution_table/_header.html", conn: @conn, user: @user, filter: @filter, sort: @sort, phase: @phase %>
-              <%= render Web.PhaseView, "solution_table/_content.html", conn: @conn, user: @user, solutions: @solutions %>
+              <%= render Web.PhaseView, "solution_table/_content.html", conn: @conn, user: @user, challenge: @challenge, solutions: @solutions %>
             </table>
           </div>
 

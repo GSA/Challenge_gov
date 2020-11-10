@@ -51,8 +51,14 @@ defmodule Web.PhaseController do
     with {:ok, challenge} <- Challenges.get(challenge_id),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
          {:ok, phase} <- Phases.get(id) do
+      solutions_filter =
+        Map.merge(filter, %{
+          "status" => "submitted",
+          "phase_id" => phase.id
+        })
+
       %{page: solutions, pagination: pagination} =
-        Solutions.all(filter: %{"phase_id" => phase.id}, page: page, per: per)
+        Solutions.all(filter: solutions_filter, page: page, per: per, sort: sort)
 
       conn
       |> assign(:user, user)

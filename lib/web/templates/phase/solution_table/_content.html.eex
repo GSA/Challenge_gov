@@ -6,7 +6,7 @@
       <td class="js-local-datetime"><%= solution.updated_at %></td>
       <td>last_messaged_placeholder</td>
       <td>topic_placeholder</td>
-      <td>selected_for_judging</td>
+      <td><%= render_select_for_judging_button(@conn, @challenge, solution) %></td>
       <td>other_actions</td>
     </tr>
   <% end %>

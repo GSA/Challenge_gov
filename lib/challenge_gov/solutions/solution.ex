@@ -19,11 +19,20 @@ defmodule ChallengeGov.Solutions.Solution do
     %{id: "submitted", label: "Submitted"}
   ]
 
+  @judging_statuses [
+    "not_selected",
+    "selected",
+    "qualified",
+    "winner"
+  ]
+
   def statuses(), do: @statuses
 
   def status_ids() do
     Enum.map(@statuses, & &1.id)
   end
+
+  def judging_statuses, do: @judging_statuses
 
   schema "solutions" do
     # Associations
@@ -39,6 +48,7 @@ defmodule ChallengeGov.Solutions.Solution do
     field(:description, :string)
     field(:external_url, :string)
     field(:status, :string)
+    field(:judging_status, :string, default: "not_selected")
 
     # Meta Timestamps
     field(:deleted_at, :utc_datetime)
@@ -121,6 +131,22 @@ defmodule ChallengeGov.Solutions.Solution do
     |> put_change(:status, "submitted")
     |> validate_required_fields
     |> validate_inclusion(:status, status_ids())
+  end
+
+  def select_for_judging_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:judging_status, "selected")
+    |> validate_required_fields
+    |> validate_inclusion(:status, judging_statuses())
+  end
+
+  def unselect_for_judging_changeset(struct) do
+    struct
+    |> change()
+    |> put_change(:judging_status, "not_selected")
+    |> validate_required_fields
+    |> validate_inclusion(:status, judging_statuses())
   end
 
   def delete_changeset(struct) do

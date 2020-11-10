@@ -580,6 +580,43 @@ defmodule ChallengeGov.SolutionsTest do
     end
   end
 
+  describe "updating judging status" do
+    test "success: changing from unselected to selected" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+
+      {:ok, updated_solution} = Solutions.update_judging_status(solution, "select")
+
+      assert solution.judging_status === "not_selected"
+      assert updated_solution.judging_status === "selected"
+    end
+
+    test "success: changing from selected to unselected" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+
+      {:ok, updated_solution} = Solutions.update_judging_status(solution, "select")
+      assert updated_solution.judging_status === "selected"
+
+      {:ok, unselected_solution} = Solutions.update_judging_status(updated_solution, "unselect")
+      assert unselected_solution.judging_status === "not_selected"
+    end
+
+    test "failure: with invalid status" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+
+      assert {:error, :invalid_judging_status} ===
+               Solutions.update_judging_status(solution, "invalid")
+    end
+  end
+
   describe "security log" do
     test "tracks an event when a solution is submitted" do
       user = AccountHelpers.create_user()
