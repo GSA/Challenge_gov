@@ -43,7 +43,8 @@ defmodule Web.PhaseController do
 
   def show(conn, params = %{"challenge_id" => challenge_id, "id" => id}) do
     %{current_user: user} = conn.assigns
-    %{page: page, per: per} = conn.assigns
+    %{page: page, per: _per} = conn.assigns
+    per = 10
 
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})

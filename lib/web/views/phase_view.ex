@@ -20,6 +20,28 @@ defmodule Web.PhaseView do
     end
   end
 
+  def submission_period_text(phase) do
+    cond do
+      Phases.is_past?(phase) ->
+        [
+          content_tag(:span, "Closed on "),
+          SharedView.local_datetime_tag(phase.end_date, "span")
+        ]
+
+      Phases.is_current?(phase) ->
+        [
+          content_tag(:span, "Opened on "),
+          SharedView.local_datetime_tag(phase.start_date, "span")
+        ]
+
+      Phases.is_future?(phase) ->
+        [
+          content_tag(:span, "Opens on "),
+          SharedView.local_datetime_tag(phase.start_date, "span")
+        ]
+    end
+  end
+
   # TODO: Refactor to be more generic
   # Example: Take a path with existing query params and append sort after and no longer need to pass filter
   def sortable_header(conn, sort, filter, column, label, phase) do
