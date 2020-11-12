@@ -39,21 +39,21 @@ defmodule ChallengeGov.Phases do
 
   def is_current?(%{start_date: start_date, end_date: end_date}) do
     now = DateTime.utc_now()
-    now >= start_date && now <= end_date
+    DateTime.compare(now, start_date) === :gt && DateTime.compare(now, end_date) === :lt
   end
 
   def is_current?(_phase), do: false
 
   def is_past?(%{end_date: end_date}) do
     now = DateTime.utc_now()
-    now > end_date
+    DateTime.compare(now, end_date) === :gt
   end
 
   def is_past?(_phase), do: false
 
   def is_future?(%{start_date: start_date}) do
     now = DateTime.utc_now()
-    now < start_date
+    DateTime.compare(now, start_date) === :lt
   end
 
   def is_future?(_phase), do: false
