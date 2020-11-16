@@ -14,7 +14,7 @@ defmodule ChallengeGov.SavedChallenges.SavedChallenge do
     belongs_to(:user, User)
     belongs_to(:challenge, Challenge)
 
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   def changeset(struct, user, challenge) do

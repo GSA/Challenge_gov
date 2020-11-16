@@ -85,7 +85,7 @@ defmodule ChallengeGov.Accounts.User do
 
     field(:renewal_request, :string)
 
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   def changeset(struct, params) do

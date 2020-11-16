@@ -52,7 +52,7 @@ defmodule ChallengeGov.Solutions.Solution do
 
     # Meta Timestamps
     field(:deleted_at, :utc_datetime)
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   def changeset(struct, params) do

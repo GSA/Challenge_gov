@@ -34,7 +34,7 @@ defmodule ChallengeGov.Agencies.Agency do
     field(:avatar_extension, :string)
 
     # Misc
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   def create_changeset(struct, params) do

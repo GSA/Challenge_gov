@@ -16,7 +16,7 @@ defmodule ChallengeGov.Agencies.Member do
     belongs_to(:user, User)
     belongs_to(:agency, Agency)
 
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   def create_changeset(struct, user, agency) do
