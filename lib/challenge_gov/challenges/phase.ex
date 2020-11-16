@@ -14,7 +14,8 @@ defmodule ChallengeGov.Challenges.Phase do
 
   schema "phases" do
     belongs_to(:challenge, Challenge)
-    has_many(:solutions, Solution)
+    has_many(:all_solutions, Solution)
+    has_many(:solutions, Solution, where: [status: "submitted"])
 
     field(:uuid, Ecto.UUID, autogenerate: true)
     field(:title, :string)
