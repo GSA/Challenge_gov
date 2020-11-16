@@ -8,6 +8,7 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
+  alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.Challenges.WinnerImage
   alias ChallengeGov.Challenges.ResourceBanner
   alias ChallengeGov.Emails
@@ -444,8 +445,7 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge =
-          Repo.preload(challenge, [:phases, events: from(e in Event, order_by: e.occurs_on)])
+        challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
 
         {:ok, challenge}
     end
@@ -463,8 +463,7 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge =
-          Repo.preload(challenge, [:phases, events: from(e in Event, order_by: e.occurs_on)])
+        challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
 
         {:ok, challenge}
     end
@@ -476,13 +475,13 @@ defmodule ChallengeGov.Challenges do
     |> preload([
       :supporting_documents,
       :user,
-      :phases,
       :federal_partner_agencies,
       :non_federal_partners,
       :agency,
       :sub_agency,
       :challenge_owner_users,
       :events,
+      phases: ^from(p in Phase, order_by: p.start_date),
       federal_partners: [:agency, :sub_agency]
     ])
     |> Repo.one()
