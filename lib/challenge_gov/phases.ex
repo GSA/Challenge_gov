@@ -58,6 +58,13 @@ defmodule ChallengeGov.Phases do
 
   def is_future?(_phase), do: false
 
+  def solution_count(phase) do
+    phase
+    |> Ecto.assoc(:solutions)
+    |> select([s], count(s))
+    |> Repo.one()
+  end
+
   def filter_on_attribute({"challenge_id", value}, query) do
     where(query, [c], c.challenge_id == ^value)
   end
