@@ -283,32 +283,25 @@ defmodule Web.SolutionController do
     end
   end
 
-  def update_judging_status(conn, %{
-        "challenge_id" => challenge_id,
-        "id" => id,
-        "judging_status" => judging_status
-      }) do
+  def update_judging_status(conn, %{"id" => id, "judging_status" => judging_status}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, challenge} <- Challenges.get(challenge_id),
+    with {:ok, solution} <- Solutions.get(id),
+         {:ok, challenge} <- Challenges.get(solution.challenge_id),
          {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge),
-         {:ok, solution} <- Solutions.get(id),
-         {:ok, _solution} <- Solutions.update_judging_status(solution, judging_status),
-         {"referer", referer} <- List.keyfind(conn.req_headers, "referer", 0) do
+         {:ok, solution} <- Solutions.update_judging_status(solution, judging_status) do
       conn
-      |> redirect(external: referer)
+      |> put_resp_content_type("application/json")
+      |> send_resp(
+        200,
+        Jason.encode!(Web.PhaseView.get_judging_status_button_values(conn, solution))
+      )
     else
       {:error, :not_permitted} ->
-        conn
-        |> assign(:user, user)
-        |> put_flash(:error, "You do not have permissions on this challenge")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
+        send_resp(conn, 403, "")
 
       _ ->
-        conn
-        |> assign(:user, user)
-        |> put_flash(:error, "Something went wrong")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
+        send_resp(conn, 400, "")
     end
   end
 

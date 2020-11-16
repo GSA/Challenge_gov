@@ -473,19 +473,21 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.challenge_solution_path(
+          Routes.solution_path(
             conn,
             :update_judging_status,
-            challenge.id,
             solution.id,
             "select"
           )
         )
 
-      assert redirected_to(conn) === referer
-
       {:ok, updated_solution} = Solutions.get(solution.id)
       assert updated_solution.judging_status === "selected"
+
+      assert response(conn, 200) ===
+               Jason.encode!(
+                 Web.PhaseView.get_judging_status_button_values(conn, updated_solution)
+               )
     end
 
     test "success: unselecting for judging", %{conn: conn} do
@@ -505,19 +507,21 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.challenge_solution_path(
+          Routes.solution_path(
             conn,
             :update_judging_status,
-            challenge.id,
             solution.id,
             "unselect"
           )
         )
 
-      assert redirected_to(conn) === referer
-
       {:ok, updated_solution} = Solutions.get(solution.id)
       assert updated_solution.judging_status === "not_selected"
+
+      assert response(conn, 200) ===
+               Jason.encode!(
+                 Web.PhaseView.get_judging_status_button_values(conn, updated_solution)
+               )
     end
 
     test "failure: invalid status", %{conn: conn} do
@@ -536,17 +540,15 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.challenge_solution_path(
+          Routes.solution_path(
             conn,
             :update_judging_status,
-            challenge.id,
             solution.id,
             "invalid"
           )
         )
 
-      assert get_flash(conn, :error) === "Something went wrong"
-      assert redirected_to(conn) === Routes.dashboard_path(conn, :index)
+      assert response(conn, 400) === ""
 
       {:ok, updated_solution} = Solutions.get(solution.id)
       assert updated_solution.judging_status === "not_selected"
@@ -568,10 +570,9 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.challenge_solution_path(
+          Routes.solution_path(
             conn,
             :update_judging_status,
-            challenge.id,
             solution.id,
             "select"
           )
@@ -610,17 +611,15 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.challenge_solution_path(
+          Routes.solution_path(
             conn,
             :update_judging_status,
-            challenge.id,
             solution.id,
             "select"
           )
         )
 
-      assert get_flash(conn, :error) === "You do not have permissions on this challenge"
-      assert redirected_to(conn) === Routes.dashboard_path(conn, :index)
+      assert response(conn, 403) === ""
 
       {:ok, updated_solution} = Solutions.get(solution.id)
       assert updated_solution.judging_status === "not_selected"

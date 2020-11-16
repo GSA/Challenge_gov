@@ -11,6 +11,8 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 
     <title><%= page_title(@conn) %></title>
+
+    <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
   </head>
 
   <body class="hold-transition sidebar-collapse sidebar-mini">

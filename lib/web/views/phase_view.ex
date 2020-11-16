@@ -75,35 +75,27 @@ defmodule Web.PhaseView do
     end
   end
 
-  def render_select_for_judging_button(conn, challenge, solution) do
-    {text, status_to_set} =
-      case solution.judging_status do
-        "selected" ->
-          {
-            content_tag(:div, "Selected", class: "btn btn-primary btn-xs"),
-            "unselect"
-          }
+  def render_select_for_judging_button(conn, solution) do
+    %{text: text, route: route, class: class} = get_judging_status_button_values(conn, solution)
 
-        "not_selected" ->
-          {
-            content_tag(:div, "Add", class: "btn btn-secondary btn-xs"),
-            "select"
-          }
+    link(text, to: route, class: class)
+  end
 
-        _ ->
-          {"Error", "error"}
-      end
+  def get_judging_status_button_values(conn, solution) do
+    case solution.judging_status do
+      "selected" ->
+        %{
+          text: "Selected",
+          route: Routes.solution_path(conn, :update_judging_status, solution.id, "unselect"),
+          class: "btn btn-secondary btn-xs js-select-for-judging"
+        }
 
-    link(text,
-      to:
-        Routes.challenge_solution_path(
-          conn,
-          :update_judging_status,
-          challenge.id,
-          solution.id,
-          status_to_set
-        ),
-      method: :put
-    )
+      "not_selected" ->
+        %{
+          text: "Add",
+          route: Routes.solution_path(conn, :update_judging_status, solution.id, "select"),
+          class: "btn btn-primary btn-xs js-select-for-judging"
+        }
+    end
   end
 end
