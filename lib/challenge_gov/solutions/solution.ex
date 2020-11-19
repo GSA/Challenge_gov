@@ -133,20 +133,12 @@ defmodule ChallengeGov.Solutions.Solution do
     |> validate_inclusion(:status, status_ids())
   end
 
-  def select_for_judging_changeset(struct) do
+  def judging_status_changeset(struct, judging_status) do
     struct
     |> change()
-    |> put_change(:judging_status, "selected")
+    |> put_change(:judging_status, judging_status)
     |> validate_required_fields
-    |> validate_inclusion(:status, judging_statuses())
-  end
-
-  def unselect_for_judging_changeset(struct) do
-    struct
-    |> change()
-    |> put_change(:judging_status, "not_selected")
-    |> validate_required_fields
-    |> validate_inclusion(:status, judging_statuses())
+    |> validate_inclusion(:judging_status, judging_statuses())
   end
 
   def delete_changeset(struct) do

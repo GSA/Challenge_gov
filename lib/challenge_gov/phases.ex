@@ -5,6 +5,7 @@ defmodule ChallengeGov.Phases do
 
   alias ChallengeGov.Repo
   alias ChallengeGov.Challenges.Phase
+  alias ChallengeGov.Solutions
   alias Stein.Filter
 
   import Ecto.Query
@@ -58,9 +59,10 @@ defmodule ChallengeGov.Phases do
 
   def is_future?(_phase), do: false
 
-  def solution_count(phase) do
+  def solution_count(phase, filter \\ %{}) do
     phase
     |> Ecto.assoc(:solutions)
+    |> Filter.filter(filter, Solutions)
     |> select([s], count(s))
     |> Repo.one()
   end

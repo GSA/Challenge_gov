@@ -6,7 +6,7 @@
       <td class="js-local-datetime"><%= solution.updated_at %></td>
       <td>last_messaged_placeholder</td>
       <td>topic_placeholder</td>
-      <td><%= render_select_for_judging_button(@conn, solution) %></td>
+      <td><%= render_select_for_judging_button(@conn, solution, @filter) %></td>
       <td>
         <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
           <div class="btn-group btn-group-sm ml-2" role="group">

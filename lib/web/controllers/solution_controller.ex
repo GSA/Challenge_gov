@@ -283,18 +283,27 @@ defmodule Web.SolutionController do
     end
   end
 
-  def update_judging_status(conn, %{"id" => id, "judging_status" => judging_status}) do
+  def update_judging_status(conn, params = %{"id" => id, "judging_status" => judging_status}) do
     %{current_user: user} = conn.assigns
+
+    filter = Map.get(params, "filter", %{})
 
     with {:ok, solution} <- Solutions.get(id),
          {:ok, challenge} <- Challenges.get(solution.challenge_id),
          {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge),
-         {:ok, solution} <- Solutions.update_judging_status(solution, judging_status) do
+         {:ok, updated_solution} <- Solutions.update_judging_status(solution, judging_status) do
       conn
       |> put_resp_content_type("application/json")
       |> send_resp(
         200,
-        Jason.encode!(Web.PhaseView.get_judging_status_button_values(conn, solution))
+        Jason.encode!(
+          Web.PhaseView.get_judging_status_button_values(
+            conn,
+            updated_solution,
+            solution.judging_status,
+            filter
+          )
+        )
       )
     else
       {:error, :not_permitted} ->

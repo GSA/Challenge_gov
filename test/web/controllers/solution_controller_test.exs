@@ -477,7 +477,7 @@ defmodule Web.SolutionControllerTest do
             conn,
             :update_judging_status,
             solution.id,
-            "select"
+            "selected"
           )
         )
 
@@ -486,7 +486,12 @@ defmodule Web.SolutionControllerTest do
 
       assert response(conn, 200) ===
                Jason.encode!(
-                 Web.PhaseView.get_judging_status_button_values(conn, updated_solution)
+                 Web.PhaseView.get_judging_status_button_values(
+                   conn,
+                   updated_solution,
+                   solution.judging_status,
+                   %{}
+                 )
                )
     end
 
@@ -501,7 +506,7 @@ defmodule Web.SolutionControllerTest do
       conn = Plug.Conn.update_req_header(conn, "referer", referer, &(&1 <> "; charset=utf-8"))
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
-      {:ok, solution} = Solutions.update_judging_status(solution, "select")
+      {:ok, solution} = Solutions.update_judging_status(solution, "selected")
       assert solution.judging_status === "selected"
 
       conn =
@@ -511,7 +516,7 @@ defmodule Web.SolutionControllerTest do
             conn,
             :update_judging_status,
             solution.id,
-            "unselect"
+            "not_selected"
           )
         )
 
@@ -520,7 +525,12 @@ defmodule Web.SolutionControllerTest do
 
       assert response(conn, 200) ===
                Jason.encode!(
-                 Web.PhaseView.get_judging_status_button_values(conn, updated_solution)
+                 Web.PhaseView.get_judging_status_button_values(
+                   conn,
+                   updated_solution,
+                   solution.judging_status,
+                   %{}
+                 )
                )
     end
 
@@ -574,7 +584,7 @@ defmodule Web.SolutionControllerTest do
             conn,
             :update_judging_status,
             solution.id,
-            "select"
+            "selected"
           )
         )
 
@@ -615,7 +625,7 @@ defmodule Web.SolutionControllerTest do
             conn,
             :update_judging_status,
             solution.id,
-            "select"
+            "selected"
           )
         )
 

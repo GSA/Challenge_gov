@@ -58,6 +58,15 @@ defmodule Web.PhaseController do
       %{page: solutions, pagination: pagination} =
         Solutions.all(filter: solutions_filter, page: page, per: per, sort: sort)
 
+      # REFACTOR: Figure out a better solution here for paginating past the page count
+      # after having moved some to a different judging status filter
+      %{page: solutions, pagination: pagination} =
+        if pagination.total !== 0 and pagination.current > pagination.total do
+          Solutions.all(filter: solutions_filter, page: pagination.total, per: per, sort: sort)
+        else
+          %{page: solutions, pagination: pagination}
+        end
+
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
