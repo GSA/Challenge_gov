@@ -746,6 +746,10 @@ defmodule ChallengeGov.Challenges do
     challenge.end_date
   end
 
+  # BOOKMARK: Phase helper functions
+  @doc """
+  Returns currently active phase
+  """
   def current_phase(%{phases: phases}) when length(phases) > 0 do
     phases
     |> Enum.find(fn phase ->
@@ -761,6 +765,24 @@ defmodule ChallengeGov.Challenges do
   end
 
   def current_phase(_challenge), do: {:error, :no_current_phase}
+
+  @doc """
+  Returns phase of a challenge after the phase passed in
+  """
+  def next_phase(%{phases: phases}, current_phase) do
+    phase_index =
+      Enum.find_index(phases, fn phase ->
+        phase.id == current_phase.id
+      end)
+
+    case Enum.at(phases, phase_index + 1) do
+      nil ->
+        {:error, :not_found}
+
+      phase ->
+        {:ok, phase}
+    end
+  end
 
   @doc """
   Create a new status event when the status changes

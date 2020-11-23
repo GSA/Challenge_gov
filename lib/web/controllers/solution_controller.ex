@@ -293,18 +293,10 @@ defmodule Web.SolutionController do
          {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge),
          {:ok, updated_solution} <- Solutions.update_judging_status(solution, judging_status) do
       conn
-      |> put_resp_content_type("application/json")
-      |> send_resp(
-        200,
-        Jason.encode!(
-          Web.PhaseView.get_judging_status_button_values(
-            conn,
-            updated_solution,
-            solution.judging_status,
-            filter
-          )
-        )
-      )
+      |> assign(:solution, solution)
+      |> assign(:updated_solution, updated_solution)
+      |> assign(:filter, filter)
+      |> render("judging_status.json")
     else
       {:error, :not_permitted} ->
         send_resp(conn, 403, "")

@@ -6,6 +6,7 @@ defmodule Web.SolutionView do
   alias Web.FormView
   alias Web.SharedView
   alias Web.DocumentView
+  alias Web.PhaseView
 
   def name_link(conn, solution) do
     link(solution.title || "Solution #{solution.id}",
@@ -79,6 +80,20 @@ defmodule Web.SolutionView do
       value: "draft",
       class: "btn btn-outline-secondary mr-2 float-right",
       formnovalidate: true
+    )
+  end
+
+  def render("judging_status.json", %{
+        conn: conn,
+        solution: solution,
+        updated_solution: updated_solution,
+        filter: filter
+      }) do
+    PhaseView.get_judging_status_button_values(
+      conn,
+      updated_solution,
+      solution.judging_status,
+      filter
     )
   end
 end

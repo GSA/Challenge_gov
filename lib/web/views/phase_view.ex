@@ -1,6 +1,7 @@
 defmodule Web.PhaseView do
   use Web, :view
 
+  alias ChallengeGov.Challenges
   alias ChallengeGov.Phases
   alias Web.SharedView
 
@@ -76,138 +77,152 @@ defmodule Web.PhaseView do
   end
 
   # TODO: Phase will be used here to determine wording on the final phase of winners/awardees
-  def render_judging_status_column_header(_phase, %{"judging_status" => "selected"}),
-    do: "Select for next phase"
+  def render_judging_status_column_header(challenge, phase, %{"judging_status" => "selected"}) do
+    case Challenges.next_phase(challenge, phase) do
+      {:ok, _phase} ->
+        "Select for next phase"
 
-  def render_judging_status_column_header(_phase, %{"judging_status" => "winner"}),
-    do: "Selected for next phase"
+      {:error, :not_found} ->
+        "Select as winner"
+    end
+  end
 
-  def render_judging_status_column_header(_phase, %{"judging_status" => "all"}),
+  def render_judging_status_column_header(challenge, phase, %{"judging_status" => "winner"}) do
+    case Challenges.next_phase(challenge, phase) do
+      {:ok, _phase} ->
+        "Selected for next phase"
+
+      {:error, :not_found} ->
+        "Selected as winner"
+    end
+  end
+
+  def render_judging_status_column_header(_challenge, _phase, %{"judging_status" => "all"}),
     do: "Selected for judging"
 
-  def render_judging_status_column_header(_phase, _filter), do: "Selected for judging"
+  def render_judging_status_column_header(_challenge, _phase, _filter), do: "Selected for judging"
 
-  def render_select_for_judging_button(conn, solution, filter) do
+  def render_select_for_judging_button(conn, phase, solution, filter) do
     %{text: text, route: route, class: class} =
       get_judging_status_button_values(conn, solution, nil, filter)
 
-    link(text, to: route, class: class, role: "button", disabled: false)
+    link(text, to: route, class: class, role: "button", disabled: judging_button_disabled(phase))
   end
 
-  def get_judging_status_button_values(
-        conn,
-        solution = %{judging_status: "selected"},
-        prev_status,
-        filter = %{"judging_status" => "winner"}
-      ) do
-    %{
-      text: "Undo",
-      status: solution.judging_status,
-      prev_status: prev_status,
-      route:
-        Routes.solution_path(conn, :update_judging_status, solution.id, "winner", filter: filter),
-      class: "btn btn-primary btn-xs js-select-for-judging"
-    }
+  defp judging_button_disabled(phase) do
+    !Phases.is_past?(phase)
   end
 
-  def get_judging_status_button_values(
-        conn,
-        solution = %{judging_status: "winner"},
-        prev_status,
-        filter = %{"judging_status" => "winner"}
-      ) do
-    %{
-      text: "Move back to judging",
-      status: solution.judging_status,
-      prev_status: prev_status,
-      route:
-        Routes.solution_path(conn, :update_judging_status, solution.id, "selected", filter: filter),
-      class: "btn btn-secondary btn-xs js-select-for-judging"
-    }
+  defp judging_status_selected_winner(map, conn, solution, filter) do
+    Map.merge(
+      map,
+      %{
+        text: "Undo",
+        route: get_judging_status_route(conn, solution, "winner", filter),
+        class: map.class <> "btn-primary"
+      }
+    )
   end
 
-  def get_judging_status_button_values(
-        conn,
-        solution = %{judging_status: "selected"},
-        prev_status,
-        filter = %{"judging_status" => "selected"}
-      ) do
-    %{
-      text: "Add",
-      status: solution.judging_status,
-      prev_status: prev_status,
-      route:
-        Routes.solution_path(conn, :update_judging_status, solution.id, "winner", filter: filter),
-      class: "btn btn-primary btn-xs js-select-for-judging"
-    }
+  defp judging_status_winner_winner(map, conn, solution, filter) do
+    Map.merge(
+      map,
+      %{
+        text: "Move back to judging",
+        route: get_judging_status_route(conn, solution, "selected", filter),
+        class: map.class <> "btn-secondary"
+      }
+    )
   end
 
-  def get_judging_status_button_values(
-        conn,
-        solution = %{judging_status: "winner"},
-        prev_status,
-        filter = %{"judging_status" => "selected"}
-      ) do
-    %{
-      text: "Selected",
-      status: solution.judging_status,
-      prev_status: prev_status,
-      route:
-        Routes.solution_path(conn, :update_judging_status, solution.id, "selected", filter: filter),
-      class: "btn btn-secondary btn-xs js-select-for-judging"
-    }
+  defp judging_status_selected_selected(map, conn, solution, filter) do
+    Map.merge(
+      map,
+      %{
+        text: "Add",
+        route: get_judging_status_route(conn, solution, "winner", filter),
+        class: map.class <> "btn-primary"
+      }
+    )
   end
 
-  def get_judging_status_button_values(
-        conn,
-        solution = %{judging_status: "not_selected"},
-        prev_status,
-        filter
-      ) do
-    %{
-      text: "Add",
-      status: solution.judging_status,
-      prev_status: prev_status,
-      route:
-        Routes.solution_path(conn, :update_judging_status, solution.id, "selected", filter: filter),
-      class: "btn btn-primary btn-xs js-select-for-judging"
-    }
+  defp judging_status_winner_selected(map, conn, solution, filter) do
+    Map.merge(
+      map,
+      %{
+        text: "Selected",
+        route: get_judging_status_route(conn, solution, "selected", filter),
+        class: map.class <> "btn-secondary"
+      }
+    )
   end
 
-  def get_judging_status_button_values(
-        conn,
-        solution = %{judging_status: "selected"},
-        prev_status,
-        filter
-      ) do
-    %{
-      text: "Selected",
-      status: solution.judging_status,
-      prev_status: prev_status,
-      route:
-        Routes.solution_path(conn, :update_judging_status, solution.id, "not_selected",
-          filter: filter
-        ),
-      class: "btn btn-secondary btn-xs js-select-for-judging"
-    }
+  defp judging_status_not_selected_any(map, conn, solution, filter) do
+    Map.merge(
+      map,
+      %{
+        text: "Add",
+        route: get_judging_status_route(conn, solution, "selected", filter),
+        class: map.class <> "btn-primary"
+      }
+    )
   end
 
-  def get_judging_status_button_values(
-        conn,
-        solution = %{judging_status: "winner"},
-        prev_status,
-        filter
-      ) do
-    %{
-      text: "Selected (Awardee)",
+  defp judging_status_selected_any(map, conn, solution, filter) do
+    Map.merge(
+      map,
+      %{
+        text: "Selected",
+        route: get_judging_status_route(conn, solution, "not_selected", filter),
+        class: map.class <> "btn-secondary"
+      }
+    )
+  end
+
+  defp judging_status_winner_any(map, conn, solution, filter) do
+    Map.merge(
+      map,
+      %{
+        text: "Selected (Awardee)",
+        route: get_judging_status_route(conn, solution, "not_selected", filter),
+        class: map.class <> "btn-secondary"
+      }
+    )
+  end
+
+  defp get_judging_status_route(conn, solution, judging_status, filter) do
+    Routes.solution_path(conn, :update_judging_status, solution.id, judging_status, filter: filter)
+  end
+
+  def get_judging_status_button_values(conn, solution, prev_status, filter) do
+    map = %{
       status: solution.judging_status,
       prev_status: prev_status,
-      route:
-        Routes.solution_path(conn, :update_judging_status, solution.id, "not_selected",
-          filter: filter
-        ),
-      class: "btn btn-secondary btn-xs js-select-for-judging"
+      class: "btn btn-xs js-select-for-judging "
     }
+
+    case {solution.judging_status, filter["judging_status"]} do
+      {"selected", "winner"} ->
+        judging_status_selected_winner(map, conn, solution, filter)
+
+      {"winner", "winner"} ->
+        judging_status_winner_winner(map, conn, solution, filter)
+
+      {"selected", "selected"} ->
+        judging_status_selected_selected(map, conn, solution, filter)
+
+      {"winner", "selected"} ->
+        judging_status_winner_selected(map, conn, solution, filter)
+
+      {"not_selected", _} ->
+        judging_status_not_selected_any(map, conn, solution, filter)
+
+      {"selected", _} ->
+        judging_status_selected_any(map, conn, solution, filter)
+
+      {"winner", _} ->
+        judging_status_winner_any(map, conn, solution, filter)
+    end
   end
 
   # Submission filter tab functions

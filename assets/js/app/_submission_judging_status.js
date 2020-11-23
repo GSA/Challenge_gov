@@ -8,7 +8,6 @@ $(() => {
   $(".js-select-for-judging").on("click", (e) => {
     e.preventDefault()
     const buttonDisabled = $(e.target).attr("disabled")
-    console.log(buttonDisabled)
 
     if (!buttonDisabled) {
       $.ajax({
