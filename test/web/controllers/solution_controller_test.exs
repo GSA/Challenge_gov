@@ -488,6 +488,8 @@ defmodule Web.SolutionControllerTest do
                Jason.encode!(
                  Web.PhaseView.get_judging_status_button_values(
                    conn,
+                   challenge,
+                   phase,
                    updated_solution,
                    solution.judging_status,
                    %{}
@@ -527,6 +529,8 @@ defmodule Web.SolutionControllerTest do
                Jason.encode!(
                  Web.PhaseView.get_judging_status_button_values(
                    conn,
+                   challenge,
+                   phase,
                    updated_solution,
                    solution.judging_status,
                    %{}

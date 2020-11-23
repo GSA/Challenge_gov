@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <%= render_submission_filter_tabs(@conn, @phase, @filter) %>
+        <%= render_submission_filter_tabs(@conn, @challenge, @phase, @filter) %>
         <div class="card">
           <div class="table-responsive">
             <table class="table table-striped">

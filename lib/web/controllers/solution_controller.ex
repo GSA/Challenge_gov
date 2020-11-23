@@ -3,6 +3,7 @@ defmodule Web.SolutionController do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Phases
   alias ChallengeGov.Solutions
   alias ChallengeGov.Security
 
@@ -290,9 +291,12 @@ defmodule Web.SolutionController do
 
     with {:ok, solution} <- Solutions.get(id),
          {:ok, challenge} <- Challenges.get(solution.challenge_id),
+         {:ok, phase} <- Phases.get(solution.phase_id),
          {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge),
          {:ok, updated_solution} <- Solutions.update_judging_status(solution, judging_status) do
       conn
+      |> assign(:challenge, challenge)
+      |> assign(:phase, phase)
       |> assign(:solution, solution)
       |> assign(:updated_solution, updated_solution)
       |> assign(:filter, filter)

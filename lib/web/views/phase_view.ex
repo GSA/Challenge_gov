@@ -4,6 +4,7 @@ defmodule Web.PhaseView do
   alias ChallengeGov.Challenges
   alias ChallengeGov.Phases
   alias Web.SharedView
+  alias Web.SolutionView
 
   def status(phase) do
     cond do
@@ -76,24 +77,19 @@ defmodule Web.PhaseView do
     end
   end
 
-  # TODO: Phase will be used here to determine wording on the final phase of winners/awardees
   def render_judging_status_column_header(challenge, phase, %{"judging_status" => "selected"}) do
-    case Challenges.next_phase(challenge, phase) do
-      {:ok, _phase} ->
-        "Select for next phase"
-
-      {:error, :not_found} ->
-        "Select as winner"
+    if next_phase_closed?(challenge, phase) do
+      "Select for next phase"
+    else
+      "Select as awardee"
     end
   end
 
   def render_judging_status_column_header(challenge, phase, %{"judging_status" => "winner"}) do
-    case Challenges.next_phase(challenge, phase) do
-      {:ok, _phase} ->
-        "Selected for next phase"
-
-      {:error, :not_found} ->
-        "Selected as winner"
+    if next_phase_closed?(challenge, phase) do
+      "Selected for next phase"
+    else
+      "Selected as awardee"
     end
   end
 
@@ -102,9 +98,18 @@ defmodule Web.PhaseView do
 
   def render_judging_status_column_header(_challenge, _phase, _filter), do: "Selected for judging"
 
-  def render_select_for_judging_button(conn, phase, solution, filter) do
+  def next_phase_closed?(challenge, phase) do
+    with {:ok, phase} <- Challenges.next_phase(challenge, phase) do
+      !phase.open_to_submissions
+    else
+      {:error, :not_found} ->
+        false
+    end
+  end
+
+  def render_select_for_judging_button(conn, challenge, phase, solution, filter) do
     %{text: text, route: route, class: class} =
-      get_judging_status_button_values(conn, solution, nil, filter)
+      get_judging_status_button_values(conn, challenge, phase, solution, nil, filter)
 
     disabled = judging_button_disabled(phase)
 
@@ -189,11 +194,16 @@ defmodule Web.PhaseView do
     )
   end
 
-  defp judging_status_winner_any(map, conn, solution, filter) do
+  defp judging_status_winner_any(map, conn, challenge, phase, solution, filter) do
+    text =
+      if next_phase_closed?(challenge, phase),
+        do: "Selected (next phase)",
+        else: "Selected (awardee)"
+
     Map.merge(
       map,
       %{
-        text: "Selected (Awardee)",
+        text: text,
         route: get_judging_status_route(conn, solution, "not_selected", filter),
         class: map.class <> "btn-secondary"
       }
@@ -204,7 +214,7 @@ defmodule Web.PhaseView do
     Routes.solution_path(conn, :update_judging_status, solution.id, judging_status, filter: filter)
   end
 
-  def get_judging_status_button_values(conn, solution, prev_status, filter) do
+  def get_judging_status_button_values(conn, challenge, phase, solution, prev_status, filter) do
     map = %{
       status: solution.judging_status,
       prev_status: prev_status,
@@ -231,27 +241,27 @@ defmodule Web.PhaseView do
         judging_status_selected_any(map, conn, solution, filter)
 
       {"winner", _} ->
-        judging_status_winner_any(map, conn, solution, filter)
+        judging_status_winner_any(map, conn, challenge, phase, solution, filter)
     end
   end
 
   # Submission filter tab functions
-  def render_submission_filter_tabs(conn, phase, filter) do
+  def render_submission_filter_tabs(conn, challenge, phase, filter) do
     content_tag(:ul, class: "submission-filter nav nav-tabs") do
       [
-        render_submission_filter_tab(conn, phase, filter, "all"),
-        render_submission_filter_tab(conn, phase, filter, "selected"),
-        render_submission_filter_tab(conn, phase, filter, "winner")
+        render_submission_filter_tab(conn, challenge, phase, filter, "all"),
+        render_submission_filter_tab(conn, challenge, phase, filter, "selected"),
+        render_submission_filter_tab(conn, challenge, phase, filter, "winner")
       ]
     end
   end
 
-  def render_submission_filter_tab(conn, phase, filter, filter_key) do
+  def render_submission_filter_tab(conn, challenge, phase, filter, filter_key) do
     judging_status_filter_value = Map.get(filter, "judging_status", "all")
     filter = Map.put(filter, "judging_status", filter_key)
 
     content_tag(:li, class: "nav-item") do
-      link(filter_tab_content(phase, filter, filter_key),
+      link(filter_tab_content(challenge, phase, filter, filter_key),
         to:
           Routes.challenge_phase_path(conn, :show, phase.challenge.id, phase.id, filter: filter),
         class: filter_tab_class(judging_status_filter_value, filter_key)
@@ -259,26 +269,30 @@ defmodule Web.PhaseView do
     end
   end
 
-  def filter_tab_content(phase, filter, filter_key) do
+  def filter_tab_content(challenge, phase, filter, filter_key) do
     content_tag(:div, class: "submission-filter__tab submission-filter__tab--#{filter_key}") do
       [
-        filter_tab_text(phase, filter_key),
+        filter_tab_text(challenge, phase, filter_key),
         filter_tab_count(phase, filter)
       ]
     end
   end
 
   # TODO: Use phase here to determine alternate filter tab text in some cases for winners/awardees
-  def filter_tab_text(_phase, "all"),
+  def filter_tab_text(_challenge, _phase, "all"),
     do: content_tag(:span, "All submissions", class: "submission-filter__text mr-1")
 
-  def filter_tab_text(_phase, "selected"),
+  def filter_tab_text(_challenge, _phase, "selected"),
     do: content_tag(:span, "Selected for judging", class: "submission-filter__text mr-1")
 
-  def filter_tab_text(_phase, "winner"),
-    do: content_tag(:span, "Winners", class: "submission-filter__text mr-1")
+  def filter_tab_text(challenge, phase, "winner") do
+    text =
+      if next_phase_closed?(challenge, phase), do: "Selected for next phase", else: "Awardees"
 
-  def filter_tab_text(_phase, _filter_key),
+    content_tag(:span, text, class: "submission-filter__text mr-1")
+  end
+
+  def filter_tab_text(_challenge, _phase, _filter_key),
     do: content_tag(:span, "Undefined", class: "submission-filter__text mr-1")
 
   def filter_tab_count(phase, filter) do
