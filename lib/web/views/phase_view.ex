@@ -106,12 +106,22 @@ defmodule Web.PhaseView do
     %{text: text, route: route, class: class} =
       get_judging_status_button_values(conn, solution, nil, filter)
 
-    link(text, to: route, class: class, role: "button", disabled: judging_button_disabled(phase))
+    disabled = judging_button_disabled(phase)
+
+    link(text,
+      to: route,
+      class: maybe_judging_button_disabled_class(disabled, class),
+      role: "button",
+      disabled: disabled
+    )
   end
 
   defp judging_button_disabled(phase) do
     !Phases.is_past?(phase)
   end
+
+  defp maybe_judging_button_disabled_class(true, class), do: class <> " disabled "
+  defp maybe_judging_button_disabled_class(false, class), do: class
 
   defp judging_status_selected_winner(map, conn, solution, filter) do
     Map.merge(
