@@ -689,6 +689,13 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  def allowed_to_edit?(user, challenge) do
+    case allowed_to_edit(user, challenge) do
+      {:ok, _challenge} -> true
+      {:error, :not_permitted} -> false
+    end
+  end
+
   @doc """
   Checks if a user can send a bulletin
   """

@@ -2,7 +2,7 @@
   <%= Enum.map @solutions, fn (solution) -> %>
     <tr>
       <td><%= solution.id %></td>
-      <td><%= SolutionView.name_link(@conn, solution) %></td>
+      <td><%= SolutionView.name_link(@conn, solution, page: @page, filter: @filter, sort: @sort) %></td>
       <td class="js-local-datetime"><%= solution.updated_at %></td>
       <td>last_messaged_placeholder</td>
       <td>topic_placeholder</td>

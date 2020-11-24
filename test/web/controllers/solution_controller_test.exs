@@ -94,6 +94,127 @@ defmodule Web.SolutionControllerTest do
       assert fetched_solution.id === solution.id
     end
 
+    test "success: viewing a solution of single phase challenge as challenge_owner", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: challenge_owner} = conn.assigns
+
+      submission_owner =
+        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
+          user_id: challenge_owner.id
+        })
+
+      solution =
+        SolutionHelpers.create_submitted_solution(
+          %{},
+          submission_owner,
+          challenge
+        )
+
+      conn = get(conn, Routes.solution_path(conn, :show, solution.id))
+      %{solution: fetched_solution} = conn.assigns
+
+      assert fetched_solution.id === solution.id
+      assert html_response(conn, 200) =~ "Back to submissions"
+      assert html_response(conn, 200) =~ "Solution ID:"
+
+      assert html_response(conn, 200) =~
+               "Challenge <i>#{challenge.title}</i> submission #{solution.id} details"
+    end
+
+    test "success: viewing a solution of multi phase challenge as challenge_owner", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: challenge_owner} = conn.assigns
+
+      submission_owner =
+        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+
+      challenge =
+        ChallengeHelpers.create_multi_phase_challenge(challenge_owner, %{
+          user_id: challenge_owner.id
+        })
+
+      phase = Enum.at(challenge.phases, 0)
+
+      solution =
+        SolutionHelpers.create_submitted_solution(
+          %{},
+          submission_owner,
+          challenge
+        )
+
+      conn = get(conn, Routes.solution_path(conn, :show, solution.id))
+      %{solution: fetched_solution} = conn.assigns
+
+      assert fetched_solution.id === solution.id
+      assert html_response(conn, 200) =~ "Back to submissions"
+      assert html_response(conn, 200) =~ "Solution ID:"
+
+      assert html_response(conn, 200) =~
+               "Phase <i>#{phase.title}</i> for challenge <i>#{challenge.title}</i> submission #{
+                 solution.id
+               } details"
+    end
+
+    test "success: viewing a solution of single phase challenge as admin", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: admin} = conn.assigns
+
+      submission_owner =
+        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(admin, %{user_id: admin.id})
+
+      solution =
+        SolutionHelpers.create_submitted_solution(
+          %{},
+          submission_owner,
+          challenge
+        )
+
+      conn = get(conn, Routes.solution_path(conn, :show, solution.id))
+      %{solution: fetched_solution} = conn.assigns
+
+      assert fetched_solution.id === solution.id
+      assert html_response(conn, 200) =~ "Back to submissions"
+      assert html_response(conn, 200) =~ "Solution ID:"
+
+      assert html_response(conn, 200) =~
+               "Challenge <i>#{challenge.title}</i> submission #{solution.id} details"
+    end
+
+    test "success: viewing a solution of multi phase challenge as admin", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: admin} = conn.assigns
+
+      submission_owner =
+        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+
+      challenge = ChallengeHelpers.create_multi_phase_challenge(admin, %{user_id: admin.id})
+      phase = Enum.at(challenge.phases, 0)
+
+      solution =
+        SolutionHelpers.create_submitted_solution(
+          %{},
+          submission_owner,
+          challenge
+        )
+
+      conn = get(conn, Routes.solution_path(conn, :show, solution.id))
+      %{solution: fetched_solution} = conn.assigns
+
+      assert fetched_solution.id === solution.id
+      assert html_response(conn, 200) =~ "Back to submissions"
+      assert html_response(conn, 200) =~ "Solution ID:"
+
+      assert html_response(conn, 200) =~
+               "Phase <i>#{phase.title}</i> for challenge <i>#{challenge.title}</i> submission #{
+                 solution.id
+               } details"
+    end
+
     test "not found viewing a deleted solution", %{conn: conn} do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns

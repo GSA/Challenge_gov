@@ -17,7 +17,7 @@ defmodule Web.SolutionController do
     [:admin, :super_admin, :challenge_owner] when action in [:update_judging_status]
   )
 
-  plug Web.Plugs.FetchPage when action in [:index]
+  plug Web.Plugs.FetchPage when action in [:index, :show]
 
   action_fallback(Web.FallbackController)
 
@@ -78,13 +78,23 @@ defmodule Web.SolutionController do
     |> render("index.html")
   end
 
-  def show(conn, %{"id" => id}) do
-    %{current_user: user} = conn.assigns
+  def show(conn, params = %{"id" => id}) do
+    %{current_user: user, page: page} = conn.assigns
 
-    with {:ok, solution} <- Solutions.get(id) do
+    filter = Map.get(params, "filter", %{})
+    sort = Map.get(params, "sort", %{})
+
+    with {:ok, solution} <- Solutions.get(id),
+         {:ok, phase} <- Phases.get(solution.phase_id),
+         {:ok, challenge} <- Challenges.get(solution.challenge_id) do
       conn
       |> assign(:user, user)
+      |> assign(:challenge, challenge)
+      |> assign(:phase, phase)
       |> assign(:solution, solution)
+      |> assign(:page, page)
+      |> assign(:filter, filter)
+      |> assign(:sort, sort)
       |> assign(:action, action_name(conn))
       |> assign(:navbar_text, solution.title || "Solution #{solution.id}")
       |> render("show.html")
