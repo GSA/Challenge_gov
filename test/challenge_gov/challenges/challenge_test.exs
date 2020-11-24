@@ -118,6 +118,25 @@ defmodule ChallengeGov.ChallengeTest do
     end
   end
 
+  describe "find next phase" do
+    test "success: multi phase challenge" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_open_multi_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
+      next_phase = Enum.at(challenge.phases, 1)
+
+      {:ok, ^next_phase} = Challenges.next_phase(challenge, phase)
+    end
+
+    test "failure: single phase challenge" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
+
+      {:error, :not_found} = Challenges.next_phase(challenge, phase)
+    end
+  end
+
   describe "create announcement" do
     test "successfully" do
       user = AccountHelpers.create_user()

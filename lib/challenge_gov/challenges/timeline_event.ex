@@ -13,7 +13,7 @@ defmodule ChallengeGov.Challenges.TimelineEvent do
     field(:title, :string)
     field(:date, :utc_datetime)
 
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   def changeset(struct, params) do

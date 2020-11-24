@@ -3,6 +3,7 @@ defmodule Web.SolutionController do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Phases
   alias ChallengeGov.Solutions
   alias ChallengeGov.Security
 
@@ -16,7 +17,7 @@ defmodule Web.SolutionController do
     [:admin, :super_admin, :challenge_owner] when action in [:update_judging_status]
   )
 
-  plug Web.Plugs.FetchPage when action in [:index]
+  plug Web.Plugs.FetchPage when action in [:index, :show]
 
   action_fallback(Web.FallbackController)
 
@@ -77,13 +78,23 @@ defmodule Web.SolutionController do
     |> render("index.html")
   end
 
-  def show(conn, %{"id" => id}) do
-    %{current_user: user} = conn.assigns
+  def show(conn, params = %{"id" => id}) do
+    %{current_user: user, page: page} = conn.assigns
 
-    with {:ok, solution} <- Solutions.get(id) do
+    filter = Map.get(params, "filter", %{})
+    sort = Map.get(params, "sort", %{})
+
+    with {:ok, solution} <- Solutions.get(id),
+         {:ok, phase} <- Phases.get(solution.phase_id),
+         {:ok, challenge} <- Challenges.get(solution.challenge_id) do
       conn
       |> assign(:user, user)
+      |> assign(:challenge, challenge)
+      |> assign(:phase, phase)
       |> assign(:solution, solution)
+      |> assign(:page, page)
+      |> assign(:filter, filter)
+      |> assign(:sort, sort)
       |> assign(:action, action_name(conn))
       |> assign(:navbar_text, solution.title || "Solution #{solution.id}")
       |> render("show.html")
@@ -283,32 +294,29 @@ defmodule Web.SolutionController do
     end
   end
 
-  def update_judging_status(conn, %{
-        "challenge_id" => challenge_id,
-        "id" => id,
-        "judging_status" => judging_status
-      }) do
+  def update_judging_status(conn, params = %{"id" => id, "judging_status" => judging_status}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, challenge} <- Challenges.get(challenge_id),
+    filter = Map.get(params, "filter", %{})
+
+    with {:ok, solution} <- Solutions.get(id),
+         {:ok, challenge} <- Challenges.get(solution.challenge_id),
+         {:ok, phase} <- Phases.get(solution.phase_id),
          {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge),
-         {:ok, solution} <- Solutions.get(id),
-         {:ok, _solution} <- Solutions.update_judging_status(solution, judging_status),
-         {"referer", referer} <- List.keyfind(conn.req_headers, "referer", 0) do
+         {:ok, updated_solution} <- Solutions.update_judging_status(solution, judging_status) do
       conn
-      |> redirect(external: referer)
+      |> assign(:challenge, challenge)
+      |> assign(:phase, phase)
+      |> assign(:solution, solution)
+      |> assign(:updated_solution, updated_solution)
+      |> assign(:filter, filter)
+      |> render("judging_status.json")
     else
       {:error, :not_permitted} ->
-        conn
-        |> assign(:user, user)
-        |> put_flash(:error, "You do not have permissions on this challenge")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
+        send_resp(conn, 403, "")
 
       _ ->
-        conn
-        |> assign(:user, user)
-        |> put_flash(:error, "Something went wrong")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
+        send_resp(conn, 400, "")
     end
   end
 

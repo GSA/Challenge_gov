@@ -587,7 +587,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      {:ok, updated_solution} = Solutions.update_judging_status(solution, "select")
+      {:ok, updated_solution} = Solutions.update_judging_status(solution, "selected")
 
       assert solution.judging_status === "not_selected"
       assert updated_solution.judging_status === "selected"
@@ -599,10 +599,12 @@ defmodule ChallengeGov.SolutionsTest do
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      {:ok, updated_solution} = Solutions.update_judging_status(solution, "select")
+      {:ok, updated_solution} = Solutions.update_judging_status(solution, "selected")
       assert updated_solution.judging_status === "selected"
 
-      {:ok, unselected_solution} = Solutions.update_judging_status(updated_solution, "unselect")
+      {:ok, unselected_solution} =
+        Solutions.update_judging_status(updated_solution, "not_selected")
+
       assert unselected_solution.judging_status === "not_selected"
     end
 
@@ -612,8 +614,8 @@ defmodule ChallengeGov.SolutionsTest do
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      assert {:error, :invalid_judging_status} ===
-               Solutions.update_judging_status(solution, "invalid")
+      {:error, changeset} = Solutions.update_judging_status(solution, "invalid")
+      assert changeset.errors[:judging_status]
     end
   end
 

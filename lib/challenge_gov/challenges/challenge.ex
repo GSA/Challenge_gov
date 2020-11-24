@@ -117,7 +117,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
     # Meta Timestamps
     field(:deleted_at, :utc_datetime)
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   # - Challenge owner starts the form → saves it as a draft - Draft

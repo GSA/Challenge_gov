@@ -2,14 +2,16 @@ defmodule Web.SolutionView do
   use Web, :view
 
   alias ChallengeGov.Accounts
+  alias ChallengeGov.Challenges
   alias ChallengeGov.Solutions
   alias Web.FormView
   alias Web.SharedView
   alias Web.DocumentView
+  alias Web.PhaseView
 
-  def name_link(conn, solution) do
+  def name_link(conn, solution, query_params \\ []) do
     link(solution.title || "Solution #{solution.id}",
-      to: Routes.solution_path(conn, :show, solution.id)
+      to: Routes.solution_path(conn, :show, solution.id, query_params)
     )
   end
 
@@ -79,6 +81,42 @@ defmodule Web.SolutionView do
       value: "draft",
       class: "btn btn-outline-secondary mr-2 float-right",
       formnovalidate: true
+    )
+  end
+
+  def render_solution_header_text(challenge, phase, solution) do
+    if length(challenge.phases) > 1 do
+      [
+        "Phase ",
+        content_tag(:i, phase.title),
+        " for challenge ",
+        content_tag(:i, challenge.title || challenge.id),
+        " submission #{solution.id} details"
+      ]
+    else
+      [
+        "Challenge ",
+        content_tag(:i, challenge.title || challenge.id),
+        " submission #{solution.id} details"
+      ]
+    end
+  end
+
+  def render("judging_status.json", %{
+        conn: conn,
+        challenge: challenge,
+        phase: phase,
+        solution: solution,
+        updated_solution: updated_solution,
+        filter: filter
+      }) do
+    PhaseView.get_judging_status_button_values(
+      conn,
+      challenge,
+      phase,
+      updated_solution,
+      solution.judging_status,
+      filter
     )
   end
 end

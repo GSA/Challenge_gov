@@ -28,7 +28,7 @@ defmodule ChallengeGov.SupportingDocuments.Document do
     field(:section, :string, default: "resources")
     field(:name, :string)
 
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   def create_changeset(struct, file, key) do

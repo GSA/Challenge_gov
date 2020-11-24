@@ -76,6 +76,10 @@ defmodule Web.SharedView do
     end
   end
 
+  def mailto_link(email) do
+    link(email, to: "mailto:#{email}")
+  end
+
   def readable_date(date) do
     if date do
       Timex.format!(date, "{0M}/{0D}/{YYYY}")

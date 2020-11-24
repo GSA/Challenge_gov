@@ -80,9 +80,7 @@ defmodule Web.Router do
 
     get("/certification_requested", AccessController, :index)
 
-    resources("/challenges", ChallengeController,
-      only: [:index, :show, :new, :create, :edit, :update, :delete]
-    ) do
+    resources("/challenges", ChallengeController) do
       resources("/documents", DocumentController, only: [:create])
 
       resources("/events", EventController, only: [:new, :create])
@@ -94,7 +92,6 @@ defmodule Web.Router do
       end
 
       resources("/solutions", SolutionController, only: [:index, :new, :create])
-      put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
 
       resources("/save_challenge", SavedChallengeController, only: [:new, :create])
     end
@@ -122,11 +119,12 @@ defmodule Web.Router do
     post("/challenges/:id/create_announcement", ChallengeController, :create_announcement)
     post("/challenges/:id/remove_announcement", ChallengeController, :remove_announcement)
 
-    resources("/documents", DocumentController, only: [:delete])
-    resources("/events", EventController, only: [:edit, :update, :delete])
-
     resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
     put("/solutions/:id/submit", SolutionController, :submit)
+    put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
+
+    resources("/documents", DocumentController, only: [:delete])
+    resources("/events", EventController, only: [:edit, :update, :delete])
 
     resources("/saved_challenges", SavedChallengeController, only: [:index, :delete])
 

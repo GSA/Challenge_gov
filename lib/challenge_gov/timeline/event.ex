@@ -18,7 +18,7 @@ defmodule ChallengeGov.Timeline.Event do
 
     belongs_to(:challenge, Challenge)
 
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   def changeset(struct, params) do

@@ -14,7 +14,8 @@ defmodule ChallengeGov.Challenges.Phase do
 
   schema "phases" do
     belongs_to(:challenge, Challenge)
-    has_many(:solutions, Solution)
+    has_many(:all_solutions, Solution)
+    has_many(:solutions, Solution, where: [status: "submitted"])
 
     field(:uuid, Ecto.UUID, autogenerate: true)
     field(:title, :string)
@@ -26,7 +27,7 @@ defmodule ChallengeGov.Challenges.Phase do
     field(:how_to_enter, :string)
     field(:how_to_enter_delta, :string)
 
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   def changeset(struct, params) do

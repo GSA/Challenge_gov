@@ -247,20 +247,9 @@ defmodule ChallengeGov.Solutions do
   defp preserve_document_ids_on_error(changeset, _params), do: changeset
 
   def update_judging_status(solution, judging_status) do
-    case judging_status do
-      "select" ->
-        solution
-        |> Solution.select_for_judging_changeset()
-        |> Repo.update()
-
-      "unselect" ->
-        solution
-        |> Solution.unselect_for_judging_changeset()
-        |> Repo.update()
-
-      _ ->
-        {:error, :invalid_judging_status}
-    end
+    solution
+    |> Solution.judging_status_changeset(judging_status)
+    |> Repo.update()
   end
 
   @doc false
@@ -339,6 +328,16 @@ defmodule ChallengeGov.Solutions do
   def filter_on_attribute({"status", value}, query) do
     value = "%" <> value <> "%"
     where(query, [s], ilike(s.status, ^value))
+  end
+
+  def filter_on_attribute({"judging_status", "all"}, query), do: query
+
+  def filter_on_attribute({"judging_status", "selected"}, query) do
+    where(query, [s], s.judging_status == "selected" or s.judging_status == "winner")
+  end
+
+  def filter_on_attribute({"judging_status", value}, query) do
+    where(query, [s], s.judging_status == ^value)
   end
 
   def order_on_attribute(query, sort_columns)

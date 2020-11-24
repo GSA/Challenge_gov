@@ -94,6 +94,127 @@ defmodule Web.SolutionControllerTest do
       assert fetched_solution.id === solution.id
     end
 
+    test "success: viewing a solution of single phase challenge as challenge_owner", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: challenge_owner} = conn.assigns
+
+      submission_owner =
+        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
+          user_id: challenge_owner.id
+        })
+
+      solution =
+        SolutionHelpers.create_submitted_solution(
+          %{},
+          submission_owner,
+          challenge
+        )
+
+      conn = get(conn, Routes.solution_path(conn, :show, solution.id))
+      %{solution: fetched_solution} = conn.assigns
+
+      assert fetched_solution.id === solution.id
+      assert html_response(conn, 200) =~ "Back to submissions"
+      assert html_response(conn, 200) =~ "Solution ID:"
+
+      assert html_response(conn, 200) =~
+               "Challenge <i>#{challenge.title}</i> submission #{solution.id} details"
+    end
+
+    test "success: viewing a solution of multi phase challenge as challenge_owner", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: challenge_owner} = conn.assigns
+
+      submission_owner =
+        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+
+      challenge =
+        ChallengeHelpers.create_multi_phase_challenge(challenge_owner, %{
+          user_id: challenge_owner.id
+        })
+
+      phase = Enum.at(challenge.phases, 0)
+
+      solution =
+        SolutionHelpers.create_submitted_solution(
+          %{},
+          submission_owner,
+          challenge
+        )
+
+      conn = get(conn, Routes.solution_path(conn, :show, solution.id))
+      %{solution: fetched_solution} = conn.assigns
+
+      assert fetched_solution.id === solution.id
+      assert html_response(conn, 200) =~ "Back to submissions"
+      assert html_response(conn, 200) =~ "Solution ID:"
+
+      assert html_response(conn, 200) =~
+               "Phase <i>#{phase.title}</i> for challenge <i>#{challenge.title}</i> submission #{
+                 solution.id
+               } details"
+    end
+
+    test "success: viewing a solution of single phase challenge as admin", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: admin} = conn.assigns
+
+      submission_owner =
+        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(admin, %{user_id: admin.id})
+
+      solution =
+        SolutionHelpers.create_submitted_solution(
+          %{},
+          submission_owner,
+          challenge
+        )
+
+      conn = get(conn, Routes.solution_path(conn, :show, solution.id))
+      %{solution: fetched_solution} = conn.assigns
+
+      assert fetched_solution.id === solution.id
+      assert html_response(conn, 200) =~ "Back to submissions"
+      assert html_response(conn, 200) =~ "Solution ID:"
+
+      assert html_response(conn, 200) =~
+               "Challenge <i>#{challenge.title}</i> submission #{solution.id} details"
+    end
+
+    test "success: viewing a solution of multi phase challenge as admin", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: admin} = conn.assigns
+
+      submission_owner =
+        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+
+      challenge = ChallengeHelpers.create_multi_phase_challenge(admin, %{user_id: admin.id})
+      phase = Enum.at(challenge.phases, 0)
+
+      solution =
+        SolutionHelpers.create_submitted_solution(
+          %{},
+          submission_owner,
+          challenge
+        )
+
+      conn = get(conn, Routes.solution_path(conn, :show, solution.id))
+      %{solution: fetched_solution} = conn.assigns
+
+      assert fetched_solution.id === solution.id
+      assert html_response(conn, 200) =~ "Back to submissions"
+      assert html_response(conn, 200) =~ "Solution ID:"
+
+      assert html_response(conn, 200) =~
+               "Phase <i>#{phase.title}</i> for challenge <i>#{challenge.title}</i> submission #{
+                 solution.id
+               } details"
+    end
+
     test "not found viewing a deleted solution", %{conn: conn} do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
@@ -473,19 +594,28 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.challenge_solution_path(
+          Routes.solution_path(
             conn,
             :update_judging_status,
-            challenge.id,
             solution.id,
-            "select"
+            "selected"
           )
         )
 
-      assert redirected_to(conn) === referer
-
       {:ok, updated_solution} = Solutions.get(solution.id)
       assert updated_solution.judging_status === "selected"
+
+      assert response(conn, 200) ===
+               Jason.encode!(
+                 Web.PhaseView.get_judging_status_button_values(
+                   conn,
+                   challenge,
+                   phase,
+                   updated_solution,
+                   solution.judging_status,
+                   %{}
+                 )
+               )
     end
 
     test "success: unselecting for judging", %{conn: conn} do
@@ -499,25 +629,34 @@ defmodule Web.SolutionControllerTest do
       conn = Plug.Conn.update_req_header(conn, "referer", referer, &(&1 <> "; charset=utf-8"))
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
-      {:ok, solution} = Solutions.update_judging_status(solution, "select")
+      {:ok, solution} = Solutions.update_judging_status(solution, "selected")
       assert solution.judging_status === "selected"
 
       conn =
         put(
           conn,
-          Routes.challenge_solution_path(
+          Routes.solution_path(
             conn,
             :update_judging_status,
-            challenge.id,
             solution.id,
-            "unselect"
+            "not_selected"
           )
         )
 
-      assert redirected_to(conn) === referer
-
       {:ok, updated_solution} = Solutions.get(solution.id)
       assert updated_solution.judging_status === "not_selected"
+
+      assert response(conn, 200) ===
+               Jason.encode!(
+                 Web.PhaseView.get_judging_status_button_values(
+                   conn,
+                   challenge,
+                   phase,
+                   updated_solution,
+                   solution.judging_status,
+                   %{}
+                 )
+               )
     end
 
     test "failure: invalid status", %{conn: conn} do
@@ -536,17 +675,15 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.challenge_solution_path(
+          Routes.solution_path(
             conn,
             :update_judging_status,
-            challenge.id,
             solution.id,
             "invalid"
           )
         )
 
-      assert get_flash(conn, :error) === "Something went wrong"
-      assert redirected_to(conn) === Routes.dashboard_path(conn, :index)
+      assert response(conn, 400) === ""
 
       {:ok, updated_solution} = Solutions.get(solution.id)
       assert updated_solution.judging_status === "not_selected"
@@ -568,12 +705,11 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.challenge_solution_path(
+          Routes.solution_path(
             conn,
             :update_judging_status,
-            challenge.id,
             solution.id,
-            "select"
+            "selected"
           )
         )
 
@@ -610,17 +746,15 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.challenge_solution_path(
+          Routes.solution_path(
             conn,
             :update_judging_status,
-            challenge.id,
             solution.id,
-            "select"
+            "selected"
           )
         )
 
-      assert get_flash(conn, :error) === "You do not have permissions on this challenge"
-      assert redirected_to(conn) === Routes.dashboard_path(conn, :index)
+      assert response(conn, 403) === ""
 
       {:ok, updated_solution} = Solutions.get(solution.id)
       assert updated_solution.judging_status === "not_selected"

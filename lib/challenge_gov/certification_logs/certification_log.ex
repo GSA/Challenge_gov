@@ -23,7 +23,7 @@ defmodule ChallengeGov.CertificationLogs.CertificationLog do
     field(:expires_at, :utc_datetime)
     field(:denied_at, :utc_datetime)
 
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   def changeset(struct, params) do

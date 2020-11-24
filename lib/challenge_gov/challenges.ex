@@ -8,6 +8,7 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
+  alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.Challenges.WinnerImage
   alias ChallengeGov.Challenges.ResourceBanner
   alias ChallengeGov.Emails
@@ -444,8 +445,7 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge =
-          Repo.preload(challenge, [:phases, events: from(e in Event, order_by: e.occurs_on)])
+        challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
 
         {:ok, challenge}
     end
@@ -463,8 +463,7 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge =
-          Repo.preload(challenge, [:phases, events: from(e in Event, order_by: e.occurs_on)])
+        challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
 
         {:ok, challenge}
     end
@@ -476,13 +475,13 @@ defmodule ChallengeGov.Challenges do
     |> preload([
       :supporting_documents,
       :user,
-      :phases,
       :federal_partner_agencies,
       :non_federal_partners,
       :agency,
       :sub_agency,
       :challenge_owner_users,
       :events,
+      phases: ^from(p in Phase, order_by: p.start_date),
       federal_partners: [:agency, :sub_agency]
     ])
     |> Repo.one()
@@ -690,6 +689,13 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  def allowed_to_edit?(user, challenge) do
+    case allowed_to_edit(user, challenge) do
+      {:ok, _challenge} -> true
+      {:error, :not_permitted} -> false
+    end
+  end
+
   @doc """
   Checks if a user can send a bulletin
   """
@@ -747,6 +753,10 @@ defmodule ChallengeGov.Challenges do
     challenge.end_date
   end
 
+  # BOOKMARK: Phase helper functions
+  @doc """
+  Returns currently active phase
+  """
   def current_phase(%{phases: phases}) when length(phases) > 0 do
     phases
     |> Enum.find(fn phase ->
@@ -762,6 +772,24 @@ defmodule ChallengeGov.Challenges do
   end
 
   def current_phase(_challenge), do: {:error, :no_current_phase}
+
+  @doc """
+  Returns phase of a challenge after the phase passed in
+  """
+  def next_phase(%{phases: phases}, current_phase) do
+    phase_index =
+      Enum.find_index(phases, fn phase ->
+        phase.id == current_phase.id
+      end)
+
+    case Enum.at(phases, phase_index + 1) do
+      nil ->
+        {:error, :not_found}
+
+      phase ->
+        {:ok, phase}
+    end
+  end
 
   @doc """
   Create a new status event when the status changes

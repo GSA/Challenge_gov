@@ -2,11 +2,12 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
+        <%= render_submission_filter_tabs(@conn, @challenge, @phase, @filter) %>
         <div class="card">
           <div class="table-responsive">
             <table class="table table-striped">
-              <%= render Web.PhaseView, "solution_table/_header.html", conn: @conn, user: @user, filter: @filter, sort: @sort, phase: @phase %>
-              <%= render Web.PhaseView, "solution_table/_content.html", conn: @conn, user: @user, challenge: @challenge, solutions: @solutions %>
+              <%= render Web.PhaseView, "solution_table/_header.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, filter: @filter, sort: @sort %>
+              <%= render Web.PhaseView, "solution_table/_content.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, solutions: @solutions, page: @pagination.current, sort: @sort, filter: @filter %>
             </table>
           </div>
 

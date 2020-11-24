@@ -5,7 +5,7 @@ defmodule Web.PhaseController do
   alias ChallengeGov.Phases
   alias ChallengeGov.Solutions
 
-  plug Web.Plugs.FetchPage when action in [:show]
+  plug Web.Plugs.FetchPage, [per: 10] when action in [:show]
 
   plug Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_owner]
 
@@ -13,12 +13,11 @@ defmodule Web.PhaseController do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
-         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
-         phases <- Phases.all(filter: %{"challenge_id" => challenge.id}) do
+         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
-      |> assign(:phases, phases)
+      |> assign(:phases, challenge.phases)
       |> render("index.html")
     else
       {:error, :not_permitted} ->
@@ -42,9 +41,7 @@ defmodule Web.PhaseController do
   end
 
   def show(conn, params = %{"challenge_id" => challenge_id, "id" => id}) do
-    %{current_user: user} = conn.assigns
-    %{page: page, per: _per} = conn.assigns
-    per = 10
+    %{current_user: user, page: page, per: per} = conn.assigns
 
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
@@ -60,6 +57,15 @@ defmodule Web.PhaseController do
 
       %{page: solutions, pagination: pagination} =
         Solutions.all(filter: solutions_filter, page: page, per: per, sort: sort)
+
+      # REFACTOR: Figure out a better solution here for paginating past the page count
+      # after having moved some to a different judging status filter
+      %{page: solutions, pagination: pagination} =
+        if pagination.total !== 0 and pagination.current > pagination.total do
+          Solutions.all(filter: solutions_filter, page: pagination.total, per: per, sort: sort)
+        else
+          %{page: solutions, pagination: pagination}
+        end
 
       conn
       |> assign(:user, user)
