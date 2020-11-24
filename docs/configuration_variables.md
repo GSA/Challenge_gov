@@ -3,6 +3,7 @@
 ## Environment Variables
 
 | Variable                                 | Description                                                                                                                                                                           | Expected Value Examples                                     |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | ACCOUNT_DEACTIVATION_IN_DAYS             | The number of days of inactivity until an account is deactivated                                                                                                                      | 90                                                          |
 | ACCOUNT_DEACTIVATION_WARNING_ONE_IN_DAYS | The number of days before an account is deactivated due to inactivity, in which the user is warned via email                                                                          | 30                                                          |
 | ACCOUNT_DEACTIVATION_WARNING_TWO_IN_DAYS | The number of days before an account is deactivated due to inactivity, in which the user is sent a second warning via email                                                           | 10                                                          |
