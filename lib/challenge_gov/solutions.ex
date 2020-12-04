@@ -44,6 +44,12 @@ defmodule ChallengeGov.Solutions do
     preload(solution, [:submitter, :documents, challenge: [:agency]])
   end
 
+  # def gather_for_export(challenge, phase_ids, filter) do
+  #   Solution
+  #   |> base_preload
+  #   |> Filter.filter(opts[:filter], __MODULE__)
+  # end
+
   def new do
     %Solution{}
     |> new_form_preload
@@ -303,6 +309,10 @@ defmodule ChallengeGov.Solutions do
 
   def filter_on_attribute({"phase_id", value}, query) do
     where(query, [c], c.phase_id == ^value)
+  end
+
+  def filter_on_attribute({"phase_ids", value}, query) do
+    where(query, [s], s.phase_id in ^value)
   end
 
   def filter_on_attribute({"title", value}, query) do

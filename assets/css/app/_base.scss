@@ -300,3 +300,15 @@ label {
   outline: 0.25rem solid #2491ff;
   outline-offset: 0;
 }
+
+#submission-download-modal {
+  .modal-dialog {
+    max-width: unset;
+  }
+
+  .modal-content {
+    padding: unset;
+    text-align: left;
+    overflow-y: unset;
+  }
+}

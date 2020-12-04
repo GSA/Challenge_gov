@@ -20,6 +20,12 @@
         <h2>View submissions for <%= @challenge.title %></h2>
       </div>
     </div>
+
+    <div class="row mb-2">
+      <div class="col">
+        <%= link "Download", to: Routes.submission_export_path(@conn, :index, @challenge.id), class: "btn btn-primary" %>
+      </div>
+    </div>
   </div>
 </div>
 
