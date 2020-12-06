@@ -1,21 +1,28 @@
-NimbleCSV.define(ChallengeGov.SubmissionExport.CSV, separator: ",", escape: "\"")
+NimbleCSV.define(ChallengeGov.SubmissionExports.CSV, separator: ",", escape: "\"")
 
 defmodule Web.SubmissionExportView do
   use Web, :view
 
-  alias ChallengeGov.SubmissionExport.CSV
+  alias ChallengeGov.SubmissionExports
+  alias ChallengeGov.SubmissionExports.CSV
   alias Web.ChallengeView
 
-  def format_content(submissions, format) do
-    case format do
-      "csv" ->
-        {:ok, submission_csv(submissions)}
+  def submission_export_action(conn, submission_export) do
+    case submission_export.status do
+      "completed" ->
+        link("Download", to: SubmissionExports.download_export_url(submission_export))
 
-      "csv_with_uploads" ->
-        {:ok, submission_csv(submissions)}
+      "outdated" ->
+        link("Restart",
+          to: Routes.submission_export_path(conn, :restart, submission_export.id),
+          method: "post"
+        )
 
-      _ ->
-        {:error, :invalid_format}
+      "pending" ->
+        link("Cancel",
+          to: Routes.submission_export_path(conn, :delete, submission_export.id),
+          method: "delete"
+        )
     end
   end
 

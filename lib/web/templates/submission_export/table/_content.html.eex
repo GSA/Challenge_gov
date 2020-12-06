@@ -1,0 +1,13 @@
+<tbody>
+  <%= Enum.map @submission_exports, fn (submission_export) -> %>
+    <tr>
+      <td><%= submission_export.phase_ids %></td>
+      <td><%= submission_export.judging_status %></td>
+      <td><%= submission_export.format %></td>
+      <td class="js-local-datetime"><%= submission_export.updated_at %></td>
+      <td><%= submission_export.status %></td>
+      <td><%= submission_export_action(@conn, submission_export) %></td>
+    </tr>
+  <% end %>
+</tbody>
+

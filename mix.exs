@@ -50,6 +50,7 @@ defmodule ChallengeGov.MixProject do
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
       {:mojito, "~> 0.7.3"},
       {:nimble_csv, "~> 0.6"},
+      {:oban, "~> 2.3"},
       {:phoenix, "~> 1.4.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 2.14"},

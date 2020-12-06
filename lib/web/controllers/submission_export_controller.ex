@@ -2,8 +2,7 @@ defmodule Web.SubmissionExportController do
   use Web, :controller
 
   alias ChallengeGov.Challenges
-  alias ChallengeGov.Solutions
-  alias Web.SubmissionExportView
+  alias ChallengeGov.SubmissionExports
 
   plug(Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_owner])
 
@@ -15,6 +14,7 @@ defmodule Web.SubmissionExportController do
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
+      |> assign(:submission_exports, SubmissionExports.all(challenge))
       |> render("index.html")
     else
       {:error, :not_found} ->
@@ -29,35 +29,21 @@ defmodule Web.SubmissionExportController do
     end
   end
 
-  def create(conn, %{
-        "id" => id,
-        "phases" => phase_ids,
-        "judging_status" => judging_status,
-        "format" => format
-      }) do
+  def create(conn, params = %{"id" => id}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
-         submissions <-
-           Solutions.all(filter: %{"phase_ids" => phase_ids, "judging_status" => judging_status}),
-         {:ok, content} <- SubmissionExportView.format_content(submissions, format) do
-      if length(submissions) > 0 do
-        send_download(conn, {:binary, content}, filename: "submissions.csv")
-      else
-        conn
-        |> put_flash(:error, "No submissions for those selections")
-        |> redirect(to: Routes.submission_export_path(conn, :index, challenge.id))
-      end
+    {:ok, challenge} = Challenges.get(id)
+
+    with {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
+         {:ok, submission_export} <- SubmissionExports.create(params, challenge),
+         {:ok, _submission_export_job} <- SubmissionExports.trigger_export(submission_export) do
+      conn
+      |> put_flash(:info, "Submission export created")
+      |> redirect(to: Routes.submission_export_path(conn, :index, challenge.id))
     else
       {:error, :invalid_format} ->
         conn
         |> put_flash(:error, "Invalid export format")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
-
-      {:error, :not_found} ->
-        conn
-        |> put_flash(:error, "Challenge not found")
         |> redirect(to: Routes.dashboard_path(conn, :index))
 
       {:error, :not_permitted} ->
@@ -65,6 +51,39 @@ defmodule Web.SubmissionExportController do
         |> put_flash(:error, "You are not authorized to export this challenge")
         |> redirect(to: Routes.dashboard_path(conn, :index))
 
+      {:error, _changeset} ->
+        conn
+        |> put_flash(:error, "Please select all export options")
+        |> redirect(to: Routes.submission_export_path(conn, :index, challenge.id))
+
+      _ ->
+        conn
+        |> put_flash(:error, "Something went wrong")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
+    end
+  end
+
+  def restart(conn, %{"id" => id}) do
+    with {:ok, submission_export} <- SubmissionExports.get(id),
+         {:ok, _submission_export_job} <- SubmissionExports.trigger_export(submission_export) do
+      conn
+      |> put_flash(:info, "Submission export restarted")
+      |> redirect(to: Routes.submission_export_path(conn, :index, submission_export.challenge_id))
+    else
+      _ ->
+        conn
+        |> put_flash(:error, "Something went wrong")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
+    end
+  end
+
+  def delete(conn, %{"id" => id}) do
+    with {:ok, submission_export} <- SubmissionExports.get(id),
+         {:ok, submission_export} <- SubmissionExports.delete(submission_export) do
+      conn
+      |> put_flash(:info, "Submission export cancelled")
+      |> redirect(to: Routes.submission_export_path(conn, :index, submission_export.challenge_id))
+    else
       _ ->
         conn
         |> put_flash(:error, "Something went wrong")
