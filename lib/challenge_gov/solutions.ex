@@ -10,6 +10,7 @@ defmodule ChallengeGov.Solutions do
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.SolutionDocuments
   alias ChallengeGov.Solutions.Solution
+  alias ChallengeGov.SubmissionExports
   alias Stein.Filter
 
   import Ecto.Query
@@ -43,12 +44,6 @@ defmodule ChallengeGov.Solutions do
   def base_preload(solution) do
     preload(solution, [:submitter, :documents, challenge: [:agency]])
   end
-
-  # def gather_for_export(challenge, phase_ids, filter) do
-  #   Solution
-  #   |> base_preload
-  #   |> Filter.filter(opts[:filter], __MODULE__)
-  # end
 
   def new do
     %Solution{}
@@ -157,6 +152,7 @@ defmodule ChallengeGov.Solutions do
         send_solution_confirmation_email(solution)
         challenge_owner_new_submission_email(solution)
         add_to_security_log(solution.submitter, solution, "submit", remote_ip)
+        SubmissionExports.check_for_outdated(solution.phase_id)
         {:ok, solution}
 
       {:error, changeset} ->
@@ -256,6 +252,14 @@ defmodule ChallengeGov.Solutions do
     solution
     |> Solution.judging_status_changeset(judging_status)
     |> Repo.update()
+    |> case do
+      {:ok, submission} ->
+        SubmissionExports.check_for_outdated(submission.phase_id)
+        {:ok, submission}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc false

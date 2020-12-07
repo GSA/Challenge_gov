@@ -69,4 +69,12 @@ defmodule ChallengeGov.SubmissionExports do
         {:error, changeset}
     end
   end
+
+  def check_for_outdated(phase_id) do
+    phase_id = to_string(phase_id)
+
+    SubmissionExport
+    |> where([se], fragment("? @> ?::jsonb", se.phase_ids, ^[phase_id]))
+    |> Repo.update_all(set: [status: "outdated"])
+  end
 end

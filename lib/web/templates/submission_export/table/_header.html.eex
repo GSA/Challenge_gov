@@ -1,6 +1,8 @@
 <thead>
   <tr>
-    <th>Content</th>
+    <%= if length(@challenge.phases) > 1 do %>
+      <th>Content</th>
+    <% end %>
     <th>Includes</th>
     <th>File type</th>
     <th>Created</th>

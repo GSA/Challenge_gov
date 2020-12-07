@@ -1,10 +1,12 @@
 <tbody>
   <%= Enum.map @submission_exports, fn (submission_export) -> %>
     <tr>
-      <td><%= submission_export.phase_ids %></td>
-      <td><%= submission_export.judging_status %></td>
+      <%= if length(@challenge.phases) > 1 do %>
+        <td><%= submission_export_phases_text(submission_export) %></td>
+      <% end %>
+      <td><%= submission_export_judging_status_text(submission_export) %></td>
       <td><%= submission_export.format %></td>
-      <td class="js-local-datetime"><%= submission_export.updated_at %></td>
+      <%= SharedView.local_datetime_tag(submission_export.updated_at, :td) %>
       <td><%= submission_export.status %></td>
       <td><%= submission_export_action(@conn, submission_export) %></td>
     </tr>

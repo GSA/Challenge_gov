@@ -11,10 +11,12 @@ defmodule Web.SubmissionExportController do
 
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
+      submission_exports = SubmissionExports.all(challenge)
+
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
-      |> assign(:submission_exports, SubmissionExports.all(challenge))
+      |> assign(:submission_exports, submission_exports)
       |> render("index.html")
     else
       {:error, :not_found} ->
