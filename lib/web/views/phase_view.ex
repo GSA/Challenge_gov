@@ -269,6 +269,47 @@ defmodule Web.PhaseView do
     end
   end
 
+  def render_submission_filter_helper_text(challenge, phase, filter) do
+    judging_status_filter_value = Map.get(filter, "judging_status", "all")
+    next_phase_closed? = next_phase_closed?(challenge, phase)
+
+    [
+      content_tag(:div, class: "submission-filter__helper-text p-3 bg-white") do
+        submission_filter_helper_text(judging_status_filter_value, next_phase_closed?)
+      end,
+      submission_filter_winner_note(judging_status_filter_value, next_phase_closed?)
+    ]
+  end
+
+  defp submission_filter_helper_text("all", _),
+    do:
+      "Select the submissions from the table below that are approved for judging. Once selected, they will show up in the judging tab."
+
+  defp submission_filter_helper_text("selected", false),
+    do:
+      "Select the submissions from the table below that are approved as awardees. Once selected, they will show up in the awardee tab."
+
+  defp submission_filter_helper_text("selected", true),
+    do:
+      "Select the submissions from the table below that are approved for the next phase. Once selected, they will show up in the next phase tab."
+
+  defp submission_filter_helper_text("winner", false),
+    do: "The submissions in this table have been selected as awardees."
+
+  defp submission_filter_helper_text("winner", true),
+    do:
+      "The submissions in this table have been selected to move to the next phase. Please invite the solvers to inform them about the next steps."
+
+  defp submission_filter_winner_note("winner", true) do
+    content_tag(:div,
+      class: "submission-filter__helper-note px-3 pb-3 bg-white text-bold text-italic"
+    ) do
+      "Note: Only solvers in this table can submit during the next phase."
+    end
+  end
+
+  defp submission_filter_winner_note(_, _), do: []
+
   def filter_tab_content(challenge, phase, filter, filter_key) do
     content_tag(:div, class: "submission-filter__tab submission-filter__tab--#{filter_key}") do
       [
