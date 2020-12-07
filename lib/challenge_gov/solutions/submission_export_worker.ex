@@ -5,6 +5,7 @@ defmodule ChallengeGov.Solutions.SubmissionExportWorker do
   use Oban.Worker, queue: :default
 
   alias ChallengeGov.Repo
+  alias ChallengeGov.SolutionDocuments
   alias ChallengeGov.Solutions
   alias ChallengeGov.Solutions.SubmissionExport
   alias ChallengeGov.SubmissionExports
@@ -14,19 +15,23 @@ defmodule ChallengeGov.Solutions.SubmissionExportWorker do
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"id" => id}}) do
-    submission_export = Repo.get(SubmissionExport, id)
+    case Repo.get(SubmissionExport, id) do
+      nil ->
+        :ok
 
-    submissions =
-      Solutions.all(
-        filter: %{
-          "phase_ids" => submission_export.phase_ids,
-          "judging_status" => submission_export.judging_status
-        }
-      )
+      submission_export ->
+        submissions =
+          Solutions.all(
+            filter: %{
+              "phase_ids" => submission_export.phase_ids,
+              "judging_status" => submission_export.judging_status
+            }
+          )
 
-    export_submissions(submission_export, submission_export.format, submissions)
+        export_submissions(submission_export, submission_export.format, submissions)
 
-    :ok
+        :ok
+    end
   end
 
   defp export_submissions(submission_export, ".csv", submissions) do
@@ -50,37 +55,28 @@ defmodule ChallengeGov.Solutions.SubmissionExportWorker do
     end
   end
 
-  # Make CSV
-  # Make Create directory for each submissions that has uploads with id
-  # Put directories and the CSV into a zip
-  # Upload the zip
-  # download all documents for the submissions into a temp folder, maybe use stein.temp
-  # :zip.zip()    
   defp export_submissions(submission_export, ".zip", submissions) do
+    # TODO: Remove this. Currently added to demonstrate pending status and export cancelling
+    Process.sleep(10_000)
     csv = SubmissionExportView.submission_csv(submissions)
 
-    # Enum.map(submissions, fn submission ->
-    #   if length(submission.documents) > 1 do
-    #     submission_upload_directory = "submission_#{submission.id}"
-    #     File.mkdir(submission_upload_directory)
+    zip_files =
+      Enum.flat_map(submissions, fn submission ->
+        Enum.map(submission.documents, fn document ->
+          {:ok, document_download} = Storage.download(SolutionDocuments.document_path(document))
+          document_path = "/submissions/#{submission.id}/#{document.key}#{document.extension}"
 
-    #     Enum.map(submission.documents, fn document ->
-    #       {:ok, document_download} = Storage.download(document.key)
+          data = File.read!(document_download)
+          File.rm(document_download)
 
-    #       submission_upload_path =
-    #         submission_upload_directory <>
-    #           "/#{document.name || document.key}#{document.extension}"
+          {String.to_charlist(document_path), data}
+        end)
+      end)
 
-    #       File.cp(document_download, submission_upload_path)
-    #     end)
-    #   end
-    # end)
-
-    {:ok, file_path} = Temp.create(extname: ".csv")
-    :ok = File.write(file_path, csv)
+    zip_files = [{'submissions.csv', to_string(csv)} | zip_files]
 
     {:ok, zip_file_path} = Temp.create(extname: ".zip")
-    {:ok, _zip} = :zip.create(zip_file_path, [String.to_charlist(file_path)])
+    {:ok, _zip} = :zip.create(String.to_charlist(zip_file_path), zip_files)
 
     file = Storage.prep_file(%{path: zip_file_path})
 

@@ -67,7 +67,7 @@ defmodule Web.SubmissionExportController do
 
   def restart(conn, %{"id" => id}) do
     with {:ok, submission_export} <- SubmissionExports.get(id),
-         {:ok, _submission_export_job} <- SubmissionExports.trigger_export(submission_export) do
+         {:ok, _submission_export_job} <- SubmissionExports.restart_export(submission_export) do
       conn
       |> put_flash(:info, "Submission export restarted")
       |> redirect(to: Routes.submission_export_path(conn, :index, submission_export.challenge_id))

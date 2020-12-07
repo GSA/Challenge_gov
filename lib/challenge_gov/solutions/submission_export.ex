@@ -41,7 +41,7 @@ defmodule ChallengeGov.Solutions.SubmissionExport do
     field(:judging_status, :string)
     field(:format, :string)
     field(:status, :string, default: "pending")
-    field(:key, Ecto.UUID, read_after_writes: true)
+    field(:key, Ecto.UUID, autogenerate: true)
 
     # Meta Timestamps
     timestamps(type: :utc_datetime_usec)

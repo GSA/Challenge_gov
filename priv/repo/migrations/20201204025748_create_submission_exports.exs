@@ -8,7 +8,7 @@ defmodule ChallengeGov.Repo.Migrations.CreateSubmissionExports do
       add(:judging_status, :string)
       add(:format, :string)
       add(:status, :string)
-      add(:key, :uuid, default: fragment("uuid_generate_v4()"), null: false)
+      add(:key, :uuid, null: false)
       timestamps()
     end
   end

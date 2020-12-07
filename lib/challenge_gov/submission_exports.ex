@@ -35,6 +35,13 @@ defmodule ChallengeGov.SubmissionExports do
     |> Oban.insert()
   end
 
+  def restart_export(submission_export) do
+    submission_export
+    |> Ecto.Changeset.change(%{status: "pending"})
+    |> Repo.update!()
+    |> trigger_export()
+  end
+
   def document_path(key, extension), do: "/submission-exports/#{key}#{extension}"
 
   def download_export_url(submission_export) do
@@ -42,8 +49,6 @@ defmodule ChallengeGov.SubmissionExports do
       signed: [expires_in: 3600]
     )
   end
-
-  # def new(), do: SubmissionExport.changeset(%SubmissionExport{}, %{})
 
   def create(params, challenge) do
     %SubmissionExport{}
@@ -62,7 +67,7 @@ defmodule ChallengeGov.SubmissionExports do
     |> Repo.delete()
     |> case do
       {:ok, submission_export} ->
-        Storage.delete(submission_export.key)
+        Storage.delete(document_path(submission_export.key, submission_export.format))
         {:ok, submission_export}
 
       {:error, changeset} ->

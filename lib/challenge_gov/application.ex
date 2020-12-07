@@ -12,6 +12,7 @@ defmodule ChallengeGov.Application do
       {Finch, name: ChallengeGov.HTTPClient},
       Web.Endpoint,
       ChallengeGov.Scheduler,
+      ChallengeGov.Telemetry,
       {Oban, oban_config()}
     ]
 
