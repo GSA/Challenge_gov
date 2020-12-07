@@ -11,7 +11,9 @@ defmodule ChallengeGov.Application do
       ChallengeGov.Repo,
       {Finch, name: ChallengeGov.HTTPClient},
       Web.Endpoint,
-      ChallengeGov.Scheduler
+      ChallengeGov.Scheduler,
+      ChallengeGov.Telemetry,
+      {Oban, oban_config()}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -25,5 +27,9 @@ defmodule ChallengeGov.Application do
   def config_change(changed, _new, removed) do
     Web.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp oban_config do
+    Application.get_env(:challenge_gov, Oban)
   end
 end

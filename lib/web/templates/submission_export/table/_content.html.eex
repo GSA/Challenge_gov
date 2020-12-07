@@ -1,0 +1,15 @@
+<tbody>
+  <%= Enum.map @submission_exports, fn (submission_export) -> %>
+    <tr>
+      <%= if length(@challenge.phases) > 1 do %>
+        <td><%= submission_export_phases_text(submission_export) %></td>
+      <% end %>
+      <td><%= submission_export_judging_status_text(submission_export) %></td>
+      <td><%= submission_export.format %></td>
+      <%= SharedView.local_datetime_tag(submission_export.updated_at, :td) %>
+      <td><%= submission_export.status %></td>
+      <td><%= submission_export_action(@conn, submission_export) %></td>
+    </tr>
+  <% end %>
+</tbody>
+

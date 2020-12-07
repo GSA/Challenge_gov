@@ -550,6 +550,70 @@ defmodule ChallengeGov.SolutionsTest do
 
       assert length(solutions) === 1
     end
+
+    test "filtering for exports" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_multi_phase_challenge(user, %{user_id: user.id})
+
+      phase_1 = Enum.at(challenge.phases, 0)
+      phase_2 = Enum.at(challenge.phases, 1)
+      phase_3 = Enum.at(challenge.phases, 2)
+
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge, phase_1)
+
+      %{}
+      |> SolutionHelpers.create_submitted_solution(user, challenge, phase_1)
+      |> Solutions.update_judging_status("selected")
+
+      %{}
+      |> SolutionHelpers.create_submitted_solution(user, challenge, phase_1)
+      |> Solutions.update_judging_status("winner")
+
+      SolutionHelpers.create_submitted_solution(%{}, user, challenge, phase_2)
+
+      %{}
+      |> SolutionHelpers.create_submitted_solution(user, challenge, phase_2)
+      |> Solutions.update_judging_status("selected")
+
+      solutions =
+        Solutions.all(
+          filter: %{
+            "phase_ids" => [phase_1.id, phase_2.id, phase_3.id],
+            "judging_status" => "all"
+          }
+        )
+
+      assert length(solutions) === 5
+
+      solutions =
+        Solutions.all(
+          filter: %{
+            "phase_ids" => [phase_1.id, phase_2.id, phase_3.id],
+            "judging_status" => "selected"
+          }
+        )
+
+      assert length(solutions) === 3
+
+      solutions =
+        Solutions.all(
+          filter: %{
+            "phase_ids" => [phase_1.id, phase_2.id, phase_3.id],
+            "judging_status" => "winner"
+          }
+        )
+
+      assert length(solutions) === 1
+
+      solutions = Solutions.all(filter: %{"phase_ids" => [phase_1.id], "judging_status" => "all"})
+      assert length(solutions) === 3
+
+      solutions = Solutions.all(filter: %{"phase_ids" => [phase_2.id], "judging_status" => "all"})
+      assert length(solutions) === 2
+
+      solutions = Solutions.all(filter: %{"phase_ids" => [phase_3.id], "judging_status" => "all"})
+      assert length(solutions) === 0
+    end
   end
 
   describe "fetching a solution" do

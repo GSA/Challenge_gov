@@ -10,6 +10,7 @@ defmodule ChallengeGov.Solutions do
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.SolutionDocuments
   alias ChallengeGov.Solutions.Solution
+  alias ChallengeGov.SubmissionExports
   alias Stein.Filter
 
   import Ecto.Query
@@ -151,6 +152,7 @@ defmodule ChallengeGov.Solutions do
         send_solution_confirmation_email(solution)
         challenge_owner_new_submission_email(solution)
         add_to_security_log(solution.submitter, solution, "submit", remote_ip)
+        SubmissionExports.check_for_outdated(solution.phase_id)
         {:ok, solution}
 
       {:error, changeset} ->
@@ -250,6 +252,14 @@ defmodule ChallengeGov.Solutions do
     solution
     |> Solution.judging_status_changeset(judging_status)
     |> Repo.update()
+    |> case do
+      {:ok, submission} ->
+        SubmissionExports.check_for_outdated(submission.phase_id)
+        {:ok, submission}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc false
@@ -303,6 +313,10 @@ defmodule ChallengeGov.Solutions do
 
   def filter_on_attribute({"phase_id", value}, query) do
     where(query, [c], c.phase_id == ^value)
+  end
+
+  def filter_on_attribute({"phase_ids", value}, query) do
+    where(query, [s], s.phase_id in ^value)
   end
 
   def filter_on_attribute({"title", value}, query) do

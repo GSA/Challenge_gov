@@ -39,6 +39,8 @@ config :challenge_gov, ChallengeGov.GovDelivery,
 
 config :stein_storage, backend: :test
 
+config :challenge_gov, Oban, crontab: false, queues: false, plugins: false
+
 if File.exists?("config/test.local.exs") do
   import_config("test.local.exs")
 end

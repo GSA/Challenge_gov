@@ -119,6 +119,13 @@ defmodule Web.Router do
     post("/challenges/:id/create_announcement", ChallengeController, :create_announcement)
     post("/challenges/:id/remove_announcement", ChallengeController, :remove_announcement)
 
+    resources("/challenges/:id/submissions/export", SubmissionExportController,
+      only: [:index, :create]
+    )
+
+    post("/submission_exports/:id", SubmissionExportController, :restart)
+    resources("/submission_exports", SubmissionExportController, only: [:delete])
+
     resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
     put("/solutions/:id/submit", SolutionController, :submit)
     put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)

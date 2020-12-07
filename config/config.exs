@@ -44,6 +44,11 @@ config :challenge_gov,
   log_retention_in_days: 180,
   challenge_owner_assumed_tlds: [".mil"]
 
+config :challenge_gov, Oban,
+  repo: ChallengeGov.Repo,
+  plugins: [Oban.Plugins.Pruner],
+  queues: [default: 10]
+
 config :challenge_gov, ChallengeGov.Scheduler,
   jobs: [
     {"0 5 * * *", {ChallengeGov.Accounts, :check_all_last_actives, []}},

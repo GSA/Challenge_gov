@@ -1,0 +1,18 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <%= render Web.SubmissionExportView, "table/_header.html", conn: @conn, challenge: @challenge %>
+              <%= render Web.SubmissionExportView, "table/_content.html", conn: @conn, challenge: @challenge, submission_exports: @submission_exports %>
+            </table>
+          </div>
+
+          <%#= Web.SharedView.pagination(path: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id, filter: @filter, sort: @sort), pagination: @pagination) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
