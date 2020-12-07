@@ -66,7 +66,11 @@ defmodule Web.SubmissionExportController do
   end
 
   def restart(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
     with {:ok, submission_export} <- SubmissionExports.get(id),
+         {:ok, challenge} <- Challenges.get(id),
+         {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge),
          {:ok, _submission_export_job} <- SubmissionExports.restart_export(submission_export) do
       conn
       |> put_flash(:info, "Submission export restarted")
@@ -80,7 +84,11 @@ defmodule Web.SubmissionExportController do
   end
 
   def delete(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
     with {:ok, submission_export} <- SubmissionExports.get(id),
+         {:ok, challenge} <- Challenges.get(id),
+         {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge),
          {:ok, submission_export} <- SubmissionExports.delete(submission_export) do
       conn
       |> put_flash(:info, "Submission export cancelled")
