@@ -22,9 +22,9 @@
       </div>
       <%= form_for @conn, Routes.submission_export_path(@conn, :create, @challenge.id), fn f -> %>
         <div class="modal-body">
-          <%= if length(@challenge.phases) > 1 do %>
+          <%= if length(@closed_phases) > 1 do %>
             <p>Choose challenge phases:</p>
-            <%= Enum.map(@challenge.phases, fn phase -> %>
+            <%= Enum.map(@closed_phases, fn phase -> %>
               <%= label do %>
                 <%= checkbox(f, "phase_ids[]", checked_value: phase.id, hidden_input: false) %>
                 <span class="ml-1"><%= phase.title %></span>
