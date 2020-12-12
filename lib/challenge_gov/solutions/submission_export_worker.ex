@@ -56,8 +56,6 @@ defmodule ChallengeGov.Solutions.SubmissionExportWorker do
   end
 
   defp export_submissions(submission_export, ".zip", submissions) do
-    # TODO: Remove this. Currently added to demonstrate pending status and export cancelling
-    Process.sleep(10_000)
     csv = SubmissionExportView.submission_csv(submissions)
 
     zip_files =
