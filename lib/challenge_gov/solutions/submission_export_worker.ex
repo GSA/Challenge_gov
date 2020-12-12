@@ -9,6 +9,7 @@ defmodule ChallengeGov.Solutions.SubmissionExportWorker do
   alias ChallengeGov.Solutions
   alias ChallengeGov.Solutions.SubmissionExport
   alias ChallengeGov.SubmissionExports
+  alias Web.DocumentView
   alias Web.SubmissionExportView
   alias Stein.Storage
   alias Stein.Storage.Temp
@@ -62,7 +63,9 @@ defmodule ChallengeGov.Solutions.SubmissionExportWorker do
       Enum.flat_map(submissions, fn submission ->
         Enum.map(submission.documents, fn document ->
           {:ok, document_download} = Storage.download(SolutionDocuments.document_path(document))
-          document_path = "/submissions/#{submission.id}/#{document.key}#{document.extension}"
+
+          document_path =
+            "/submissions/#{submission.id}/#{DocumentView.filename(document)}#{document.extension}"
 
           data = File.read!(document_download)
           File.rm(document_download)
