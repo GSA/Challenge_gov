@@ -13,7 +13,7 @@ defmodule ChallengeGov.SubmissionExports do
   def all(challenge) do
     SubmissionExport
     |> where([se], se.challenge_id == ^challenge.id)
-    |> order_by([se], desc: se.inserted_at)
+    |> order_by([se], desc: se.updated_at)
     |> Repo.all()
   end
 
@@ -87,7 +87,13 @@ defmodule ChallengeGov.SubmissionExports do
 
   defp prune_duplicates(submission_exports) do
     if length(submission_exports) == 1 do
-      Enum.at(submission_exports, 0)
+      {:ok, submission_export} =
+        submission_exports
+        |> Enum.at(0)
+        |> Ecto.Changeset.change(%{updated_at: DateTime.utc_now()})
+        |> Repo.update()
+
+      submission_export
     else
       Enum.each(submission_exports, fn submission_export ->
         delete(submission_export)
