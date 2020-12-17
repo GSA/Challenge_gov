@@ -51,6 +51,7 @@
   <div class="row p-2 mb-1">
     <div class="col">
       <%= link "Download", to: Routes.submission_export_path(@conn, :index, @challenge.id), class: "btn btn-primary" %>
+      <%= link "Manage invites for next phase", to: Routes.submission_invite_path(@conn, :index, @phase.id), class: "btn btn-primary" %>
     </div>
   </div>
 </div>

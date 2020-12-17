@@ -123,6 +123,13 @@ defmodule Web.Router do
       only: [:index, :create]
     )
 
+    resources("/phases/:phase_id/submission_invites", SubmissionInviteController,
+      only: [:index, :show, :create]
+    )
+
+    post("/submission_invites/:id/accept", SubmissionInviteController, :accept)
+    post("/submission_invites/:id/revoke", SubmissionInviteController, :revoke)
+
     post("/submission_exports/:id", SubmissionExportController, :restart)
     resources("/submission_exports", SubmissionExportController, only: [:delete])
 
