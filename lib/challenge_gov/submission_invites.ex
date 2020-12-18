@@ -41,12 +41,36 @@ defmodule ChallengeGov.SubmissionInvites do
     end
   end
 
+  def reinvite(submission_invite, params) do
+    submission_invite
+    |> SubmissionInvite.reinvite_changeset(params)
+    |> Repo.update()
+    |> case do
+      {:ok, submission_invite} ->
+        submission_invite = Repo.preload(submission_invite, solution: [:challenge, :submitter])
+
+        submission_invite
+        |> Emails.submission_invite()
+        |> Mailer.deliver_later()
+
+        {:ok, submission_invite}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
   def bulk_create(params, submission_ids) do
     submission_ids
     |> Enum.reduce(Ecto.Multi.new(), fn submission_id, multi ->
       Ecto.Multi.run(multi, submission_id, fn _repo, _changes ->
         {:ok, submission} = Solutions.get(submission_id)
-        create(params, submission)
+
+        if submission.invite do
+          reinvite(submission.invite, params)
+        else
+          create(params, submission)
+        end
       end)
     end)
     |> Repo.transaction()

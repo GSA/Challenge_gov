@@ -1,1 +1,80 @@
-Submission Invite Index
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item"><%= link("Challenges", to: Routes.challenge_path(@conn, :index)) %></li>
+          <li class="breadcrumb-item"><%= link(@challenge.title, to: Routes.challenge_path(@conn, :show, @challenge.id)) %></li>
+          <li class="breadcrumb-item"><%= link("Phases", to: Routes.challenge_phase_path(@conn, :index, @challenge.id)) %></li>
+          <li class="breadcrumb-item"><%= link(@phase.title, to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id)) %></li>
+          <li class="breadcrumb-item active">Invite solvers to next phase</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <h2>Invite solvers to next phase of <%= @challenge.title %></h2>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <h3>Select solvers</h3>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <p>
+          Select the solvers to message with instructions for the next phase. When you message the solver, they will also receive an email notification.
+        </p>
+      </div>
+    </div>
+
+    <%= form_for(@conn, Routes.submission_invite_path(@conn, :create, @phase.id), [class: "form-horizontal usa-form", multipart: true], fn f -> %>
+      <div class="row mb-3">
+        <div class="col">
+          <input id="submission-invites__select-all" class="submission-invites__select-all" type="checkbox" name="submission-invites__select-all">
+          <label for="submission-invites__select-all">Select all solvers</label>
+        </div>
+      </div>
+      <%= render Web.SubmissionInviteView, "table/_table.html", conn: @conn, challenge: @challenge, phase: @phase, submissions: @submissions %>
+
+      <div class="row mb-3">
+        <div class="col">
+          <h3>Create message</h3>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col">
+          <p>
+            Customize the message below to inform solvers about entering the next phase of the challenge. We suggest adding the phase number and name along with the start and end dates.
+          </p>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col">
+          <div class="submission-invites__message">
+            <label>Invite message</label>
+            <%= FormView.rt_textarea_field_alt(f, :message) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col">
+          <%= link("Cancel", to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id)) %>
+          <%= submit("Send invite", class: "btn btn-primary ml-3", id: "submission-invites__submit", disabled: true) %>
+        </div>
+      </div>
+    </div>
+  <% end) %>
+</div>

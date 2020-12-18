@@ -138,7 +138,8 @@ defmodule Web.SubmissionInviteControllerTest do
       {:ok, submission_invite} = SubmissionInvites.get(submission_invite.id)
 
       assert submission_invite.status === "revoked"
-      assert html_response(conn, 200)
+      assert get_flash(conn, :error) == "Invite revoked"
+      assert redirected_to(conn) == Routes.submission_invite_path(conn, :index, phase.id)
     end
   end
 

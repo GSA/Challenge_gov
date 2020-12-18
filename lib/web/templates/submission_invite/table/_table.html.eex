@@ -1,0 +1,16 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <%= render Web.SubmissionInviteView, "table/_header.html", conn: @conn, phase: @phase %>
+              <%= render Web.SubmissionInviteView, "table/_content.html", conn: @conn, phase: @phase, submissions: @submissions%>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

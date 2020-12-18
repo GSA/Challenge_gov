@@ -22,6 +22,7 @@ defmodule Web.SubmissionInviteController do
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
+      |> assign(:phase, phase)
       |> assign(:submissions, submissions)
       |> render("index.html")
     else
@@ -93,7 +94,10 @@ defmodule Web.SubmissionInviteController do
       conn
       |> assign(:user, user)
       |> assign(:submission_invite, submission_invite)
-      |> render("show.html")
+      |> put_flash(:error, "Invite revoked")
+      |> redirect(
+        to: Routes.submission_invite_path(conn, :index, submission_invite.solution.phase_id)
+      )
     else
       {:error, _changeset} ->
         conn

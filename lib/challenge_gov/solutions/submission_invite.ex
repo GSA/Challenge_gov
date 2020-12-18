@@ -48,6 +48,14 @@ defmodule ChallengeGov.Solutions.SubmissionInvite do
     struct
     |> changeset(params)
     |> put_change(:solution, submission)
+    |> foreign_key_constraint(:submission_id)
+    |> unique_constraint(:submission_id)
+  end
+
+  def reinvite_changeset(struct, params) do
+    struct
+    |> changeset(params)
+    |> put_change(:status, "pending")
   end
 
   def accept_changeset(struct) do
