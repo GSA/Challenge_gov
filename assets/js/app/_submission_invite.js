@@ -15,9 +15,11 @@ individualCheckboxes.on("change", (e) => {
 // Grabs the quill element that is set in rich_text_editor.js to attach event listener
 // Track message length to enable/disable submit button
 quill = $(".submission-invites__message .rt-textarea").data("quill")
-quill.on('text-change', function(delta, source) {
-  checkSubmitRequirements()
-});
+if (quill) {
+  quill.on('text-change', function(delta, source) {
+    checkSubmitRequirements()
+  });
+}
 
 const checkSelectAllStatus = () => {
   const individualCheckboxCount = individualCheckboxes.length
