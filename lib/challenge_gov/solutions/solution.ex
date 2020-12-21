@@ -11,6 +11,7 @@ defmodule ChallengeGov.Solutions.Solution do
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.Solutions.Document
+  alias ChallengeGov.Solutions.SubmissionInvite
 
   @type t :: %__MODULE__{}
 
@@ -39,6 +40,7 @@ defmodule ChallengeGov.Solutions.Solution do
     belongs_to(:submitter, User)
     belongs_to(:challenge, Challenge)
     belongs_to(:phase, Phase)
+    has_one(:invite, SubmissionInvite)
     has_many(:documents, Document)
     field(:document_ids, :map, virtual: true)
 
