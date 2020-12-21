@@ -104,6 +104,7 @@ defmodule ChallengeGov.Emails do
       "You have been invited to the next phase of #{submission_invite.solution.challenge.title}"
     )
     |> assign(:submission_invite, submission_invite)
+    |> assign(:challenge, submission_invite.solution.challenge)
     |> render("submission_invite.html")
   end
 
