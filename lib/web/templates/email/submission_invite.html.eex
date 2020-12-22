@@ -1,5 +1,5 @@
 <div>
   <%= SharedView.render_safe_html(@submission_invite.message) %>
 </div>
-<%= link("Your solutions", to: Routes.solution_path(Endpoint, :index)) %> | 
+<%= link("Your solutions", to: Routes.solution_url(Endpoint, :index)) %> | 
 <%= link("Challenge details", to: Routes.public_challenge_details_url(Endpoint, :index, @challenge.id)) %>
