@@ -87,11 +87,12 @@
         {Credo.Check.Readability.ParenthesesOnZeroArityDefs, []},
         {Credo.Check.Readability.PredicateFunctionNames, []},
         {Credo.Check.Readability.PreferImplicitTry, []},
-        {Credo.Check.Readability.RedundantBlankLines, []},
+        {Credo.Check.Readability.RedundantBlankLines, [max_blank_lines: 2]},
         {Credo.Check.Readability.Semicolons, []},
         {Credo.Check.Readability.SpaceAfterCommas, []},
         {Credo.Check.Readability.StringSigils, []},
         {Credo.Check.Readability.TrailingBlankLine, []},
+        {Credo.Check.Readability.UnnecessaryAliasExpansion, []},
         {Credo.Check.Readability.TrailingWhiteSpace, []},
         {Credo.Check.Readability.VariableNames, []},
 
@@ -102,6 +103,8 @@
         {Credo.Check.Refactor.CyclomaticComplexity, []},
         {Credo.Check.Refactor.FunctionArity, []},
         {Credo.Check.Refactor.LongQuoteBlocks, []},
+        # Not an issue with Elixir 1.8+
+        {Credo.Check.Refactor.MapInto, false},
         {Credo.Check.Refactor.MatchInCondition, []},
         {Credo.Check.Refactor.NegatedConditionsInUnless, []},
         {Credo.Check.Refactor.NegatedConditionsWithElse, []},
@@ -109,17 +112,20 @@
         {Credo.Check.Refactor.PipeChainStart,
          [
            excluded_argument_types: [:atom, :binary, :fn, :keyword, :number],
-           excluded_functions: []
+           excluded_functions: ["from"]
          ]},
         {Credo.Check.Refactor.UnlessWithElse, []},
+        {Credo.Check.Refactor.WithClauses, []},
 
         #
         ## Warnings
         #
+        {Credo.Check.Warning.ApplicationConfigInModuleAtribute, []},
         {Credo.Check.Warning.BoolOperationOnSameValues, []},
         {Credo.Check.Warning.ExpensiveEmptyEnumCheck, []},
         {Credo.Check.Warning.IExPry, []},
         {Credo.Check.Warning.IoInspect, []},
+        # Not an issue with Elixir 1.8+
         {Credo.Check.Warning.LazyLogging, []},
         {Credo.Check.Warning.OperationOnSameValues, []},
         {Credo.Check.Warning.OperationWithConstantResult, []},
@@ -132,29 +138,60 @@
         {Credo.Check.Warning.UnusedRegexOperation, []},
         {Credo.Check.Warning.UnusedStringOperation, []},
         {Credo.Check.Warning.UnusedTupleOperation, []},
+        {Credo.Check.Warning.UnsafeExe, []},
+        {Credo.Check.Warning.MapGetUnsafePass, []},
+        {Credo.Check.Warning.UnsafeToAtom, []},
 
-        #
-        # Controversial and experimental checks (opt-in, just replace `false` with `[]`)
-        #
-        {Credo.Check.Consistency.MultiAliasImportRequireUse, false},
-        {Credo.Check.Design.DuplicatedCode, false},
-        {Credo.Check.Readability.Specs, false},
-        {Credo.Check.Refactor.ABCSize, false},
-        {Credo.Check.Refactor.AppendSingleItem, false},
-        {Credo.Check.Refactor.DoubleBooleanNegation, false},
-        {Credo.Check.Refactor.ModuleDependencies, false},
-        {Credo.Check.Refactor.VariableRebinding, false},
-        {Credo.Check.Warning.MapGetUnsafePass, false},
-        {Credo.Check.Warning.UnsafeToAtom, false},
+#
+# Controversial and experimental checks (opt-in, just replace `false` with `[]`)
+#
+{Credo.Check.Consistency.MultiAliasImportRequireUse, []},
+{Credo.Check.Consistency.UnusedVariableNames, false},
+{Credo.Check.Design.DuplicatedCode, []},
+{Credo.Check.Readability.AliasAs, false},
+{Credo.Check.Readability.BlockPipe, []},
+{Credo.Check.Readability.ImplTrue, []},
+{Credo.Check.Readability.MultiAlias, []},
+{Credo.Check.Readability.SeparateAliasRequire, []},
+{Credo.Check.Readability.SinglePipe, false},
+{Credo.Check.Readability.Specs, []},
+{Credo.Check.Readability.StrictModuleLayout, []},
+{Credo.Check.Readability.WithCustomTaggedTuple,[]
+},
+{Credo.Check.Refactor.ABCSize, false},
+{Credo.Check.Refactor.AppendSingleItem, []},
+{Credo.Check.Refactor.DoubleBooleanNegation, []},
+{Credo.Check.Refactor.ModuleDependencies, false},
+{Credo.Check.Refactor.NegatedIsNil, false},
+{Credo.Check.Refactor.VariableRebinding, false},
 
-        #
-        # Deprecated
-        #
-        {Credo.Check.Refactor.MapInto, false}
+#
+# CredoContrib checks
+#
+{CredoContrib.Check.EmptyDocString, []},
+{CredoContrib.Check.EmptyTestBlock, []},
+{CredoContrib.Check.FunctionBlockSyntax, false},
+{CredoContrib.Check.FunctionNameUnderscorePrefix, []},
+{CredoContrib.Check.ModuleAlias, []},
+{CredoContrib.Check.ModuleDirectivesOrder, []},
+{CredoContrib.Check.PublicPrivateFunctionName, []},
+{CredoContrib.Check.SingleFunctionPipe, false},
 
-        #
-        # Custom checks can be created using `mix credo.gen.check`.
-        #
+#
+# CredoEnvVar checks
+#
+{CredoEnvvar.Check.Warning.EnvironmentVariablesAtCompileTime, []},
+
+#
+# CredoNaming checks
+#
+{CredoNaming.Check.Warning.AvoidSpecificTermsInModuleNames, false},
+{CredoNaming.Check.Consistency.ModuleFilename,
+ excluded_paths: ["config", "mix.exs", "test/support"]}
+
+#
+# Custom checks can be created using `mix credo.gen.check`.
+#
       ]
     }
   ]
