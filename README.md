@@ -10,6 +10,7 @@ Welcome to the ChallengeGov Data Portal
 - [Elixir 1.9](https://elixir-lang.org) - server language
 - [Erlang 21.2](https://www.erlang.org/) - server language
 - [node.js 11.10](https://nodejs.org/en/) - front end language
+- [yarn 1.22.5](https://yarnpkg.com/) - package manager
 
 ## Install & Setup
 
@@ -40,7 +41,11 @@ asdf install elixir 1.8.0
 
 asdf plugin-add nodejs
 bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
-asdf install nodejs 11.13.0
+asdf install nodejs 11.13.
+
+asdf plugin-add yarn 
+asdf install yarn 1.22.5
+
 ```
 
 ### ChallengeGov Setup
@@ -95,7 +100,15 @@ mix ecto.create
 mix ecto.migrate
 ```
 
-Once the database is setup, you can run the server.
+Once the database is setup, make sure to install javascript dependencies.
+
+```bash
+cd assets/
+yarn
+cd ..
+```
+
+Now you can run the server.
 
 ```bash
 mix phx.server
