@@ -245,18 +245,8 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
             "upload_logo" => "false",
             "is_multi_phase" => "true",
             "phases" => %{
-              "0" => %{
-                "title" => "Test",
-                "start_date" => TestHelpers.iso_timestamp(hours: -4),
-                "end_date" => TestHelpers.iso_timestamp(hours: -3),
-                "open_to_submissions" => "true"
-              },
-              "1" => %{
-                "title" => "Test 2",
-                "start_date" => TestHelpers.iso_timestamp(hours: -2),
-                "end_date" => TestHelpers.iso_timestamp(hours: -1),
-                "open_to_submissions" => "false"
-              }
+              "0" => create_phase("Test", hours: -4, hours: -3, true),
+              "1" => create_phase("Test 2", hours: -2, hours: -1, false)
             }
           }
         },
@@ -265,6 +255,15 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
       )
 
     challenge
+  end
+
+  defp create_phase(title, start_date, end_date, open_to_submissions) do
+    %{
+      "title" => "title",
+      "start_date" => TestHelpers.iso_timestamp(start_date),
+      "end_date" => TestHelpers.iso_timestamp(end_date),
+      "open_to_submissions" => open_to_submissions
+    }
   end
 
   def create_old_archived_multi_phase_challenge(user, attributes \\ %{}) do
@@ -281,18 +280,8 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
             "upload_logo" => "false",
             "is_multi_phase" => "true",
             "phases" => %{
-              "0" => %{
-                "title" => "Test",
-                "start_date" => TestHelpers.iso_timestamp(months: -5),
-                "end_date" => TestHelpers.iso_timestamp(months: -5),
-                "open_to_submissions" => "true"
-              },
-              "1" => %{
-                "title" => "Test 2",
-                "start_date" => TestHelpers.iso_timestamp(months: -5),
-                "end_date" => TestHelpers.iso_timestamp(months: -4),
-                "open_to_submissions" => "false"
-              }
+              "0" => create_phase("Test", months: -5, months: -5, true),
+              "1" => create_phase("Test 2", months: -5, months: -4, false)
             }
           }
         },
