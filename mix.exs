@@ -62,6 +62,7 @@ defmodule ChallengeGov.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:quantum, "~> 3.0-rc"},
       {:remote_ip, "~> 0.2.0"},
+      {:sobelow, "~> 0.11"},
       {:stein, "~> 0.5"},
       {:stein_storage, "~> 0.1"},
       {:sweet_xml, "~> 0.6.6"},
