@@ -10,7 +10,14 @@ defmodule ChallengeGov.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -35,6 +42,7 @@ defmodule ChallengeGov.MixProject do
     [
       {:bamboo_smtp, "~> 2.1.0"},
       {:cors_plug, "~> 2.0"},
+      {:excoveralls, "~> 0.10", only: :test},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:earmark, "~> 1.4.3"},
       {:ecto_sql, "~> 3.4"},
