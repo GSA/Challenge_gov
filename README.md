@@ -114,16 +114,6 @@ Now you can run the server.
 mix phx.server
 ```
 
-### File Uploads
-
-In development, local file storage is used. In production, file uploads are stored in S3.
-
-Environment variables required for upload on production:
-
-- `AWS_ACCESS_KEY_ID` - IAM access key
-- `AWS_SECRET_ACCESS_KEY` - IAM access secret key
-- `AWS_BUCKET` - bucket that the IAM user has read and write permissions to
-
 ## Testing
 
 The ChallengeGov runs each pull request (and every commit on the `master` branch) through CI. Make sure to add tests as you extend the application. We also run [Credo](https://github.com/rrrene/credo) and the built in formatter in CI to ensure code quality.
