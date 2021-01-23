@@ -1,7 +1,6 @@
 {
   "repository": {},
-  "license": "GSA-GOV",
-  "repository": { "type": "git", "url": "https://github.com/GSA/Challenge_gov" },
+  "license": "MIT",
   "scripts": {
     "build": "webpack --mode development",
     "deploy": "webpack --mode production",
