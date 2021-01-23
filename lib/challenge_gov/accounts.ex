@@ -614,83 +614,21 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Activate pending user. Check certification, change status, allow login if certified
   """
-  def activate(user = %{status: "pending"}, approver, approver_remote_ip) do
-    # pending users get certified on activation unless they are solvers
-    if user.role != "solver" do
-      CertificationLogs.certify_user_with_approver(user, approver, approver_remote_ip)
-      activate(user, user.status, approver, approver_remote_ip)
-    else
-      activate(user, user.status, approver, approver_remote_ip)
-    end
+  def activate(user = %{status: "pending", role: "solver"}, originator, remote_ip) do
+      activate(user,  originator, remote_ip, previous_status: previous_status)
   end
-
-  @doc """
-  Activate a user. Change status, allows login
-  """
+  def activate(user = %{status: "pending"}, originator, remote_ip) do
+      CertificationLogs.certify_user_with_approver(user, originator, remote_ip)
+      activate(user, originator, remote_ip, previous_status: previous_status)
+  end
   def activate(user, originator, remote_ip) do
-    previous_status = user.status
-
     changeset =
       user
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:status, "active")
       |> maybe_update_request_renewal(user)
 
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.update(:user, changeset)
-      |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%{
-          originator_id: originator.id,
-          originator_role: originator.role,
-          originator_identifier: originator.email,
-          originator_remote_ip: remote_ip,
-          target_id: user.id,
-          target_type: user.role,
-          target_identifier: user.email,
-          action: "status_change",
-          details: %{previous_status: previous_status, new_status: "active"}
-        })
-      end)
-      |> Repo.transaction()
-
-    case result do
-      {:ok, %{user: user}} ->
-        {:ok, user}
-
-      {:error, _type, changeset, _changes} ->
-        {:error, changeset}
-    end
-  end
-
-  @doc """
-  Activate users who previously needed extra actions. Change status, allows login
-  """
-  def activate(user, previous_status, originator, remote_ip) do
-    changeset =
-      user
-      |> Ecto.Changeset.change()
-      |> Ecto.Changeset.put_change(:status, "active")
-      |> maybe_update_request_renewal(user)
-
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.update(:user, changeset)
-      |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%{
-          originator_id: originator.id,
-          originator_role: originator.role,
-          originator_identifier: originator.email,
-          originator_remote_ip: remote_ip,
-          target_id: user.id,
-          target_type: user.role,
-          target_identifier: user.email,
-          action: "status_change",
-          details: %{previous_status: previous_status, new_status: "active"}
-        })
-      end)
-      |> Repo.transaction()
-
+    result = update_user_and_log(user, originator, remote_ip, changeset)
     case result do
       {:ok, %{user: user}} ->
         {:ok, user}
@@ -712,30 +650,12 @@ defmodule ChallengeGov.Accounts do
   Suspend a user. User can no longer login. Still has data access after
   """
   def suspend(user, originator, remote_ip) do
-    previous_status = user.status
-
     changeset =
       user
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:status, "suspended")
 
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.update(:user, changeset)
-      |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%{
-          originator_id: originator.id,
-          originator_role: originator.role,
-          originator_identifier: originator.email,
-          originator_remote_ip: remote_ip,
-          target_id: user.id,
-          target_type: user.role,
-          target_identifier: user.email,
-          action: "status_change",
-          details: %{previous_status: previous_status, new_status: "suspended"}
-        })
-      end)
-      |> Repo.transaction()
+    result = update_user_and_log(user, originator, remote_ip, changeset)
 
     case result do
       {:ok, %{user: user}} ->
@@ -750,30 +670,12 @@ defmodule ChallengeGov.Accounts do
   Revoke a user. User can no longer login. Removes access to their challenges
   """
   def revoke(user, originator, remote_ip) do
-    previous_status = user.status
-
     changeset =
       user
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:status, "revoked")
 
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.update(:user, changeset)
-      |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%{
-          originator_id: originator.id,
-          originator_role: originator.role,
-          originator_identifier: originator.email,
-          originator_remote_ip: remote_ip,
-          target_id: user.id,
-          target_type: user.role,
-          target_identifier: user.email,
-          action: "status_change",
-          details: %{previous_status: previous_status, new_status: "revoked"}
-        })
-      end)
-      |> Repo.transaction()
+    result = update_user_and_log(user, originator, remote_ip, changeset)
 
     case result do
       {:ok, %{user: user}} ->
@@ -790,27 +692,12 @@ defmodule ChallengeGov.Accounts do
   """
 
   def deactivate(user) do
-    previous_status = user.status
-
     changeset =
       user
       |> Ecto.Changeset.change()
       |> Ecto.Changeset.put_change(:status, "deactivated")
 
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.update(:user, changeset)
-      |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%{
-          target_id: user.id,
-          target_type: user.role,
-          target_identifier: user.email,
-          action: "status_change",
-          details: %{previous_status: previous_status, new_status: "deactivated"}
-        })
-      end)
-      |> Repo.transaction()
-
+    result = update_user_and_log(user, originator, remote_ip, changeset)
     case result do
       {:ok, %{user: user}} ->
         {:ok, user}
@@ -824,8 +711,6 @@ defmodule ChallengeGov.Accounts do
   Decertify a user. User can no longer login. Removes access to their challenges
   """
   def decertify(user) do
-    previous_status = user.status
-
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -833,20 +718,7 @@ defmodule ChallengeGov.Accounts do
       |> Ecto.Changeset.put_change(:terms_of_use, nil)
       |> Ecto.Changeset.put_change(:privacy_guidelines, nil)
 
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.update(:user, changeset)
-      |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%{
-          target_id: user.id,
-          target_type: user.role,
-          target_identifier: user.role,
-          action: "status_change",
-          details: %{previous_status: previous_status, new_status: "decertified"}
-        })
-      end)
-      |> Repo.transaction()
-
+    result = update_user_and_log(user, originator, remote_ip, changeset)
     case result do
       {:ok, %{user: user}} ->
         revoke_challenge_ownership(user)
@@ -856,6 +728,29 @@ defmodule ChallengeGov.Accounts do
         {:error, changeset}
     end
   end
+
+  defp update_user_and_log(user, originator, remote_ip, changeset) do
+    new_status = changeset
+    |> Ecto.Changeset.get_change(:status)
+    
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:user, changeset)
+    |> Ecto.Multi.run(:log, fn _repo, _changes ->
+      SecurityLogs.track(%{
+            originator_id: originator.id,
+            originator_role: originator.role,
+            originator_identifier: originator.email,
+            originator_remote_ip: remote_ip,
+            target_id: user.id,
+            target_type: user.role,
+            target_identifier: user.email,
+            action: "status_change",
+            details: %{previous_status: user.status, new_status: new_status}
+      })
+    end)
+    |> Repo.transaction()
+  end
+  
 
   @doc """
   Removes a user's access to their challenges while preserving they previously had access
