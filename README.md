@@ -18,6 +18,13 @@ Welcome to the ChallengeGov Data Portal
 
 Install PostgreSQL according to your OS of choice, for MacOS [Postgres.app](https://postgresapp.com/) is recommended.
 
+Alternatively, use the Challenge_gov docker-compose file to run psql locally in a container.
+
+```cd docker
+docker-compose run --service-ports psql
+```
+
+
 To install Elixir, Erlang, and NodeJS it is recommended to use the [asdf version manager](https://asdf-vm.com/#/). Install instructions are copied here for MacOS, for other OSs see [asdf docs](https://asdf-vm.com/#/core-manage-asdf-vm). This also assumes you have [HomeBrew](https://brew.sh/) installed.
 
 ```bash
