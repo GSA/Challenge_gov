@@ -2,7 +2,7 @@ defmodule Web.Plugs.SessionTimeout do
   @moduledoc """
   Manage session timeout
   """
-  alias Web.API.SessionController
+  alias Web.SessionController
   alias ChallengeGov.Accounts
   alias ChallengeGov.Security
 

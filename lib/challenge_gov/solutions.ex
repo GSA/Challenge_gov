@@ -6,7 +6,6 @@ defmodule ChallengeGov.Solutions do
   alias ChallengeGov.Emails
   alias ChallengeGov.GovDelivery
   alias ChallengeGov.Mailer
-  alias ChallengeGov.QueryHelper
   alias ChallengeGov.Repo
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.SolutionDocuments
@@ -355,8 +354,25 @@ defmodule ChallengeGov.Solutions do
     where(query, [s], s.judging_status == ^value)
   end
 
-  def order_on_attribute(query, sort_columns) when is_map(sort_columns) and map_size(sort_columns) > 0 do
-    QueryHelper.order_on_attribute(query, sort_columns)
+  def order_on_attribute(query, sort_columns)
+      when is_map(sort_columns) and map_size(sort_columns) > 0 do
+    columns_to_sort =
+      Enum.reduce(sort_columns, [], fn {column, direction}, acc ->
+        column = String.to_atom(column)
+
+        case direction do
+          "asc" ->
+            acc ++ [asc_nulls_last: column]
+
+          "desc" ->
+            acc ++ [desc_nulls_last: column]
+
+          _ ->
+            []
+        end
+      end)
+
+    order_by(query, [c], ^columns_to_sort)
   end
 
   def order_on_attribute(query, _), do: order_by(query, [c], desc_nulls_last: :id)

@@ -13,7 +13,6 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Challenges.ResourceBanner
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
-  alias ChallengeGov.QueryHelper
   alias ChallengeGov.Phases
   alias ChallengeGov.Repo
   alias ChallengeGov.SavedChallenges
@@ -1364,6 +1363,22 @@ defmodule ChallengeGov.Challenges do
   end
 
   def order_on_attribute(query, sort_columns) do
-    QueryHelper.order_on_attribute(query, sort_columns)
+    columns_to_sort =
+      Enum.reduce(sort_columns, [], fn {column, direction}, acc ->
+        column = String.to_atom(column)
+
+        case direction do
+          "asc" ->
+            acc ++ [asc_nulls_last: column]
+
+          "desc" ->
+            acc ++ [desc_nulls_last: column]
+
+          _ ->
+            []
+        end
+      end)
+
+    order_by(query, [c], ^columns_to_sort)
   end
 end

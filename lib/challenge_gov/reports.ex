@@ -5,8 +5,6 @@ defmodule ChallengeGov.Reports do
 
   import Ecto.Query
   import Ecto.Changeset
-  
-  alias ChallengeGov.DateRange
   alias ChallengeGov.Repo
   alias ChallengeGov.Reports.Report
   alias ChallengeGov.SecurityLogs.SecurityLog
@@ -35,7 +33,7 @@ defmodule ChallengeGov.Reports do
 
     if changeset.valid? do
       {datetime_start, datetime_end} =
-        DateRange.range_from(
+        range_from(
           sanitize_param(year),
           sanitize_param(month),
           sanitize_param(day)
@@ -57,5 +55,55 @@ defmodule ChallengeGov.Reports do
 
   defp sanitize_param(value) do
     if value == "", do: nil, else: String.to_integer(value)
+  end
+
+  defp range_from(year, month, day) do
+    case {year, month, day} do
+      {year, month, day} when month == nil and day == nil ->
+        # just year given
+        datetime_start =
+          year
+          |> Timex.beginning_of_year()
+          |> Timex.to_datetime()
+
+        datetime_end =
+          year
+          |> Timex.end_of_year()
+          |> Timex.to_datetime()
+          |> Timex.end_of_day()
+          |> Timex.to_datetime()
+
+        {datetime_start, datetime_end}
+
+      {year, month, day} when day == nil ->
+        # month/year given
+        datetime_start =
+          year
+          |> Timex.beginning_of_month(month)
+          |> Timex.to_datetime()
+          |> Timex.beginning_of_day()
+
+        datetime_end =
+          year
+          |> Timex.end_of_month(month)
+          |> Timex.to_datetime()
+          |> Timex.end_of_day()
+
+        {datetime_start, datetime_end}
+
+      {year, month, day} ->
+        # day/month/year given
+        datetime_start =
+          {year, month, day}
+          |> Timex.to_datetime()
+          |> Timex.beginning_of_day()
+
+        datetime_end =
+          {year, month, day}
+          |> Timex.to_datetime()
+          |> Timex.end_of_day()
+
+        {datetime_start, datetime_end}
+    end
   end
 end
