@@ -93,11 +93,12 @@ mix deps.get
 mix compile
 ```
 
-This sets up your basic elixir environment. Next setup the database. The following commands will create and migrate locally.
+This sets up your basic elixir environment. Next setup the database. The following commands will create and migrate locally, as well as migrate seeds.
 
 ```bash
 mix ecto.create
 mix ecto.migrate
+mix run priv/repo/seeds.exs
 ```
 
 Once the database is setup, make sure to install javascript dependencies.
