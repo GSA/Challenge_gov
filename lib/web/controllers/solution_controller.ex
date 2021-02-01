@@ -9,8 +9,13 @@ defmodule Web.SolutionController do
 
   plug(
     Web.Plugs.EnsureRole,
-    [:solver] when action not in [:index, :show, :delete, :update_judging_status]
-  )
+    [:solver] when action not in [:index, :show, :delete, :update_judging_status, :new]
+)
+
+ plug(
+   Web.Plugs.EnsureRole,
+   [:admin, :super_admin, :solver] when action in [:new]
+ )
 
   plug(
     Web.Plugs.EnsureRole,
