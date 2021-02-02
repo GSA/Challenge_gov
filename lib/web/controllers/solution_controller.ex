@@ -9,12 +9,12 @@ defmodule Web.SolutionController do
 
   plug(
     Web.Plugs.EnsureRole,
-    [:solver] when action not in [:index, :show, :delete, :update_judging_status, :new]
+    [:solver] when action not in [:index, :show, :delete, :update_judging_status, :new, :submit, :create]
 )
 
  plug(
    Web.Plugs.EnsureRole,
-   [:admin, :super_admin, :solver] when action in [:new]
+   [:admin, :super_admin, :solver] when action in [:new, :submit, :create]
  )
 
   plug(
@@ -106,13 +106,14 @@ defmodule Web.SolutionController do
     end
   end
 
-  def new(conn, %{"challenge_id" => challenge_id}) do
+  def new(conn, params = %{"challenge_id" => challenge_id, "phase_id" => phase_id}) do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
     conn
     |> assign(:user, user)
     |> assign(:challenge, challenge)
+    |> assign(:phase_id, phase_id)
     |> assign(:action, action_name(conn))
     |> assign(:changeset, Solutions.new())
     |> assign(:navbar_text, "Submit solution")
@@ -121,12 +122,13 @@ defmodule Web.SolutionController do
 
   def create(
         conn,
-        %{
-          "challenge_id" => challenge_id,
+        params = %{
+      "challenge_id" => challenge_id,
+      "phase_id" => phase_id,
           "action" => "draft",
           "solution" => solution_params
         }
-      ) do
+  ) do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
@@ -146,23 +148,42 @@ defmodule Web.SolutionController do
     end
   end
 
-  def create(conn, %{
-        "challenge_id" => challenge_id,
-        "action" => "review",
-        "solution" => solution_params
-      }) do
-    %{current_user: user} = conn.assigns
-    {:ok, challenge} = Challenges.get(challenge_id)
+  def create(conn, params = %{
+    "challenge_id" => challenge_id,
+    "phase_id" => phase_id,
+    "action" => "review",
+    "solution" => solution_params
+    }) do
 
-    with {:ok, phase} <- Challenges.current_phase(challenge),
-         {:ok, solution} <- Solutions.create_review(solution_params, user, challenge, phase) do
+    %{current_user: user} = conn.assigns
+
+    {:ok, solver} = cond do
+      user.role == "admin" ->
+        # what if user doesn't exist?
+        # what if GSA does not confirm?
+        Accounts.get_by_email(solution_params["solver_addr"])
+      true ->
+        {:ok, user}
+    end
+    {:ok, challenge} = Challenges.get(challenge_id)
+    phase = cond do
+      user.role == "admin" ->
+        {:ok, phase} = Phases.get(phase_id)
+        phase
+      true ->
+        case Challenges.current_phase(challenge) do
+          {:ok, phase} ->
+            phase
+          {:error, :no_current_phase} ->
+            conn
+            |> put_flash(:error, "No current phase found")
+            |> redirect(to: Routes.dashboard_path(conn, :index))
+        end
+    end
+    with {:ok, solution} <- Solutions.create_review(solution_params, solver, challenge, phase) do
       conn
       |> redirect(to: Routes.solution_path(conn, :show, solution.id))
     else
-      {:error, :no_current_phase} ->
-        conn
-        |> put_flash(:error, "No current phase found")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
 
       {:error, changeset} ->
         create_error(conn, changeset, user, challenge)

@@ -6,7 +6,7 @@
       <div class="col-md-8">
         <div class="card p-3">
           <%= render Web.SolutionView, "_header.html", conn: @conn, challenge: @challenge %>
-          <%= render Web.SolutionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.challenge_solution_path(@conn, :create, @challenge.id), user: @user, challenge: @challenge %>
+          <%= render Web.SolutionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.challenge_phase_solution_path(@conn, :create, @challenge.id, @phase_id), user: @user, challenge: @challenge %>
         </div>
       </div>
     </div>

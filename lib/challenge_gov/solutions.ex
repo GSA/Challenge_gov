@@ -174,6 +174,7 @@ defmodule ChallengeGov.Solutions do
     |> Mailer.deliver_later()
   end
 
+  # allowed to edit?
   def allowed_to_edit?(user, solution) do
     if solution.submitter_id === user.id do
       {:ok, solution}
