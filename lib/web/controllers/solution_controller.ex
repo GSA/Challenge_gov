@@ -154,16 +154,25 @@ defmodule Web.SolutionController do
     "action" => "review",
     "solution" => solution_params
     }) do
-
+    IO.inspect("params")
+    IO.inspect(params)
+    IO.inspect("Params look for action")
     %{current_user: user} = conn.assigns
 
-    {:ok, solver} = cond do
+    solver = cond do
       user.role == "admin" ->
         # what if user doesn't exist?
         # what if GSA does not confirm?
-        Accounts.get_by_email(solution_params["solver_addr"])
+        case Accounts.get_by_email(solution_params["solver_addr"]) do
+          {:ok, solver} ->
+            solver
+          {:error, :not_found} ->
+            conn
+            |> put_flash(:error, "That user is not found")
+            |> redirect(to: Routes.dashboard_path(conn, :index))
+        end
       true ->
-        {:ok, user}
+        user
     end
     {:ok, challenge} = Challenges.get(challenge_id)
     phase = cond do
