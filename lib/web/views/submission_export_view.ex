@@ -12,9 +12,9 @@ defmodule Web.SubmissionExportView do
   def submission_export_phases_text(submission_export) do
     submission_export.phase_ids
     |> Enum.map(fn phase_id ->
-      phase_id
+      res = phase_id
       |> Phases.get()
-      |> case do
+      case res do
         {:ok, phase} ->
           phase.title
 

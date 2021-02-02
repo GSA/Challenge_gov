@@ -656,11 +656,12 @@ defmodule ChallengeGov.Challenges do
   def soft_delete(challenge, user, remote_ip) do
     now = DateTime.truncate(Timex.now(), :second)
 
-    challenge
+    result = challenge
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:deleted_at, now)
     |> Repo.update()
-    |> case do
+
+    case result do
       {:ok, challenge} ->
         add_to_security_log(user, challenge, "delete", remote_ip)
         {:ok, challenge}
