@@ -5,7 +5,7 @@
         <%= render_submission_filter_tabs(@conn, @challenge, @phase, @filter) %>
         <div class="card">
           <%= render_submission_filter_helper_text(@challenge, @phase, @filter) %>
-          <span style="display: inline;"> Other actions: <%= link("Add submission ->", to: Routes.challenge_solution_path(@conn, :new, @challenge.id)) %></span>
+          <span class="submission-filter__hellper-text p-3" style="display: inline;"> Other actions: <%= link("Add submission ->", to: Routes.challenge_phase_solution_path(@conn, :new, @challenge.id, @phase.id)) %></span>
           <div class="table-responsive">
             <table class="table table-striped">
               <%= render Web.PhaseView, "solution_table/_header.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, filter: @filter, sort: @sort %>
