@@ -355,6 +355,10 @@ defmodule ChallengeGov.Solutions do
     where(query, [s], s.judging_status == ^value)
   end
 
+  def filter_on_attribute({"manager_id", value}, query) do
+    where(query, [s], s.manager_id == ^value)
+  end
+
   def order_on_attribute(query, sort_columns)
       when is_map(sort_columns) and map_size(sort_columns) > 0 do
     columns_to_sort =

@@ -39,6 +39,7 @@ defmodule ChallengeGov.Solutions.Solution do
     belongs_to(:submitter, User)
     belongs_to(:challenge, Challenge)
     belongs_to(:phase, Phase)
+    belongs_to(:manager, User)
     has_many(:documents, Document)
     field(:document_ids, :map, virtual: true)
 
@@ -61,8 +62,9 @@ defmodule ChallengeGov.Solutions.Solution do
       :title,
       :brief_description,
       :description,
-      :external_url
-    ])
+      :external_url,
+
+    ], [:manager_id])
   end
 
   def draft_changeset(struct, params, user, challenge, phase) do
@@ -75,6 +77,7 @@ defmodule ChallengeGov.Solutions.Solution do
     |> foreign_key_constraint(:submitter)
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)
+    |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
     |> validate_length(:brief_description, max: 500)
   end
@@ -85,10 +88,13 @@ defmodule ChallengeGov.Solutions.Solution do
     |> put_change(:submitter_id, user.id)
     |> put_change(:challenge_id, challenge.id)
     |> put_change(:phase_id, phase.id)
+    |> put_change(:manager_id, params["manager_id"])
     |> put_change(:status, "draft")
     |> foreign_key_constraint(:submitter)
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)
+    |> foreign_key_constraint(:manager)
+    
     |> validate_inclusion(:status, status_ids())
     |> validate_required([
       :title,
@@ -105,6 +111,8 @@ defmodule ChallengeGov.Solutions.Solution do
     |> foreign_key_constraint(:submitter)
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)
+    |> foreign_key_constraint(:manager)
+    
     |> validate_inclusion(:status, status_ids())
     |> validate_length(:brief_description, max: 500)
   end
@@ -116,6 +124,7 @@ defmodule ChallengeGov.Solutions.Solution do
     |> foreign_key_constraint(:submitter)
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)
+    |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
     |> validate_required([
       :title,

@@ -9,12 +9,17 @@ defmodule Web.SolutionController do
 
   plug(
     Web.Plugs.EnsureRole,
-    [:solver] when action not in [:index, :show, :delete, :update_judging_status, :new, :submit, :create]
+    [:solver] when action not in [:index, :show, :delete, :update_judging_status, :new, :submit, :create, :managed_solutions]
 )
 
  plug(
    Web.Plugs.EnsureRole,
    [:admin, :super_admin, :solver] when action in [:new, :submit, :create]
+ )
+
+ plug(
+   Web.Plugs.EnsureRole,
+   [:admin, :super_admin] when action in [:managed_solutions]
  )
 
   plug(
@@ -81,6 +86,21 @@ defmodule Web.SolutionController do
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> render("index.html")
+  end
+
+  # TODO: meld this into index, include param
+  def managed_solutions(conn, params = %{"challenge_id" => challenge_id, "phase_id" => phase_id}) do
+    %{current_user: user}  = conn.assigns
+    filter = %{ "manager_id" => user.id }
+    sort = Map.get(params, "sort", %{})
+    solutions = Solutions.all(filter: filter)
+
+    conn
+    |> assign(:user, user)
+    |> assign(:solutions, solutions)
+    |> assign(:filter, filter)
+    |> assign(:sort, sort)
+    |> render("index_managed.html")
   end
 
   def show(conn, params = %{"id" => id}) do
@@ -154,41 +174,38 @@ defmodule Web.SolutionController do
     "action" => "review",
     "solution" => solution_params
     }) do
-    IO.inspect("params")
-    IO.inspect(params)
-    IO.inspect("Params look for action")
     %{current_user: user} = conn.assigns
-
-    solver = cond do
-      user.role == "admin" ->
-        # what if user doesn't exist?
-        # what if GSA does not confirm?
-        case Accounts.get_by_email(solution_params["solver_addr"]) do
-          {:ok, solver} ->
-            solver
-          {:error, :not_found} ->
-            conn
-            |> put_flash(:error, "That user is not found")
-            |> redirect(to: Routes.dashboard_path(conn, :index))
-        end
-      true ->
-        user
-    end
+    
     {:ok, challenge} = Challenges.get(challenge_id)
-    phase = cond do
+    
+    {solver, phase, solution_params} = cond do
       user.role == "admin" ->
+        solution_params = Map.merge(solution_params, %{"manager_id" => user.id})
+        solver =
+          case Accounts.get_by_email(solution_params["solver_addr"]) do
+            {:ok, solver} ->
+              solver
+            {:error, :not_found} ->
+              conn
+              |> put_flash(:error, "That user is not found")
+              |> redirect(to: Routes.dashboard_path(conn, :index))
+          end
         {:ok, phase} = Phases.get(phase_id)
-        phase
+        {solver, phase, solution_params}
       true ->
-        case Challenges.current_phase(challenge) do
-          {:ok, phase} ->
-            phase
-          {:error, :no_current_phase} ->
-            conn
-            |> put_flash(:error, "No current phase found")
-            |> redirect(to: Routes.dashboard_path(conn, :index))
-        end
+        solver = user
+        phase =
+          case Challenges.current_phase(challenge) do
+            {:ok, phase} ->
+              phase
+            {:error, :no_current_phase} ->
+              conn
+              |> put_flash(:error, "No current phase found")
+              |> redirect(to: Routes.dashboard_path(conn, :index))
+          end
+        {solver, phase, solution_params}
     end
+
     with {:ok, solution} <- Solutions.create_review(solution_params, solver, challenge, phase) do
       conn
       |> redirect(to: Routes.solution_path(conn, :show, solution.id))
@@ -198,6 +215,8 @@ defmodule Web.SolutionController do
         create_error(conn, changeset, user, challenge)
     end
   end
+
+  defp redirect_
 
   defp create_error(conn, changeset, user, challenge) do
     conn
