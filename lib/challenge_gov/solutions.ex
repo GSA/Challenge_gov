@@ -176,7 +176,7 @@ defmodule ChallengeGov.Solutions do
 
   # allowed to edit?
   def allowed_to_edit?(user, solution) do
-    if solution.submitter_id === user.id do
+    if solution.submitter_id === user.id or solution.manager_id === user.id do
       {:ok, solution}
     else
       {:error, :not_permitted}

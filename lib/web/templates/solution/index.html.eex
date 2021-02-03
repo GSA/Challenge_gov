@@ -52,7 +52,7 @@
                       <td><%= Web.UserView.name_link(@conn, solution.submitter) %></td>
                     <% end %>
                     <td>
-                      <%= render Web.SolutionView, "_actions.html", conn: @conn, challenge: @challenge, user: @user, solution: solution %>
+                      <%= render Web.SolutionView, "_actions.html", conn: @conn, user: @user, solution: solution %>
                     </td>
                   </tr>
                 <% end %>

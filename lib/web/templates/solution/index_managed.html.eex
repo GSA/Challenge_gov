@@ -23,6 +23,9 @@
 </div>
 <section class="content">
   <div class="container-fluid">
+    <h1>Manage offline submissions for <%= @challenge.title %></h1>
+    <%= link("new offline submission", to: Routes.challenge_phase_solution_path(@conn, :new, @challenge.id, @phase.id)) %>
+    <a href="New offline</btn>
     <div class="row">
       <div class="col-md-12">
         <div class="card">
