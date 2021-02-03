@@ -91,12 +91,16 @@ defmodule Web.SolutionController do
   # TODO: meld this into index, include param
   def managed_solutions(conn, params = %{"challenge_id" => challenge_id, "phase_id" => phase_id}) do
     %{current_user: user}  = conn.assigns
+    {:ok, challenge} = Challenges.get(challenge_id)
+    {:ok, phase} = Phases.get(phase_id)
     filter = %{ "manager_id" => user.id }
     sort = Map.get(params, "sort", %{})
     solutions = Solutions.all(filter: filter)
 
     conn
     |> assign(:user, user)
+    |> assign(:challenge, challenge)
+    |> assign(:phase, phase)
     |> assign(:solutions, solutions)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
