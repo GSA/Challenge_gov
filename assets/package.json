@@ -43,14 +43,36 @@
   "devDependencies": {
     "@babel/core": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
     "babel-loader": "8.0.6",
     "copy-webpack-plugin": "^4.5.0",
     "css-loader": "^0.28.10",
+    "eslint": "^7.15.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.21.5",
+    "identity-obj-proxy": "^3.0.0",
     "mini-css-extract-plugin": "^0.4.0",
     "optimize-css-assets-webpack-plugin": "^4.0.0",
     "sass-loader": "^8.0.2",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "4.41.2",
     "webpack-cli": "^3.3.11"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "./client/__mocks__/fileMock.js",
+      "\\.(css|less)$": "identity-obj-proxy"
+    },
+    "setupFiles": [
+      "./client/tests/test-env.js"
+    ],
+    "setupFilesAfterEnv": [
+      "./client/tests/setupTests.js"
+    ]
   }
 }

@@ -1,10 +1,10 @@
-const path = require('path');
-const glob = require('glob');
-const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path')
+const glob = require('glob')
+const webpack = require('webpack')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = (env, options) => ({
   optimization: {
@@ -69,7 +69,7 @@ module.exports = (env, options) => ({
           mimetype: 'application/image/svg+xml',
           fallback: 'file-loader'
         }
-      },      
+      },
       {
         test: /\.png(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
@@ -82,7 +82,7 @@ module.exports = (env, options) => ({
       },
       {
         test: /\.s?css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       }
     ]
   },
@@ -95,6 +95,6 @@ module.exports = (env, options) => ({
     })
   ],
   resolve: {
-    extensions: [".js", ".jsx", ".json"]
+    extensions: ['.js', '.jsx', '.json']
   }
-});
+})
