@@ -50,6 +50,8 @@ defmodule ChallengeGov.Solutions.Solution do
     field(:external_url, :string)
     field(:status, :string)
     field(:judging_status, :string, default: "not_selected")
+    field(:terms_accepted, :boolean)
+    field(:review_verified, :boolean)
 
     # Meta Timestamps
     field(:deleted_at, :utc_datetime)
@@ -63,7 +65,8 @@ defmodule ChallengeGov.Solutions.Solution do
       :brief_description,
       :description,
       :external_url,
-
+      :terms_accepted,
+      :review_verified,
     ], [:manager_id])
   end
 

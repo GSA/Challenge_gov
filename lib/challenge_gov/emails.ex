@@ -40,6 +40,18 @@ defmodule ChallengeGov.Emails do
     |> render("challenge_auto_publish.html")
   end
 
+  def managed_solution_submission(user, manager, solution) do
+    base_email()
+    |> to(user.email)
+    |> subject(
+      "Challenge.gov - Solution submitted for #{solution.challenge.id} #{solution.challenge.title}"
+    )
+    |> assign(:solution, solution)
+    |> assign(:challenge, solution.challenge)
+    |> render("solution-submission-managed.html")
+  end
+
+  # might require a change in this email.
   def new_solution_submission(user, solution) do
     base_email()
     |> to(user.email)
@@ -49,6 +61,17 @@ defmodule ChallengeGov.Emails do
     |> assign(:solution, solution)
     |> assign(:challenge, solution.challenge)
     |> render("solution-submission.html")
+  end
+
+  def solution_review(user, phase, solution) do
+    base_email()
+    |> to(user.email)
+    |> subject(
+      "Action needed. New submission notification"
+    )
+    |> assign(:solution, solution)
+    |> assign(:phase, phase)
+    |> render("managed-solution-created.html")
   end
 
   def solution_confirmation(solution) do

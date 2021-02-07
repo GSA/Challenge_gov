@@ -184,7 +184,7 @@ defmodule Web.SolutionController do
     
     {solver, phase, solution_params} = cond do
       user.role == "admin" ->
-        solution_params = Map.merge(solution_params, %{"manager_id" => user.id})
+        solution_params = Map.merge(solution_params, %{"manager_id" => user.id, "terms_accepted" => false})
         solver =
           case Accounts.get_by_email(solution_params["solver_addr"]) do
             {:ok, solver} ->
@@ -219,8 +219,6 @@ defmodule Web.SolutionController do
         create_error(conn, changeset, user, challenge)
     end
   end
-
-  defp redirect_
 
   defp create_error(conn, changeset, user, challenge) do
     conn

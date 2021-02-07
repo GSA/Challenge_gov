@@ -39,12 +39,6 @@
 
     <%= FormView.text_field(f, :external_url, label: "External URL (optional)") %>
 
- <%= if @user.role == "admin" do %>
- <%= Phoenix.HTML.Form.checkbox(f, :submitter_read_rules, required: true) %>
- <b>GSA admin has confirmed the submitter has read and accepted the rules of this challenge.</b>
- </div>
-<% end %>    
-
     <%= cancel_button(@conn, @action, @challenge) %>
     <%= submit("Review and submit", name: "action", value: "review", class: "btn btn-primary float-right") %>
     <%= save_draft_button() %>

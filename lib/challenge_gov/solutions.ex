@@ -86,9 +86,10 @@ defmodule ChallengeGov.Solutions do
     |> attach_documents(params)
     |> Repo.transaction()
     |> case do
-      {:ok, %{solution: solution}} ->
-        {:ok, solution}
-
+         {:ok, %{solution: solution}} ->
+           solution = new_form_preload(solution)
+           if solution.manager_id, do: send_solution_review_email(user, phase, solution)
+           {:ok, solution}
       {:error, _type, changeset, _changes} ->
         changeset = preserve_document_ids_on_error(changeset, params)
         changeset = %Ecto.Changeset{changeset | data: Repo.preload(changeset.data, [:documents])}
@@ -171,6 +172,12 @@ defmodule ChallengeGov.Solutions do
   defp send_solution_confirmation_email(solution) do
     solution
     |> Emails.solution_confirmation()
+    |> Mailer.deliver_later()
+  end
+
+  defp send_solution_review_email(user, phase, solution) do
+    user
+    |> Emails.solution_review(phase, solution)
     |> Mailer.deliver_later()
   end
 
