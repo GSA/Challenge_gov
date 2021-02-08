@@ -230,7 +230,9 @@ defmodule ChallengeGov.Solutions do
     end)
   end
 
-  defp attach_documents(multi, _params), do: multi
+  defp attach_documents(multi, params) do
+    multi
+  end
 
   defp attach_document({:ok, document}, solution) do
     SolutionDocuments.attach_to_solution(document, solution)

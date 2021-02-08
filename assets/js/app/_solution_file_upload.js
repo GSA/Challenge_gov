@@ -7,16 +7,19 @@ $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
 $("#solution_document_upload").on("click", function(e) {
   name_input = $("#solution_document_name")
   name = name_input.val()
+  solver_email_input = $("#solution_solver_addr")
+  solver_email = solver_email_input.val()
   file_input = $("#solution_document")
   file = file_input.prop("files")[0]
 
   fd = new FormData()
   fd.append("document[file]", file)
   fd.append("document[name]", name)
+  fd.set("solver_email", solver_email)
 
   if (file) {
     $.ajax({
-      url: "/api/solution_documents", 
+        url: "/api/solution_documents",
       type: "post",
       processData: false,
       contentType: false,
