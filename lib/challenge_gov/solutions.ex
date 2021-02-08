@@ -300,6 +300,15 @@ defmodule ChallengeGov.Solutions do
     })
   end
 
+  def get_all_with_user_id_and_manager(user) do
+    (from s in Solution,
+      where: s.submitter_id == ^user.id,
+      where: not is_nil(s.manager_id),
+      where: s.status == "draft",
+      select: s)
+    |> Repo.all() |> IO.inspect()
+  end
+
   # BOOKMARK: Filter functions
   @impl true
   def filter_on_attribute({"search", value}, query) do
