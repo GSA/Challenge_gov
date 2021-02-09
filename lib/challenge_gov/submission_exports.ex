@@ -13,7 +13,7 @@ defmodule ChallengeGov.SubmissionExports do
   def all(challenge) do
     SubmissionExport
     |> where([se], se.challenge_id == ^challenge.id)
-    |> order_by([se], desc: se.inserted_at)
+    |> order_by([se], desc: se.updated_at)
     |> Repo.all()
   end
 
@@ -51,9 +51,56 @@ defmodule ChallengeGov.SubmissionExports do
   end
 
   def create(params, challenge) do
-    %SubmissionExport{}
-    |> SubmissionExport.create_changeset(params, challenge)
-    |> Repo.insert()
+    case check_for_existing(params) do
+      nil ->
+        %SubmissionExport{}
+        |> SubmissionExport.create_changeset(params, challenge)
+        |> Repo.insert()
+
+      submission_export ->
+        {:ok, submission_export}
+    end
+  end
+
+  defp check_for_existing(%{
+         "phase_ids" => phase_ids,
+         "judging_status" => judging_status,
+         "format" => format
+       }) do
+    submission_export_params = [
+      phase_ids: phase_ids,
+      judging_status: judging_status,
+      format: format
+    ]
+
+    SubmissionExport
+    |> where(^submission_export_params)
+    |> Repo.all()
+    |> case do
+      [] ->
+        nil
+
+      submission_exports ->
+        prune_duplicates(submission_exports)
+    end
+  end
+
+  defp prune_duplicates(submission_exports) do
+    if length(submission_exports) == 1 do
+      {:ok, submission_export} =
+        submission_exports
+        |> Enum.at(0)
+        |> Ecto.Changeset.change(%{updated_at: DateTime.utc_now()})
+        |> Repo.update()
+
+      submission_export
+    else
+      Enum.each(submission_exports, fn submission_export ->
+        delete(submission_export)
+      end)
+
+      nil
+    end
   end
 
   def update(submission_export, params) do

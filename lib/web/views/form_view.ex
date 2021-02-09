@@ -242,6 +242,24 @@ defmodule Web.FormView do
     end
   end
 
+  def rt_textarea_field_alt(form, field, opts \\ []) do
+    content_tag(:div, class: form_group_classes(form, field)) do
+      [
+        content_tag(:div, "",
+          class: "rt-textarea",
+          data: [input: Atom.to_string(field)]
+        ),
+        hidden_input(
+          form,
+          field,
+          Keyword.merge([class: form_control_classes(form, field)], opts)
+        ),
+        hidden_input(form, String.to_existing_atom(Atom.to_string(field) <> "_delta")),
+        error_tag(form, field)
+      ]
+    end
+  end
+
   @doc """
   Generate a textarea field, styled properly
   """

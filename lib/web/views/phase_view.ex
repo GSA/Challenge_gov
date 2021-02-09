@@ -310,6 +310,21 @@ defmodule Web.PhaseView do
 
   defp submission_filter_winner_note(_, _), do: []
 
+  def render_manage_invite_button(conn, challenge, phase, %{"judging_status" => "winner"}) do
+    next_phase_closed? = next_phase_closed?(challenge, phase)
+
+    if next_phase_closed? do
+      link("Manage invites for next phase",
+        to: Routes.submission_invite_path(conn, :index, phase.id),
+        class: "btn btn-primary float-right"
+      )
+    else
+      nil
+    end
+  end
+
+  def render_manage_invite_button(_conn, _challenge, _phase, _filter), do: nil
+
   def filter_tab_content(challenge, phase, filter, filter_key) do
     content_tag(:div, class: "submission-filter__tab submission-filter__tab--#{filter_key}") do
       [
