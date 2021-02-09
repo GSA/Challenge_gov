@@ -18,6 +18,7 @@ defmodule Web.PhaseController do
       |> assign(:user, user)
       |> assign(:challenge, challenge)
       |> assign(:phases, challenge.phases)
+      |> assign(:has_closed_phases, Challenges.has_closed_phases?(challenge))
       |> render("index.html")
     else
       {:error, :not_permitted} ->
@@ -72,6 +73,7 @@ defmodule Web.PhaseController do
       |> assign(:challenge, challenge)
       |> assign(:phase, phase)
       |> assign(:solutions, solutions)
+      |> assign(:has_closed_phases, Challenges.has_closed_phases?(challenge))
       |> assign(:pagination, pagination)
       |> assign(:sort, sort)
       |> assign(:filter, filter)

@@ -48,11 +48,13 @@
     </div>
   </div>
 
-  <div class="row p-2 mb-1">
-    <div class="col">
-      <%= link "Download", to: Routes.submission_export_path(@conn, :index, @challenge.id), class: "btn btn-primary" %>
+  <%= if @has_closed_phases do %>
+    <div class="row p-2 mb-1">
+      <div class="col">
+        <%= link "Download", to: Routes.submission_export_path(@conn, :index, @challenge.id), class: "btn btn-primary" %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
 
 <%= render Web.PhaseView, "solution_table/_table.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, solutions: @solutions, pagination: @pagination, sort: @sort, filter: @filter %>

@@ -12,4 +12,12 @@ defmodule Web.DocumentView do
       "#{document.filename} (#{document.extension})"
     end
   end
+
+  def filename(document) do
+    if !is_nil(document.name) and document.name != "" do
+      document.name
+    else
+      document.key
+    end
+  end
 end

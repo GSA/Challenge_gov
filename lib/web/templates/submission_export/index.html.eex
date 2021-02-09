@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <%= ChallengeView.challenge_solutions_link(@conn, @challenge, @user, label: "Back", class: "btn btn-link p-0 mb-1") %>
 
-    <h1 class="mb-3">Recent download for <%= @challenge.title %></h1>
+    <h1 class="mb-3">Recent downloads for <%= @challenge.title %></h1>
 
     <button class="btn btn-primary" data-toggle="modal" data-target="#submission-download-modal">Create new download</button>
   </div>
@@ -22,9 +22,9 @@
       </div>
       <%= form_for @conn, Routes.submission_export_path(@conn, :create, @challenge.id), fn f -> %>
         <div class="modal-body">
-          <%= if length(@challenge.phases) > 1 do %>
+          <%= if length(@closed_phases) > 1 do %>
             <p>Choose challenge phases:</p>
-            <%= Enum.map(@challenge.phases, fn phase -> %>
+            <%= Enum.map(@closed_phases, fn phase -> %>
               <%= label do %>
                 <%= checkbox(f, "phase_ids[]", checked_value: phase.id, hidden_input: false) %>
                 <span class="ml-1"><%= phase.title %></span>

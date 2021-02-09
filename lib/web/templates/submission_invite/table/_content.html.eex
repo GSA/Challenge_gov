@@ -1,0 +1,28 @@
+<tbody>
+  <%= Enum.map @submissions, fn (submission) -> %>
+    <tr>
+      <td>
+        <input class="submission-invites__checkbox" id="submission_ids" type="checkbox" name="submission_ids[]" value=<%= submission.id %>>
+      </td>
+      <td><%= submission.id %></td>
+      <td><%= submission.title %></td>
+      <td><%= submission.submitter.email %></td>
+      <td><%= status_text(submission) %></td>
+      <td>          
+        <%= if !is_nil(submission.invite) do %>
+          <div class="btn-group btn-group-sm ml-2" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              More options
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+              <%= link("View invite", to: Routes.submission_invite_path(@conn, :show, @phase.id, submission.invite.id), class: "btn btn-link btn-xs") %>
+              <br/>
+              <%= link("Revoke invite", to: Routes.submission_invite_path(@conn, :revoke, submission.invite.id), method: :post, class: "btn btn-link btn-xs text-danger") %>
+            </div>
+          </div>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</tbody>
+

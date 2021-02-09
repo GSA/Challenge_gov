@@ -2,6 +2,7 @@ defmodule Web.SubmissionExportController do
   use Web, :controller
 
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Phases
   alias ChallengeGov.SubmissionExports
 
   plug(Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_owner])
@@ -10,12 +11,15 @@ defmodule Web.SubmissionExportController do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
+         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
+         true <- Challenges.has_closed_phases?(challenge) do
       submission_exports = SubmissionExports.all(challenge)
+      closed_phases = Phases.closed_for_challenge(challenge)
 
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
+      |> assign(:closed_phases, closed_phases)
       |> assign(:submission_exports, submission_exports)
       |> render("index.html")
     else
@@ -27,6 +31,12 @@ defmodule Web.SubmissionExportController do
       {:error, :not_permitted} ->
         conn
         |> put_flash(:error, "You are not authorized to export this challenge's submissions")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
+
+      # Case where there are no closed phases
+      false ->
+        conn
+        |> put_flash(:error, "Challenge has no closed phases to export")
         |> redirect(to: Routes.dashboard_path(conn, :index))
     end
   end
@@ -52,6 +62,11 @@ defmodule Web.SubmissionExportController do
         conn
         |> put_flash(:error, "You are not authorized to export this challenge")
         |> redirect(to: Routes.dashboard_path(conn, :index))
+
+      {:error, %{errors: [phase_ids: {error_msg, _}]}} ->
+        conn
+        |> put_flash(:error, error_msg)
+        |> redirect(to: Routes.submission_export_path(conn, :index, challenge.id))
 
       {:error, _changeset} ->
         conn
