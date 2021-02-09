@@ -90,9 +90,22 @@ defmodule Web.SubmissionExportView do
       submission.description,
       submission.external_url,
       submission.status,
-      submission.judging_status,
-      submission.inserted_at,
-      submission.updated_at
+      submission_export_judging_status_text_csv(submission),
+      SharedView.readable_datetime(submission.inserted_at),
+      SharedView.readable_datetime(submission.updated_at)
     ]
+  end
+
+  def submission_export_judging_status_text_csv(submission_export) do
+    case submission_export.judging_status do
+      "not_selected" ->
+        "Not selected"
+
+      "selected" ->
+        "Selected for judging"
+
+      "winner" ->
+        "Awardee/Selected for next phase"
+    end
   end
 end

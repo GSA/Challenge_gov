@@ -125,6 +125,13 @@ defmodule Web.Router do
       only: [:index, :create]
     )
 
+    resources("/phases/:phase_id/submission_invites", SubmissionInviteController,
+      only: [:index, :show, :create]
+    )
+
+    post("/submission_invites/:id/accept", SubmissionInviteController, :accept)
+    post("/submission_invites/:id/revoke", SubmissionInviteController, :revoke)
+
     post("/submission_exports/:id", SubmissionExportController, :restart)
     resources("/submission_exports", SubmissionExportController, only: [:delete])
 
@@ -187,7 +194,7 @@ defmodule Web.Router do
 
     get("/", PageController, :index)
     get("/challenges", PageController, :index, as: :challenge_index)
-    get("/challenge/:id", PageController, :index, as: :challenge_details)
+    get("/challenges#/challenge/:id", PageController, :index, as: :challenge_details)
   end
 
   if Mix.env() == :dev do

@@ -59,6 +59,14 @@ defmodule ChallengeGov.Phases do
 
   def is_future?(_phase), do: false
 
+  def closed_for_challenge(challenge) do
+    now = DateTime.utc_now()
+
+    Phase
+    |> where([p], p.challenge_id == ^challenge.id and p.end_date < ^now)
+    |> Repo.all()
+  end
+
   def solution_count(phase, filter \\ %{}) do
     phase
     |> Ecto.assoc(:solutions)

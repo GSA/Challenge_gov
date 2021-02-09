@@ -120,6 +120,17 @@ defmodule ChallengeGov.Emails do
     |> render("contact_confirmation.html")
   end
 
+  def submission_invite(submission_invite) do
+    base_email()
+    |> to(submission_invite.solution.submitter.email)
+    |> subject(
+      "You have been invited to the next phase of #{submission_invite.solution.challenge.title}"
+    )
+    |> assign(:submission_invite, submission_invite)
+    |> assign(:challenge, submission_invite.solution.challenge)
+    |> render("submission_invite.html")
+  end
+
   defp base_email() do
     new_email()
     |> from(Mailer.from())
