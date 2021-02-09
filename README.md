@@ -10,6 +10,7 @@ Welcome to the ChallengeGov Data Portal
 - [Elixir 1.9](https://elixir-lang.org) - server language
 - [Erlang 21.2](https://www.erlang.org/) - server language
 - [node.js 11.10](https://nodejs.org/en/) - front end language
+- [yarn 1.22.5](https://yarnpkg.com/) - package manager
 
 ## Install & Setup
 
@@ -47,7 +48,11 @@ asdf install elixir 1.8.0
 
 asdf plugin-add nodejs
 bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
-asdf install nodejs 11.13.0
+asdf install nodejs 11.13.
+
+asdf plugin-add yarn 
+asdf install yarn 1.22.5
+
 ```
 
 ### ChallengeGov Setup
@@ -95,28 +100,40 @@ mix deps.get
 mix compile
 ```
 
-This sets up your basic elixir environment. Next setup the database. The following commands will create and migrate locally.
+This sets up your basic elixir environment. Next setup the database. The following commands will create and migrate locally, as well as migrate seeds.
+
+### Super-Admin (optional)
+If you would like to seed the database with a default super-admin user, please set the following environment variables:
+
+- FIRST_USER_EMAIL
+- FIRST_USER_FN
+- FIRST_USER_LN
 
 ```bash
 mix ecto.create
 mix ecto.migrate
+mix run priv/repo/seeds.exs
 ```
 
-Once the database is setup, you can run the server.
+Once the database is setup, make sure to install javascript dependencies.
+
+```bash
+cd assets/
+yarn
+cd ..
+```
+
+Now you can run the server.
 
 ```bash
 mix phx.server
 ```
 
-### File Uploads
+## Private Keys
 
-In development, local file storage is used. In production, file uploads are stored in S3.
+In order to spin up challenge.gov on your local machine it may be necessary to obtain private keys manually.
 
-Environment variables required for upload on production:
-
-- `AWS_ACCESS_KEY_ID` - IAM access key
-- `AWS_SECRET_ACCESS_KEY` - IAM access secret key
-- `AWS_BUCKET` - bucket that the IAM user has read and write permissions to
+Contact [team@challenge.gov](team@challenge.gov) with subject heading 'Open-Source Development Access' to take part.
 
 ## Testing
 
