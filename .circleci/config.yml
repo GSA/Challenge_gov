@@ -73,6 +73,7 @@ jobs:
           key: v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
       - restore_cache:
           key: v3-build-cache-{{ .Branch }}
+      - run: mix deps.get
       - run: mix compile --force --warnings-as-errors
       - run: mix deps.audit  --ignore-package-names sweet_xml
       - run: mix format --check-formatted
@@ -104,6 +105,7 @@ jobs:
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: mix deps.get          
       - run: mix compile --force --warnings-as-errors
       - run: mix ecto.migrate
       - run: mix run priv/repo/seeds.exs
