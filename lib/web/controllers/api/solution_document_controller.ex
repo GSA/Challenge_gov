@@ -8,10 +8,12 @@ defmodule Web.Api.SolutionDocumentController do
   def create(conn, %{"document" => params, "solver_email" => solver_email} = all_params) do
     IO.inspect("solver email?")
     IO.inspect(solver_email)
+
     user =
       case solver_email do
         "undefined" ->
           conn.assigns.current_user
+
         _ ->
           {:ok, user} = Accounts.get_by_email(solver_email)
           user

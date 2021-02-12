@@ -142,56 +142,55 @@
         {Credo.Check.Warning.MapGetUnsafePass, []},
         {Credo.Check.Warning.UnsafeToAtom, []},
 
-#
-# Controversial and experimental checks (opt-in, just replace `false` with `[]`)
-#
-{Credo.Check.Consistency.MultiAliasImportRequireUse, []},
-{Credo.Check.Consistency.UnusedVariableNames, false},
-{Credo.Check.Design.DuplicatedCode, []},
-{Credo.Check.Readability.AliasAs, false},
-{Credo.Check.Readability.BlockPipe, []},
-{Credo.Check.Readability.ImplTrue, []},
-{Credo.Check.Readability.MultiAlias, []},
-{Credo.Check.Readability.SeparateAliasRequire, []},
-{Credo.Check.Readability.SinglePipe, false},
-{Credo.Check.Readability.Specs, []},
-{Credo.Check.Readability.StrictModuleLayout, []},
-{Credo.Check.Readability.WithCustomTaggedTuple,[]
-},
-{Credo.Check.Refactor.ABCSize, false},
-{Credo.Check.Refactor.AppendSingleItem, []},
-{Credo.Check.Refactor.DoubleBooleanNegation, []},
-{Credo.Check.Refactor.ModuleDependencies, false},
-{Credo.Check.Refactor.NegatedIsNil, false},
-{Credo.Check.Refactor.VariableRebinding, false},
+        #
+        # Controversial and experimental checks (opt-in, just replace `false` with `[]`)
+        #
+        {Credo.Check.Consistency.MultiAliasImportRequireUse, []},
+        {Credo.Check.Consistency.UnusedVariableNames, false},
+        {Credo.Check.Design.DuplicatedCode, []},
+        {Credo.Check.Readability.AliasAs, false},
+        {Credo.Check.Readability.BlockPipe, []},
+        {Credo.Check.Readability.ImplTrue, []},
+        {Credo.Check.Readability.MultiAlias, []},
+        {Credo.Check.Readability.SeparateAliasRequire, []},
+        {Credo.Check.Readability.SinglePipe, false},
+        {Credo.Check.Readability.Specs, []},
+        {Credo.Check.Readability.StrictModuleLayout, []},
+        {Credo.Check.Readability.WithCustomTaggedTuple, []},
+        {Credo.Check.Refactor.ABCSize, false},
+        {Credo.Check.Refactor.AppendSingleItem, []},
+        {Credo.Check.Refactor.DoubleBooleanNegation, []},
+        {Credo.Check.Refactor.ModuleDependencies, false},
+        {Credo.Check.Refactor.NegatedIsNil, false},
+        {Credo.Check.Refactor.VariableRebinding, false},
 
-#
-# CredoContrib checks
-#
-{CredoContrib.Check.EmptyDocString, []},
-{CredoContrib.Check.EmptyTestBlock, []},
-{CredoContrib.Check.FunctionBlockSyntax, false},
-{CredoContrib.Check.FunctionNameUnderscorePrefix, []},
-{CredoContrib.Check.ModuleAlias, []},
-{CredoContrib.Check.ModuleDirectivesOrder, []},
-{CredoContrib.Check.PublicPrivateFunctionName, []},
-{CredoContrib.Check.SingleFunctionPipe, false},
+        #
+        # CredoContrib checks
+        #
+        {CredoContrib.Check.EmptyDocString, []},
+        {CredoContrib.Check.EmptyTestBlock, []},
+        {CredoContrib.Check.FunctionBlockSyntax, false},
+        {CredoContrib.Check.FunctionNameUnderscorePrefix, []},
+        {CredoContrib.Check.ModuleAlias, []},
+        {CredoContrib.Check.ModuleDirectivesOrder, []},
+        {CredoContrib.Check.PublicPrivateFunctionName, []},
+        {CredoContrib.Check.SingleFunctionPipe, false},
 
-#
-# CredoEnvVar checks
-#
-{CredoEnvvar.Check.Warning.EnvironmentVariablesAtCompileTime, []},
+        #
+        # CredoEnvVar checks
+        #
+        {CredoEnvvar.Check.Warning.EnvironmentVariablesAtCompileTime, []},
 
-#
-# CredoNaming checks
-#
-{CredoNaming.Check.Warning.AvoidSpecificTermsInModuleNames, false},
-{CredoNaming.Check.Consistency.ModuleFilename,
- excluded_paths: ["config", "mix.exs", "test/support"]}
+        #
+        # CredoNaming checks
+        #
+        {CredoNaming.Check.Warning.AvoidSpecificTermsInModuleNames, false},
+        {CredoNaming.Check.Consistency.ModuleFilename,
+         excluded_paths: ["config", "mix.exs", "test/support"]}
 
-#
-# Custom checks can be created using `mix credo.gen.check`.
-#
+        #
+        # Custom checks can be created using `mix credo.gen.check`.
+        #
       ]
     }
   ]

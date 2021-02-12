@@ -62,14 +62,18 @@ defmodule ChallengeGov.Solutions.Solution do
 
   def changeset(struct, params) do
     struct
-    |> cast(params, [
-      :title,
-      :brief_description,
-      :description,
-      :external_url,
-      :terms_accepted,
-      :review_verified,
-    ], [:manager_id])
+    |> cast(
+      params,
+      [
+        :title,
+        :brief_description,
+        :description,
+        :external_url,
+        :terms_accepted,
+        :review_verified
+      ],
+      [:manager_id]
+    )
   end
 
   def draft_changeset(struct, params, user, challenge, phase) do
@@ -99,7 +103,6 @@ defmodule ChallengeGov.Solutions.Solution do
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
-    
     |> validate_inclusion(:status, status_ids())
     |> validate_required([
       :title,
@@ -117,7 +120,6 @@ defmodule ChallengeGov.Solutions.Solution do
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
-    
     |> validate_inclusion(:status, status_ids())
     |> validate_length(:brief_description, max: 500)
   end

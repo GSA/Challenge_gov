@@ -66,9 +66,7 @@ defmodule ChallengeGov.Emails do
   def solution_review(user, phase, solution) do
     base_email()
     |> to(user.email)
-    |> subject(
-      "Action needed. New submission notification"
-    )
+    |> subject("Action needed. New submission notification")
     |> assign(:solution, solution)
     |> assign(:phase, phase)
     |> render("managed-solution-created.html")

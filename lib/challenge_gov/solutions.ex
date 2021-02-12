@@ -86,10 +86,11 @@ defmodule ChallengeGov.Solutions do
     |> attach_documents(params)
     |> Repo.transaction()
     |> case do
-         {:ok, %{solution: solution}} ->
-           solution = new_form_preload(solution)
-           if solution.manager_id, do: send_solution_review_email(user, phase, solution)
-           {:ok, solution}
+      {:ok, %{solution: solution}} ->
+        solution = new_form_preload(solution)
+        if solution.manager_id, do: send_solution_review_email(user, phase, solution)
+        {:ok, solution}
+
       {:error, _type, changeset, _changes} ->
         changeset = preserve_document_ids_on_error(changeset, params)
         changeset = %Ecto.Changeset{changeset | data: Repo.preload(changeset.data, [:documents])}
@@ -301,12 +302,14 @@ defmodule ChallengeGov.Solutions do
   end
 
   def get_all_with_user_id_and_manager(user) do
-    (from s in Solution,
+    from(s in Solution,
       where: s.submitter_id == ^user.id,
       where: not is_nil(s.manager_id),
       where: s.status == "draft",
-      select: s)
-    |> Repo.all() |> IO.inspect()
+      select: s
+    )
+    |> Repo.all()
+    |> IO.inspect()
   end
 
   # BOOKMARK: Filter functions

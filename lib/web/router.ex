@@ -89,6 +89,7 @@ defmodule Web.Router do
 
       resources("/phases", PhaseController, only: [:index, :show]) do
         get("/solutions/managed", SolutionController, :managed_solutions, as: :managed_solution)
+
         resources("/solutions", SolutionController, only: [:index, :show, :new, :create]) do
         end
       end

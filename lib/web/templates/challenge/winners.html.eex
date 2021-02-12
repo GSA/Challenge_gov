@@ -1,0 +1,7 @@
+<h1>Winners for <%= @challenge.title %></h1>
+<%= for p <- @challenge.phases do %>
+    <h3>Phase X</h3>
+    <p><b>Start Date</b> 7/20/2020</p>
+    <p><b>End Date</b> 2/28/2021</p>
+    <%= link "Manage Winners", to: Routes.challenge_phase_winner_path(@conn, :winners, @challenge.id, p.id), class: "btn btn-link" %>
+<%= end %>
