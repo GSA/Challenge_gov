@@ -88,6 +88,10 @@ defmodule Web.Router do
       resources("/bulletin", BulletinController, only: [:new, :create])
 
       resources("/phases", PhaseController, only: [:index, :show]) do
+        get("/winners/publish", PhaseController, :winners_publish, as: "winner")
+        get("/winners", PhaseController, :winners, as: "winner")
+        post("/winners", PhaseController, :create_winners, as: "winner")
+
         resources("/solutions", SolutionController, only: [:index, :show, :new, :create])
       end
 
@@ -97,6 +101,7 @@ defmodule Web.Router do
     end
 
     get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
+    get("/challenges/:id/winners", ChallengeController, :winners, as: :challenge)
 
     post("/challenges/:id/approve", ChallengeController, :approve, as: :challenge)
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)

@@ -398,6 +398,14 @@ defmodule Web.ChallengeController do
     end
   end
 
+  def winners(conn, %{"id" => id}) do
+    with {:ok, challenge} <- Challenges.get(id) do
+      conn
+      |> assign(:challenge, challenge)
+      |> render("winners.html")
+    end
+  end  
+
   def create_announcement(conn, %{"id" => id, "announcement" => announcement}) do
     with {id, _} <- Integer.parse(id),
          {:ok, challenge} <- Challenges.get(id),
@@ -454,4 +462,5 @@ defmodule Web.ChallengeController do
       |> redirect(to: Routes.challenge_path(conn, :edit, challenge.id, section))
     end
   end
+
 end

@@ -40,7 +40,7 @@ defmodule ChallengeGov.Challenges.Phase do
       :judging_criteria,
       :judging_criteria_delta,
       :how_to_enter,
-      :how_to_enter_delta
+      :how_to_enter_delta,
     ])
   end
 

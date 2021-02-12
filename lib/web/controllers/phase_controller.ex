@@ -3,6 +3,7 @@ defmodule Web.PhaseController do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.Phases
+  alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.Solutions
 
   plug Web.Plugs.FetchPage, [per: 10] when action in [:show]
@@ -97,5 +98,44 @@ defmodule Web.PhaseController do
         |> put_flash(:error, "Something went wrong")
         |> redirect(to: Routes.challenge_path(conn, :index))
     end
+  end
+
+  def create_winners(conn, %{"challenge_id" => cid, "phase_id" => pid} = params) do
+    IO.inspect("CREATING WINNER")
+    IO.inspect("creating winner")
+    IO.inspect(params)
+    challenge = Challenges.get(cid)
+
+    conn
+    |> assign(:challenge, challenge)
+  end   
+
+  def winners(conn, %{"challenge_id" => cid, "phase_id" => phid} = params) do
+    IO.inspect("WINNERS (conn assigns)")
+    IO.inspect(params)
+    IO.inspect(conn.assigns)
+    {:ok, phase} = Phases.get(phid)
+    IO.inspect("PHASE THEN CHANGESET")
+    IO.inspect(phase)
+    phase = Phase.changeset(phase, %{}) |> IO.inspect
+    
+    conn
+    |> assign(:changeset, phase)
+    |> assign(:challenge_id, cid)
+    |> assign(:phase_id, phid)
+    |> render("winners.html")
+  end
+
+  def winners_published(conn, %{"challenge_id" => cid, "phase_id" => pid} = params) do
+    IO.inspect("WINNERS (PUBLISH PAGE)")
+    IO.inspect(conn)
+    IO.inspect(params)
+    {:ok, phase} = Phases.get(pid)
+    IO.inspect("PHASE THEN CHANGESET")
+    phase = Phase.changeset(Phases.get(pid), %{}) |> IO.inspect
+
+    conn
+    |> assign(:changeset, phase)
+    |> render("winners_published.html")
   end
 end
