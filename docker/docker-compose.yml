@@ -1,0 +1,22 @@
+version: "3.4"
+services:
+  psql:
+    build: ./psql/
+    container_name: psql
+    ports:
+      - "5435:5435"
+      - "5432:5432"
+    networks:
+      - server
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - dbdata:/var/lib/postgres
+      - dbdata:/var/lib/postgresql/data
+volumes:
+  dbdata:
+    external: true
+    name: a4e2b5873d8f7ef2344825ad5c0b1b0a98423e173aa549256b69efdc1c648750
+networks:
+  server:

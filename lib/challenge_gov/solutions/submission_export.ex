@@ -8,6 +8,7 @@ defmodule ChallengeGov.Solutions.SubmissionExport do
   import Ecto.Changeset
 
   alias ChallengeGov.Challenges.Challenge
+  alias ChallengeGov.Phases
 
   @type t :: %__MODULE__{}
 
@@ -60,6 +61,7 @@ defmodule ChallengeGov.Solutions.SubmissionExport do
       :judging_status,
       :format
     ])
+    |> validate_phases_closed(params)
   end
 
   def create_changeset(struct, params, challenge) do
@@ -71,5 +73,21 @@ defmodule ChallengeGov.Solutions.SubmissionExport do
   def update_changeset(struct, params) do
     struct
     |> changeset(params)
+  end
+
+  defp validate_phases_closed(struct, %{"phase_ids" => phase_ids}) do
+    phase_ids
+    |> Enum.map(fn phase_id ->
+      {:ok, phase} = Phases.get(phase_id)
+      Phases.is_past?(phase)
+    end)
+    |> Enum.all?()
+    |> case do
+      true ->
+        struct
+
+      false ->
+        add_error(struct, :phase_ids, "All phases must be closed")
+    end
   end
 end

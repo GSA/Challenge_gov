@@ -157,7 +157,7 @@ defmodule Web.SavedChallengeControllerTest do
                       "href",
                       61,
                       34,
-                      "http://localhost:4002/public/challenge/#{challenge.id}",
+                      "http://localhost:4002/public/challenges#/challenge/#{challenge.id}",
                       34
                     ]
                   ],
