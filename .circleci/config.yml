@@ -93,6 +93,7 @@ jobs:
       - checkout
       - run: mix local.hex --force
       - run: mix local.rebar --force
+      - run: mix clean      
       - run: cp config/test.circleci.exs config/test.local.exs
       - restore_cache:
           key: v3-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
@@ -103,6 +104,7 @@ jobs:
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: mix compile --force --warnings-as-errors
       - run: mix ecto.migrate
       - run: mix run priv/repo/seeds.exs
       - run: mix test

@@ -48,3 +48,4 @@ npm-debug.log
 
 # ignore emacs temp files
 **~
+**/**~
