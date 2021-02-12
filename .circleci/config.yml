@@ -91,9 +91,9 @@ jobs:
           POSTGRES_PASSWORD: postgres
     steps:
       - checkout
-      - run: mix clean
       - run: mix local.hex --force
       - run: mix local.rebar --force
+      - run: mix clean      
       - run: cp config/test.circleci.exs config/test.local.exs
       - restore_cache:
           key: v3-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
