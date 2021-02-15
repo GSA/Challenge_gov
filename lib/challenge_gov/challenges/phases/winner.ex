@@ -28,7 +28,6 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
     field(:winner_image_extension, :string)
 
     embeds_many :winners, SingleWinner
-
   end
 
   def changeset(struct, params) do
@@ -36,6 +35,7 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
     |> cast(params, [
           :status,
           :overview,
+          :winner_image_extension
         ])
   end
 
