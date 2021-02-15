@@ -23,6 +23,7 @@ defmodule Web do
 
       import Plug.Conn
       import Web.Gettext
+      import Phoenix.LiveView.Controller
       alias Web.Router.Helpers, as: Routes
     end
   end
@@ -39,11 +40,12 @@ defmodule Web do
         only: [get_flash: 1, get_flash: 2, view_module: 1, action_name: 1]
 
       # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
+      use Phoenix.HTML      
 
       import Web.ErrorHelpers
       import Web.Gettext
       alias Web.Router.Helpers, as: Routes
+      import Phoenix.LiveView.Helpers      
     end
   end
 
@@ -52,6 +54,7 @@ defmodule Web do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 

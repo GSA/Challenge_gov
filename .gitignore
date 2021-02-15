@@ -45,3 +45,5 @@ npm-debug.log
 /uploads
 /private.pem
 /key.pem
+
+**/*~
