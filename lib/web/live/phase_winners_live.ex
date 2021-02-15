@@ -12,10 +12,14 @@ defmodule Web.PhaseWinnersLive do
       socket
       |> assign(:phase, phase)
       |> assign(:challenge, challenge)
+    |> assign(:winner_form, false)
     {:ok, socket}
   end
 
-  def phase_winners(params) do
-    IO.inspect("phase_winners?")
+  def handle_event("add-winner", params, socket) do
+    socket =
+      socket
+      |> assign(:winner_form, true)
+    {:noreply, socket}
   end
 end
