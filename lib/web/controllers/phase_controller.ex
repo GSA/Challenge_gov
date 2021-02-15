@@ -111,18 +111,16 @@ defmodule Web.PhaseController do
   end   
 
   def winners(conn, %{"challenge_id" => cid, "phase_id" => phid} = params) do
-    IO.inspect("WINNERS (conn assigns)")
-    IO.inspect(params)
-    IO.inspect(conn.assigns)
+    {:ok, challenge} = Challenges.get(cid)
     {:ok, phase} = Phases.get(phid)
-    IO.inspect("PHASE THEN CHANGESET")
-    IO.inspect(phase)
-    phase = Phase.changeset(phase, %{}) |> IO.inspect
+    changeset = Phase.changeset(phase, %{})
     
     conn
-    |> assign(:changeset, phase)
+    |> assign(:changeset, changeset)    
     |> assign(:challenge_id, cid)
     |> assign(:phase_id, phid)
+    |> assign(:challenge, challenge)
+    |> assign(:phase, phase)
     |> render("winners.html")
   end
 
@@ -132,10 +130,10 @@ defmodule Web.PhaseController do
     IO.inspect(params)
     {:ok, phase} = Phases.get(pid)
     IO.inspect("PHASE THEN CHANGESET")
-    phase = Phase.changeset(Phases.get(pid), %{}) |> IO.inspect
+    changeset = Phase.changeset(phase, %{}) |> IO.inspect
 
     conn
-    |> assign(:changeset, phase)
+    |> assign(:changeset, changeset)
     |> render("winners_published.html")
   end
 end

@@ -401,8 +401,7 @@ defmodule Web.ChallengeController do
   def winners(conn, %{"id" => id}) do
     with {:ok, challenge} <- Challenges.get(id) do
       conn
-      |> assign(:challenge, challenge)
-      |> render("winners.html")
+      |> live_render(Web.WinnersLive, session: %{ "cid" => id })
     end
   end  
 

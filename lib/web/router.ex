@@ -5,9 +5,11 @@ defmodule Web.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
+    plug :fetch_live_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug Web.Plugs.FetchUser
+    plug :put_root_layout, {Web.LayoutView, :root}
+    plug Web.Plugs.FetchUser    
   end
 
   pipeline :api do
@@ -80,6 +82,7 @@ defmodule Web.Router do
 
     get("/certification_requested", AccessController, :index)
 
+    live "/challenges/:cid/phases/:pid/winners", PhaseWinnersLive, :create
     resources("/challenges", ChallengeController) do
       resources("/documents", DocumentController, only: [:create])
 
@@ -87,9 +90,8 @@ defmodule Web.Router do
 
       resources("/bulletin", BulletinController, only: [:new, :create])
 
+        get("/winners/publish", PhaseController, :winners_published, as: "winner")
       resources("/phases", PhaseController, only: [:index, :show]) do
-        get("/winners/publish", PhaseController, :winners_publish, as: "winner")
-        get("/winners", PhaseController, :winners, as: "winner")
         post("/winners", PhaseController, :create_winners, as: "winner")
 
         resources("/solutions", SolutionController, only: [:index, :show, :new, :create])
@@ -101,7 +103,7 @@ defmodule Web.Router do
     end
 
     get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
-    get("/challenges/:id/winners", ChallengeController, :winners, as: :challenge)
+    get "/challenges/:id/winners", ChallengeController, :winners
 
     post("/challenges/:id/approve", ChallengeController, :approve, as: :challenge)
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)
