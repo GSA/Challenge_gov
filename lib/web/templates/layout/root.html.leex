@@ -10,7 +10,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 
-    <title><%= page_title(@conn) %></title>
+    <title><%= # page_title(@conn) %></title>
 
     <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
   </head>
@@ -150,11 +150,10 @@
         <%= @inner_content %>
       </div>
 
-         <aside class="control-sidebar control-sidebar-light">
-           <div class="p-3">
-          <%= if load_filter_panel(@conn, @view_module) do %>
-            <%= render @view_module, "_filter.html", conn: @conn, user: @user, filter: @filter, sort: @sort %>
-          <% end%>
+      <aside class="control-sidebar control-sidebar-light">
+        <div class="p-3">
+
+            <%= #render @view_module, "_filter.html", conn: @conn, user: @user, filter: @filter, sort: @sort %>
         </div>
       </aside>
     </div>

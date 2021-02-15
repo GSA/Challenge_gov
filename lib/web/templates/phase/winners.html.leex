@@ -1,0 +1,27 @@
+<div class="main-container">
+<h1>Winners for Phase <%= @phase.title %> of <%= @challenge.title %></h1>
+<p>Entering winners is as flexible as you need for your phase. Add any information (overview details) about the challenge.</p>
+
+<h2>Winners overview</h2>
+<p>Winners description (optional)</p>
+<%= form_for(:fake, "#", [class: "form-horizontal", multipart: true], fn f -> %>
+
+    <%= FormView.textarea_field(f, :description, label: "Winners description (optional)") %>
+    <div class="form-group">
+      <%= file_input f, :document, name: "winner[document][file]", class: "my-3" %>
+      <%= FormView.text_field(f, :document_name, name: "solution[document][name]", class: "my-3") %>
+      <div id="solution_document_upload" class="btn btn-primary">Upload file</div>
+    </div>
+<h3>Add individual winners with name, rank and photo (optional)</h3>
+<div>
+  <a href="#" class="btn btn-primary">+ Add new winner</a>
+</div>
+<div>
+  <a href="#">cancel</a>
+  <a href="#">Save draft</a>
+  <a href="#">Preview</a>
+  <%=# link("Review + Publish", to: Routes.challenge_phase_winner_path(@conn, :winners_published, @challenge_id, @phase_id), class: "btn btn-primary") %>
+</div>
+<% end) %>
+</div>
+</div>

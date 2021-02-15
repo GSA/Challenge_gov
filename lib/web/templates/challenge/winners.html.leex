@@ -1,0 +1,13 @@
+<div class="main-container">
+<h1>Winners for <%= @challenge.title %></h1>
+<%= for p <- @challenge.phases do %>
+    <div class="card">
+      <div class="card-body">
+        <h3>Phase X</h3>
+        <% Routes.__info__(:functions) |> IO.inspect %>
+<% Routes.__info__(:functions) |> Enum.slice(100..150) |> IO.inspect %>
+        <%= live_redirect("Manage Winners", to: Routes.live_path(Web.Endpoint, Web.PhaseWinnersLive, @challenge.id, p.id), class: "btn btn-primary") %>
+      </div>
+    </div>
+    <%= end %>
+</div>
