@@ -3,16 +3,14 @@
 <p>Entering winners is as flexible as you need for your phase. Add any information (overview details) about the challenge.</p>
 
 <h2>Winners overview</h2>
-<%= form_for(:fake, "#", [class: "form-horizontal", multipart: true], fn f -> %>
-    <%= FormView.textarea_field(f, :description, label: "Winners description (optional)") %>
-    <div class="form-group">
-      <label class="control-label">Upload image (optional)</label>
-      <%= FormView.file_field(f, :winners_image, label: false) %>
-      <p>File must be smaller than 10mb</p>
-    </div>
+<%= f = form_for(@changeset, "#", [class: "form-horizontal", phx_submit: "submit", multipart: true])  %>
+<%= FormView.textarea_field(f, :overview, label: "Winners description (optional)") %>
+  Upload image (optional)
+  <%= live_file_input(@uploads.winner_image_extension) %>
+  <p>File must be smaller than 10mb</p>  
 <hr/>
 
-  <h3>Add individual winners with name, rank and photo (optional)</h3>
+<h3>Add individual winners with name, rank and photo (optional)</h3>
   <%= if @winner_form do %>
   <%= form_for :winner, "#", [multipart: true], fn f -> %>
   <div class="winner grid-col flex-2">
@@ -28,7 +26,7 @@
     </div>
     <div class="form-group">
       <label class="control-label">Upload image (optional)</label>
-      <%= FormView.file_field(f, :winner_image, label: false) %>
+      <%= FormView.file_field(f, :winner_image_extension, label: false) %>
       <p>File must be smaller than 10mb</p>
     </div>
     <div class="col flex-2">
@@ -45,10 +43,10 @@
     <div class="col-md1">
       <a class="disabled">Save draft</a>
       <a class="disabled">Preview</a>
-      <%= link("Review + Publish", to: Routes.challenge_phase_winner_path(Web.Endpoint, :winners_published, @challenge.id, @phase.id), class: "btn btn-primary") %>
+      <%= submit("Review + Publish", class: "btn btn-primary") %>
     </div>
     </div>
 </div>
-<% end) %>
+</form>
 </div>
 </div>
