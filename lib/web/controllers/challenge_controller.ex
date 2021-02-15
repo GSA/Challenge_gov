@@ -398,13 +398,6 @@ defmodule Web.ChallengeController do
     end
   end
 
-  def winners(conn, %{"id" => id}) do
-    with {:ok, challenge} <- Challenges.get(id) do
-      conn
-      |> live_render(Web.WinnersLive, session: %{ "cid" => id })
-    end
-  end  
-
   def create_announcement(conn, %{"id" => id, "announcement" => announcement}) do
     with {id, _} <- Integer.parse(id),
          {:ok, challenge} <- Challenges.get(id),
