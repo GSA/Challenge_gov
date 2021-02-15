@@ -28,3 +28,13 @@ require("../css/app/index.scss");
 // Import JS
 import "./app/index.js";
 import "./shared/index.js";
+
+import {Socket} from "phoenix";
+import LiveSocket from "phoenix_live_view";
+
+console.log("LIVE SOCKET?")
+console.log(LiveSocket)
+let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+const liveSocket = new LiveSocket("/live", Socket, {params: { _csrf_token: csrfToken}});
+liveSocket.connect();
+window.liveSocket = liveSocket;

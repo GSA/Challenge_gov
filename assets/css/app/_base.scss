@@ -75,6 +75,14 @@ body {
   color: #4A5C6B;
 }
 
+.main-container .btn-primary {
+     background-color: #F2994A;
+     width: 200px;
+     height: 33px;
+     border-radius: 4px;
+     color: black;
+}
+
 .btn-wrapper {
   margin-top: 30px;
   display: flex;
@@ -86,6 +94,16 @@ body {
 }
 
 /* timeout modal */
+
+.main-container {
+  left: 200px;
+}
+
+.main-container h1 {
+  font-family: 'Public Sans';
+  font-weight: 400;
+  font-size: 36px;
+}
 
 .main-sidebar {
   z-index: 1021;
