@@ -103,7 +103,7 @@ defmodule Web.Router do
     end
 
     get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
-    get "/challenges/:id/winners", ChallengeController, :winners
+    live "/challenges/:id/winners", WinnersLive
 
     post("/challenges/:id/approve", ChallengeController, :approve, as: :challenge)
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)

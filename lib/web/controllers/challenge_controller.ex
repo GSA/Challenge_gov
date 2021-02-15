@@ -29,6 +29,7 @@ defmodule Web.ChallengeController do
     challenges = Challenges.all_for_user(user, filter: filter, sort: sort, page: page, per: per)
 
     conn
+    |> Phoenix.Controller.put_layout(false)
     |> assign(:user, user)
     |> assign(:pending_challenges, pending_challenges.page)
     |> assign(:pending_pagination, pending_challenges.pagination)
@@ -47,6 +48,7 @@ defmodule Web.ChallengeController do
       Challenges.add_to_security_log(user, challenge, "read", Security.extract_remote_ip(conn))
 
       conn
+      |> Phoenix.Controller.put_layout(false)
       |> assign(:user, user)
       |> assign(:challenge, challenge)
       |> assign(:events, challenge.events)

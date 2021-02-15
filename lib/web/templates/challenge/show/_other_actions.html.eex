@@ -18,7 +18,7 @@
          <%= Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge) -> %>
       <%= link("Add winners", to: "#", class: "btn btn-primary disabled", disabled: true) %>
       <%= Challenges.is_challenge_owner?(@user, @challenge) -> %>
-      <%= link("Add winners", to: Routes.challenge_path(@conn, :winners, @challenge.id), class: "btn btn-primary") %>
+      <%= live_redirect("Add winners", to: Routes.live_path(Web.Endpoint, Web.WinnersLive, @challenge.id), class: "btn btn-primary") %>
       <% end %>
 
       <%= if Accounts.has_admin_access?(@user) and (Challenges.is_open?(@challenge) or Challenges.is_closed?(@challenge)) do %>

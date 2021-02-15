@@ -7,8 +7,6 @@ defmodule Web.LayoutView do
   alias Web.PageTitle
 
   def page_title(conn) do
-    IO.inspect("PAGE TITLE CONN (root layout?)")
-    IO.inspect(conn)
     view = Phoenix.Controller.view_module(conn)
 
     action =
