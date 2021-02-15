@@ -3,24 +3,51 @@
 <p>Entering winners is as flexible as you need for your phase. Add any information (overview details) about the challenge.</p>
 
 <h2>Winners overview</h2>
-<p>Winners description (optional)</p>
 <%= form_for(:fake, "#", [class: "form-horizontal", multipart: true], fn f -> %>
-
     <%= FormView.textarea_field(f, :description, label: "Winners description (optional)") %>
     <div class="form-group">
-      <%= file_input f, :document, name: "winner[document][file]", class: "my-3" %>
-      <%= FormView.text_field(f, :document_name, name: "solution[document][name]", class: "my-3") %>
-      <div id="solution_document_upload" class="btn btn-primary">Upload file</div>
+      <label class="control-label">Upload image (optional)</label>
+      <%= FormView.file_field(f, :winners_image, label: false) %>
+      <p>File must be smaller than 10mb</p>
     </div>
-<h3>Add individual winners with name, rank and photo (optional)</h3>
-<div>
-  <a href="#" class="btn btn-primary">+ Add new winner</a>
-</div>
-<div>
-  <a href="#">cancel</a>
-  <a href="#">Save draft</a>
-  <a href="#">Preview</a>
-  <%=# link("Review + Publish", to: Routes.challenge_phase_winner_path(@conn, :winners_published, @challenge_id, @phase_id), class: "btn btn-primary") %>
+<hr/>
+
+  <h3>Add individual winners with name, rank and photo (optional)</h3>
+  <%= if @winner_form do %>
+  <%= form_for :winner, "#", [multipart: true], fn f -> %>
+  <div class="winner grid-col flex-2">
+    <div class="form-group">
+      <div>
+      <label>Place title (ex. First Place or Grand Winner) (optional)</label></div>
+      <%= text_input f, :place_title %>
+    </div>
+    <div class="form-group">
+      <div><label>Name (optional)</label>
+      </div>
+      <%= text_input f, :name %>
+    </div>
+    <div class="form-group">
+      <label class="control-label">Upload image (optional)</label>
+      <%= FormView.file_field(f, :winner_image, label: false) %>
+      <p>File must be smaller than 10mb</p>
+    </div>
+    <div class="col flex-2">
+      <a href="#">remove</a>
+    </div>
+  <% end %>
+  <% end %>
+  <a phx-click="add-winner" href="#" class="btn btn-primary">+ Add new winner</a>
+  <div>
+    <div class="row">
+    <div class="col-md-1">
+      <%= link("cancel", to: Routes.live_path(Web.Endpoint, Web.WinnersLive, @challenge.id)) %>          
+    </div>
+    <div class="col-md1">
+      <a class="disabled">Save draft</a>
+      <a class="disabled">Preview</a>
+      <%= link("Review + Publish", to: Routes.challenge_phase_winner_path(Web.Endpoint, :winners_published, @challenge.id, @phase.id), class: "btn btn-primary") %>
+    </div>
+    </div>
 </div>
 <% end) %>
 </div>

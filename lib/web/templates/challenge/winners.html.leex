@@ -1,9 +1,12 @@
+<div class="content-header">
+  <%= render Web.ChallengeView, "_breadcrumb.html", challenge: @challenge, winners: true %>
+</div>
 <div class="main-container">
 <h1>Winners for <%= @challenge.title %></h1>
 <%= for p <- @challenge.phases do %>
     <div class="card">
       <div class="card-body">
-        <h3>Phase X</h3>
+        <h3>Phase <%= p.title %></h3>
         <%= live_redirect("Manage Winners", to: Routes.live_path(Web.Endpoint, Web.PhaseWinnersLive, @challenge.id, p.id), class: "btn btn-primary") %>
       </div>
     </div>
