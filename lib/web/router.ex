@@ -82,7 +82,7 @@ defmodule Web.Router do
 
     get("/certification_requested", AccessController, :index)
 
-    live "/challenges/:cid/phases/:pid/winners", PhaseWinnersLive, :create
+    live "/challenges/:cid/phases/:pid/winners", PhaseWinnersLive
     resources("/challenges", ChallengeController) do
       resources("/documents", DocumentController, only: [:create])
 
