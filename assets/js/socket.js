@@ -7,12 +7,8 @@
 // Pass the token on params as below. Or remove it
 // from the params if you are not using authentication.
 import {Socket} from "phoenix"
-import LiveSocket from "phoenix_live_view";
 
 let socket = new Socket("/socket", {params: {token: window.userToken}})
-let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-const liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}});
-liveSocket.connect();
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
