@@ -125,14 +125,12 @@ defmodule Web.PhaseController do
   end
 
   def winners_published(conn, %{"challenge_id" => cid, "phase_id" => pid} = params) do
-    IO.inspect("WINNERS (PUBLISH PAGE)")
-    IO.inspect(conn)
-    IO.inspect(params)
     {:ok, phase} = Phases.get(pid)
     IO.inspect("PHASE THEN CHANGESET")
     changeset = Phase.changeset(phase, %{}) |> IO.inspect
 
     conn
+    |> Phoenix.Controller.put_layout(false)
     |> assign(:changeset, changeset)
     |> render("winners_published.html")
   end
