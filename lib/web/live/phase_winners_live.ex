@@ -26,6 +26,10 @@ defmodule Web.PhaseWinnersLive do
   end
 
   def handle_event("validate", params, socket) do
+    changeset = Winner.changeset(%Winner{}, params["winner"])
+    socket = socket
+    |> assign(:changeset, changeset)
+
     {:noreply, socket}
   end
 
@@ -38,6 +42,8 @@ defmodule Web.PhaseWinnersLive do
   end
 
   def handle_event("add-winner", params, socket) do
+    IO.inspect("params may be key")
+    IO.inspect(params)
     # the plan:
     # count all outstanding 'winner-uploads'
     # generate an atom with the appropriate name
@@ -45,23 +51,28 @@ defmodule Web.PhaseWinnersLive do
     # form the ID
 
     # on submit, consume each and every uploaded file
-
-    
-    
     existing_winners = Map.get(socket.assigns.changeset.changes, :winners, [])
     str = "single_winner_image_#{Enum.count(existing_winners)}"
-    img_key = String.to_atom(str)
-    tmp_id = get_temp_id()
+    temp_id = get_temp_id()
 
     winners = existing_winners
-    |> Enum.concat([%Winner.SingleWinner{temp_id: tmp_id}])
+    |> Enum.concat([
+      Ecto.Changeset.change(%Winner.SingleWinner{}, %{temp_id: temp_id})
+    ])
+
+    #IO.inspect("winners")
+    #IO.inspect(winners)
+    
     changeset =
       socket.assigns.changeset
       |> Ecto.Changeset.put_embed(:winners, winners)
+
+    IO.inspect("changeset")
+    IO.inspect(changeset)
     socket =
       socket
       |> assign(:changeset, changeset)
-      |> Phoenix.LiveView.allow_upload(img_key, accept: ~w(.jpg .jpeg .png), progress: &handle_progress/3, auto_upload: true)
+      |> Phoenix.LiveView.allow_upload(String.to_atom(temp_id), accept: ~w(.jpg .jpeg .png), progress: &handle_progress/3, auto_upload: true)
     {:noreply, socket}
   end
 
@@ -83,12 +94,23 @@ defmodule Web.PhaseWinnersLive do
     end)
     
     existing_winners = Map.get(socket.assigns.changeset.changes, :winners, [])
-    for {w, i} <- Enum.with_index(existing_winners) do
-      str = "single_winner_image_#{i}"
-      img_key = String.to_atom(str)
-      single_winners = consume_uploaded_entries(socket, img_key, fn %{path: path}, entry ->
+    for w <- existing_winners do
+      single_winner_img = consume_uploaded_entries(socket, w.data.temp_id, fn %{path: path}, entry ->
+
       end)
     end
+
+    changeset = socket.assigns.changeset
+    |> Ecto.Changeset.put_change(:status, "draft")
+    |> Ecto.Changeset.put_change(:phase_id, socket.assigns.phase.id)
+
+    #Enum.map(changeset.changes.winners, fn e ->
+    #  IO.inspect("WINNERS?")
+    #  IO.inspect(e)
+    #  IO.inspect(e.data)
+    #  IO.inspect(e.changes)
+    #end)
+    
     socket =
       socket
       |> assign(:uploaded_files, :winners)
@@ -96,8 +118,5 @@ defmodule Web.PhaseWinnersLive do
     #Phases.create_winner(params)
     
     {:noreply, socket}
-      end
-
-#        defp generate_img_key(i) do
-#        end
+  end
 end
