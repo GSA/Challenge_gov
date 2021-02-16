@@ -53,7 +53,7 @@ defmodule ChallengeGov.MixProject do
       {:oban, "~> 2.3"},
       {:phoenix, "~> 1.5.7"},
       {:phoenix_ecto, "~> 4.0"},
-      {:phoenix_html, "~> 2.14"},
+      {:phoenix_html, "~> 2.14.3"},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
       {:phoenix_live_view, "~> 0.15.4", override: true},
       {:phoenix_pubsub, "~> 2.0"},
