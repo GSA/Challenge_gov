@@ -11,9 +11,7 @@
 <hr/>
 
 <h3>Add individual winners with name, rank and photo (optional)</h3>
-<%= if @winner_form do %>
-  Hello
-  <%= inputs_for f, :winners, fn w -> %>
+  <%= for w <- (inputs_for f, :winners) do %>
   <div class="winner grid-col flex-2">
     <div class="form-group">
       <div>
@@ -27,13 +25,13 @@
     </div>
     <div class="form-group">
       <label class="control-label">Upload image (optional)</label>
-      <%= FormView.file_field(w, :winner_image_extension, label: false) %>
+      Upload image (optional)
+      <%= live_file_input(@uploads.single_winner_images) %>
       <p>File must be smaller than 10mb</p>
     </div>
     <div class="col flex-2">
       <a href="#" phx-click="remove-winner">remove</a>
     </div>
-  <% end %>
   <% end %>
   <a phx-click="add-winner" href="#" class="btn btn-primary">+ Add new winner</a>
   <div>
