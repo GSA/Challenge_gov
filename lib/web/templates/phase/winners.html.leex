@@ -11,26 +11,27 @@
 <hr/>
 
 <h3>Add individual winners with name, rank and photo (optional)</h3>
-  <%= if @winner_form do %>
-  <%= form_for :winner, "#", [multipart: true], fn f -> %>
+<%= if @winner_form do %>
+  Hello
+  <%= inputs_for f, :winners, fn w -> %>
   <div class="winner grid-col flex-2">
     <div class="form-group">
       <div>
       <label>Place title (ex. First Place or Grand Winner) (optional)</label></div>
-      <%= text_input f, :place_title %>
+      <%= text_input w, :place_title %>
     </div>
     <div class="form-group">
       <div><label>Name (optional)</label>
       </div>
-      <%= text_input f, :name %>
+      <%= text_input w, :name %>
     </div>
     <div class="form-group">
       <label class="control-label">Upload image (optional)</label>
-      <%= FormView.file_field(f, :winner_image_extension, label: false) %>
+      <%= FormView.file_field(w, :winner_image_extension, label: false) %>
       <p>File must be smaller than 10mb</p>
     </div>
     <div class="col flex-2">
-      <a href="#">remove</a>
+      <a href="#" phx-click="remove-winner">remove</a>
     </div>
   <% end %>
   <% end %>

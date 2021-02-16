@@ -27,8 +27,15 @@ defmodule Web.PhaseWinnersLive do
   end
 
   def handle_event("add-winner", params, socket) do
+    existing_winners = Map.get(socket.assigns.changeset.changes, :winners, [])
+    winners = existing_winners
+    |> Enum.concat([%Winner.SingleWinner{}])
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.put_embed(:winners, winners)
     socket =
       socket
+      |> assign(:changeset, changeset)
       |> assign(:winner_form, true)
     {:noreply, socket}
   end
@@ -37,9 +44,20 @@ defmodule Web.PhaseWinnersLive do
     {:noreply, socket}
   end
 
+  def handle_event("remove-winner", params, socket) do
+    # remove nonpersisted winner
+    {:noreply, socket}
+  end
+
   def handle_event("submit", params, socket) do
     #  to: Routes.challenge_phase_winner_path(Web.Endpoint, :winners_published, @challenge.id, @phase.id),
-    Phases.create_winner(params)
+    winners = consume_uploaded_entries(socket, :winner_image_extension, fn %{path: path}, entry ->
+    end)
+    socket =
+      socket
+      |> assign(:uploaded_files, :winners)
+
+    #Phases.create_winner(params)
     
     {:noreply, socket}
   end
