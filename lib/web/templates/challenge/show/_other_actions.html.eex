@@ -3,7 +3,7 @@
     <h4>Other actions</h4>
     <div class="btn-toolbar">
       <%= challenge_solutions_link(@conn, @challenge, @user, label: "View submissions", class: "btn btn-primary") %>
-      <% if Accounts.has_admin_access?(@user) or !(Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge)) do %>
+      <%= if Accounts.has_admin_access?(@user) or !(Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge)) do %>
         <%= link "Preview", to: Routes.public_preview_path(@conn, :index, @challenge.uuid), target: "_blank", class: "btn btn-info" %>
         <%= link "Print", to: Routes.public_preview_path(@conn, :index, @challenge.uuid, print: true), target: "_blank", class: "btn btn-info" %>
         <%= link "JSON", to: Routes.export_path(@conn, :export_challenge, @challenge.id, "json"), target: "_blank", class: "btn btn-info" %>
@@ -14,7 +14,7 @@
         <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-danger") %>
       <% end %>
       
-      <% cond do %>
+      <%= cond do %>
          <% Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge) -> %>
       <%= link("Add winners", to: "#", class: "btn btn-primary disabled", disabled: true) %>
       <% Challenges.is_challenge_owner?(@user, @challenge) -> %>

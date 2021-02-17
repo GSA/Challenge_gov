@@ -22,7 +22,6 @@ defmodule Web.Api.SolutionController do
          {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge),
          {:ok, updated_solution} <- Solutions.update_judging_status(solution, judging_status) do
       conn
-      |> Phoenix.Controller.put_layout(false)
       |> assign(:challenge, challenge)
       |> assign(:phase, phase)
       |> assign(:solution, solution)

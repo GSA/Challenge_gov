@@ -127,9 +127,9 @@
               </div>
             </div>
           </div>
-        <% end %>  
+          <% end %>
+      <%= @inner_content %>          
       </div>
-      <%= @inner_content %>
       <aside class="control-sidebar control-sidebar-light">
         <div class="p-3">
           <%= if load_filter_panel(@conn, view_module(@conn)) do %>

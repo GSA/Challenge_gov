@@ -5,7 +5,6 @@ defmodule Web.DashboardController do
     %{current_user: user} = conn.assigns
 
     conn
-    |> Phoenix.Controller.put_layout(false)
     |> assign(:user, user)
     |> assign(:filter, nil)
     |> assign(:sort, nil)

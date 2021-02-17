@@ -127,7 +127,6 @@ defmodule Web.PhaseController do
     changeset = Phase.changeset(phase, %{}) |> IO.inspect()
 
     conn
-    |> Phoenix.Controller.put_layout(false)
     |> assign(:changeset, changeset)
     |> render("winners_published.html")
   end
