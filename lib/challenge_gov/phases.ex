@@ -80,15 +80,4 @@ defmodule ChallengeGov.Phases do
   end
 
   def filter_on_attribute(_, query), do: query
-
-  def create_winner(params) do
-    IO.inspect("phase?")
-    IO.inspect("params?")
-    IO.inspect(params)
-
-    IO.inspect("CREATE WINNER")
-    # %Winner{}
-    # |> Winner.changeset(params)
-    # |> Repo.insert()
-  end
 end

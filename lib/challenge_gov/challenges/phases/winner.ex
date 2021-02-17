@@ -45,18 +45,6 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
     |> cast_embed(:winners)
     |> unique_constraint(:phase_id)
   end
-
-  def update_winners(%__MODULE__{} = winner, attrs) do
-    IO.inspect(winner)
-    IO.inspect(attrs)
-  end
-
-  # def winner_image_changeset(struct, key, extension) do
-  #  struct
-  #  |> change()
-  #  |> put_change(:winner_image_key, key)
-  #  |> put_change(:winner_image_extension, extension)
-  # end
 end
 
 defmodule ChallengeGov.Challenges.Phases.Winner.SingleWinner do

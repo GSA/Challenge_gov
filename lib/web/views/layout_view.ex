@@ -7,14 +7,7 @@ defmodule Web.LayoutView do
   alias Web.PageTitle
 
   def page_title(conn) do
-    IO.inspect("might be breaking here...")
-    IO.inspect(Phoenix.Controller.view_module(conn))
     view = Phoenix.Controller.view_module(conn)
-    IO.inspect("view")
-    IO.inspect(view)
-    IO.inspect("view template is off")
-
-    IO.inspect(Phoenix.Controller.view_template(conn))
 
     action =
       case view do
