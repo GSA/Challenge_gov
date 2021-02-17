@@ -109,7 +109,8 @@ defmodule Web.SolutionView do
         solution: solution,
         updated_solution: updated_solution,
         filter: filter
-      }) do
+             }) do
+    IO.inspect("rendering judging status")
     PhaseView.get_judging_status_button_values(
       conn,
       challenge,
