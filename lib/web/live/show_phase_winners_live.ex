@@ -11,16 +11,17 @@ defmodule Web.ShowPhaseWinnersLive do
   end
 
   def mount(p, s, socket) do
-    IO.inspect("mounting!")
     winners = Repo.get(Winner, p["wid"])
     {:ok, phase} = ChallengeGov.Phases.get(winners.phase_id)
     {:ok, challenge} = ChallengeGov.Challenges.get(p["cid"])
+    {:ok, user} = ChallengeGov.Accounts.get(s["user_id"])
 
     socket =
       socket
       |> assign(:phase, phase)
       |> assign(:winners, winners)
       |> assign(:challenge, challenge)
+      |> assign(:user, user)
       |> assign(:text, "Review the information and publish winners.")
 
     {:ok, socket}

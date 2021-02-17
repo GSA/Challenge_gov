@@ -14,6 +14,7 @@ defmodule Web.Plugs.VerifyUser do
     case Map.has_key?(conn.assigns, :current_user) do
       true ->
         conn
+        |> Plug.Conn.put_session(:user_id, conn.assigns.current_user.id)
 
       false ->
         conn
@@ -24,8 +25,9 @@ defmodule Web.Plugs.VerifyUser do
 
   def call(conn, _opts) do
     case Map.has_key?(conn.assigns, :current_user) do
-      true ->
+      true ->        
         conn
+        |> Plug.Conn.put_session(:user_id, conn.assigns.current_user.id)
 
       false ->
         uri = %URI{path: conn.request_path, query: conn.query_string}

@@ -17,6 +17,7 @@ defmodule Web.PhaseWinnersLive do
   def mount(p, s, socket) do
     {:ok, challenge} = ChallengeGov.Challenges.get(p["cid"])
     {:ok, phase} = ChallengeGov.Phases.get(p["pid"])
+    {:ok, user} = ChallengeGov.Accounts.get(s["user_id"])
 
     case Repo.get_by(Winner, phase_id: String.to_integer(p["pid"])) do
       nil ->
@@ -30,6 +31,7 @@ defmodule Web.PhaseWinnersLive do
           |> assign(:phase, phase)
           |> assign(:challenge, challenge)
           |> assign(:changeset, changeset)
+          |> assign(:user, user)
           |> assign(:uploaded_files, [])
           |> assign(
             :text,

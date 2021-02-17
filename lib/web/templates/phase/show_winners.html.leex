@@ -1,13 +1,4 @@
 <div class="main-container">
-  <%= if live_flash(@flash, :info) do %>
-  <div class="content-header">
-    <div class="container-fluid">
-      <div class="callout callout-success">
-        <i class="fa fa-info-circle"></i> <%= live_flash(@flash, :info) %>
-      </div>
-    </div>
-  </div>
-  <% end %>
   <div class="main-container phase-winners">
   <%= render Web.PhaseView, "_winner_header.html", phase: @phase, challenge: @challenge, text: @text %>
   </div>
