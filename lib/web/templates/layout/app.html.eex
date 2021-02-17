@@ -1,0 +1,142 @@
+      <div class="session-timeout-div"
+        data-session_expiration="<%= Web.SharedView.session_timeout(@conn) %>"
+        id="session_timeout">
+      </div>
+      <div>
+      <%= case current_user(@conn) do %>
+      <% nil -> %>
+      <% u -> %>
+      <nav class="main-header navbar navbar-expand navbar-dark challenge_navbar">
+        <%= @view_module %>
+        <%= Phoenix.Controller.view_module(conn) %>
+        <% if @view_module(@conn) != Web.TermsController and @view_module(@conn) != Web.TermsView and @view_module(@conn) != Web.AccessView do %>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" data-widget="pushmenu" href="#">
+                <i class="fas fa-ellipsis-v"></i>
+              </a>
+            </li>
+            <li class="navbar-text">
+              <%= assigns[:navbar_text] %>
+            </li>
+          </ul>
+        <% end %>
+
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
+              <span><%= u.email %></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+              <%= link to: Routes.session_path(@conn, :delete), method: :delete, class: "dropdown-item" do %>
+              <i class="fas fa-sign-out-alt mr-2"></i> Logout
+              <% end %>
+            </div>
+          </li>          
+          <% end %>
+        </ul>
+      </nav>
+
+      <%= case current_user(@conn) do %>
+      <% nil -> %>
+      <% u -> %>
+      <%= if @view_module(@conn) != Web.TermsController and @view_module(@conn) != Web.TermsView and @view_module(@conn) != Web.AccessView do %>
+        <aside class="main-sidebar sidebar-light-primary challenge_sidebar">
+          <%= link(to: Routes.dashboard_path(@conn, :index), class: "brand-link") do %>
+            <i class="ml-3 nav-icon fas fa-home"></i>
+            <span class="ml-1 brand-text font-weight-light">Challenge.gov</span>
+          <% end %>
+          <div class="sidebar">
+            <nav class="mt-2">
+              <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                <%= if Accounts.role_at_or_below(u, "solver") do %>
+                  <li class="nav-item">
+                    <%= link(to: Routes.solution_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "solutions")}") do %>
+                      <i class="nav-icon icon-submissions"></i>
+                      <p>Solutions</p>
+                    <% end %>
+                  </li>
+                  <li class="nav-item">
+                    <%= link(to: Routes.saved_challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "saved_challenges")}") do %>
+                      <i class="nav-icon fas fa-bookmark"></i>
+                      <p>Saved challenges</p>
+                    <% end %>
+                  </li>
+                <% end %>
+                <%= if Accounts.role_at_or_above(u, "challenge_owner") do %>
+                  <li class="nav-item">
+                    <%= link(to: Routes.challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "challenges")}") do %>
+                      <i class="nav-icon fas fa-award"></i>
+                      <p>Challenges</p>
+                    <% end %>
+                  </li>
+                <% end %>
+                <%= if ChallengeGov.Accounts.has_admin_access?(u) do %>
+                  <li class="nav-item">
+                    <%= link(to: Routes.user_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "users")}") do %>
+                      <i class="nav-icon fas fa-users"></i>
+                      <p>Users</p>
+                    <% end %>
+                  </li>
+                  <li class="nav-item">
+                    <%= link(to: Routes.agency_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "agencies")}") do %>
+                      <i class="nav-icon fas fa-building"></i>
+                      <p>Agencies</p>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            </nav>
+            <%= if ChallengeGov.Accounts.has_admin_access?(u) do %>
+              <nav class="mt-5">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                  <li class="nav-item">
+                    <%= link(to: Routes.reports_path(@conn, :new), class: "nav-link #{tab_selected(@conn, "reports")}") do %>
+                    <i class="nav-icon fas fa-download"></i>
+                    <p>Reports</p>
+                    <% end %>
+                  </li>
+                  <li class="nav-item">
+                    <%= link(to: Routes.site_content_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "site_content")}") do %>
+                    <i class="nav-icon fas fa-list-alt"></i>
+                    <p>Site Management</p>
+                    <% end %>
+                  </li>
+                </ul>
+              </nav>
+            <% end %>
+          </div>
+          <% end %>
+        </aside>
+      <% end %>
+
+      <div class="content-wrapper">
+        <%= if get_flash(@conn, :info) do %>
+          <div class="content-header">
+            <div class="container-fluid">
+              <div class="callout callout-success">
+                <i class="fa fa-info-circle"></i> <%= get_flash(@conn, :info) %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <%= if get_flash(@conn, :error) do %>
+          <div class="content-header">
+            <div class="container-fluid">
+              <div class="callout callout-danger">
+                <i class="fa fa-exclamation-circle"></i> <%= get_flash(@conn, :error) %>
+              </div>
+            </div>
+          </div>
+        <% end %>  
+      </div>
+      <%= @inner_content %>
+      <aside class="control-sidebar control-sidebar-light">
+        <div class="p-3">
+          <%= if load_filter_panel(@conn, @view_module(@conn)) do %>
+          <%= render @view_module(@conn), "_filter.html", conn: @conn, user: @user, filter: @filter, sort: @sort %>
+          <% end%>
+        </div>
+      </aside>
+    </div>      
