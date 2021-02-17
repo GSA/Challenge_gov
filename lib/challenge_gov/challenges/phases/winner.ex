@@ -48,6 +48,10 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
 end
 
 defmodule ChallengeGov.Challenges.Phases.Winner.SingleWinner do
+  @moduledoc """
+  Individual Winners
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

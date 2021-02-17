@@ -176,7 +176,6 @@ defmodule Web.Router do
 
     put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
 
-    # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
     post("/session/logout", SessionController, :logout_user)
   end

@@ -45,8 +45,6 @@ defmodule Web.PhaseView do
     end
   end
 
-  # TODO: Refactor to be more generic
-  # Example: Take a path with existing query params and append sort after and no longer need to pass filter
   def sortable_header(conn, sort, filter, column, label, phase) do
     {sort_icon, sort_values} =
       case Map.get(sort, column) do
@@ -337,7 +335,6 @@ defmodule Web.PhaseView do
     end
   end
 
-  # TODO: Use phase here to determine alternate filter tab text in some cases for winners/awardees
   def filter_tab_text(_challenge, _phase, "all"),
     do: content_tag(:span, "All submissions", class: "submission-filter__text mr-1")
 

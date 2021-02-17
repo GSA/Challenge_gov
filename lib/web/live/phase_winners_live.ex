@@ -1,4 +1,7 @@
 defmodule Web.PhaseWinnersLive do
+  @moduledoc """
+  LiveView for Phase Winners
+  """
   use Phoenix.LiveView, layout: {Web.LayoutView, "live.html"}
 
   alias Web.Router.Helpers, as: Routes
@@ -98,8 +101,10 @@ defmodule Web.PhaseWinnersLive do
   end
 
   defp add_phase_winner(socket, temp_id) do
+    changes = Map.get(socket.assigns.changeset.changes, :winners, [])
+
     _winners =
-      Map.get(socket.assigns.changeset.changes, :winners, [])
+      changes
       |> Enum.concat([
         Winner.SingleWinner.changeset(%Winner.SingleWinner{}, %{temp_id: temp_id})
       ])
