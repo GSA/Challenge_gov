@@ -81,6 +81,8 @@ defmodule Web do
       import Phoenix.LiveView.Helpers
       import Phoenix.View
 
+      import Web.ErrorHelpers
+      import Web.Gettext
       alias Web.Router.Helpers, as: Routes
     end
   end
