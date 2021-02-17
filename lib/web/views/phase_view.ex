@@ -212,7 +212,7 @@ defmodule Web.PhaseView do
   end
 
   defp get_judging_status_route(conn, solution, judging_status, filter) do
-    Routes.solution_path(conn, :update_judging_status, solution.id, judging_status, filter: filter)
+    Routes.api_solution_path(conn, :update_judging_status, solution.id, judging_status, filter: filter)
   end
 
   def get_judging_status_button_values(conn, challenge, phase, solution, prev_status, filter) do

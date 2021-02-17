@@ -579,8 +579,6 @@ defmodule Web.SolutionControllerTest do
 
   describe "updating judging status" do
     test "success: selecting for judging", %{conn: conn} do
-      IO.inspect("CONN")
-      IO.inspect(conn)
       conn = prep_conn_admin(conn)
       %{current_user: user} = conn.assigns
 
@@ -593,19 +591,10 @@ defmodule Web.SolutionControllerTest do
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
       assert solution.judging_status === "not_selected"
 
-      IO.inspect("solution path?")
-      IO.inspect("conn")
-      IO.inspect(conn)
-      IO.inspect(Routes.solution_path(
-            conn,
-            :update_judging_status,
-            solution.id,
-            "selected"))
-
       conn =
         put(
           conn,
-          Routes.solution_path(
+          Routes.api_solution_path(
             conn,
             :update_judging_status,
             solution.id,
@@ -646,7 +635,7 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.solution_path(
+          Routes.api_solution_path(
             conn,
             :update_judging_status,
             solution.id,
@@ -686,7 +675,7 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.solution_path(
+          Routes.api_solution_path(
             conn,
             :update_judging_status,
             solution.id,
@@ -716,7 +705,7 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.solution_path(
+          Routes.api_solution_path(
             conn,
             :update_judging_status,
             solution.id,
@@ -757,7 +746,7 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.solution_path(
+          Routes.api_solution_path(
             conn,
             :update_judging_status,
             solution.id,

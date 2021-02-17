@@ -3,7 +3,7 @@
     <h4>Other actions</h4>
     <div class="btn-toolbar">
       <%= challenge_solutions_link(@conn, @challenge, @user, label: "View submissions", class: "btn btn-primary") %>
-      <%= if Accounts.has_admin_access?(@user) or !(Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge)) do %>
+      <% if Accounts.has_admin_access?(@user) or !(Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge)) do %>
         <%= link "Preview", to: Routes.public_preview_path(@conn, :index, @challenge.uuid), target: "_blank", class: "btn btn-info" %>
         <%= link "Print", to: Routes.public_preview_path(@conn, :index, @challenge.uuid, print: true), target: "_blank", class: "btn btn-info" %>
         <%= link "JSON", to: Routes.export_path(@conn, :export_challenge, @challenge.id, "json"), target: "_blank", class: "btn btn-info" %>
@@ -14,11 +14,12 @@
         <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-danger") %>
       <% end %>
       
-      <%= cond do %>
-         <%= Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge) -> %>
+      <% cond do %>
+         <% Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge) -> %>
       <%= link("Add winners", to: "#", class: "btn btn-primary disabled", disabled: true) %>
-      <%= Challenges.is_challenge_owner?(@user, @challenge) -> %>
+      <% Challenges.is_challenge_owner?(@user, @challenge) -> %>
       <%= live_redirect("Add winners", to: Routes.live_path(Web.Endpoint, Web.WinnersLive, @challenge.id), class: "btn btn-primary") %>
+      <% true -> %>      
       <% end %>
 
       <%= if Accounts.has_admin_access?(@user) and (Challenges.is_open?(@challenge) or Challenges.is_closed?(@challenge)) do %>

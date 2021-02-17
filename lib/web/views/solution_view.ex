@@ -101,23 +101,4 @@ defmodule Web.SolutionView do
       ]
     end
   end
-
-  def render("judging_status.json", %{
-        conn: conn,
-        challenge: challenge,
-        phase: phase,
-        solution: solution,
-        updated_solution: updated_solution,
-        filter: filter
-             }) do
-    IO.inspect("rendering judging status")
-    PhaseView.get_judging_status_button_values(
-      conn,
-      challenge,
-      phase,
-      updated_solution,
-      solution.judging_status,
-      filter
-    )
-  end
 end

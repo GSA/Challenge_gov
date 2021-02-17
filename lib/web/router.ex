@@ -15,6 +15,7 @@ defmodule Web.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug :fetch_session
+    plug :fetch_flash
     plug(Web.Plugs.FetchUser)
   end
 
@@ -144,7 +145,6 @@ defmodule Web.Router do
 
     resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
     put("/solutions/:id/submit", SolutionController, :submit)
-    put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
 
     resources("/documents", DocumentController, only: [:delete])
     resources("/events", EventController, only: [:edit, :update, :delete])
@@ -176,6 +176,8 @@ defmodule Web.Router do
 
     resources("/documents", DocumentController, only: [:create, :delete])
     resources("/solution_documents", SolutionDocumentController, only: [:create, :delete])
+
+    put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)    
 
     # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
