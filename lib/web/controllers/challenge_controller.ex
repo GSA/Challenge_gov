@@ -456,5 +456,4 @@ defmodule Web.ChallengeController do
       |> redirect(to: Routes.challenge_path(conn, :edit, challenge.id, section))
     end
   end
-
 end

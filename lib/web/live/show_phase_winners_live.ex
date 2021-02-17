@@ -16,11 +16,13 @@ defmodule Web.ShowPhaseWinnersLive do
     {:ok, phase} = ChallengeGov.Phases.get(winners.phase_id)
     {:ok, challenge} = ChallengeGov.Challenges.get(p["cid"])
 
-    socket = socket
-    |> assign(:phase, phase)
-    |> assign(:winners, winners)
-    |> assign(:challenge, challenge)
-    |> assign(:text, "Review the information and publish winners.")
+    socket =
+      socket
+      |> assign(:phase, phase)
+      |> assign(:winners, winners)
+      |> assign(:challenge, challenge)
+      |> assign(:text, "Review the information and publish winners.")
+
     {:ok, socket}
   end
 

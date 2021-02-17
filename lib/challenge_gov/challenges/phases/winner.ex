@@ -30,20 +30,20 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
     # Images
     field(:winner_overview_img_url, :string)
 
-    #field :winners, {:array, :map}
+    # field :winners, {:array, :map}
     embeds_many :winners, __MODULE__.SingleWinner
   end
 
   def changeset(struct, params) do
     struct
     |> cast(params, [
-          :status,
-          :overview,
-          :winner_overview_img_url,
-          :phase_id
-        ])
-        |> cast_embed(:winners)
-        |> unique_constraint(:phase_id)
+      :status,
+      :overview,
+      :winner_overview_img_url,
+      :phase_id
+    ])
+    |> cast_embed(:winners)
+    |> unique_constraint(:phase_id)
   end
 
   def update_winners(%__MODULE__{} = winner, attrs) do
@@ -51,12 +51,12 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
     IO.inspect(attrs)
   end
 
-  #def winner_image_changeset(struct, key, extension) do
+  # def winner_image_changeset(struct, key, extension) do
   #  struct
   #  |> change()
   #  |> put_change(:winner_image_key, key)
   #  |> put_change(:winner_image_extension, extension)
-  #end
+  # end
 end
 
 defmodule ChallengeGov.Challenges.Phases.Winner.SingleWinner do
@@ -70,14 +70,13 @@ defmodule ChallengeGov.Challenges.Phases.Winner.SingleWinner do
     field :temp_id, :string, virtual: true
   end
 
-
   def changeset(struct, params) do
     struct
     |> cast(params, [
-          :winner_img_url,
-          :place_title,
-          :name,
-          :temp_id
-        ])
+      :winner_img_url,
+      :place_title,
+      :name,
+      :temp_id
+    ])
   end
 end

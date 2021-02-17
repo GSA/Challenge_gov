@@ -9,7 +9,7 @@ defmodule Web.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :put_root_layout, {Web.LayoutView, :root}
-    plug Web.Plugs.FetchUser    
+    plug Web.Plugs.FetchUser
   end
 
   pipeline :api do
@@ -84,13 +84,13 @@ defmodule Web.Router do
 
     live "/challenges/:cid/phases/:pid/winners", PhaseWinnersLive
     live "/challenges/:cid/phases/:pid/winners/:wid", ShowPhaseWinnersLive
+
     resources("/challenges", ChallengeController) do
       resources("/documents", DocumentController, only: [:create])
 
       resources("/events", EventController, only: [:new, :create])
 
       resources("/bulletin", BulletinController, only: [:new, :create])
-
 
       resources("/phases", PhaseController, only: [:index, :show]) do
         get("/winners_published", PhaseController, :winners_published, as: "winner")

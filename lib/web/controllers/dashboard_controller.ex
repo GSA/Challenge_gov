@@ -3,6 +3,7 @@ defmodule Web.DashboardController do
 
   def index(conn, _params) do
     %{current_user: user} = conn.assigns
+
     conn
     |> Phoenix.Controller.put_layout(false)
     |> assign(:user, user)

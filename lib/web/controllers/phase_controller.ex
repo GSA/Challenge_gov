@@ -105,15 +105,15 @@ defmodule Web.PhaseController do
 
     conn
     |> assign(:challenge, challenge)
-  end   
+  end
 
   def winners(conn, %{"challenge_id" => cid, "phase_id" => phid} = params) do
     {:ok, challenge} = Challenges.get(cid)
     {:ok, phase} = Phases.get(phid)
     changeset = Phase.changeset(phase, %{})
-    
+
     conn
-    |> assign(:changeset, changeset)    
+    |> assign(:changeset, changeset)
     |> assign(:challenge_id, cid)
     |> assign(:phase_id, phid)
     |> assign(:challenge, challenge)
@@ -124,7 +124,7 @@ defmodule Web.PhaseController do
   def winners_published(conn, %{"challenge_id" => cid, "phase_id" => pid} = params) do
     {:ok, phase} = Phases.get(pid)
     IO.inspect("PHASE THEN CHANGESET")
-    changeset = Phase.changeset(phase, %{}) |> IO.inspect
+    changeset = Phase.changeset(phase, %{}) |> IO.inspect()
 
     conn
     |> Phoenix.Controller.put_layout(false)
