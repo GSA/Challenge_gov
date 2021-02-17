@@ -101,9 +101,6 @@ defmodule Web.PhaseController do
   end
 
   def create_winners(conn, %{"challenge_id" => cid, "phase_id" => pid} = params) do
-    IO.inspect("CREATING WINNER")
-    IO.inspect("creating winner")
-    IO.inspect(params)
     challenge = Challenges.get(cid)
 
     conn
