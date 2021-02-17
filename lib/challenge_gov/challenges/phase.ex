@@ -9,7 +9,7 @@ defmodule ChallengeGov.Challenges.Phase do
 
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Solutions.Solution
-  alias ChallengeGov.Phases.Winner
+  alias ChallengeGov.Challenges.Phases.Winner
 
   @type t :: %__MODULE__{}
 
@@ -17,7 +17,7 @@ defmodule ChallengeGov.Challenges.Phase do
     belongs_to(:challenge, Challenge)
     has_many(:all_solutions, Solution)
     has_many(:solutions, Solution, where: [status: "submitted"])
-    has_one(:wall_winners, Winner)
+    has_one(:winners, Winner)
 
     field(:uuid, Ecto.UUID, autogenerate: true)
     field(:title, :string)
