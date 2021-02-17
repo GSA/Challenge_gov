@@ -2,71 +2,70 @@
   <%= render Web.ChallengeView, "_breadcrumb.html", challenge: @challenge, winners: true %>
 </div>
 <div class="main-container phase-winners">
-<h1>Winners for Phase <%= @phase.title %> of <%= @challenge.title %></h1>
-<h3>Entering winners is as flexible as you need for your phase. Add any information (overview details) about the challenge.</h3>
-<div>
-<h2>Winners overview</h2>
-<%= f = form_for(@changeset, "#", [class: "form-horizontal", phx_submit: "submit", phx_change: "validate", phx_target: "#upload-winners", id: "upload-winners", multipart: true])  %>
-<%= FormView.textarea_field(f, :overview, label: "Winners description (optional)", id: "winners-overview-box", class: "winners-overview-box") %>
- <p>Upload image (optional)</p>
-<%= live_file_input(@uploads.winner_image_extension) %>
-<%= for entry <- @uploads.winner_image_extension.entries do %>
-    <div class="row">
-      <div class="column">
-        <progress max="100" value="<%= entry.progress %>"/>
+  <h1>Winners for Phase <%= @phase.title %> of <%= @challenge.title %></h1>
+  <h3>Entering winners is as flexible as you need for your phase. Add any information (overview details) about the challenge.</h3>
+  <div>
+    <h2>Winners overview</h2>
+    <%= f = form_for(@changeset, "#", [class: "form-horizontal", phx_submit: "submit", phx_change: "validate", phx_target: "#upload-winners", id: "upload-winners", multipart: true])  %>
+    <%= FormView.textarea_field(f, :overview, label: "Winners description (optional)", id: "winners-overview-box", class: "winners-overview-box") %>
+    <p>Upload image (optional)</p>
+    <%= live_file_input(@uploads.winner_overview_img) %>
+    <%= for entry <- @uploads.winner_overview_img.entries do %>
+        <div class="row">
+          <div class="column">
+            <progress max="100" value="<%= entry.progress %>"/>
+          </div>
+        </div>
+        <% end %>
+        <p class="mini">File must be smaller than 10mb</p>  
+        <hr/>
+  <div class="individual-winners">
+    <h3>Add individual winners with name, rank and photo (optional)</h3>
+    <%= for w <- (inputs_for f, :winners) do  %>
+    <% temp_id = String.to_atom(w.source.changes.temp_id) %>
+    <%= hidden_input w, :temp_id, value: w.source.changes.temp_id %>
+    <div class="grid-row">
+      <div class="winner grid-col flex-2">
+        <div class="form-group">
+          <div>
+            <label>Place title (ex. First Place or Grand Winner) (optional)</label></div>
+          <%= text_input w, :place_title %>
+        </div>
+        <div class="form-group">
+          <div><label>Name (optional)</label></div>
+          <%= text_input w, :name %>
+        </div>
+        <div class="form-group">
+          <p><label class="control-label">Upload image (optional)</label></p>
+          <%= live_file_input(@uploads[temp_id]) %>
+          <%= for entry <- @uploads[temp_id].entries do %>
+              <div class="row">
+                <div class="column">
+                  <progress max="100" value="<%= entry.progress %>"/>
+                </div>
+              </div>
+              <% end %>   
+              <p class="mini">File must be smaller than 10mb</p>
+        </div>
+      </div>
+      <div class="grid-col flex-2 remove-winner-container">
+        <a href="#" phx-click="remove-winner" phx-value-remove="<%= temp_id %>" class="remove-winner">Remove</a>
       </div>
     </div>
-    <% end %>
-  <p class="mini">File must be smaller than 10mb</p>  
-  <hr/>
-</div>
-<div class="individual-winners">
-<h3>Add individual winners with name, rank and photo (optional)</h3>
-<%= for w <- inputs_for(f, :winners) do %>
-    <%= hidden_input w, :temp_id, value: w.source.changes.temp_id %>
-    <% temp_id = String.to_atom(w.source.changes.temp_id) %>
-    <div class="grid-row">
-  <div class="winner grid-col flex-2">
-    <div class="form-group">
-      <div>
-      <label>Place title (ex. First Place or Grand Winner) (optional)</label></div>
-      <%= text_input w, :place_title %>
+    <% end %>     
+    <a phx-click="add-winner" href="#" class="btn btn-primary">+ Add new winner</a>
+    <div>
+      <div class="row winner-options">
+        <div class="col-md-1 cancel-winner">
+          <%= link("cancel", to: Routes.live_path(Web.Endpoint, Web.WinnersLive, @challenge.id)) %>          
+        </div>
+        <div class="col-md1">
+          <a class="disabled btn">Save draft</a>
+          <a class="disabled btn">Preview</a>
+          <%= submit("Review + Publish", class: "btn btn-primary") %>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <div><label>Name (optional)</label></div>
-      <%= text_input w, :name %>
-    </div>
-    <div class="form-group">
-      <p><label class="control-label">Upload image (optional)</label></p>
-      <%= live_file_input(@uploads[temp_id]) %>
-      <%= for entry <- @uploads[temp_id].entries do %>
-          <div class="row">
-            <div class="column">
-              <progress max="100" value="<%= entry.progress %>"/>
-            </div>
-          </div>
-          <% end %>   
-      <p class="mini">File must be smaller than 10mb</p>
-    </div>
-  </div>
-    <div class="grid-col flex-2 remove-winner-container">
-      <a href="#" phx-click="remove-winner" class="remove-winner">Remove</a>
-    </div>
-  </div>
-  <% end %>
-  <a phx-click="add-winner" href="#" class="btn btn-primary">+ Add new winner</a>
-  <div>
-    <div class="row winner-options">
-    <div class="col-md-1 cancel-winner">
-      <%= link("cancel", to: Routes.live_path(Web.Endpoint, Web.WinnersLive, @challenge.id)) %>          
-    </div>
-    <div class="col-md1">
-      <a class="disabled btn">Save draft</a>
-      <a class="disabled btn">Preview</a>
-      <%= submit("Review + Publish", class: "btn btn-primary") %>
-    </div>
-    </div>
-</div>
 </form>
 </div>
 </div>

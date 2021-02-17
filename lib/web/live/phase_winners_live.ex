@@ -4,6 +4,7 @@ defmodule Web.PhaseWinnersLive do
   alias Web.Router.Helpers, as: Routes
 
   alias ChallengeGov.Phases
+  alias ChallengeGov.Repo
   alias ChallengeGov.Challenges.Phases.Winner
   alias Stein.Storage
 
@@ -16,6 +17,13 @@ defmodule Web.PhaseWinnersLive do
   def mount(p, s, socket) do
     {:ok, challenge} = ChallengeGov.Challenges.get(p["cid"])
     {:ok, phase} = ChallengeGov.Phases.get(p["pid"])
+
+    # get winner if already exists.
+    with {:ok, winners} <- Repo.get_by(Winner, phase_id: p["pid"]) do
+	push_redirect(socket, to: Routes.live_path(Web.Endpoint, Web.PhaseWinnersLive, challenge.id, phase.id, winners.id, replace: true))
+    end
+    # if winner already exists, phase redirect is the answer
+    
     changeset = Winner.changeset(%Winner{}, %{"winners" => []})
     |> Ecto.Changeset.put_embed(:winners, [])
 
@@ -105,14 +113,11 @@ defmodule Web.PhaseWinnersLive do
     |> Ecto.Changeset.put_change(:phase_id, socket.assigns.phase.id)
     |> Ecto.Changeset.put_embed(:winners, updated_winners)
 
-    # next: save phase winners
 
-    #socket =
-     # socket
-     # |> assign(:uploaded_files, :winners)
+    # TODO: check for existing winners, handle error
+    winners_persisted = Repo.insert!(changeset)
+    push_redirect(socket, to: Routes.live_path(Web.Endpoint, Web.ShowPhaseWinnersLive, socket.assigns.challenge.id, socket.assigns.phase.id, winners_persisted.id, replace: true))
 
-    #Phases.create_winner(params)
-    #  to: Routes.challenge_phase_winner_path(Web.Endpoint, :winners_published, @challenge.id, @phase.id),
     {:noreply, socket}
   end
 
