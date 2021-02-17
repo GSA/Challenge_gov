@@ -47,3 +47,4 @@ npm-debug.log
 /key.pem
 
 **/*~
+**/#*#
