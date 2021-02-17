@@ -177,7 +177,7 @@ defmodule Web.Router do
     resources("/documents", DocumentController, only: [:create, :delete])
     resources("/solution_documents", SolutionDocumentController, only: [:create, :delete])
 
-    put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)    
+    put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
 
     # TODO: This might make sense to move elsewhere
     post("/session/renew", SessionController, :check_session_timeout)
