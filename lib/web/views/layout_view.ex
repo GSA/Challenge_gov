@@ -14,7 +14,7 @@ defmodule Web.LayoutView do
     IO.inspect(view)
     IO.inspect("view template is off")
 
-    IO.inspect(Pheonix.Controller.view_template(conn))
+    IO.inspect(Phoenix.Controller.view_template(conn))
 
     action =
       case view do
