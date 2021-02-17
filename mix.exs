@@ -39,6 +39,7 @@ defmodule ChallengeGov.MixProject do
       {:earmark, "~> 1.4.3"},
       {:ecto_sql, "~> 3.4"},
       {:elixir_uuid, "~> 1.2"},
+      {:ex_check, "~> 0.12", only: [:dev, :test], runtime: true},
       {:finch, "~> 0.2"},
       {:gettext, "~> 0.11"},
       {:hackney, "~> 1.16.0"},
