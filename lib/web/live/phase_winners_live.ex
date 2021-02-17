@@ -18,24 +18,26 @@ defmodule Web.PhaseWinnersLive do
     {:ok, challenge} = ChallengeGov.Challenges.get(p["cid"])
     {:ok, phase} = ChallengeGov.Phases.get(p["pid"])
 
-    # get winner if already exists.
-    with {:ok, winners} <- Repo.get_by(Winner, phase_id: p["pid"]) do
-	push_redirect(socket, to: Routes.live_path(Web.Endpoint, Web.PhaseWinnersLive, challenge.id, phase.id, winners.id, replace: true))
-    end
-    # if winner already exists, phase redirect is the answer
-    
-    changeset = Winner.changeset(%Winner{}, %{"winners" => []})
-    |> Ecto.Changeset.put_embed(:winners, [])
+    case Repo.get_by(Winner, phase_id: String.to_integer(p["pid"])) do
+      nil ->
+        # if winner already exists, phase redirect is the answer
+        changeset = Winner.changeset(%Winner{}, %{"winners" => []})
+        |> Ecto.Changeset.put_embed(:winners, [])
+        
+        socket =
+          socket
+          |> assign(:phase, phase)
+          |> assign(:challenge, challenge)
+          |> assign(:changeset, changeset)
+          |> assign(:uploaded_files, [])
+          |> Phoenix.LiveView.allow_upload(:winner_overview_img, accept: ~w(.jpg .jpeg .png), max_file_size: 10_000_000, progress: &handle_progress/3, auto_upload: true)
+        {:ok, socket}
 
-    socket =
-      socket
-      |> assign(:phase, phase)
-      |> assign(:challenge, challenge)
-      |> assign(:changeset, changeset)
-      |> assign(:uploaded_files, [])
-      |> Phoenix.LiveView.allow_upload(:winner_overview_img, accept: ~w(.jpg .jpeg .png), max_file_size: 10_000_000, progress: &handle_progress/3, auto_upload: true)
-    {:ok, socket}
+      winners ->
+        {:ok, push_redirect(socket, to: Routes.live_path(Web.Endpoint, Web.ShowPhaseWinnersLive, challenge.id, phase.id, winners.id, replace: true))}
+    end
   end
+  
   def handle_progress(key, entry, socket) do
     {:noreply, socket}
   end  
@@ -116,9 +118,8 @@ defmodule Web.PhaseWinnersLive do
 
     # TODO: check for existing winners, handle error
     winners_persisted = Repo.insert!(changeset)
-    push_redirect(socket, to: Routes.live_path(Web.Endpoint, Web.ShowPhaseWinnersLive, socket.assigns.challenge.id, socket.assigns.phase.id, winners_persisted.id, replace: true))
 
-    {:noreply, socket}
+    {:noreply, push_redirect(socket, to: Routes.live_path(Web.Endpoint, Web.ShowPhaseWinnersLive, socket.assigns.challenge.id, socket.assigns.phase.id, winners_persisted.id), replace: true)}
   end
 
   defp consume_upload_and_generate_url(socket, key) do

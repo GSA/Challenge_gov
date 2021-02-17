@@ -1,5 +1,7 @@
-defmodule ChallengeGov.Web.ShowPhaseWinnersLive do
-  use Phoenix.LiveView
+defmodule Web.ShowPhaseWinnersLive do
+  use Phoenix.LiveView, layout: {Web.LayoutView, "live.html"}
+
+  import Phoenix.LiveView.Helpers
 
   def render(assigns) do
     ~L"""
@@ -8,6 +10,7 @@ defmodule ChallengeGov.Web.ShowPhaseWinnersLive do
   end
 
   def mount(_params, s, socket) do
+    IO.inspect("mounting!")
     {:ok, socket}
   end
 end
