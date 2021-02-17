@@ -94,9 +94,6 @@ defmodule Web.Router do
       resources("/bulletin", BulletinController, only: [:new, :create])
 
       resources("/phases", PhaseController, only: [:index, :show]) do
-        get("/winners_published", PhaseController, :winners_published, as: "winner")
-        post("/winners", PhaseController, :create_winners, as: "winner")
-
         resources("/solutions", SolutionController, only: [:index, :show, :new, :create])
       end
 
