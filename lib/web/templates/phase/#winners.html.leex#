@@ -3,6 +3,7 @@
 </div>
 <div class="main-container phase-winners">
   <%= render Web.PhaseView, "_winner_header.html", phase: @phase, challenge: @challenge, text: @text %>
+  <p class="alert alert-info"><%= live_flash(@flash, :info) %></p>
   <div>
     <h2>Winners overview</h2>
     <%= f = form_for(@changeset, "#", [class: "form-horizontal", phx_submit: "submit", phx_change: "validate", phx_target: "#upload-winners", id: "upload-winners", multipart: true])  %>

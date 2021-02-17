@@ -30,6 +30,7 @@ defmodule Web.PhaseWinnersLive do
           |> assign(:challenge, challenge)
           |> assign(:changeset, changeset)
           |> assign(:uploaded_files, [])
+          |> assign(:text, "Entering winners is as flexible as you need for your phase. Add any information (overview details) about the challenge.")
           |> Phoenix.LiveView.allow_upload(:winner_overview_img, accept: ~w(.jpg .jpeg .png), max_file_size: 10_000_000, progress: &handle_progress/3, auto_upload: true)
         {:ok, socket}
 
