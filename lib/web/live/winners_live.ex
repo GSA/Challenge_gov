@@ -1,4 +1,7 @@
 defmodule Web.WinnersLive do
+  @moduledoc """
+  LiveView for challenge winners management page
+  """
   use Phoenix.LiveView, layout: {Web.LayoutView, "live.html"}
 
   def mount(p, s, socket) do

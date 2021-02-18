@@ -1,4 +1,7 @@
 defmodule Web.ShowPhaseWinnersLive do
+  @moduledoc """
+  LiveView for showing phase winners
+  """
   use Phoenix.LiveView, layout: {Web.LayoutView, "live.html"}
 
   alias ChallengeGov.Repo

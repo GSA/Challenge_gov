@@ -25,8 +25,10 @@ defmodule Web.PhaseWinnersLive do
     case Repo.get_by(Winner, phase_id: String.to_integer(p["pid"])) do
       nil ->
         # if winner already exists, phase redirect is the answer
+        changeset = Winner.changeset(%Winner{}, %{"winners" => []})
+
         changeset =
-          Winner.changeset(%Winner{}, %{"winners" => []})
+          changeset
           |> Ecto.Changeset.put_embed(:winners, [])
 
         socket =
@@ -110,14 +112,14 @@ defmodule Web.PhaseWinnersLive do
       ])
   end
 
-  # JUST TO GENERATE A RANDOM STRING
+  # generate a random string
   defp get_temp_id, do: :crypto.strong_rand_bytes(5) |> Base.url_encode64() |> binary_part(0, 5)
 
   def handle_event("save", params, socket) do
     {:noreply, socket}
   end
 
-  def handle_event("remove-winner", %{"remove" => temp_id} = params, socket) do
+  def handle_event("remove-winner", _params = %{"remove" => temp_id}, socket) do
     winners =
       socket.assigns.changeset.changes.winners
       |> Enum.reject(fn winner ->
@@ -162,7 +164,6 @@ defmodule Web.PhaseWinnersLive do
       |> Ecto.Changeset.put_change(:phase_id, socket.assigns.phase.id)
       |> Ecto.Changeset.put_embed(:winners, updated_winners)
 
-    # TODO: check for existing winners, handle error
     winners_persisted = Repo.insert!(changeset)
 
     {:noreply,
