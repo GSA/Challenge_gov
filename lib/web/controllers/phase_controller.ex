@@ -3,6 +3,7 @@ defmodule Web.PhaseController do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.Phases
+  alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.Solutions
 
   plug Web.Plugs.FetchPage, [per: 10] when action in [:show]

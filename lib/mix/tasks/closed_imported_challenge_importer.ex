@@ -83,7 +83,6 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
     end
   end
 
-  # TODO: check that the \n looks right
   defp format_judging_criteria(challenge) do
     criteria =
       Enum.map(0..9, fn i ->

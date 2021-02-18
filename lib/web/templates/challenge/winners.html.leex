@@ -1,0 +1,17 @@
+<div class="content-header">
+  <%= render Web.ChallengeView, "_breadcrumb.html", challenge: @challenge, winners: true %>
+</div>
+<div class="main-container">
+<h1>Winners for <%= @challenge.title %></h1>
+<%= for p <- @challenge.phases do %>
+    <div class="card winner-manage">
+      <div class="card-body">
+        <h3>Phase <%= p.title %></h3>
+        <p><b>Start date: </b><%= Timex.format!(p.start_date, "{M}/{D}/{YYYY}") %></p>
+        <p><b>End date: </b><%= Timex.format!(p.end_date, "{M}/{D}/{YYYY}") %></p>        
+        <%= live_redirect("Manage Winners", to: Routes.live_path(Web.Endpoint, Web.PhaseWinnersLive, @challenge.id, p.id), class: "btn btn-primary") %>
+
+      </div>
+    </div>
+    <% end %>
+</div>

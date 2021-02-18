@@ -102,7 +102,6 @@ defmodule ChallengeGov.SavedChallengesTest do
       assert length(saved_challenges) === 0
     end
 
-    # TODO: Is this a valid feature? Don't do this
     @tag :pending
     test "remove saved challenges when challenge is no longer published" do
     end

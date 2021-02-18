@@ -1,13 +1,9 @@
-      <div class="session-timeout-div"
-        data-session_expiration="<%= Web.SharedView.session_timeout(@conn) %>"
-        id="session_timeout">
-      </div>
-      <div>
-      <%= case current_user(@conn) do %>
+<main role="main">
+  <div>
+      <%= case @user do %>
       <% nil -> %>
       <% u -> %>
       <nav class="main-header navbar navbar-expand navbar-dark challenge_navbar">
-        <% if view_module(@conn) != Web.TermsController and view_module(@conn) != Web.TermsView and view_module(@conn) != Web.AccessView do %>
           <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link" data-widget="pushmenu" href="#">
@@ -18,15 +14,13 @@
               <%= assigns[:navbar_text] %>
             </li>
           </ul>
-        <% end %>
-
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
               <span><%= u.email %></span>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-              <%= link to: Routes.session_path(@conn, :delete), method: :delete, class: "dropdown-item" do %>
+              <%= link to: Routes.session_path(Web.Endpoint, :delete), method: :delete, class: "dropdown-item" do %>
               <i class="fas fa-sign-out-alt mr-2"></i> Logout
               <% end %>
             </div>
@@ -35,12 +29,11 @@
         </ul>
       </nav>
 
-      <%= case current_user(@conn) do %>
+      <%= case @user do %>
       <% nil -> %>
       <% u -> %>
-      <%= if view_module(@conn) != Web.TermsController and view_module(@conn) != Web.TermsView and view_module(@conn) != Web.AccessView do %>
         <aside class="main-sidebar sidebar-light-primary challenge_sidebar">
-          <%= link(to: Routes.dashboard_path(@conn, :index), class: "brand-link") do %>
+          <%= link(to: Routes.dashboard_path(Web.Endpoint, :index), class: "brand-link") do %>
             <i class="ml-3 nav-icon fas fa-home"></i>
             <span class="ml-1 brand-text font-weight-light">Challenge.gov</span>
           <% end %>
@@ -49,13 +42,13 @@
               <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                 <%= if Accounts.role_at_or_below(u, "solver") do %>
                   <li class="nav-item">
-                    <%= link(to: Routes.solution_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "solutions")}") do %>
+                    <%= link(to: Routes.solution_path(Web.Endpoint, :index), class: "nav-link") do %>
                       <i class="nav-icon icon-submissions"></i>
                       <p>Solutions</p>
                     <% end %>
                   </li>
                   <li class="nav-item">
-                    <%= link(to: Routes.saved_challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "saved_challenges")}") do %>
+                    <%= link(to: Routes.saved_challenge_path(Web.Endpoint, :index), class: "nav-link") do %>
                       <i class="nav-icon fas fa-bookmark"></i>
                       <p>Saved challenges</p>
                     <% end %>
@@ -63,7 +56,7 @@
                 <% end %>
                 <%= if Accounts.role_at_or_above(u, "challenge_owner") do %>
                   <li class="nav-item">
-                    <%= link(to: Routes.challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "challenges")}") do %>
+                    <%= link(to: Routes.challenge_path(Web.Endpoint, :index), class: "nav-link") do %>
                       <i class="nav-icon fas fa-award"></i>
                       <p>Challenges</p>
                     <% end %>
@@ -71,13 +64,13 @@
                 <% end %>
                 <%= if ChallengeGov.Accounts.has_admin_access?(u) do %>
                   <li class="nav-item">
-                    <%= link(to: Routes.user_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "users")}") do %>
+                    <%= link(to: Routes.user_path(Web.Endpoint, :index), class: "nav-link") do %>
                       <i class="nav-icon fas fa-users"></i>
                       <p>Users</p>
                     <% end %>
                   </li>
                   <li class="nav-item">
-                    <%= link(to: Routes.agency_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "agencies")}") do %>
+                    <%= link(to: Routes.agency_path(Web.Endpoint, :index), class: "nav-link") do %>
                       <i class="nav-icon fas fa-building"></i>
                       <p>Agencies</p>
                     <% end %>
@@ -89,13 +82,13 @@
               <nav class="mt-5">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                   <li class="nav-item">
-                    <%= link(to: Routes.reports_path(@conn, :new), class: "nav-link #{tab_selected(@conn, "reports")}") do %>
+                    <%= link(to: Routes.reports_path(Web.Endpoint, :new), class: "nav-link") do %>
                     <i class="nav-icon fas fa-download"></i>
                     <p>Reports</p>
                     <% end %>
                   </li>
                   <li class="nav-item">
-                    <%= link(to: Routes.site_content_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "site_content")}") do %>
+                    <%= link(to: Routes.site_content_path(Web.Endpoint, :index), class: "nav-link") do %>
                     <i class="nav-icon fas fa-list-alt"></i>
                     <p>Site Management</p>
                     <% end %>
@@ -106,35 +99,28 @@
           </div>
           <% end %>
         </aside>
-      <% end %>
 
       <div class="content-wrapper">
-        <%= if get_flash(@conn, :info) do %>
+        <%= if live_flash(@flash, :info) do %>
           <div class="content-header">
             <div class="container-fluid">
               <div class="callout callout-success">
-                <i class="fa fa-info-circle"></i> <%= get_flash(@conn, :info) %>
+                <i class="fa fa-info-circle"></i> <%= live_flash(@flash, :info) %>
               </div>
             </div>
           </div>
         <% end %>
 
-        <%= if get_flash(@conn, :error) do %>
+        <%= if live_flash(@flash, :error) do %>
           <div class="content-header">
             <div class="container-fluid">
               <div class="callout callout-danger">
-                <i class="fa fa-exclamation-circle"></i> <%= get_flash(@conn, :error) %>
+                <i class="fa fa-exclamation-circle"></i> <%= live_flash(@flash, :error) %>
               </div>
             </div>
           </div>
           <% end %>
       <%= @inner_content %>          
       </div>
-      <aside class="control-sidebar control-sidebar-light">
-        <div class="p-3">
-          <%= if load_filter_panel(@conn, view_module(@conn)) do %>
-          <%= render view_module(@conn), "_filter.html", conn: @conn, user: @user, filter: @filter, sort: @sort %>
-          <% end%>
-        </div>
-      </aside>
-    </div>      
+    </div>
+</main>

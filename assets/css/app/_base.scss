@@ -75,6 +75,15 @@ body {
   color: #4A5C6B;
 }
 
+.main-container .btn-primary {
+     background-color: #F2994A;
+     width: 200px;
+     height: 33px;
+     border-radius: 4px;
+     color: black;
+     border: none;
+}
+
 .btn-wrapper {
   margin-top: 30px;
   display: flex;
@@ -86,6 +95,89 @@ body {
 }
 
 /* timeout modal */
+
+.main-container {
+  left: 200px;
+}
+
+.main-container h1 {
+  font-family: 'Public Sans';
+  font-weight: 400;
+  font-size: 36px;
+}
+
+.main-container h2 {
+  font-family: 'Public Sans';
+  font-size: 25px;
+}
+
+.main-container h3 {
+  font-family: 'Public Sans';
+  font-size: 20px;
+}
+
+.card.winner-manage {
+  max-width: 300px;
+  border-radius: 4px;
+}
+
+.main-container.phase-winners img.winner-img {
+  width: 100px;
+  height: 100px;
+}
+
+.main-container {
+  margin-left: 20px;
+  max-width: 900px;
+}
+
+.main-container.phase-winners p {
+  font-size: 16px;
+  font-family: 'Public Sans';
+}
+
+.main-container.phase-winners label {
+  font-size: 16px;
+  margin-bottom: 0px;
+  font-family: 'Public Sans';
+}
+
+.main-container hr {
+  background-color: #333333;
+  height: 1px;
+}
+
+.main-container .winner-options {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+.main-container .cancel-winner {
+  text-decoration-line: underline;
+  margin-top: 5px;
+}
+
+.main-container .individual-winners {
+  padding-top: 20px;
+}
+
+.main-container.phase-winners .mini {
+  font-size: 12px;
+}
+
+.main-container .remove-winner-container {
+  padding-top: 22px;
+}
+
+.main-container .remove-winner {
+  color: red;
+  text-decoration-line: underline;
+}
+
+.main-container textarea#winner_overview {
+  max-width: 600px;
+  height: 200px;
+}
 
 .main-sidebar {
   z-index: 1021;

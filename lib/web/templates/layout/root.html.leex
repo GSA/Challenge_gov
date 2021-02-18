@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <%= csrf_meta_tag() %>    
+    <link rel="icon" type="image/png" href="<%= Routes.static_path(Web.Endpoint, "/images/favicon3.png") %>" />
+
+    <link rel="stylesheet" href="<%= Routes.static_path(Web.Endpoint, "/css/app.css") %>"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+    <title>Challenge.Gov</title>
+
+    <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
+  </head>
+
+  <body class="hold-transition sidebar-collapse sidebar-mini">
+    <div class="wrapper">
+        <%= @inner_content %>
+    </div>
+
+    <script type="text/javascript" src="<%= Routes.static_path(Web.Endpoint, "/js/app.js") %>"></script>
+  </body>
+</html>
