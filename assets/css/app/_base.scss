@@ -116,8 +116,25 @@ body {
   font-size: 20px;
 }
 
+.winner-manage div.card-body {
+  position: relative;  
+}
+
+.winner-manage div.card-body .mng-winner-btn {
+  position: absolute;
+  bottom: 10px;
+  left: 45px;
+}
+
+.winner-manage .winner-title {
+  height: 75px;
+  overflow: auto;
+}
+
+
 .card.winner-manage {
   max-width: 300px;
+  min-height: 250px;
   border-radius: 4px;
   margin: 20px;
 }
