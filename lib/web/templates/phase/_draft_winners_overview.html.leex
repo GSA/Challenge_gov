@@ -1,0 +1,11 @@
+<%= FormView.textarea_field(@f, :overview, label: "Winners description (optional)", id: "winners-overview-box", class: "winners-overview-box") %>
+<p>Upload image (optional)</p>
+<%= live_file_input(@uploads.winner_overview_img) %>
+<%= for entry <- @uploads.winner_overview_img.entries do %>
+    <div class="row">
+      <div class="column">
+        <progress max="100" value="<%= entry.progress %>"/>
+      </div>
+    </div>
+<% end %>
+<p class="mini">File must be smaller than 10mb</p>  
