@@ -15,7 +15,8 @@ config :challenge_gov,
 config :challenge_gov, Web.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: Web.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: ChallengeGov.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: ChallengeGov.PubSub,
+  live_view: [signing_salt: "SECRET_SALT"]
 
 # Configures Elixir's Logger
 config :logger, :console,

@@ -47,8 +47,6 @@ defmodule Web.ChallengeView do
     "http://www.challenge.gov/challenge/#{challenge.custom_url}"
   end
 
-  # TODO: Refactor to be more generic
-  # Example: Take a path with existing query params and append sort after and no longer need to pass filter
   def sortable_header(conn, sort, filter, column, label) do
     {sort_icon, sort_values} =
       case Map.get(sort, column) do
@@ -252,7 +250,6 @@ defmodule Web.ChallengeView do
     end
   end
 
-  # TODO: Change how these three associations work when no params are passed
   @doc """
   Hidden challenge owner field to keep existing challenge owners from being wiped if none are passed
   """

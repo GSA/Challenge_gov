@@ -8,6 +8,8 @@ defmodule ChallengeGov.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
+      # Start the PubSub system
+      {Phoenix.PubSub, name: ChallengeGov.PubSub},
       ChallengeGov.Repo,
       {Finch, name: ChallengeGov.HTTPClient},
       Web.Endpoint,

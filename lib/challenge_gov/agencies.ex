@@ -108,7 +108,6 @@ defmodule ChallengeGov.Agencies do
   #   |> Ecto.Changeset.apply_action(:insert)
   # end
 
-  # TODO: Change this to use user again if needed
   def create(_user, params) do
     result =
       Ecto.Multi.new()

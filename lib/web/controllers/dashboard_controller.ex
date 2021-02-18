@@ -3,7 +3,7 @@ defmodule Web.DashboardController do
 
   def index(conn, _params) do
     %{current_user: user} = conn.assigns
-    # redirect(conn, to: Routes.challenge_path(conn, :index))
+
     conn
     |> assign(:user, user)
     |> assign(:filter, nil)
