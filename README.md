@@ -100,11 +100,19 @@ mix deps.get
 mix compile
 ```
 
-This sets up your basic elixir environment. Next setup the database. The following commands will create and migrate locally.
+This sets up your basic elixir environment. Next setup the database. The following commands will create and migrate locally, as well as migrate seeds.
+
+### Super-Admin (optional)
+If you would like to seed the database with a default super-admin user, please set the following environment variables:
+
+- FIRST_USER_EMAIL
+- FIRST_USER_FN
+- FIRST_USER_LN
 
 ```bash
 mix ecto.create
 mix ecto.migrate
+mix run priv/repo/seeds.exs
 ```
 
 Once the database is setup, make sure to install javascript dependencies.
@@ -120,6 +128,12 @@ Now you can run the server.
 ```bash
 mix phx.server
 ```
+
+## Private Keys
+
+In order to spin up challenge.gov on your local machine it may be necessary to obtain private keys manually.
+
+Contact [team@challenge.gov](team@challenge.gov) with subject heading 'Open-Source Development Access' to take part.
 
 ## Testing
 

@@ -8,7 +8,9 @@ defmodule ChallengeGov.SubmissionExportsTest do
   describe "exporting submissions" do
     test "success: all as zip" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_open_multi_phase_challenge(user, %{user_id: user.id})
+
+      challenge =
+        ChallengeHelpers.create_archived_multi_phase_challenge(user, %{user_id: user.id})
 
       phase_ids =
         Enum.map(challenge.phases, fn phase ->

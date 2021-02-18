@@ -20,7 +20,6 @@ defmodule ChallengeGov.Challenges.Logo do
   @doc """
   Upload a logo if the key is present
   """
-  # TODO: Validate logo uploading doesn't happen if upload_logo param is false
   def maybe_upload_logo(challenge, params) do
     params =
       Enum.into(params, %{}, fn {key, value} ->

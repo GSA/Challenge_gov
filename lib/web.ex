@@ -5,8 +5,8 @@ defmodule Web do
 
   This can be used in your application as:
 
-      use Web, :controller
-      use Web, :view
+  use Web, :controller
+  use Web, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -23,6 +23,7 @@ defmodule Web do
 
       import Plug.Conn
       import Web.Gettext
+      import Phoenix.LiveView.Controller
       alias Web.Router.Helpers, as: Routes
     end
   end
@@ -34,16 +35,19 @@ defmodule Web do
         namespace: Web,
         pattern: "**/*"
 
-      # Import convenience functions from controllers
       import Phoenix.Controller,
-        only: [get_flash: 1, get_flash: 2, view_module: 1, action_name: 1]
+        only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
 
-      # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
+      unquote(view_helpers())
+    end
+  end
 
-      import Web.ErrorHelpers
-      import Web.Gettext
-      alias Web.Router.Helpers, as: Routes
+  def live_view do
+    quote do
+      use Phoenix.LiveView,
+        layout: {Web.LayoutView, "live.html"}
+
+      unquote(view_helpers())
     end
   end
 
@@ -52,6 +56,7 @@ defmodule Web do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 
@@ -67,5 +72,18 @@ defmodule Web do
   """
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
+  end
+
+  defp view_helpers do
+    quote do
+      use Phoenix.HTML
+
+      import Phoenix.LiveView.Helpers
+      import Phoenix.View
+
+      import Web.ErrorHelpers
+      import Web.Gettext
+      alias Web.Router.Helpers, as: Routes
+    end
   end
 end

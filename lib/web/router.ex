@@ -5,14 +5,17 @@ defmodule Web.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
+    plug :fetch_live_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :put_root_layout, {Web.LayoutView, :root}
     plug Web.Plugs.FetchUser
   end
 
   pipeline :api do
     plug :accepts, ["json"]
     plug :fetch_session
+    plug :fetch_flash
     plug(Web.Plugs.FetchUser)
   end
 
@@ -80,6 +83,9 @@ defmodule Web.Router do
 
     get("/certification_requested", AccessController, :index)
 
+    live "/challenges/:cid/phases/:pid/winners", PhaseWinnersLive
+    live "/challenges/:cid/phases/:pid/winners/:wid", ShowPhaseWinnersLive
+
     resources("/challenges", ChallengeController) do
       resources("/documents", DocumentController, only: [:create])
 
@@ -97,6 +103,7 @@ defmodule Web.Router do
     end
 
     get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
+    live "/challenges/:id/winners", WinnersLive
 
     post("/challenges/:id/approve", ChallengeController, :approve, as: :challenge)
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)
@@ -123,12 +130,18 @@ defmodule Web.Router do
       only: [:index, :create]
     )
 
+    resources("/phases/:phase_id/submission_invites", SubmissionInviteController,
+      only: [:index, :show, :create]
+    )
+
+    post("/submission_invites/:id/accept", SubmissionInviteController, :accept)
+    post("/submission_invites/:id/revoke", SubmissionInviteController, :revoke)
+
     post("/submission_exports/:id", SubmissionExportController, :restart)
     resources("/submission_exports", SubmissionExportController, only: [:delete])
 
     resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
     put("/solutions/:id/submit", SolutionController, :submit)
-    put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
 
     resources("/documents", DocumentController, only: [:delete])
     resources("/events", EventController, only: [:edit, :update, :delete])
@@ -161,7 +174,8 @@ defmodule Web.Router do
     resources("/documents", DocumentController, only: [:create, :delete])
     resources("/solution_documents", SolutionDocumentController, only: [:create, :delete])
 
-    # TODO: This might make sense to move elsewhere
+    put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
+
     post("/session/renew", SessionController, :check_session_timeout)
     post("/session/logout", SessionController, :logout_user)
   end
@@ -185,7 +199,7 @@ defmodule Web.Router do
 
     get("/", PageController, :index)
     get("/challenges", PageController, :index, as: :challenge_index)
-    get("/challenge/:id", PageController, :index, as: :challenge_details)
+    get("/challenges#/challenge/:id", PageController, :index, as: :challenge_details)
   end
 
   if Mix.env() == :dev do

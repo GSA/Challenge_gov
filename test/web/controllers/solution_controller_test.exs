@@ -594,7 +594,7 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.solution_path(
+          Routes.api_solution_path(
             conn,
             :update_judging_status,
             solution.id,
@@ -635,7 +635,7 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.solution_path(
+          Routes.api_solution_path(
             conn,
             :update_judging_status,
             solution.id,
@@ -675,7 +675,7 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.solution_path(
+          Routes.api_solution_path(
             conn,
             :update_judging_status,
             solution.id,
@@ -705,7 +705,7 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.solution_path(
+          Routes.api_solution_path(
             conn,
             :update_judging_status,
             solution.id,
@@ -746,7 +746,7 @@ defmodule Web.SolutionControllerTest do
       conn =
         put(
           conn,
-          Routes.solution_path(
+          Routes.api_solution_path(
             conn,
             :update_judging_status,
             solution.id,

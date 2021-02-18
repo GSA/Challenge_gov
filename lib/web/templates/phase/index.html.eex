@@ -21,11 +21,13 @@
       </div>
     </div>
 
-    <div class="row mb-2">
-      <div class="col">
-        <%= link "Download", to: Routes.submission_export_path(@conn, :index, @challenge.id), class: "btn btn-primary" %>
+    <%= if @has_closed_phases do %>
+      <div class="row mb-2">
+        <div class="col">
+          <%= link "Download", to: Routes.submission_export_path(@conn, :index, @challenge.id), class: "btn btn-primary" %>
+        </div>
       </div>
-    </div>
+    <% end %>
   </div>
 </div>
 

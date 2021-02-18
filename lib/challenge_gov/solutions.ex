@@ -42,7 +42,7 @@ defmodule ChallengeGov.Solutions do
   end
 
   def base_preload(solution) do
-    preload(solution, [:submitter, :documents, challenge: [:agency]])
+    preload(solution, [:submitter, :invite, :documents, challenge: [:agency]])
   end
 
   def new do

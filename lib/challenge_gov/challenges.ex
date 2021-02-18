@@ -181,7 +181,6 @@ defmodule ChallengeGov.Challenges do
   Update a challenge
   """
   def update(challenge, params, current_user, remote_ip) do
-    # TODO: Refactor the current_user permissions checking for updating challenge owner
     challenge = challenge_form_preload(challenge)
 
     params =
@@ -793,6 +792,15 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
+  Returns if a challenge has closed phases or not
+  """
+  def has_closed_phases?(%{phases: phases}) do
+    Enum.any?(phases, fn phase ->
+      Phases.is_past?(phase)
+    end)
+  end
+
+  @doc """
   Create a new status event when the status changes
   """
   def create_status_event(_), do: :ok
@@ -1284,7 +1292,6 @@ defmodule ChallengeGov.Challenges do
     where(query, [c], c.sub_status == ^value)
   end
 
-  # TODO: Refactor this to use jsonb column more elegantly
   def filter_on_attribute({"types", values}, query) do
     Enum.reduce(values, query, fn value, query ->
       where(query, [c], fragment("? @> ?::jsonb", c.types, ^[value]))
