@@ -1,18 +1,5 @@
 <div class="content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
-              <i class="fa fa-dashboard"></i> Home
-            <% end %>
-          </li>
-          <li class="breadcrumb-item"><%= link("Challenges", to: Routes.challenge_path(@conn, :index)) %></li>
-          <li class="breadcrumb-item active"><%= @challenge.title %></li>
-        </ol>
-      </div>
-    </div>
+  <%= render Web.ChallengeView, "_breadcrumb.html", challenge: @challenge, winners: false %>
     <div class="row">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">

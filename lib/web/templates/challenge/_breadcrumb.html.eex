@@ -1,0 +1,17 @@
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.dashboard_path(Web.Endpoint, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item"><%= link("Challenges", to: Routes.challenge_path(Web.Endpoint, :index)) %></li>
+          <li class="breadcrumb-item active"><%= @challenge.title %></li>
+          <%= if @winners do %>
+          <li class="breadcrumb-item active">Winners</li>
+          <% end %>
+        </ol>
+      </div>
+    </div>

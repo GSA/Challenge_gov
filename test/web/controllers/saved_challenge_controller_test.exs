@@ -144,7 +144,6 @@ defmodule Web.SavedChallengeControllerTest do
       assert length(saved_challenges) === 1
       assert conn.status === 302
 
-      # TODO: Find a way to use a route helper here
       assert get_flash(conn, :info) === [
                "Challenge saved. Click ",
                {:safe,

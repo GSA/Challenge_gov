@@ -5,6 +5,7 @@ defmodule Web.PhaseView do
   alias ChallengeGov.Phases
   alias Web.SharedView
   alias Web.SolutionView
+  alias Web.FormView
 
   def status(phase) do
     cond do
@@ -44,8 +45,6 @@ defmodule Web.PhaseView do
     end
   end
 
-  # TODO: Refactor to be more generic
-  # Example: Take a path with existing query params and append sort after and no longer need to pass filter
   def sortable_header(conn, sort, filter, column, label, phase) do
     {sort_icon, sort_values} =
       case Map.get(sort, column) do
@@ -211,7 +210,9 @@ defmodule Web.PhaseView do
   end
 
   defp get_judging_status_route(conn, solution, judging_status, filter) do
-    Routes.solution_path(conn, :update_judging_status, solution.id, judging_status, filter: filter)
+    Routes.api_solution_path(conn, :update_judging_status, solution.id, judging_status,
+      filter: filter
+    )
   end
 
   def get_judging_status_button_values(conn, challenge, phase, solution, prev_status, filter) do
@@ -334,7 +335,6 @@ defmodule Web.PhaseView do
     end
   end
 
-  # TODO: Use phase here to determine alternate filter tab text in some cases for winners/awardees
   def filter_tab_text(_challenge, _phase, "all"),
     do: content_tag(:span, "All submissions", class: "submission-filter__text mr-1")
 

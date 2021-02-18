@@ -39,7 +39,6 @@ defmodule ChallengeGov.Challenges.TimelineEvent do
     |> changeset(params)
   end
 
-  # TODO: Verify date is after start_date
   defp validate_date_after_start(struct, %{"date" => date}, start_date) do
     with {:ok, date} <- Timex.parse(date, "{ISO:Extended}"),
          1 <- Timex.compare(date, start_date) do
