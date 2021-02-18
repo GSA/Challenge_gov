@@ -59,11 +59,13 @@ defmodule ChallengeGov.Solutions do
     params = attach_default_multi_params(params)
     changeset = Solution.draft_changeset(%Solution{}, params, user, challenge, phase)
 
-    Ecto.Multi.new()
+    transaction = Ecto.Multi.new()
     |> Ecto.Multi.insert(:solution, changeset)
     |> attach_documents(params)
     |> Repo.transaction()
-    |> case do
+
+    
+    case transaction do
       {:ok, %{solution: solution}} ->
         GovDelivery.subscribe_user_general(user)
         GovDelivery.subscribe_user_challenge(user, challenge)
@@ -81,11 +83,12 @@ defmodule ChallengeGov.Solutions do
     params = attach_default_multi_params(params)
     changeset = Solution.review_changeset(%Solution{}, params, user, challenge, phase)
 
-    Ecto.Multi.new()
+    transaction = Ecto.Multi.new()
     |> Ecto.Multi.insert(:solution, changeset)
     |> attach_documents(params)
     |> Repo.transaction()
-    |> case do
+
+    case transaction do
       {:ok, %{solution: solution}} ->
         {:ok, solution}
 
