@@ -2,9 +2,10 @@
   <%= render Web.ChallengeView, "_breadcrumb.html", challenge: @challenge, winners: true %>
 </div>
 <div class="main-container">
-<h1>Winners for <%= @challenge.title %></h1>
-<%= for p <- @challenge.phases do %>
-    <div class="card winner-manage">
+  <h1>Winners for <%= @challenge.title %></h1>
+  <div class="grid-row">
+    <%= for p <- @challenge.phases do %>        
+    <div class="card winner-manage grid-col flex-2">
       <div class="card-body">
         <h3>Phase <%= p.title %></h3>
         <p><b>Start date: </b><%= Timex.format!(p.start_date, "{M}/{D}/{YYYY}") %></p>
@@ -14,4 +15,5 @@
       </div>
     </div>
     <% end %>
+  </div>
 </div>
