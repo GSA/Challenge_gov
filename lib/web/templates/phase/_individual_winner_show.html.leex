@@ -1,0 +1,21 @@
+<%= for w <- @winners.winners do %>
+    <div class="grid-row">
+      <div class="grid-col flex-2">
+        Place title:
+      </div>
+      <div class="grid-col flex-2">
+        Name:
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="grid-col flex-2">
+        <%= w.place_title %>
+      </div>
+      <div class="grid-col flex-2">
+        <%= w.name %>
+      </div>          
+    </div>
+    <div class="grid-row">
+      <img class="winner-img" src="/images/account_icon.svg">
+    </div>
+    <% end %>

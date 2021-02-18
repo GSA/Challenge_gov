@@ -5,10 +5,8 @@
   <div>
     <h2>Winners overview</h2>
     <p><%= @winners.overview %></p>
-
     <hr/>
     <div class="individual-winners">
-    <h2>Individual Winners</h2>
     <%= for w <- @winners.winners do %>
         <div class="grid-row">
           <div class="grid-col flex-2">
@@ -32,7 +30,6 @@
         <% end %>
     </div>
     <%= if !live_flash(@flash, :info) do %>
-        
         <div class="row winner-options">
           <div class="col-md-1 cancel-winner">
             <%= link("back", to: "#") %>
