@@ -198,9 +198,7 @@ defmodule Web.PhaseWinnersLive do
     end)
   end
 
-  # TODO: persist changeset (review/publish)
   def handle_event("publish", params, socket) do
-    # changeset = Winner.changeset(%Winner{}, %{"status" => "review"})
     socket =
       socket
       |> assign(:action, :publish)
