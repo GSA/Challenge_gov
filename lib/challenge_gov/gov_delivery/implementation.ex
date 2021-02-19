@@ -14,7 +14,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def remove_topic(challenge) do
     endpoint =
       challenge.id
@@ -40,7 +40,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     end
   end
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def add_topic(challenge) do
     body = xml_topic_from_challenge(challenge)
 
@@ -67,7 +67,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     end
   end
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def subscribe_user_general(user) do
     body = xml_subscribe_general(user)
 
@@ -93,7 +93,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     end
   end
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def subscribe_user_challenge(user, challenge) do
     body = xml_subscribe_challenge(user, challenge)
 
@@ -119,7 +119,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     end
   end
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def send_bulletin(challenge, subject, body) do
     body = xml_send_bulletin(challenge, subject, body)
 
@@ -145,7 +145,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     end
   end
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def get_topic_subscribe_count(challenge) do
     response =
       Mojito.get(

@@ -3,6 +3,10 @@ defmodule ChallengeGov.Challenges do
   Context for Challenges
   """
 
+  @behaviour Stein.Filter
+
+  import Ecto.Query  
+
   alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.ChallengeOwner
@@ -20,10 +24,6 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.SupportingDocuments
   alias ChallengeGov.Timeline.Event
   alias Stein.Filter
-
-  import Ecto.Query
-
-  @behaviour Stein.Filter
 
   # BOOKMARK: Functions for fetching valid attribute values
   @doc false

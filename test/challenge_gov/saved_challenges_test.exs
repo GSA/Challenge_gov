@@ -104,6 +104,7 @@ defmodule ChallengeGov.SavedChallengesTest do
 
     @tag :pending
     test "remove saved challenges when challenge is no longer published" do
+      assert true
     end
   end
 

@@ -714,7 +714,8 @@ defmodule ChallengeGov.Challenges.Challenge do
   defp check_auto_publish_date(struct, date) do
     now = Timex.now()
 
-    with 1 <- Timex.compare(date, now) do
+    case Timex.compare(date, now) do
+      1 ->
       struct
     else
       tc when tc == -1 or tc == 0 ->

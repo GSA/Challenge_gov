@@ -3,10 +3,10 @@ defmodule ChallengeGov.Images do
   Common module for dealing with image conversion
   """
 
-  @type opts() :: Keyword.t()
-
   alias Stein.Storage.FileUpload
   alias Stein.Storage.Temp
+
+  @type opts() :: Keyword.t()  
 
   @doc """
   Convert an image file using image magick

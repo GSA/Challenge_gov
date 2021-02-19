@@ -77,7 +77,7 @@ defmodule ChallengeGov.SavedChallenges do
     |> Repo.one()
   end
 
-  @impl true
+  @impl Stein.Filter
   def filter_on_attribute({"user_id", value}, query) do
     where(query, [sc], sc.user_id == ^value)
   end

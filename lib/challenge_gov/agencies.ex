@@ -3,15 +3,15 @@ defmodule ChallengeGov.Agencies do
   Agencies context
   """
 
+  @behaviour Stein.Filter
+
+  import Ecto.Query  
+
   alias ChallengeGov.Repo
   alias ChallengeGov.Agencies.Avatar
   alias ChallengeGov.Agencies.Member
   alias ChallengeGov.Agencies.Agency
   alias Stein.Filter
-
-  import Ecto.Query
-
-  @behaviour Stein.Filter
 
   @doc """
   New agency changeset

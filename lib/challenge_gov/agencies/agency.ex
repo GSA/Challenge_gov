@@ -7,11 +7,11 @@ defmodule ChallengeGov.Agencies.Agency do
 
   import Ecto.Changeset
 
-  @type t :: %__MODULE__{}
-
   alias ChallengeGov.Agencies.Member
   alias ChallengeGov.Challenges.Challenge
-  alias ChallengeGov.Challenges.FederalPartner
+  alias ChallengeGov.Challenges.FederalPartner  
+
+  @type t :: %__MODULE__{}
 
   schema "agencies" do
     # Associations

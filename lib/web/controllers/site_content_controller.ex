@@ -31,7 +31,8 @@ defmodule Web.SiteContentController do
   def show(conn, %{"id" => section}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, content} <- SiteContent.get(section) do
+    case SiteContent.get(section) do
+      {:ok, content} ->      
       conn
       |> assign(:user, user)
       |> assign(:content, content)
@@ -47,13 +48,13 @@ defmodule Web.SiteContentController do
   def edit(conn, %{"id" => section}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, content} <- SiteContent.get(section) do
-      conn
-      |> assign(:user, user)
-      |> assign(:content, content)
-      |> assign(:changeset, SiteContent.edit(content))
-      |> render("edit.html")
-    else
+    case SiteContent.get(section) do
+      {:ok, content} ->
+        conn
+        |> assign(:user, user)
+        |> assign(:content, content)
+        |> assign(:changeset, SiteContent.edit(content))
+        |> render("edit.html")
       {:error, :not_found} ->
         conn
         |> put_flash(:error, "Site content not found")

@@ -291,7 +291,7 @@ defmodule ChallengeGov.Solutions do
   end
 
   # BOOKMARK: Filter functions
-  @impl true
+  @impl Stein.Filter
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
 
