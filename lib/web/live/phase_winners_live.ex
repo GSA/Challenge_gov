@@ -4,14 +4,14 @@ defmodule Web.PhaseWinnersLive do
   """
   use Phoenix.LiveView, layout: {Web.LayoutView, "live.html"}
 
+  import Phoenix.LiveView.Helpers  
+
   alias Web.Router.Helpers, as: Routes
 
   alias ChallengeGov.Phases
   alias ChallengeGov.Repo
   alias ChallengeGov.Challenges.Phases.Winner
   alias Stein.Storage
-
-  import Phoenix.LiveView.Helpers
 
   def render(assigns) do
     Phoenix.View.render(Web.PhaseView, "winners.html", assigns)

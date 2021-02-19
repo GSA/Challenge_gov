@@ -633,7 +633,7 @@ defmodule Web.ChallengeView do
   end
 
   def timeline_date(event_time) do
-    with {:ok, time} = Timex.format(event_time, "{Mshort} {D}, {YYYY}") do
+    with {:ok, time} <- Timex.format(event_time, "{Mshort} {D}, {YYYY}") do
       time
     end
   end

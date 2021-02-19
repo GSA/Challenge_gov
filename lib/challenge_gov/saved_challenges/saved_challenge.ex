@@ -2,12 +2,12 @@ defmodule ChallengeGov.SavedChallenges.SavedChallenge do
   @moduledoc """
   SavedChallenge schema
   """
+  use Ecto.Schema
+
+  import Ecto.Changeset
 
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Challenges.Challenge
-
-  use Ecto.Schema
-  import Ecto.Changeset
 
   @type t :: %__MODULE__{}
   schema "saved_challenges" do

@@ -98,9 +98,10 @@ defmodule Web.PhaseView do
   def render_judging_status_column_header(_challenge, _phase, _filter), do: "Selected for judging"
 
   def next_phase_closed?(challenge, phase) do
-    with {:ok, phase} <- Challenges.next_phase(challenge, phase) do
-      !phase.open_to_submissions
-    else
+    case Challenges.next_phase(challenge, phase) do
+      {:ok, phase} ->      
+        !phase.open_to_submissions
+      _ ->
       {:error, :not_found} ->
         false
     end

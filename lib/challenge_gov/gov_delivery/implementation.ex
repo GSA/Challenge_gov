@@ -9,10 +9,10 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   @behaviour ChallengeGov.GovDelivery
 
+  import SweetXml  
+
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery
-
-  import SweetXml
 
   @impl true
   def remove_topic(challenge) do
