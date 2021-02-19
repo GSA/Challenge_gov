@@ -1273,7 +1273,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   # BOOKMARK: Filter functions
-  @impl true
+  @impl Stein.Filter
   def filter_on_attribute({"search", value}, query) do
     original_value = value
     value = "%" <> value <> "%"

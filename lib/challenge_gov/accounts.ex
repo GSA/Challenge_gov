@@ -598,7 +598,7 @@ defmodule ChallengeGov.Accounts do
 
   def has_accepted_terms?(%{privacy_guidelines: _timestamp}), do: true
 
-  @impl true
+  @impl Stein.Filter
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
 

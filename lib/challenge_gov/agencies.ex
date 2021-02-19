@@ -211,7 +211,7 @@ defmodule ChallengeGov.Agencies do
     |> Repo.update()
   end
 
-  @impl true
+  @impl Stein.Filter
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
     where(query, [c], ilike(c.name, ^value) or ilike(c.description, ^value))
