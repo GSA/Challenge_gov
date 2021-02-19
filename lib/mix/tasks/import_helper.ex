@@ -195,13 +195,14 @@ defmodule Mix.Tasks.ImportHelper do
     {:ok, tmp_file} = Stein.Storage.Temp.create(extname: extension)
 
     case Finch.request(HTTPClient, :get, logo_url) do
-    {:ok, %{status: 200, body: body}} ->
-      File.write!(tmp_file, body, [:binary])
+      {:ok, %{status: 200, body: body}} ->
+        File.write!(tmp_file, body, [:binary])
 
-      %{
-        filename: filename,
-        path: tmp_file
-      }
+        %{
+          filename: filename,
+          path: tmp_file
+        }
+
       {:ok, %{status: 404}} ->
         ""
     end

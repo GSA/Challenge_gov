@@ -4,7 +4,7 @@ defmodule Web.PhaseWinnersLive do
   """
   use Phoenix.LiveView, layout: {Web.LayoutView, "live.html"}
 
-  import Phoenix.LiveView.Helpers  
+  import Phoenix.LiveView.Helpers
 
   alias Web.Router.Helpers, as: Routes
 
@@ -144,7 +144,8 @@ defmodule Web.PhaseWinnersLive do
   def handle_event("submit", params, socket) do
     updated_winners =
       for w <- Map.get(socket.assigns.changeset.changes, :winners, []),
-          res = consume_upload_and_generate_url(socket, String.to_existing_atom(w.changes.temp_id)) do
+          res =
+            consume_upload_and_generate_url(socket, String.to_existing_atom(w.changes.temp_id)) do
         case res do
           [winner_img_url] ->
             w |> Ecto.Changeset.put_change(:winner_img_url, winner_img_url)

@@ -2,9 +2,9 @@ defmodule ChallengeGov.Accounts do
   @moduledoc """
   Context for user accounts
   """
-  @behaviour Stein.Filter  
+  @behaviour Stein.Filter
   import Ecto.Query
-  
+
   alias ChallengeGov.Accounts.Avatar
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.CertificationLogs
@@ -29,7 +29,6 @@ defmodule ChallengeGov.Accounts do
         Enum.slice(User.roles(), 2..2)
     end
   end
-
 
   @spec get_role_rank(String.t()) :: number()
   def get_role_rank(role) do
@@ -108,6 +107,7 @@ defmodule ChallengeGov.Accounts do
 
     where(query, ^conditions)
   end
+
   def filter_invite_users(query, _opts), do: query
 
   @doc """
@@ -268,7 +268,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Update active session
   """
-  @spec update_active_session(User.t(), map()) :: {:ok, User.t} | {:error, Ecto.Changeset.t()}
+  @spec update_active_session(User.t(), map()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def update_active_session(user, param) do
     user
     |> User.active_session_changeset(param)
@@ -322,7 +322,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Validate a user's login information
   """
-  @spec validate_login(String.t(), String.t()) ::  {:ok, User.t()} | {:error, :invalid}
+  @spec validate_login(String.t(), String.t()) :: {:ok, User.t()} | {:error, :invalid}
   def validate_login(email, password) do
     Stein.Accounts.validate_login(Repo, User, email, password)
   end

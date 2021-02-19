@@ -5,8 +5,8 @@ defmodule ChallengeGov.Phases do
 
   @behaviour Stein.Filter
 
-  import Ecto.Query  
-  
+  import Ecto.Query
+
   alias ChallengeGov.Repo
   alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.Solutions

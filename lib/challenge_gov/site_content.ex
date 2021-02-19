@@ -2,7 +2,7 @@ defmodule ChallengeGov.SiteContent do
   @moduledoc """
   Site content context
   """
-  import Ecto.Query  
+  import Ecto.Query
 
   alias ChallengeGov.Repo
   alias ChallengeGov.SiteContent.Content

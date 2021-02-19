@@ -84,14 +84,14 @@ end
 
 defmodule Web.PageTitle do
   alias Web.Admin
-    alias Web.SessionView
-    alias Web.RegistrationView
-    alias Web.RegistrationResetView
-    alias Web.UserInviteView
-    alias Web.ChallengeView
-    alias Web.AccountView
-    alias Web.AgencyView
-    alias Web.ErrorView
+  alias Web.SessionView
+  alias Web.RegistrationView
+  alias Web.RegistrationResetView
+  alias Web.UserInviteView
+  alias Web.ChallengeView
+  alias Web.AccountView
+  alias Web.AgencyView
+  alias Web.ErrorView
 
   @app_name "Challenge.gov"
 

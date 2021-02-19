@@ -10,7 +10,7 @@ defmodule ChallengeGov.SecurityLogs do
   alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs.SecurityLog
 
-  require Logger  
+  require Logger
 
   def track(params) do
     Logger.info("Audit event #{params[:action]}", log_type: "audit", params: params)

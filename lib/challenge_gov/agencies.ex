@@ -5,7 +5,7 @@ defmodule ChallengeGov.Agencies do
 
   @behaviour Stein.Filter
 
-  import Ecto.Query  
+  import Ecto.Query
 
   alias ChallengeGov.Repo
   alias ChallengeGov.Agencies.Avatar

@@ -9,7 +9,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   @behaviour ChallengeGov.GovDelivery
 
-  import SweetXml  
+  import SweetXml
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery

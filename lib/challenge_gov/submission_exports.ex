@@ -2,7 +2,7 @@ defmodule ChallengeGov.SubmissionExports do
   @moduledoc """
   Context for managing submission exports from a challenge
   """
-  import Ecto.Query  
+  import Ecto.Query
 
   alias ChallengeGov.Solutions.SubmissionExport
   alias ChallengeGov.Solutions.SubmissionExportWorker

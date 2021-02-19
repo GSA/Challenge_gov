@@ -5,7 +5,7 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
 
   use Ecto.Schema
 
-  import Ecto.Changeset  
+  import Ecto.Changeset
 
   alias ChallengeGov.Repo
   alias Stein.Storage

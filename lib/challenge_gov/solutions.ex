@@ -3,9 +3,9 @@ defmodule ChallengeGov.Solutions do
   Context for Solutions
   """
 
-  @behaviour Stein.Filter  
+  @behaviour Stein.Filter
 
-  import Ecto.Query  
+  import Ecto.Query
 
   alias ChallengeGov.Emails
   alias ChallengeGov.GovDelivery
@@ -234,8 +234,9 @@ defmodule ChallengeGov.Solutions do
     {document_ids, documents} =
       Enum.reduce(ids, {[], []}, fn document_id, {document_ids, documents} ->
         case SolutionDocuments.get(document_id) do
-          {:ok, document} ->          
+          {:ok, document} ->
             {[document_id | document_ids], [document | documents]}
+
           _ ->
             {document_ids, documents}
         end

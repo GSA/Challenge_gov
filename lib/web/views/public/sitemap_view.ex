@@ -1,7 +1,7 @@
 defmodule Web.Public.SitemapView do
   use Web, :view
 
-  import XmlBuilder  
+  import XmlBuilder
 
   alias Web.ChallengeView
 

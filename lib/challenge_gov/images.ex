@@ -6,7 +6,7 @@ defmodule ChallengeGov.Images do
   alias Stein.Storage.FileUpload
   alias Stein.Storage.Temp
 
-  @type opts() :: Keyword.t()  
+  @type opts() :: Keyword.t()
 
   @doc """
   Convert an image file using image magick

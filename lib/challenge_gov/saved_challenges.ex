@@ -3,8 +3,8 @@ defmodule ChallengeGov.SavedChallenges do
   Context for saved challenges
   """
   @behaviour Stein.Filter
-  
-  import Ecto.Query  
+
+  import Ecto.Query
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery

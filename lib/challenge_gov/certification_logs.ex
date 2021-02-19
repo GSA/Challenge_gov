@@ -10,7 +10,7 @@ defmodule ChallengeGov.CertificationLogs do
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
 
-  require Logger  
+  require Logger
 
   def track(params) do
     %CertificationLog{}

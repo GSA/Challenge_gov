@@ -8,7 +8,7 @@ defmodule ChallengeGov.Agencies.Member do
   import Ecto.Changeset
 
   alias ChallengeGov.Accounts.User
-  alias ChallengeGov.Agencies.Agency  
+  alias ChallengeGov.Agencies.Agency
 
   @type t :: %__MODULE__{}
 
