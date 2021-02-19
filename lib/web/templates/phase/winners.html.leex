@@ -50,7 +50,7 @@
 <% :review -> %>
 <div class="row winner-options">
   <div class="col-md-1 cancel-winner">
-    <%= link("back", to: "#") %>
+    <%= link("back", to: "#", class: "disabled btn") %>
   </div>
   <div class="col-md-1 cancel-winner">
     <%= link("cancel", to: Routes.live_path(Web.Endpoint, Web.WinnersLive, @challenge.id)) %>
