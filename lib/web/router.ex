@@ -85,7 +85,6 @@ defmodule Web.Router do
 
     live "/challenges/:id/winners", WinnersLive
     live "/challenges/:cid/phases/:pid/winners", PhaseWinnersLive
-    live "/challenges/:cid/phases/:pid/winners/:wid", ShowPhaseWinnersLive
 
     resources("/challenges", ChallengeController) do
       resources("/documents", DocumentController, only: [:create])

@@ -2,7 +2,7 @@
   <%= case @action do %>
   <% :draft -> %>
   <%= render Web.ChallengeView, "_breadcrumb.html", challenge: @challenge, winners: true %>
-  <% :review -> %>  
+  <% _ -> %>  
   <div></div>
   <% true -> %>
   <% end %>
@@ -11,7 +11,6 @@
   <%= render Web.PhaseView, "_winner_header.html", phase: @phase, challenge: @challenge, text: @text %>
   <div class="winners-overview">
     <h2>Winners overview</h2>
-    
     <%= case @action do %>
     <% :draft -> %>
     <%= f = form_for(@changeset, "#", [class: "form-horizontal", phx_submit: "submit", phx_change: "validate", phx_target: "#upload-winners", id: "upload-winners", multipart: true]) %>
@@ -22,7 +21,7 @@
     <div class="individual-winners">      
       <h3>Add individual winners with name, rank and photo (optional)</h3>
       <%= render Web.PhaseView, "_individual_winner_form.html", f: f, uploads: @uploads %>
-      <% :review -> %>
+      <% _ -> %>
       <%= @winners.overview %>
       <hr/>      
       <div class="individual-winners">      
@@ -49,7 +48,6 @@
       </div>
 </form>
 <% :review -> %>
-
 <div class="row winner-options">
   <div class="col-md-1 cancel-winner">
     <%= link("back", to: "#") %>
@@ -57,9 +55,15 @@
   <div class="col-md-1 cancel-winner">
     <%= link("cancel", to: Routes.live_path(Web.Endpoint, Web.WinnersLive, @challenge.id)) %>
   </div>
-  <div class="col-md1">
+  <div class="col-md-1">
     <a class="disabled btn">Preview</a>
     <a href="#" phx-click="publish" class="btn btn-primary">Publish</a>
+  </div>
+</div>
+<% :publish -> %>
+<div class="row winner-options">
+  <div class="col-md-1">
+    <a class="disabled btn"> Edit</a>
   </div>
 </div>
 <% end %>
