@@ -92,7 +92,6 @@ defmodule Web.PageTitle do
     alias Web.AccountView,
     alias Web.AgencyView,
     alias Web.ErrorView
-  }
 
   @app_name "Challenge.gov"
 
