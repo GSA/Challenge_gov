@@ -120,7 +120,7 @@
         #
         ## Warnings
         #
-        {Credo.Check.Warning.ApplicationConfigInModuleAttribute, false},
+        {Credo.Check.Warning.ApplicationConfigInModuleAttribute, []},
         {Credo.Check.Warning.BoolOperationOnSameValues, []},
         {Credo.Check.Warning.ExpensiveEmptyEnumCheck, []},
         {Credo.Check.Warning.IExPry, []},
@@ -146,14 +146,14 @@
         #
         {Credo.Check.Consistency.MultiAliasImportRequireUse, []},
         {Credo.Check.Consistency.UnusedVariableNames, false},
-        # {Credo.Check.Design.DuplicatedCode, []},
+        {Credo.Check.Design.DuplicatedCode, []},
         {Credo.Check.Readability.AliasAs, false},
         # {Credo.Check.Readability.BlockPipe, []},
         {Credo.Check.Readability.ImplTrue, []},
         {Credo.Check.Readability.MultiAlias, []},
         {Credo.Check.Readability.SeparateAliasRequire, []},
         {Credo.Check.Readability.SinglePipe, false},
-        # {Credo.Check.Readability.Specs, []},
+        {Credo.Check.Readability.Specs, []},
         {Credo.Check.Readability.StrictModuleLayout, []},
         {Credo.Check.Readability.WithCustomTaggedTuple, []},
         {Credo.Check.Refactor.ABCSize, false},
