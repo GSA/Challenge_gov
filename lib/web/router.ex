@@ -83,8 +83,8 @@ defmodule Web.Router do
 
     get("/certification_requested", AccessController, :index)
 
+    live "/challenges/:id/winners", WinnersLive
     live "/challenges/:cid/phases/:pid/winners", PhaseWinnersLive
-    live "/challenges/:cid/phases/:pid/winners/:wid", ShowPhaseWinnersLive
 
     resources("/challenges", ChallengeController) do
       resources("/documents", DocumentController, only: [:create])
@@ -103,7 +103,6 @@ defmodule Web.Router do
     end
 
     get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
-    live "/challenges/:id/winners", WinnersLive
 
     post("/challenges/:id/approve", ChallengeController, :approve, as: :challenge)
     post("/challenges/:id/publish", ChallengeController, :publish, as: :challenge)

@@ -17,54 +17,58 @@ defmodule Web.PhaseWinnersLive do
     Phoenix.View.render(Web.PhaseView, "winners.html", assigns)
   end
 
-  def mount(p, s, socket) do
-    {:ok, challenge} = ChallengeGov.Challenges.get(p["cid"])
-    {:ok, phase} = ChallengeGov.Phases.get(p["pid"])
-    {:ok, user} = ChallengeGov.Accounts.get(s["user_id"])
+  def mount(params, session, socket) do
+    phase_winners = Repo.get_by(Winner, phase_id: String.to_integer(params["pid"]))
 
-    case Repo.get_by(Winner, phase_id: String.to_integer(p["pid"])) do
-      nil ->
-        # if winner already exists, phase redirect is the answer
-        changeset = Winner.changeset(%Winner{}, %{"winners" => []})
+    socket =
+      socket
+      |> assign_defaults(params, session)
+      |> assign_status_specific(phase_winners)
 
-        changeset =
-          changeset
-          |> Ecto.Changeset.put_embed(:winners, [])
+    {:ok, socket}
+  end
 
-        socket =
-          socket
-          |> assign(:phase, phase)
-          |> assign(:challenge, challenge)
-          |> assign(:changeset, changeset)
-          |> assign(:user, user)
-          |> assign(:uploaded_files, [])
-          |> assign(
-            :text,
-            "Entering winners is as flexible as you need for your phase. Add any information (overview details) about the challenge."
-          )
-          |> Phoenix.LiveView.allow_upload(:winner_overview_img,
-            accept: ~w(.jpg .jpeg .png),
-            max_file_size: 10_000_000,
-            progress: &handle_progress/3,
-            auto_upload: true
-          )
+  defp assign_defaults(socket, params, session) do
+    {:ok, challenge} = ChallengeGov.Challenges.get(params["cid"])
+    {:ok, phase} = ChallengeGov.Phases.get(params["pid"])
+    {:ok, user} = ChallengeGov.Accounts.get(session["user_id"])
 
-        {:ok, socket}
+    socket
+    |> assign(:phase, phase)
+    |> assign(:challenge, challenge)
+    |> assign(:user, user)
+    |> assign(:uploaded_files, [])
+  end
 
-      winners ->
-        {:ok,
-         push_redirect(socket,
-           to:
-             Routes.live_path(
-               Web.Endpoint,
-               Web.ShowPhaseWinnersLive,
-               challenge.id,
-               phase.id,
-               winners.id,
-               replace: true
-             )
-         )}
-    end
+  defp assign_status_specific(socket, nil) do
+    # if winner already exists, phase redirect is the answer
+    changeset = Winner.changeset(%Winner{}, %{"winners" => []})
+
+    changeset =
+      changeset
+      |> Ecto.Changeset.put_embed(:winners, [])
+
+    socket
+    |> assign(:changeset, changeset)
+    |> assign(:action, :draft)
+    |> assign(
+      :text,
+      "Entering winners is as flexible as you need for your phase. Add any information (overview details) about the challenge."
+    )
+    |> Phoenix.LiveView.allow_upload(:winner_overview_img,
+      accept: ~w(.jpg .jpeg .png),
+      max_file_size: 10_000_000,
+      progress: &handle_progress/3,
+      auto_upload: true
+    )
+  end
+
+  defp assign_status_specific(socket, phase_winners) do
+    socket =
+      socket
+      |> assign(:action, :review)
+      |> assign(:winners, phase_winners)
+      |> assign(:text, "Review the information and publish the winners.")
   end
 
   def handle_progress(key, entry, socket) do
@@ -130,7 +134,11 @@ defmodule Web.PhaseWinnersLive do
       socket.assigns.changeset
       |> Ecto.Changeset.put_embed(:winners, winners)
 
-    {:noreply, assign(socket, changeset: changeset)}
+    socket =
+      socket
+      |> assign(:changeset, changeset)
+
+    {:noreply, socket}
   end
 
   def handle_event("submit", params, socket) do
@@ -188,5 +196,14 @@ defmodule Web.PhaseWinnersLive do
       [ext | _] = MIME.extensions(entry.client_type)
       url = Routes.static_path(socket, "/uploads/phases/winners/#{entry.uuid}.#{ext}")
     end)
+  end
+
+  def handle_event("publish", params, socket) do
+    socket =
+      socket
+      |> assign(:action, :publish)
+      |> put_flash(:info, "Winners updated successfully.")
+
+    {:noreply, socket}
   end
 end
