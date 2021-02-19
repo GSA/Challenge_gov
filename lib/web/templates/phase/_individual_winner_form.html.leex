@@ -1,5 +1,5 @@
 <%= for w <- (inputs_for @f, :winners) do  %>
-    <% temp_id = String.to_atom(w.source.changes.temp_id) %>
+    <% temp_id = String.to_existing_atom(w.source.changes.temp_id) %>
     <%= hidden_input w, :temp_id, value: w.source.changes.temp_id %>
     <div class="grid-row">
       <div class="winner grid-col flex-2">
