@@ -3,14 +3,14 @@ defmodule ChallengeGov.Phases do
   Context for Phases
   """
 
+  @behaviour Stein.Filter
+
+  import Ecto.Query
+
   alias ChallengeGov.Repo
   alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.Solutions
   alias Stein.Filter
-
-  import Ecto.Query
-
-  @behaviour Stein.Filter
 
   def all(opts \\ []) do
     Phase

@@ -5,11 +5,10 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
 
   use Ecto.Schema
 
-  alias ChallengeGov.Repo
-  alias Stein.Storage
-
   import Ecto.Changeset
 
+  alias ChallengeGov.Repo
+  alias Stein.Storage
   alias ChallengeGov.Challenges.Phase
 
   @type t :: %__MODULE__{}

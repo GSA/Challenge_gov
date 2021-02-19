@@ -2,16 +2,15 @@ defmodule ChallengeGov.SavedChallenges do
   @moduledoc """
   Context for saved challenges
   """
+  @behaviour Stein.Filter
+
+  import Ecto.Query
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery
   alias ChallengeGov.Repo
   alias ChallengeGov.SavedChallenges.SavedChallenge
   alias Stein.Filter
-
-  import Ecto.Query
-
-  @behaviour Stein.Filter
 
   def all(user, opts \\ []) do
     SavedChallenge
@@ -78,7 +77,7 @@ defmodule ChallengeGov.SavedChallenges do
     |> Repo.one()
   end
 
-  @impl true
+  @impl Stein.Filter
   def filter_on_attribute({"user_id", value}, query) do
     where(query, [sc], sc.user_id == ^value)
   end

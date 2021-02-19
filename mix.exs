@@ -35,7 +35,10 @@ defmodule ChallengeGov.MixProject do
     [
       {:bamboo_smtp, "~> 2.1.0"},
       {:cors_plug, "~> 2.0"},
-      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:credo_contrib, "~> 0.2", only: [:dev, :test], runtime: false},
+      {:credo_envvar, "~> 0.1", only: [:dev, :test], runtime: false},
+      {:credo_naming, "~> 1.0", only: [:dev, :test], runtime: false},
       {:earmark, "~> 1.4.3"},
       {:ecto_sql, "~> 3.4"},
       {:elixir_uuid, "~> 1.2"},

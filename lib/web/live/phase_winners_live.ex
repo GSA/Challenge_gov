@@ -4,14 +4,14 @@ defmodule Web.PhaseWinnersLive do
   """
   use Phoenix.LiveView, layout: {Web.LayoutView, "live.html"}
 
+  import Phoenix.LiveView.Helpers
+
   alias Web.Router.Helpers, as: Routes
 
   alias ChallengeGov.Phases
   alias ChallengeGov.Repo
   alias ChallengeGov.Challenges.Phases.Winner
   alias Stein.Storage
-
-  import Phoenix.LiveView.Helpers
 
   def render(assigns) do
     Phoenix.View.render(Web.PhaseView, "winners.html", assigns)
@@ -96,7 +96,7 @@ defmodule Web.PhaseWinnersLive do
     socket =
       socket
       |> assign(:changeset, changeset)
-      |> Phoenix.LiveView.allow_upload(String.to_atom(temp_id),
+      |> Phoenix.LiveView.allow_upload(String.to_existing_atom(temp_id),
         accept: ~w(.jpg .jpeg .png),
         max_file_size: 10_000_000,
         progress: &handle_progress/3,
@@ -144,7 +144,8 @@ defmodule Web.PhaseWinnersLive do
   def handle_event("submit", params, socket) do
     updated_winners =
       for w <- Map.get(socket.assigns.changeset.changes, :winners, []),
-          res = consume_upload_and_generate_url(socket, String.to_atom(w.changes.temp_id)) do
+          res =
+            consume_upload_and_generate_url(socket, String.to_existing_atom(w.changes.temp_id)) do
         case res do
           [winner_img_url] ->
             w |> Ecto.Changeset.put_change(:winner_img_url, winner_img_url)

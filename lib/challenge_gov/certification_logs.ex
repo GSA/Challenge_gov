@@ -4,11 +4,13 @@ defmodule ChallengeGov.CertificationLogs do
   """
 
   import Ecto.Query
-  require Logger
+
   alias ChallengeGov.Accounts
   alias ChallengeGov.CertificationLogs.CertificationLog
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
+
+  require Logger
 
   def track(params) do
     %CertificationLog{}

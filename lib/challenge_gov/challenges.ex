@@ -3,6 +3,10 @@ defmodule ChallengeGov.Challenges do
   Context for Challenges
   """
 
+  @behaviour Stein.Filter
+
+  import Ecto.Query
+
   alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.ChallengeOwner
@@ -20,10 +24,6 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.SupportingDocuments
   alias ChallengeGov.Timeline.Event
   alias Stein.Filter
-
-  import Ecto.Query
-
-  @behaviour Stein.Filter
 
   # BOOKMARK: Functions for fetching valid attribute values
   @doc false
@@ -1273,7 +1273,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   # BOOKMARK: Filter functions
-  @impl true
+  @impl Stein.Filter
   def filter_on_attribute({"search", value}, query) do
     original_value = value
     value = "%" <> value <> "%"
@@ -1372,7 +1372,7 @@ defmodule ChallengeGov.Challenges do
   def order_on_attribute(query, sort_columns) do
     columns_to_sort =
       Enum.reduce(sort_columns, [], fn {column, direction}, acc ->
-        column = String.to_atom(column)
+        column = String.to_existing_atom(column)
 
         case direction do
           "asc" ->

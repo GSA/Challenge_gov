@@ -4,13 +4,13 @@ defmodule ChallengeGov.SecurityLogs do
   """
   import Ecto.Query
 
-  require Logger
-
   alias ChallengeGov.Accounts
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs.SecurityLog
+
+  require Logger
 
   def track(params) do
     Logger.info("Audit event #{params[:action]}", log_type: "audit", params: params)

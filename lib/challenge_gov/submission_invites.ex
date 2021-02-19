@@ -3,13 +3,13 @@ defmodule ChallengeGov.SubmissionInvites do
   Context for managing submission invites for a phase
   """
 
+  import Ecto.Query
+
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
   alias ChallengeGov.Solutions
   alias ChallengeGov.Solutions.SubmissionInvite
-
-  import Ecto.Query
 
   def get(id) do
     SubmissionInvite

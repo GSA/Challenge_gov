@@ -3,6 +3,10 @@ defmodule ChallengeGov.Solutions do
   Context for Solutions
   """
 
+  @behaviour Stein.Filter
+
+  import Ecto.Query
+
   alias ChallengeGov.Emails
   alias ChallengeGov.GovDelivery
   alias ChallengeGov.Mailer
@@ -12,10 +16,6 @@ defmodule ChallengeGov.Solutions do
   alias ChallengeGov.Solutions.Solution
   alias ChallengeGov.SubmissionExports
   alias Stein.Filter
-
-  import Ecto.Query
-
-  @behaviour Stein.Filter
 
   def all(opts \\ []) do
     Solution
@@ -233,9 +233,10 @@ defmodule ChallengeGov.Solutions do
   defp preserve_document_ids_on_error(changeset, %{"document_ids" => ids}) do
     {document_ids, documents} =
       Enum.reduce(ids, {[], []}, fn document_id, {document_ids, documents} ->
-        with {:ok, document} <- SolutionDocuments.get(document_id) do
-          {[document_id | document_ids], [document | documents]}
-        else
+        case SolutionDocuments.get(document_id) do
+          {:ok, document} ->
+            {[document_id | document_ids], [document | documents]}
+
           _ ->
             {document_ids, documents}
         end
@@ -291,7 +292,7 @@ defmodule ChallengeGov.Solutions do
   end
 
   # BOOKMARK: Filter functions
-  @impl true
+  @impl Stein.Filter
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
 
@@ -358,7 +359,7 @@ defmodule ChallengeGov.Solutions do
       when is_map(sort_columns) and map_size(sort_columns) > 0 do
     columns_to_sort =
       Enum.reduce(sort_columns, [], fn {column, direction}, acc ->
-        column = String.to_atom(column)
+        column = String.to_existing_atom(column)
 
         case direction do
           "asc" ->
