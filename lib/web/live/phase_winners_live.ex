@@ -67,19 +67,8 @@ defmodule Web.PhaseWinnersLive do
     socket =
       socket
       |> assign(:action, :review)
+      |> assign(:winners, phase_winners)
       |> assign(:text, "Review the information and publish the winners.")
-
-    push_redirect(socket,
-      to:
-        Routes.live_path(
-          Web.Endpoint,
-          Web.ShowPhaseWinnersLive,
-          socket.assigns.challenge.id,
-          socket.assigns.phase.id,
-          phase_winners.id,
-          replace: true
-        )
-    )
   end
 
   def handle_progress(key, entry, socket) do
@@ -145,7 +134,11 @@ defmodule Web.PhaseWinnersLive do
       socket.assigns.changeset
       |> Ecto.Changeset.put_embed(:winners, winners)
 
-    {:noreply, assign(socket, changeset: changeset)}
+    socket =
+      socket
+      |> assign(:changeset, changeset)
+
+    {:noreply, socket}
   end
 
   def handle_event("submit", params, socket) do
@@ -203,5 +196,14 @@ defmodule Web.PhaseWinnersLive do
       [ext | _] = MIME.extensions(entry.client_type)
       url = Routes.static_path(socket, "/uploads/phases/winners/#{entry.uuid}.#{ext}")
     end)
+  end
+
+  def handle_event("publish", params, socket) do
+    socket =
+      socket
+      |> assign(:action, :publish)
+      |> put_flash(:info, "Winners updated successfully.")
+
+    {:noreply, socket}
   end
 end

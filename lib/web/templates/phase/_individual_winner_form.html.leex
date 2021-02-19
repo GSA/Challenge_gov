@@ -5,9 +5,7 @@
       <div class="winner grid-col flex-2">
         
         <div class="form-group">
-          <div>
-            <label>Place title (ex. First Place or Grand Winner) (optional)</label>
-          </div>
+          <div><label>Place title (ex. First Place or Grand Winner) (optional)</label></div>
           <%= text_input w, :place_title %>
         </div>
         
@@ -32,7 +30,5 @@
     <div class="grid-col flex-2 remove-winner-container">
       <a href="#" phx-click="remove-winner" phx-value-remove="<%= temp_id %>" class="remove-winner">Remove</a>
     </div>
-      
     </div>
-    
 <% end %>
