@@ -202,7 +202,6 @@ defmodule Mix.Tasks.ImportHelper do
         filename: filename,
         path: tmp_file
       }
-    _ ->
       {:ok, %{status: 404}} ->
         ""
     end

@@ -45,7 +45,7 @@ defmodule Web.Api.ChallengeControllerTest do
 
     test "no results", %{conn: conn} do
       conn = get(conn, Routes.api_challenge_path(conn, :index))
-      assert length(json_response(conn, 200)["collection"]) === 0
+      assert Enum.empty?(json_response(conn, 200)["collection"])
     end
   end
 
@@ -113,7 +113,7 @@ defmodule Web.Api.ChallengeControllerTest do
 
     test "no results", %{conn: conn} do
       conn = get(conn, Routes.api_challenge_path(conn, :index), archived: true)
-      assert length(json_response(conn, 200)["collection"]) === 0
+      assert Enum.empty?(json_response(conn, 200)["collection"])
     end
   end
 

@@ -717,10 +717,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     case Timex.compare(date, now) do
       1 ->
       struct
-    else
       tc when tc == -1 or tc == 0 ->
         add_error(struct, :auto_publish_date, "must be in the future")
-
       _error ->
         add_error(struct, :auto_publish_date, "is required")
     end

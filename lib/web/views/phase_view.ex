@@ -101,7 +101,6 @@ defmodule Web.PhaseView do
     case Challenges.next_phase(challenge, phase) do
       {:ok, phase} ->      
         !phase.open_to_submissions
-      _ ->
       {:error, :not_found} ->
         false
     end

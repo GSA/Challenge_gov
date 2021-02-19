@@ -73,7 +73,6 @@ defmodule Web.SavedChallengeController do
       conn
       |> assign(:challenge, challenge)
       |> render("new.html")
-    _ ->
       {:error, :not_found} ->
         conn
         |> put_flash(:error, "Challenge not found")

@@ -33,11 +33,10 @@ defmodule Web.SiteContentController do
 
     case SiteContent.get(section) do
       {:ok, content} ->      
-      conn
-      |> assign(:user, user)
-      |> assign(:content, content)
-      |> render("show.html")
-    else
+        conn
+        |> assign(:user, user)
+        |> assign(:content, content)
+        |> render("show.html")
       {:error, :not_found} ->
         conn
         |> put_flash(:error, "Site content not found")
