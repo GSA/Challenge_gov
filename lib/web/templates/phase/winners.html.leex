@@ -24,7 +24,7 @@
       <%= @winners.overview %>
       <div>
       <%= if @winners.winner_overview_img_url do %>
-      <%= img_tag(@winners.winner_overview_img_url, class: "winner-img-thumbnail") %>
+      <%= img_tag(Stein.Storage.url(@winners.winner_overview_img_url), class: "winner-img-thumbnail") %>
       <% end %>
       </div>
       <hr/>      
