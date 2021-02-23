@@ -138,7 +138,7 @@
         {Credo.Check.Warning.UnusedRegexOperation, []},
         {Credo.Check.Warning.UnusedStringOperation, []},
         {Credo.Check.Warning.UnusedTupleOperation, []},
-        {Credo.Check.Warning.UnsafeExe, []},
+        # {Credo.Check.Warning.UnsafeExe, []},
         {Credo.Check.Warning.MapGetUnsafePass, []},
         {Credo.Check.Warning.UnsafeToAtom, []},
         #
