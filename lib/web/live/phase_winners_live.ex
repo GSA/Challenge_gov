@@ -152,8 +152,7 @@ defmodule Web.PhaseWinnersLive do
   def handle_event("submit", params, socket) do
     updated_winners =
       for w <- Map.get(socket.assigns.changeset.changes, :winners, []),
-          res =
-            consume_upload_and_generate_url(socket, String.to_atom(w.changes.temp_id)) do
+          res = consume_upload_and_generate_url(socket, String.to_atom(w.changes.temp_id)) do
         case res do
           [winner_img_url] ->
             w |> Ecto.Changeset.put_change(:winner_img_url, winner_img_url)
