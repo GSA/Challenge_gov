@@ -359,7 +359,7 @@ defmodule ChallengeGov.Solutions do
       when is_map(sort_columns) and map_size(sort_columns) > 0 do
     columns_to_sort =
       Enum.reduce(sort_columns, [], fn {column, direction}, acc ->
-        column = String.to_existing_atom(column)
+        column = String.to_atom(column)
 
         case direction do
           "asc" ->

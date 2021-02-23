@@ -1372,7 +1372,7 @@ defmodule ChallengeGov.Challenges do
   def order_on_attribute(query, sort_columns) do
     columns_to_sort =
       Enum.reduce(sort_columns, [], fn {column, direction}, acc ->
-        column = String.to_existing_atom(column)
+        column = String.to_atom(column)
 
         case direction do
           "asc" ->
