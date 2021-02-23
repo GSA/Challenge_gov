@@ -34,7 +34,7 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
     embeds_many :winners, __MODULE__.SingleWinner
   end
 
-  def changeset(struct, params) do
+  def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [
       :status,

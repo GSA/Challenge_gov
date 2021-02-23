@@ -80,7 +80,6 @@ defmodule Web.Router do
     pipe_through([:browser, :signed_in, :valid_status])
 
     get("/", DashboardController, :index)
-
     get("/certification_requested", AccessController, :index)
 
     live "/challenges/:id/winners", WinnersLive
@@ -88,9 +87,7 @@ defmodule Web.Router do
 
     resources("/challenges", ChallengeController) do
       resources("/documents", DocumentController, only: [:create])
-
       resources("/events", EventController, only: [:new, :create])
-
       resources("/bulletin", BulletinController, only: [:new, :create])
 
       resources("/phases", PhaseController, only: [:index, :show]) do
@@ -98,7 +95,6 @@ defmodule Web.Router do
       end
 
       resources("/solutions", SolutionController, only: [:index, :new, :create])
-
       resources("/save_challenge", SavedChallengeController, only: [:new, :create])
     end
 
@@ -111,7 +107,6 @@ defmodule Web.Router do
     post("/challenges/:id/submit", ChallengeController, :submit, as: :challenge)
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
     post("/challenges/:id/unarchive", ChallengeController, :unarchive, as: :challenge)
-
     post("/challenges/:id/remove_logo", ChallengeController, :remove_logo, as: :challenge)
 
     post("/challenges/:id/remove_winner_image", ChallengeController, :remove_winner_image,
@@ -199,9 +194,5 @@ defmodule Web.Router do
     get("/", PageController, :index)
     get("/challenges", PageController, :index, as: :challenge_index)
     get("/challenges#/challenge/:id", PageController, :index, as: :challenge_details)
-  end
-
-  if Mix.env() == :dev do
-    forward("/emails/sent", Bamboo.SentEmailViewerPlug)
   end
 end

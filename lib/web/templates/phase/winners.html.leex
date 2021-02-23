@@ -15,7 +15,6 @@
     <% :draft -> %>
     <%= f = form_for(@changeset, "#", [class: "form-horizontal", phx_submit: "submit", phx_change: "validate", phx_target: "#upload-winners", id: "upload-winners", multipart: true]) %>
     <%= render Web.PhaseView, "_draft_winners_overview.html", changeset: @changeset, f: f, uploads: @uploads %>
-
     <hr/>    
     
     <div class="individual-winners">      
@@ -23,6 +22,9 @@
       <%= render Web.PhaseView, "_individual_winner_form.html", f: f, uploads: @uploads %>
       <% _ -> %>
       <%= @winners.overview %>
+      <%= if @winners.winner_overview_img_url do %>
+      <%= img_tag(@winners.winner_overview_img_url) %>
+      <% end %>
       <hr/>      
       <div class="individual-winners">      
         <h2>Individual Winners</h2>      
@@ -60,7 +62,7 @@
     <a href="#" phx-click="publish" class="btn btn-primary">Publish</a>
   </div>
 </div>
-<% :publish -> %>
+<% :published -> %>
 <div class="row winner-options">
   <div class="col-md-1">
     <a class="disabled btn"> Edit</a>

@@ -8,6 +8,10 @@
       <div class="grid-col flex-2"><%= w.name %></div>
     </div>
     <div class="grid-row">
+      <%= if w.winner_img_url do %>      
+      <%= img_tag(w.winner_img_url) %>
+      <% else %>
       <img class="winner-img" src="/images/account_icon.svg">
+      <% end %>
     </div>
     <% end %>
