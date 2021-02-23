@@ -9,7 +9,7 @@
     </div>
     <div class="grid-row">
       <%= if w.winner_img_url do %>      
-      <%= img_tag(w.winner_img_url) %>
+      <%= img_tag(w.winner_img_url, class: "winner-img-thumbnail") %>
       <% else %>
       <img class="winner-img" src="/images/account_icon.svg">
       <% end %>

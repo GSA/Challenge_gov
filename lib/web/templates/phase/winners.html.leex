@@ -22,9 +22,11 @@
       <%= render Web.PhaseView, "_individual_winner_form.html", f: f, uploads: @uploads %>
       <% _ -> %>
       <%= @winners.overview %>
+      <div>
       <%= if @winners.winner_overview_img_url do %>
-      <%= img_tag(@winners.winner_overview_img_url) %>
+      <%= img_tag(@winners.winner_overview_img_url, class: "winner-img-thumbnail") %>
       <% end %>
+      </div>
       <hr/>      
       <div class="individual-winners">      
         <h2>Individual Winners</h2>      
