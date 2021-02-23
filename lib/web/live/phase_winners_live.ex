@@ -63,6 +63,14 @@ defmodule Web.PhaseWinnersLive do
     )
   end
 
+  defp assign_status_specific(socket, phase_winners = %Winner{status: "published"}) do
+    socket =
+      socket
+      |> assign(:action, :published)
+      |> assign(:winners, phase_winners)
+      |> assign(:text, "")
+  end
+
   defp assign_status_specific(socket, phase_winners) do
     socket =
       socket
@@ -97,7 +105,7 @@ defmodule Web.PhaseWinnersLive do
       socket
       |> assign(:changeset, changeset)
       |> Phoenix.LiveView.allow_upload(String.to_existing_atom(temp_id),
-        accept: ~w(.jpg .jpeg .png),
+        accept: ~w(.jpg .jpeg .png .gif),
         max_file_size: 10_000_000,
         progress: &handle_progress/3,
         auto_upload: true
@@ -169,7 +177,7 @@ defmodule Web.PhaseWinnersLive do
 
     changeset =
       changeset
-      |> Ecto.Changeset.put_change(:status, "draft")
+      |> Ecto.Changeset.put_change(:status, "review")
       |> Ecto.Changeset.put_change(:phase_id, socket.assigns.phase.id)
       |> Ecto.Changeset.put_embed(:winners, updated_winners)
 
@@ -190,16 +198,20 @@ defmodule Web.PhaseWinnersLive do
   end
 
   defp consume_upload_and_generate_url(socket, key) do
-    consume_uploaded_entries(socket, key, fn %{path: path} = p, entry ->
-      # almost there... Stein Storage will come in handy here...
-      # dest = Path.join("priv/static/uploads", Path.basename(path))
-      # File.cp!(path, dest)
+    consume_uploaded_entries(socket, key, fn p = %{path: path}, entry ->
       [ext | _] = MIME.extensions(entry.client_type)
-      url = Routes.static_path(socket, "/uploads/phases/winners/#{entry.uuid}.#{ext}")
+      file = %Storage.FileUpload{Storage.prep_file(p) | extension: ".#{ext}"}
+      path = "/phases/winners/#{entry.uuid}.#{ext}"
+      Storage.upload(file, path, extensions: [".png", ".jpg", ".jpeg", ".gif"])
+
+      _url = "/uploads#{path}"
     end)
   end
 
   def handle_event("publish", params, socket) do
+    changeset = Winner.changeset(socket.assigns.winners, %{status: "published"})
+    Repo.update!(changeset)
+
     socket =
       socket
       |> assign(:action, :publish)
