@@ -203,7 +203,7 @@ defmodule Web.PhaseWinnersLive do
       path = "/phases/winners/#{entry.uuid}.#{ext}"
       Storage.upload(file, path, extensions: [".png", ".jpg", ".jpeg", ".gif"])
 
-      _url = "/uploads#{path}"
+      _url = "#{path}"
     end)
   end
 
