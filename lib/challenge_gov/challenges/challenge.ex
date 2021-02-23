@@ -714,9 +714,10 @@ defmodule ChallengeGov.Challenges.Challenge do
   defp check_auto_publish_date(struct, date) do
     now = Timex.now()
 
-    with 1 <- Timex.compare(date, now) do
-      struct
-    else
+    case Timex.compare(date, now) do
+      1 ->
+        struct
+
       tc when tc == -1 or tc == 0 ->
         add_error(struct, :auto_publish_date, "must be in the future")
 

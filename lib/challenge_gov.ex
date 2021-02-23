@@ -13,7 +13,8 @@ defmodule ChallengeGov do
   iex> ChallengeGov.config({:system, "HOST"})
   "example.com"
   """
+  @spec config({atom(), String.t() | nil}) :: String.t() | nil
   def config({:system, env}), do: System.get_env(env)
-
+  @spec config(any()) :: any()
   def config(config), do: config
 end

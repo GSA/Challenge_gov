@@ -10,27 +10,27 @@ defmodule ChallengeGov.GovDelivery.Mock do
 
   @behaviour ChallengeGov.GovDelivery
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def remove_topic(_challenge) do
   end
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def add_topic(_challenge) do
   end
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def subscribe_user_general(_user) do
   end
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def subscribe_user_challenge(_user, _challenge) do
   end
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def send_bulletin(_challenge, _subject, _body) do
   end
 
-  @impl true
+  @impl ChallengeGov.GovDelivery
   def get_topic_subscribe_count(_challenge) do
   end
 end

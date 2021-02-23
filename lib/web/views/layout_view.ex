@@ -83,17 +83,15 @@ defmodule Web.LayoutView do
 end
 
 defmodule Web.PageTitle do
-  alias Web.{
-    Admin,
-    SessionView,
-    RegistrationView,
-    RegistrationResetView,
-    UserInviteView,
-    ChallengeView,
-    AccountView,
-    AgencyView,
-    ErrorView
-  }
+  alias Web.Admin
+  alias Web.SessionView
+  alias Web.RegistrationView
+  alias Web.RegistrationResetView
+  alias Web.UserInviteView
+  alias Web.ChallengeView
+  alias Web.AccountView
+  alias Web.AgencyView
+  alias Web.ErrorView
 
   @app_name "Challenge.gov"
 

@@ -19,7 +19,7 @@ defmodule ChallengeGov.Recaptcha.Mock do
     FakeCaptcha.set_valid_token(pid, is_valid)
   end
 
-  @impl true
+  @impl ChallengeGov.Recaptcha
   def valid_token?(_token) do
     case Process.get(:recpatcha) do
       nil ->

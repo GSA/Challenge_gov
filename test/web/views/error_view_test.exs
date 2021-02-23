@@ -1,11 +1,11 @@
 defmodule Web.ErrorViewTest do
   use Web.ConnCase, async: true
 
-  alias ChallengeGov.Accounts
-  alias Web.ErrorView
-
   # Bring render/3 and render_to_string/3 for testing custom views
   import Phoenix.View
+
+  alias ChallengeGov.Accounts
+  alias Web.ErrorView
 
   describe "errors.json" do
     test "renders changeset errors" do
