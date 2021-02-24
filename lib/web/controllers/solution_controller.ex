@@ -94,7 +94,6 @@ defmodule Web.SolutionController do
     |> render("index.html")
   end
 
-  # TODO: meld this into index, include param
   def managed_solutions(conn, params = %{"challenge_id" => challenge_id, "phase_id" => phase_id}) do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
@@ -204,8 +203,7 @@ defmodule Web.SolutionController do
     {:ok, challenge} = Challenges.get(challenge_id)
 
     {solver, phase, solution_params} =
-      cond do
-        user.role == "admin" ->
+      if user.role == "admin" do
           solution_params =
             Map.merge(solution_params, %{"manager_id" => user.id, "terms_accepted" => false})
 
@@ -223,7 +221,7 @@ defmodule Web.SolutionController do
           {:ok, phase} = Phases.get(phase_id)
           {solver, phase, solution_params}
 
-        true ->
+        else
           solver = user
 
           phase =
@@ -240,10 +238,10 @@ defmodule Web.SolutionController do
           {solver, phase, solution_params}
       end
 
-    with {:ok, solution} <- Solutions.create_review(solution_params, solver, challenge, phase) do
+    case Solutions.create_review(solution_params, solver, challenge, phase) do
+      {:ok, solution} ->
       conn
       |> redirect(to: Routes.solution_path(conn, :show, solution.id))
-    else
       {:error, changeset} ->
         create_error(conn, changeset, user, challenge)
     end

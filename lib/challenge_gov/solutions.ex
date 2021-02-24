@@ -310,7 +310,6 @@ defmodule ChallengeGov.Solutions do
       select: s
     )
     |> Repo.all()
-    |> IO.inspect()
   end
 
   # BOOKMARK: Filter functions

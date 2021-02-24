@@ -5,10 +5,7 @@ defmodule Web.Api.SolutionDocumentController do
   alias Web.ErrorView
   alias ChallengeGov.Accounts
 
-  def create(conn, %{"document" => params, "solver_email" => solver_email} = all_params) do
-    IO.inspect("solver email?")
-    IO.inspect(solver_email)
-
+  def create(conn, all_params = %{"document" => params, "solver_email" => solver_email}) do
     user =
       case solver_email do
         "undefined" ->
