@@ -2,6 +2,8 @@ defmodule ChallengeGov.Accounts do
   @moduledoc """
   Context for user accounts
   """
+  @behaviour Stein.Filter
+  import Ecto.Query
 
   alias ChallengeGov.Accounts.Avatar
   alias ChallengeGov.Accounts.User
@@ -16,11 +18,8 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.SecurityLogs
   alias Stein.Filter
 
-  import Ecto.Query
-
-  @behaviour Stein.Filter
-
   @doc false
+  @spec roles(User.t()) :: String.t()
   def roles(user) do
     case user.role do
       "super_admin" ->
@@ -31,6 +30,7 @@ defmodule ChallengeGov.Accounts do
     end
   end
 
+  @spec get_role_rank(String.t()) :: number()
   def get_role_rank(role) do
     Enum.find(User.roles(), fn r -> r.id === role end).rank
   end
@@ -40,6 +40,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Get all accounts
   """
+  @spec all([any()]) :: User.t()
   def all(opts \\ []) do
     opts = Enum.into(opts, %{})
 
@@ -51,6 +52,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Get all accounts
   """
+  @spec all_for_select() :: [User.t()]
   def all_for_select() do
     Repo.all(User)
   end
@@ -58,6 +60,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Get all public accounts
   """
+  @spec public([any()]) :: User.t()
   def public(opts \\ []) do
     opts = Enum.into(opts, %{})
 
@@ -73,6 +76,7 @@ defmodule ChallengeGov.Accounts do
 
   They don't already belong
   """
+  @spec for_inviting_to([any()]) :: User.t()
   def for_inviting_to(opts \\ []) do
     opts = Enum.into(opts, %{})
 
@@ -91,6 +95,7 @@ defmodule ChallengeGov.Accounts do
     |> Repo.all()
   end
 
+  @spec filter_invite_users(Ecto.Query.t(), map()) :: Ecto.Query.t()
   def filter_invite_users(query, %{search: search}) when search != nil and search != "" do
     names = String.split(search, " ")
 
@@ -108,6 +113,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Changeset for sign in and registration
   """
+  @spec new() :: User.t()
   def new() do
     User.create_changeset(%User{}, %{})
   end
@@ -115,6 +121,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Create an account via admin panel
   """
+  @spec create(map(), User.t(), String.t()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def create(params, originator, remote_ip) do
     changeset =
       %User{}
@@ -150,6 +157,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Create an account
   """
+  @spec create(String.t(), map()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def create(remote_ip, params) do
     changeset =
       %User{}
@@ -182,6 +190,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Create an account as a system
   """
+  @spec system_create(map()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def system_create(params) do
     changeset =
       %User{}
@@ -204,6 +213,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Register an account
   """
+  @spec register(map()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def register(params) do
     recaptcha_token = Map.get(params, "recaptcha_token")
 
@@ -242,11 +252,13 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Changeset for account editing
   """
+  @spec edit(User.t()) :: Ecto.Changeset.t()
   def edit(user), do: User.update_changeset(user, %{})
 
   @doc """
   Update last active timestamp
   """
+  @spec update_last_active(User.t()) :: {:ok, User} | {:error, Ecto.Changeset.t()}
   def update_last_active(user) do
     user
     |> User.last_active_changeset()
@@ -256,6 +268,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Update active session
   """
+  @spec update_active_session(User.t(), map()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def update_active_session(user, param) do
     user
     |> User.active_session_changeset(param)
@@ -265,6 +278,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Update an account
   """
+  @spec update(User.t(), map()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def update(user, params) do
     changeset = User.update_changeset(user, params)
 
@@ -288,6 +302,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Update an account's password
   """
+  @spec update_password(User.t(), map()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def update_password(user, params) do
     user
     |> User.password_changeset(params)
@@ -297,6 +312,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Update an account's terms
   """
+  @spec update_terms(User.t(), map()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def update_terms(user, params) do
     user
     |> User.terms_changeset(params)
@@ -306,6 +322,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Validate a user's login information
   """
+  @spec validate_login(String.t(), String.t()) :: {:ok, User.t()} | {:error, :invalid}
   def validate_login(email, password) do
     Stein.Accounts.validate_login(Repo, User, email, password)
   end
@@ -581,7 +598,7 @@ defmodule ChallengeGov.Accounts do
 
   def has_accepted_terms?(%{privacy_guidelines: _timestamp}), do: true
 
-  @impl true
+  @impl Stein.Filter
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
 

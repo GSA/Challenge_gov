@@ -41,3 +41,28 @@ cf ssh challenge-portal-dev
 
 To run IEx commands or others, you'll need elixir and erlang on the path, just run:
 `export PATH=/home/vcap/app/.platform_tools/elixir/bin:/home/vcap/app/.platform_tools/erlang/bin:/bin:/usr/bin` when connected via SSH
+
+You can then work from the `app` directory and should be able to perform the mix and iex tasks you need to perform.
+
+## PSQL
+
+You can SSH tunnel through the running container to the PostgreSQL RDS instance so that you can use your local psql and related tools to work with the running database.
+
+You'll need the RDS Host, Database, Username, and Password which you can get from the ENV of the running app in Cloud.gov or via the Cloud.gov administration panel for the application.
+
+```
+cf ssh challenge-portal-dev -L 5433:RDS_HOST:5432
+```
+
+This forwards on port 5433 so that you can still run postgres locally on 5432 without conflict.
+
+Now in a separate terminal window, you can run, with the right username and database name filled in, using localhost on the 5433 port to leverage the tunnel via SSH.
+
+```
+psql -h localhost -p 5433 -U RDS_USERNAME RDS_DB
+```
+
+It will prompt for the RDS user password and then you'll have a connected psql session to the database.
+
+Be sure to close the SSH connection when you are finished.
+

@@ -5,14 +5,17 @@ defmodule Web.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
+    plug :fetch_live_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :put_root_layout, {Web.LayoutView, :root}
     plug Web.Plugs.FetchUser
   end
 
   pipeline :api do
     plug :accepts, ["json"]
     plug :fetch_session
+    plug :fetch_flash
     plug(Web.Plugs.FetchUser)
   end
 
@@ -77,14 +80,14 @@ defmodule Web.Router do
     pipe_through([:browser, :signed_in, :valid_status])
 
     get("/", DashboardController, :index)
-
     get("/certification_requested", AccessController, :index)
+
+    live "/challenges/:id/winners", WinnersLive
+    live "/challenges/:cid/phases/:pid/winners", PhaseWinnersLive
 
     resources("/challenges", ChallengeController) do
       resources("/documents", DocumentController, only: [:create])
-
       resources("/events", EventController, only: [:new, :create])
-
       resources("/bulletin", BulletinController, only: [:new, :create])
 
       resources("/phases", PhaseController, only: [:index, :show]) do
@@ -92,7 +95,6 @@ defmodule Web.Router do
       end
 
       resources("/solutions", SolutionController, only: [:index, :new, :create])
-
       resources("/save_challenge", SavedChallengeController, only: [:new, :create])
     end
 
@@ -105,7 +107,6 @@ defmodule Web.Router do
     post("/challenges/:id/submit", ChallengeController, :submit, as: :challenge)
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
     post("/challenges/:id/unarchive", ChallengeController, :unarchive, as: :challenge)
-
     post("/challenges/:id/remove_logo", ChallengeController, :remove_logo, as: :challenge)
 
     post("/challenges/:id/remove_winner_image", ChallengeController, :remove_winner_image,
@@ -123,12 +124,18 @@ defmodule Web.Router do
       only: [:index, :create]
     )
 
+    resources("/phases/:phase_id/submission_invites", SubmissionInviteController,
+      only: [:index, :show, :create]
+    )
+
+    post("/submission_invites/:id/accept", SubmissionInviteController, :accept)
+    post("/submission_invites/:id/revoke", SubmissionInviteController, :revoke)
+
     post("/submission_exports/:id", SubmissionExportController, :restart)
     resources("/submission_exports", SubmissionExportController, only: [:delete])
 
     resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
     put("/solutions/:id/submit", SolutionController, :submit)
-    put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
 
     resources("/documents", DocumentController, only: [:delete])
     resources("/events", EventController, only: [:edit, :update, :delete])
@@ -161,7 +168,8 @@ defmodule Web.Router do
     resources("/documents", DocumentController, only: [:create, :delete])
     resources("/solution_documents", SolutionDocumentController, only: [:create, :delete])
 
-    # TODO: This might make sense to move elsewhere
+    put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
+
     post("/session/renew", SessionController, :check_session_timeout)
     post("/session/logout", SessionController, :logout_user)
   end
@@ -185,10 +193,6 @@ defmodule Web.Router do
 
     get("/", PageController, :index)
     get("/challenges", PageController, :index, as: :challenge_index)
-    get("/challenge/:id", PageController, :index, as: :challenge_details)
-  end
-
-  if Mix.env() == :dev do
-    forward("/emails/sent", Bamboo.SentEmailViewerPlug)
+    get("/challenges#/challenge/:id", PageController, :index, as: :challenge_details)
   end
 end

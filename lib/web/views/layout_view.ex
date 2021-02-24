@@ -72,27 +72,26 @@ defmodule Web.LayoutView do
   end
 
   def load_filter_panel(conn, view_module) do
-    action_name(conn) == :index and
+    Phoenix.Controller.action_name(conn) == :index and
       view_module != Web.DashboardView and
       view_module != Web.AccessView and
       view_module != Web.SiteContentView and
       view_module != Web.PhaseView and
-      view_module != Web.SubmissionExportView
+      view_module != Web.SubmissionExportView and
+      view_module != Web.SubmissionInviteView
   end
 end
 
 defmodule Web.PageTitle do
-  alias Web.{
-    Admin,
-    SessionView,
-    RegistrationView,
-    RegistrationResetView,
-    UserInviteView,
-    ChallengeView,
-    AccountView,
-    AgencyView,
-    ErrorView
-  }
+  alias Web.Admin
+  alias Web.SessionView
+  alias Web.RegistrationView
+  alias Web.RegistrationResetView
+  alias Web.UserInviteView
+  alias Web.ChallengeView
+  alias Web.AccountView
+  alias Web.AgencyView
+  alias Web.ErrorView
 
   @app_name "Challenge.gov"
 

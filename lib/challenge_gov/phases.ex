@@ -3,14 +3,14 @@ defmodule ChallengeGov.Phases do
   Context for Phases
   """
 
+  @behaviour Stein.Filter
+
+  import Ecto.Query
+
   alias ChallengeGov.Repo
   alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.Solutions
   alias Stein.Filter
-
-  import Ecto.Query
-
-  @behaviour Stein.Filter
 
   def all(opts \\ []) do
     Phase
@@ -58,6 +58,14 @@ defmodule ChallengeGov.Phases do
   end
 
   def is_future?(_phase), do: false
+
+  def closed_for_challenge(challenge) do
+    now = DateTime.utc_now()
+
+    Phase
+    |> where([p], p.challenge_id == ^challenge.id and p.end_date < ^now)
+    |> Repo.all()
+  end
 
   def solution_count(phase, filter \\ %{}) do
     phase

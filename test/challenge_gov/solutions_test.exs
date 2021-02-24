@@ -612,7 +612,7 @@ defmodule ChallengeGov.SolutionsTest do
       assert length(solutions) === 2
 
       solutions = Solutions.all(filter: %{"phase_ids" => [phase_3.id], "judging_status" => "all"})
-      assert length(solutions) === 0
+      assert Enum.empty?(solutions)
     end
   end
 

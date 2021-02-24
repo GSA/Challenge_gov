@@ -9,6 +9,7 @@ defmodule ChallengeGov.Solutions.SubmissionExportWorker do
   alias ChallengeGov.Solutions
   alias ChallengeGov.Solutions.SubmissionExport
   alias ChallengeGov.SubmissionExports
+  alias Web.DocumentView
   alias Web.SubmissionExportView
   alias Stein.Storage
   alias Stein.Storage.Temp
@@ -56,15 +57,15 @@ defmodule ChallengeGov.Solutions.SubmissionExportWorker do
   end
 
   defp export_submissions(submission_export, ".zip", submissions) do
-    # TODO: Remove this. Currently added to demonstrate pending status and export cancelling
-    Process.sleep(10_000)
     csv = SubmissionExportView.submission_csv(submissions)
 
     zip_files =
       Enum.flat_map(submissions, fn submission ->
         Enum.map(submission.documents, fn document ->
           {:ok, document_download} = Storage.download(SolutionDocuments.document_path(document))
-          document_path = "/submissions/#{submission.id}/#{document.key}#{document.extension}"
+
+          document_path =
+            "/submissions/#{submission.id}/#{DocumentView.filename(document)}#{document.extension}"
 
           data = File.read!(document_download)
           File.rm(document_download)

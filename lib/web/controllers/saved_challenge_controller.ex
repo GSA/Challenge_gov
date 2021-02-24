@@ -68,11 +68,12 @@ defmodule Web.SavedChallengeController do
   end
 
   def new(conn, %{"challenge_id" => challenge_id}) do
-    with {:ok, challenge} <- Challenges.get(challenge_id) do
-      conn
-      |> assign(:challenge, challenge)
-      |> render("new.html")
-    else
+    case Challenges.get(challenge_id) do
+      {:ok, challenge} ->
+        conn
+        |> assign(:challenge, challenge)
+        |> render("new.html")
+
       {:error, :not_found} ->
         conn
         |> put_flash(:error, "Challenge not found")

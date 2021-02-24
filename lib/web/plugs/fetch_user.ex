@@ -2,10 +2,9 @@ defmodule Web.Plugs.FetchUser do
   @moduledoc """
   Fetch a user from the session
   """
+  @behaviour Plug
 
   import Plug.Conn
-
-  @behaviour Plug
 
   alias ChallengeGov.Accounts
 

@@ -7,10 +7,10 @@ defmodule ChallengeGov.Agencies.Member do
 
   import Ecto.Changeset
 
-  @type t :: %__MODULE__{}
-
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Agencies.Agency
+
+  @type t :: %__MODULE__{}
 
   schema "agency_members" do
     belongs_to(:user, User)

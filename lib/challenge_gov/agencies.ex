@@ -3,15 +3,15 @@ defmodule ChallengeGov.Agencies do
   Agencies context
   """
 
+  @behaviour Stein.Filter
+
+  import Ecto.Query
+
   alias ChallengeGov.Repo
   alias ChallengeGov.Agencies.Avatar
   alias ChallengeGov.Agencies.Member
   alias ChallengeGov.Agencies.Agency
   alias Stein.Filter
-
-  import Ecto.Query
-
-  @behaviour Stein.Filter
 
   @doc """
   New agency changeset
@@ -108,7 +108,6 @@ defmodule ChallengeGov.Agencies do
   #   |> Ecto.Changeset.apply_action(:insert)
   # end
 
-  # TODO: Change this to use user again if needed
   def create(_user, params) do
     result =
       Ecto.Multi.new()
@@ -212,7 +211,7 @@ defmodule ChallengeGov.Agencies do
     |> Repo.update()
   end
 
-  @impl true
+  @impl Stein.Filter
   def filter_on_attribute({"search", value}, query) do
     value = "%" <> value <> "%"
     where(query, [c], ilike(c.name, ^value) or ilike(c.description, ^value))
