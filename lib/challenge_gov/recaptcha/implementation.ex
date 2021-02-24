@@ -5,7 +5,7 @@ defmodule ChallengeGov.Recaptcha.Implementation do
 
   @behaviour ChallengeGov.Recaptcha
 
-  @impl true
+  @impl ChallengeGov.Recaptcha
   def valid_token?(token) do
     case recaptcha_request(token) do
       {:ok, %{"success" => true}} ->

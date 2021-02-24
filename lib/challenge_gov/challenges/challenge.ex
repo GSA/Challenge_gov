@@ -262,7 +262,6 @@ defmodule ChallengeGov.Challenges.Challenge do
     end
   end
 
-  # TODO: user_id, agency_id, and status should be locked behind admin only changeset
   def changeset(struct, params) do
     struct
     |> cast(params, [
@@ -518,7 +517,6 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> submit_changeset()
   end
 
-  # TODO: Add user usage back in if needing to track submitter
   def create_changeset(struct, params, _user) do
     struct
     |> changeset(params)
@@ -665,7 +663,6 @@ defmodule ChallengeGov.Challenges.Challenge do
   defp validate_upload_logo(struct, params = %{"upload_logo" => "true"}),
     do: validate_logo(struct, params)
 
-  # TODO: Make this situation properly delete the uploaded file instead of just severing the connection
   defp validate_upload_logo(struct, %{"upload_logo" => "false"}) do
     struct
     |> put_change(:logo_key, nil)
@@ -717,9 +714,10 @@ defmodule ChallengeGov.Challenges.Challenge do
   defp check_auto_publish_date(struct, date) do
     now = Timex.now()
 
-    with 1 <- Timex.compare(date, now) do
-      struct
-    else
+    case Timex.compare(date, now) do
+      1 ->
+        struct
+
       tc when tc == -1 or tc == 0 ->
         add_error(struct, :auto_publish_date, "must be in the future")
 

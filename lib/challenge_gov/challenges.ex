@@ -3,6 +3,10 @@ defmodule ChallengeGov.Challenges do
   Context for Challenges
   """
 
+  @behaviour Stein.Filter
+
+  import Ecto.Query
+
   alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.ChallengeOwner
@@ -20,10 +24,6 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.SupportingDocuments
   alias ChallengeGov.Timeline.Event
   alias Stein.Filter
-
-  import Ecto.Query
-
-  @behaviour Stein.Filter
 
   # BOOKMARK: Functions for fetching valid attribute values
   @doc false
@@ -181,7 +181,6 @@ defmodule ChallengeGov.Challenges do
   Update a challenge
   """
   def update(challenge, params, current_user, remote_ip) do
-    # TODO: Refactor the current_user permissions checking for updating challenge owner
     challenge = challenge_form_preload(challenge)
 
     params =
@@ -1274,7 +1273,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   # BOOKMARK: Filter functions
-  @impl true
+  @impl Stein.Filter
   def filter_on_attribute({"search", value}, query) do
     original_value = value
     value = "%" <> value <> "%"
@@ -1292,7 +1291,6 @@ defmodule ChallengeGov.Challenges do
     where(query, [c], c.sub_status == ^value)
   end
 
-  # TODO: Refactor this to use jsonb column more elegantly
   def filter_on_attribute({"types", values}, query) do
     Enum.reduce(values, query, fn value, query ->
       where(query, [c], fragment("? @> ?::jsonb", c.types, ^[value]))

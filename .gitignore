@@ -46,6 +46,9 @@ npm-debug.log
 /private.pem
 /key.pem
 
-# ignore emacs temp files
+# ignore temp + backup files
 **~
 **/**~
+**/*~
+**/#*#
+

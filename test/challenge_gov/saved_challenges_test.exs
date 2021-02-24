@@ -71,7 +71,7 @@ defmodule ChallengeGov.SavedChallengesTest do
 
       saved_challenges = SavedChallenges.all(user)
 
-      assert length(saved_challenges) === 0
+      assert Enum.empty?(saved_challenges)
     end
 
     test "success saving public challenges" do
@@ -99,12 +99,12 @@ defmodule ChallengeGov.SavedChallengesTest do
 
       saved_challenges = SavedChallenges.all(user)
 
-      assert length(saved_challenges) === 0
+      assert Enum.empty?(saved_challenges)
     end
 
-    # TODO: Is this a valid feature? Don't do this
     @tag :pending
     test "remove saved challenges when challenge is no longer published" do
+      assert true
     end
   end
 
@@ -172,7 +172,7 @@ defmodule ChallengeGov.SavedChallengesTest do
 
       assert deleted_saved_challenge.user_id === user.id
       assert deleted_saved_challenge.challenge_id === challenge.id
-      assert length(saved_challenges) === 0
+      assert Enum.empty?(saved_challenges)
       assert length(saved_challenges_2) === 1
     end
 

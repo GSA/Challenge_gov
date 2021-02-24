@@ -120,7 +120,7 @@
         #
         ## Warnings
         #
-        {Credo.Check.Warning.ApplicationConfigInModuleAtribute, []},
+        {Credo.Check.Warning.ApplicationConfigInModuleAttribute, false},
         {Credo.Check.Warning.BoolOperationOnSameValues, []},
         {Credo.Check.Warning.ExpensiveEmptyEnumCheck, []},
         {Credo.Check.Warning.IExPry, []},
@@ -138,23 +138,22 @@
         {Credo.Check.Warning.UnusedRegexOperation, []},
         {Credo.Check.Warning.UnusedStringOperation, []},
         {Credo.Check.Warning.UnusedTupleOperation, []},
-        {Credo.Check.Warning.UnsafeExe, []},
+        # {Credo.Check.Warning.UnsafeExe, []},
         {Credo.Check.Warning.MapGetUnsafePass, []},
-        {Credo.Check.Warning.UnsafeToAtom, []},
-
+        # {Credo.Check.Warning.UnsafeToAtom, []},
         #
         # Controversial and experimental checks (opt-in, just replace `false` with `[]`)
         #
         {Credo.Check.Consistency.MultiAliasImportRequireUse, []},
         {Credo.Check.Consistency.UnusedVariableNames, false},
-        {Credo.Check.Design.DuplicatedCode, []},
+        # {Credo.Check.Design.DuplicatedCode, []},
         {Credo.Check.Readability.AliasAs, false},
-        {Credo.Check.Readability.BlockPipe, []},
+        # {Credo.Check.Readability.BlockPipe, []},
         {Credo.Check.Readability.ImplTrue, []},
         {Credo.Check.Readability.MultiAlias, []},
         {Credo.Check.Readability.SeparateAliasRequire, []},
         {Credo.Check.Readability.SinglePipe, false},
-        {Credo.Check.Readability.Specs, []},
+        # {Credo.Check.Readability.Specs, []},
         {Credo.Check.Readability.StrictModuleLayout, []},
         {Credo.Check.Readability.WithCustomTaggedTuple, []},
         {Credo.Check.Refactor.ABCSize, false},
@@ -179,8 +178,7 @@
         #
         # CredoEnvVar checks
         #
-        {CredoEnvvar.Check.Warning.EnvironmentVariablesAtCompileTime, []},
-
+        # {CredoEnvvar.Check.Warning.EnvironmentVariablesAtCompileTime, []},
         #
         # CredoNaming checks
         #

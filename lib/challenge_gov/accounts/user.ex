@@ -15,8 +15,6 @@ defmodule ChallengeGov.Accounts.User do
 
   @type t :: %__MODULE__{}
 
-  # TODO: Available roles to be able to change a user to need to differ by role attempting the change
-  # TODO: Add backend restriction on role modifying. Different roles need different changesets
   @roles [
     %{id: "super_admin", label: "Super Admin", rank: 1},
     %{id: "admin", label: "Admin", rank: 2},

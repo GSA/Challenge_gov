@@ -18,8 +18,6 @@ defmodule Web.DashboardController do
         []
       end
 
-    IO.inspect("GETTING ALL")
-
     conn =
       conn
       |> assign(:user, user)

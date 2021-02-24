@@ -27,15 +27,9 @@ defmodule Web.SolutionController do
     Web.Plugs.EnsureRole,
     [:admin, :super_admin, :solver] when action in [:new, :submit, :create]
   )
-
   plug(
     Web.Plugs.EnsureRole,
     [:admin, :super_admin] when action in [:managed_solutions]
-  )
-
-  plug(
-    Web.Plugs.EnsureRole,
-    [:admin, :super_admin, :challenge_owner] when action in [:update_judging_status]
   )
 
   plug Web.Plugs.FetchPage when action in [:index, :show]
@@ -369,32 +363,6 @@ defmodule Web.SolutionController do
         |> assign(:path, Routes.solution_path(conn, :update, id))
         |> assign(:changeset, changeset)
         |> render("edit.html")
-    end
-  end
-
-  def update_judging_status(conn, params = %{"id" => id, "judging_status" => judging_status}) do
-    %{current_user: user} = conn.assigns
-
-    filter = Map.get(params, "filter", %{})
-
-    with {:ok, solution} <- Solutions.get(id),
-         {:ok, challenge} <- Challenges.get(solution.challenge_id),
-         {:ok, phase} <- Phases.get(solution.phase_id),
-         {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge),
-         {:ok, updated_solution} <- Solutions.update_judging_status(solution, judging_status) do
-      conn
-      |> assign(:challenge, challenge)
-      |> assign(:phase, phase)
-      |> assign(:solution, solution)
-      |> assign(:updated_solution, updated_solution)
-      |> assign(:filter, filter)
-      |> render("judging_status.json")
-    else
-      {:error, :not_permitted} ->
-        send_resp(conn, 403, "")
-
-      _ ->
-        send_resp(conn, 400, "")
     end
   end
 

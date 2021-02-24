@@ -1,9 +1,9 @@
 defmodule Web.Public.SitemapView do
   use Web, :view
 
-  alias Web.ChallengeView
-
   import XmlBuilder
+
+  alias Web.ChallengeView
 
   def render("rss.xml", %{challenges: challenges}) do
     challenges_xml =
@@ -28,7 +28,7 @@ defmodule Web.Public.SitemapView do
           ],
           " "
         ),
-      pubDate: formatPubdate(challenge.updated_at),
+      pubDate: format_pub_date(challenge.updated_at),
       guid: ChallengeView.public_details_url(challenge)
     )
   end
@@ -59,7 +59,7 @@ defmodule Web.Public.SitemapView do
     ]
   end
 
-  defp formatPubdate(naive_datetime) do
+  defp format_pub_date(naive_datetime) do
     naive_datetime
     |> Timex.to_datetime()
     |> Timex.format!("{RFC822}")

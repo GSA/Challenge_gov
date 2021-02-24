@@ -144,7 +144,6 @@ defmodule Web.SavedChallengeControllerTest do
       assert length(saved_challenges) === 1
       assert conn.status === 302
 
-      # TODO: Find a way to use a route helper here
       assert get_flash(conn, :info) === [
                "Challenge saved. Click ",
                {:safe,
@@ -194,7 +193,7 @@ defmodule Web.SavedChallengeControllerTest do
       conn = post(conn, Routes.challenge_saved_challenge_path(conn, :create, challenge.id))
 
       saved_challenges = SavedChallenges.all(user)
-      assert length(saved_challenges) === 0
+      assert Enum.empty?(saved_challenges)
       assert conn.status === 302
       assert get_flash(conn, :error) === "There was an error saving this challenge"
       assert redirected_to(conn) == Routes.saved_challenge_path(conn, :index)

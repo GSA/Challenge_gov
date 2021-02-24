@@ -79,8 +79,8 @@ defmodule Web.ChallengeControllerTest do
       assert user === user_in_assigns
 
       assert challenge.id === challenge_in_assigns.id
-      assert length(events) === 0
-      assert length(supporting_documents) === 0
+      assert Enum.empty?(events)
+      assert Enum.empty?(supporting_documents)
 
       assert html_response(conn, 200) =~ "Challenge"
     end

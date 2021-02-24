@@ -1,0 +1,17 @@
+<%= for w <- @winners.winners do %>
+    <div class="grid-row">
+      <div class="grid-col flex-2">Place title:</div>
+      <div class="grid-col flex-2">Name:</div>
+    </div>
+    <div class="grid-row">
+      <div class="grid-col flex-2"><%= w.place_title %></div>
+      <div class="grid-col flex-2"><%= w.name %></div>
+    </div>
+    <div class="grid-row">
+      <%= if w.winner_img_url do %>      
+      <%= img_tag(Stein.Storage.url(w.winner_img_url, signed: [expires_in: 3600]), class: "winner-img-thumbnail") %>
+      <% else %>
+      <img class="winner-img" src="/images/account_icon.svg">
+      <% end %>
+    </div>
+    <% end %>

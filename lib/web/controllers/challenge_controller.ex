@@ -75,7 +75,6 @@ defmodule Web.ChallengeController do
     |> render("new.html")
   end
 
-  # TODO: Make an old "new" to keep access to old challenge form for now
   def new(conn, params) do
     %{current_user: user} = conn.assigns
 
@@ -130,7 +129,6 @@ defmodule Web.ChallengeController do
     end
   end
 
-  # TODO: Remove this old create
   def create(conn, %{"challenge" => params}) do
     %{current_user: user} = conn.assigns
 
@@ -178,7 +176,6 @@ defmodule Web.ChallengeController do
     end
   end
 
-  # TODO: Remove old edit
   def edit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
 
@@ -267,7 +264,6 @@ defmodule Web.ChallengeController do
     end
   end
 
-  # TODO: Remove old update
   def update(conn, %{"id" => id, "challenge" => params}) do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(id)

@@ -1,0 +1,34 @@
+<%= for w <- (inputs_for @f, :winners) do  %>
+    <% temp_id = String.to_atom(w.source.changes.temp_id) %>
+    <%= hidden_input w, :temp_id, value: w.source.changes.temp_id %>
+    <div class="grid-row">
+      <div class="winner grid-col flex-2">
+        
+        <div class="form-group">
+          <div><label>Place title (ex. First Place or Grand Winner) (optional)</label></div>
+          <%= text_input w, :place_title %>
+        </div>
+        
+        <div class="form-group">
+          <div><label>Name (optional)</label></div>
+          <%= text_input w, :name %>
+        </div>
+        
+        <div class="form-group">
+          <p><label class="control-label">Upload image (optional)</label></p>
+          <%= live_file_input(@uploads[temp_id]) %>
+          <%= for entry <- @uploads[temp_id].entries do %>
+              <div class="row">
+                <div class="column">
+                  <progress max="100" value="<%= entry.progress %>"/>
+                </div>
+              </div>
+           <% end %>   
+           <p class="mini">File must be smaller than 10mb</p>
+        </div>
+      </div>
+    <div class="grid-col flex-2 remove-winner-container">
+      <a href="#" phx-click="remove-winner" phx-value-remove="<%= temp_id %>" class="remove-winner">Remove</a>
+    </div>
+    </div>
+<% end %>
