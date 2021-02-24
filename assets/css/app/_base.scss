@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
+/* Challenge.gov core pallet */
+@import './core';
+
+
 body {
   font-family: 'Public Sans', sans-serif;
   background-color: #dedede;
@@ -22,7 +26,7 @@ body {
 
 .component-btn {
   color: #000;
-  background-color: #FA9441;
+  background-color: $orange-30v;
 }
 
 /* post sign-in screen: lib/web/templates/admin/terms/index.html.eex */
@@ -76,12 +80,24 @@ body {
 }
 
 .main-container .btn-primary {
-     background-color: #F2994A;
+     background-color: $orange-30v;
      width: 200px;
      height: 33px;
      border-radius: 4px;
      color: black;
      border: none;
+     padding: 5px;
+     text-align: center;
+}
+
+.main-container .btn-short {
+     width: 100px;
+     font-size: 15px;
+}
+
+.main-container #new-offline-submissions {
+     margin-top: 10px;
+     margin-bottom: 10px;
 }
 
 .btn-wrapper {

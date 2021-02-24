@@ -1,0 +1,13 @@
+<div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+  <%= link("View", to: Routes.solution_path(@conn, :show, @solution.id), class: "btn btn-default btn-xs mr-2") %>
+  <%= link("Edit", to: Routes.solution_path(@conn, :edit, @solution.id), class: "btn btn-default btn-xs mr-2") %>
+  <div class="btn-group btn-group-sm ml-2" role="group">
+    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      More options
+    </button>
+    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+      <a class="btn btn-link" href="#">Media</a>
+      <%= solution_delete_link(@conn, @solution, @user, label: "Delete", class: "btn btn-default btn-xs") %>
+    </div>
+  </div>
+</div>

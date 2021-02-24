@@ -87,6 +87,8 @@ defmodule ChallengeGov.Solutions do
     |> Repo.transaction()
     |> case do
       {:ok, %{solution: solution}} ->
+        solution = new_form_preload(solution)
+        if solution.manager_id, do: send_solution_review_email(user, phase, solution)
         {:ok, solution}
 
       {:error, _type, changeset, _changes} ->
@@ -174,8 +176,15 @@ defmodule ChallengeGov.Solutions do
     |> Mailer.deliver_later()
   end
 
+  defp send_solution_review_email(user, phase, solution) do
+    user
+    |> Emails.solution_review(phase, solution)
+    |> Mailer.deliver_later()
+  end
+
+  # allowed to edit?
   def allowed_to_edit?(user, solution) do
-    if solution.submitter_id === user.id do
+    if solution.submitter_id === user.id or solution.manager_id === user.id do
       {:ok, solution}
     else
       {:error, :not_permitted}
@@ -222,7 +231,9 @@ defmodule ChallengeGov.Solutions do
     end)
   end
 
-  defp attach_documents(multi, _params), do: multi
+  defp attach_documents(multi, params) do
+    multi
+  end
 
   defp attach_document({:ok, document}, solution) do
     SolutionDocuments.attach_to_solution(document, solution)
@@ -291,6 +302,16 @@ defmodule ChallengeGov.Solutions do
     })
   end
 
+  def get_all_with_user_id_and_manager(user) do
+    from(s in Solution,
+      where: s.submitter_id == ^user.id,
+      where: not is_nil(s.manager_id),
+      where: s.status == "draft",
+      select: s
+    )
+    |> Repo.all()
+  end
+
   # BOOKMARK: Filter functions
   @impl Stein.Filter
   def filter_on_attribute({"search", value}, query) do
@@ -353,6 +374,10 @@ defmodule ChallengeGov.Solutions do
 
   def filter_on_attribute({"judging_status", value}, query) do
     where(query, [s], s.judging_status == ^value)
+  end
+
+  def filter_on_attribute({"manager_id", value}, query) do
+    where(query, [s], s.manager_id == ^value)
   end
 
   def order_on_attribute(query, sort_columns)

@@ -91,7 +91,10 @@ defmodule Web.Router do
       resources("/bulletin", BulletinController, only: [:new, :create])
 
       resources("/phases", PhaseController, only: [:index, :show]) do
-        resources("/solutions", SolutionController, only: [:index, :show, :new, :create])
+        get("/solutions/managed", SolutionController, :managed_solutions, as: :managed_solution)
+
+        resources("/solutions", SolutionController, only: [:index, :show, :new, :create]) do
+        end
       end
 
       resources("/solutions", SolutionController, only: [:index, :new, :create])

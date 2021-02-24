@@ -1,6 +1,11 @@
 <section>
   <small class="d-block pl-2 mb-2">Required<span class="required">*</span></small>
   <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
+  
+  <%= if @user.role == "admin" do
+  FormView.text_field(f, :solver_addr, label: "Email address of solver", required: true)
+  end %>
+  
     <%= FormView.text_field(f, :title, label: "Title", required: true) %>
     <%= FormView.textarea_field(f, :brief_description, label: "Brief description", required: true, limit: 500) %>
     <%= FormView.textarea_field(f, :description, label: "Description", required: true) %>

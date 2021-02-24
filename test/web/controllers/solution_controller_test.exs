@@ -237,8 +237,14 @@ defmodule Web.SolutionControllerTest do
       %{current_user: user} = conn.assigns
 
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = challenge.phases |> Enum.at(0)
 
-      conn = get(conn, Routes.challenge_solution_path(conn, :new, challenge.id))
+      params = %{
+        "challenge_id" => challenge.id,
+        "phase_id" => phase.id
+      }
+
+      conn = get(conn, Routes.challenge_solution_path(conn, :new, challenge.id), params)
 
       %{changeset: changeset} = conn.assigns
 
@@ -252,12 +258,15 @@ defmodule Web.SolutionControllerTest do
       %{current_user: user} = conn.assigns
 
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = challenge.phases |> Enum.at(0)
 
       params = %{
         "action" => "draft",
         "solution" => %{
           "title" => "Test title"
-        }
+        },
+        "challenge_id" => challenge.id,
+        "phase_id" => phase.id
       }
 
       conn = post(conn, Routes.challenge_solution_path(conn, :create, challenge.id), params)
@@ -271,6 +280,7 @@ defmodule Web.SolutionControllerTest do
       %{current_user: user} = conn.assigns
 
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = challenge.phases |> Enum.at(0)
 
       params = %{
         "action" => "review",
@@ -279,7 +289,9 @@ defmodule Web.SolutionControllerTest do
           "brief_description" => "Test brief description",
           "description" => "Test description",
           "external_url" => "Test external url"
-        }
+        },
+        "challenge_id" => challenge.id,
+        "phase_id" => phase.id
       }
 
       conn = post(conn, Routes.challenge_solution_path(conn, :create, challenge.id), params)
@@ -293,10 +305,13 @@ defmodule Web.SolutionControllerTest do
       %{current_user: user} = conn.assigns
 
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = challenge.phases |> Enum.at(0)
 
       params = %{
         "action" => "review",
-        "solution" => %{}
+        "solution" => %{},
+        "challenge_id" => challenge.id,
+        "phase_id" => phase.id
       }
 
       conn = post(conn, Routes.challenge_solution_path(conn, :create, challenge.id), params)

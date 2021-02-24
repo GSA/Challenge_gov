@@ -61,24 +61,35 @@
               <div class="col"><%= status_display_name(@solution) %></div>
             </div>
 
-            <%= if Challenges.allowed_to_edit?(@user, @challenge) do %>
+            <%= if @solution.manager_id == @user.id do %>
               <div class="form-group">
                 <label class="col"><strong>Contact email:</strong></label>
                 <div class="col"><%= SharedView.mailto_link(@solution.submitter.email) %></div>
               </div>
-
+            <% end %>
               <div class="form-group">
                 <label class="col"><strong>Last updated date:</strong></label>
                 <div class="col"><%= SharedView.local_datetime_tag(@solution.updated_at) %></div>
               </div>
-            <% end %>
-
-            <%= if !Challenges.allowed_to_edit?(@user, @challenge) do %>
-              <%= if @solution.status !== "submitted" do %>
-                <%= link("Submit", to: Routes.solution_path(@conn, :submit, @solution.id), method: :put, class: "btn btn-primary float-right") %>
+              <%= if @solution.submitter.id == @user.id do %>
+              <div class="form-group">
+                <div class="col">
+                  <input type="checkbox" id="solution-rules-read" name="solution[terms]" value="true">I have read the <%= link("rules", to: Routes.challenge_path(@conn, :show, @solution.challenge.id)) %> of this challenge.
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col">
+                  <input type="checkbox" id="solution-review-verified" name="solution[review]" value="true"> I have reviewed the solution and verify it is accurate.
+                </div>
+              </div>
               <% end %>
-              <%= link("Edit", to: Routes.solution_path(@conn, :edit, @solution.id), class: "btn btn-link float-right") %>
-            <% end %>
+
+            <%= if @solution.submitter.id == @user.id or @solution.manager_id == @user.id  do %>
+            <%= link("Edit", to: Routes.solution_path(@conn, :edit, @solution.id), class: "btn btn-link float-right") %>
+              <%= if @solution.status !== "submitted" do %>
+              <%= link("Submit", to: Routes.solution_path(@conn, :submit, @solution.id), method: :put, class: "btn btn-primary float-right") %>
+              <% end %>
+              <% end %>              
           </section>
         </div>
       </div>

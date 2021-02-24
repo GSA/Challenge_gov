@@ -3,9 +3,18 @@ defmodule Web.Api.SolutionDocumentController do
 
   alias ChallengeGov.SolutionDocuments
   alias Web.ErrorView
+  alias ChallengeGov.Accounts
 
-  def create(conn, %{"document" => params}) do
-    %{current_user: user} = conn.assigns
+  def create(conn, all_params = %{"document" => params, "solver_email" => solver_email}) do
+    user =
+      case solver_email do
+        "undefined" ->
+          conn.assigns.current_user
+
+        _ ->
+          {:ok, user} = Accounts.get_by_email(solver_email)
+          user
+      end
 
     case SolutionDocuments.upload(user, params) do
       {:ok, document} ->

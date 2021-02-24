@@ -1,0 +1,64 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item"><%= link("Challenges", to: Routes.challenge_path(@conn, :index)) %></li>
+          <li class="breadcrumb-item"><%= link(@challenge.title, to: Routes.challenge_path(@conn, :show, @challenge.id)) %></li>
+          <%= if length(@challenge.phases) > 1 do %>
+            <li class="breadcrumb-item"><%= link("Phases", to: Routes.challenge_phase_path(@conn, :index, @challenge.id)) %></li>
+            <li class="breadcrumb-item active"><%= @phase.title %></li>
+          <% else %>
+            <li class="breadcrumb-item"><%= link("Submissions", to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id)) %></li>
+          <% end %>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="content main-container">
+  <div class="container-fluid">
+
+    <h1>Manage offline submissions for <%= @challenge.title %></h1>
+    <div class="row" id="new-offline-submissions"> 
+      <%= link("new offline submission", to: Routes.challenge_phase_solution_path(@conn, :new, @challenge.id, @phase.id), class: "btn-primary") %>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <%= sortable_header(@conn, @sort, @filter, "id", "ID") %>
+                  <%= sortable_header(@conn, @sort, @filter, "title", "Name") %>
+                  <%= sortable_header(@conn, @sort, @filter, "last-updated", "Last update") %>
+                  <%= sortable_header(@conn, @sort, @filter, "status", "Status") %>                  
+                  <%= sortable_header(@conn, @sort, @filter, "accepted_by_solver", "Accepted By Solver") %>
+                  <th>Actions</th>
+              </thead>
+
+              <tbody>
+                <%= Enum.map @solutions, fn (solution) -> %>
+                <tr>
+                    <td><%= solution.id %></td>
+                    <td><%= name_link(@conn, solution) %></td>
+                    <td><%= link(solution.challenge.title, to: Routes.challenge_path(@conn, :show, solution.challenge.id)) %></td>
+                    <td><%= status_display_name(solution) %></td>
+                    <td>false</td>
+                    <td>
+                      <%= render Web.SolutionView, "_actions.html", conn: @conn, challenge: @challenge, user: @user, solution: solution %>
+                </tr>
+                <% end %>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

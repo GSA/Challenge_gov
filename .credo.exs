@@ -179,7 +179,6 @@
         # CredoEnvVar checks
         #
         # {CredoEnvvar.Check.Warning.EnvironmentVariablesAtCompileTime, []},
-
         #
         # CredoNaming checks
         #
