@@ -161,6 +161,7 @@ defmodule Web.SolutionController do
       ) do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
+
     conn =
       conn
       |> assign(:phase_id, phase_id)
@@ -169,8 +170,8 @@ defmodule Web.SolutionController do
          {:ok, solution} <- Solutions.create_draft(solution_params, user, challenge, phase) do
       conn =
         conn
-      |> assign(:phase_id, phase.id)
-      
+        |> assign(:phase_id, phase.id)
+
       conn
       |> put_flash(:info, "Solution saved as draft")
       |> redirect(to: Routes.solution_path(conn, :edit, solution.id))
@@ -195,10 +196,11 @@ defmodule Web.SolutionController do
         }
       ) do
     %{current_user: user} = conn.assigns
+
     conn =
       conn
       |> assign(:phase_id, phase_id)
-    
+
     {:ok, challenge} = Challenges.get(challenge_id)
 
     {solver, phase, solution_params} =

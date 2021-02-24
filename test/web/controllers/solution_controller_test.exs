@@ -280,7 +280,7 @@ defmodule Web.SolutionControllerTest do
       %{current_user: user} = conn.assigns
 
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-      phase = challenge.phases |> Enum.at(0)      
+      phase = challenge.phases |> Enum.at(0)
 
       params = %{
         "action" => "review",
@@ -311,7 +311,7 @@ defmodule Web.SolutionControllerTest do
         "action" => "review",
         "solution" => %{},
         "challenge_id" => challenge.id,
-        "phase_id" => phase.id,
+        "phase_id" => phase.id
       }
 
       conn = post(conn, Routes.challenge_solution_path(conn, :create, challenge.id), params)
