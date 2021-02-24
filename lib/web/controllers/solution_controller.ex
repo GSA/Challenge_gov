@@ -204,44 +204,44 @@ defmodule Web.SolutionController do
 
     {solver, phase, solution_params} =
       if user.role == "admin" do
-          solution_params =
-            Map.merge(solution_params, %{"manager_id" => user.id, "terms_accepted" => false})
+        solution_params =
+          Map.merge(solution_params, %{"manager_id" => user.id, "terms_accepted" => false})
 
-          solver =
-            case Accounts.get_by_email(solution_params["solver_addr"]) do
-              {:ok, solver} ->
-                solver
+        solver =
+          case Accounts.get_by_email(solution_params["solver_addr"]) do
+            {:ok, solver} ->
+              solver
 
-              {:error, :not_found} ->
-                conn
-                |> put_flash(:error, "That user is not found")
-                |> redirect(to: Routes.dashboard_path(conn, :index))
-            end
+            {:error, :not_found} ->
+              conn
+              |> put_flash(:error, "That user is not found")
+              |> redirect(to: Routes.dashboard_path(conn, :index))
+          end
 
-          {:ok, phase} = Phases.get(phase_id)
-          {solver, phase, solution_params}
+        {:ok, phase} = Phases.get(phase_id)
+        {solver, phase, solution_params}
+      else
+        solver = user
 
-        else
-          solver = user
+        phase =
+          case Challenges.current_phase(challenge) do
+            {:ok, phase} ->
+              phase
 
-          phase =
-            case Challenges.current_phase(challenge) do
-              {:ok, phase} ->
-                phase
+            {:error, :no_current_phase} ->
+              conn
+              |> put_flash(:error, "No current phase found")
+              |> redirect(to: Routes.dashboard_path(conn, :index))
+          end
 
-              {:error, :no_current_phase} ->
-                conn
-                |> put_flash(:error, "No current phase found")
-                |> redirect(to: Routes.dashboard_path(conn, :index))
-            end
-
-          {solver, phase, solution_params}
+        {solver, phase, solution_params}
       end
 
     case Solutions.create_review(solution_params, solver, challenge, phase) do
       {:ok, solution} ->
-      conn
-      |> redirect(to: Routes.solution_path(conn, :show, solution.id))
+        conn
+        |> redirect(to: Routes.solution_path(conn, :show, solution.id))
+
       {:error, changeset} ->
         create_error(conn, changeset, user, challenge)
     end
