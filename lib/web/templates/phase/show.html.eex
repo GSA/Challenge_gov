@@ -19,7 +19,6 @@
         </ol>
       </div>
     </div>
-
     <div class="row mb-3">
       <div class="col">
         <%= if length(@challenge.phases) > 1 do %>
@@ -56,5 +55,6 @@
     </div>
   <% end %>
 </div>
-
+<div class="main-container">
 <%= render Web.PhaseView, "solution_table/_table.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, solutions: @solutions, pagination: @pagination, sort: @sort, filter: @filter %>
+</div>

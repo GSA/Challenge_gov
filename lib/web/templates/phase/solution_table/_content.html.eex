@@ -1,4 +1,4 @@
-<tbody>
+<tbody class="main-container">
   <%= Enum.map @solutions, fn (solution) -> %>
     <tr>
       <td><%= solution.id %></td>

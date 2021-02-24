@@ -21,11 +21,13 @@
     </div>
   </div>
 </div>
-<section class="content">
+<section class="content main-container">
   <div class="container-fluid">
+
     <h1>Manage offline submissions for <%= @challenge.title %></h1>
-    <%= link("new offline submission", to: Routes.challenge_phase_solution_path(@conn, :new, @challenge.id, @phase.id)) %>
-    <a href="New offline</btn>
+    <div class="row" id="new-offline-submissions"> 
+      <%= link("new offline submission", to: Routes.challenge_phase_solution_path(@conn, :new, @challenge.id, @phase.id), class: "btn-primary") %>
+    </div>
     <div class="row">
       <div class="col-md-12">
         <div class="card">

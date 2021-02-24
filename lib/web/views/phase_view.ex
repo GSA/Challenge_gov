@@ -154,9 +154,9 @@ defmodule Web.PhaseView do
     Map.merge(
       map,
       %{
-        text: "Add",
+        text: "+ Add",
         route: get_judging_status_route(conn, solution, "winner", filter),
-        class: map.class <> "btn-primary"
+        class: map.class <> "btn-primary btn-short"
       }
     )
   end
@@ -176,9 +176,9 @@ defmodule Web.PhaseView do
     Map.merge(
       map,
       %{
-        text: "Add",
+        text: "+ Add",
         route: get_judging_status_route(conn, solution, "selected", filter),
-        class: map.class <> "btn-primary"
+        class: map.class <> "btn-primary btn-short"
       }
     )
   end
