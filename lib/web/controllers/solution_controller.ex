@@ -27,6 +27,7 @@ defmodule Web.SolutionController do
     Web.Plugs.EnsureRole,
     [:admin, :super_admin, :solver] when action in [:new, :submit, :create]
   )
+
   plug(
     Web.Plugs.EnsureRole,
     [:admin, :super_admin] when action in [:managed_solutions]
