@@ -1,4 +1,7 @@
-<%= FormView.textarea_field(@f, :overview, label: "Winners description (optional)", id: "winners-overview-box", class: "winners-overview-box") %>
+<div class="col">
+  <label>Winners description (optional)</label>
+  <%= FormView.rt_textarea_field(@f, :overview) %>
+</div>
 <p>Upload image (optional)</p>
 <%= live_file_input(@uploads.winner_overview_img) %>
 <%= for entry <- @uploads.winner_overview_img.entries do %>
