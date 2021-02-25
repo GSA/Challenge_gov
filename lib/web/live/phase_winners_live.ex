@@ -42,7 +42,7 @@ defmodule Web.PhaseWinnersLive do
 
   defp assign_status_specific(socket, nil) do
     # if winner already exists, phase redirect is the answer
-    changeset = Winner.changeset(%Winner{}, %{"winners" => []})
+    changeset = Winner.changeset(%Winner{}, %{"winners" => [], "overview" => ""})
 
     changeset =
       changeset
@@ -150,6 +150,15 @@ defmodule Web.PhaseWinnersLive do
   end
 
   def handle_event("submit", params, socket) do
+    update_params =
+      case params["winner"] do
+        nil ->
+          %{}
+
+        w ->
+          for {key, val} <- w, into: %{}, do: {String.to_atom(key), val}
+      end
+
     updated_winners =
       for w <- Map.get(socket.assigns.changeset.changes, :winners, []),
           res = consume_upload_and_generate_url(socket, String.to_atom(w.changes.temp_id)) do
@@ -176,6 +185,7 @@ defmodule Web.PhaseWinnersLive do
 
     changeset =
       changeset
+      |> Ecto.Changeset.change(update_params)
       |> Ecto.Changeset.put_change(:status, "review")
       |> Ecto.Changeset.put_change(:phase_id, socket.assigns.phase.id)
       |> Ecto.Changeset.put_embed(:winners, updated_winners)
