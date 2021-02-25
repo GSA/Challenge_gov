@@ -25,6 +25,7 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
     field(:uuid, Ecto.UUID, autogenerate: true)
     field(:status, :string)
     field(:overview, :string)
+    field(:overview_delta, :string)
 
     # Images
     field(:winner_overview_img_url, :string)
@@ -38,6 +39,7 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
     |> cast(params, [
       :status,
       :overview,
+      :overview_delta,
       :winner_overview_img_url,
       :phase_id
     ])
