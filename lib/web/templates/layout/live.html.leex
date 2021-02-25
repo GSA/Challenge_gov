@@ -100,7 +100,17 @@
           <% end %>
         </aside>
 
-      <div class="content-wrapper">
+        <div class="content-wrapper">
+          <%= if live_flash(@flash, :success) do %>
+          <div class="content-header">
+            <div class="container-fluid">
+              <div class="callout callout-success">
+                <i class="fa fa-check-circle"></i> <%= live_flash(@flash, :success) %>
+              </div>
+            </div>
+          </div>
+          <% end %>
+
         <%= if live_flash(@flash, :info) do %>
           <div class="content-header">
             <div class="container-fluid">
@@ -109,7 +119,7 @@
               </div>
             </div>
           </div>
-        <% end %>
+          <% end %>
 
         <%= if live_flash(@flash, :error) do %>
           <div class="content-header">
