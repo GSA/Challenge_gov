@@ -223,8 +223,8 @@ defmodule Web.PhaseWinnersLive do
 
     socket =
       socket
-      |> assign(:action, :publish)
-      |> put_flash(:info, "Winners updated successfully.")
+      |> assign(:action, :published)
+      |> put_flash(:success, "Winners updated successfully.")
 
     {:noreply, socket}
   end
