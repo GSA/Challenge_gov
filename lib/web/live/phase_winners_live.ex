@@ -131,6 +131,10 @@ defmodule Web.PhaseWinnersLive do
     {:noreply, socket}
   end
 
+  def handle_event("delete-draft", params, socket) do
+    {:noreply, socket}
+  end
+
   def handle_event("remove-winner", _params = %{"remove" => temp_id}, socket) do
     winners =
       socket.assigns.changeset.changes.winners
