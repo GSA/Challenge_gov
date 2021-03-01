@@ -147,6 +147,14 @@ body {
   overflow: auto;
 }
 
+.winner-edit-btn {
+  margin-left: 500px;
+}
+
+#disabled-edit-primary {
+  background-color: transparent;
+  border: 1px solid;
+}
 
 .card.winner-manage {
   max-width: 300px;
