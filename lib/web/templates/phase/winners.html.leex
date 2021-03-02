@@ -2,7 +2,7 @@
   <%= case @action do %>
   <% :draft -> %>
   <%= render Web.ChallengeView, "_breadcrumb.html", challenge: @challenge, winners: true %>
-  <% _ -> %>  
+  <% _ -> %>
   <div></div>
   <% true -> %>
   <% end %>
