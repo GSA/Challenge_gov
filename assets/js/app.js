@@ -32,7 +32,14 @@ import "./shared/index.js";
 import {Socket} from "phoenix";
 import LiveSocket from "phoenix_live_view";
 
+let Hooks = {};
+Hooks.WYSIWYG = {
+    mounted() {
+        location.reload();
+    }
+}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-const liveSocket = new LiveSocket("/live", Socket, {params: { _csrf_token: csrfToken}});
+const liveSocket = new LiveSocket("/live", Socket, {params: { _csrf_token: csrfToken}, hooks: Hooks});
 liveSocket.connect();
 window.liveSocket = liveSocket;
