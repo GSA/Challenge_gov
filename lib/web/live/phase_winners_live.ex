@@ -48,9 +48,6 @@ defmodule Web.PhaseWinnersLive do
       changeset
       |> Ecto.Changeset.put_embed(:winners, [])
 
-    IO.inspect("embed...")
-    IO.inspect(changeset)
-
     socket
     |> assign(:changeset, changeset)
     |> assign(:action, :draft)
@@ -99,9 +96,6 @@ defmodule Web.PhaseWinnersLive do
   def handle_event("add-winner", params, socket) do
     temp_id = get_temp_id()
     winners = add_phase_winner(socket, temp_id)
-
-    IO.inspect("winners...")
-    IO.inspect(winners)
 
     changeset =
       socket.assigns.changeset
