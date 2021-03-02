@@ -230,6 +230,7 @@ defmodule Web.FormView do
   """
   def rt_textarea_field(form, field, opts \\ []) do
     opts = Keyword.merge([class: form_group_classes(form, field)], opts)
+
     content_tag(:div, opts) do
       [
         content_tag(:div, "",
