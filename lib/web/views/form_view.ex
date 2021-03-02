@@ -228,8 +228,9 @@ defmodule Web.FormView do
   @doc """
   Generate a textarea field, styled properly. Adds rich text support
   """
-  def rt_textarea_field(form, field, _opts \\ []) do
-    content_tag(:div, class: form_group_classes(form, field), phx_update: "ignore", phx_hook: "WYSIWYG") do
+  def rt_textarea_field(form, field, opts \\ []) do
+    opts = Keyword.merge([class: form_group_classes(form, field)], opts)
+    content_tag(:div, opts) do
       [
         content_tag(:div, "",
           class: "rt-textarea",

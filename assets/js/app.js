@@ -35,7 +35,22 @@ import LiveSocket from "phoenix_live_view";
 let Hooks = {};
 Hooks.WYSIWYG = {
     mounted() {
-        location.reload();
+        import('./app/_rich_text_editor.js').then(rte => {
+            console.log("imported rte, should work now...");
+            console.log("rte?");
+            console.log(rte);
+
+            console.log("each rt-textarea...");
+            console.log("this.el");
+            console.log(this.el);
+            
+            let quill = new Quill(this.el, {
+                theme: 'snow',
+                placeholder: "Enter text...",
+            })
+
+            console.log("right track?");
+        })
     }
 }
 
