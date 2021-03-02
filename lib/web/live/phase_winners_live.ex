@@ -132,7 +132,18 @@ defmodule Web.PhaseWinnersLive do
   end
 
   def handle_event("delete-draft", params, socket) do
-    {:noreply, socket}
+    Repo.delete!(socket.assigns.winners)
+
+    {:noreply,
+     push_redirect(socket,
+       to:
+         Routes.live_path(
+           Web.Endpoint,
+           Web.WinnersLive,
+           socket.assigns.challenge.id
+         ),
+       replace: true
+     )}
   end
 
   def handle_event("remove-winner", _params = %{"remove" => temp_id}, socket) do
