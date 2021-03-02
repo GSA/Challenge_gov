@@ -30,7 +30,6 @@ defmodule ChallengeGov.Challenges.Phases.Winner do
     # Images
     field(:winner_overview_img_url, :string)
 
-    # field :winners, {:array, :map}
     embeds_many :winners, __MODULE__.SingleWinner
   end
 

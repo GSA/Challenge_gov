@@ -165,13 +165,13 @@ defmodule Web.PhaseWinnersLive do
   end
 
   def handle_event("submit", params, socket) do
-    update_params =
+    {overview, overview_delta} =
       case params["winner"] do
         nil ->
-          %{}
+          {nil, nil}
 
         w ->
-          for {key, val} <- w, into: %{}, do: {String.to_atom(key), val}
+          {w["overview"], w["overview_delta"]}
       end
 
     updated_winners =
@@ -200,7 +200,8 @@ defmodule Web.PhaseWinnersLive do
 
     changeset =
       changeset
-      |> Ecto.Changeset.change(update_params)
+      |> Ecto.Changeset.put_change(:overview, overview)
+      |> Ecto.Changeset.put_change(:overview_delta, overview_delta)
       |> Ecto.Changeset.put_change(:status, "review")
       |> Ecto.Changeset.put_change(:phase_id, socket.assigns.phase.id)
       |> Ecto.Changeset.put_embed(:winners, updated_winners)
@@ -212,10 +213,9 @@ defmodule Web.PhaseWinnersLive do
        to:
          Routes.live_path(
            Web.Endpoint,
-           Web.ShowPhaseWinnersLive,
+           Web.PhaseWinnersLive,
            socket.assigns.challenge.id,
-           socket.assigns.phase.id,
-           winners_persisted.id
+           socket.assigns.phase.id
          ),
        replace: true
      )}
