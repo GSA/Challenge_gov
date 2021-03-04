@@ -250,6 +250,18 @@ defmodule Web.SolutionControllerTest do
 
       assert changeset
     end
+
+    test "success: viewing the new solution form as admin", %{conn: conn} do
+      assert false == "GSA admin can view new solution form"
+    end
+
+    test "GSA admin cannot submit a solution on behalf of a user with no email", %{conn: conn} do
+      assert false == "flash notifies admin that user does not exist"
+    end
+
+    test "GSA admin can successffully submit a solution on behalf of an existing user", %{conn: conn} do
+      assert false == "GSA admin submission is successful"
+    end
   end
 
   describe "create action" do
