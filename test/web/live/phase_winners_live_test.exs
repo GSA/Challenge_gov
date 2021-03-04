@@ -1,5 +1,16 @@
 defmodule Web.PhaseWinnersLiveTest do
+  import Plug.Conn
+  import Phoenix.ConnTest
+  import Phoenix.LiveViewTest
   use Web.ConnCase
+
+  @endpoint Web.Endpoint
+
+  describe "mount" do
+    test "disconnected and connected mount", %{conn: conn} do
+      # get path...
+    end
+  end
 
   describe "uploading winner images" do
     test "winner file upload works" do
@@ -27,5 +38,9 @@ defmodule Web.PhaseWinnersLiveTest do
     test "confirmation banner when published" do
       assert true == false
     end
+  end
+
+  describe "phase winners only chooseable after phase concludes" do
+
   end
 end
