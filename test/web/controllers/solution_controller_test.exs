@@ -880,7 +880,7 @@ defmodule Web.SolutionControllerTest do
     end
   end
 
-  describe "managed solutions" do
+  describe "managed solutions for challenge" do
     test "when GSA admin manages solutions, only the managed solutions are visible" do
       assert false == true
     end
