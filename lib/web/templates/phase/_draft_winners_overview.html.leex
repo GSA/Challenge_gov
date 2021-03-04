@@ -1,6 +1,6 @@
 <div class="col">
   <label>Winners description (optional)</label>
-  <%= FormView.rt_textarea_field(@f, :overview) %>
+  <%= FormView.rt_textarea_field(@f, :overview, phx_update: "ignore", phx_hook: "WYSIWYG", id: "#winner-overview-wysiwyg") %>
 </div>
 <p>Upload image (optional)</p>
 <%= live_file_input(@uploads.winner_overview_img) %>

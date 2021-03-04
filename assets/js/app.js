@@ -32,7 +32,21 @@ import "./shared/index.js";
 import {Socket} from "phoenix";
 import LiveSocket from "phoenix_live_view";
 
+let Hooks = {};
+Hooks.WYSIWYG = {
+    mounted() {
+        /* note: this is a quick fix because
+           sometimes the _rich_textarea form
+           loads before the associated DOM element
+           is rendered. This forces reload of the page
+           in this case. */
+        if (this.el.clientHeight == 0) {
+            location.reload();
+        }
+    }
+}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-const liveSocket = new LiveSocket("/live", Socket, {params: { _csrf_token: csrfToken}});
+const liveSocket = new LiveSocket("/live", Socket, {params: { _csrf_token: csrfToken}, hooks: Hooks});
 liveSocket.connect();
 window.liveSocket = liveSocket;

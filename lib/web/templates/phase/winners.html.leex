@@ -2,13 +2,23 @@
   <%= case @action do %>
   <% :draft -> %>
   <%= render Web.ChallengeView, "_breadcrumb.html", challenge: @challenge, winners: true %>
-  <% _ -> %>  
+  <% _ -> %>
   <div></div>
   <% true -> %>
   <% end %>
 </div>
 <div class="main-container phase-winners">
   <%= render Web.PhaseView, "_winner_header.html", phase: @phase, challenge: @challenge, text: @text %>
+  <%= case @action do %>
+  <% :published -> %>
+  <div class="winner-edit-btn row winner-options">
+    <div class="col-md-1">
+      <a id="disabled-edit-primary" class="disabled btn btn-primary disabled-primary"> Edit</a>
+    </div>
+  </div>
+  <% _ -> %>
+  <% end %>
+  
   <div class="winners-overview">
     <h2>Winners overview</h2>
     <%= case @action do %>
@@ -57,7 +67,7 @@
     <%= link("back", to: "#", class: "disabled btn") %>
   </div>
   <div class="col-md-1 cancel-winner">
-    <%= link("Cancel", to: Routes.live_path(Web.Endpoint, Web.WinnersLive, @challenge.id)) %>
+    <%= link("Cancel", to: "#", phx_click: "delete-draft") %>
   </div>
   <div class="col-md-1">
     <a class="disabled btn">Preview</a>
@@ -65,11 +75,6 @@
   </div>
 </div>
 <% :published -> %>
-<div class="row winner-options">
-  <div class="col-md-1">
-    <a class="disabled btn"> Edit</a>
-  </div>
-</div>
 <% end %>
 </div>
 </div>
