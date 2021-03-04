@@ -880,6 +880,12 @@ defmodule Web.SolutionControllerTest do
     end
   end
 
+  describe "managed solutions" do
+    test "when GSA admin manages solutions, only the managed solutions are visible" do
+      assert false == true
+    end
+  end
+
   defp prep_conn(conn) do
     user = AccountHelpers.create_user()
     assign(conn, :current_user, user)
