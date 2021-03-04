@@ -18,7 +18,7 @@ defmodule Web.PhaseWinnersLiveTest do
       assert true == false
     end
 
-    test "multiple winner img disallowed" do
+    test "multiple winner images disallowed" do
       assert true == false
     end
   end
