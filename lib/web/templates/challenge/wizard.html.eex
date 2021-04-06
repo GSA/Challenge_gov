@@ -68,6 +68,7 @@
                 <%= if @section != "general" do %>
                   <%= back_button(@conn, @changeset.data, @section) %>
                 <% end %>
+                <%= save_and_return_to_review_button(@conn, @challenge) %>
                 <%= submit_button(@section) %>
                 <%= preview_challenge_button(@conn, @challenge, @section) %>
                 <%= save_draft_button(@section) %>

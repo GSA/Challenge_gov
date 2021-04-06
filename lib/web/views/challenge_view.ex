@@ -438,6 +438,10 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def save_and_return_to_review_button(conn, challenge) do
+    submit("Save and return to review", name: "action", value: "return_to_review", class: "usa-button")
+  end
+
   def save_draft_button(section) do
     if section != Enum.at(Challenges.sections(), -1).id do
       submit("Save Draft",

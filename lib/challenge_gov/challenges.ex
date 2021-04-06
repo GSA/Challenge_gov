@@ -970,13 +970,17 @@ defmodule ChallengeGov.Challenges do
     Accounts.has_admin_access?(user) and is_unpublishable?(challenge)
   end
 
+  def edit_with_wizard?(challenge) do
+    challenge.status != "gsa_review"
+  end
+
   def is_editable?(_challenge) do
     true
   end
 
   def is_editable?(challenge, user) do
     (is_challenge_owner?(user, challenge) or Accounts.has_admin_access?(user)) and
-      is_editable?(challenge)
+    edit_with_wizard?(challenge)
   end
 
   # BOOKMARK: Status altering functions
