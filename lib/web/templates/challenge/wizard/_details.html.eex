@@ -135,7 +135,10 @@
   Please allow up to one business day for approval and publishing of your content
 </p>
 
-<label class="control-label col-md-4">Schedule a publish date and time*</label>
+<label class="control-label col-md-4">
+  Schedule a publish date and time
+  <span class="required">*</span>
+</label>
 <div class="col">
   <div class="<%= FormView.form_group_classes(@form, :auto_publish_date) %>">
     <%= datetime_local_input(@form, :auto_publish_date, label: "Publish date", 

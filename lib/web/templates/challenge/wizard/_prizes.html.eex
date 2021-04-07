@@ -3,7 +3,7 @@
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 
 <div class="col pl-2 js-prize-detail-toggle">
-  <p>Select prize award *</p>
+  <p>Select prize award <span class="required">*</span></p>
   <div>
     <%= radio_button(@form, :prize_type, "monetary", class: "mr-2", required: true) %>
     <label for="challenge_prize_type_monetary">Cash prize</label>
@@ -20,10 +20,10 @@
 <br/>
 
 <div class="js-prize-total collapse">
-  <%= FormView.text_field(@form, :prize_total, label: "Total cash prizes offered *") %>
+  <%= FormView.text_field(@form, :prize_total, label: "Total cash prizes offered", required: true) %>
 </div>
 <div class="js-non-monetary-prize collapse">
-  <%= FormView.text_field(@form, :non_monetary_prizes, label: "Non-monetary prize award *") %>
+  <%= FormView.text_field(@form, :non_monetary_prizes, label: "Non-monetary prize award", required: true) %>
 </div>
 
 <div class="col">

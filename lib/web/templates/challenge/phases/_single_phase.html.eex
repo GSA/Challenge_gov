@@ -46,7 +46,7 @@
     <div class="col">
       <div class="form-group nested-form-group">
         <div class="form-group">
-          <label for="challenge_phases_0_start_date">Phase 1 submission start date and time *</label>
+          <label for="challenge_phases_0_start_date">Phase 1 submission start date and time</label><span class="required">*</span>
           <input class="form-control js-datetime-input" id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="datetime-local" required="true">
           <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">              
         </div>

@@ -23,7 +23,7 @@ defmodule Web.FormView do
     case Keyword.get(opts, :required, false) do
       true ->
         label(form, field, class: "col") do
-          [text, content_tag(:span, "*", class: "required")]
+          [text, content_tag(:span, " *", class: "required")]
         end
 
       false ->

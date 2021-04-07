@@ -10,8 +10,8 @@
     "fs": false
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/preset-react": "^7.8.3",
+    "@babel/plugin-proposal-class-properties": "^7.8.7",
+    "@babel/preset-react": "^7.8.7",
     "@fortawesome/fontawesome-free": "^5.12.1",
     "admin-lte": "^3.0",
     "axios": "^0.19.2",
