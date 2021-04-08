@@ -20,7 +20,7 @@
 <br/>
 
 <div class="js-prize-total collapse">
-  <%= FormView.text_field(@form, :prize_total, label: "Total cash prizes offered", required: true) %>
+  <%= FormView.currency_field(@form, :prize_total, label: "Total cash prizes offered", required: true) %>
 </div>
 <div class="js-non-monetary-prize collapse">
   <%= FormView.text_field(@form, :non_monetary_prizes, label: "Non-monetary prize award", required: true) %>

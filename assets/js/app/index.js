@@ -1,5 +1,6 @@
 import "./_challenge_type_select.js";
 import "./_character_limit.js";
+import "./_currency_input.js";
 import "./_custom_select.js";
 import "./_custom_url_generator.js";
 import "./_date_conversion.js";

@@ -128,7 +128,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   #   - (2a) GSA Admin approves the challenge (waiting to be published according to date specified)- Approved
   #   - (2b) GSA Admin requests edits from Challenge Owner (i.e. date is wrong)- Edits Requested**
   # - Challenge Owner updates the edits and re-submit to GSA Admin - GSA Review
-  # - Challenge goes Live - Published 
+  # - Challenge goes Live - Published
   # - Challenge is archived - Archived
   # - Published status but updating Winners & FAQ and submitted to GSA Admin - GSA Review
   # - Challenge Owner updates an Archived challenge posting - goes to "GSA Review" -> GSA Admin approves -> status back to Archived
@@ -290,7 +290,6 @@ defmodule ChallengeGov.Challenges.Challenge do
       :phase_descriptions,
       :phase_dates,
       :judging_criteria,
-      :prize_total,
       :non_monetary_prizes,
       :prize_description,
       :prize_description_delta,
@@ -475,6 +474,22 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_prizes(params)
     |> force_change(:prize_description, fetch_field!(struct, :prize_description))
     |> validate_length(:prize_description, max: 1500)
+  end
+
+  def parse_currency(struct, %{"prize_total" => prize_total}) do
+    case Money.parse(prize_total, :USD) do
+      {:ok, money} ->
+        case money.amount <= 0 do
+          true ->
+            add_error(struct, :prize_total, "must be more than $0")
+
+          false ->
+            put_change(struct, :prize_total, money.amount)
+        end
+
+      :error ->
+        add_error(struct, :prize_total, "Invalid currency formatting")
+    end
   end
 
   def rules_changeset(struct, params) do
@@ -973,19 +988,23 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   defp validate_terms_draft(struct, _params), do: struct
 
-  defp validate_prizes(struct, %{"prize_type" => "monetary"}) do
-    validate_required(struct, [:prize_total])
+  defp validate_prizes(struct, params = %{"prize_type" => "monetary"}) do
+    struct
+    |> validate_required([:prize_total])
+    |> parse_currency(params)
   end
 
   defp validate_prizes(struct, %{"prize_type" => "non_monetary"}) do
     validate_required(struct, [:non_monetary_prizes])
   end
 
-  defp validate_prizes(struct, %{"prize_type" => "both"}) do
-    validate_required(struct, [
+  defp validate_prizes(struct, params = %{"prize_type" => "both"}) do
+    struct
+    |> validate_required([
       :prize_total,
       :non_monetary_prizes
     ])
+    |>parse_currency(params)
   end
 
   defp validate_prizes(struct, _params), do: struct

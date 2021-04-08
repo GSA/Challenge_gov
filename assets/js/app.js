@@ -21,6 +21,7 @@ import jquery from  "jquery";
 import "popper.js";
 import "select2";
 import "phoenix_html";
+import Inputmask from "inputmask";
 
 // Import CSS
 require("../css/app/index.scss");
