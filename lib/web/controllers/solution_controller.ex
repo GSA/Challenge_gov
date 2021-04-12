@@ -203,7 +203,7 @@ defmodule Web.SolutionController do
     {:ok, challenge} = Challenges.get(challenge_id)
 
     {solver, phase, solution_params} =
-      if user.role == "admin" do
+      if Accounts.has_admin_access?(user) do
         solution_params =
           Map.merge(solution_params, %{"manager_id" => user.id, "terms_accepted" => false})
 
