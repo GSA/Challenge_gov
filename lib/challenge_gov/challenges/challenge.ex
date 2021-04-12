@@ -476,6 +476,16 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_length(:prize_description, max: 1500)
   end
 
+  def parse_currency(struct, %{"prize_total" => prize_total, "prize_type" => "non_monetary"}) do
+    case Money.parse(prize_total, :USD) do
+      {:ok, _money} ->
+        put_change(struct, :prize_total, 0)
+
+      :error ->
+        add_error(struct, :prize_total, "Invalid currency formatting")
+    end
+  end
+
   def parse_currency(struct, %{"prize_total" => prize_total}) do
     case Money.parse(prize_total, :USD) do
       {:ok, money} ->
@@ -999,8 +1009,10 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> parse_currency(params)
   end
 
-  defp validate_prizes(struct, %{"prize_type" => "non_monetary"}) do
-    validate_required(struct, [:non_monetary_prizes])
+  defp validate_prizes(struct, params = %{"prize_type" => "non_monetary"}) do
+    struct
+    |> validate_required([:non_monetary_prizes])
+    |> parse_currency(params)
   end
 
   defp validate_prizes(struct, params = %{"prize_type" => "both"}) do
