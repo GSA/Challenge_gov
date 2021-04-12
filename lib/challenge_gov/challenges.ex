@@ -855,13 +855,16 @@ defmodule ChallengeGov.Challenges do
 
   def is_archived_new?(challenge = %{phases: phases}) when length(phases) > 0 do
     now = DateTime.utc_now()
+
     phases_end_date =
       Enum.max_by(phases, fn p ->
         d = p.end_date
+
         if d do
           {d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond}
         end
       end).end_date
+
     is_published?(challenge) and DateTime.compare(now, phases_end_date) === :gt
   end
 
@@ -980,7 +983,7 @@ defmodule ChallengeGov.Challenges do
 
   def is_editable?(challenge, user) do
     (is_challenge_owner?(user, challenge) or Accounts.has_admin_access?(user)) and
-    edit_with_wizard?(challenge)
+      edit_with_wizard?(challenge)
   end
 
   # BOOKMARK: Status altering functions

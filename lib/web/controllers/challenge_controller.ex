@@ -221,7 +221,7 @@ defmodule Web.ChallengeController do
         "return_to_review" ->
           conn
           |> put_flash(:info, "changes saved")
-          |> redirect(to: Routes.challenge_path(conn, :show, challenge.id)<>"##{section}")
+          |> redirect(to: Routes.challenge_path(conn, :show, challenge.id) <> "##{section}")
 
         "submit" ->
           conn

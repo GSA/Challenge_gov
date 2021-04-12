@@ -101,6 +101,7 @@ defmodule ChallengeGov.Agencies do
 
   Adds the user to the agency, fails if the user is already part of a agency
   """
+
   # def create(%{email_verified_at: nil}, _params) do
   #   %Agency{}
   #   |> Ecto.Changeset.change()

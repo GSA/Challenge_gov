@@ -81,14 +81,15 @@ defmodule Web.FormView do
     opts = Keyword.merge(opts, dopts)
     text_opts = Keyword.take(opts, [:value, :rows, :placeholder, :required])
 
-    classes =
-      form_control_classes(form, field)
+    classes = form_control_classes(form, field)
 
-    currency_opts =
-        [data: [inputmask: "'alias': 'currency', 'prefix': '$', 'rightAlign': false, 'greedy' : false"]]
+    currency_opts = [
+      data: [
+        inputmask: "'alias': 'currency', 'prefix': '$', 'rightAlign': false, 'greedy' : false"
+      ]
+    ]
 
-    args =
-      Keyword.merge([class: classes], currency_opts)
+    args = Keyword.merge([class: classes], currency_opts)
 
     content_tag(:div, class: form_group_classes(form, field)) do
       [
