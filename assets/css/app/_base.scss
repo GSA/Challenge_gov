@@ -397,7 +397,6 @@ label {
 }
 
 .btn-toolbar {
-  height: 38px;
   a {
     margin-right: .5rem;
   }
@@ -407,10 +406,8 @@ label {
 }
 
 .challenge-show-actions {
-  height: 200px;
-                        
   .card {
-    min-height: 10rem;
+    min-height: 11rem;
   }
   .card-body {
     display: flex;

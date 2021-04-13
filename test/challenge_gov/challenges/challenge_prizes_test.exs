@@ -19,7 +19,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
             "challenge" => %{
               "section" => "prizes",
               "prize_type" => "both",
-              "prize_total" => 100,
+              "prize_total" => "100.00",
               "non_monetary_prizes" => "Test non monetary prize",
               "prize_description" => "Test prize description"
             }
@@ -29,7 +29,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
         )
 
       assert updated_challenge.prize_type === "both"
-      assert updated_challenge.prize_total === 100
+      assert updated_challenge.prize_total === 10_000
       assert updated_challenge.non_monetary_prizes === "Test non monetary prize"
       assert updated_challenge.prize_description === "Test prize description"
     end
@@ -46,7 +46,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
             "challenge" => %{
               "section" => "prizes",
               "prize_type" => "monetary",
-              "prize_total" => 100
+              "prize_total" => "100.00"
             }
           },
           user,
@@ -54,7 +54,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
         )
 
       assert updated_challenge.prize_type === "monetary"
-      assert updated_challenge.prize_total === 100
+      assert updated_challenge.prize_total === 10_000
     end
 
     test "successfully adding non monetary prize only" do
@@ -69,7 +69,8 @@ defmodule ChallengeGov.ChallengePrizesTest do
             "challenge" => %{
               "section" => "prizes",
               "prize_type" => "non_monetary",
-              "non_monetary_prizes" => "Test non monetary prize"
+              "non_monetary_prizes" => "Test non monetary prize",
+              "prize_total" => "100.00"
             }
           },
           user,
@@ -78,6 +79,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
 
       assert updated_challenge.prize_type === "non_monetary"
       assert updated_challenge.non_monetary_prizes === "Test non monetary prize"
+      assert updated_challenge.prize_total === 0
     end
 
     test "failure from prize description length" do
@@ -96,7 +98,8 @@ defmodule ChallengeGov.ChallengePrizesTest do
               "section" => "prizes",
               "prize_type" => "non_monetary",
               "non_monetary_prizes" => "test non monetary prize",
-              "prize_description" => prize_description
+              "prize_description" => prize_description,
+              "prize_total" => 0
             }
           },
           user,
@@ -138,7 +141,9 @@ defmodule ChallengeGov.ChallengePrizesTest do
             "action" => "next",
             "challenge" => %{
               "section" => "prizes",
-              "prize_type" => "both"
+              "prize_type" => "both",
+              "prize_total" => "",
+              "non_monetary_prizes" => ""
             }
           },
           user,
@@ -160,7 +165,8 @@ defmodule ChallengeGov.ChallengePrizesTest do
             "action" => "next",
             "challenge" => %{
               "section" => "prizes",
-              "prize_type" => "monetary"
+              "prize_type" => "monetary",
+              "prize_total" => ""
             }
           },
           user,
@@ -205,7 +211,8 @@ defmodule ChallengeGov.ChallengePrizesTest do
             "action" => "next",
             "challenge" => %{
               "section" => "prizes",
-              "prize_type" => "non_monetary"
+              "prize_type" => "non_monetary",
+              "prize_total" => "100.00"
             }
           },
           user,

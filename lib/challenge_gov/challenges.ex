@@ -859,7 +859,10 @@ defmodule ChallengeGov.Challenges do
     phases_end_date =
       Enum.max_by(phases, fn p ->
         d = p.end_date
-        {d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond}
+
+        if d do
+          {d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond}
+        end
       end).end_date
 
     is_published?(challenge) and DateTime.compare(now, phases_end_date) === :gt
@@ -970,13 +973,17 @@ defmodule ChallengeGov.Challenges do
     Accounts.has_admin_access?(user) and is_unpublishable?(challenge)
   end
 
+  def edit_with_wizard?(challenge) do
+    challenge.status != "gsa_review"
+  end
+
   def is_editable?(_challenge) do
     true
   end
 
   def is_editable?(challenge, user) do
     (is_challenge_owner?(user, challenge) or Accounts.has_admin_access?(user)) and
-      is_editable?(challenge)
+      edit_with_wizard?(challenge)
   end
 
   # BOOKMARK: Status altering functions

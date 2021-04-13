@@ -88,7 +88,7 @@ function showNonMonetaryPrize() {
   nonMonetaryPrizeSection.collapse("show")
   nonMonetaryPrizeSection.find("input").prop("disabled", false)
   prizeTotalSection.collapse("hide")
-  prizeTotalSection.find("input").prop("disabled", true)
+  // prizeTotalSection.find("input").prop("disabled", true)
 }
 
 function showBothPrizes() {

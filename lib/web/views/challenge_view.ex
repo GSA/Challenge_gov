@@ -424,16 +424,26 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def back_button(conn, challenge) do
-    if challenge.id do
-      submit("Back", name: "action", value: "back", class: "btn btn-link", formnovalidate: true)
-    else
-      link("Back",
-        to: Routes.challenge_path(conn, :index),
-        class: "btn btn-link",
-        formnovalidate: true
-      )
+  def back_button(conn, challenge, section) do
+    if section != Enum.at(Challenges.sections(), 0).id do
+      if challenge.id do
+        submit("Back", name: "action", value: "back", class: "btn btn-link", formnovalidate: true)
+      else
+        link("Back",
+          to: Routes.challenge_path(conn, :index),
+          class: "btn btn-link",
+          formnovalidate: true
+        )
+      end
     end
+  end
+
+  def save_and_return_to_review_button(conn, challenge) do
+    submit("Save and return to review",
+      name: "action",
+      value: "return_to_review",
+      class: "usa-button"
+    )
   end
 
   def save_draft_button(section) do

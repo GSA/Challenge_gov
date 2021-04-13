@@ -1,5 +1,5 @@
 <div class="display-flex flex-row flex-justify"> 
-  <h5>Prizes</h5>
+  <h5 id="prizes">Prizes</h5>
   <%= if Accounts.has_admin_access?(@user) or !Challenges.is_archived_new?(@challenge) do %>
     <%= link("Edit", to: Routes.challenge_path(@conn, :edit, @challenge.id, "prizes"), class: "btn btn-link") %>
   <% end %>

@@ -10,7 +10,7 @@
 <% end %>
 <%= FormView.text_field(@form, :challenge_manager, label: "Challenge manager of record (does not appear on public listing)", required: true) %>
 <%= FormView.email_field(@form, :challenge_manager_email, label: "Challenge manager email (does not appear on public listing)", placeholder: "challenge_manager@example.com", required: true) %>
-<%= FormView.email_field(@form, :poc_email, label: "Point of contact email", placeholder: "point_of_contact@example.com", required: true) %>          
+<%= FormView.email_field(@form, :poc_email, label: "Point of contact email", placeholder: "point_of_contact@example.com", required: true) %>
 <hr/>
 <%= FormView.select_field(@form, :agency_id, collection: Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), label: "Lead agency name", prompt: "Choose an agency", required: true) %>
 <%= FormView.select_field(@form, :sub_agency_id, collection: Enum.map(Web.AgencyView.sub_agencies(@form.data.agency), &{&1.name, &1.id}), label: "Sub-agency name (optional)", prompt: "Choose a sub-agency") %>
