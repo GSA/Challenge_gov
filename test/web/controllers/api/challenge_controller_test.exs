@@ -272,6 +272,7 @@ defmodule Web.Api.ChallengeControllerTest do
     %{
       "description" => challenge.description,
       "id" => challenge.id,
+      "uuid" => challenge.uuid,
       "title" => challenge.title,
       "legal_authority" => "Test legal authority",
       "phase_dates" => nil,

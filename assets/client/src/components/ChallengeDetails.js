@@ -301,6 +301,9 @@ export const ChallengeDetails = ({challenge, preview, print}) => {
                   <p>{`$${challenge.prize_total.toLocaleString()}`}</p>
                 </div>
               }
+              {challenge.uuid &&
+                <a href={apiUrl + `/public/previews/challenges/${challenge.uuid}?print=true`} target="_blank">print</a>
+              }
             </div>
           </section>
         </section>

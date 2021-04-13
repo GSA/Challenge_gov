@@ -22,6 +22,7 @@ defmodule Web.Api.ChallengeView do
   def render("card.json", %{challenge: challenge}) do
     %{
       id: challenge.id,
+      uuid: challenge.uuid,
       title: challenge.title,
       tagline: challenge.tagline,
       custom_url: challenge.custom_url,
@@ -144,6 +145,7 @@ defmodule Web.Api.ChallengeView do
       terms_and_conditions: HtmlSanitizeEx.basic_html(challenge.terms_and_conditions),
       title: challenge.title,
       types: challenge.types,
+      uuid: challenge.uuid,
       winner_information: challenge.winner_information,
       winner_image: ChallengeView.winner_img_url(challenge),
       gov_delivery_topic_subscribe_link: GovDelivery.public_subscribe_link(challenge),
