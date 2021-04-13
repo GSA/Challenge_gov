@@ -2,7 +2,7 @@
   <small class="d-block pl-2 mb-2">Required<span class="required">*</span></small>
   <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
   
-  <%= if @user.role == "admin" do
+  <%= if Accounts.has_admin_access?(@user) do
   FormView.text_field(f, :solver_addr, label: "Email address of solver", required: true)
   end %>
   

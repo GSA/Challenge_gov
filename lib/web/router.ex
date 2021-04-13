@@ -198,4 +198,8 @@ defmodule Web.Router do
     get("/challenges", PageController, :index, as: :challenge_index)
     get("/challenges#/challenge/:id", PageController, :index, as: :challenge_details)
   end
+
+  if Mix.env() == :dev do
+    forward("/emails/sent", Bamboo.SentEmailViewerPlug)
+  end
 end
