@@ -482,7 +482,7 @@ defmodule ChallengeGov.Challenges.Challenge do
         put_change(struct, :prize_total, 0)
 
       :error ->
-        add_error(struct, :prize_total, "Invalid currency formatting")
+        add_error(struct, :prize_total, "Invalid currency")
     end
   end
 
