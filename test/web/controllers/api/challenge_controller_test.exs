@@ -304,7 +304,7 @@ defmodule Web.Api.ChallengeControllerTest do
       "number_of_phases" => nil,
       "winner_image" => nil,
       "tagline" => challenge.tagline,
-      "prize_total" => nil,
+      "prize_total" => 0,
       "brief_description" => challenge.brief_description,
       "phase_descriptions" => nil,
       "federal_partners" => [],

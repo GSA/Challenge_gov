@@ -85,7 +85,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:phase_dates, :string)
     field(:judging_criteria, :string)
     field(:prize_type, :string)
-    field(:prize_total, :integer)
+    field(:prize_total, :integer, default: 0)
     field(:non_monetary_prizes, :string)
     field(:prize_description, :string)
     field(:prize_description_delta, :string)
