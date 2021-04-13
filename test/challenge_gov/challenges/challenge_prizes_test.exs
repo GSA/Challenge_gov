@@ -29,7 +29,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
         )
 
       assert updated_challenge.prize_type === "both"
-      assert updated_challenge.prize_total === "100.00"
+      assert updated_challenge.prize_total === 10_000
       assert updated_challenge.non_monetary_prizes === "Test non monetary prize"
       assert updated_challenge.prize_description === "Test prize description"
     end
@@ -54,7 +54,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
         )
 
       assert updated_challenge.prize_type === "monetary"
-      assert updated_challenge.prize_total === "100.00"
+      assert updated_challenge.prize_total === 10_000
     end
 
     test "successfully adding non monetary prize only" do
@@ -143,7 +143,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
               "section" => "prizes",
               "prize_type" => "both",
               "prize_total" => "",
-              "non_monetary_prizes" => "",
+              "non_monetary_prizes" => ""
             }
           },
           user,

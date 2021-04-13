@@ -1005,8 +1005,8 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   defp validate_prizes(struct, params = %{"prize_type" => "monetary"}) do
     struct
-    |> validate_required([:prize_total])
     |> parse_currency(params)
+    |> validate_required([:prize_total])
   end
 
   defp validate_prizes(struct, params = %{"prize_type" => "non_monetary"}) do
@@ -1017,11 +1017,11 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   defp validate_prizes(struct, params = %{"prize_type" => "both"}) do
     struct
+    |> parse_currency(params)
     |> validate_required([
       :prize_total,
       :non_monetary_prizes
     ])
-    |> parse_currency(params)
   end
 
   defp validate_prizes(struct, _params), do: struct
