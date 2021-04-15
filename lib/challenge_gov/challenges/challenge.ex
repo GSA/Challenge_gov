@@ -728,8 +728,8 @@ defmodule ChallengeGov.Challenges.Challenge do
        )
        when not is_nil(date) do
     {:ok, date} = Timex.parse(date, "{ISO:Extended}")
-    {:ok, %{sub_status: sub_status}} = Challenges.get(id)
-    if sub_status === "open", do: struct, else: check_auto_publish_date(struct, date)
+    {:ok, %{status: status}} = Challenges.get(id)
+    if status === "published", do: struct, else: check_auto_publish_date(struct, date)
   end
 
   defp validate_auto_publish_date(struct = %{data: %{auto_publish_date: date}}, params)
