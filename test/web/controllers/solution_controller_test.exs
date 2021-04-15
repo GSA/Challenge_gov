@@ -250,6 +250,24 @@ defmodule Web.SolutionControllerTest do
 
       assert changeset
     end
+
+    test "viewing the new solution form without phase id", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = challenge.phases |> Enum.at(0)
+
+      params = %{
+        "challenge_id" => challenge.id
+      }
+
+      conn = get(conn, Routes.challenge_solution_path(conn, :new, challenge.id), params)
+
+      %{changeset: changeset} = conn.assigns
+
+      assert changeset
+    end
   end
 
   describe "create action" do

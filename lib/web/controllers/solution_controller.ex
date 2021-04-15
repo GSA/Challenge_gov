@@ -149,6 +149,32 @@ defmodule Web.SolutionController do
     |> render("new.html")
   end
 
+  def new(conn, params = %{"challenge_id" => challenge_id}) do
+    %{current_user: user} = conn.assigns
+
+    with {:ok, challenge} <- Challenges.get(challenge_id),
+         {:ok, %{id: phase_id}} <- Challenges.current_phase(challenge) do
+      conn
+      |> assign(:user, user)
+      |> assign(:challenge, challenge)
+      |> assign(:phase_id, phase_id)
+      |> assign(:action, action_name(conn))
+      |> assign(:changeset, Solutions.new())
+      |> assign(:navbar_text, "Submit solution")
+      |> render("new.html")
+    else
+      {:error, :no_current_phase} ->
+        conn
+        |> put_flash(:error, "No current phase found")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
+
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "Challenge not found")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
+    end
+  end
+
   def create(
         conn,
         params = %{
