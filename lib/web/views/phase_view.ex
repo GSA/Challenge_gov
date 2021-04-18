@@ -134,7 +134,7 @@ defmodule Web.PhaseView do
       %{
         text: "Undo",
         route: get_judging_status_route(conn, solution, "winner", filter),
-        class: map.class <> "btn-primary"
+        class: map.class <> "btn-primary btn-short"
       }
     )
   end
@@ -145,7 +145,7 @@ defmodule Web.PhaseView do
       %{
         text: "Move back to judging",
         route: get_judging_status_route(conn, solution, "selected", filter),
-        class: map.class <> "btn-secondary"
+        class: map.class <> "btn-secondary btn-long"
       }
     )
   end
@@ -167,7 +167,7 @@ defmodule Web.PhaseView do
       %{
         text: "Selected",
         route: get_judging_status_route(conn, solution, "selected", filter),
-        class: map.class <> "btn-secondary"
+        class: map.class <> "btn-secondary btn-short"
       }
     )
   end
@@ -189,7 +189,7 @@ defmodule Web.PhaseView do
       %{
         text: "Selected",
         route: get_judging_status_route(conn, solution, "not_selected", filter),
-        class: map.class <> "btn-secondary"
+        class: map.class <> "btn-secondary btn-short"
       }
     )
   end

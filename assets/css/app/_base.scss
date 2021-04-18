@@ -90,8 +90,24 @@ body {
      text-align: center;
 }
 
+.main-container .btn-secondary {
+     background-color: #6c757d;
+     width: 150px;
+     height: 33px;
+     border-radius: 4px;
+     color: white;
+     border: none;
+     padding: 5px;
+     text-align: center;
+}
+
 .main-container .btn-short {
      width: 100px;
+     font-size: 15px;
+}
+
+.main-container .btn-long {
+     width: 170px;
      font-size: 15px;
 }
 
