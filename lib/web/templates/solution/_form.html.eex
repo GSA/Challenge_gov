@@ -10,30 +10,27 @@
     <%= FormView.textarea_field(f, :brief_description, label: "Brief description", required: true, limit: 500) %>
     <%= FormView.textarea_field(f, :description, label: "Description", required: true) %>
     <div class="form-group">
-      <label class="col">Uploaded files</label>
+      <label class="col">Upload files (optional)</label>
       <div class="col">
-        <div class="solution-documents-list">
-          <%= Enum.map(@data.documents, fn document -> %>
-            <div class="row solution-document-row">
-              <div class="col"><%= link(DocumentView.name(document), to: ChallengeGov.SolutionDocuments.download_document_url(document), target: "_blank") %></div>
-              <div class="col"><a href="#", class="solution_uploaded_document_delete" data-document-id="<%= document.id %>">Remove</a></div>
-            </div>
-          <% end) %>
-          <%= Enum.map(@changeset.changes[:document_objects] || [], fn document -> %>
-            <div class="row solution-document-row">
-              <div class="col"><%= link(DocumentView.name(document), to: ChallengeGov.SolutionDocuments.download_document_url(document), target: "_blank") %></div>
-              <div class="col"><a href="#", class="solution_uploaded_document_delete" data-document-id="<%= document.id %>">Remove</a></div>
-            </div>
-          <% end) %>
-        </div>
         <div class="solution-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
             <%= hidden_input f, :document_id, name: "solution[document_ids][]", value: document_id %>
           <% end) %>
         </div>
-        <%= file_input f, :document, name: "solution[document][file]", class: "my-3" %>
-        <%= FormView.text_field(f, :document_name, name: "solution[document][name]", class: "my-3") %>
-        <div id="solution_document_upload" class="btn btn-primary">Upload file</div>
+        <%= FormView.text_field(f, :document_name, name: "solution[document][name]", label: "File name (optional)", class: "my-3") %>
+        <div class="col">
+          <%= file_input f, :document, name: "solution[document][file]", class: "my-3" %>
+          <div id="solution_document_upload" class="btn btn-primary">Upload file</div>
+        </div>
+      </div>
+      <div class="solution-documents-list">
+        <%= Enum.map(@data.documents, fn document -> %>
+          <div class="row solution-document-row">
+            <%= link(DocumentView.name(document), to: ChallengeGov.SolutionDocuments.download_document_url(document), target: "_blank") %>
+            <%= link to: "#", data: [document_id: document.id], class: "solution_uploaded_document_delete" do %>
+            <% end %>
+          </div>
+        <% end) %>
       </div>
     </div>
 

@@ -29,16 +29,15 @@ $("#solution_document_upload").on("click", function(e) {
         $(file_input).val("")
 
         $(".solution-documents-list").append(`
-          <div class="row solution-document-row">
-            <div class="col">
-              <a href=${document.url} target="_blank">${document.display_name}</a>
-            </div>
-            <div class="col">
-              <a href="#", class="solution_uploaded_document_delete" data-document-id="${document.id}">Remove</a>
-            </div>
+          <div>
+            <i class="fa fa-paperclip mr-1"></i>
+            <a href=${document.url} target="_blank">${document.display_name}</a>
+            <a href="" data-document-id=${document.id} class="challenge_uploaded_document_delete">
+              <i class="fa fa-trash"></i>
+            </a>
           </div>
         `)
-        
+
         $(".solution-document-ids").append(`
           <input type="hidden" name="solution[document_ids][]" value="${document.id}">
         `)
