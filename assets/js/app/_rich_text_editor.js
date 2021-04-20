@@ -22,12 +22,12 @@ let toolbarOptions = [
   // [{ 'script': 'super' }, { 'script': 'sub' }],
   // [ 'direction', { 'align': [] }],
 
-  // Setup some default options without link funtionality until it's fixed
+  // Setup some default options
   [{ 'size': [] }],
   [ 'bold', 'italic', 'underline', 'strike' ],
   [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block' ],
   [{ 'list': 'ordered' }, { 'list': 'bullet'}, { 'indent': '-1' }, { 'indent': '+1' }],
-  // [ 'link', 'image', 'video', 'formula' ],
+  [ 'link', 'image', 'video', 'formula' ],
   [ 'clean' ]
 ]
 
@@ -41,6 +41,35 @@ $(".rt-textarea").each(function(textarea) {
     }
   });
   $(this).data("quill", quill)
+
+  let toolBar = quill.getModule("toolbar")
+  var tooltipSave = quill.theme.tooltip.save;
+  var tooltipShow = quill.theme.tooltip.show;
+
+  quill.theme.tooltip.show = function() {
+    $(this.root).removeClass('is-invalid');
+    $("span").remove('.text-danger')
+    $("span").remove('.text-secondary')
+    tooltipShow.call(this);
+  }
+
+  quill.theme.tooltip.save = function() {
+    var url = this.textbox.value;
+    $(this.root).removeClass('is-invalid');
+    $("span").remove('.text-danger')
+    $("span").remove('.text-secondary')
+
+    let httpRegex = /^https?:\/\//i
+    if(httpRegex.test(url)) {
+      $(this.root).removeClass('is-invalid');
+      tooltipSave.call(this);
+    }
+    else {
+      $(this.root).addClass('is-invalid');
+      $(this.root).append('<span class="text-danger">links must contain "https"</span>')
+      $(this.root).append('<span class="text-secondary">tip: copy and paste url</span>')
+    }
+  };
 
   let fieldName = $(this).data("input")
   let richTextInput = $(`#${fieldName}`)
