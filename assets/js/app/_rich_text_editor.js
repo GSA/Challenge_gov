@@ -46,6 +46,7 @@ $(".rt-textarea").each(function(textarea) {
   var tooltipSave = quill.theme.tooltip.save;
   var tooltipShow = quill.theme.tooltip.show;
 
+  // make sure the tooltip has no remaining errors in new instance
   quill.theme.tooltip.show = function() {
     $(this.root).removeClass('is-invalid');
     $("span").remove('.text-danger')
@@ -53,8 +54,10 @@ $(".rt-textarea").each(function(textarea) {
     tooltipShow.call(this);
   }
 
+  // show errors on save when missing https
   quill.theme.tooltip.save = function() {
     var url = this.textbox.value;
+    // clean out any previous errors
     $(this.root).removeClass('is-invalid');
     $("span").remove('.text-danger')
     $("span").remove('.text-secondary')
@@ -96,3 +99,31 @@ $(".rt-textarea").each(function(textarea) {
     richTextInput.val("")
   }
 })
+
+  // set char limit text
+  const charLimitedField = $(".char-limited-editor")
+  const charLimitedQuill = $(".char-limited-editor .rt-textarea").data("quill")
+
+  if (charLimitedField.length >= 1) {
+    const charLimit = charLimitedQuill.container.attributes["data-limit"].value
+    const charsRemaining = document.getElementById("chars-remaining")
+    const charsLimitText = document.getElementById("char-limit-text")
+
+    // set inital limit
+    charsRemaining.textContent = charLimit
+    charsLimitText.textContent = " characters remaining"
+
+    charLimitedQuill.on('text-change', function() {
+      let remaining = charLimit - (charLimitedQuill.getLength() - 1)
+      if (Math.sign(remaining) != -1) {
+        charsRemaining.textContent = remaining
+        charsLimitText.textContent = " characters remaining"
+      } else {
+        // validation?
+        charsRemaining.style.color = "red"
+        charsLimitText.style.color = "red"
+        charsRemaining.textContent = `${remaining*-1}`
+        charsLimitText.textContent = " characters over the limit"
+      }
+    });
+  }

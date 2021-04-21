@@ -59,7 +59,10 @@
 
 <hr/>
 
-<%= FormView.textarea_field(@form, :brief_description, label: "Short description (help text: Appears in challenge details header)", limit: 200, required: true) %>
+<div class="col char-limited-editor">
+  <label for="brief_description">Short description <span class="required">*</span></label>
+  <%= FormView.rt_textarea_field(@form, :brief_description, limit: 200) %>
+</div>
 
 <div class="col">
   <label><%= "Long description" %> <span class="required">*</span></label>
