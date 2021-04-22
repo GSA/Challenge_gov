@@ -32,7 +32,7 @@
 <br/>
 <div>
   <div class="text-bold">Brief description:</div>
-  <div><%= @challenge.brief_description %></div>
+  <div><%= SharedView.render_safe_html(@challenge.brief_description) %></div>
 </div>
 <br/>
 <div>

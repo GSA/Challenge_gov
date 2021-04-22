@@ -98,32 +98,43 @@ $(".rt-textarea").each(function(textarea) {
     deltaInput.val("")
     richTextInput.val("")
   }
-})
 
-  // set char limit text
-  const charLimitedField = $(".char-limited-editor")
-  const charLimitedQuill = $(".char-limited-editor .rt-textarea").data("quill")
+  const setCharLimitHelperText = (charsRemaining, displayNumber, displayText) => {
+    if (Math.sign(charsRemaining) != -1) {
+      displayNumber.css("color", "inherit")
+      displayText.css("color", "inherit")
+      displayNumber.text(charsRemaining)
+      displayText.text(" characters remaining")
+    } else {
+      displayNumber.css("color", "red")
+      displayText.css("color", "red")
+      displayNumber.text(`${charsRemaining * -1}`)
+      displayText.text(" characters over the limit")
+    }
+  }
 
-  if (charLimitedField.length >= 1) {
-    const charLimit = charLimitedQuill.container.attributes["data-limit"].value
-    const charsRemaining = document.getElementById("chars-remaining")
-    const charsLimitText = document.getElementById("char-limit-text")
+  if ($(this).hasClass("rt_char-limited")) {
+    const charLimit = $(this).data("limit")
+    const lengthInput = $(`#${fieldName}_length`)
+    const charsRemaining = $(`#${fieldName}_chars-remaining`)
+    const charLimitText = $(`#${fieldName}_char-limit-text`)
+    let initialCharsRemaining = charLimit - (quill.getLength() - 1)
 
-    // set inital limit
-    charsRemaining.textContent = charLimit
-    charsLimitText.textContent = " characters remaining"
+    // set inital values
+    lengthInput.val(quill.getLength() - 1)
+    if ((quill.getLength() - 1) === 0) {
+      charsRemaining.css("color", "inherit")
+      charLimitText.css("color", "inherit")
+      charsRemaining.text(charLimit)
+      charLimitText.text(" characters remaining")
+    } else {
+      setCharLimitHelperText(initialCharsRemaining, charsRemaining, charLimitText)
+    }
 
-    charLimitedQuill.on('text-change', function() {
-      let remaining = charLimit - (charLimitedQuill.getLength() - 1)
-      if (Math.sign(remaining) != -1) {
-        charsRemaining.textContent = remaining
-        charsLimitText.textContent = " characters remaining"
-      } else {
-        // validation?
-        charsRemaining.style.color = "red"
-        charsLimitText.style.color = "red"
-        charsRemaining.textContent = `${remaining*-1}`
-        charsLimitText.textContent = " characters over the limit"
-      }
+    quill.on('text-change', function() {
+      let numCharsRemaining = charLimit - (quill.getLength() - 1)
+      lengthInput.val(quill.getLength() - 1)
+      setCharLimitHelperText(numCharsRemaining, charsRemaining, charLimitText)
     });
   }
+})

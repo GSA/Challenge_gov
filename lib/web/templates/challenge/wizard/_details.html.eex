@@ -59,7 +59,7 @@
 
 <hr/>
 
-<div class="col char-limited-editor">
+<div class="col">
   <label for="brief_description">Short description <span class="required">*</span></label>
   <%= FormView.rt_textarea_field(@form, :brief_description, limit: 200) %>
 </div>

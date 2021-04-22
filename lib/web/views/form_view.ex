@@ -259,25 +259,39 @@ defmodule Web.FormView do
   def rt_textarea_field(form, field, opts \\ []) do
     opts = Keyword.merge([class: form_group_classes(form, field)], opts)
 
-    char_limited_label =
+    char_limited_tags =
       if opts[:limit] do
         [
-          content_tag(:span, "", id: "chars-remaining", class: "char-limit-label ml-1"),
-          content_tag(:span, "", id: "char-limit-text", class: "char-limit-label ml-1")
+          content_tag(:span, "",
+            id: "challenge_#{Atom.to_string(field)}_chars-remaining",
+            class: "char-limit-label ml-1"
+          ),
+          content_tag(:span, "",
+            id: "challenge_#{Atom.to_string(field)}_char-limit-text",
+            class: "char-limit-label ml-1"
+          ),
+          hidden_input(form, String.to_existing_atom(Atom.to_string(field) <> "_length"))
         ]
       else
         ""
       end
 
+    classes =
+      if opts[:limit] do
+        "rt-textarea rt_char-limited"
+      else
+        "rt-textarea"
+      end
+
     content_tag(:div, opts) do
       [
         content_tag(:div, "",
-          class: "rt-textarea",
+          class: classes,
           data: [input: form.id <> "_" <> Atom.to_string(field), limit: opts[:limit]]
         ),
-        char_limited_label,
+        char_limited_tags,
         hidden_input(form, field, class: form_control_classes(form, field)),
-        hidden_input(form, String.to_atom(Atom.to_string(field) <> "_delta")),
+        hidden_input(form, String.to_existing_atom(Atom.to_string(field) <> "_delta")),
         error_tag(form, field)
       ]
     end
