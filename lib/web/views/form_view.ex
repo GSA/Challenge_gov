@@ -85,7 +85,8 @@ defmodule Web.FormView do
 
     currency_opts = [
       data: [
-        inputmask: "'alias': 'currency', 'prefix': '$', 'rightAlign': false, 'greedy' : false"
+        inputmask:
+          "'alias': 'currency', 'digits': '0', 'prefix': '$', 'rightAlign': false, 'greedy' : false"
       ]
     ]
 
