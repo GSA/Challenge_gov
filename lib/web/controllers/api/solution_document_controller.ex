@@ -10,7 +10,7 @@ defmodule Web.Api.SolutionDocumentController do
     {:error, changeset} =
       Solutions.new()
       |> Ecto.Changeset.change()
-      |> Ecto.Changeset.add_error(:solver_addr, "must add solver address first")
+      |> Ecto.Changeset.add_error(:solver_addr, "must add solver email first")
       |> Ecto.Changeset.apply_action(:insert)
 
     conn

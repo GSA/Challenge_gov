@@ -22,6 +22,7 @@
           <%= file_input f, :document, name: "solution[document][file]", class: "my-3" %>
           <div id="solution_document_upload" class="btn btn-primary">Upload file</div>
         </div>
+        <span id="solution_document_upload_error" class="js-error-tag text-danger"></span>
       </div>
       <div class="solution-documents-list">
         <%= Enum.map(@data.documents, fn document -> %>
@@ -32,7 +33,6 @@
           </div>
         <% end) %>
       </div>
-      <span id="solution_document_upload_error" class="js-error-tag text-danger"></span>
     </div>
 
     <%= FormView.text_field(f, :external_url, label: "External URL (optional)") %>
