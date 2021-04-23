@@ -3,7 +3,7 @@
   <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
   
   <%= if Accounts.has_admin_access?(@user) do
-  FormView.text_field(f, :solver_addr, label: "Email address of solver", required: true)
+    FormView.text_field(f, :solver_addr, label: "Email address of solver", required: true)
   end %>
   
     <%= FormView.text_field(f, :title, label: "Title", required: true) %>
@@ -32,6 +32,7 @@
           </div>
         <% end) %>
       </div>
+      <span id="solution_document_upload_error" class="js-error-tag text-danger"></span>
     </div>
 
     <%= FormView.text_field(f, :external_url, label: "External URL (optional)") %>
