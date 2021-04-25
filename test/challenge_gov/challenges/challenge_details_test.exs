@@ -143,7 +143,14 @@ defmodule ChallengeGov.ChallengeDetailsTest do
       {:ok, challenge} =
         Challenges.update(
           challenge,
-          %{"status" => "published", "start_date" => TestHelpers.iso_timestamp(days: -5)},
+          %{
+            "action" => "next",
+            "challenge" => %{
+              "section" => "details",
+              "status" => "published",
+              "auto_publish_date" => TestHelpers.iso_timestamp(days: -5)
+            }
+          },
           user,
           ""
         )
