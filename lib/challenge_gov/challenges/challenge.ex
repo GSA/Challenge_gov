@@ -454,7 +454,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     ])
     |> validate_length(:title, max: 90)
     |> validate_length(:tagline, max: 90)
-    |> validate_rich_text_length(:brief_description_length, 200)
+    |> validate_rich_text_length(:brief_description, 200)
     |> validate_length(:description, max: 4000)
     |> validate_length(:other_type, max: 45)
     |> validate_inclusion(:primary_type, @challenge_types)
@@ -466,7 +466,8 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   def validate_rich_text_length(struct, field, length) do
-    value = get_field(struct, field)
+    field_length = String.to_existing_atom("#{field}_length")
+    value = get_field(struct, field_length)
 
     case value do
       nil ->
@@ -474,7 +475,7 @@ defmodule ChallengeGov.Challenges.Challenge do
 
       _ ->
         if value > length do
-          add_error(struct, :brief_description, "can't be greater than #{length} characters")
+          add_error(struct, field, "can't be greater than #{length} characters")
         else
           struct
         end

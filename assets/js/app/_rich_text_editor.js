@@ -27,7 +27,7 @@ let toolbarOptions = [
   [ 'bold', 'italic', 'underline', 'strike' ],
   [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block' ],
   [{ 'list': 'ordered' }, { 'list': 'bullet'}, { 'indent': '-1' }, { 'indent': '+1' }],
-  [ 'link', 'image', 'video', 'formula' ],
+  [ 'link'], // ['image', 'video', 'formula' ],
   [ 'clean' ]
 ]
 
