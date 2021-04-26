@@ -58,9 +58,9 @@ export const ChallengeDetails = ({challenge, preview, print}) => {
 
   const renderFollowButton = (challenge) => {
     if (challenge.subscriber_count > 0) {
-      return <button className="follow-btn" id="followChallengeButton"><i className="far fa-bookmark mr-3"></i>Follow challenge ({ challenge.subscriber_count })</button>
+      return <span className="follow-btn" id="followChallengeButton"><i className="far fa-bookmark mr-3"></i>Follow challenge ({ challenge.subscriber_count })</span>
     } else {
-      return <button className="follow-btn" id="followChallengeButton"><i className="far fa-bookmark mr-3"></i>Follow challenge</button>
+      return <span className="follow-btn" id="followChallengeButton"><i className="far fa-bookmark mr-3"></i>Follow challenge</span>
     }
   }
 
@@ -235,6 +235,25 @@ export const ChallengeDetails = ({challenge, preview, print}) => {
     }
   }
 
+  const renderInteractiveItems = () => {
+    if (print != "true") {
+      return (
+        <>
+          {renderApplyButton(challenge)}
+          <div className="detail-section__follow">
+            {renderFollowButton(challenge)}
+            {renderFollowTooltip()}
+            {challenge.uuid &&
+              <a className="follow-btn" href={apiUrl + `/public/previews/challenges/${challenge.uuid}?print=true`} target="_blank">
+                <span className="follow-btn"><i className="fas fa-print mr-3"></i>Print challenge</span>
+              </a>
+            }
+          </div>
+        </>
+      )
+    }
+  }
+
   return (
     challenge ? (
       <div className="w-100">
@@ -278,11 +297,7 @@ export const ChallengeDetails = ({challenge, preview, print}) => {
               </div>
             </div>
             <div className="detail-section">
-              {renderApplyButton(challenge)}
-              <div className="detail-section__follow">
-                {renderFollowButton(challenge)}
-                {renderFollowTooltip()}
-              </div>
+              {renderInteractiveItems()}
               <div className="item">
                 <p className="info-title">Submission period:</p>
                 {submissionPeriod(challenge.phases)}
@@ -301,26 +316,23 @@ export const ChallengeDetails = ({challenge, preview, print}) => {
                   <p>{`$${challenge.prize_total.toLocaleString()}`}</p>
                 </div>
               }
-              {challenge.uuid &&
-                <a href={apiUrl + `/public/previews/challenges/${challenge.uuid}?print=true`} target="_blank">print</a>
-              }
             </div>
           </section>
         </section>
         <ChallengeTabs print={print}>
           <div label="Overview">
-            <Overview challenge={challenge} />
+            <Overview challenge={challenge} print={print} />
           </div>
           { challenge.events.length > 0 &&
             <div label="Timeline">
-              <Timeline challenge={challenge} />
+              <Timeline challenge={challenge} print={print} />
             </div> 
           }
           <div label="Prizes">
-            <Prizes challenge={challenge} />
+            <Prizes challenge={challenge} print={print} />
           </div>
           <div label="Rules">
-            <Rules challenge={challenge} />
+            <Rules challenge={challenge} print={print} />
           </div>
           <div label="Judging">
             <Judging challenge={challenge} print={print} />
@@ -335,14 +347,14 @@ export const ChallengeDetails = ({challenge, preview, print}) => {
           }
           { (challenge.faq || documentsForSection(challenge, "faq") > 0) &&
             <div label="FAQ">
-              <FAQ challenge={challenge} />
+              <FAQ challenge={challenge} print={print} />
             </div>
           }
           <div label="Contact">
             <ContactForm preview={preview} />
           </div>
           <div label="Winners" disabled={!challenge.winner_information} >
-            <Winners challenge={challenge} />
+            <Winners challenge={challenge} print={print} />
           </div>
         </ChallengeTabs>
       </div>
