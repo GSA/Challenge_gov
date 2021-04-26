@@ -1,0 +1,34 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      {"Home", Routes.dashboard_path(Web.Endpoint, :index)},
+      {"Challenges", Routes.challenge_path(Web.Endpoint, :index)},
+      {@challenge.title, Routes.challenge_path(Web.Endpoint, :show, @challenge.id)},
+      {"Manage Winners Phase Selection", Routes.phase_winner_path(@conn, :index, @challenge.id)},
+      {"#{@phase.title} Winners", nil},
+    ])%>
+  </div>
+</div>
+
+<div class="content phase-winners">
+  <div class="container-fluid">
+    <%= render_title(@challenge, @phase) %>
+    <div class="card">
+      <div class="card-body">
+        <%= link("Edit", to: Routes.phase_winner_path(@conn, :edit, @phase.id)) %>
+        <hr/>
+        <h2>Winner Overview Info</h2>
+        <%= SharedView.render_safe_html(@phase_winner.overview) %>
+        <%= render_overview_image(@phase_winner) %>
+        <hr/>
+        <h2>Individual Winner Info</h2>
+        <%= Enum.map(@phase_winner.winners, fn winner -> %>
+          <div>Place title: <%= winner.place_title %></div>
+          <div>Name: <%= winner.name %></div>
+          <div><%= render_winner_image(winner) %></div>
+          <br/>
+        <% end) %>
+      </div>
+    </div>
+  </div>
+</div>

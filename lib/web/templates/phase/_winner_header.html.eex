@@ -1,2 +1,0 @@
-  <h1>Winners for Phase <%= @phase.title %> of <%= @challenge.title %></h1>
-  <h3><%= @text %></h3>

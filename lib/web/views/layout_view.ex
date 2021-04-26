@@ -77,6 +77,7 @@ defmodule Web.LayoutView do
       view_module != Web.AccessView and
       view_module != Web.SiteContentView and
       view_module != Web.PhaseView and
+      view_module != Web.PhaseWinnerView and
       view_module != Web.SubmissionExportView and
       view_module != Web.SubmissionInviteView
   end
