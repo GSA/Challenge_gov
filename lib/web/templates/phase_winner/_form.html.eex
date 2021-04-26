@@ -1,0 +1,39 @@
+<div class="card winners-overview">
+  <div class="card-body">
+    <h2>Winners overview</h2>
+
+    <%= form_for(@changeset, @action, [class: "form-horizontal", multipart: true, data: [phase_winner_id: @changeset.data.id]], fn f -> %>
+      <div class="col winner-overview">
+        <label>Winners description (optional)</label>
+        <%= FormView.rt_textarea_field(f, :overview) %>
+        <label>Winners overview image (optional)</label>
+        <%= hidden_input f, :overview_image_path %>
+        <%= FormView.file_field(f, :overview_image, label: false) %>
+        <%= render_remove_image_checkbox(f, :overview_image) %>
+      </div>
+
+      <hr/>
+
+      <div class="col individual-winners">
+        <h2>Add individual winners with name, rank and photo (optional)</h2>
+
+        <%= render Web.PhaseWinnerView, "winners/_form.html", form: f %>
+      </div>
+
+      <hr/>
+
+      <div class="col">
+        <div class="row winner-options">
+          <div class="col-md cancel-winner">
+            <%= link("Cancel", to: Routes.challenge_path(@conn, :show, @challenge.id)) %>          
+          </div>
+          <div class="col-md">
+            <a class="disabled btn">Save draft</a>
+            <a class="disabled btn">Preview</a>
+            <%= submit("Review + Publish", class: "btn btn-primary") %>
+          </div>
+        </div>
+      </div>
+    <% end) %>
+  </div>
+</div>

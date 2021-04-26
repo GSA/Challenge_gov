@@ -1,7 +1,15 @@
 <div class="content-header">
-  <%= render Web.ChallengeView, "_breadcrumb.html", challenge: @challenge, winners: true %>
+  <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      {"Home", Routes.dashboard_path(Web.Endpoint, :index)},
+      {"Challenges", Routes.challenge_path(Web.Endpoint, :index)},
+      {@challenge.title, Routes.challenge_path(Web.Endpoint, :show, @challenge.id)},
+      {"Manage Winners Phase Selection", nil},
+    ])%>
+  </div>
 </div>
-<div class="main-container">
+
+<div class="content">
   <h1>Winners for <%= @challenge.title %></h1>
   <div class="grid-row">
     <%= for p <- @challenge.phases do %>        
@@ -14,8 +22,8 @@
         <p><b>Start date: </b><%= Timex.format!(p.start_date, "{M}/{D}/{YYYY}") %></p>
         <p><b>End date: </b><%= Timex.format!(p.end_date, "{M}/{D}/{YYYY}") %></p>
         </div>       
-        <%= live_redirect("Manage Winners", to: Routes.live_path(Web.Endpoint, Web.PhaseWinnersLive, @challenge.id, p.id), class: "btn btn-primary mng-winner-btn", replace: true) %>
 
+        <%= link("Manage Winners", to: Routes.phase_winner_path(@conn, :show, p.id), class: "btn btn-primary mng-winner-btn") %>
       </div>
     </div>
     <% end %>

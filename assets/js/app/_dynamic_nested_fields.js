@@ -179,3 +179,49 @@ $("#js-federal-partners").on("click", ".remove-nested-section", (e) => {
     parent.remove()
   }
 })
+
+// Individual winners dynamic nested fields
+$("#winners-form").on("click", ".js-dynamic-nested-add", (e) => {
+  template = $(e.target).siblings(".js-dynamic-nested-template").clone()
+  nestedItems = $(e.target).siblings(".js-dynamic-nested-items")
+
+  lastIndex = nestedItems.find(".js-dynamic-nested-item").last().data("index")
+  nextIndex = lastIndex + 1 || 0
+
+  nestedItem = template.find(".js-dynamic-nested-item")
+
+  parentClass = $(e.target).data("parent")
+  childClass = $(e.target).data("child")
+
+  nestedItem.attr("data-index", nextIndex)
+
+  nestedItem.find(".js-dynamic-nested-group").each(function() {
+    label = $(this).find("label")
+    input = $(this).find("input")
+    field = input.data("field")
+
+    newId = `${parentClass}_${childClass}_${nextIndex}_${field}`
+    newName = `${parentClass}[${childClass}][${nextIndex}][${field}]`
+
+    label.attr("for", newId)
+
+    input.attr("id", newId)
+          .attr("name", newName)
+  })
+
+  nestedItems.append(nestedItem)
+})
+
+$("#winners-form").on("click", ".js-dynamic-nested-remove", (e) => {
+  e.preventDefault()
+
+  if (window.confirm("Are you sure you want to remove this winner?")) {
+    parent = $(e.target).closest(".js-dynamic-nested-item")
+
+    index = parent.data("index")
+    removeInput = $(`#phase_winner_winners_${index}_remove`)
+
+    $(removeInput).val(true)
+    parent.addClass("d-none")
+  }
+})

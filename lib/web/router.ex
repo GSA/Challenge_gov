@@ -82,9 +82,6 @@ defmodule Web.Router do
     get("/", DashboardController, :index)
     get("/certification_requested", AccessController, :index)
 
-    live "/challenges/:id/winners", WinnersLive
-    live "/challenges/:cid/phases/:pid/winners", PhaseWinnersLive
-
     resources("/challenges", ChallengeController) do
       resources("/documents", DocumentController, only: [:create])
       resources("/events", EventController, only: [:new, :create])
@@ -111,6 +108,14 @@ defmodule Web.Router do
     post("/challenges/:id/archive", ChallengeController, :archive, as: :challenge)
     post("/challenges/:id/unarchive", ChallengeController, :unarchive, as: :challenge)
     post("/challenges/:id/remove_logo", ChallengeController, :remove_logo, as: :challenge)
+
+    # Winners
+    get("/challenges/:challenge_id/winners", PhaseWinnerController, :index)
+
+    resources("/phase/:phase_id/winners", PhaseWinnerController,
+      except: [:new, :delete],
+      singleton: true
+    )
 
     post("/challenges/:id/remove_winner_image", ChallengeController, :remove_winner_image,
       as: :challenge
@@ -172,6 +177,15 @@ defmodule Web.Router do
     resources("/solution_documents", SolutionDocumentController, only: [:create, :delete])
 
     put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
+
+    # Winners
+    post(
+      "/phase_winners/:id/upload_overview_image",
+      PhaseWinnerController,
+      :upload_overview_image
+    )
+
+    post("/phase_winners/:id/upload_winner_image", WinnerController, :upload_image)
 
     post("/session/renew", SessionController, :check_session_timeout)
     post("/session/logout", SessionController, :logout_user)

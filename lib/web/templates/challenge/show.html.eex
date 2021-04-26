@@ -1,5 +1,10 @@
 <div class="content-header">
-  <%= render Web.ChallengeView, "_breadcrumb.html", challenge: @challenge, winners: false %>
+  <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      {"Home", Routes.dashboard_path(Web.Endpoint, :index)},
+      {"Challenges", Routes.challenge_path(Web.Endpoint, :index)},
+      {@challenge.title, nil}
+    ])%>
     <div class="row">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">

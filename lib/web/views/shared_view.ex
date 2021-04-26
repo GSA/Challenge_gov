@@ -1,6 +1,7 @@
 defmodule Web.SharedView do
   use Web, :view
 
+  alias Stein.Storage
   alias Web.SharedView
 
   def session_timeout(conn) do
@@ -110,5 +111,23 @@ defmodule Web.SharedView do
     html
     |> HtmlSanitizeEx.basic_html()
     |> raw
+  end
+
+  def upload_url(path) do
+    Storage.url(path)
+  end
+
+  def render_breadcrumbs(breadcrumb_info) do
+    content_tag :div, class: "row mb-2" do
+      content_tag :div, class: "col" do
+        content_tag :ol, class: "breadcrumb" do
+          Enum.map(breadcrumb_info, fn {text, url} ->
+            content_tag :li, class: "breadcrumb-item #{if is_nil(url), do: 'active'}" do
+              content_tag(:a, text, href: url)
+            end
+          end)
+        end
+      end
+    end
   end
 end

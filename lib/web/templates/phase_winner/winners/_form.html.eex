@@ -1,0 +1,86 @@
+<div id="winners-form">
+  <div class="js-dynamic-nested-items">
+    <%= inputs_for(@form, :winners, [skip_hidden: true], fn winner -> %>
+      <div class="js-dynamic-nested-item grid-row mb-2" data-index=<%= winner.index %>>
+        <div class="form-group">
+          <%= hidden_input winner, :id %>
+        </div>
+
+        <div class="form-group">
+          <%= hidden_input winner, :remove, value: false %>
+        </div>
+
+        <div class="winner grid-col flex-2">
+          <div class="form-group">
+            <div><%= label winner, :place_title, "Place title (ex. First Place or Grand Winner) (optional)" %></div>
+            <%= text_input winner, :place_title %>
+          </div>
+          
+          <div class="form-group">
+            <div><%= label winner, :name, "Name (optional)" %></div>
+            <%= text_input winner, :name %>
+          </div>
+
+          <div class="form-group">
+            <%= hidden_input winner, :image_path, data: [field: :image_path] %>
+          </div>
+          
+          <div class="form-group">
+            <div><%= label winner, :image, "Upload image (optional)", class: "control-label" %></div>
+            <%= file_input winner, :image, data: [field: :image] %>
+          </div>
+
+          <div class="form-group">
+            <%= render_remove_image_checkbox(winner, :image) %>
+          </div>
+        </div>
+
+        <div class="grid-col flex-2 remove-winner-container">
+          <a href="#" class="js-dynamic-nested-remove">Remove</a>
+        </div>
+      </div>
+    <% end) %>
+  </div>
+
+  <div class="js-dynamic-nested-template d-none">
+    <div class="js-dynamic-nested-item grid-row mb-2">
+      <div class="js-dynamic-nested-group form-group">
+        <%= hidden_input :template, :field, data: [field: :id] %>
+      </div>
+      <div class="js-dynamic-nested-group form-group">
+        <%= hidden_input :template, :field, data: [field: :remove], value: false %>
+      </div>
+
+      <div class="winner grid-col flex-2">
+        <div class="js-dynamic-nested-group form-group">
+          <div><label >Place title (ex. First Place or Grand Winner) (optional)</label></div>
+          <%= text_input :template, :field, data: [field: :place_title] %>
+        </div>
+        
+        <div class="js-dynamic-nested-group form-group">
+          <div><label>Name (optional)</label></div>
+          <%= text_input :template, :field, data: [field: :name] %>
+        </div>
+        
+        <div class="js-dynamic-nested-group form-group">
+          <%= hidden_input :template, :field, data: [field: :image_path] %>
+        </div>
+
+        <div class="js-dynamic-nested-group form-group">
+          <div><label class="control-label">Upload image (optional)</label></div>
+          <%= file_input :template, :field, data: [field: :image] %>
+        </div>
+
+        <div class="js-dynamic-nested-group form-group">
+          <%= render_remove_image_checkbox(:template, :field, data: [field: :remove_image]) %>
+        </div>
+      </div>
+
+      <div class="grid-col flex-2 remove-winner-container">
+        <a href="#" class="js-dynamic-nested-remove">Remove</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="js-dynamic-nested-add btn btn-primary" data-parent="phase_winner" data-child="winners">Add</div>
+</div>
