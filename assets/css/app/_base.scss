@@ -450,3 +450,21 @@ label {
 .submission-invites__message .form-group {
   background-color: #fff;
 }
+
+/* Quill link error handling */
+.ql-tooltip.is-invalid {
+  border: 2px solid var(--danger);
+  background-color: #fff !important;
+  z-index: 1 !important;
+  left: 0;
+}
+
+.ql-tooltip span {
+  display: block;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.ql-tooltip {
+  left: 0 !important;
+}

@@ -74,6 +74,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:description, :string)
     field(:description_delta, :string)
     field(:brief_description, :string)
+    field(:brief_description_delta, :string)
+    field(:brief_description_length, :integer, virtual: true)
     field(:how_to_enter, :string)
     field(:fiscal_year, :string)
     field(:start_date, :utc_datetime)
@@ -281,6 +283,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :description,
       :description_delta,
       :brief_description,
+      :brief_description_delta,
+      :brief_description_length,
       :how_to_enter,
       :fiscal_year,
       :start_date,
@@ -450,7 +454,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     ])
     |> validate_length(:title, max: 90)
     |> validate_length(:tagline, max: 90)
-    |> validate_length(:brief_description, max: 200)
+    |> validate_rich_text_length(:brief_description, 200)
     |> validate_length(:description, max: 4000)
     |> validate_length(:other_type, max: 45)
     |> validate_inclusion(:primary_type, @challenge_types)
@@ -459,6 +463,23 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_auto_publish_date(params)
     |> validate_custom_url(params)
     |> validate_phases(params)
+  end
+
+  def validate_rich_text_length(struct, field, length) do
+    field_length = String.to_existing_atom("#{field}_length")
+    value = get_field(struct, field_length)
+
+    case value do
+      nil ->
+        struct
+
+      _ ->
+        if value > length do
+          add_error(struct, field, "can't be greater than #{length} characters")
+        else
+          struct
+        end
+    end
   end
 
   def timeline_changeset(struct, params) do

@@ -22,12 +22,12 @@ let toolbarOptions = [
   // [{ 'script': 'super' }, { 'script': 'sub' }],
   // [ 'direction', { 'align': [] }],
 
-  // Setup some default options without link funtionality until it's fixed
+  // Setup some default options
   [{ 'size': [] }],
   [ 'bold', 'italic', 'underline', 'strike' ],
   [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block' ],
   [{ 'list': 'ordered' }, { 'list': 'bullet'}, { 'indent': '-1' }, { 'indent': '+1' }],
-  // [ 'link', 'image', 'video', 'formula' ],
+  [ 'link'], // ['image', 'video', 'formula' ],
   [ 'clean' ]
 ]
 
@@ -41,6 +41,38 @@ $(".rt-textarea").each(function(textarea) {
     }
   });
   $(this).data("quill", quill)
+
+  let toolBar = quill.getModule("toolbar")
+  var tooltipSave = quill.theme.tooltip.save;
+  var tooltipShow = quill.theme.tooltip.show;
+
+  // make sure the tooltip has no remaining errors in new instance
+  quill.theme.tooltip.show = function() {
+    $(this.root).removeClass('is-invalid');
+    $("span").remove('.text-danger')
+    $("span").remove('.text-secondary')
+    tooltipShow.call(this);
+  }
+
+  // show errors on save when missing https
+  quill.theme.tooltip.save = function() {
+    var url = this.textbox.value;
+    // clean out any previous errors
+    $(this.root).removeClass('is-invalid');
+    $("span").remove('.text-danger')
+    $("span").remove('.text-secondary')
+
+    let httpRegex = /^https?:\/\//i
+    if(httpRegex.test(url)) {
+      $(this.root).removeClass('is-invalid');
+      tooltipSave.call(this);
+    }
+    else {
+      $(this.root).addClass('is-invalid');
+      $(this.root).append('<span class="text-danger">links must contain "https"</span>')
+      $(this.root).append('<span class="text-secondary">tip: copy and paste url</span>')
+    }
+  };
 
   let fieldName = $(this).data("input")
   let richTextInput = $(`#${fieldName}`)
@@ -65,5 +97,44 @@ $(".rt-textarea").each(function(textarea) {
   function clearInputs() {
     deltaInput.val("")
     richTextInput.val("")
+  }
+
+  const setCharLimitHelperText = (charsRemaining, displayNumber, displayText) => {
+    if (Math.sign(charsRemaining) != -1) {
+      displayNumber.css("color", "inherit")
+      displayText.css("color", "inherit")
+      displayNumber.text(charsRemaining)
+      displayText.text(" characters remaining")
+    } else {
+      displayNumber.css("color", "red")
+      displayText.css("color", "red")
+      displayNumber.text(`${charsRemaining * -1}`)
+      displayText.text(" characters over the limit")
+    }
+  }
+
+  if ($(this).hasClass("rt_char-limited")) {
+    const charLimit = $(this).data("limit")
+    const lengthInput = $(`#${fieldName}_length`)
+    const charsRemaining = $(`#${fieldName}_chars-remaining`)
+    const charLimitText = $(`#${fieldName}_char-limit-text`)
+    let initialCharsRemaining = charLimit - (quill.getLength() - 1)
+
+    // set inital values
+    lengthInput.val(quill.getLength() - 1)
+    if ((quill.getLength() - 1) === 0) {
+      charsRemaining.css("color", "inherit")
+      charLimitText.css("color", "inherit")
+      charsRemaining.text(charLimit)
+      charLimitText.text(" characters remaining")
+    } else {
+      setCharLimitHelperText(initialCharsRemaining, charsRemaining, charLimitText)
+    }
+
+    quill.on('text-change', function() {
+      let numCharsRemaining = charLimit - (quill.getLength() - 1)
+      lengthInput.val(quill.getLength() - 1)
+      setCharLimitHelperText(numCharsRemaining, charsRemaining, charLimitText)
+    });
   }
 })
