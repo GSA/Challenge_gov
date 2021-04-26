@@ -134,4 +134,44 @@ defmodule ChallengeGov.ChallengeDetailsTest do
       assert updated_challenge.sub_status === nil
     end
   end
+
+  describe "updating a published challenge" do
+    test "success - with auto publish date in the past" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      {:ok, challenge} =
+        Challenges.update(
+          challenge,
+          %{
+            "action" => "next",
+            "challenge" => %{
+              "section" => "details",
+              "status" => "published",
+              "auto_publish_date" => TestHelpers.iso_timestamp(days: -5)
+            }
+          },
+          user,
+          ""
+        )
+
+      assert challenge.status === "published"
+
+      {:ok, updated_challenge} =
+        Challenges.update(
+          challenge,
+          %{
+            "action" => "next",
+            "challenge" => %{
+              "section" => "details",
+              "brief_description" => "Updated brief description"
+            }
+          },
+          user,
+          ""
+        )
+
+      assert updated_challenge.brief_description === "Updated brief description"
+    end
+  end
 end
