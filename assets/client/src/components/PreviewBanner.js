@@ -1,16 +1,8 @@
 import React from 'react'
 import moment from 'moment'
 
-export const PreviewBanner = ({challenge, print}) => {
-  const renderPrintViewToggle = () => {
-    const location = window.location.href.split('?')[0]
-
-    if (print) {
-      return <a href={location}>Switch to preview view</a>
-    } else {
-      return <a href={location + "?print=true"}>Switch to printable view</a>
-    }
-  }
+export const PreviewBanner = ({challenge}) => {
+  const location = window.location.href.split('?')[0]
 
   return (
     challenge ? (
@@ -28,7 +20,7 @@ export const PreviewBanner = ({challenge, print}) => {
             <div>
               <span className="mr-3">Preview generated on {moment().format("llll")}</span>
               <a className="mr-3" href={window.location.href}>Refresh page</a>
-              {renderPrintViewToggle()}
+              <a href={location + "?print=true"}>Print</a>
             </div> 
             <br/>
             <div>Link to share for internal agency review:</div>

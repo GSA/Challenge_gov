@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import queryString from 'query-string'
 import { useParams, useLocation } from "react-router-dom";
@@ -8,7 +8,9 @@ import { PreviewBanner } from '../components/PreviewBanner';
 
 export const PreviewPage = () => {
   const [currentChallenge, setCurrentChallenge] = useState()
-  const [loadingState, setLoadingState] = useState(false)
+  const [loadingState, setLoadingState] = useState(null)
+
+  const isMounted = useRef(false)
 
   let { challengeId } = useParams()
   let query = useLocation().search
@@ -33,19 +35,29 @@ export const PreviewPage = () => {
       })
   }, [])
 
+  const launchPrintDialogue = () => {
+    if (loadingState === false) {
+      setTimeout(() => {
+        window.print()
+      }, 1000);
+    }
+  }
+
   return (
     <div className="challenge-preview py-5">
-      <div className="challenge-preview__top row mb-5">
-        <div className="col-md-4">
-          <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
+      {!print &&
+        <div className="challenge-preview__top row mb-5">
+          <div className="col-md-4">
+            <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
+          </div>
+          <div className="col-md-8">
+            <PreviewBanner challenge={currentChallenge} />
+          </div>
         </div>
-        <div className="col-md-8">
-          <PreviewBanner challenge={currentChallenge} print={print} />
-        </div>
-      </div>
+      }
       <div className="row">
         <div className="col">
-          <ChallengeDetails challenge={currentChallenge} preview={true} loading={loadingState} print={print} />
+          <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} preview={true} loading={loadingState} print={print} />
         </div>
       </div>
     </div>

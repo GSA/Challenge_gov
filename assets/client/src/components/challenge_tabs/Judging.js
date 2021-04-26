@@ -31,7 +31,7 @@ export const Judging = ({challenge, print}) => {
   }
 
   return (
-    <ChallengeTab label="Judging" downloadsLabel="Additional judging documents" section="judging" challenge={challenge} wrapContent={isSinglePhase(challenge)}>
+    <ChallengeTab label="Judging" downloadsLabel="Additional judging documents" section="judging" challenge={challenge} wrapContent={isSinglePhase(challenge)} print={print}>
       {renderPhaseData(challenge.phases)}
     </ChallengeTab>
   )

@@ -1,7 +1,7 @@
 import React from 'react'
 import { ChallengeTab } from "../ChallengeTab"
 
-export const Timeline = ({challenge}) => {
+export const Timeline = ({challenge, print}) => {
   const renderEvents = (events) => {
     return (
       events.map((event, index) => {
@@ -17,7 +17,7 @@ export const Timeline = ({challenge}) => {
   }
 
   return (
-    <ChallengeTab label="Timeline" downloadsLabel="Additional timeline documents" section="timeline" challenge={challenge}>
+    <ChallengeTab label="Timeline" downloadsLabel="Additional timeline documents" section="timeline" challenge={challenge} print={print}>
       {renderEvents(challenge.events)}
     </ChallengeTab>
   )

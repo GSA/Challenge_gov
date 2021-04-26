@@ -9,7 +9,7 @@
 
   &__content {
     margin: 30px;
-    min-width: 60%;
+    min-width: 75%;
     max-width: 1440px;
     height: 80%;
     border-radius: 10px;
@@ -130,16 +130,15 @@
 
     &__follow {
       // margin-bottom: 1.5rem;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
 
       .follow-btn {
-        height: 100%;
-        width: 100%;
-        // padding: .5rem;
         align-self: center;
         color: #2d618a;
-        border-radius: 7px;
-        border: 1px solid #2d618a;
-        box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
+        cursor: pointer;
       }
     }
 
@@ -283,10 +282,11 @@
       &__follow {
         grid-row: 1 / span 2;
         grid-column: 1;
+        width: 80%;
 
         .follow-btn {
-          width: 80%;
-          padding: 0 40px;
+          // width: 80%;
+          // padding: 0 40px;
         }
       }
 
