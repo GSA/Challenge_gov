@@ -25,6 +25,7 @@ $("#solution_document_upload").on("click", function(e) {
       contentType: false,
       data: fd,
       success: function(document) {
+        $("#solution_document_upload_error").text("")
         $(name_input).val("")
         $(file_input).val("")
 
@@ -44,10 +45,17 @@ $("#solution_document_upload").on("click", function(e) {
       },
       error: function(err) {
         console.log("Something went wrong")
+        handleFileUploadError(err.responseJSON.errors)
       }
     })
   }
 })
+
+const handleFileUploadError = (errors) => {
+  if (errors["solver_addr"]) {
+    $("#solution_document_upload_error").text(`${errors["solver_addr"]}`)
+  }
+}
 
 $(".solution-documents-list").on("click", ".solution_uploaded_document_delete", function(e) {
   e.preventDefault()

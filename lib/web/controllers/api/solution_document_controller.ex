@@ -4,8 +4,23 @@ defmodule Web.Api.SolutionDocumentController do
   alias ChallengeGov.SolutionDocuments
   alias Web.ErrorView
   alias ChallengeGov.Accounts
+  alias ChallengeGov.Solutions
 
-  def create(conn, all_params = %{"document" => params, "solver_email" => solver_email}) do
+  def create(conn, %{"document" => params, "solver_email" => ""}) do
+    {:error, changeset} =
+      Solutions.new()
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.add_error(:solver_addr, "must add solver email first")
+      |> Ecto.Changeset.apply_action(:insert)
+
+    conn
+    |> assign(:changeset, changeset)
+    |> put_status(:unprocessable_entity)
+    |> put_view(ErrorView)
+    |> render("errors.json")
+  end
+
+  def create(conn, %{"document" => params, "solver_email" => solver_email}) do
     user =
       case solver_email do
         "undefined" ->
