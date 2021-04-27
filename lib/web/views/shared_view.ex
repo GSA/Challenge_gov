@@ -114,7 +114,7 @@ defmodule Web.SharedView do
   end
 
   def upload_url(path) do
-    Storage.url(path)
+    Storage.url(path, signed: [expires_in: 3600])
   end
 
   def render_breadcrumbs(breadcrumb_info) do
