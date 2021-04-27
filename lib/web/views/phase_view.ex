@@ -205,7 +205,7 @@ defmodule Web.PhaseView do
       %{
         text: text,
         route: get_judging_status_route(conn, solution, "not_selected", filter),
-        class: map.class <> "btn-secondary"
+        class: map.class <> "btn-secondary btn-long"
       }
     )
   end
