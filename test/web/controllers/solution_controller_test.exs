@@ -256,7 +256,7 @@ defmodule Web.SolutionControllerTest do
       %{current_user: user} = conn.assigns
 
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-      phase = challenge.phases |> Enum.at(0)
+      _phase = challenge.phases |> Enum.at(0)
 
       params = %{
         "challenge_id" => challenge.id

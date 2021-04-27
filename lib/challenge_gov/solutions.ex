@@ -380,6 +380,16 @@ defmodule ChallengeGov.Solutions do
     where(query, [s], s.manager_id == ^value)
   end
 
+  def filter_on_attribute({"managed_accepted", "true"}, query) do
+    where(
+      query,
+      [s],
+      (s.review_verified == true and s.terms_accepted == true) or is_nil(s.manager_id)
+    )
+  end
+
+  def filter_on_attribute({"managed_accepted", _value}, query), do: query
+
   def order_on_attribute(query, sort_columns)
       when is_map(sort_columns) and map_size(sort_columns) > 0 do
     columns_to_sort =
