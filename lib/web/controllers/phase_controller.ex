@@ -54,7 +54,8 @@ defmodule Web.PhaseController do
       solutions_filter =
         Map.merge(filter, %{
           "status" => "submitted",
-          "phase_id" => phase.id
+          "phase_id" => phase.id,
+          "managed_accepted" => "true"
         })
 
       %{page: solutions, pagination: pagination} =

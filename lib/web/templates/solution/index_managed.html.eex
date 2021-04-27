@@ -50,7 +50,7 @@
                     <td><%= name_link(@conn, solution) %></td>
                     <td><%= link(solution.challenge.title, to: Routes.challenge_path(@conn, :show, solution.challenge.id)) %></td>
                     <td><%= status_display_name(solution) %></td>
-                    <td>false</td>
+                    <td><%= solution.review_verified %></td>
                     <td>
                       <%= render Web.SolutionView, "_actions.html", conn: @conn, challenge: @challenge, user: @user, solution: solution %>
                 </tr>
