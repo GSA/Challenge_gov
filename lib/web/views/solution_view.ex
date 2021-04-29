@@ -7,7 +7,6 @@ defmodule Web.SolutionView do
   alias Web.FormView
   alias Web.SharedView
   alias Web.DocumentView
-  alias Web.PhaseView
 
   def name_link(conn, solution, query_params \\ []) do
     link(solution.title || "Solution #{solution.id}",

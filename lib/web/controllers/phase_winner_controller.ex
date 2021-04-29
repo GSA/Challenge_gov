@@ -9,11 +9,10 @@ defmodule Web.PhaseWinnerController do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(challenge_id) do
-      conn =
-        conn
-        |> assign(:user, user)
-        |> assign(:challenge, challenge)
-        |> render("phase_selection.html")
+      conn
+      |> assign(:user, user)
+      |> assign(:challenge, challenge)
+      |> render("phase_selection.html")
     end
   end
 
@@ -68,7 +67,7 @@ defmodule Web.PhaseWinnerController do
     {:ok, phase_winner} = PhaseWinners.get_by_phase_id(phase.id)
 
     case PhaseWinners.update(phase_winner, params) do
-      {:ok, phase_winner} ->
+      {:ok, _phase_winner} ->
         conn
         |> put_flash(:info, "Winners updated")
         |> redirect(to: Routes.phase_winner_path(conn, :show, phase.id))

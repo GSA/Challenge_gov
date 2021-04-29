@@ -4,7 +4,6 @@ defmodule Web.Api.SolutionController do
   alias ChallengeGov.Challenges
   alias ChallengeGov.Phases
   alias ChallengeGov.Solutions
-  alias Web.Api.ErrorView
 
   plug(
     Web.Plugs.EnsureRole,

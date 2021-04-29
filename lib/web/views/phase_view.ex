@@ -5,7 +5,6 @@ defmodule Web.PhaseView do
   alias ChallengeGov.Phases
   alias Web.SharedView
   alias Web.SolutionView
-  alias Web.FormView
 
   def status(phase) do
     cond do

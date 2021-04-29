@@ -47,7 +47,7 @@ defmodule ChallengeGov.Accounts.User do
     has_many(:challenge_owner_challenges, through: [:challenge_owners, :challenge])
     has_many(:members, Member)
     has_many(:supporting_documents, Document)
-    has_many(:solutions, Solution)
+    has_many(:solutions, Solution, foreign_key: :submitter_id)
     has_many(:managed_solutions, {"managed_solutions", Solution}, foreign_key: :manager_id)
     has_many(:solution_documents, Solutions.Document)
 

@@ -6,7 +6,7 @@ defmodule Web.Api.SolutionDocumentController do
   alias ChallengeGov.Accounts
   alias ChallengeGov.Solutions
 
-  def create(conn, %{"document" => params, "solver_email" => ""}) do
+  def create(conn, %{"document" => _params, "solver_email" => ""}) do
     {:error, changeset} =
       Solutions.new()
       |> Ecto.Changeset.change()

@@ -7,8 +7,6 @@ defmodule ChallengeGov.PhaseWinners.PhaseWinner do
 
   import Ecto.Changeset
 
-  alias ChallengeGov.Repo
-  alias Stein.Storage
   alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.PhaseWinners.Winner
 
@@ -50,6 +48,7 @@ defmodule ChallengeGov.PhaseWinners.PhaseWinner do
     ])
     |> put_change(:phase_id, phase.id)
     |> unique_constraint(:phase_id)
+    |> validate_inclusion(:status, @statuses)
   end
 
   def update_changeset(struct, params \\ %{}) do
@@ -60,6 +59,7 @@ defmodule ChallengeGov.PhaseWinners.PhaseWinner do
       :overview_delta,
       :overview_image_path
     ])
+    |> validate_inclusion(:status, @statuses)
   end
 
   def overview_image_changeset(struct, path) do

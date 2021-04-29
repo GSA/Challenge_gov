@@ -629,6 +629,8 @@ defmodule ChallengeGov.Accounts do
   def is_decertified?(_user), do: false
 
   @doc """
+  Activate a user. Change status, allows login
+
   Activate pending user. Check certification, change status, allow login if certified
   """
   def activate(user = %{status: "pending"}, approver, approver_remote_ip) do
@@ -641,9 +643,6 @@ defmodule ChallengeGov.Accounts do
     end
   end
 
-  @doc """
-  Activate a user. Change status, allows login
-  """
   def activate(user, originator, remote_ip) do
     previous_status = user.status
 
