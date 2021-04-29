@@ -484,7 +484,17 @@ defmodule ChallengeGov.Accounts do
   Find a user by an email
   """
   def get_by_email(email) do
-    case Repo.get_by(User, email: email) do
+    email =
+      email
+      |> String.trim()
+      |> String.downcase()
+
+    query =
+      User
+      |> where([s], fragment("lower(?) = ?", s.email, ^email))
+      |> limit(1)
+
+    case Repo.one(query) do
       nil ->
         {:error, :not_found}
 
