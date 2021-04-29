@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="card p-3">
-          <%= render Web.SolutionView, "_header.html", conn: @conn, challenge: @solution.challenge %>
+          <%= render Web.SolutionView, "_header.html", conn: @conn, challenge: @solution.challenge, phase: @phase %>
           <%= render Web.SolutionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.solution_path(@conn, :update, @solution.id), user: @user, challenge: @solution.challenge %>
         </div>
       </div>

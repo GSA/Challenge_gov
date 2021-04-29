@@ -12,7 +12,7 @@
           <%= if Challenges.allowed_to_edit?(@user, @challenge) do %>
             <%= render Web.SolutionView, "_header_judging.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, solution: @solution %>
           <% else %>
-            <%= render Web.SolutionView, "_header.html", conn: @conn, user: @user, challenge: @solution.challenge %>
+            <%= render Web.SolutionView, "_header.html", conn: @conn, user: @user, challenge: @solution.challenge, phase: @phase %>
           <% end %>
 
           <section>
