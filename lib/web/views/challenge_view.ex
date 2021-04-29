@@ -438,7 +438,7 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def save_and_return_to_review_button(conn, challenge) do
+  def save_and_return_to_review_button(_conn, _challenge) do
     submit("Save and return to review",
       name: "action",
       value: "return_to_review",

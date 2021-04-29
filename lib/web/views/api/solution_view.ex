@@ -1,7 +1,6 @@
 defmodule Web.Api.SolutionView do
   use Web, :view
 
-  alias ChallengeGov.Solution
   alias Web.PhaseView
 
   def render("judging_status.json", %{

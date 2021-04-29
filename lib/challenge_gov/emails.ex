@@ -40,7 +40,7 @@ defmodule ChallengeGov.Emails do
     |> render("challenge_auto_publish.html")
   end
 
-  def managed_solution_submission(user, manager, solution) do
+  def managed_solution_submission(user, _manager, solution) do
     base_email()
     |> to(user.email)
     |> subject(

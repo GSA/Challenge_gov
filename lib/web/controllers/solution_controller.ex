@@ -135,7 +135,7 @@ defmodule Web.SolutionController do
     end
   end
 
-  def new(conn, params = %{"challenge_id" => challenge_id, "phase_id" => phase_id}) do
+  def new(conn, %{"challenge_id" => challenge_id, "phase_id" => phase_id}) do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
@@ -149,7 +149,7 @@ defmodule Web.SolutionController do
     |> render("new.html")
   end
 
-  def new(conn, params = %{"challenge_id" => challenge_id}) do
+  def new(conn, %{"challenge_id" => challenge_id}) do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
@@ -177,7 +177,7 @@ defmodule Web.SolutionController do
 
   def create(
         conn,
-        params = %{
+        %{
           "challenge_id" => challenge_id,
           "phase_id" => phase_id,
           "action" => "draft",
@@ -213,7 +213,7 @@ defmodule Web.SolutionController do
 
   def create(
         conn,
-        params = %{
+        %{
           "challenge_id" => challenge_id,
           "phase_id" => phase_id,
           "action" => "review",
