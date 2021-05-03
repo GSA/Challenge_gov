@@ -1,12 +1,12 @@
 <div class="content-header">
   <div class="container-fluid">
     <%= SharedView.render_breadcrumbs([
-      {"Home", Routes.dashboard_path(Web.Endpoint, :index)},
-      {"Challenges", Routes.challenge_path(Web.Endpoint, :index)},
-      {@challenge.title, Routes.challenge_path(Web.Endpoint, :show, @challenge.id)},
-      {"Manage Winners Phase Selection", Routes.phase_winner_path(@conn, :index, @challenge.id)},
-      {"#{@phase.title} Winners", Routes.phase_winner_path(@conn, :show, @phase.id)},
-      {"Edit", nil}
+      %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+      %{text: "Challenges", route: Routes.challenge_path(Web.Endpoint, :index)},
+      %{text: @challenge.title, route: Routes.challenge_path(Web.Endpoint, :show, @challenge.id)},
+      %{text: "Manage Winners Phase Selection", route: Routes.phase_winner_path(@conn, :index, @challenge.id)},
+      %{text: "#{@phase.title} Winners", route: Routes.phase_winner_path(@conn, :show, @phase.id)},
+      %{text: "Edit"}
     ])%>
   </div>
 </div>

@@ -31,6 +31,8 @@ defmodule ChallengeGov.Solutions do
     |> where([s], is_nil(s.deleted_at))
     |> where([s], s.id == ^id)
     |> base_preload
+    |> preload([:phase])
+    |> preload(challenge: [:challenge_owners])
     |> Repo.one()
     |> case do
       nil ->

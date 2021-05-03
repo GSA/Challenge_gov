@@ -139,10 +139,15 @@ defmodule Web.SolutionController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
+    phase =
+      Enum.find(challenge.phases, fn %{id: id} ->
+        id == String.to_integer(phase_id)
+      end)
+
     conn
     |> assign(:user, user)
     |> assign(:challenge, challenge)
-    |> assign(:phase_id, phase_id)
+    |> assign(:phase, phase)
     |> assign(:action, action_name(conn))
     |> assign(:changeset, Solutions.new())
     |> assign(:navbar_text, "Submit solution")
@@ -153,11 +158,11 @@ defmodule Web.SolutionController do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
-         {:ok, %{id: phase_id}} <- Challenges.current_phase(challenge) do
+         {:ok, phase} <- Challenges.current_phase(challenge) do
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
-      |> assign(:phase_id, phase_id)
+      |> assign(:phase, phase)
       |> assign(:action, action_name(conn))
       |> assign(:changeset, Solutions.new())
       |> assign(:navbar_text, "Submit solution")
@@ -293,6 +298,8 @@ defmodule Web.SolutionController do
       conn
       |> assign(:user, user)
       |> assign(:solution, solution)
+      |> assign(:challenge, solution.challenge)
+      |> assign(:phase, solution.phase)
       |> assign(:action, action_name(conn))
       |> assign(:path, Routes.solution_path(conn, :update, id))
       |> assign(:changeset, Solutions.edit(solution))
@@ -365,6 +372,8 @@ defmodule Web.SolutionController do
     conn
     |> assign(:user, user)
     |> assign(:solution, solution)
+    |> assign(:challenge, solution.challenge)
+    |> assign(:phase, solution.phase)
     |> assign(:action, action_name(conn))
     |> assign(:path, Routes.solution_path(conn, :update, solution.id))
     |> assign(:changeset, changeset)

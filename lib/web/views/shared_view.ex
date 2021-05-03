@@ -117,13 +117,21 @@ defmodule Web.SharedView do
     Storage.url(path, signed: [expires_in: 3600])
   end
 
-  def render_breadcrumbs(breadcrumb_info) do
+  def render_breadcrumbs(breadcrumbs) do
     content_tag :div, class: "row mb-2" do
       content_tag :div, class: "col" do
         content_tag :ol, class: "breadcrumb" do
-          Enum.map(breadcrumb_info, fn {text, url} ->
-            content_tag :li, class: "breadcrumb-item #{if is_nil(url), do: 'active'}" do
-              content_tag(:a, text, href: url)
+          Enum.map(breadcrumbs, fn breadcrumb ->
+            text = Map.get(breadcrumb, :text)
+            route = Map.get(breadcrumb, :route, nil)
+            is_visible = Map.get(breadcrumb, :is_visible, true)
+
+            if is_visible do
+              content_tag :li, class: "breadcrumb-item #{if is_nil(route), do: 'active'}" do
+                content_tag(:a, text, href: route)
+              end
+            else
+              []
             end
           end)
         end
