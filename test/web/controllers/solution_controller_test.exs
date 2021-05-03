@@ -284,7 +284,7 @@ defmodule Web.SolutionControllerTest do
           "title" => "Test title"
         },
         "challenge_id" => challenge.id,
-        "phase_id" => phase.id
+        "phase_id" => "#{phase.id}"
       }
 
       conn = post(conn, Routes.challenge_solution_path(conn, :create, challenge.id), params)
@@ -309,7 +309,7 @@ defmodule Web.SolutionControllerTest do
           "external_url" => "Test external url"
         },
         "challenge_id" => challenge.id,
-        "phase_id" => phase.id
+        "phase_id" => "#{phase.id}"
       }
 
       conn = post(conn, Routes.challenge_solution_path(conn, :create, challenge.id), params)
@@ -329,7 +329,7 @@ defmodule Web.SolutionControllerTest do
         "action" => "review",
         "solution" => %{},
         "challenge_id" => challenge.id,
-        "phase_id" => phase.id
+        "phase_id" => "#{phase.id}"
       }
 
       conn = post(conn, Routes.challenge_solution_path(conn, :create, challenge.id), params)
