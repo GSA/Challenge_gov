@@ -34,7 +34,7 @@ defmodule Web.SolutionControllerTest do
 
       SolutionHelpers.create_submitted_solution(
         %{
-          title: "Filtered title"
+          "title" => "Filtered title"
         },
         user,
         challenge
@@ -44,7 +44,7 @@ defmodule Web.SolutionControllerTest do
 
       SolutionHelpers.create_submitted_solution(
         %{
-          title: "Filtered title"
+          "title" => "Filtered title"
         },
         user,
         challenge_2
@@ -82,7 +82,7 @@ defmodule Web.SolutionControllerTest do
       solution =
         SolutionHelpers.create_submitted_solution(
           %{
-            title: "Filtered title"
+            "title" => "Filtered title"
           },
           user,
           challenge
@@ -223,7 +223,7 @@ defmodule Web.SolutionControllerTest do
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      Solutions.delete(solution, user)
+      Solutions.delete(solution)
 
       conn = get(conn, Routes.solution_path(conn, :show, solution.id))
 
@@ -399,7 +399,7 @@ defmodule Web.SolutionControllerTest do
 
       solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
 
-      {:ok, solution} = Solutions.delete(solution, user)
+      {:ok, solution} = Solutions.delete(solution)
 
       conn = get(conn, Routes.solution_path(conn, :edit, solution.id))
 
@@ -572,7 +572,7 @@ defmodule Web.SolutionControllerTest do
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      {:ok, solution} = Solutions.delete(solution, user)
+      {:ok, solution} = Solutions.delete(solution)
 
       params = %{
         "action" => "review",
@@ -829,60 +829,42 @@ defmodule Web.SolutionControllerTest do
       conn = prep_conn_admin(conn)
       %{current_user: user} = conn.assigns
 
-      user_2 = AccountHelpers.create_user()
-
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
-      solution = SolutionHelpers.create_draft_solution(%{}, user_2, challenge)
+      solution = SolutionHelpers.create_draft_solution(%{"manager_id" => user.id}, user, challenge)
 
-      conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
+      conn = delete(conn, Routes.solution_path(conn, :delete, solution))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
       assert get_flash(conn, :info) === "Solution deleted"
-      assert redirected_to(conn) === Routes.solution_path(conn, :index)
+      assert redirected_to(conn) ===
+        Routes.challenge_phase_managed_solution_path(
+          conn,
+          :managed_solutions,
+          solution.challenge_id,
+          solution.phase_id
+        )
     end
 
     test "deleting a submitted solution as an admin", %{conn: conn} do
       conn = prep_conn_admin(conn)
       %{current_user: user} = conn.assigns
 
-      user_2 = AccountHelpers.create_user()
-
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
-      solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
+      solution = SolutionHelpers.create_submitted_solution(%{"manager_id" => user.id}, user, challenge)
 
-      conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
+      conn = delete(conn, Routes.solution_path(conn, :delete, solution))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
       assert get_flash(conn, :info) === "Solution deleted"
-      assert redirected_to(conn) === Routes.solution_path(conn, :index)
-    end
-
-    test "deleting a deleted solution", %{conn: conn} do
-      conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
-
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-
-      solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
-
-      {:ok, solution} = Solutions.delete(solution, user)
-
-      conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
-
-      assert {:error, :not_found} === Solutions.get(solution.id)
-      assert get_flash(conn, :error) === "This solution does not exist"
-      assert redirected_to(conn) === Routes.solution_path(conn, :index)
-    end
-
-    test "deleting a solution that doesn't exist", %{conn: conn} do
-      conn = prep_conn(conn)
-
-      conn = delete(conn, Routes.solution_path(conn, :delete, 1))
-
-      assert get_flash(conn, :error) === "This solution does not exist"
-      assert redirected_to(conn) === Routes.solution_path(conn, :index)
+      assert redirected_to(conn) ===
+        Routes.challenge_phase_managed_solution_path(
+          conn,
+          :managed_solutions,
+          solution.challenge_id,
+          solution.phase_id
+        )
     end
   end
 

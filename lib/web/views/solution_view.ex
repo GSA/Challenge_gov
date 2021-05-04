@@ -50,14 +50,14 @@ defmodule Web.SolutionView do
   end
 
   def solution_delete_link(conn, solution, user, opts \\ []) do
-    if (user.role == "solver" and solution.status == "draft") or
-         Accounts.has_admin_access?(user) do
-      link(opts[:label] || "Delete",
-        to: Routes.solution_path(conn, :delete, solution.id),
-        method: :delete,
-        class: "btn btn-link text-danger",
-        data: [confirm: "Are you sure you want to delete this solution?"]
-      )
+    case Solutions.allowed_to_delete?(user, solution) do
+      {:ok, solution} ->
+        link(opts[:label] || "Delete",
+          to: Routes.solution_path(conn, :delete, solution.id),
+          method: :delete,
+          class: "btn btn-link text-danger",
+          data: [confirm: "Are you sure you want to delete this solution?"]
+        )
     end
   end
 

@@ -9,10 +9,10 @@ defmodule ChallengeGov.TestHelpers.SolutionHelpers do
   defp default_attributes(attributes) do
     Map.merge(
       %{
-        title: "Test Title",
-        brief_description: "Test Brief Description",
-        description: "Test Description",
-        external_url: "www.example.com"
+        "title" => "Test Title",
+        "brief_description" => "Test Brief Description",
+        "description" => "Test Description",
+        "external_url" => "www.example.com"
       },
       attributes
     )

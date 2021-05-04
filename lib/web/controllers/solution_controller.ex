@@ -25,7 +25,7 @@ defmodule Web.SolutionController do
 
   plug(
     Web.Plugs.EnsureRole,
-    [:admin, :super_admin, :solver] when action in [:new, :submit, :create]
+    [:admin, :super_admin, :solver] when action in [:new, :submit, :create, :delete]
   )
 
   plug(
@@ -361,24 +361,40 @@ defmodule Web.SolutionController do
 
   def delete(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
+    {:ok, solution} = Solutions.get(id)
 
-    with {:ok, solution} <- Solutions.get(id),
-         {:ok, _solution} <- Solutions.delete(solution, user) do
+    with {:ok, solution} <- Solutions.allowed_to_delete?(user, solution),
+         {:ok, solution} <- Solutions.delete(solution) do
       conn
       |> put_flash(:info, "Solution deleted")
-      |> redirect(to: Routes.solution_path(conn, :index))
+      |> post_delete_redirect(user, solution)
     else
-      {:error, :not_found} ->
+      {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "This solution does not exist")
-        |> redirect(to: Routes.solution_path(conn, :index))
+        |> put_flash(:error, "You are not authorized to delete this submission")
+        |> post_delete_redirect(user, solution)
 
       {:error, _changeset} ->
         conn
         |> put_flash(:error, "Something went wrong")
-        |> redirect(to: Routes.solution_path(conn, :index))
+        |> post_delete_redirect(user, solution)
     end
   end
+
+  def post_delete_redirect(conn, %{id: id}, solution = %{manager_id: id}),
+    do:
+      redirect(conn,
+        to:
+          Routes.challenge_phase_managed_solution_path(
+            conn,
+            :managed_solutions,
+            solution.challenge_id,
+            solution.phase_id
+          )
+      )
+
+  def post_delete_redirect(conn, %{id: id}, %{submitter_id: id}),
+    do: redirect(conn, to: Routes.solution_path(conn, :index))
 
   defp get_params_by_current_user(solution_params, current_user) do
     case Accounts.has_admin_access?(current_user) do

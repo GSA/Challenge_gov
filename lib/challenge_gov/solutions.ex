@@ -7,6 +7,7 @@ defmodule ChallengeGov.Solutions do
 
   import Ecto.Query
 
+  alias ChallengeGov.Accounts
   alias ChallengeGov.Emails
   alias ChallengeGov.GovDelivery
   alias ChallengeGov.Mailer
@@ -32,7 +33,7 @@ defmodule ChallengeGov.Solutions do
     |> where([s], s.id == ^id)
     |> base_preload
     |> preload([:phase])
-    |> preload(challenge: [:challenge_owners])
+    |> preload(challenge: [:phases])
     |> Repo.one()
     |> case do
       nil ->
@@ -184,21 +185,26 @@ defmodule ChallengeGov.Solutions do
     |> Mailer.deliver_later()
   end
 
-  # allowed to edit?
   def allowed_to_edit?(user, solution) do
-    if solution.submitter_id === user.id or solution.manager_id === user.id do
+    if solution.submitter_id === user.id or
+         (Accounts.has_admin_access?(user) and !is_nil(solution.manager_id)) do
       {:ok, solution}
     else
       {:error, :not_permitted}
     end
   end
 
-  def delete(solution, user) do
-    if allowed_to_delete?(solution, user) do
-      soft_delete(solution)
+  def allowed_to_delete?(user, solution) do
+    if solution.submitter_id === user.id or
+         (Accounts.has_admin_access?(user) and !is_nil(solution.manager_id)) do
+      {:ok, solution}
     else
       {:error, :not_permitted}
     end
+  end
+
+  def delete(solution) do
+    soft_delete(solution)
   end
 
   defp soft_delete(solution) do
@@ -212,10 +218,6 @@ defmodule ChallengeGov.Solutions do
       {:error, changeset} ->
         {:error, changeset}
     end
-  end
-
-  defp allowed_to_delete?(_solution, _user) do
-    true
   end
 
   # Attach supporting document functions
