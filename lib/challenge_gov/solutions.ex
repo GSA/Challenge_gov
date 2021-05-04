@@ -27,6 +27,16 @@ defmodule ChallengeGov.Solutions do
     |> Repo.paginate(opts[:page], opts[:per])
   end
 
+  def all_by_submitter_id(user_id, opts \\ []) do
+    Solution
+    |> preload([:challenge, :phase])
+    |> where([s], is_nil(s.deleted_at))
+    |> where([s], s.submitter_id == ^user_id)
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> order_on_attribute(opts[:sort])
+    |> Repo.paginate(opts[:page], opts[:per])
+  end
+
   def get(id) do
     Solution
     |> where([s], is_nil(s.deleted_at))
@@ -391,6 +401,36 @@ defmodule ChallengeGov.Solutions do
   end
 
   def filter_on_attribute({"managed_accepted", _value}, query), do: query
+
+  def order_on_attribute(query, %{"challenge" => direction}) do
+    query = join(query, :left, [s], c in assoc(s, :challenge))
+
+    case direction do
+      "asc" ->
+        order_by(query, [s, c], asc_nulls_last: c.title)
+
+      "desc" ->
+        order_by(query, [s, c], desc_nulls_last: c.title)
+
+      _ ->
+        query
+    end
+  end
+
+  def order_on_attribute(query, %{"phase" => direction}) do
+    query = join(query, :left, [s], p in assoc(s, :phase))
+
+    case direction do
+      "asc" ->
+        order_by(query, [s, p], asc_nulls_last: p.title)
+
+      "desc" ->
+        order_by(query, [s, p], desc_nulls_last: p.title)
+
+      _ ->
+        query
+    end
+  end
 
   def order_on_attribute(query, sort_columns)
       when is_map(sort_columns) and map_size(sort_columns) > 0 do

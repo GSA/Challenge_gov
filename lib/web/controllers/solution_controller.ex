@@ -33,6 +33,8 @@ defmodule Web.SolutionController do
     [:admin, :super_admin] when action in [:managed_solutions]
   )
 
+  plug(Web.Plugs.EnsureRole, [:solver] when action in [:index])
+
   plug Web.Plugs.FetchPage when action in [:index, :show]
 
   action_fallback(Web.FallbackController)
@@ -73,17 +75,10 @@ defmodule Web.SolutionController do
 
     filter = Map.get(params, "filter", %{})
 
-    filter =
-      if Accounts.role_at_or_below(user, "solver") do
-        Map.merge(filter, %{"submitter_id" => user.id})
-      else
-        filter
-      end
-
     sort = Map.get(params, "sort", %{})
 
     %{page: solutions, pagination: pagination} =
-      Solutions.all(filter: filter, sort: sort, page: page, per: per)
+      Solutions.all_by_submitter_id(user.id, filter: filter, sort: sort, page: page, per: per)
 
     conn
     |> assign(:user, user)

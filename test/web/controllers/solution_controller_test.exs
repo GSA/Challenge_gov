@@ -7,22 +7,24 @@ defmodule Web.SolutionControllerTest do
   alias ChallengeGov.TestHelpers.SolutionHelpers
 
   describe "index under challenge" do
-    test "successfully retrieve all solutions for challenge", %{conn: conn} do
+    test "successfully retrieve all solutions for current solver user", %{conn: conn} do
       conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
+      %{current_user: user1} = conn.assigns
 
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-      challenge_2 = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      user2 = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
-      SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+      challenge = ChallengeHelpers.create_single_phase_challenge(user1, %{user_id: user1.id})
+      challenge_2 = ChallengeHelpers.create_single_phase_challenge(user1, %{user_id: user1.id})
 
-      SolutionHelpers.create_submitted_solution(%{}, user, challenge_2)
+      SolutionHelpers.create_submitted_solution(%{}, user1, challenge)
+      SolutionHelpers.create_submitted_solution(%{}, user1, challenge_2)
+      SolutionHelpers.create_submitted_solution(%{}, user2, challenge_2)
 
-      conn = get(conn, Routes.challenge_solution_path(conn, :index, challenge.id))
+      conn = get(conn, Routes.solution_path(conn, :index))
 
       %{solutions: solutions, pagination: _pagination} = conn.assigns
 
-      assert length(solutions) === 1
+      assert length(solutions) === 2
     end
 
     test "successfully retrieve filtered solutions for challenge", %{conn: conn} do
@@ -50,15 +52,11 @@ defmodule Web.SolutionControllerTest do
         challenge_2
       )
 
-      conn =
-        get(conn, Routes.challenge_solution_path(conn, :index, challenge.id),
-          filter: %{title: "Filtered"}
-        )
+      conn = get(conn, Routes.solution_path(conn, :index), filter: %{title: "Filtered"})
 
       %{solutions: solutions, pagination: _pagination, filter: filter} = conn.assigns
 
-      assert length(solutions) === 1
-      assert filter["challenge_id"] === Integer.to_string(challenge.id)
+      assert length(solutions) === 2
       assert filter["title"] === "Filtered"
     end
 

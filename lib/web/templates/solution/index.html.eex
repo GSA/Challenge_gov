@@ -7,7 +7,7 @@
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">
-          <span>Solutions</span>
+          <span>Submissions</span>
         </h1>
       </div>
     </div>
@@ -26,6 +26,7 @@
                   <%= sortable_header(@conn, @sort, @filter, "id", "ID") %>
                   <%= sortable_header(@conn, @sort, @filter, "title", "Name") %>
                   <%= sortable_header(@conn, @sort, @filter, "challenge", "Challenge") %>
+                  <%= sortable_header(@conn, @sort, @filter, "phase", "Phase") %>
                   <%= sortable_header(@conn, @sort, @filter, "status", "Status") %>
                   <%= if Accounts.has_admin_access?(@user) do %>
                     <th>Submitter</th>
@@ -40,6 +41,7 @@
                     <td><%= solution.id %></td>
                     <td><%= name_link(@conn, solution) %></td>
                     <td><%= link(solution.challenge.title, to: Routes.challenge_path(@conn, :show, solution.challenge.id)) %></td>
+                    <td><%= solution.phase.title %></td>
                     <td><%= status_display_name(solution) %></td>
                     <%= if Accounts.has_admin_access?(@user) do %>
                       <td><%= Web.UserView.name_link(@conn, solution.submitter) %></td>
