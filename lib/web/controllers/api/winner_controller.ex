@@ -6,6 +6,9 @@ defmodule Web.Api.WinnerController do
   alias ChallengeGov.PhaseWinners
   alias ChallengeGov.Winners
 
+  plug Web.Plugs.FetchChallenge, id_param: "phase_winner_id"
+  plug Web.Plugs.AuthorizeChallenge
+
   def upload_image(conn, %{"id" => id, "image" => image}) do
     {:ok, phase_winner} = PhaseWinners.get(id)
 

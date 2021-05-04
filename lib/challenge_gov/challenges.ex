@@ -478,6 +478,7 @@ defmodule ChallengeGov.Challenges do
       :non_federal_partners,
       :agency,
       :sub_agency,
+      :challenge_owners,
       :challenge_owner_users,
       :events,
       phases: ^from(p in Phase, order_by: p.start_date),
