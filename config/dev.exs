@@ -74,10 +74,10 @@ config :challenge_gov, :oidc_config, %{
   idp_authorize_url: "https://idp.int.identitysandbox.gov/openid_connect/authorize",
   acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
   redirect_uri: "http://localhost:4000/auth/result",
-  client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_test_app",
+  client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_gov_portal_local",
   private_key_password: nil,
-  private_key_path: "private.pem",
-  public_key_path: "cert.pem"
+  private_key_path: "local_key.pem",
+  public_key_path: "local_cert.pem"
 }
 
 # Configure your database
