@@ -143,8 +143,8 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project
-      - run: echo -e $DEV_PRIVATE_KEY > sandbox_key.pem
-      - run: echo -e $DEV_PUBLIC_CERT > cert.pem
+      - run: echo -e $DEV_PRIVATE_KEY > dev_key.pem
+      - run: echo -e $DEV_PUBLIC_CERT > dev_cert.pem
       - run: echo 'export CF_PASSWORD=$CF_PASSWORD_DEV' >> $BASH_ENV
       - run: echo 'export CF_USERNAME=$CF_USERNAME_DEV' >> $BASH_ENV
       - cloudfoundry/install:
