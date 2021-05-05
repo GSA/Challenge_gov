@@ -2,3 +2,4 @@
 - [ ] Docs are up to date with changes (modules and functions)
 - [ ] Tests are included for changes
 - [ ] Links in emails use the `_url` route helpers
+- [ ] Controllers modified contain appropriate authorization plugs

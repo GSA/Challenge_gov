@@ -1,26 +1,31 @@
 defmodule Web.PhaseWinnerController do
   use Web, :controller
 
-  alias ChallengeGov.Challenges
-  alias ChallengeGov.Phases
   alias ChallengeGov.PhaseWinners
 
-  def index(conn, %{"challenge_id" => challenge_id}) do
-    %{current_user: user} = conn.assigns
+  plug(
+    Web.Plugs.FetchChallenge,
+    [id_param: "challenge_id"] when action in [:index]
+  )
 
-    with {:ok, challenge} <- Challenges.get(challenge_id) do
-      conn
-      |> assign(:user, user)
-      |> assign(:challenge, challenge)
-      |> render("phase_selection.html")
-    end
+  plug(
+    Web.Plugs.FetchChallenge,
+    [id_param: "phase_id"] when action in [:show, :edit, :update]
+  )
+
+  plug Web.Plugs.AuthorizeChallenge
+
+  def index(conn, %{"challenge_id" => _challenge_id}) do
+    %{current_user: user, current_challenge: challenge} = conn.assigns
+
+    conn
+    |> assign(:user, user)
+    |> assign(:challenge, challenge)
+    |> render("phase_selection.html")
   end
 
-  def show(conn, %{"phase_id" => phase_id}) do
-    %{current_user: user} = conn.assigns
-
-    {:ok, phase} = Phases.get(phase_id)
-    {:ok, challenge} = Challenges.get(phase.challenge_id)
+  def show(conn, %{"phase_id" => _phase_id}) do
+    %{current_user: user, current_challenge: challenge, current_phase: phase} = conn.assigns
 
     case PhaseWinners.get_by_phase_id(phase.id) do
       {:ok, phase_winner} ->
@@ -37,11 +42,8 @@ defmodule Web.PhaseWinnerController do
     end
   end
 
-  def edit(conn, %{"phase_id" => phase_id}) do
-    %{current_user: user} = conn.assigns
-
-    {:ok, phase} = Phases.get(phase_id)
-    {:ok, challenge} = Challenges.get(phase.challenge_id)
+  def edit(conn, %{"phase_id" => _phase_id}) do
+    %{current_user: user, current_challenge: challenge, current_phase: phase} = conn.assigns
 
     case PhaseWinners.get_by_phase_id(phase.id) do
       {:ok, phase_winner} ->
@@ -59,18 +61,18 @@ defmodule Web.PhaseWinnerController do
     end
   end
 
-  def update(conn, params = %{"phase_id" => phase_id}) do
-    %{current_user: user} = conn.assigns
+  def update(conn, params = %{"phase_id" => _phase_id}) do
+    %{current_user: user, current_challenge: challenge, current_phase: phase} = conn.assigns
 
-    {:ok, phase} = Phases.get(phase_id)
-    {:ok, challenge} = Challenges.get(phase.challenge_id)
-    {:ok, phase_winner} = PhaseWinners.get_by_phase_id(phase.id)
-
-    case PhaseWinners.update(phase_winner, params) do
-      {:ok, _phase_winner} ->
-        conn
-        |> put_flash(:info, "Winners updated")
-        |> redirect(to: Routes.phase_winner_path(conn, :show, phase.id))
+    with {:ok, phase_winner} <- PhaseWinners.get_by_phase_id(phase.id),
+         {:ok, _phase_winner} <- PhaseWinners.update(phase_winner, params) do
+      conn
+      |> put_flash(:info, "Winners updated")
+      |> redirect(to: Routes.phase_winner_path(conn, :show, phase.id))
+    else
+      {:error, :no_phase_winner} ->
+        {:ok, _phase_winner} = PhaseWinners.create(phase, %{"phase_winner" => %{}})
+        redirect(conn, to: Routes.phase_winner_path(conn, :edit, phase.id))
 
       {:error, changeset} ->
         conn
