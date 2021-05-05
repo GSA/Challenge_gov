@@ -829,19 +829,21 @@ defmodule Web.SolutionControllerTest do
 
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
-      solution = SolutionHelpers.create_draft_solution(%{"manager_id" => user.id}, user, challenge)
+      solution =
+        SolutionHelpers.create_draft_solution(%{"manager_id" => user.id}, user, challenge)
 
       conn = delete(conn, Routes.solution_path(conn, :delete, solution))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
       assert get_flash(conn, :info) === "Solution deleted"
+
       assert redirected_to(conn) ===
-        Routes.challenge_phase_managed_solution_path(
-          conn,
-          :managed_solutions,
-          solution.challenge_id,
-          solution.phase_id
-        )
+               Routes.challenge_phase_managed_solution_path(
+                 conn,
+                 :managed_solutions,
+                 solution.challenge_id,
+                 solution.phase_id
+               )
     end
 
     test "deleting a submitted solution as an admin", %{conn: conn} do
@@ -850,19 +852,21 @@ defmodule Web.SolutionControllerTest do
 
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
-      solution = SolutionHelpers.create_submitted_solution(%{"manager_id" => user.id}, user, challenge)
+      solution =
+        SolutionHelpers.create_submitted_solution(%{"manager_id" => user.id}, user, challenge)
 
       conn = delete(conn, Routes.solution_path(conn, :delete, solution))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
       assert get_flash(conn, :info) === "Solution deleted"
+
       assert redirected_to(conn) ===
-        Routes.challenge_phase_managed_solution_path(
-          conn,
-          :managed_solutions,
-          solution.challenge_id,
-          solution.phase_id
-        )
+               Routes.challenge_phase_managed_solution_path(
+                 conn,
+                 :managed_solutions,
+                 solution.challenge_id,
+                 solution.phase_id
+               )
     end
   end
 
