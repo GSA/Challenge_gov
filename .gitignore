@@ -43,8 +43,7 @@ npm-debug.log
 /config/dev.local.exs
 /config/test.local.exs
 /uploads
-/private.pem
-/key.pem
+/*.pem
 
 # ignore temp + backup files
 **~
