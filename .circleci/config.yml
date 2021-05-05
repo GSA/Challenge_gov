@@ -94,7 +94,7 @@ jobs:
       - checkout
       - run: mix local.hex --force
       - run: mix local.rebar --force
-      - run: mix clean      
+      - run: mix clean
       - run: cp config/test.circleci.exs config/test.local.exs
       - restore_cache:
           key: v3-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
@@ -105,7 +105,7 @@ jobs:
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: mix deps.get          
+      - run: mix deps.get
       - run: mix compile --force
       - run: mix ecto.migrate
       - run: mix run priv/repo/seeds.exs
@@ -143,6 +143,8 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project
+      - run: echo -e $DEV_PRIVATE_KEY > sandbox_key.pem
+      - run: echo -e $DEV_PUBLIC_CERT > cert.pem
       - run: echo 'export CF_PASSWORD=$CF_PASSWORD_DEV' >> $BASH_ENV
       - run: echo 'export CF_USERNAME=$CF_USERNAME_DEV' >> $BASH_ENV
       - cloudfoundry/install:
@@ -159,6 +161,8 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project
+      - run: echo -e $STAGING_PRIVATE_KEY > staging_key.pem
+      - run: echo -e $STAGING_PUBLIC_CERT > staging_cert.pem
       - run: echo 'export CF_PASSWORD=$CF_PASSWORD_STAGING' >> $BASH_ENV
       - run: echo 'export CF_USERNAME=$CF_USERNAME_STAGING' >> $BASH_ENV
       - cloudfoundry/install:
