@@ -22,9 +22,9 @@
     <div class="row mb-3">
       <div class="col">
         <%= if length(@challenge.phases) > 1 do %>
-          <h2>Solutions for Phase: <span class="font-italic"><%= @phase.title %></span> of Challenge: <span class="font-italic"><%= @challenge.title %></span></h2>
+          <h2>Submissions for Phase: <span class="font-italic"><%= @phase.title %></span> of Challenge: <span class="font-italic"><%= @challenge.title %></span></h2>
         <% else %>
-          <h2>Solutions for <span class="font-italic"><%= @challenge.title %></span></h2>
+          <h2>Submissions for <span class="font-italic"><%= @challenge.title %></span></h2>
         <% end %>
       </div>
     </div>
@@ -40,7 +40,7 @@
         <div class="card">
           <div class="card-body text-center">
             <div class="display-3"><%= length(@phase.solutions) %></div>
-            <div>Total # of Solutions</div>
+            <div>Total # of Submissions</div>
           </div>
         </div>
       </div>

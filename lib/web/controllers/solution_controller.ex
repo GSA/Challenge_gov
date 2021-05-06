@@ -130,7 +130,7 @@ defmodule Web.SolutionController do
       |> assign(:filter, filter)
       |> assign(:sort, sort)
       |> assign(:action, action_name(conn))
-      |> assign(:navbar_text, solution.title || "Solution #{solution.id}")
+      |> assign(:navbar_text, solution.title || "Submission #{solution.id}")
       |> render("show.html")
     end
   end
@@ -145,7 +145,7 @@ defmodule Web.SolutionController do
     |> assign(:phase_id, phase_id)
     |> assign(:action, action_name(conn))
     |> assign(:changeset, Solutions.new())
-    |> assign(:navbar_text, "Submit solution")
+    |> assign(:navbar_text, "Create submission")
     |> render("new.html")
   end
 
@@ -160,7 +160,7 @@ defmodule Web.SolutionController do
       |> assign(:phase_id, phase_id)
       |> assign(:action, action_name(conn))
       |> assign(:changeset, Solutions.new())
-      |> assign(:navbar_text, "Submit solution")
+      |> assign(:navbar_text, "Create submission")
       |> render("new.html")
     else
       {:error, :no_current_phase} ->
@@ -198,7 +198,7 @@ defmodule Web.SolutionController do
         |> assign(:phase_id, phase.id)
 
       conn
-      |> put_flash(:info, "Solution saved as draft")
+      |> put_flash(:info, "Submission saved as draft")
       |> redirect(to: Routes.solution_path(conn, :edit, solution.id))
     else
       {:error, :no_current_phase} ->
@@ -296,12 +296,12 @@ defmodule Web.SolutionController do
       |> assign(:action, action_name(conn))
       |> assign(:path, Routes.solution_path(conn, :update, id))
       |> assign(:changeset, Solutions.edit(solution))
-      |> assign(:navbar_text, "Edit solution")
+      |> assign(:navbar_text, "Edit submission")
       |> render("edit.html")
     else
       {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "You are not allowed to edit this solution")
+        |> put_flash(:error, "You are not allowed to edit this submission")
         |> redirect(to: Routes.solution_path(conn, :index))
 
       {:error, :not_found} ->
@@ -318,17 +318,17 @@ defmodule Web.SolutionController do
          {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
          {:ok, solution} <- Solutions.update_draft(solution, solution_params) do
       conn
-      |> put_flash(:info, "Solution saved as draft")
+      |> put_flash(:info, "Submission saved as draft")
       |> redirect(to: Routes.solution_path(conn, :edit, solution.id))
     else
       {:error, :not_found} ->
         conn
-        |> put_flash(:error, "This solution does not exist")
+        |> put_flash(:error, "This submission does not exist")
         |> redirect(to: Routes.solution_path(conn, :index))
 
       {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "You are not allowed to edit this solution")
+        |> put_flash(:error, "You are not allowed to edit this submission")
         |> redirect(to: Routes.solution_path(conn, :index))
 
       {:error, changeset} ->
@@ -347,12 +347,12 @@ defmodule Web.SolutionController do
     else
       {:error, :not_found} ->
         conn
-        |> put_flash(:error, "This solution does not exist")
+        |> put_flash(:error, "This submission does not exist")
         |> redirect(to: Routes.solution_path(conn, :index))
 
       {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "You are not allowed to edit this solution")
+        |> put_flash(:error, "You are not allowed to edit this submission")
         |> redirect(to: Routes.solution_path(conn, :index))
 
       {:error, changeset} ->
@@ -379,17 +379,17 @@ defmodule Web.SolutionController do
     with {:ok, solution} <- Solutions.allowed_to_edit?(user, solution),
          {:ok, solution} <- Solutions.submit(solution, Security.extract_remote_ip(conn)) do
       conn
-      |> put_flash(:info, "Solution submitted")
+      |> put_flash(:info, "Submission created")
       |> redirect(to: Routes.solution_path(conn, :show, solution.id))
     else
       {:error, :not_found} ->
         conn
-        |> put_flash(:error, "This solution does not exist")
+        |> put_flash(:error, "This submission does not exist")
         |> redirect(to: Routes.solution_path(conn, :index))
 
       {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "You are not allowed to edit this solution")
+        |> put_flash(:error, "You are not allowed to edit this submission")
         |> redirect(to: Routes.solution_path(conn, :index))
 
       {:error, changeset} ->
@@ -409,12 +409,12 @@ defmodule Web.SolutionController do
     with {:ok, solution} <- Solutions.get(id),
          {:ok, _solution} <- Solutions.delete(solution, user) do
       conn
-      |> put_flash(:info, "Solution deleted")
+      |> put_flash(:info, "Submission deleted")
       |> redirect(to: Routes.solution_path(conn, :index))
     else
       {:error, :not_found} ->
         conn
-        |> put_flash(:error, "This solution does not exist")
+        |> put_flash(:error, "This submission does not exist")
         |> redirect(to: Routes.solution_path(conn, :index))
 
       {:error, _changeset} ->

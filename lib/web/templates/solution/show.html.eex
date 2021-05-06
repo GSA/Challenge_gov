@@ -18,7 +18,7 @@
           <section>
             <%= if Challenges.allowed_to_edit?(@user, @challenge) do %>
               <div class="form-group">
-                <label class="col"><strong>Solution ID:</strong></label>
+                <label class="col"><strong>Submission ID:</strong></label>
                 <div class="col"><%= @solution.id || "None" %></div>
               </div>
             <% end %>

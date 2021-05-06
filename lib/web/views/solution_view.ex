@@ -9,13 +9,13 @@ defmodule Web.SolutionView do
   alias Web.DocumentView
 
   def name_link(conn, solution, query_params \\ []) do
-    link(solution.title || "Solution #{solution.id}",
+    link(solution.title || "Submission #{solution.id}",
       to: Routes.solution_path(conn, :show, solution.id, query_params)
     )
   end
 
   def name_link_url(conn, solution) do
-    link(solution.title || "Solution #{solution.id}",
+    link(solution.title || "Submission #{solution.id}",
       to: Routes.solution_url(conn, :show, solution.id)
     )
   end
@@ -56,7 +56,7 @@ defmodule Web.SolutionView do
         to: Routes.solution_path(conn, :delete, solution.id),
         method: :delete,
         class: "btn btn-link text-danger",
-        data: [confirm: "Are you sure you want to delete this solution?"]
+        data: [confirm: "Are you sure you want to delete this submission?"]
       )
     end
   end

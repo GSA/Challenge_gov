@@ -52,7 +52,7 @@
         <div class="col">
           <%= label f, :review_verified do %>
             <%= checkbox(f, :review_verified) %>
-            I have reviewed the solution and verify it is accurate.
+            I have reviewed the submission and verify it is accurate.
           <% end %>
         </div>
       </div>

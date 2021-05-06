@@ -3,7 +3,7 @@
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">
-          <span>Solutions</span>
+          <span>Submissions</span>
         </h1>
       </div>
 
@@ -14,7 +14,7 @@
               <i class="fa fa-dashboard"></i> Home
             <% end %>
           </li>
-          <li class="breadcrumb-item active">Solutions</li>
+          <li class="breadcrumb-item active">Submissions</li>
         </ol>
       </div>
     </div>

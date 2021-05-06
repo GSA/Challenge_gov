@@ -118,7 +118,7 @@ defmodule Web.SolutionControllerTest do
 
       assert fetched_solution.id === solution.id
       assert html_response(conn, 200) =~ "Back to submissions"
-      assert html_response(conn, 200) =~ "Solution ID:"
+      assert html_response(conn, 200) =~ "Submission ID:"
 
       assert html_response(conn, 200) =~
                "Challenge <i>#{challenge.title}</i> submission #{solution.id} details"
@@ -150,7 +150,7 @@ defmodule Web.SolutionControllerTest do
 
       assert fetched_solution.id === solution.id
       assert html_response(conn, 200) =~ "Back to submissions"
-      assert html_response(conn, 200) =~ "Solution ID:"
+      assert html_response(conn, 200) =~ "Submission ID:"
 
       assert html_response(conn, 200) =~
                "Phase <i>#{phase.title}</i> for challenge <i>#{challenge.title}</i> submission #{
@@ -179,7 +179,7 @@ defmodule Web.SolutionControllerTest do
 
       assert fetched_solution.id === solution.id
       assert html_response(conn, 200) =~ "Back to submissions"
-      assert html_response(conn, 200) =~ "Solution ID:"
+      assert html_response(conn, 200) =~ "Submission ID:"
 
       assert html_response(conn, 200) =~
                "Challenge <i>#{challenge.title}</i> submission #{solution.id} details"
@@ -207,7 +207,7 @@ defmodule Web.SolutionControllerTest do
 
       assert fetched_solution.id === solution.id
       assert html_response(conn, 200) =~ "Back to submissions"
-      assert html_response(conn, 200) =~ "Solution ID:"
+      assert html_response(conn, 200) =~ "Submission ID:"
 
       assert html_response(conn, 200) =~
                "Phase <i>#{phase.title}</i> for challenge <i>#{challenge.title}</i> submission #{
@@ -387,7 +387,7 @@ defmodule Web.SolutionControllerTest do
 
       conn = get(conn, Routes.solution_path(conn, :edit, solution.id))
 
-      assert get_flash(conn, :error) === "You are not allowed to edit this solution"
+      assert get_flash(conn, :error) === "You are not allowed to edit this submission"
       assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
@@ -441,7 +441,7 @@ defmodule Web.SolutionControllerTest do
       {:ok, solution} = Solutions.get(solution.id)
 
       assert solution.status === "draft"
-      assert get_flash(conn, :info) === "Solution saved as draft"
+      assert get_flash(conn, :info) === "Submission saved as draft"
       assert redirected_to(conn) === Routes.solution_path(conn, :edit, solution.id)
     end
 
@@ -468,7 +468,7 @@ defmodule Web.SolutionControllerTest do
       {:ok, solution} = Solutions.get(solution.id)
 
       assert solution.status === "draft"
-      assert get_flash(conn, :info) === "Solution saved as draft"
+      assert get_flash(conn, :info) === "Submission saved as draft"
       assert redirected_to(conn) === Routes.solution_path(conn, :edit, solution.id)
     end
 
@@ -544,7 +544,7 @@ defmodule Web.SolutionControllerTest do
 
       conn = put(conn, Routes.solution_path(conn, :update, solution.id), params)
 
-      assert get_flash(conn, :error) === "You are not allowed to edit this solution"
+      assert get_flash(conn, :error) === "You are not allowed to edit this submission"
       assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
@@ -586,7 +586,7 @@ defmodule Web.SolutionControllerTest do
 
       conn = put(conn, Routes.solution_path(conn, :update, solution.id), params)
 
-      assert get_flash(conn, :error) === "This solution does not exist"
+      assert get_flash(conn, :error) === "This submission does not exist"
       assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
@@ -605,7 +605,7 @@ defmodule Web.SolutionControllerTest do
 
       conn = put(conn, Routes.solution_path(conn, :update, 1), params)
 
-      assert get_flash(conn, :error) === "This solution does not exist"
+      assert get_flash(conn, :error) === "This submission does not exist"
       assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
   end
@@ -806,7 +806,7 @@ defmodule Web.SolutionControllerTest do
       conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
-      assert get_flash(conn, :info) === "Solution deleted"
+      assert get_flash(conn, :info) === "Submission deleted"
       assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
@@ -821,7 +821,7 @@ defmodule Web.SolutionControllerTest do
       conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
-      assert get_flash(conn, :info) === "Solution deleted"
+      assert get_flash(conn, :info) === "Submission deleted"
       assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
@@ -838,7 +838,7 @@ defmodule Web.SolutionControllerTest do
       conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
-      assert get_flash(conn, :info) === "Solution deleted"
+      assert get_flash(conn, :info) === "Submission deleted"
       assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
@@ -855,7 +855,7 @@ defmodule Web.SolutionControllerTest do
       conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
-      assert get_flash(conn, :info) === "Solution deleted"
+      assert get_flash(conn, :info) === "Submission deleted"
       assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
@@ -872,7 +872,7 @@ defmodule Web.SolutionControllerTest do
       conn = delete(conn, Routes.solution_path(conn, :delete, solution.id))
 
       assert {:error, :not_found} === Solutions.get(solution.id)
-      assert get_flash(conn, :error) === "This solution does not exist"
+      assert get_flash(conn, :error) === "This submission does not exist"
       assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
 
@@ -881,7 +881,7 @@ defmodule Web.SolutionControllerTest do
 
       conn = delete(conn, Routes.solution_path(conn, :delete, 1))
 
-      assert get_flash(conn, :error) === "This solution does not exist"
+      assert get_flash(conn, :error) === "This submission does not exist"
       assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
   end
