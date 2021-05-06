@@ -123,7 +123,7 @@ export const ChallengeDetails = ({challenge, preview, print}) => {
     if (challenge.external_url) {
       applyButtonUrl = challenge.external_url
     } else if (!preview) {
-      applyButtonUrl = apiUrl + `/challenges/${challenge.id}/solutions/new`
+      applyButtonUrl = apiUrl + `/challenges/${challenge.id}/submissions/new`
     }
 
     let applyButtonText = []

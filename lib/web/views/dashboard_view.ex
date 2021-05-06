@@ -206,7 +206,7 @@ defmodule Web.DashboardView do
     content_tag :div, class: "row" do
       [
         render("_card_link.html",
-          target: "/solutions",
+          target: "/submissions",
           icon: "/images/dashboard_icons/submissions.svg",
           title: "My submissions",
           description: "view my challenges submissions."

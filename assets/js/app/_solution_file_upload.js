@@ -19,7 +19,7 @@ $("#solution_document_upload").on("click", function(e) {
 
   if (file) {
     $.ajax({
-        url: "/api/solution_documents",
+        url: "/api/submission_documents",
       type: "post",
       processData: false,
       contentType: false,
@@ -64,7 +64,7 @@ $(".solution-documents-list").on("click", ".solution_uploaded_document_delete", 
   parent_element = $(this).parents(".solution-document-row")
 
   $.ajax({
-    url: `/api/solution_documents/${document_id}`, 
+    url: `/api/submission_documents/${document_id}`, 
     type: "delete",
     processData: false,
     contentType: false,
