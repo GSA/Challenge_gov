@@ -54,10 +54,9 @@
               </tbody>
             </table>
           </div>
-
-          <%= SharedView.pagination(path: Routes.challenge_path(@conn, :index, filter: @filter, sort: @sort), pagination: @pagination) %>
         </div>
       </div>
     </div>
+    <%= SharedView.pagination(path: Routes.solution_path(@conn, :index), pagination: @pagination) %>
   </div>
 </section>
