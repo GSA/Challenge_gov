@@ -8,6 +8,10 @@ defmodule Web.SolutionView do
   alias Web.SharedView
   alias Web.DocumentView
 
+  def persist_solver_email_on_edit(data) do
+    if data.submitter, do: data.submitter.email, else: ""
+  end
+
   def name_link(conn, solution, query_params \\ []) do
     link(solution.title || "Solution #{solution.id}",
       to: Routes.solution_path(conn, :show, solution.id, query_params)
