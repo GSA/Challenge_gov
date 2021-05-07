@@ -8,12 +8,12 @@ defmodule ChallengeGov.SubmissionInvites do
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
-  alias ChallengeGov.Solutions
-  alias ChallengeGov.Solutions.SubmissionInvite
+  alias ChallengeGov.Submissions
+  alias ChallengeGov.Submissions.SubmissionInvite
 
   def get(id) do
     SubmissionInvite
-    |> preload([:solution])
+    |> preload([:submission])
     |> Repo.get(id)
     |> case do
       nil ->
@@ -47,7 +47,7 @@ defmodule ChallengeGov.SubmissionInvites do
     |> Repo.update()
     |> case do
       {:ok, submission_invite} ->
-        submission_invite = Repo.preload(submission_invite, solution: [:challenge, :submitter])
+        submission_invite = Repo.preload(submission_invite, submission: [:challenge, :submitter])
 
         submission_invite
         |> Emails.submission_invite()
@@ -64,7 +64,7 @@ defmodule ChallengeGov.SubmissionInvites do
     submission_ids
     |> Enum.reduce(Ecto.Multi.new(), fn submission_id, multi ->
       Ecto.Multi.run(multi, submission_id, fn _repo, _changes ->
-        {:ok, submission} = Solutions.get(submission_id)
+        {:ok, submission} = Submissions.get(submission_id)
 
         if submission.invite do
           reinvite(submission.invite, params)

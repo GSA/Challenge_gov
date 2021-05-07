@@ -36,7 +36,7 @@ defmodule ChallengeGov.ChallengeTest do
       first_date = Timex.now()
 
       assert length(challenge.phases) === 1
-      assert Timex.equal?(start_date, first_date)
+      assert Timex.equal?(start_date, first_date, :minute)
     end
 
     test "successfully from multi phase" do
@@ -60,7 +60,7 @@ defmodule ChallengeGov.ChallengeTest do
       last_date = Timex.shift(Timex.now(), hours: 1)
 
       assert length(challenge.phases) === 1
-      assert Timex.equal?(end_date, last_date)
+      assert Timex.equal?(end_date, last_date, :minute)
     end
 
     test "successfully from multi phase" do
@@ -71,7 +71,7 @@ defmodule ChallengeGov.ChallengeTest do
       last_date = Timex.shift(Timex.now(), hours: 4)
 
       assert length(challenge.phases) === 3
-      assert Timex.equal?(end_date, last_date)
+      assert Timex.equal?(end_date, last_date, :minute)
     end
   end
 

@@ -1,0 +1,25 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item"><%= link("Submissions", to: Routes.submission_path(@conn, :index)) %></li>
+          <%= case @action do %>
+            <% :show -> %>
+              <li class="breadcrumb-item active"><%= @submission.title || "Submission ##{@submission.id}" %></li>
+            <% a when a === :new or a === :create -> %>
+              <li class="breadcrumb-item active">Submit submission</li>
+            <% a when a === :edit or a === :update or a === :submit -> %>
+              <li class="breadcrumb-item"><%= link(@submission.title || "Submission ##{@submission.id}", to: Routes.submission_path(@conn, :show, @submission.id)) %></li>
+              <li class="breadcrumb-item active">Edit</li>
+          <% end %>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>

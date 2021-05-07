@@ -1,0 +1,68 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          <span>Submissions</span>
+        </h1>
+      </div>
+
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
+              <i class="fa fa-dashboard"></i> Home
+            <% end %>
+          </li>
+          <li class="breadcrumb-item active">Submissions</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <%= sortable_header(@conn, @sort, @filter, "id", "ID") %>
+                  <%= sortable_header(@conn, @sort, @filter, "title", "Name") %>
+                  <%= sortable_header(@conn, @sort, @filter, "challenge", "Challenge") %>
+                  <%= sortable_header(@conn, @sort, @filter, "status", "Status") %>
+                  <%= if Accounts.has_admin_access?(@user) do %>
+                    <th>Submitter</th>
+                  <% end %>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <%= Enum.map @submissions, fn (submission) -> %>
+                  <tr>
+                    <td><%= submission.id %></td>
+                    <td><%= name_link(@conn, submission) %></td>
+                    <td><%= link(submission.challenge.title, to: Routes.challenge_path(@conn, :show, submission.challenge.id)) %></td>
+                    <td><%= status_display_name(submission) %></td>
+                    <%= if Accounts.has_admin_access?(@user) do %>
+                      <td><%= Web.UserView.name_link(@conn, submission.submitter) %></td>
+                    <% end %>
+                    <td>
+                      <%= render Web.SubmissionView, "_actions.html", conn: @conn, user: @user, submission: submission %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <%= SharedView.pagination(path: Routes.challenge_path(@conn, :index, filter: @filter, sort: @sort), pagination: @pagination) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

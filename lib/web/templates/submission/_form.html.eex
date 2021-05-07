@@ -1,0 +1,65 @@
+<section>
+  <small class="d-block pl-2 mb-2">Required<span class="required">*</span></small>
+  <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
+    <%= if Accounts.has_admin_access?(@user) do
+      FormView.text_field(f, :solver_addr, label: "Email address of solver", required: true)
+    end %>
+  
+    <%= FormView.text_field(f, :title, label: "Title", required: true) %>
+    <%= FormView.textarea_field(f, :brief_description, label: "Brief description", required: true, limit: 500) %>
+    <%= FormView.textarea_field(f, :description, label: "Description", required: true) %>
+
+    <div class="form-group">
+      <label class="col">Upload files (optional)</label>
+      <div class="col">
+        <div class="submission-document-ids">
+          <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
+            <%= hidden_input f, :document_id, name: "submission[document_ids][]", value: document_id %>
+          <% end) %>
+        </div>
+        <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "File name (optional)", class: "my-3") %>
+        <div class="col">
+          <%= file_input f, :document, name: "submission[document][file]", class: "my-3" %>
+          <div id="submission_document_upload" class="btn btn-primary">Upload file</div>
+        </div>
+        <span id="submission_document_upload_error" class="js-error-tag text-danger"></span>
+      </div>
+      <div class="submission-documents-list">
+        <%= Enum.map(@data.documents, fn document -> %>
+          <div class="row submission-document-row">
+            <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank") %>
+            <%= link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
+            <% end %>
+          </div>
+        <% end) %>
+      </div>
+    </div>
+
+    <%= FormView.text_field(f, :external_url, label: "External URL (optional)") %>
+    <br/>
+
+    <%= if @data.submitter_id == @user.id do %>
+      <div class="form-group">
+        <div class="col">
+          <%= label f, :terms_accepted do %>
+            <%= checkbox(f, :terms_accepted) %>
+            I have read the <%= link("rules", to: Routes.challenge_path(@conn, :show, @challenge.id)) %> of this challenge.
+          <% end %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col">
+          <%= label f, :review_verified do %>
+            <%= checkbox(f, :review_verified) %>
+            I have reviewed the submission and verify it is accurate.
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= cancel_button(@conn, @action, @challenge) %>
+    <%= submit("Review and submit", name: "action", value: "review", class: "btn btn-primary float-right") %>
+    <%= save_draft_button() %>
+  <% end) %>
+</section>

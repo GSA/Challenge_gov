@@ -39,7 +39,7 @@
       <div class="col-md-3">
         <div class="card">
           <div class="card-body text-center">
-            <div class="display-3"><%= length(@phase.solutions) %></div>
+            <div class="display-3"><%= length(@phase.submissions) %></div>
             <div>Total # of Submissions</div>
           </div>
         </div>
@@ -56,5 +56,5 @@
   <% end %>
 </div>
 <div class="main-container">
-<%= render Web.PhaseView, "solution_table/_table.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, solutions: @solutions, pagination: @pagination, sort: @sort, filter: @filter %>
+<%= render Web.PhaseView, "submission_table/_table.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, submissions: @submissions, pagination: @pagination, sort: @sort, filter: @filter %>
 </div>

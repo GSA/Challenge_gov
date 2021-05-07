@@ -3,7 +3,7 @@ defmodule Web.PhaseController do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.Phases
-  alias ChallengeGov.Solutions
+  alias ChallengeGov.Submissions
 
   plug Web.Plugs.FetchPage, [per: 10] when action in [:show]
 
@@ -50,30 +50,35 @@ defmodule Web.PhaseController do
     with {:ok, challenge} <- Challenges.get(challenge_id),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
          {:ok, phase} <- Phases.get(id) do
-      solutions_filter =
+      submissions_filter =
         Map.merge(filter, %{
           "status" => "submitted",
           "phase_id" => phase.id,
           "managed_accepted" => "true"
         })
 
-      %{page: solutions, pagination: pagination} =
-        Solutions.all(filter: solutions_filter, page: page, per: per, sort: sort)
+      %{page: submissions, pagination: pagination} =
+        Submissions.all(filter: submissions_filter, page: page, per: per, sort: sort)
 
-      # REFACTOR: Figure out a better solution here for paginating past the page count
+      # REFACTOR: Figure out a better submission here for paginating past the page count
       # after having moved some to a different judging status filter
-      %{page: solutions, pagination: pagination} =
+      %{page: submissions, pagination: pagination} =
         if pagination.total !== 0 and pagination.current > pagination.total do
-          Solutions.all(filter: solutions_filter, page: pagination.total, per: per, sort: sort)
+          Submissions.all(
+            filter: submissions_filter,
+            page: pagination.total,
+            per: per,
+            sort: sort
+          )
         else
-          %{page: solutions, pagination: pagination}
+          %{page: submissions, pagination: pagination}
         end
 
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
       |> assign(:phase, phase)
-      |> assign(:solutions, solutions)
+      |> assign(:submissions, submissions)
       |> assign(:has_closed_phases, Challenges.has_closed_phases?(challenge))
       |> assign(:pagination, pagination)
       |> assign(:sort, sort)

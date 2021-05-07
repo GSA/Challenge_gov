@@ -1,0 +1,14 @@
+<%= render Web.SubmissionView, "_breadcrumbs.html", conn: @conn, action: @action, submission: @changeset.data %>
+
+<section class="content"> 
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card p-3">
+          <%= render Web.SubmissionView, "_header.html", conn: @conn, challenge: @challenge %>
+          <%= render Web.SubmissionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.challenge_phase_submission_path(@conn, :create, @challenge.id, @phase_id), user: @user, challenge: @challenge %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

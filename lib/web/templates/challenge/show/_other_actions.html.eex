@@ -2,7 +2,7 @@
   <div class="card-body">
     <h4>Other actions</h4>
     <div class="btn-toolbar">
-      <%= challenge_solutions_link(@conn, @challenge, @user, label: "View submissions", class: "btn btn-primary") %>
+      <%= challenge_submissions_link(@conn, @challenge, @user, label: "View submissions", class: "btn btn-primary") %>
       <%= if Accounts.has_admin_access?(@user) or !(Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge)) do %>
         <%= link "Preview", to: Routes.public_preview_path(@conn, :index, @challenge.uuid), target: "_blank", class: "btn btn-info" %>
         <%= link "Print", to: Routes.public_preview_path(@conn, :index, @challenge.uuid, print: true), target: "_blank", class: "btn btn-info" %>
@@ -23,7 +23,7 @@
       <% end %>
 
       <%= if Accounts.has_admin_access?(@user) and (Challenges.is_open?(@challenge) or Challenges.is_closed?(@challenge)) do %>
-        <%= link("Create submission", to: Routes.challenge_solution_path(@conn, :new, @challenge.id), class: "btn btn-primary") %>
+        <%= link("Create submission", to: Routes.challenge_submission_path(@conn, :new, @challenge.id), class: "btn btn-primary") %>
       <% end %>
 
       <%= if Challenges.is_published?(@challenge) do %>

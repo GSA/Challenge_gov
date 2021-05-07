@@ -2,7 +2,7 @@ defmodule Web.DashboardController do
   use Web, :controller
   use Phoenix.HTML
 
-  alias ChallengeGov.Solutions
+  alias ChallengeGov.Submissions
   alias Web.Endpoint
 
   def index(conn, _params) do
@@ -11,9 +11,9 @@ defmodule Web.DashboardController do
 
     # if current user is solver with submissions
     # which are drafts w/ manager ID, include notification.
-    solutions =
+    submissions =
       if user.role == "solver" do
-        Solutions.get_all_with_user_id_and_manager(user)
+        Submissions.get_all_with_user_id_and_manager(user)
       else
         []
       end
@@ -25,20 +25,20 @@ defmodule Web.DashboardController do
       |> assign(:sort, nil)
 
     conn =
-      if Enum.count(solutions) > 0 do
-        solution = solutions |> Enum.at(0)
+      if Enum.count(submissions) > 0 do
+        submission = submissions |> Enum.at(0)
 
         conn
         |> put_flash(:info, [
           "A new submission has been created for you. You must review the submission by clicking ",
           link("here",
             to:
-              Routes.challenge_phase_solution_url(
+              Routes.challenge_phase_submission_url(
                 Endpoint,
                 :show,
-                solution.challenge_id,
-                solution.phase_id,
-                solution.id
+                submission.challenge_id,
+                submission.phase_id,
+                submission.id
               )
           ),
           " or by navigating to My submissions and clicking Accept entry for this challenge."

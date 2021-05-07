@@ -4,5 +4,5 @@ defmodule Web.EmailView do
   alias Web.Endpoint
   alias Web.ChallengeView
   alias Web.SharedView
-  alias Web.SolutionView
+  alias Web.SubmissionView
 end

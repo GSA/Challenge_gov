@@ -102,7 +102,7 @@ defmodule Web.ChallengeView do
 
   def published_sub_status_display(_challenge, _attached), do: ""
 
-  def challenge_solutions_link(conn, challenge, user, opts \\ []) do
+  def challenge_submissions_link(conn, challenge, user, opts \\ []) do
     if (user.role == "challenge_owner" or
           Accounts.has_admin_access?(user)) and length(challenge.phases) > 0 do
       link_location =

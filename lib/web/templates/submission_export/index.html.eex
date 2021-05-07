@@ -1,6 +1,6 @@
 <div class="content-header">
   <div class="container-fluid">
-    <%= ChallengeView.challenge_solutions_link(@conn, @challenge, @user, label: "Back", class: "btn btn-link p-0 mb-1") %>
+    <%= ChallengeView.challenge_submissions_link(@conn, @challenge, @user, label: "Back", class: "btn btn-link p-0 mb-1") %>
 
     <h1 class="mb-3">Recent downloads for <%= @challenge.title %></h1>
 

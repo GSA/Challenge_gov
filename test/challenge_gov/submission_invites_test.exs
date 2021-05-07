@@ -6,13 +6,13 @@ defmodule ChallengeGov.SubmissionInvitesTest do
   alias ChallengeGov.SubmissionInvites
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
-  alias ChallengeGov.TestHelpers.SolutionHelpers
+  alias ChallengeGov.TestHelpers.SubmissionHelpers
 
   describe "creating a submission invite" do
     test "success" do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-      submission = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+      submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
       params = %{
         "message" => "message text",
@@ -32,9 +32,9 @@ defmodule ChallengeGov.SubmissionInvitesTest do
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       solver = AccountHelpers.create_user(%{email: "solver@example.com"})
-      submission1 = SolutionHelpers.create_submitted_solution(%{}, solver, challenge)
-      submission2 = SolutionHelpers.create_submitted_solution(%{}, solver, challenge)
-      submission3 = SolutionHelpers.create_submitted_solution(%{}, solver, challenge)
+      submission1 = SubmissionHelpers.create_submitted_submission(%{}, solver, challenge)
+      submission2 = SubmissionHelpers.create_submitted_submission(%{}, solver, challenge)
+      submission3 = SubmissionHelpers.create_submitted_submission(%{}, solver, challenge)
 
       params = %{
         "message" => "message text",
@@ -61,7 +61,7 @@ defmodule ChallengeGov.SubmissionInvitesTest do
     test "success" do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-      submission = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+      submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
       params = %{
         "message" => "message text",
@@ -80,7 +80,7 @@ defmodule ChallengeGov.SubmissionInvitesTest do
     test "success" do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-      submission = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+      submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
       params = %{
         "message" => "message text",
@@ -99,7 +99,7 @@ defmodule ChallengeGov.SubmissionInvitesTest do
     test "success" do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-      submission = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
+      submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
       params = %{
         "message" => "message text",

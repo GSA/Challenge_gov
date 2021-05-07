@@ -4,8 +4,8 @@ defmodule ChallengeGov.SubmissionExports do
   """
   import Ecto.Query
 
-  alias ChallengeGov.Solutions.SubmissionExport
-  alias ChallengeGov.Solutions.SubmissionExportWorker
+  alias ChallengeGov.Submissions.SubmissionExport
+  alias ChallengeGov.Submissions.SubmissionExportWorker
   alias ChallengeGov.Repo
   alias Stein.Storage
 

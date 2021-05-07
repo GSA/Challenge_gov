@@ -1,11 +1,11 @@
 defmodule Web.SubmissionInviteControllerTest do
   use Web.ConnCase
 
-  alias ChallengeGov.Solutions
+  alias ChallengeGov.Submissions
   alias ChallengeGov.SubmissionInvites
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
-  alias ChallengeGov.TestHelpers.SolutionHelpers
+  alias ChallengeGov.TestHelpers.SubmissionHelpers
 
   describe "index" do
     test "success: as super admin", %{conn: conn} do
@@ -16,7 +16,8 @@ defmodule Web.SubmissionInviteControllerTest do
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
       phase = Enum.at(challenge.phases, 0)
 
-      submissions = Solutions.all(filter: %{"phase_id" => phase.id, "judging_status" => "winner"})
+      submissions =
+        Submissions.all(filter: %{"phase_id" => phase.id, "judging_status" => "winner"})
 
       conn = get(conn, Routes.submission_invite_path(conn, :index, phase.id))
 
@@ -42,7 +43,7 @@ defmodule Web.SubmissionInviteControllerTest do
       phase = Enum.at(challenge.phases, 0)
 
       solver = AccountHelpers.create_user(%{email: "solver@example.com"})
-      submission = SolutionHelpers.create_submitted_solution(%{}, solver, challenge)
+      submission = SubmissionHelpers.create_submitted_submission(%{}, solver, challenge)
 
       params = %{
         "message" => "message text",
@@ -66,9 +67,9 @@ defmodule Web.SubmissionInviteControllerTest do
       phase = Enum.at(challenge.phases, 0)
 
       solver = AccountHelpers.create_user(%{email: "solver@example.com"})
-      submission1 = SolutionHelpers.create_submitted_solution(%{}, solver, challenge)
-      submission2 = SolutionHelpers.create_submitted_solution(%{}, solver, challenge)
-      submission3 = SolutionHelpers.create_submitted_solution(%{}, solver, challenge)
+      submission1 = SubmissionHelpers.create_submitted_submission(%{}, solver, challenge)
+      submission2 = SubmissionHelpers.create_submitted_submission(%{}, solver, challenge)
+      submission3 = SubmissionHelpers.create_submitted_submission(%{}, solver, challenge)
 
       submission_ids = [
         submission1.id,
@@ -95,7 +96,7 @@ defmodule Web.SubmissionInviteControllerTest do
       phase = Enum.at(challenge.phases, 0)
 
       solver = AccountHelpers.create_user(%{email: "solver@example.com"})
-      submission = SolutionHelpers.create_submitted_solution(%{}, solver, challenge, phase)
+      submission = SubmissionHelpers.create_submitted_submission(%{}, solver, challenge, phase)
 
       conn = prep_conn(conn, solver)
 
@@ -124,7 +125,7 @@ defmodule Web.SubmissionInviteControllerTest do
       phase = Enum.at(challenge.phases, 0)
 
       solver = AccountHelpers.create_user(%{email: "solver@example.com"})
-      submission = SolutionHelpers.create_submitted_solution(%{}, solver, challenge, phase)
+      submission = SubmissionHelpers.create_submitted_submission(%{}, solver, challenge, phase)
 
       params = %{
         "message" => "message text",

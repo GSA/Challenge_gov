@@ -9,7 +9,7 @@ defmodule ChallengeGov.Phases do
 
   alias ChallengeGov.Repo
   alias ChallengeGov.Challenges.Phase
-  alias ChallengeGov.Solutions
+  alias ChallengeGov.Submissions
   alias Stein.Filter
 
   def all(opts \\ []) do
@@ -35,7 +35,7 @@ defmodule ChallengeGov.Phases do
 
   defp base_query(query) do
     query
-    |> preload([:solutions, challenge: [:challenge_owners]])
+    |> preload([:submissions, challenge: [:challenge_owners]])
   end
 
   def is_current?(%{start_date: start_date, end_date: end_date}) do
@@ -67,10 +67,10 @@ defmodule ChallengeGov.Phases do
     |> Repo.all()
   end
 
-  def solution_count(phase, filter \\ %{}) do
+  def submission_count(phase, filter \\ %{}) do
     phase
-    |> Ecto.assoc(:solutions)
-    |> Filter.filter(filter, Solutions)
+    |> Ecto.assoc(:submissions)
+    |> Filter.filter(filter, Submissions)
     |> select([s], count(s))
     |> Repo.one()
   end

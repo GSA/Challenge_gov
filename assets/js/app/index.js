@@ -13,7 +13,7 @@ import "./_remove_reports_error.js";
 import "./_rich_text_editor.js";
 import "./_session_timeout.js";
 import "./_section_file_upload.js";
-import "./_solution_file_upload.js";
+import "./_submission_file_upload.js";
 import "./_submission_invite.js";
 import "./_submission_judging_status.js";
 import "./_sub_agency_select.js";

@@ -15,7 +15,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   alias ChallengeGov.Challenges.NonFederalPartner
   alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.Challenges.TimelineEvent
-  alias ChallengeGov.Solutions.SubmissionExport
+  alias ChallengeGov.Submissions.SubmissionExport
   alias ChallengeGov.SupportingDocuments.Document
   alias ChallengeGov.Timeline.Event
 
