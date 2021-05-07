@@ -20,7 +20,7 @@ defmodule Web.SolutionController do
 
   plug(Web.Plugs.EnsureRole, [:solver] when action in [:index])
 
-  plug Web.Plugs.FetchPage when action in [:index, :show]
+  plug Web.Plugs.FetchPage when action in [:index, :show, :managed_solutions]
 
   action_fallback(Web.FallbackController)
 
@@ -76,17 +76,23 @@ defmodule Web.SolutionController do
 
   def managed_solutions(conn, params = %{"challenge_id" => challenge_id, "phase_id" => phase_id}) do
     %{current_user: user} = conn.assigns
+    %{page: page, per: per} = conn.assigns
+
     {:ok, challenge} = Challenges.get(challenge_id)
     {:ok, phase} = Phases.get(phase_id)
+
     filter = %{"manager_id" => user.id}
     sort = Map.get(params, "sort", %{})
-    solutions = Solutions.all(filter: filter)
+
+    %{page: solutions, pagination: pagination} =
+      Solutions.all(filter: filter, sort: sort, page: page, per: per)
 
     conn
     |> assign(:user, user)
     |> assign(:challenge, challenge)
     |> assign(:phase, phase)
     |> assign(:solutions, solutions)
+    |> assign(:pagination, pagination)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> render("index_managed.html")

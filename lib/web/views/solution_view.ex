@@ -49,6 +49,41 @@ defmodule Web.SolutionView do
     end
   end
 
+  def sortable_managed_header(conn, challenge, phase, sort, filter, column, label) do
+    {sort_icon, sort_values} =
+      case Map.get(sort, column) do
+        "asc" ->
+          {"fa-sort-up", Map.put(%{}, column, :desc)}
+
+        "desc" ->
+          {"fa-sort-down", %{}}
+
+        _ ->
+          {"fa-sort", Map.put(%{}, column, :asc)}
+      end
+
+    content_tag :th do
+      link(
+        to:
+          Routes.challenge_phase_managed_solution_path(
+            conn,
+            :managed_solutions,
+            challenge.id,
+            phase.id,
+            filter: filter,
+            sort: sort_values
+          )
+      ) do
+        content_tag :div do
+          [
+            content_tag(:span, label),
+            content_tag(:i, "", class: "fa " <> sort_icon)
+          ]
+        end
+      end
+    end
+  end
+
   def status_display_name(solution) do
     Solutions.status_label(solution.status)
   end

@@ -24,11 +24,11 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <%= sortable_header(@conn, @sort, @filter, "id", "ID") %>
-                  <%= sortable_header(@conn, @sort, @filter, "title", "Name") %>
-                  <%= sortable_header(@conn, @sort, @filter, "last-updated", "Last update") %>
-                  <%= sortable_header(@conn, @sort, @filter, "status", "Status") %>                  
-                  <%= sortable_header(@conn, @sort, @filter, "accepted_by_solver", "Accepted By Solver") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "id", "ID") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "title", "Name") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "challenge", "Challenge") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "status", "Status") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "review_verified", "Accepted By Solver") %>
                   <th>Actions</th>
               </thead>
 
@@ -49,5 +49,6 @@
         </div>
       </div>
     </div>
+    <%= SharedView.pagination(path: Routes.challenge_phase_managed_solution_path(@conn, :managed_solutions, @challenge.id, @phase.id), pagination: @pagination) %>
   </div>
 </section>
