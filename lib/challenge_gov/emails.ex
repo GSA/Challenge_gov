@@ -44,7 +44,7 @@ defmodule ChallengeGov.Emails do
     base_email()
     |> to(user.email)
     |> subject(
-      "Challenge.gov - Submission submitted for #{submission.challenge.id} #{
+      "Challenge.gov - Submission created for #{submission.challenge.id} #{
         submission.challenge.title
       }"
     )
@@ -58,7 +58,7 @@ defmodule ChallengeGov.Emails do
     base_email()
     |> to(user.email)
     |> subject(
-      "Challenge.gov - Submission submitted for #{submission.challenge.id} #{
+      "Challenge.gov - Submission created for #{submission.challenge.id} #{
         submission.challenge.title
       }"
     )
@@ -80,7 +80,7 @@ defmodule ChallengeGov.Emails do
     base_email()
     |> to(submission.submitter.email)
     |> subject(
-      "Challenge.gov - Submission submitted for #{submission.challenge.id} #{
+      "Challenge.gov - Submission created for #{submission.challenge.id} #{
         submission.challenge.title
       }"
     )
