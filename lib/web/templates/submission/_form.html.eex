@@ -14,9 +14,14 @@
     <% end %>
   
     <%= FormView.text_field(f, :title, label: "Title", required: true) %>
-    <%= FormView.textarea_field(f, :brief_description, label: "Brief description", required: true, limit: 500) %>
-    <%= FormView.textarea_field(f, :description, label: "Description", required: true) %>
-
+    <div class="col">
+      <label for="brief_description">Brief description <span class="required">*</span></label>
+      <%= FormView.rt_textarea_field(f, :brief_description, limit: 500) %>
+    </div>
+    <div class="col">
+      <label><%= "Description" %> <span class="required">*</span></label>
+      <%= FormView.rt_textarea_field(f, :description) %>
+    </div>
     <div class="form-group">
       <label class="col">Upload files (optional)</label>
       <div class="col">

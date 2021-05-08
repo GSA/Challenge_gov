@@ -264,11 +264,11 @@ defmodule Web.FormView do
       if opts[:limit] do
         [
           content_tag(:span, "",
-            id: "challenge_#{Atom.to_string(field)}_chars-remaining",
+            id: "#{form.id}_#{Atom.to_string(field)}_chars-remaining",
             class: "char-limit-label ml-1"
           ),
           content_tag(:span, "",
-            id: "challenge_#{Atom.to_string(field)}_char-limit-text",
+            id: "#{form.id}_#{Atom.to_string(field)}_char-limit-text",
             class: "char-limit-label ml-1"
           ),
           hidden_input(form, String.to_existing_atom(Atom.to_string(field) <> "_length"))

@@ -106,8 +106,8 @@ $(".rt-textarea").each(function(textarea) {
       displayNumber.text(charsRemaining)
       displayText.text(" characters remaining")
     } else {
-      displayNumber.css("color", "red")
-      displayText.css("color", "red")
+      displayNumber.css("color", "#dc3545")
+      displayText.css("color", "#dc3545")
       displayNumber.text(`${charsRemaining * -1}`)
       displayText.text(" characters over the limit")
     }
