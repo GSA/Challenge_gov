@@ -492,7 +492,6 @@ defmodule ChallengeGov.Accounts do
     query =
       User
       |> where([s], fragment("lower(?) = ?", s.email, ^email))
-      |> limit(1)
 
     case Repo.one(query) do
       nil ->
