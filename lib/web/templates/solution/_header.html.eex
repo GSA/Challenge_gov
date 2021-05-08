@@ -1,8 +1,9 @@
 <section class="solution-header row">
   <div class="col-8">
-    <h4>Create a submission for:</h4>
     <h1><i><%= @challenge.title || "Challenge #{@challenge.id}" %></i></h1>
-    <h3><i><%= @phase.title || "phase #{@phase.id}" %></i></h3>
+    <% if @phase.title do %>
+      <h3><i><%= @phase.title %></i></h3>
+    <% end %>
     <br/>
     <%= link to: Routes.public_challenge_details_path(@conn, :index, @challenge.id), target: "_blank" do %>
       View challenge details <i class="fa fa-external-link-alt"></i>
