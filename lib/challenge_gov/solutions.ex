@@ -21,6 +21,7 @@ defmodule ChallengeGov.Solutions do
   def all(opts \\ []) do
     Solution
     |> base_preload
+    |> preload([:phase])
     |> where([s], is_nil(s.deleted_at))
     |> Filter.filter(opts[:filter], __MODULE__)
     |> order_on_attribute(opts[:sort])

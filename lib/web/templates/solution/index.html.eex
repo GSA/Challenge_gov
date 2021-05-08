@@ -43,9 +43,6 @@
                     <td><%= link(solution.challenge.title, to: Routes.challenge_path(@conn, :show, solution.challenge.id)) %></td>
                     <td><%= solution.phase.title %></td>
                     <td><%= status_display_name(solution) %></td>
-                    <%= if Accounts.has_admin_access?(@user) do %>
-                      <td><%= Web.UserView.name_link(@conn, solution.submitter) %></td>
-                    <% end %>
                     <td>
                       <%= render Web.SolutionView, "_actions.html", conn: @conn, user: @user, solution: solution %>
                     </td>

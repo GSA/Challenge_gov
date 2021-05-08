@@ -10,7 +10,7 @@ defmodule Web.SolutionController do
   plug(
     Web.Plugs.EnsureRole,
     [:admin, :super_admin, :solver]
-    when action in [:index, :new, :submit, :create, :edit, :update, :delete]
+    when action in [:new, :submit, :create, :edit, :update, :delete]
   )
 
   plug(
