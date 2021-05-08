@@ -9,23 +9,8 @@ defmodule Web.SolutionController do
 
   plug(
     Web.Plugs.EnsureRole,
-    [:solver]
-    when action not in [
-           :index,
-           :show,
-           :edit,
-           :delete,
-           :update_judging_status,
-           :new,
-           :submit,
-           :create,
-           :managed_solutions
-         ]
-  )
-
-  plug(
-    Web.Plugs.EnsureRole,
-    [:admin, :super_admin, :solver] when action in [:new, :submit, :create]
+    [:admin, :super_admin, :solver]
+    when action in [:new, :submit, :create, :edit, :update, :delete]
   )
 
   plug(
@@ -33,7 +18,9 @@ defmodule Web.SolutionController do
     [:admin, :super_admin] when action in [:managed_solutions]
   )
 
-  plug Web.Plugs.FetchPage when action in [:index, :show]
+  plug(Web.Plugs.EnsureRole, [:solver] when action in [:index])
+
+  plug Web.Plugs.FetchPage when action in [:index, :show, :managed_solutions]
 
   action_fallback(Web.FallbackController)
 
@@ -73,17 +60,10 @@ defmodule Web.SolutionController do
 
     filter = Map.get(params, "filter", %{})
 
-    filter =
-      if Accounts.role_at_or_below(user, "solver") do
-        Map.merge(filter, %{"submitter_id" => user.id})
-      else
-        filter
-      end
-
     sort = Map.get(params, "sort", %{})
 
     %{page: solutions, pagination: pagination} =
-      Solutions.all(filter: filter, sort: sort, page: page, per: per)
+      Solutions.all_by_submitter_id(user.id, filter: filter, sort: sort, page: page, per: per)
 
     conn
     |> assign(:user, user)
@@ -96,17 +76,23 @@ defmodule Web.SolutionController do
 
   def managed_solutions(conn, params = %{"challenge_id" => challenge_id, "phase_id" => phase_id}) do
     %{current_user: user} = conn.assigns
+    %{page: page, per: per} = conn.assigns
+
     {:ok, challenge} = Challenges.get(challenge_id)
     {:ok, phase} = Phases.get(phase_id)
+
     filter = %{"manager_id" => user.id}
     sort = Map.get(params, "sort", %{})
-    solutions = Solutions.all(filter: filter)
+
+    %{page: solutions, pagination: pagination} =
+      Solutions.all(filter: filter, sort: sort, page: page, per: per)
 
     conn
     |> assign(:user, user)
     |> assign(:challenge, challenge)
     |> assign(:phase, phase)
     |> assign(:solutions, solutions)
+    |> assign(:pagination, pagination)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> render("index_managed.html")
@@ -139,10 +125,15 @@ defmodule Web.SolutionController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
+    phase =
+      Enum.find(challenge.phases, fn %{id: id} ->
+        id == String.to_integer(phase_id)
+      end)
+
     conn
     |> assign(:user, user)
     |> assign(:challenge, challenge)
-    |> assign(:phase_id, phase_id)
+    |> assign(:phase, phase)
     |> assign(:action, action_name(conn))
     |> assign(:changeset, Solutions.new())
     |> assign(:navbar_text, "Submit solution")
@@ -153,11 +144,11 @@ defmodule Web.SolutionController do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
-         {:ok, %{id: phase_id}} <- Challenges.current_phase(challenge) do
+         {:ok, phase} <- Challenges.current_phase(challenge) do
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
-      |> assign(:phase_id, phase_id)
+      |> assign(:phase, phase)
       |> assign(:action, action_name(conn))
       |> assign(:changeset, Solutions.new())
       |> assign(:navbar_text, "Submit solution")
@@ -180,103 +171,50 @@ defmodule Web.SolutionController do
         %{
           "challenge_id" => challenge_id,
           "phase_id" => phase_id,
-          "action" => "draft",
+          "action" => action,
           "solution" => solution_params
         }
       ) do
-    %{current_user: user} = conn.assigns
+    %{current_user: current_user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
-    conn =
-      conn
-      |> assign(:phase_id, phase_id)
+    phase =
+      Enum.find(challenge.phases, fn %{id: id} ->
+        id == String.to_integer(phase_id)
+      end)
 
-    with {:ok, phase} <- Challenges.current_phase(challenge),
-         {:ok, solution} <- Solutions.create_draft(solution_params, user, challenge, phase) do
-      conn =
-        conn
-        |> assign(:phase_id, phase.id)
+    {submitter, solution_params} = get_params_by_current_user(solution_params, current_user)
 
-      conn
-      |> put_flash(:info, "Solution saved as draft")
-      |> redirect(to: Routes.solution_path(conn, :edit, solution.id))
-    else
-      {:error, :no_current_phase} ->
-        conn
-        |> put_flash(:error, "No current phase found")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
+    case action do
+      "draft" ->
+        case Solutions.create_draft(solution_params, submitter, challenge, phase) do
+          {:ok, solution} ->
+            conn
+            |> assign(:phase_id, phase.id)
+            |> put_flash(:info, "Solution saved as draft")
+            |> redirect(to: Routes.solution_path(conn, :edit, solution.id))
 
-      {:error, changeset} ->
-        create_error(conn, changeset, user, challenge)
+          {:error, changeset} ->
+            create_error(conn, changeset, current_user, challenge, phase)
+        end
+
+      "review" ->
+        case Solutions.create_review(solution_params, submitter, challenge, phase) do
+          {:ok, solution} ->
+            conn
+            |> redirect(to: Routes.solution_path(conn, :show, solution.id))
+
+          {:error, changeset} ->
+            create_error(conn, changeset, current_user, challenge, phase)
+        end
     end
   end
 
-  def create(
-        conn,
-        %{
-          "challenge_id" => challenge_id,
-          "phase_id" => phase_id,
-          "action" => "review",
-          "solution" => solution_params
-        }
-      ) do
-    %{current_user: user} = conn.assigns
-
-    conn =
-      conn
-      |> assign(:phase_id, phase_id)
-
-    {:ok, challenge} = Challenges.get(challenge_id)
-
-    {solver, phase, solution_params} =
-      if Accounts.has_admin_access?(user) do
-        solution_params =
-          Map.merge(solution_params, %{"manager_id" => user.id, "terms_accepted" => false})
-
-        solver =
-          case Accounts.get_by_email(solution_params["solver_addr"]) do
-            {:ok, solver} ->
-              solver
-
-            {:error, :not_found} ->
-              conn
-              |> put_flash(:error, "That user is not found")
-              |> redirect(to: Routes.dashboard_path(conn, :index))
-          end
-
-        {:ok, phase} = Phases.get(phase_id)
-        {solver, phase, solution_params}
-      else
-        solver = user
-
-        phase =
-          case Challenges.current_phase(challenge) do
-            {:ok, phase} ->
-              phase
-
-            {:error, :no_current_phase} ->
-              conn
-              |> put_flash(:error, "No current phase found")
-              |> redirect(to: Routes.dashboard_path(conn, :index))
-          end
-
-        {solver, phase, solution_params}
-      end
-
-    case Solutions.create_review(solution_params, solver, challenge, phase) do
-      {:ok, solution} ->
-        conn
-        |> redirect(to: Routes.solution_path(conn, :show, solution.id))
-
-      {:error, changeset} ->
-        create_error(conn, changeset, user, challenge)
-    end
-  end
-
-  defp create_error(conn, changeset, user, challenge) do
+  defp create_error(conn, changeset, user, challenge, phase) do
     conn
     |> assign(:user, user)
     |> assign(:challenge, challenge)
+    |> assign(:phase, phase)
     |> assign(:path, Routes.challenge_path(conn, :create))
     |> assign(:action, action_name(conn))
     |> assign(:changeset, changeset)
@@ -293,6 +231,8 @@ defmodule Web.SolutionController do
       conn
       |> assign(:user, user)
       |> assign(:solution, solution)
+      |> assign(:challenge, solution.challenge)
+      |> assign(:phase, solution.phase)
       |> assign(:action, action_name(conn))
       |> assign(:path, Routes.solution_path(conn, :update, id))
       |> assign(:changeset, Solutions.edit(solution))
@@ -365,6 +305,8 @@ defmodule Web.SolutionController do
     conn
     |> assign(:user, user)
     |> assign(:solution, solution)
+    |> assign(:challenge, solution.challenge)
+    |> assign(:phase, solution.phase)
     |> assign(:action, action_name(conn))
     |> assign(:path, Routes.solution_path(conn, :update, solution.id))
     |> assign(:changeset, changeset)
@@ -405,22 +347,51 @@ defmodule Web.SolutionController do
 
   def delete(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
+    {:ok, solution} = Solutions.get(id)
 
-    with {:ok, solution} <- Solutions.get(id),
-         {:ok, _solution} <- Solutions.delete(solution, user) do
+    with {:ok, solution} <- Solutions.allowed_to_delete?(user, solution),
+         {:ok, solution} <- Solutions.delete(solution) do
       conn
       |> put_flash(:info, "Solution deleted")
-      |> redirect(to: Routes.solution_path(conn, :index))
+      |> post_delete_redirect(user, solution)
     else
-      {:error, :not_found} ->
+      {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "This solution does not exist")
-        |> redirect(to: Routes.solution_path(conn, :index))
+        |> put_flash(:error, "You are not authorized to delete this submission")
+        |> post_delete_redirect(user, solution)
 
       {:error, _changeset} ->
         conn
         |> put_flash(:error, "Something went wrong")
-        |> redirect(to: Routes.solution_path(conn, :index))
+        |> post_delete_redirect(user, solution)
+    end
+  end
+
+  def post_delete_redirect(conn, %{id: id}, solution = %{manager_id: id}),
+    do:
+      redirect(conn,
+        to:
+          Routes.challenge_phase_managed_solution_path(
+            conn,
+            :managed_solutions,
+            solution.challenge_id,
+            solution.phase_id
+          )
+      )
+
+  def post_delete_redirect(conn, %{id: id}, %{submitter_id: id}),
+    do: redirect(conn, to: Routes.solution_path(conn, :index))
+
+  defp get_params_by_current_user(solution_params, current_user) do
+    case Accounts.has_admin_access?(current_user) do
+      true ->
+        {:ok, submitter} = Accounts.get_by_email(solution_params["solver_addr"])
+        solution_params = Map.merge(solution_params, %{"manager_id" => current_user.id})
+        {submitter, solution_params}
+
+      false ->
+        {:ok, submitter} = Accounts.get_by_email(current_user.email)
+        {submitter, solution_params}
     end
   end
 end

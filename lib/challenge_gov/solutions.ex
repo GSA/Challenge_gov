@@ -7,6 +7,7 @@ defmodule ChallengeGov.Solutions do
 
   import Ecto.Query
 
+  alias ChallengeGov.Accounts
   alias ChallengeGov.Emails
   alias ChallengeGov.GovDelivery
   alias ChallengeGov.Mailer
@@ -20,7 +21,18 @@ defmodule ChallengeGov.Solutions do
   def all(opts \\ []) do
     Solution
     |> base_preload
+    |> preload([:phase])
     |> where([s], is_nil(s.deleted_at))
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> order_on_attribute(opts[:sort])
+    |> Repo.paginate(opts[:page], opts[:per])
+  end
+
+  def all_by_submitter_id(user_id, opts \\ []) do
+    Solution
+    |> preload([:challenge, :phase])
+    |> where([s], is_nil(s.deleted_at))
+    |> where([s], s.submitter_id == ^user_id)
     |> Filter.filter(opts[:filter], __MODULE__)
     |> order_on_attribute(opts[:sort])
     |> Repo.paginate(opts[:page], opts[:per])
@@ -31,6 +43,8 @@ defmodule ChallengeGov.Solutions do
     |> where([s], is_nil(s.deleted_at))
     |> where([s], s.id == ^id)
     |> base_preload
+    |> preload([:phase])
+    |> preload(challenge: [:phases])
     |> Repo.one()
     |> case do
       nil ->
@@ -182,21 +196,26 @@ defmodule ChallengeGov.Solutions do
     |> Mailer.deliver_later()
   end
 
-  # allowed to edit?
   def allowed_to_edit?(user, solution) do
-    if solution.submitter_id === user.id or solution.manager_id === user.id do
+    if solution.submitter_id === user.id or
+         (Accounts.has_admin_access?(user) and !is_nil(solution.manager_id)) do
       {:ok, solution}
     else
       {:error, :not_permitted}
     end
   end
 
-  def delete(solution, user) do
-    if allowed_to_delete?(solution, user) do
-      soft_delete(solution)
+  def allowed_to_delete?(user, solution) do
+    if solution.submitter_id === user.id or
+         (Accounts.has_admin_access?(user) and !is_nil(solution.manager_id)) do
+      {:ok, solution}
     else
       {:error, :not_permitted}
     end
+  end
+
+  def delete(solution) do
+    soft_delete(solution)
   end
 
   defp soft_delete(solution) do
@@ -210,10 +229,6 @@ defmodule ChallengeGov.Solutions do
       {:error, changeset} ->
         {:error, changeset}
     end
-  end
-
-  defp allowed_to_delete?(_solution, _user) do
-    true
   end
 
   # Attach supporting document functions
@@ -387,6 +402,36 @@ defmodule ChallengeGov.Solutions do
   end
 
   def filter_on_attribute({"managed_accepted", _value}, query), do: query
+
+  def order_on_attribute(query, %{"challenge" => direction}) do
+    query = join(query, :left, [s], c in assoc(s, :challenge))
+
+    case direction do
+      "asc" ->
+        order_by(query, [s, c], asc_nulls_last: c.title)
+
+      "desc" ->
+        order_by(query, [s, c], desc_nulls_last: c.title)
+
+      _ ->
+        query
+    end
+  end
+
+  def order_on_attribute(query, %{"phase" => direction}) do
+    query = join(query, :left, [s], p in assoc(s, :phase))
+
+    case direction do
+      "asc" ->
+        order_by(query, [s, p], asc_nulls_last: p.title)
+
+      "desc" ->
+        order_by(query, [s, p], desc_nulls_last: p.title)
+
+      _ ->
+        query
+    end
+  end
 
   def order_on_attribute(query, sort_columns)
       when is_map(sort_columns) and map_size(sort_columns) > 0 do

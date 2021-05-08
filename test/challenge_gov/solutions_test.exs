@@ -247,7 +247,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      {:ok, solution} = Solutions.delete(solution, user)
+      {:ok, solution} = Solutions.delete(solution)
 
       assert !is_nil(solution.deleted_at)
     end
@@ -266,7 +266,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       deleted_solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       solutions = Solutions.all()
 
@@ -285,7 +285,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       deleted_solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       %{page: solutions, pagination: _pagination} = Solutions.all(page: 1, per: 1)
 
@@ -305,7 +305,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       deleted_solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       solutions = Solutions.all(filter: %{"submitter_id" => user_2.id})
 
@@ -325,7 +325,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       deleted_solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge_2)
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       solutions = Solutions.all(filter: %{"challenge_id" => challenge_2.id})
 
@@ -340,7 +340,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       SolutionHelpers.create_submitted_solution(
         %{
-          title: "Filtered Title"
+          "title" => "Filtered Title"
         },
         user,
         challenge
@@ -348,7 +348,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       SolutionHelpers.create_submitted_solution(
         %{
-          brief_description: "Filtered Brief Description"
+          "brief_description" => "Filtered Brief Description"
         },
         user,
         challenge
@@ -356,7 +356,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       SolutionHelpers.create_submitted_solution(
         %{
-          description: "Filtered Description"
+          "description" => "Filtered Description"
         },
         user,
         challenge
@@ -364,7 +364,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       SolutionHelpers.create_submitted_solution(
         %{
-          external_url: "www.example_filtered.com"
+          "external_url" => "www.example_filtered.com"
         },
         user,
         challenge
@@ -372,51 +372,51 @@ defmodule ChallengeGov.SolutionsTest do
 
       deleted_solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       deleted_solution =
         SolutionHelpers.create_submitted_solution(
           %{
-            title: "Filtered Title"
+            "title" => "Filtered Title"
           },
           user,
           challenge
         )
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       deleted_solution =
         SolutionHelpers.create_submitted_solution(
           %{
-            brief_description: "Filtered Brief Description"
+            "brief_description" => "Filtered Brief Description"
           },
           user,
           challenge
         )
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       deleted_solution =
         SolutionHelpers.create_submitted_solution(
           %{
-            description: "Filtered Description"
+            "description" => "Filtered Description"
           },
           user,
           challenge
         )
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       deleted_solution =
         SolutionHelpers.create_submitted_solution(
           %{
-            external_url: "www.example_filtered.com"
+            "external_url" => "www.example_filtered.com"
           },
           user,
           challenge
         )
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       solutions = Solutions.all(filter: %{"search" => "Filtered"})
 
@@ -429,7 +429,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       SolutionHelpers.create_submitted_solution(
         %{
-          title: "Filtered Title"
+          "title" => "Filtered Title"
         },
         user,
         challenge
@@ -442,13 +442,13 @@ defmodule ChallengeGov.SolutionsTest do
       deleted_solution =
         SolutionHelpers.create_submitted_solution(
           %{
-            title: "Filtered Title"
+            "title" => "Filtered Title"
           },
           user,
           challenge
         )
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       solutions = Solutions.all(filter: %{"title" => "Filtered Title"})
 
@@ -461,7 +461,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       SolutionHelpers.create_submitted_solution(
         %{
-          brief_description: "Filtered Brief Description"
+          "brief_description" => "Filtered Brief Description"
         },
         user,
         challenge
@@ -474,13 +474,13 @@ defmodule ChallengeGov.SolutionsTest do
       deleted_solution =
         SolutionHelpers.create_submitted_solution(
           %{
-            brief_description: "Filtered Brief Description"
+            "brief_description" => "Filtered Brief Description"
           },
           user,
           challenge
         )
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       solutions = Solutions.all(filter: %{"brief_description" => "Filtered Brief Description"})
 
@@ -493,7 +493,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       SolutionHelpers.create_submitted_solution(
         %{
-          description: "Filtered Description"
+          "description" => "Filtered Description"
         },
         user,
         challenge
@@ -506,13 +506,13 @@ defmodule ChallengeGov.SolutionsTest do
       deleted_solution =
         SolutionHelpers.create_submitted_solution(
           %{
-            description: "Filtered Description"
+            "description" => "Filtered Description"
           },
           user,
           challenge
         )
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       solutions = Solutions.all(filter: %{"description" => "Filtered Description"})
 
@@ -525,7 +525,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       SolutionHelpers.create_submitted_solution(
         %{
-          external_url: "www.example_filtered.com"
+          "external_url" => "www.example_filtered.com"
         },
         user,
         challenge
@@ -538,13 +538,13 @@ defmodule ChallengeGov.SolutionsTest do
       deleted_solution =
         SolutionHelpers.create_submitted_solution(
           %{
-            external_url: "www.example_filtered.com"
+            "external_url" => "www.example_filtered.com"
           },
           user,
           challenge
         )
 
-      Solutions.delete(deleted_solution, user)
+      Solutions.delete(deleted_solution)
 
       solutions = Solutions.all(filter: %{"external_url" => "www.example_filtered.com"})
 
@@ -634,7 +634,7 @@ defmodule ChallengeGov.SolutionsTest do
 
       solution = SolutionHelpers.create_submitted_solution(%{}, user, challenge)
 
-      {:ok, deleted_solution} = Solutions.delete(solution, user)
+      {:ok, deleted_solution} = Solutions.delete(solution)
 
       assert Solutions.get(deleted_solution.id) === {:error, :not_found}
     end
