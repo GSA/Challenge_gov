@@ -3,6 +3,7 @@ defmodule Seeds.SeedModules.Accounts do
 
   def run do
     IO.inspect "Seeding Accounts"
+
     # Super Admins
     create_role_of_status("super_admin", "active")
     create_role_of_status("super_admin", "pending")
