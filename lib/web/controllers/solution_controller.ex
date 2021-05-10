@@ -225,29 +225,25 @@ defmodule Web.SolutionController do
 
   def edit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
+    {:ok, solution} = Solutions.get(id)
 
-    with {:ok, solution} <- Solutions.get(id),
-         {:ok, solution} <- Solutions.allowed_to_edit?(user, solution) do
-      conn
-      |> assign(:user, user)
-      |> assign(:solution, solution)
-      |> assign(:challenge, solution.challenge)
-      |> assign(:phase, solution.phase)
-      |> assign(:action, action_name(conn))
-      |> assign(:path, Routes.solution_path(conn, :update, id))
-      |> assign(:changeset, Solutions.edit(solution))
-      |> assign(:navbar_text, "Edit solution")
-      |> render("edit.html")
-    else
+    case Solutions.allowed_to_edit?(user, solution) do
+      {:ok, solution} ->
+        conn
+        |> assign(:user, user)
+        |> assign(:solution, solution)
+        |> assign(:challenge, solution.challenge)
+        |> assign(:phase, solution.phase)
+        |> assign(:action, action_name(conn))
+        |> assign(:path, Routes.solution_path(conn, :update, id))
+        |> assign(:changeset, Solutions.edit(solution))
+        |> assign(:navbar_text, "Edit solution")
+        |> render("edit.html")
+
       {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "You are not allowed to edit this solution")
-        |> redirect(to: Routes.solution_path(conn, :index))
-
-      {:error, :not_found} ->
-        conn
-        |> put_flash(:error, "Solution not found")
-        |> redirect(to: Routes.solution_path(conn, :index))
+        |> put_flash(:error, "Submission cannot be edited")
+        |> post_delete_redirect(user, solution)
     end
   end
 
@@ -367,8 +363,11 @@ defmodule Web.SolutionController do
     end
   end
 
-  def post_delete_redirect(conn, %{id: id}, solution = %{manager_id: id}),
-    do:
+  def post_delete_redirect(conn, %{id: id}, %{submitter_id: id}),
+    do: redirect(conn, to: Routes.solution_path(conn, :index))
+
+  def post_delete_redirect(conn, user, solution) do
+    if Accounts.has_admin_access?(user) do
       redirect(conn,
         to:
           Routes.challenge_phase_managed_solution_path(
@@ -378,9 +377,10 @@ defmodule Web.SolutionController do
             solution.phase_id
           )
       )
-
-  def post_delete_redirect(conn, %{id: id}, %{submitter_id: id}),
-    do: redirect(conn, to: Routes.solution_path(conn, :index))
+    else
+      redirect(conn, to: Routes.solution_path(conn, :index))
+    end
+  end
 
   defp get_params_by_current_user(solution_params, current_user) do
     case Accounts.has_admin_access?(current_user) do

@@ -8,6 +8,16 @@ defmodule Web.SolutionView do
   alias Web.SharedView
   alias Web.DocumentView
 
+  def can_edit?(user, submission) do
+    case Solutions.is_editable?(user, submission) do
+      {:ok, _submission} ->
+        true
+
+      {:error, :not_permitted} ->
+        false
+    end
+  end
+
   def persist_solver_email_on_edit(data) do
     if data.submitter, do: data.submitter.email, else: ""
   end

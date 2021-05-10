@@ -376,41 +376,17 @@ defmodule Web.SolutionControllerTest do
 
     test "viewing the edit solution form for a solution you don't own", %{conn: conn} do
       conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
-      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      %{current_user: solver_user} = conn.assigns
+      solver_user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
 
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(solver_user, %{user_id: solver_user.id})
 
-      solution = SolutionHelpers.create_submitted_solution(%{}, user_2, challenge)
-
-      conn = get(conn, Routes.solution_path(conn, :edit, solution.id))
-
-      assert get_flash(conn, :error) === "You are not allowed to edit this solution"
-      assert redirected_to(conn) === Routes.solution_path(conn, :index)
-    end
-
-    test "viewing the edit solution form for a solution that was deleted", %{conn: conn} do
-      conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
-
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-
-      solution = SolutionHelpers.create_draft_solution(%{}, user, challenge)
-
-      {:ok, solution} = Solutions.delete(solution)
+      solution = SolutionHelpers.create_submitted_solution(%{}, solver_user_2, challenge)
 
       conn = get(conn, Routes.solution_path(conn, :edit, solution.id))
 
-      assert get_flash(conn, :error) === "Solution not found"
-      assert redirected_to(conn) === Routes.solution_path(conn, :index)
-    end
-
-    test "viewing the edit solution form for a solution that doesn't exist", %{conn: conn} do
-      conn = prep_conn(conn)
-
-      conn = get(conn, Routes.solution_path(conn, :edit, 1))
-
-      assert get_flash(conn, :error) === "Solution not found"
+      assert get_flash(conn, :error) === "Submission cannot be edited"
       assert redirected_to(conn) === Routes.solution_path(conn, :index)
     end
   end
@@ -825,12 +801,18 @@ defmodule Web.SolutionControllerTest do
 
     test "deleting a draft solution as an admin", %{conn: conn} do
       conn = prep_conn_admin(conn)
-      %{current_user: user} = conn.assigns
+      %{current_user: admin_user} = conn.assigns
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(admin_user, %{user_id: admin_user.id})
 
       solution =
-        SolutionHelpers.create_draft_solution(%{"manager_id" => user.id}, user, challenge)
+        SolutionHelpers.create_draft_solution(
+          %{"manager_id" => admin_user.id},
+          solver_user,
+          challenge
+        )
 
       conn = delete(conn, Routes.solution_path(conn, :delete, solution))
 
@@ -848,12 +830,18 @@ defmodule Web.SolutionControllerTest do
 
     test "deleting a submitted solution as an admin", %{conn: conn} do
       conn = prep_conn_admin(conn)
-      %{current_user: user} = conn.assigns
+      %{current_user: admin_user} = conn.assigns
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(admin_user, %{user_id: admin_user.id})
 
       solution =
-        SolutionHelpers.create_submitted_solution(%{"manager_id" => user.id}, user, challenge)
+        SolutionHelpers.create_submitted_solution(
+          %{"manager_id" => admin_user.id},
+          solver_user,
+          challenge
+        )
 
       conn = delete(conn, Routes.solution_path(conn, :delete, solution))
 

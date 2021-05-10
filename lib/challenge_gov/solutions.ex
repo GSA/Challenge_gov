@@ -207,12 +207,45 @@ defmodule ChallengeGov.Solutions do
     |> Mailer.deliver_later()
   end
 
-  def allowed_to_edit?(user, solution) do
-    if solution.submitter_id === user.id or
-         (Accounts.has_admin_access?(user) and !is_nil(solution.manager_id)) do
-      {:ok, solution}
+  def allowed_to_edit?(user, submission) do
+    if submission.submitter_id === user.id or
+         (Accounts.has_admin_access?(user) and !is_nil(submission.manager_id)) do
+      is_editable?(user, submission)
     else
       {:error, :not_permitted}
+    end
+  end
+
+  def is_editable?(%{role: "solver"}, submission) do
+    submission_phase_is_open?(submission)
+  end
+
+  def is_editable?(user, submission) do
+    case Accounts.has_admin_access?(user) do
+      true ->
+        if is_nil(submission.manager_id) or
+             !!submission.review_verified or
+             submission.challenge.sub_status === "archived" do
+          {:error, :not_permitted}
+        else
+          {:ok, submission}
+        end
+
+      false ->
+        {:error, :not_permitted}
+    end
+  end
+
+  def submission_phase_is_open?(submission) do
+    phase_close = submission.phase.end_date
+    now = Timex.now()
+
+    case Timex.compare(phase_close, now) do
+      1 ->
+        {:ok, submission}
+
+      tc when tc == -1 or tc == 0 ->
+        {:error, :not_permitted}
     end
   end
 
