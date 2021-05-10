@@ -5,7 +5,7 @@
         <%= render_submission_filter_tabs(@conn, @challenge, @phase, @filter) %>
         <div class="card">
           <%= render_submission_filter_helper_text(@challenge, @phase, @filter) %>
-          <span class="submission-filter__helper-text p-3" style="display: inline;"> Other actions: <%= link("manage offline submissions ->", to: Routes.challenge_phase_managed_submission_path(@conn, :managed_submissions, @challenge.id, @phase.id)) %></span>
+          <span class="submission-filter__helper-text p-3" style="display: inline;"> Other actions: <%= link("Add solver submission ->", to: Routes.challenge_phase_managed_submission_path(@conn, :managed_submissions, @challenge.id, @phase.id)) %></span>
 <%  # to: Routes.challenge_phase_submission_path(@conn, :new, @challenge.id, @phase.id)) %>
           <div class="row">
             <div class="col">

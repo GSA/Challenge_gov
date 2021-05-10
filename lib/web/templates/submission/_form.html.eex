@@ -1,9 +1,17 @@
 <section>
   <small class="d-block pl-2 mb-2">Required<span class="required">*</span></small>
   <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
-    <%= if Accounts.has_admin_access?(@user) do
-      FormView.text_field(f, :solver_addr, label: "Email address of solver", required: true)
-    end %>
+    <%= if Accounts.has_admin_access?(@user) and @data.status != "submitted" do %>
+      <%= FormView.text_field(f, :solver_addr, label: "Email address of solver", required: true, value: persist_solver_email_on_edit(@data)) %>
+      <div id="submission_document_upload__error-solver-addr" class="js-indented-error-tag text-danger"></div>
+    <% else %>
+      <%= if Accounts.has_admin_access?(@user) do %>
+        <div class="form-group">
+          <label class="col">Solver</label>
+          <%= content_tag(:div, "#{@data.submitter.email}", class: "col") %>
+        </div>
+      <% end %>
+    <% end %>
   
     <%= FormView.text_field(f, :title, label: "Title", required: true) %>
     <%= FormView.textarea_field(f, :brief_description, label: "Brief description", required: true, limit: 500) %>
@@ -22,7 +30,7 @@
           <%= file_input f, :document, name: "submission[document][file]", class: "my-3" %>
           <div id="submission_document_upload" class="btn btn-primary">Upload file</div>
         </div>
-        <span id="submission_document_upload_error" class="js-error-tag text-danger"></span>
+        <span id="submission_document_upload__error-no-email" class="js-error-tag text-danger"></span>
       </div>
       <div class="submission-documents-list">
         <%= Enum.map(@data.documents, fn document -> %>

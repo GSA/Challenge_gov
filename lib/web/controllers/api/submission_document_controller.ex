@@ -21,24 +21,27 @@ defmodule Web.Api.SubmissionDocumentController do
   end
 
   def create(conn, %{"document" => params, "solver_email" => solver_email}) do
-    user =
-      case solver_email do
-        "undefined" ->
-          conn.assigns.current_user
-
-        _ ->
-          {:ok, user} = Accounts.get_by_email(solver_email)
-          user
-      end
-
-    case SubmissionDocuments.upload(user, params) do
-      {:ok, document} ->
-        conn
-        |> assign(:document, document)
-        |> put_status(:created)
-        |> render("show.json")
-
+    with {:ok, user} <- Accounts.get_by_email(solver_email),
+         {:ok, document} <- SubmissionDocuments.upload(user, params) do
+      conn
+      |> assign(:document, document)
+      |> put_status(:created)
+      |> render("show.json")
+    else
       {:error, changeset} ->
+        conn
+        |> assign(:changeset, changeset)
+        |> put_status(:unprocessable_entity)
+        |> put_view(ErrorView)
+        |> render("errors.json")
+
+      {:error, :not_found} ->
+        {:error, changeset} =
+          Submissions.new()
+          |> Ecto.Changeset.change()
+          |> Ecto.Changeset.add_error(:solver_addr, "user not found")
+          |> Ecto.Changeset.apply_action(:insert)
+
         conn
         |> assign(:changeset, changeset)
         |> put_status(:unprocessable_entity)

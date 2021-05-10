@@ -1,8 +1,24 @@
-<%= if Challenges.allowed_to_edit?(@user, @challenge) do %>
-  <%= render Web.SubmissionView, "_breadcrumbs_judging.html", conn: @conn, action: @action, challenge: @challenge, phase: @phase, submission: @submission, filter: @filter, sort: @sort, page: @page %>
-<% else %>
-  <%= render Web.SubmissionView, "_breadcrumbs.html", conn: @conn, action: @action, submission: @submission %>
-<% end %>
+<div class="content-header">
+  <div class="container-fluid">
+    <%= if Accounts.is_solver?(@user) do %>
+      <%= SharedView.render_breadcrumbs([
+        %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+        %{text: "Submissions", route: Routes.submission_path(@conn, :index)},
+        %{text: @submission.title}
+      ])%>
+    <% else %>
+      <%= SharedView.render_breadcrumbs([
+        %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+        %{text: "Challenges", route: Routes.challenge_path(@conn, :index)},
+        %{text: @challenge.title, route: Routes.challenge_path(@conn, :show, @challenge.id)},
+        %{text: "Phases", route: Routes.challenge_phase_path(@conn, :index, @challenge.id), is_visible: length(@challenge.phases) > 1},
+        %{text: @phase.title, route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) > 1},
+        %{text: "Submissions", route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) === 1},
+        %{text: @submission.title}
+      ])%>
+    <% end %>
+  </div>
+</div>
 
 <section class="content">
   <div class="container-fluid">
@@ -12,7 +28,7 @@
           <%= if Challenges.allowed_to_edit?(@user, @challenge) do %>
             <%= render Web.SubmissionView, "_header_judging.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, submission: @submission %>
           <% else %>
-            <%= render Web.SubmissionView, "_header.html", conn: @conn, user: @user, challenge: @submission.challenge %>
+            <%= render Web.SubmissionView, "_header.html", conn: @conn, user: @user, challenge: @submission.challenge, phase: @phase %>
           <% end %>
 
           <section>
@@ -82,6 +98,21 @@
             <% end %>              
           </section>
         </div>
+        <%= if Accounts.has_admin_access?(@user) do %>
+          <div class="col">
+            <%= link "< Back to submissions", to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id, page: @page, filter: @filter, sort: @sort) %>
+          </div>
+        <% end %>
+        <%= if Accounts.is_solver?(@user) do %>
+          <div class="col">
+            <%= link "< Back to submissions", to: Routes.submission_path(@conn, :index, filter: @filter, sort: @sort) %>
+          </div>
+        <% end %>
+        <%= if Accounts.is_challenge_owner?(@user) do %>
+          <div class="col">
+            <%= link "< Back to submissions", to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id) %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>

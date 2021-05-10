@@ -9,6 +9,10 @@ defmodule Web.SubmissionView do
   alias Web.FormView
   alias Web.SharedView
 
+  def persist_solver_email_on_edit(data) do
+    if data.submitter, do: data.submitter.email, else: ""
+  end
+
   def name_link(conn, submission, query_params \\ []) do
     link(submission.title || "Submission #{submission.id}",
       to: Routes.submission_path(conn, :show, submission.id, query_params)
@@ -46,19 +50,54 @@ defmodule Web.SubmissionView do
     end
   end
 
+  def sortable_managed_header(conn, challenge, phase, sort, filter, column, label) do
+    {sort_icon, sort_values} =
+      case Map.get(sort, column) do
+        "asc" ->
+          {"fa-sort-up", Map.put(%{}, column, :desc)}
+
+        "desc" ->
+          {"fa-sort-down", %{}}
+
+        _ ->
+          {"fa-sort", Map.put(%{}, column, :asc)}
+      end
+
+    content_tag :th do
+      link(
+        to:
+          Routes.challenge_phase_managed_submission_path(
+            conn,
+            :managed_submissions,
+            challenge.id,
+            phase.id,
+            filter: filter,
+            sort: sort_values
+          )
+      ) do
+        content_tag :div do
+          [
+            content_tag(:span, label),
+            content_tag(:i, "", class: "fa " <> sort_icon)
+          ]
+        end
+      end
+    end
+  end
+
   def status_display_name(submission) do
     Submissions.status_label(submission.status)
   end
 
   def submission_delete_link(conn, submission, user, opts \\ []) do
-    if (user.role == "solver" and submission.status == "draft") or
-         Accounts.has_admin_access?(user) do
-      link(opts[:label] || "Delete",
-        to: Routes.submission_path(conn, :delete, submission.id),
-        method: :delete,
-        class: "btn btn-link text-danger",
-        data: [confirm: "Are you sure you want to delete this submission?"]
-      )
+    case Submissions.allowed_to_delete?(user, submission) do
+      {:ok, submission} ->
+        link(opts[:label] || "Delete",
+          to: Routes.submission_path(conn, :delete, submission.id),
+          method: :delete,
+          class: "btn btn-link text-danger",
+          data: [confirm: "Are you sure you want to delete this submission?"]
+        )
     end
   end
 

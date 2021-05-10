@@ -247,7 +247,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
-      {:ok, submission} = Submissions.delete(submission, user)
+      {:ok, submission} = Submissions.delete(submission)
 
       assert !is_nil(submission.deleted_at)
     end
@@ -266,7 +266,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       deleted_submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       submissions = Submissions.all()
 
@@ -285,7 +285,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       deleted_submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       %{page: submissions, pagination: _pagination} = Submissions.all(page: 1, per: 1)
 
@@ -305,7 +305,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       deleted_submission = SubmissionHelpers.create_submitted_submission(%{}, user_2, challenge)
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       submissions = Submissions.all(filter: %{"submitter_id" => user_2.id})
 
@@ -325,7 +325,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       deleted_submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge_2)
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       submissions = Submissions.all(filter: %{"challenge_id" => challenge_2.id})
 
@@ -340,7 +340,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       SubmissionHelpers.create_submitted_submission(
         %{
-          title: "Filtered Title"
+          "title" => "Filtered Title"
         },
         user,
         challenge
@@ -348,7 +348,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       SubmissionHelpers.create_submitted_submission(
         %{
-          brief_description: "Filtered Brief Description"
+          "brief_description" => "Filtered Brief Description"
         },
         user,
         challenge
@@ -356,7 +356,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       SubmissionHelpers.create_submitted_submission(
         %{
-          description: "Filtered Description"
+          "description" => "Filtered Description"
         },
         user,
         challenge
@@ -364,7 +364,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       SubmissionHelpers.create_submitted_submission(
         %{
-          external_url: "www.example_filtered.com"
+          "external_url" => "www.example_filtered.com"
         },
         user,
         challenge
@@ -372,51 +372,51 @@ defmodule ChallengeGov.SubmissionsTest do
 
       deleted_submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       deleted_submission =
         SubmissionHelpers.create_submitted_submission(
           %{
-            title: "Filtered Title"
+            "title" => "Filtered Title"
           },
           user,
           challenge
         )
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       deleted_submission =
         SubmissionHelpers.create_submitted_submission(
           %{
-            brief_description: "Filtered Brief Description"
+            "brief_description" => "Filtered Brief Description"
           },
           user,
           challenge
         )
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       deleted_submission =
         SubmissionHelpers.create_submitted_submission(
           %{
-            description: "Filtered Description"
+            "description" => "Filtered Description"
           },
           user,
           challenge
         )
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       deleted_submission =
         SubmissionHelpers.create_submitted_submission(
           %{
-            external_url: "www.example_filtered.com"
+            "external_url" => "www.example_filtered.com"
           },
           user,
           challenge
         )
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       submissions = Submissions.all(filter: %{"search" => "Filtered"})
 
@@ -429,7 +429,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       SubmissionHelpers.create_submitted_submission(
         %{
-          title: "Filtered Title"
+          "title" => "Filtered Title"
         },
         user,
         challenge
@@ -442,13 +442,13 @@ defmodule ChallengeGov.SubmissionsTest do
       deleted_submission =
         SubmissionHelpers.create_submitted_submission(
           %{
-            title: "Filtered Title"
+            "title" => "Filtered Title"
           },
           user,
           challenge
         )
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       submissions = Submissions.all(filter: %{"title" => "Filtered Title"})
 
@@ -461,7 +461,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       SubmissionHelpers.create_submitted_submission(
         %{
-          brief_description: "Filtered Brief Description"
+          "brief_description" => "Filtered Brief Description"
         },
         user,
         challenge
@@ -474,13 +474,13 @@ defmodule ChallengeGov.SubmissionsTest do
       deleted_submission =
         SubmissionHelpers.create_submitted_submission(
           %{
-            brief_description: "Filtered Brief Description"
+            "brief_description" => "Filtered Brief Description"
           },
           user,
           challenge
         )
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       submissions =
         Submissions.all(filter: %{"brief_description" => "Filtered Brief Description"})
@@ -494,7 +494,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       SubmissionHelpers.create_submitted_submission(
         %{
-          description: "Filtered Description"
+          "description" => "Filtered Description"
         },
         user,
         challenge
@@ -507,13 +507,13 @@ defmodule ChallengeGov.SubmissionsTest do
       deleted_submission =
         SubmissionHelpers.create_submitted_submission(
           %{
-            description: "Filtered Description"
+            "description" => "Filtered Description"
           },
           user,
           challenge
         )
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       submissions = Submissions.all(filter: %{"description" => "Filtered Description"})
 
@@ -526,7 +526,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       SubmissionHelpers.create_submitted_submission(
         %{
-          external_url: "www.example_filtered.com"
+          "external_url" => "www.example_filtered.com"
         },
         user,
         challenge
@@ -539,13 +539,13 @@ defmodule ChallengeGov.SubmissionsTest do
       deleted_submission =
         SubmissionHelpers.create_submitted_submission(
           %{
-            external_url: "www.example_filtered.com"
+            "external_url" => "www.example_filtered.com"
           },
           user,
           challenge
         )
 
-      Submissions.delete(deleted_submission, user)
+      Submissions.delete(deleted_submission)
 
       submissions = Submissions.all(filter: %{"external_url" => "www.example_filtered.com"})
 
@@ -641,7 +641,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
-      {:ok, deleted_submission} = Submissions.delete(submission, user)
+      {:ok, deleted_submission} = Submissions.delete(submission)
 
       assert Submissions.get(deleted_submission.id) === {:error, :not_found}
     end

@@ -25,7 +25,9 @@ $("#submission_document_upload").on("click", function(e) {
       contentType: false,
       data: fd,
       success: function(document) {
-        $("#submission_document_upload_error").text("")
+        $("#submission_document_upload__error-no-email").text("")
+        $("#submission_document_upload__error-solver-addr").text("").css("padding-bottom", "0")
+
         $(name_input).val("")
         $(file_input).val("")
 
@@ -52,8 +54,17 @@ $("#submission_document_upload").on("click", function(e) {
 })
 
 const handleFileUploadError = (errors) => {
-  if (errors["solver_addr"]) {
-    $("#submission_document_upload_error").text(`${errors["solver_addr"]}`)
+  const noEmailErrorTag = $("#submission_document_upload__error-no-email")
+  const emailNotFoundErrorTag = $("#submission_document_upload__error-solver-addr")
+  
+  if (errors["solver_addr"][0] === "must add solver email first") {
+    // reset other js error
+    emailNotFoundErrorTag.text("").css("padding-bottom", "0")
+    noEmailErrorTag.text(`${errors["solver_addr"]}`)
+  } else if (errors["solver_addr"][0] === "user not found") {
+    // reset other js error
+    noEmailErrorTag.text("")
+    emailNotFoundErrorTag.text(`${errors["solver_addr"]}`).css("padding-bottom", "16px")
   }
 }
 

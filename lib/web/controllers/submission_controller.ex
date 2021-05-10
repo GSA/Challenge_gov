@@ -9,23 +9,8 @@ defmodule Web.SubmissionController do
 
   plug(
     Web.Plugs.EnsureRole,
-    [:solver]
-    when action not in [
-           :index,
-           :show,
-           :edit,
-           :delete,
-           :update_judging_status,
-           :new,
-           :submit,
-           :create,
-           :managed_submissions
-         ]
-  )
-
-  plug(
-    Web.Plugs.EnsureRole,
-    [:admin, :super_admin, :solver] when action in [:new, :submit, :create]
+    [:admin, :super_admin, :solver]
+    when action in [:new, :submit, :create, :edit, :update, :delete]
   )
 
   plug(
@@ -33,7 +18,9 @@ defmodule Web.SubmissionController do
     [:admin, :super_admin] when action in [:managed_submissions]
   )
 
-  plug Web.Plugs.FetchPage when action in [:index, :show]
+  plug(Web.Plugs.EnsureRole, [:solver] when action in [:index])
+
+  plug Web.Plugs.FetchPage when action in [:index, :show, :managed_submissions]
 
   action_fallback(Web.FallbackController)
 
@@ -73,17 +60,10 @@ defmodule Web.SubmissionController do
 
     filter = Map.get(params, "filter", %{})
 
-    filter =
-      if Accounts.role_at_or_below(user, "solver") do
-        Map.merge(filter, %{"submitter_id" => user.id})
-      else
-        filter
-      end
-
     sort = Map.get(params, "sort", %{})
 
     %{page: submissions, pagination: pagination} =
-      Submissions.all(filter: filter, sort: sort, page: page, per: per)
+      Submissions.all_by_submitter_id(user.id, filter: filter, sort: sort, page: page, per: per)
 
     conn
     |> assign(:user, user)
@@ -99,17 +79,23 @@ defmodule Web.SubmissionController do
         params = %{"challenge_id" => challenge_id, "phase_id" => phase_id}
       ) do
     %{current_user: user} = conn.assigns
+    %{page: page, per: per} = conn.assigns
+
     {:ok, challenge} = Challenges.get(challenge_id)
     {:ok, phase} = Phases.get(phase_id)
+
     filter = %{"manager_id" => user.id}
     sort = Map.get(params, "sort", %{})
-    submissions = Submissions.all(filter: filter)
+
+    %{page: submissions, pagination: pagination} =
+      Submissions.all(filter: filter, sort: sort, page: page, per: per)
 
     conn
     |> assign(:user, user)
     |> assign(:challenge, challenge)
     |> assign(:phase, phase)
     |> assign(:submissions, submissions)
+    |> assign(:pagination, pagination)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> render("index_managed.html")
@@ -142,10 +128,15 @@ defmodule Web.SubmissionController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
+    phase =
+      Enum.find(challenge.phases, fn %{id: id} ->
+        id == String.to_integer(phase_id)
+      end)
+
     conn
     |> assign(:user, user)
     |> assign(:challenge, challenge)
-    |> assign(:phase_id, phase_id)
+    |> assign(:phase, phase)
     |> assign(:action, action_name(conn))
     |> assign(:changeset, Submissions.new())
     |> assign(:navbar_text, "Create submission")
@@ -156,11 +147,11 @@ defmodule Web.SubmissionController do
     %{current_user: user} = conn.assigns
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
-         {:ok, %{id: phase_id}} <- Challenges.current_phase(challenge) do
+         {:ok, phase} <- Challenges.current_phase(challenge) do
       conn
       |> assign(:user, user)
       |> assign(:challenge, challenge)
-      |> assign(:phase_id, phase_id)
+      |> assign(:phase, phase)
       |> assign(:action, action_name(conn))
       |> assign(:changeset, Submissions.new())
       |> assign(:navbar_text, "Create submission")
@@ -183,103 +174,50 @@ defmodule Web.SubmissionController do
         %{
           "challenge_id" => challenge_id,
           "phase_id" => phase_id,
-          "action" => "draft",
+          "action" => action,
           "submission" => submission_params
         }
       ) do
-    %{current_user: user} = conn.assigns
+    %{current_user: current_user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
-    conn =
-      conn
-      |> assign(:phase_id, phase_id)
+    phase =
+      Enum.find(challenge.phases, fn %{id: id} ->
+        id == String.to_integer(phase_id)
+      end)
 
-    with {:ok, phase} <- Challenges.current_phase(challenge),
-         {:ok, submission} <- Submissions.create_draft(submission_params, user, challenge, phase) do
-      conn =
-        conn
-        |> assign(:phase_id, phase.id)
+    {submitter, submission_params} = get_params_by_current_user(submission_params, current_user)
 
-      conn
-      |> put_flash(:info, "Submission saved as draft")
-      |> redirect(to: Routes.submission_path(conn, :edit, submission.id))
-    else
-      {:error, :no_current_phase} ->
-        conn
-        |> put_flash(:error, "No current phase found")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
+    case action do
+      "draft" ->
+        case Submissions.create_draft(submission_params, submitter, challenge, phase) do
+          {:ok, submission} ->
+            conn
+            |> assign(:phase_id, phase.id)
+            |> put_flash(:info, "Submission saved as draft")
+            |> redirect(to: Routes.submission_path(conn, :edit, submission.id))
 
-      {:error, changeset} ->
-        create_error(conn, changeset, user, challenge)
+          {:error, changeset} ->
+            create_error(conn, changeset, current_user, challenge, phase)
+        end
+
+      "review" ->
+        case Submissions.create_review(submission_params, submitter, challenge, phase) do
+          {:ok, submission} ->
+            conn
+            |> redirect(to: Routes.submission_path(conn, :show, submission.id))
+
+          {:error, changeset} ->
+            create_error(conn, changeset, current_user, challenge, phase)
+        end
     end
   end
 
-  def create(
-        conn,
-        %{
-          "challenge_id" => challenge_id,
-          "phase_id" => phase_id,
-          "action" => "review",
-          "submission" => submission_params
-        }
-      ) do
-    %{current_user: user} = conn.assigns
-
-    conn =
-      conn
-      |> assign(:phase_id, phase_id)
-
-    {:ok, challenge} = Challenges.get(challenge_id)
-
-    {solver, phase, submission_params} =
-      if Accounts.has_admin_access?(user) do
-        submission_params =
-          Map.merge(submission_params, %{"manager_id" => user.id, "terms_accepted" => false})
-
-        solver =
-          case Accounts.get_by_email(submission_params["solver_addr"]) do
-            {:ok, solver} ->
-              solver
-
-            {:error, :not_found} ->
-              conn
-              |> put_flash(:error, "That user is not found")
-              |> redirect(to: Routes.dashboard_path(conn, :index))
-          end
-
-        {:ok, phase} = Phases.get(phase_id)
-        {solver, phase, submission_params}
-      else
-        solver = user
-
-        phase =
-          case Challenges.current_phase(challenge) do
-            {:ok, phase} ->
-              phase
-
-            {:error, :no_current_phase} ->
-              conn
-              |> put_flash(:error, "No current phase found")
-              |> redirect(to: Routes.dashboard_path(conn, :index))
-          end
-
-        {solver, phase, submission_params}
-      end
-
-    case Submissions.create_review(submission_params, solver, challenge, phase) do
-      {:ok, submission} ->
-        conn
-        |> redirect(to: Routes.submission_path(conn, :show, submission.id))
-
-      {:error, changeset} ->
-        create_error(conn, changeset, user, challenge)
-    end
-  end
-
-  defp create_error(conn, changeset, user, challenge) do
+  defp create_error(conn, changeset, user, challenge, phase) do
     conn
     |> assign(:user, user)
     |> assign(:challenge, challenge)
+    |> assign(:phase, phase)
     |> assign(:path, Routes.challenge_path(conn, :create))
     |> assign(:action, action_name(conn))
     |> assign(:changeset, changeset)
@@ -296,6 +234,8 @@ defmodule Web.SubmissionController do
       conn
       |> assign(:user, user)
       |> assign(:submission, submission)
+      |> assign(:challenge, submission.challenge)
+      |> assign(:phase, submission.phase)
       |> assign(:action, action_name(conn))
       |> assign(:path, Routes.submission_path(conn, :update, id))
       |> assign(:changeset, Submissions.edit(submission))
@@ -368,6 +308,8 @@ defmodule Web.SubmissionController do
     conn
     |> assign(:user, user)
     |> assign(:submission, submission)
+    |> assign(:challenge, submission.challenge)
+    |> assign(:phase, submission.phase)
     |> assign(:action, action_name(conn))
     |> assign(:path, Routes.submission_path(conn, :update, submission.id))
     |> assign(:changeset, changeset)
@@ -408,22 +350,51 @@ defmodule Web.SubmissionController do
 
   def delete(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
+    {:ok, submission} = Submissions.get(id)
 
-    with {:ok, submission} <- Submissions.get(id),
-         {:ok, _submission} <- Submissions.delete(submission, user) do
+    with {:ok, submission} <- Submissions.allowed_to_delete?(user, submission),
+         {:ok, submission} <- Submissions.delete(submission) do
       conn
       |> put_flash(:info, "Submission deleted")
-      |> redirect(to: Routes.submission_path(conn, :index))
+      |> post_delete_redirect(user, submission)
     else
-      {:error, :not_found} ->
+      {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "This submission does not exist")
-        |> redirect(to: Routes.submission_path(conn, :index))
+        |> put_flash(:error, "You are not authorized to delete this submission")
+        |> post_delete_redirect(user, submission)
 
       {:error, _changeset} ->
         conn
         |> put_flash(:error, "Something went wrong")
-        |> redirect(to: Routes.submission_path(conn, :index))
+        |> post_delete_redirect(user, submission)
+    end
+  end
+
+  def post_delete_redirect(conn, %{id: id}, submission = %{manager_id: id}),
+    do:
+      redirect(conn,
+        to:
+          Routes.challenge_phase_managed_submission_path(
+            conn,
+            :managed_submissions,
+            submission.challenge_id,
+            submission.phase_id
+          )
+      )
+
+  def post_delete_redirect(conn, %{id: id}, %{submitter_id: id}),
+    do: redirect(conn, to: Routes.submission_path(conn, :index))
+
+  defp get_params_by_current_user(submission_params, current_user) do
+    case Accounts.has_admin_access?(current_user) do
+      true ->
+        {:ok, submitter} = Accounts.get_by_email(submission_params["solver_addr"])
+        submission_params = Map.merge(submission_params, %{"manager_id" => current_user.id})
+        {submitter, submission_params}
+
+      false ->
+        {:ok, submitter} = Accounts.get_by_email(current_user.email)
+        {submitter, submission_params}
     end
   end
 end

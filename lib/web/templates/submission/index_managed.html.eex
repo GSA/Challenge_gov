@@ -1,32 +1,21 @@
 <div class="content-header">
   <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
-              <i class="fa fa-dashboard"></i> Home
-            <% end %>
-          </li>
-          <li class="breadcrumb-item"><%= link("Challenges", to: Routes.challenge_path(@conn, :index)) %></li>
-          <li class="breadcrumb-item"><%= link(@challenge.title, to: Routes.challenge_path(@conn, :show, @challenge.id)) %></li>
-          <%= if length(@challenge.phases) > 1 do %>
-            <li class="breadcrumb-item"><%= link("Phases", to: Routes.challenge_phase_path(@conn, :index, @challenge.id)) %></li>
-            <li class="breadcrumb-item active"><%= @phase.title %></li>
-          <% else %>
-            <li class="breadcrumb-item"><%= link("Submissions", to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id)) %></li>
-          <% end %>
-        </ol>
-      </div>
-    </div>
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+      %{text: "Challenges", route: Routes.challenge_path(@conn, :index)},
+      %{text: @challenge.title, route: Routes.challenge_path(@conn, :show, @challenge.id)},
+      %{text: "Phases", route: Routes.challenge_phase_path(@conn, :index, @challenge.id), is_visible: length(@challenge.phases) > 1},
+      %{text: @phase.title, route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) > 1},
+      %{text: "Manage Submissions"}
+    ])%>
   </div>
 </div>
 <section class="content main-container">
   <div class="container-fluid">
 
-    <h1>Manage offline submissions for <%= @challenge.title %></h1>
+    <h1>Add solver submission for <%= @challenge.title %></h1>
     <div class="row" id="new-offline-submissions"> 
-      <%= link("new offline submission", to: Routes.challenge_phase_submission_path(@conn, :new, @challenge.id, @phase.id), class: "btn-primary") %>
+      <%= link("New solver submission", to: Routes.challenge_phase_submission_path(@conn, :new, @challenge.id, @phase.id), class: "btn-primary") %>
     </div>
     <div class="row">
       <div class="col-md-12">
@@ -35,11 +24,11 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <%= sortable_header(@conn, @sort, @filter, "id", "ID") %>
-                  <%= sortable_header(@conn, @sort, @filter, "title", "Name") %>
-                  <%= sortable_header(@conn, @sort, @filter, "last-updated", "Last update") %>
-                  <%= sortable_header(@conn, @sort, @filter, "status", "Status") %>                  
-                  <%= sortable_header(@conn, @sort, @filter, "accepted_by_solver", "Accepted By Solver") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "id", "ID") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "title", "Name") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "challenge", "Challenge") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "status", "Status") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "review_verified", "Accepted By Solver") %>
                   <th>Actions</th>
               </thead>
 
@@ -60,5 +49,6 @@
         </div>
       </div>
     </div>
+    <%= SharedView.pagination(path: Routes.challenge_phase_managed_submission_path(@conn, :managed_submissions, @challenge.id, @phase.id), pagination: @pagination) %>
   </div>
 </section>

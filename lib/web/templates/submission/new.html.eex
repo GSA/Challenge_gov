@@ -1,12 +1,33 @@
-<%= render Web.SubmissionView, "_breadcrumbs.html", conn: @conn, action: @action, submission: @changeset.data %>
+<div class="content-header">
+  <div class="container-fluid">
+  <%= if Accounts.has_admin_access?(@user) do %>
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+      %{text: "Challenges", route: Routes.challenge_path(@conn, :index)},
+      %{text: @challenge.title, route: Routes.challenge_path(@conn, :show, @challenge.id)},
+      %{text: "Submissions", route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) === 1},
+      %{text: "Phases", route: Routes.challenge_phase_path(@conn, :index, @challenge.id), is_visible: length(@challenge.phases) > 1},
+      %{text: @phase.title, route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) > 1},
+      %{text: "Create Submission"}
+    ])%>
+  <% else %>
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+      %{text: "Submissions", route: Routes.submission_path(@conn, :index)},
+      %{text: "Create Submission"},
+    ])%>
+  <% end %>
+  </div>
+</div>
 
 <section class="content"> 
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-8">
         <div class="card p-3">
-          <%= render Web.SubmissionView, "_header.html", conn: @conn, challenge: @challenge %>
-          <%= render Web.SubmissionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.challenge_phase_submission_path(@conn, :create, @challenge.id, @phase_id), user: @user, challenge: @challenge %>
+          <h4>Create a submission for:</h4>
+          <%= render Web.SubmissionView, "_header.html", conn: @conn, challenge: @challenge, phase: @phase %>
+          <%= render Web.SubmissionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.challenge_phase_submission_path(@conn, :create, @challenge.id, @phase.id), user: @user, challenge: @challenge %>
         </div>
       </div>
     </div>

@@ -7,22 +7,24 @@ defmodule Web.SubmissionControllerTest do
   alias ChallengeGov.TestHelpers.SubmissionHelpers
 
   describe "index under challenge" do
-    test "successfully retrieve all submissions for challenge", %{conn: conn} do
+    test "successfully retrieve all submissions for current solver user", %{conn: conn} do
       conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
+      %{current_user: user1} = conn.assigns
 
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-      challenge_2 = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      user2 = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
-      SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
+      challenge = ChallengeHelpers.create_single_phase_challenge(user1, %{user_id: user1.id})
+      challenge_2 = ChallengeHelpers.create_single_phase_challenge(user1, %{user_id: user1.id})
 
-      SubmissionHelpers.create_submitted_submission(%{}, user, challenge_2)
+      SubmissionHelpers.create_submitted_submission(%{}, user1, challenge)
+      SubmissionHelpers.create_submitted_submission(%{}, user1, challenge_2)
+      SubmissionHelpers.create_submitted_submission(%{}, user2, challenge_2)
 
-      conn = get(conn, Routes.challenge_submission_path(conn, :index, challenge.id))
+      conn = get(conn, Routes.submission_path(conn, :index))
 
       %{submissions: submissions, pagination: _pagination} = conn.assigns
 
-      assert length(submissions) === 1
+      assert length(submissions) === 2
     end
 
     test "successfully retrieve filtered submissions for challenge", %{conn: conn} do
@@ -34,7 +36,7 @@ defmodule Web.SubmissionControllerTest do
 
       SubmissionHelpers.create_submitted_submission(
         %{
-          title: "Filtered title"
+          "title" => "Filtered title"
         },
         user,
         challenge
@@ -44,21 +46,17 @@ defmodule Web.SubmissionControllerTest do
 
       SubmissionHelpers.create_submitted_submission(
         %{
-          title: "Filtered title"
+          "title" => "Filtered title"
         },
         user,
         challenge_2
       )
 
-      conn =
-        get(conn, Routes.challenge_submission_path(conn, :index, challenge.id),
-          filter: %{title: "Filtered"}
-        )
+      conn = get(conn, Routes.submission_path(conn, :index), filter: %{title: "Filtered"})
 
       %{submissions: submissions, pagination: _pagination, filter: filter} = conn.assigns
 
-      assert length(submissions) === 1
-      assert filter["challenge_id"] === Integer.to_string(challenge.id)
+      assert length(submissions) === 2
       assert filter["title"] === "Filtered"
     end
 
@@ -82,7 +80,7 @@ defmodule Web.SubmissionControllerTest do
       submission =
         SubmissionHelpers.create_submitted_submission(
           %{
-            title: "Filtered title"
+            "title" => "Filtered title"
           },
           user,
           challenge
@@ -227,7 +225,7 @@ defmodule Web.SubmissionControllerTest do
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
-      Submissions.delete(submission, user)
+      Submissions.delete(submission)
 
       conn = get(conn, Routes.submission_path(conn, :show, submission.id))
 
@@ -288,7 +286,7 @@ defmodule Web.SubmissionControllerTest do
           "title" => "Test title"
         },
         "challenge_id" => challenge.id,
-        "phase_id" => phase.id
+        "phase_id" => "#{phase.id}"
       }
 
       conn = post(conn, Routes.challenge_submission_path(conn, :create, challenge.id), params)
@@ -313,7 +311,7 @@ defmodule Web.SubmissionControllerTest do
           "external_url" => "Test external url"
         },
         "challenge_id" => challenge.id,
-        "phase_id" => phase.id
+        "phase_id" => "#{phase.id}"
       }
 
       conn = post(conn, Routes.challenge_submission_path(conn, :create, challenge.id), params)
@@ -333,7 +331,7 @@ defmodule Web.SubmissionControllerTest do
         "action" => "review",
         "submission" => %{},
         "challenge_id" => challenge.id,
-        "phase_id" => phase.id
+        "phase_id" => "#{phase.id}"
       }
 
       conn = post(conn, Routes.challenge_submission_path(conn, :create, challenge.id), params)
@@ -403,7 +401,7 @@ defmodule Web.SubmissionControllerTest do
 
       submission = SubmissionHelpers.create_draft_submission(%{}, user, challenge)
 
-      {:ok, submission} = Submissions.delete(submission, user)
+      {:ok, submission} = Submissions.delete(submission)
 
       conn = get(conn, Routes.submission_path(conn, :edit, submission.id))
 
@@ -576,7 +574,7 @@ defmodule Web.SubmissionControllerTest do
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
-      {:ok, submission} = Submissions.delete(submission, user)
+      {:ok, submission} = Submissions.delete(submission)
 
       params = %{
         "action" => "review",
@@ -833,60 +831,46 @@ defmodule Web.SubmissionControllerTest do
       conn = prep_conn_admin(conn)
       %{current_user: user} = conn.assigns
 
-      user_2 = AccountHelpers.create_user()
-
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
-      submission = SubmissionHelpers.create_draft_submission(%{}, user_2, challenge)
+      submission =
+        SubmissionHelpers.create_draft_submission(%{"manager_id" => user.id}, user, challenge)
 
-      conn = delete(conn, Routes.submission_path(conn, :delete, submission.id))
+      conn = delete(conn, Routes.submission_path(conn, :delete, submission))
 
       assert {:error, :not_found} === Submissions.get(submission.id)
       assert get_flash(conn, :info) === "Submission deleted"
-      assert redirected_to(conn) === Routes.submission_path(conn, :index)
+
+      assert redirected_to(conn) ===
+               Routes.challenge_phase_managed_submission_path(
+                 conn,
+                 :managed_submissions,
+                 submission.challenge_id,
+                 submission.phase_id
+               )
     end
 
     test "deleting a submitted submission as an admin", %{conn: conn} do
       conn = prep_conn_admin(conn)
       %{current_user: user} = conn.assigns
 
-      user_2 = AccountHelpers.create_user()
-
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
-      submission = SubmissionHelpers.create_submitted_submission(%{}, user_2, challenge)
+      submission =
+        SubmissionHelpers.create_submitted_submission(%{"manager_id" => user.id}, user, challenge)
 
-      conn = delete(conn, Routes.submission_path(conn, :delete, submission.id))
+      conn = delete(conn, Routes.submission_path(conn, :delete, submission))
 
       assert {:error, :not_found} === Submissions.get(submission.id)
       assert get_flash(conn, :info) === "Submission deleted"
-      assert redirected_to(conn) === Routes.submission_path(conn, :index)
-    end
 
-    test "deleting a deleted submission", %{conn: conn} do
-      conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
-
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-
-      submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
-
-      {:ok, submission} = Submissions.delete(submission, user)
-
-      conn = delete(conn, Routes.submission_path(conn, :delete, submission.id))
-
-      assert {:error, :not_found} === Submissions.get(submission.id)
-      assert get_flash(conn, :error) === "This submission does not exist"
-      assert redirected_to(conn) === Routes.submission_path(conn, :index)
-    end
-
-    test "deleting a submission that doesn't exist", %{conn: conn} do
-      conn = prep_conn(conn)
-
-      conn = delete(conn, Routes.submission_path(conn, :delete, 1))
-
-      assert get_flash(conn, :error) === "This submission does not exist"
-      assert redirected_to(conn) === Routes.submission_path(conn, :index)
+      assert redirected_to(conn) ===
+               Routes.challenge_phase_managed_submission_path(
+                 conn,
+                 :managed_submissions,
+                 submission.challenge_id,
+                 submission.phase_id
+               )
     end
   end
 
