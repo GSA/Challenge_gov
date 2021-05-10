@@ -380,10 +380,11 @@ defmodule Web.SubmissionControllerTest do
 
     test "viewing the edit submission form for a submission you don't own", %{conn: conn} do
       conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
-      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+      %{current_user: solver_user} = conn.assigns
+      solver_user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
 
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(solver_user, %{user_id: solver_user.id})
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user_2, challenge)
 
@@ -414,7 +415,7 @@ defmodule Web.SubmissionControllerTest do
 
       conn = get(conn, Routes.submission_path(conn, :edit, 1))
 
-      assert get_flash(conn, :error) === "Submission not found"
+      assert get_flash(conn, :error) === "Submission cannot be edited"
       assert redirected_to(conn) === Routes.submission_path(conn, :index)
     end
   end
@@ -829,12 +830,14 @@ defmodule Web.SubmissionControllerTest do
 
     test "deleting a draft submission as an admin", %{conn: conn} do
       conn = prep_conn_admin(conn)
-      %{current_user: user} = conn.assigns
+      %{current_user: admin_user} = conn.assigns
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(admin_user, %{user_id: admin_user.id})
 
       submission =
-        SubmissionHelpers.create_draft_submission(%{"manager_id" => user.id}, user, challenge)
+        SubmissionHelpers.create_draft_submission(%{"manager_id" => admin_user.id}, solver_user, challenge)
 
       conn = delete(conn, Routes.submission_path(conn, :delete, submission))
 
@@ -852,12 +855,18 @@ defmodule Web.SubmissionControllerTest do
 
     test "deleting a submitted submission as an admin", %{conn: conn} do
       conn = prep_conn_admin(conn)
-      %{current_user: user} = conn.assigns
+      %{current_user: admin_user} = conn.assigns
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(admin_user, %{user_id: admin_user.id})
 
       submission =
-        SubmissionHelpers.create_submitted_submission(%{"manager_id" => user.id}, user, challenge)
+        SubmissionHelpers.create_submitted_submission(
+          %{"manager_id" => admin_user.id},
+          solver_user,
+          challenge
+        )
 
       conn = delete(conn, Routes.submission_path(conn, :delete, submission))
 
