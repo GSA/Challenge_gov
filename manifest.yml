@@ -12,8 +12,8 @@ applications:
   env:
     MIX_ENV: prod
     HOST: challenge-portal-dev.app.cloud.gov
-    LOGIN_PRIVATE_KEY_PATH: sandbox_key.pem
-    LOGIN_PUBLIC_KEY_PATH: cert.pem
+    LOGIN_PRIVATE_KEY_PATH: dev_key.pem
+    LOGIN_PUBLIC_KEY_PATH: dev_cert.pem
     LOGIN_REDIRECT_URL: https://challenge-portal-dev.app.cloud.gov/auth/result
 
 - name: challenge-portal-staging
