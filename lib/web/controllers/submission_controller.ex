@@ -84,11 +84,11 @@ defmodule Web.SubmissionController do
     {:ok, challenge} = Challenges.get(challenge_id)
     {:ok, phase} = Phases.get(phase_id)
 
-    filter = %{"manager_id" => user.id}
+    filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
 
     %{page: submissions, pagination: pagination} =
-      Submissions.all(filter: filter, sort: sort, page: page, per: per)
+      Solutions.all_with_manager_id(filter: filter, sort: sort, page: page, per: per)
 
     conn
     |> assign(:user, user)

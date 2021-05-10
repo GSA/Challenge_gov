@@ -31,6 +31,17 @@ defmodule ChallengeGov.Submissions do
   def all_with_manager_id(opts \\ []) do
     Solution
     |> base_preload
+    |> preload([:phase])
+    |> where([s], is_nil(s.deleted_at))
+    |> where([s], not is_nil(s.manager_id))
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> order_on_attribute(opts[:sort])
+    |> Repo.paginate(opts[:page], opts[:per])
+  end
+
+  def all_by_submitter_id(user_id, opts \\ []) do
+    Solution
+    |> base_preload
     |> where([s], is_nil(s.deleted_at))
     |> where([s], not is_nil(s.manager_id))
     |> join(:inner, [s], m in assoc(s, :manager))
