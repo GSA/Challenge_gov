@@ -88,13 +88,15 @@ defmodule Web.Router do
       resources("/bulletin", BulletinController, only: [:new, :create])
 
       resources("/phases", PhaseController, only: [:index, :show]) do
-        get("/solutions/managed", SolutionController, :managed_solutions, as: :managed_solution)
+        get("/submissions/managed", SubmissionController, :managed_submissions,
+          as: :managed_submission
+        )
 
-        resources("/solutions", SolutionController, only: [:index, :show, :new, :create]) do
+        resources("/submissions", SubmissionController, only: [:index, :show, :new, :create]) do
         end
       end
 
-      resources("/solutions", SolutionController, only: [:index, :new, :create])
+      resources("/submissions", SubmissionController, only: [:index, :new, :create])
       resources("/save_challenge", SavedChallengeController, only: [:new, :create])
     end
 
@@ -142,8 +144,9 @@ defmodule Web.Router do
     post("/submission_exports/:id", SubmissionExportController, :restart)
     resources("/submission_exports", SubmissionExportController, only: [:delete])
 
-    resources("/solutions", SolutionController, only: [:index, :show, :edit, :update, :delete])
-    put("/solutions/:id/submit", SolutionController, :submit)
+    resources("/submissions", SubmissionController, only: [:index, :show, :edit, :update, :delete])
+
+    put("/submissions/:id/submit", SubmissionController, :submit)
 
     resources("/documents", DocumentController, only: [:delete])
     resources("/events", EventController, only: [:edit, :update, :delete])
@@ -174,9 +177,9 @@ defmodule Web.Router do
     pipe_through([:api, :signed_in_api])
 
     resources("/documents", DocumentController, only: [:create, :delete])
-    resources("/solution_documents", SolutionDocumentController, only: [:create, :delete])
+    resources("/submission_documents", SubmissionDocumentController, only: [:create, :delete])
 
-    put("/solutions/:id/:judging_status", SolutionController, :update_judging_status)
+    put("/submissions/:id/:judging_status", SubmissionController, :update_judging_status)
 
     # Winners
     post(

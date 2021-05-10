@@ -1,5 +1,5 @@
 <div class="card-tools btn-group">
-  <%= link("Submit Solution", to: Routes.challenge_solution_path(@conn, :new, @challenge.id), class: "btn btn-primary") %>
+  <%= link("Create Submission", to: Routes.challenge_submission_path(@conn, :new, @challenge.id), class: "btn btn-primary") %>
   <%= if Challenges.is_approvable?(@challenge, @user) do  %>
     <%= link("Approve", to: Routes.challenge_path(@conn, :approve, @challenge.id), method: :post, class: "btn btn-primary") %>
   <% end %>

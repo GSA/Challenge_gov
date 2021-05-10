@@ -6,7 +6,7 @@
       <div><span>End date: </span><span class="js-local-datetime"><%= @phase.end_date %></span></div>
     </div>
     <div class="mb-2">Status: <%= status(@phase) %></div>
-    <div class="mb-3">Submission total: <%= Phases.solution_count(@phase) %></div>
+    <div class="mb-3">Submission total: <%= Phases.submission_count(@phase) %></div>
     <div>
       <%= link("Manage submissions", to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), class: "btn btn-primary") %>
     </div>

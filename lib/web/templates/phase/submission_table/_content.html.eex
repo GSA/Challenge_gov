@@ -1,0 +1,23 @@
+<tbody class="main-container">
+  <%= Enum.map @submissions, fn (submission) -> %>
+    <tr>
+      <td><%= submission.id %></td>
+      <td><%= SubmissionView.name_link(@conn, submission, page: @page, filter: @filter, sort: @sort) %></td>
+      <td class="js-local-datetime"><%= submission.updated_at %></td>
+      <td>last_messaged_placeholder</td>
+      <td>topic_placeholder</td>
+      <td><%= render_select_for_judging_button(@conn, @challenge, @phase, submission, @filter) %></td>
+      <td>
+        <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+          <div class="btn-group btn-group-sm ml-2" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              More options
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  <% end %>
+</tbody>

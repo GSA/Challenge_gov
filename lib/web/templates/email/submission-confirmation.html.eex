@@ -1,0 +1,1 @@
+Your submission <%= SubmissionView.name_link_url(Endpoint, @submission) %> for challenge <%= ChallengeView.public_name_link_url(Endpoint, @challenge) %> was created at <%= SharedView.readable_datetime(@submission.updated_at) %> UTC

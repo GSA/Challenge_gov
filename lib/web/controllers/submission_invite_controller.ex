@@ -3,7 +3,7 @@ defmodule Web.SubmissionInviteController do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.Phases
-  alias ChallengeGov.Solutions
+  alias ChallengeGov.Submissions
   alias ChallengeGov.SubmissionInvites
 
   plug(
@@ -17,7 +17,8 @@ defmodule Web.SubmissionInviteController do
     with {:ok, phase} <- Phases.get(phase_id),
          {:ok, challenge} <- Challenges.get(phase.challenge_id),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
-      submissions = Solutions.all(filter: %{"phase_id" => phase_id, "judging_status" => "winner"})
+      submissions =
+        Submissions.all(filter: %{"phase_id" => phase_id, "judging_status" => "winner"})
 
       conn
       |> assign(:user, user)
@@ -37,7 +38,7 @@ defmodule Web.SubmissionInviteController do
     %{current_user: user} = conn.assigns
 
     with {:ok, submission_invite} <- SubmissionInvites.get(id),
-         {:ok, challenge} <- Challenges.get(submission_invite.solution.challenge_id),
+         {:ok, challenge} <- Challenges.get(submission_invite.submission.challenge_id),
          {:ok, _challenge} <- Challenges.allowed_to_edit(user, challenge) do
       conn
       |> assign(:user, user)
@@ -96,7 +97,7 @@ defmodule Web.SubmissionInviteController do
       |> assign(:submission_invite, submission_invite)
       |> put_flash(:error, "Invite revoked")
       |> redirect(
-        to: Routes.submission_invite_path(conn, :index, submission_invite.solution.phase_id)
+        to: Routes.submission_invite_path(conn, :index, submission_invite.submission.phase_id)
       )
     else
       {:error, _changeset} ->

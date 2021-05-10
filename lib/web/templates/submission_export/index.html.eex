@@ -1,6 +1,6 @@
 <div class="content-header">
   <div class="container-fluid">
-    <%= ChallengeView.challenge_solutions_link(@conn, @challenge, @user, label: "Back", class: "btn btn-link p-0 mb-1") %>
+    <%= ChallengeView.challenge_submissions_link(@conn, @challenge, @user, label: "Back", class: "btn btn-link p-0 mb-1") %>
 
     <h1 class="mb-3">Recent downloads for <%= @challenge.title %></h1>
 
@@ -52,7 +52,7 @@
           <% end %>
           <br/>
           <p>File type:</p>
-          <p>CSV will include only the text of each solution entry. ZIP files will include both a CSV of the entry and all uploaded files in a folder structured format.</p>
+          <p>CSV will include only the text of each submission entry. ZIP files will include both a CSV of the entry and all uploaded files in a folder structured format.</p>
           <%= label do %>
             <%= radio_button(f, :format, ".csv") %>
             <span class="ml-1">csv only</span>

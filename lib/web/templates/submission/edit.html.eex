@@ -1,0 +1,37 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <%= if Accounts.has_admin_access?(@user) do %>
+      <%= SharedView.render_breadcrumbs([
+        %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+        %{text: "Challenges", route: Routes.challenge_path(@conn, :index)},
+        %{text: @challenge.title, route: Routes.challenge_path(@conn, :show, @challenge.id)},
+        %{text: "Submissions", route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) === 1},
+        %{text: "Phases", route: Routes.challenge_phase_path(@conn, :index, @challenge.id), is_visible: length(@challenge.phases) > 1},
+        %{text: @phase.title, route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) > 1},
+        %{text: @submission.title, route: Routes.challenge_phase_submission_path(@conn, :show, @challenge.id, @phase.id, @submission.id)},
+        %{text: "Edit"}
+      ])%>
+    <% else %>
+      <%= SharedView.render_breadcrumbs([
+        %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+        %{text: "Submissions", route: Routes.submission_path(@conn, :index)},
+        %{text: @submission.title, route: Routes.submission_path(@conn, :show, @submission.id)},
+        %{text: "Edit"},
+      ])%>
+    <% end %>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">   
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card p-3">
+          <h4>Edit submission for:</h4>
+          <%= render Web.SubmissionView, "_header.html", conn: @conn, challenge: @submission.challenge, phase: @phase %>
+          <%= render Web.SubmissionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.submission_path(@conn, :update, @submission.id), user: @user, challenge: @submission.challenge %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

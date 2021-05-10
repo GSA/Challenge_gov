@@ -1,0 +1,1 @@
+Your challenge <%= ChallengeView.public_name_link_url(Endpoint, @challenge) %> has received a new submission <%= SubmissionView.name_link_url(Endpoint, @submission) %>

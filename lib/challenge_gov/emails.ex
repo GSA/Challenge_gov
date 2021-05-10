@@ -40,47 +40,53 @@ defmodule ChallengeGov.Emails do
     |> render("challenge_auto_publish.html")
   end
 
-  def managed_solution_submission(user, _manager, solution) do
+  def managed_submission_submission(user, _manager, submission) do
     base_email()
     |> to(user.email)
     |> subject(
-      "Challenge.gov - Solution submitted for #{solution.challenge.id} #{solution.challenge.title}"
+      "Challenge.gov - Submission created for #{submission.challenge.id} #{
+        submission.challenge.title
+      }"
     )
-    |> assign(:solution, solution)
-    |> assign(:challenge, solution.challenge)
-    |> render("solution-submission-managed.html")
+    |> assign(:submission, submission)
+    |> assign(:challenge, submission.challenge)
+    |> render("submission-submission-managed.html")
   end
 
   # might require a change in this email.
-  def new_solution_submission(user, solution) do
+  def new_submission_submission(user, submission) do
     base_email()
     |> to(user.email)
     |> subject(
-      "Challenge.gov - Solution submitted for #{solution.challenge.id} #{solution.challenge.title}"
+      "Challenge.gov - Submission created for #{submission.challenge.id} #{
+        submission.challenge.title
+      }"
     )
-    |> assign(:solution, solution)
-    |> assign(:challenge, solution.challenge)
-    |> render("solution-submission.html")
+    |> assign(:submission, submission)
+    |> assign(:challenge, submission.challenge)
+    |> render("submission-submission.html")
   end
 
-  def solution_review(user, phase, solution) do
+  def submission_review(user, phase, submission) do
     base_email()
     |> to(user.email)
     |> subject("Action needed. New submission notification")
-    |> assign(:solution, solution)
+    |> assign(:submission, submission)
     |> assign(:phase, phase)
-    |> render("managed-solution-created.html")
+    |> render("managed-submission-created.html")
   end
 
-  def solution_confirmation(solution) do
+  def submission_confirmation(submission) do
     base_email()
-    |> to(solution.submitter.email)
+    |> to(submission.submitter.email)
     |> subject(
-      "Challenge.gov - Solution submitted for #{solution.challenge.id} #{solution.challenge.title}"
+      "Challenge.gov - Submission created for #{submission.challenge.id} #{
+        submission.challenge.title
+      }"
     )
-    |> assign(:solution, solution)
-    |> assign(:challenge, solution.challenge)
-    |> render("solution-confirmation.html")
+    |> assign(:submission, submission)
+    |> assign(:challenge, submission.challenge)
+    |> render("submission-confirmation.html")
   end
 
   def days_deactivation_warning(user, days) do
@@ -120,12 +126,12 @@ defmodule ChallengeGov.Emails do
 
   def submission_invite(submission_invite) do
     base_email()
-    |> to(submission_invite.solution.submitter.email)
+    |> to(submission_invite.submission.submitter.email)
     |> subject(
-      "You have been invited to the next phase of #{submission_invite.solution.challenge.title}"
+      "You have been invited to the next phase of #{submission_invite.submission.challenge.title}"
     )
     |> assign(:submission_invite, submission_invite)
-    |> assign(:challenge, submission_invite.solution.challenge)
+    |> assign(:challenge, submission_invite.submission.challenge)
     |> render("submission_invite.html")
   end
 

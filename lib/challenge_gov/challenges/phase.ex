@@ -8,15 +8,15 @@ defmodule ChallengeGov.Challenges.Phase do
   import Ecto.Changeset
 
   alias ChallengeGov.Challenges.Challenge
-  alias ChallengeGov.Solutions.Solution
+  alias ChallengeGov.Submissions.Submission
   alias ChallengeGov.PhaseWinners.PhaseWinner
 
   @type t :: %__MODULE__{}
 
   schema "phases" do
     belongs_to(:challenge, Challenge)
-    has_many(:all_solutions, Solution)
-    has_many(:solutions, Solution, where: [status: "submitted"])
+    has_many(:all_submissions, Submission)
+    has_many(:submissions, Submission, where: [status: "submitted"])
     has_one(:winners, PhaseWinner)
 
     field(:uuid, Ecto.UUID, autogenerate: true)

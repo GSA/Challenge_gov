@@ -49,7 +49,7 @@
               <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                 <%= if Accounts.role_at_or_below(u, "solver") do %>
                   <li class="nav-item">
-                    <%= link(to: Routes.solution_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "solutions")}") do %>
+                    <%= link(to: Routes.submission_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "submissions")}") do %>
                       <i class="nav-icon icon-submissions"></i>
                       <p>Submissions</p>
                     <% end %>

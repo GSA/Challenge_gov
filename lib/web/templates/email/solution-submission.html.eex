@@ -1,1 +1,0 @@
-Your challenge <%= ChallengeView.public_name_link_url(Endpoint, @challenge) %> has received a new solution <%= SolutionView.name_link_url(Endpoint, @solution) %>
