@@ -31,9 +31,10 @@ defmodule ChallengeGov.Solutions do
   def all_with_manager_id(opts \\ []) do
     Solution
     |> base_preload
-    |> preload([:phase])
     |> where([s], is_nil(s.deleted_at))
     |> where([s], not is_nil(s.manager_id))
+    |> join(:inner, [s], m in assoc(s, :manager))
+    |> preload([:phase, :manager])
     |> Filter.filter(opts[:filter], __MODULE__)
     |> order_on_attribute(opts[:sort])
     |> Repo.paginate(opts[:page], opts[:per])
@@ -471,6 +472,21 @@ defmodule ChallengeGov.Solutions do
 
       "desc" ->
         order_by(query, [s, p], desc_nulls_last: p.title)
+
+      _ ->
+        query
+    end
+  end
+
+  def order_on_attribute(query, %{"manager_last_name" => direction}) do
+    query = join(query, :left, [s], m in assoc(s, :manager))
+
+    case direction do
+      "asc" ->
+        order_by(query, [s, m], asc_nulls_last: m.last_name)
+
+      "desc" ->
+        order_by(query, [s, m], desc_nulls_last: m.last_name)
 
       _ ->
         query
