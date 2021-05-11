@@ -234,8 +234,8 @@ defmodule Web.SubmissionControllerTest do
   end
 
   describe "new action" do
-    test "viewing the new submission form", %{conn: conn} do
-      conn = prep_conn(conn)
+    test "viewing the new submission form from phases as an admin", %{conn: conn} do
+      conn = prep_conn_admin(conn)
       %{current_user: user} = conn.assigns
 
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
