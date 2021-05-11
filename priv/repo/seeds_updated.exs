@@ -16,7 +16,7 @@ defmodule SeedsUpdated do
     Accounts.run()
     challenges = Challenges.run()
     Submissions.run(challenges)
-    PhaseWinners.run()
+    PhaseWinners.run(challenges)
   end
 end
 
