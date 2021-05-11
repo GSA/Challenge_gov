@@ -128,19 +128,27 @@ defmodule Web.SubmissionController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
-    phase =
-      Enum.find(challenge.phases, fn %{id: id} ->
-        id == String.to_integer(phase_id)
-      end)
+    case Accounts.role_at_or_above(user, "challenge_owner") do
+      true ->
+        phase =
+          Enum.find(challenge.phases, fn %{id: id} ->
+            id == String.to_integer(phase_id)
+          end)
 
-    conn
-    |> assign(:user, user)
-    |> assign(:challenge, challenge)
-    |> assign(:phase, phase)
-    |> assign(:action, action_name(conn))
-    |> assign(:changeset, Submissions.new())
-    |> assign(:navbar_text, "Create submission")
-    |> render("new.html")
+        conn
+        |> assign(:user, user)
+        |> assign(:challenge, challenge)
+        |> assign(:phase, phase)
+        |> assign(:action, action_name(conn))
+        |> assign(:changeset, Submissions.new())
+        |> assign(:navbar_text, "Create submission")
+        |> render("new.html")
+
+      false ->
+        conn
+        |> put_flash(:error, "Action not permitted")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
+    end
   end
 
   def new(conn, %{"challenge_id" => challenge_id}) do
