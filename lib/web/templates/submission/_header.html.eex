@@ -1,7 +1,7 @@
 <section class="submission-header row">
   <div class="col-8">
     <h1><i><%= @challenge.title || "Challenge #{@challenge.id}" %></i></h1>
-    <% if @phase.title do %>
+    <%= if @phase.title do %>
       <h3><i><%= @phase.title %></i></h3>
     <% end %>
     <br/>
