@@ -27,19 +27,23 @@
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "id", "ID") %>
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "title", "Name") %>
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "challenge", "Challenge") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "phase", "Phase") %>
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "status", "Status") %>
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "review_verified", "Accepted By Solver") %>
+                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "manager_last_name", "Created By") %>
                   <th>Actions</th>
               </thead>
 
               <tbody>
                 <%= Enum.map @submissions, fn (submission) -> %>
                 <tr>
-                    <td><%= submission.id %></td>
-                    <td><%= name_link(@conn, submission) %></td>
-                    <td><%= link(submission.challenge.title, to: Routes.challenge_path(@conn, :show, submission.challenge.id)) %></td>
-                    <td><%= status_display_name(submission) %></td>
-                    <td><%= submission.review_verified %></td>
+                    <td><%= solution.id %></td>
+                    <td><%= name_link(@conn, solution) %></td>
+                    <td><%= link(solution.challenge.title, to: Routes.challenge_path(@conn, :show, solution.challenge.id)) %></td>
+                    <td><%= solution.phase.title %></td>
+                    <td><%= status_display_name(solution) %></td>
+                    <td><%= solution.review_verified %></td>
+                    <td><%= solution.manager.first_name <> " " <> solution.manager.last_name %></td>
                     <td>
                       <%= render Web.SubmissionView, "_actions.html", conn: @conn, challenge: @challenge, user: @user, submission: submission %>
                 </tr>
