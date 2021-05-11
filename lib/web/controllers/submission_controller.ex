@@ -128,23 +128,23 @@ defmodule Web.SubmissionController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
-    case Accounts.role_at_or_above(user, "challenge_owner") do
-      true ->
-        phase =
-          Enum.find(challenge.phases, fn %{id: id} ->
-            id == String.to_integer(phase_id)
-          end)
+    with true <- Accounts.role_at_or_above(user, "challenge_owner"),
+         true <- challenge.sub_status != "archived" do
+      phase =
+        Enum.find(challenge.phases, fn %{id: id} ->
+          id == String.to_integer(phase_id)
+        end)
 
-        conn
-        |> assign(:user, user)
-        |> assign(:challenge, challenge)
-        |> assign(:phase, phase)
-        |> assign(:action, action_name(conn))
-        |> assign(:changeset, Submissions.new())
-        |> assign(:navbar_text, "Create submission")
-        |> render("new.html")
-
-      false ->
+      conn
+      |> assign(:user, user)
+      |> assign(:challenge, challenge)
+      |> assign(:phase, phase)
+      |> assign(:action, action_name(conn))
+      |> assign(:changeset, Submissions.new())
+      |> assign(:navbar_text, "Create submission")
+      |> render("new.html")
+    else
+      _ ->
         conn
         |> put_flash(:error, "Action not permitted")
         |> redirect(to: Routes.dashboard_path(conn, :index))
