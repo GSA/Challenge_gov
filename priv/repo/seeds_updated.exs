@@ -14,8 +14,8 @@ defmodule SeedsUpdated do
   def run() do
     Agencies.run()
     Accounts.run()
-    Challenges.run()
-    Submissions.run()
+    challenges = Challenges.run()
+    Submissions.run(challenges)
     PhaseWinners.run()
   end
 end
