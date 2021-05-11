@@ -1,7 +1,7 @@
 <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
-  <%= link("View", to: Routes.solution_path(@conn, :show, @solution.id), class: "btn btn-default btn-xs mr-2") %>
-  <%= if can_edit?(@user, @solution) do %>
-    <%= link("Edit", to: Routes.solution_path(@conn, :edit, @solution.id), class: "btn btn-default btn-xs mr-2") %>
+  <%= link("View", to: Routes.submission_path(@conn, :show, @submission.id), class: "btn btn-default btn-xs mr-2") %>
+  <%= if can_edit?(@user, @submission) do %>
+    <%= link("Edit", to: Routes.submission_path(@conn, :edit, @submission.id), class: "btn btn-default btn-xs mr-2") %>
   <% else %>
     <span class="row-text">closed</span>
   <% end %>

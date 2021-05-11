@@ -10,7 +10,7 @@ defmodule Web.SubmissionView do
   alias Web.SharedView
 
   def can_edit?(user, submission) do
-    case Solutions.is_editable?(user, submission) do
+    case Submissions.is_editable?(user, submission) do
       {:ok, _submission} ->
         true
 

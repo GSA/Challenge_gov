@@ -819,7 +819,11 @@ defmodule Web.SubmissionControllerTest do
         ChallengeHelpers.create_single_phase_challenge(admin_user, %{user_id: admin_user.id})
 
       submission =
-        SubmissionHelpers.create_draft_submission(%{"manager_id" => admin_user.id}, solver_user, challenge)
+        SubmissionHelpers.create_draft_submission(
+          %{"manager_id" => admin_user.id},
+          solver_user,
+          challenge
+        )
 
       conn = delete(conn, Routes.submission_path(conn, :delete, submission))
 

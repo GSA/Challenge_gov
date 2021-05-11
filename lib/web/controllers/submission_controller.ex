@@ -88,7 +88,7 @@ defmodule Web.SubmissionController do
     sort = Map.get(params, "sort", %{})
 
     %{page: submissions, pagination: pagination} =
-      Solutions.all_with_manager_id(filter: filter, sort: sort, page: page, per: per)
+      Submissions.all_with_manager_id(filter: filter, sort: sort, page: page, per: per)
 
     conn
     |> assign(:user, user)
@@ -228,25 +228,25 @@ defmodule Web.SubmissionController do
 
   def edit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
-    {:ok, solution} = Solutions.get(id)
+    {:ok, submission} = Submissions.get(id)
 
-    case Solutions.allowed_to_edit?(user, solution) do
-      {:ok, solution} ->
+    case Submissions.allowed_to_edit?(user, submission) do
+      {:ok, submission} ->
         conn
         |> assign(:user, user)
-        |> assign(:solution, solution)
-        |> assign(:challenge, solution.challenge)
-        |> assign(:phase, solution.phase)
+        |> assign(:submission, submission)
+        |> assign(:challenge, submission.challenge)
+        |> assign(:phase, submission.phase)
         |> assign(:action, action_name(conn))
-        |> assign(:path, Routes.solution_path(conn, :update, id))
-        |> assign(:changeset, Solutions.edit(solution))
-        |> assign(:navbar_text, "Edit solution")
+        |> assign(:path, Routes.submission_path(conn, :update, id))
+        |> assign(:changeset, Submissions.edit(submission))
+        |> assign(:navbar_text, "Edit submission")
         |> render("edit.html")
 
       {:error, :not_permitted} ->
         conn
         |> put_flash(:error, "Submission cannot be edited")
-        |> post_delete_redirect(user, solution)
+        |> post_delete_redirect(user, submission)
     end
   end
 
@@ -367,9 +367,9 @@ defmodule Web.SubmissionController do
   end
 
   def post_delete_redirect(conn, %{id: id}, %{submitter_id: id}),
-    do: redirect(conn, to: Routes.solution_path(conn, :index))
+    do: redirect(conn, to: Routes.submission_path(conn, :index))
 
-  def post_delete_redirect(conn, user, solution) do
+  def post_delete_redirect(conn, user, submission) do
     if Accounts.has_admin_access?(user) do
       redirect(conn,
         to:
@@ -381,7 +381,7 @@ defmodule Web.SubmissionController do
           )
       )
     else
-      redirect(conn, to: Routes.solution_path(conn, :index))
+      redirect(conn, to: Routes.submission_path(conn, :index))
     end
   end
 

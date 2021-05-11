@@ -29,19 +29,9 @@ defmodule ChallengeGov.Submissions do
   end
 
   def all_with_manager_id(opts \\ []) do
-    Solution
+    Submission
     |> base_preload
     |> preload([:phase])
-    |> where([s], is_nil(s.deleted_at))
-    |> where([s], not is_nil(s.manager_id))
-    |> Filter.filter(opts[:filter], __MODULE__)
-    |> order_on_attribute(opts[:sort])
-    |> Repo.paginate(opts[:page], opts[:per])
-  end
-
-  def all_by_submitter_id(user_id, opts \\ []) do
-    Solution
-    |> base_preload
     |> where([s], is_nil(s.deleted_at))
     |> where([s], not is_nil(s.manager_id))
     |> join(:inner, [s], m in assoc(s, :manager))
@@ -53,7 +43,8 @@ defmodule ChallengeGov.Submissions do
 
   def all_by_submitter_id(user_id, opts \\ []) do
     Submission
-    |> preload([:challenge, :phase])
+    |> base_preload
+    |> preload([:phase])
     |> where([s], is_nil(s.deleted_at))
     |> where([s], s.submitter_id == ^user_id)
     |> Filter.filter(opts[:filter], __MODULE__)
@@ -261,10 +252,10 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
-  def allowed_to_delete?(user, solution) do
-    if solution.submitter_id === user.id or
-         (Accounts.has_admin_access?(user) and !is_nil(solution.manager_id)) do
-      {:ok, solution}
+  def allowed_to_delete?(user, submission) do
+    if submission.submitter_id === user.id or
+         (Accounts.has_admin_access?(user) and !is_nil(submission.manager_id)) do
+      {:ok, submission}
     else
       {:error, :not_permitted}
     end
