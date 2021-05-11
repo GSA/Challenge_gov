@@ -386,34 +386,9 @@ defmodule Web.SubmissionControllerTest do
       challenge =
         ChallengeHelpers.create_single_phase_challenge(solver_user, %{user_id: solver_user.id})
 
-      submission = SubmissionHelpers.create_submitted_submission(%{}, user_2, challenge)
+      submission = SubmissionHelpers.create_submitted_submission(%{}, solver_user_2, challenge)
 
       conn = get(conn, Routes.submission_path(conn, :edit, submission.id))
-
-      assert get_flash(conn, :error) === "You are not allowed to edit this submission"
-      assert redirected_to(conn) === Routes.submission_path(conn, :index)
-    end
-
-    test "viewing the edit submission form for a submission that was deleted", %{conn: conn} do
-      conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
-
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
-
-      submission = SubmissionHelpers.create_draft_submission(%{}, user, challenge)
-
-      {:ok, submission} = Submissions.delete(submission)
-
-      conn = get(conn, Routes.submission_path(conn, :edit, submission.id))
-
-      assert get_flash(conn, :error) === "Submission not found"
-      assert redirected_to(conn) === Routes.submission_path(conn, :index)
-    end
-
-    test "viewing the edit submission form for a submission that doesn't exist", %{conn: conn} do
-      conn = prep_conn(conn)
-
-      conn = get(conn, Routes.submission_path(conn, :edit, 1))
 
       assert get_flash(conn, :error) === "Submission cannot be edited"
       assert redirected_to(conn) === Routes.submission_path(conn, :index)
@@ -423,11 +398,18 @@ defmodule Web.SubmissionControllerTest do
   describe "update action" do
     test "updating a draft submission and saving as draft", %{conn: conn} do
       conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
+      %{current_user: solver_user} = conn.assigns
+      admin_user = AccountHelpers.create_user(%{email: "admin_user_2@example.com", role: "admin"})
 
-      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(admin_user, %{user_id: admin_user.id})
 
-      submission = SubmissionHelpers.create_draft_submission(%{}, user, challenge)
+      submission =
+        SubmissionHelpers.create_draft_submission(
+          %{"manager_id" => admin_user.id},
+          solver_user,
+          challenge
+        )
 
       params = %{
         "action" => "draft",
