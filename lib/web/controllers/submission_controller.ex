@@ -84,11 +84,11 @@ defmodule Web.SubmissionController do
     {:ok, challenge} = Challenges.get(challenge_id)
     {:ok, phase} = Phases.get(phase_id)
 
-    filter = %{"manager_id" => user.id}
+    filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
 
     %{page: submissions, pagination: pagination} =
-      Submissions.all(filter: filter, sort: sort, page: page, per: per)
+      Submissions.all_with_manager_id(filter: filter, sort: sort, page: page, per: per)
 
     conn
     |> assign(:user, user)
@@ -228,29 +228,25 @@ defmodule Web.SubmissionController do
 
   def edit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
+    {:ok, submission} = Submissions.get(id)
 
-    with {:ok, submission} <- Submissions.get(id),
-         {:ok, submission} <- Submissions.allowed_to_edit?(user, submission) do
-      conn
-      |> assign(:user, user)
-      |> assign(:submission, submission)
-      |> assign(:challenge, submission.challenge)
-      |> assign(:phase, submission.phase)
-      |> assign(:action, action_name(conn))
-      |> assign(:path, Routes.submission_path(conn, :update, id))
-      |> assign(:changeset, Submissions.edit(submission))
-      |> assign(:navbar_text, "Edit submission")
-      |> render("edit.html")
-    else
+    case Submissions.allowed_to_edit?(user, submission) do
+      {:ok, submission} ->
+        conn
+        |> assign(:user, user)
+        |> assign(:submission, submission)
+        |> assign(:challenge, submission.challenge)
+        |> assign(:phase, submission.phase)
+        |> assign(:action, action_name(conn))
+        |> assign(:path, Routes.submission_path(conn, :update, id))
+        |> assign(:changeset, Submissions.edit(submission))
+        |> assign(:navbar_text, "Edit submission")
+        |> render("edit.html")
+
       {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "You are not allowed to edit this submission")
-        |> redirect(to: Routes.submission_path(conn, :index))
-
-      {:error, :not_found} ->
-        conn
-        |> put_flash(:error, "Submission not found")
-        |> redirect(to: Routes.submission_path(conn, :index))
+        |> put_flash(:error, "Submission cannot be edited")
+        |> post_delete_redirect(user, submission)
     end
   end
 
@@ -370,8 +366,11 @@ defmodule Web.SubmissionController do
     end
   end
 
-  def post_delete_redirect(conn, %{id: id}, submission = %{manager_id: id}),
-    do:
+  def post_delete_redirect(conn, %{id: id}, %{submitter_id: id}),
+    do: redirect(conn, to: Routes.submission_path(conn, :index))
+
+  def post_delete_redirect(conn, user, submission) do
+    if Accounts.has_admin_access?(user) do
       redirect(conn,
         to:
           Routes.challenge_phase_managed_submission_path(
@@ -381,9 +380,10 @@ defmodule Web.SubmissionController do
             submission.phase_id
           )
       )
-
-  def post_delete_redirect(conn, %{id: id}, %{submitter_id: id}),
-    do: redirect(conn, to: Routes.submission_path(conn, :index))
+    else
+      redirect(conn, to: Routes.submission_path(conn, :index))
+    end
+  end
 
   defp get_params_by_current_user(submission_params, current_user) do
     case Accounts.has_admin_access?(current_user) do

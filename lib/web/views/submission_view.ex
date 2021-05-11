@@ -9,6 +9,16 @@ defmodule Web.SubmissionView do
   alias Web.FormView
   alias Web.SharedView
 
+  def can_edit?(user, submission) do
+    case Submissions.is_editable?(user, submission) do
+      {:ok, _submission} ->
+        true
+
+      {:error, :not_permitted} ->
+        false
+    end
+  end
+
   def persist_solver_email_on_edit(data) do
     if data.submitter, do: data.submitter.email, else: ""
   end

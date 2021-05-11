@@ -28,9 +28,23 @@ defmodule ChallengeGov.Submissions do
     |> Repo.paginate(opts[:page], opts[:per])
   end
 
+  def all_with_manager_id(opts \\ []) do
+    Submission
+    |> base_preload
+    |> preload([:phase])
+    |> where([s], is_nil(s.deleted_at))
+    |> where([s], not is_nil(s.manager_id))
+    |> join(:inner, [s], m in assoc(s, :manager))
+    |> preload([:phase, :manager])
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> order_on_attribute(opts[:sort])
+    |> Repo.paginate(opts[:page], opts[:per])
+  end
+
   def all_by_submitter_id(user_id, opts \\ []) do
     Submission
-    |> preload([:challenge, :phase])
+    |> base_preload
+    |> preload([:phase])
     |> where([s], is_nil(s.deleted_at))
     |> where([s], s.submitter_id == ^user_id)
     |> Filter.filter(opts[:filter], __MODULE__)
@@ -199,9 +213,42 @@ defmodule ChallengeGov.Submissions do
   def allowed_to_edit?(user, submission) do
     if submission.submitter_id === user.id or
          (Accounts.has_admin_access?(user) and !is_nil(submission.manager_id)) do
-      {:ok, submission}
+      is_editable?(user, submission)
     else
       {:error, :not_permitted}
+    end
+  end
+
+  def is_editable?(%{role: "solver"}, submission) do
+    submission_phase_is_open?(submission)
+  end
+
+  def is_editable?(user, submission) do
+    case Accounts.has_admin_access?(user) do
+      true ->
+        if is_nil(submission.manager_id) or
+             !!submission.review_verified or
+             submission.challenge.sub_status === "archived" do
+          {:error, :not_permitted}
+        else
+          {:ok, submission}
+        end
+
+      false ->
+        {:error, :not_permitted}
+    end
+  end
+
+  def submission_phase_is_open?(submission) do
+    phase_close = submission.phase.end_date
+    now = Timex.now()
+
+    case Timex.compare(phase_close, now) do
+      1 ->
+        {:ok, submission}
+
+      tc when tc == -1 or tc == 0 ->
+        {:error, :not_permitted}
     end
   end
 
@@ -427,6 +474,21 @@ defmodule ChallengeGov.Submissions do
 
       "desc" ->
         order_by(query, [s, p], desc_nulls_last: p.title)
+
+      _ ->
+        query
+    end
+  end
+
+  def order_on_attribute(query, %{"manager_last_name" => direction}) do
+    query = join(query, :left, [s], m in assoc(s, :manager))
+
+    case direction do
+      "asc" ->
+        order_by(query, [s, m], asc_nulls_last: m.last_name)
+
+      "desc" ->
+        order_by(query, [s, m], desc_nulls_last: m.last_name)
 
       _ ->
         query

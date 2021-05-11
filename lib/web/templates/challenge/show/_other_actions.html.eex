@@ -22,10 +22,6 @@
         <% true -> %>
       <% end %>
 
-      <%= if Accounts.has_admin_access?(@user) and (Challenges.is_open?(@challenge) or Challenges.is_closed?(@challenge)) do %>
-        <%= link("Create submission", to: Routes.challenge_submission_path(@conn, :new, @challenge.id), class: "btn btn-primary") %>
-      <% end %>
-
       <%= if Challenges.is_published?(@challenge) do %>
         <%= link("Add/Edit announcement", to: "#", class: "btn btn-primary", data: [toggle: "modal", target: "#announcement-modal"] ) %>
       <% end %>
