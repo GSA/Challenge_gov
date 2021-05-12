@@ -39,6 +39,12 @@ defmodule ChallengeGov.PhaseWinners do
     end
   end
 
+  def create(phase) do
+    %PhaseWinner{}
+    |> PhaseWinner.create_changeset(phase, %{})
+    |> Repo.insert()
+  end
+
   def create(phase, %{"phase_winner" => phase_winner_params}) do
     %PhaseWinner{}
     |> PhaseWinner.create_changeset(phase, phase_winner_params)

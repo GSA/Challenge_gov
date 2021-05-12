@@ -217,6 +217,13 @@ defmodule Web.Router do
   end
 
   if Mix.env() == :dev do
+    scope "/dev_accounts", Web, as: :dev_accounts do
+      pipe_through([:browser, :signed_out])
+
+      get("/", PageController, :dev_accounts)
+      post("/sign_in", PageController, :dev_account_sign_in)
+    end
+
     forward("/emails/sent", Bamboo.SentEmailViewerPlug)
   end
 end
