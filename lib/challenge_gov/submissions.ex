@@ -31,10 +31,8 @@ defmodule ChallengeGov.Submissions do
   def all_with_manager_id(opts \\ []) do
     Submission
     |> base_preload
-    |> preload([:phase])
     |> where([s], is_nil(s.deleted_at))
     |> where([s], not is_nil(s.manager_id))
-    |> join(:inner, [s], m in assoc(s, :manager))
     |> preload([:phase, :manager])
     |> Filter.filter(opts[:filter], __MODULE__)
     |> order_on_attribute(opts[:sort])
@@ -455,14 +453,14 @@ defmodule ChallengeGov.Submissions do
   def filter_on_attribute({"managed_accepted", _value}, query), do: query
 
   def order_on_attribute(query, %{"challenge" => direction}) do
-    query = join(query, :left, [s], c in assoc(s, :challenge))
+    query = join(query, :left, [s], c in assoc(s, :challenge), as: :challenge)
 
     case direction do
       "asc" ->
-        order_by(query, [s, c], asc_nulls_last: c.title)
+        order_by(query, [s, challenge: c], asc_nulls_last: c.title)
 
       "desc" ->
-        order_by(query, [s, c], desc_nulls_last: c.title)
+        order_by(query, [s, challenge: c], desc_nulls_last: c.title)
 
       _ ->
         query
@@ -470,14 +468,14 @@ defmodule ChallengeGov.Submissions do
   end
 
   def order_on_attribute(query, %{"phase" => direction}) do
-    query = join(query, :left, [s], p in assoc(s, :phase))
+    query = join(query, :left, [s], p in assoc(s, :phase), as: :phase)
 
     case direction do
       "asc" ->
-        order_by(query, [s, p], asc_nulls_last: p.title)
+        order_by(query, [s, phase: p], asc_nulls_last: p.title)
 
       "desc" ->
-        order_by(query, [s, p], desc_nulls_last: p.title)
+        order_by(query, [s, phase: p], desc_nulls_last: p.title)
 
       _ ->
         query
@@ -485,14 +483,14 @@ defmodule ChallengeGov.Submissions do
   end
 
   def order_on_attribute(query, %{"manager_last_name" => direction}) do
-    query = join(query, :left, [s], m in assoc(s, :manager))
+    query = join(query, :left, [s], m in assoc(s, :manager), as: :manager)
 
     case direction do
       "asc" ->
-        order_by(query, [s, m], asc_nulls_last: m.last_name)
+        order_by(query, [s, manager: m], asc_nulls_last: m.last_name)
 
       "desc" ->
-        order_by(query, [s, m], desc_nulls_last: m.last_name)
+        order_by(query, [s, manager: m], desc_nulls_last: m.last_name)
 
       _ ->
         query
