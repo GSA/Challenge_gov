@@ -9,6 +9,35 @@ defmodule Web.SubmissionView do
   alias Web.FormView
   alias Web.SharedView
 
+  def solver_field(form, user, data) do
+    content_tag :div, class: FormView.form_group_classes(form, :solver_addr) do
+      [
+        label(form, :solver_addr, class: "col-md-4") do
+          [
+            "Solver ",
+            content_tag(:span, "*", class: "required")
+          ]
+        end,
+        content_tag(:div, class: "col") do
+          [
+            select(
+              form,
+              :solver_addr,
+              Enum.map(
+                Accounts.all_solvers_for_select(),
+                &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.email}
+              ),
+              class: "form-control",
+              disabled: !Accounts.has_admin_access?(user),
+              value: persist_solver_email_on_edit(data)
+            ),
+            error_tag(form, :solver_addr)
+          ]
+        end
+      ]
+    end
+  end
+
   def can_edit?(user, submission) do
     case Submissions.is_editable?(user, submission) do
       {:ok, _submission} ->

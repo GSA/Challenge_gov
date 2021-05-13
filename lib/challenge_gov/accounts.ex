@@ -58,6 +58,16 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Get all solver accounts
+  """
+  def all_solvers_for_select() do
+    User
+    |> where([u], u.role == "solver")
+    |> where([u], u.status == "active")
+    |> Repo.all()
+  end
+
+  @doc """
   Get all public accounts
   """
   @spec public([any()]) :: User.t()

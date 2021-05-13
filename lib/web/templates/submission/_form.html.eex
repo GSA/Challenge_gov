@@ -2,7 +2,7 @@
   <small class="d-block pl-2 mb-2">Required<span class="required">*</span></small>
   <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
     <%= if Accounts.has_admin_access?(@user) and @data.status != "submitted" do %>
-      <%= FormView.text_field(f, :solver_addr, label: "Email address of solver", required: true, value: persist_solver_email_on_edit(@data)) %>
+      <%= solver_field(f, @user, @data) %>
       <div id="submission_document_upload__error-solver-addr" class="js-indented-error-tag text-danger"></div>
     <% else %>
       <%= if Accounts.has_admin_access?(@user) do %>
