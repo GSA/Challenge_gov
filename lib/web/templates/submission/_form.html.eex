@@ -33,6 +33,7 @@
         <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "File name (optional)", class: "my-3") %>
         <div class="col">
           <%= file_input f, :document, name: "submission[document][file]", class: "my-3" %>
+          <span data-user="<%= @user.email %>", id="current_user"></span>
           <div id="submission_document_upload" class="btn btn-primary">Upload file</div>
         </div>
         <span id="submission_document_upload__error-no-email" class="js-error-tag text-danger"></span>

@@ -7,8 +7,9 @@ $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
 $("#submission_document_upload").on("click", function(e) {
   name_input = $("#submission_document_name")
   name = name_input.val()
+  current_user = $("#current_user").data("user")
   solver_email_input = $("#submission_solver_addr")
-  solver_email = solver_email_input.val()
+  solver_email = solver_email_input.val() || current_user
   file_input = $("#submission_document")
   file = file_input.prop("files")[0]
 
@@ -19,7 +20,7 @@ $("#submission_document_upload").on("click", function(e) {
 
   if (file) {
     $.ajax({
-        url: "/api/submission_documents",
+      url: "/api/submission_documents",
       type: "post",
       processData: false,
       contentType: false,
