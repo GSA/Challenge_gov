@@ -33,17 +33,14 @@ $("#submission_document_upload").on("click", function(e) {
         $(file_input).val("")
 
         $(".submission-documents-list").append(`
-          <div>
+          <div class="row submission-document-row">
+            <input type="hidden" name="submission[document_ids][]" value="${document.id}">
             <i class="fa fa-paperclip mr-1"></i>
             <a href=${document.url} target="_blank">${document.display_name}</a>
-            <a href="" data-document-id=${document.id} class="challenge_uploaded_document_delete">
+            <a href="" data-document-id=${document.id} class="submission_uploaded_document_delete">
               <i class="fa fa-trash"></i>
             </a>
           </div>
-        `)
-
-        $(".submission-document-ids").append(`
-          <input type="hidden" name="submission[document_ids][]" value="${document.id}">
         `)
       },
       error: function(err) {

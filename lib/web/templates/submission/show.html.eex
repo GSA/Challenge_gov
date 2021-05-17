@@ -99,17 +99,17 @@
           </section>
         </div>
         <%= if Accounts.has_admin_access?(@user) do %>
-          <div class="col">
+          <div class="col mb-4">
             <%= link "< Back to submissions", to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id, page: @page, filter: @filter, sort: @sort) %>
           </div>
         <% end %>
         <%= if Accounts.is_solver?(@user) do %>
-          <div class="col">
+          <div class="col mb-4">
             <%= link "< Back to submissions", to: Routes.submission_path(@conn, :index, filter: @filter, sort: @sort) %>
           </div>
         <% end %>
         <%= if Accounts.is_challenge_owner?(@user) do %>
-          <div class="col">
+          <div class="col mb-4">
             <%= link "< Back to submissions", to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id) %>
           </div>
         <% end %>
