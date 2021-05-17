@@ -490,6 +490,7 @@ label {
 .ql-tooltip {
   left: 0 !important;
 }
+
 /* JS added errors */
 
 .js-error-tag {
@@ -502,3 +503,10 @@ label {
   padding-left: 20px;
 }
 
+/* submission form */
+
+form {
+  .submission-documents-list {
+    padding-left: 20px;
+  }
+}
