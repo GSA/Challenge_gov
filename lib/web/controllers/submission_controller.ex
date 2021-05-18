@@ -266,6 +266,9 @@ defmodule Web.SubmissionController do
   def update(conn, %{"id" => id, "action" => "draft", "submission" => submission_params}) do
     %{current_user: user} = conn.assigns
 
+    {submitter, _submission_params} = get_params_by_current_user(submission_params, user)
+    submission_params = Map.put_new(submission_params, "submitter_id", submitter.id)
+
     with {:ok, submission} <- Submissions.get(id),
          {:ok, submission} <- Submissions.allowed_to_edit?(user, submission),
          {:ok, submission} <- Submissions.update_draft(submission, submission_params) do
@@ -275,12 +278,12 @@ defmodule Web.SubmissionController do
     else
       {:error, :not_found} ->
         conn
-        |> put_flash(:error, "This submission does not exist")
+        |> put_flash(:error, "Submission does not exist")
         |> redirect(to: Routes.submission_path(conn, :index))
 
       {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "You are not allowed to edit this submission")
+        |> put_flash(:error, "Submission cannot be edited")
         |> redirect(to: Routes.submission_path(conn, :index))
 
       {:error, changeset} ->
