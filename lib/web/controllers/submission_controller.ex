@@ -88,7 +88,12 @@ defmodule Web.SubmissionController do
     sort = Map.get(params, "sort", %{})
 
     %{page: submissions, pagination: pagination} =
-      Submissions.all_with_manager_id(filter: filter, sort: sort, page: page, per: per)
+      Submissions.all_by_phase_with_manager_id(phase_id,
+        filter: filter,
+        sort: sort,
+        page: page,
+        per: per
+      )
 
     conn
     |> assign(:user, user)

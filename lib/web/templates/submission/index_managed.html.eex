@@ -27,7 +27,9 @@
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "id", "ID") %>
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "title", "Name") %>
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "challenge", "Challenge") %>
-                  <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "phase", "Phase") %>
+                  <%= if  length(@challenge.phases) > 1 do %>
+                    <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "phase", "Phase") %>
+                  <%= end %>
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "status", "Status") %>
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "review_verified", "Accepted By Solver") %>
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "manager_last_name", "Created By") %>
@@ -40,7 +42,9 @@
                     <td><%= submission.id %></td>
                     <td><%= name_link(@conn, submission) %></td>
                     <td><%= link(submission.challenge.title, to: Routes.challenge_path(@conn, :show, submission.challenge.id)) %></td>
-                    <td><%= submission.phase.title %></td>
+                    <%= if  length(@challenge.phases) > 1 do %>
+                      <td><%= submission.phase.title %></td>
+                    <%= end %>
                     <td><%= status_display_name(submission) %></td>
                     <td><%= submission.review_verified %></td>
                     <td><%= submission.manager.first_name <> " " <> submission.manager.last_name %></td>
