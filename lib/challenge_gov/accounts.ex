@@ -64,6 +64,7 @@ defmodule ChallengeGov.Accounts do
     User
     |> where([u], u.role == "solver")
     |> where([u], u.status == "active")
+    |> order_by([u], [{:asc, u.email}])
     |> Repo.all()
   end
 

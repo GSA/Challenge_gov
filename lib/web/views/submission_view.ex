@@ -25,7 +25,7 @@ defmodule Web.SubmissionView do
               :solver_addr,
               Enum.map(
                 Accounts.all_solvers_for_select(),
-                &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.email}
+                &{"#{&1.email} (#{&1.first_name} #{&1.last_name})", &1.email}
               ),
               class: "form-control",
               disabled: !Accounts.has_admin_access?(user),
