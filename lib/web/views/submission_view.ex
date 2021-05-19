@@ -161,22 +161,4 @@ defmodule Web.SubmissionView do
       formnovalidate: true
     )
   end
-
-  def render_submission_header_text(challenge, phase, submission) do
-    if length(challenge.phases) > 1 do
-      [
-        "Phase ",
-        content_tag(:i, phase.title),
-        " for challenge ",
-        content_tag(:i, challenge.title || challenge.id),
-        " submission #{submission.id} details"
-      ]
-    else
-      [
-        "Challenge ",
-        content_tag(:i, challenge.title || challenge.id),
-        " submission #{submission.id} details"
-      ]
-    end
-  end
 end

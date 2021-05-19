@@ -25,12 +25,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="card p-3">
-          <%= if Challenges.allowed_to_edit?(@user, @challenge) do %>
-            <%= render Web.SubmissionView, "_header_judging.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, submission: @submission %>
-          <% else %>
-            <%= render Web.SubmissionView, "_header.html", conn: @conn, user: @user, challenge: @submission.challenge, phase: @phase %>
-          <% end %>
-
+          <%= render Web.SubmissionView, "_header.html", conn: @conn, user: @user, challenge: @submission.challenge, phase: @phase %>
           <section>
             <%= if Challenges.allowed_to_edit?(@user, @challenge) do %>
               <div class="form-group">
