@@ -121,7 +121,7 @@ defmodule Web.SubmissionControllerTest do
       assert html_response(conn, 200) =~ "Submission ID:"
 
       assert html_response(conn, 200) =~
-               "Challenge <i>#{challenge.title}</i> submission #{submission.id} details"
+               "<i>#{challenge.title}</i>"
     end
 
     test "success: viewing a submission of multi phase challenge as challenge_owner", %{
@@ -155,9 +155,7 @@ defmodule Web.SubmissionControllerTest do
       assert html_response(conn, 200) =~ "Submission ID:"
 
       assert html_response(conn, 200) =~
-               "Phase <i>#{phase.title}</i> for challenge <i>#{challenge.title}</i> submission #{
-                 submission.id
-               } details"
+               "<i>#{challenge.title}</i>"
     end
 
     test "success: viewing a submission of single phase challenge as admin", %{conn: conn} do
@@ -184,7 +182,7 @@ defmodule Web.SubmissionControllerTest do
       assert html_response(conn, 200) =~ "Submission ID:"
 
       assert html_response(conn, 200) =~
-               "Challenge <i>#{challenge.title}</i> submission #{submission.id} details"
+               "<i>#{challenge.title}</i>"
     end
 
     test "success: viewing a submission of multi phase challenge as admin", %{conn: conn} do
@@ -212,9 +210,7 @@ defmodule Web.SubmissionControllerTest do
       assert html_response(conn, 200) =~ "Submission ID:"
 
       assert html_response(conn, 200) =~
-               "Phase <i>#{phase.title}</i> for challenge <i>#{challenge.title}</i> submission #{
-                 submission.id
-               } details"
+               "<i>#{challenge.title}</i>"
     end
 
     test "not found viewing a deleted submission", %{conn: conn} do
