@@ -75,6 +75,7 @@ defmodule ChallengeGov.Submissions.Submission do
         :external_url,
         :terms_accepted,
         :review_verified,
+        :submitter_id,
         :manager_id
       ]
     )
