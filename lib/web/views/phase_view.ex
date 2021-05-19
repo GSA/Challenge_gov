@@ -1,6 +1,7 @@
 defmodule Web.PhaseView do
   use Web, :view
 
+  alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges
   alias ChallengeGov.Phases
   alias Web.SharedView
