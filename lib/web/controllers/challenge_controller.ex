@@ -9,7 +9,7 @@ defmodule Web.ChallengeController do
 
   plug(
     Web.Plugs.EnsureRole,
-    [:super_admin, :admin, :challenge_owner] when action not in [:index, :show]
+    [:super_admin, :admin, :challenge_owner]
   )
 
   action_fallback(Web.FallbackController)

@@ -58,6 +58,18 @@ defmodule Web.ChallengeControllerTest do
       assert conn.halted
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
+
+    test "failure: access list of challenges as a solver", %{conn: conn} do
+      conn = prep_conn_solver(conn)
+      %{current_user: user} = conn.assigns
+
+      conn = get(conn, Routes.challenge_path(conn, :index))
+
+      assert conn.status === 302
+      assert get_flash(conn, :error) === "You are not authorized"
+      assert conn.halted
+      assert redirected_to(conn) == Routes.dashboard_path(conn, :index)
+    end
   end
 
   describe "show for challenges" do
@@ -181,6 +193,11 @@ defmodule Web.ChallengeControllerTest do
 
   defp prep_conn(conn) do
     user = AccountHelpers.create_user(%{role: "admin"})
+    assign(conn, :current_user, user)
+  end
+
+  defp prep_conn_solver(conn) do
+    user = AccountHelpers.create_user(%{role: "solver"})
     assign(conn, :current_user, user)
   end
 end
