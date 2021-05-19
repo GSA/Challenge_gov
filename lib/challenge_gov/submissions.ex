@@ -221,7 +221,7 @@ defmodule ChallengeGov.Submissions do
     if submission.challenge.sub_status === "archived" do
       {:error, :not_permitted}
     else
-      submission_phase_is_open?(submission)
+      submission_phase_is_open(submission)
     end
   end
 
@@ -241,7 +241,7 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
-  def submission_phase_is_open?(submission) do
+  def submission_phase_is_open(submission) do
     phase_close = submission.phase.end_date
     now = Timex.now()
 
@@ -254,12 +254,17 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
-  def allowed_to_delete?(user, submission) do
-    if submission.submitter_id === user.id or
-         (Accounts.has_admin_access?(user) and !is_nil(submission.manager_id)) do
-      {:ok, submission}
-    else
-      {:error, :not_permitted}
+  def allowed_to_delete(%{:id => id}, submission = %{:submitter_id => id}) do
+    submission_phase_is_open(submission)
+  end
+
+  def allowed_to_delete(user, submission) do
+    case Accounts.has_admin_access?(user) and !is_nil(submission.manager_id) do
+      true ->
+        {:ok, submission}
+
+      false ->
+        {:error, :not_permitted}
     end
   end
 

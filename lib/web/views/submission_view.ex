@@ -129,7 +129,7 @@ defmodule Web.SubmissionView do
   end
 
   def submission_delete_link(conn, submission, user, opts \\ []) do
-    case Submissions.allowed_to_delete?(user, submission) do
+    case Submissions.allowed_to_delete(user, submission) do
       {:ok, submission} ->
         link(opts[:label] || "Delete",
           to: Routes.submission_path(conn, :delete, submission.id),
@@ -137,6 +137,9 @@ defmodule Web.SubmissionView do
           class: "btn btn-link text-danger",
           data: [confirm: "Are you sure you want to delete this submission?"]
         )
+
+      {:error, :not_permitted} ->
+        nil
     end
   end
 
