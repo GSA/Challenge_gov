@@ -28,9 +28,10 @@ defmodule ChallengeGov.Submissions do
     |> Repo.paginate(opts[:page], opts[:per])
   end
 
-  def all_with_manager_id(opts \\ []) do
+  def all_by_phase_with_manager_id(phase_id, opts \\ []) do
     Submission
     |> base_preload
+    |> where([s], s.phase_id == ^phase_id)
     |> where([s], is_nil(s.deleted_at))
     |> where([s], not is_nil(s.manager_id))
     |> preload([:phase, :manager])

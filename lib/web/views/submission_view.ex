@@ -124,6 +124,18 @@ defmodule Web.SubmissionView do
     end
   end
 
+  def multi_phase_column_header(conn, challenge, phase, sort, filter, sort_name, column_name) do
+    if Challenges.is_multi_phase?(challenge) do
+      sortable_managed_header(conn, challenge, phase, sort, filter, sort_name, column_name)
+    end
+  end
+
+  def multi_phase_column_content(challenge, content) do
+    if Challenges.is_multi_phase?(challenge) do
+      content_tag(:td, content)
+    end
+  end
+
   def status_display_name(submission) do
     Submissions.status_label(submission.status)
   end

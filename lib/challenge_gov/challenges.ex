@@ -800,6 +800,10 @@ defmodule ChallengeGov.Challenges do
     end)
   end
 
+  def is_multi_phase?(challenge) do
+    length(challenge.phases) > 1
+  end
+
   @doc """
   Create a new status event when the status changes
   """
