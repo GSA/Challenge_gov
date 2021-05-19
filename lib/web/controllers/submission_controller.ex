@@ -356,7 +356,7 @@ defmodule Web.SubmissionController do
     %{current_user: user} = conn.assigns
     {:ok, submission} = Submissions.get(id)
 
-    with {:ok, submission} <- Submissions.allowed_to_delete?(user, submission),
+    with {:ok, submission} <- Submissions.allowed_to_delete(user, submission),
          {:ok, submission} <- Submissions.delete(submission) do
       conn
       |> put_flash(:info, "Submission deleted")
