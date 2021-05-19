@@ -48,7 +48,9 @@ defmodule ChallengeGov.Submissions.Submission do
     # Fields
     field(:title, :string)
     field(:brief_description, :string)
+    field(:brief_description_delta, :string)
     field(:description, :string)
+    field(:description_delta, :string)
     field(:external_url, :string)
     field(:status, :string)
     field(:judging_status, :string, default: "not_selected")
@@ -67,12 +69,14 @@ defmodule ChallengeGov.Submissions.Submission do
       [
         :title,
         :brief_description,
+        :brief_description_delta,
         :description,
+        :description_delta,
         :external_url,
         :terms_accepted,
-        :review_verified
-      ],
-      [:manager_id]
+        :review_verified,
+        :manager_id
+      ]
     )
   end
 

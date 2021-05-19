@@ -79,7 +79,7 @@
     <br/>
     <input class="challenge_document_file form-file-control" type="file">
     <div class="challenge_document_upload btn btn-primary">Upload file</div>
-  </div>              
+  </div>
 
   <br/>
 
