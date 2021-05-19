@@ -7,6 +7,22 @@ defmodule Web.PhaseView do
   alias Web.SharedView
   alias Web.SubmissionView
 
+  def render_manage_submissions_button(conn, user, challenge, phase) do
+    if Accounts.has_admin_access?(user) do
+      content_tag(:span, class: "submission-filter__helper-text p-3", style: "display: inline;") do
+        link("Add solver submission ->",
+          to:
+            Routes.challenge_phase_managed_submission_path(
+              conn,
+              :managed_submissions,
+              challenge.id,
+              phase.id
+            )
+        )
+      end
+    end
+  end
+
   def status(phase) do
     cond do
       Phases.is_past?(phase) ->
@@ -316,10 +332,14 @@ defmodule Web.PhaseView do
     next_phase_closed? = next_phase_closed?(challenge, phase)
 
     if next_phase_closed? do
-      link("Manage invites for next phase",
-        to: Routes.submission_invite_path(conn, :index, phase.id),
-        class: "btn btn-primary float-right"
-      )
+      content_tag(:div, class: "col") do
+        content_tag(:div, class: "col p-3") do
+          link("Manage invites for next phase",
+            to: Routes.submission_invite_path(conn, :index, phase.id),
+            class: "btn btn-primary float-right"
+          )
+        end
+      end
     else
       nil
     end
