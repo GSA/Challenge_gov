@@ -5,16 +5,9 @@
         <%= render_submission_filter_tabs(@conn, @challenge, @phase, @filter) %>
         <div class="card">
           <%= render_submission_filter_helper_text(@challenge, @phase, @filter) %>
-          <span class="submission-filter__helper-text p-3" style="display: inline;"> Other actions: <%= link("Add solver submission ->", to: Routes.challenge_phase_managed_submission_path(@conn, :managed_submissions, @challenge.id, @phase.id)) %></span>
+          <%= render_manage_submissions_button(@conn, @user, @challenge, @phase) %>
 <%  # to: Routes.challenge_phase_submission_path(@conn, :new, @challenge.id, @phase.id)) %>
-          <div class="row">
-            <div class="col">
-              <%= render_submission_filter_helper_text(@challenge, @phase, @filter) %>
-            </div>
-            <div class="col p-3">
-              <%= render_manage_invite_button(@conn, @challenge, @phase, @filter) %>
-            </div>
-          </div>
+          <%= render_manage_invite_button(@conn, @challenge, @phase, @filter) %>
           <div class="table-responsive">
             <table class="table table-striped">
               <%= render Web.PhaseView, "submission_table/_header.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, filter: @filter, sort: @sort %>
