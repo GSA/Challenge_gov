@@ -136,7 +136,7 @@ defmodule Web.DashboardView do
             description: "Conduct reporting activities."
           ),
           render("_card_link.html",
-            target: "#",
+            target: Routes.analytics_path(Endpoint, :index),
             icon: "/images/dashboard_icons/analytics.svg",
             title: "Analytics",
             description: "View web analytics related to your challenges."
