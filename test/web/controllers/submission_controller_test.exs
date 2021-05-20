@@ -138,7 +138,7 @@ defmodule Web.SubmissionControllerTest do
           user_id: challenge_owner.id
         })
 
-      phase = Enum.at(challenge.phases, 0)
+      _phase = Enum.at(challenge.phases, 0)
 
       submission =
         SubmissionHelpers.create_submitted_submission(
@@ -193,7 +193,7 @@ defmodule Web.SubmissionControllerTest do
         AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
 
       challenge = ChallengeHelpers.create_multi_phase_challenge(admin, %{user_id: admin.id})
-      phase = Enum.at(challenge.phases, 0)
+      _phase = Enum.at(challenge.phases, 0)
 
       submission =
         SubmissionHelpers.create_submitted_submission(
