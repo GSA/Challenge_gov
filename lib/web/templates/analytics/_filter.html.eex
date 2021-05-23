@@ -1,0 +1,35 @@
+<%= form_for(@conn, Routes.analytics_path(@conn, :index, filter: @filter), [method: :get, as: :filter], fn f -> %>
+  <div>
+    <%= inputs_for(f, :year_filter, fn yf -> %>
+      <div class="form-group">
+        <%= label yf, :target_date_start do %>
+          <%= radio_button yf, :target_date, "start", checked: true %>
+          Filter on start date
+        <% end %>
+      </div>
+      <div class="form-group">
+        <%= label yf, :target_date_end do %>
+          <%= radio_button yf, :target_date, "end" %>
+          Filter on end date
+        <% end %>
+      </div>
+      <div class="form-group">
+        <%= label yf, :start_year %>
+        <%= select(yf, :start_year, @years, prompt: "Select year", class: "form-control js-select") %>
+      </div>
+      <div class="form-group">
+        <%= label yf, :end_year %>
+        <%= select(yf, :end_year, @years, prompt: "Select year", class: "form-control js-select") %>
+      </div>
+    <% end) %>
+
+    <div class="form-group">
+      <%= label f, :agency_id %>
+      <%= select(f, :agency_id, Enum.map(@agencies, &{&1.name, &1.id}), value: @filter["agency_id"], prompt: "All", class: "form-control js-select") %>
+    </div>
+    <div>
+      <%= submit "Filter", class: "btn btn-primary" %>
+      <%= link "Clear", to: Routes.analytics_path(@conn, :index), class: "btn" %>
+    </div>
+  </div>
+<% end) %>

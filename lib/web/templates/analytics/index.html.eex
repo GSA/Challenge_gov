@@ -1,5 +1,27 @@
 <div class="content-header">
-  <div class="container-fluid">
+  <div class="container-fluid" style="max-width: 900px">
     Analytics Index
+
+    <div>
+      Active challenges: <%= @active_challenges_count %>
+    </div>
+    <div>
+      Archived challenges: <%= @archived_challenges_count %>
+    </div>
+    <div>
+      Draft challenges: <%= @draft_challenges_count %>
+    </div>
+
+    <hr/>
+
+    <%= render Web.AnalyticsView, "_filter.html", conn: @conn, filter: @filter, agencies: @agencies, years: @years %>
+
+    <hr/>
+
+    <%= render_graph(@all_challenges.data, @all_challenges.options) %>
+    <%= render_graph(@challenges_by_primary_type.data, @challenges_by_primary_type.options) %>
+    <%= render_graph(@challenges_hosted_externally.data, @challenges_hosted_externally.options) %>
+    <%= render_graph(@total_cash_prizes.data, @total_cash_prizes.options) %>
+    <%= render_graph(@challenges_by_legal_authority.data, @challenges_by_legal_authority.options) %>
   </div>
 </div>
