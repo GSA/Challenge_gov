@@ -21,9 +21,10 @@ module.exports = (env, options) => ({
     preview: ['./client/src/preview.js']
   },
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, '../priv/static/js')
+    path: path.resolve(__dirname, '../priv/static/js'),
+    publicPath: ''
   },
+  mode: 'none',
   module: {
     rules: [
       {
