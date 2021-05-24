@@ -15,7 +15,7 @@
       <%= SharedView.render_breadcrumbs([
         %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
         %{text: "Submissions", route: Routes.submission_path(@conn, :index)},
-        %{text: @submission.title, route: Routes.submission_path(@conn, :show, @submission.id)},
+        %{text: @submission.title, route: Routes.submission_path(@conn, :show, @submission.id), is_visible: @submission.title},
         %{text: "Edit"},
       ])%>
     <% end %>

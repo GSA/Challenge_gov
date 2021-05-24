@@ -76,6 +76,6 @@
 
     <%= cancel_button(@conn, @action, @challenge) %>
     <%= submit("Review and submit", name: "action", value: "review", class: "btn btn-primary float-right") %>
-    <%= save_draft_button() %>
+    <%= save_draft_button(@data) %>
   <% end) %>
 </section>

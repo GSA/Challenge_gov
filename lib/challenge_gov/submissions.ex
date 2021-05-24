@@ -209,16 +209,26 @@ defmodule ChallengeGov.Submissions do
     |> Mailer.deliver_later()
   end
 
-  def allowed_to_edit?(user, submission) do
+  def has_not_been_submitted?(submission) do
+    case submission.status do
+      "submitted" ->
+        false
+
+      _ ->
+        true
+    end
+  end
+
+  def allowed_to_edit(user, submission) do
     if submission.submitter_id === user.id or
          (Accounts.has_admin_access?(user) and !is_nil(submission.manager_id)) do
-      is_editable?(user, submission)
+      is_editable(user, submission)
     else
       {:error, :not_permitted}
     end
   end
 
-  def is_editable?(%{role: "solver"}, submission) do
+  def is_editable(%{role: "solver"}, submission) do
     if submission.challenge.sub_status === "archived" do
       {:error, :not_permitted}
     else
@@ -226,7 +236,7 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
-  def is_editable?(user, submission) do
+  def is_editable(user, submission) do
     case Accounts.has_admin_access?(user) do
       true ->
         if is_nil(submission.manager_id) or
@@ -239,6 +249,16 @@ defmodule ChallengeGov.Submissions do
 
       false ->
         {:error, :not_permitted}
+    end
+  end
+
+  def is_editable?(user, submission) do
+    case is_editable(user, submission) do
+      {:ok, _submission} ->
+        true
+
+      {:error, :not_permitted} ->
+        false
     end
   end
 
