@@ -7,7 +7,7 @@ jobs:
   setup:
     parallelism: 1
     docker:
-      - image: circleci/elixir:1.9.2-node
+      - image: circleci/elixir:1.9.4-node
         environment:
           MIX_ENV: test
     steps:
@@ -59,7 +59,7 @@ jobs:
   lint:
     parallelism: 1
     docker:
-      - image: circleci/elixir:1.9.2-node
+      - image: circleci/elixir:1.9.4-node
         environment:
           MIX_ENV: test
     steps:
@@ -82,7 +82,7 @@ jobs:
   test:
     parallelism: 1
     docker:
-      - image: circleci/elixir:1.9.2-node
+      - image: circleci/elixir:1.9.4-node
         environment:
           MIX_ENV: test
       - image: mdillon/postgis:10
@@ -114,7 +114,7 @@ jobs:
   assets:
     parallelism: 1
     docker:
-      - image: circleci/elixir:1.9.2-node
+      - image: circleci/elixir:1.9.4-node
         environment:
           MIX_ENV: test
     steps:
