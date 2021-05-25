@@ -28,6 +28,7 @@ defmodule Web.AnalyticsController do
     total_cash_prizes = Analytics.total_cash_prizes(challenges)
     challenges_by_legal_authority = Analytics.challenges_by_legal_authority(challenges)
     participating_lead_agencies = Analytics.participating_lead_agencies(challenges)
+    total_prize_competitions = Analytics.total_prize_competitions(challenges)
 
     conn
     |> assign(:user, user)
@@ -42,6 +43,7 @@ defmodule Web.AnalyticsController do
     |> assign(:total_cash_prizes, total_cash_prizes)
     |> assign(:challenges_by_legal_authority, challenges_by_legal_authority)
     |> assign(:participating_lead_agencies, participating_lead_agencies)
+    |> assign(:total_prize_competitions, total_prize_competitions)
     |> assign(:filter, filter)
     |> render("index.html")
   end

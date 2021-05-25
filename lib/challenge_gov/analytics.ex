@@ -365,6 +365,86 @@ defmodule ChallengeGov.Analytics do
     }
   end
 
+  def total_prize_competitions(challenges) do
+    challenges =
+      Enum.filter(challenges, fn challenge ->
+        !is_nil(challenge.start_date) and !is_nil(challenge.end_date) and
+          (challenge.prize_type == "both" or challenge.prize_type == "monetary")
+      end)
+
+    min_year =
+      Enum.min_by(challenges, fn challenge -> challenge.start_date.year end).start_date.year
+
+    max_year = Enum.max_by(challenges, fn challenge -> challenge.end_date.year end).end_date.year
+    year_range = Enum.to_list(min_year..max_year)
+
+    labels = year_range
+
+    launched_data =
+      year_range
+      |> Enum.map(fn year ->
+        challenges
+        |> Enum.filter(fn challenge -> launched_in_year?(challenge, year) end)
+        |> Enum.count()
+      end)
+
+    ongoing_data =
+      year_range
+      |> Enum.map(fn year ->
+        challenges
+        |> Enum.filter(fn challenge -> ongoing_in_year?(challenge, year) end)
+        |> Enum.count()
+      end)
+
+    closed_data =
+      year_range
+      |> Enum.map(fn year ->
+        challenges
+        |> Enum.filter(fn challenge -> closed_in_year?(challenge, year) end)
+        |> Enum.count()
+      end)
+
+    data = [
+      %{
+        label: "Launched",
+        data: launched_data
+      },
+      %{
+        label: "Ongoing",
+        data: ongoing_data
+      },
+      %{
+        label: "Closed",
+        data: closed_data
+      }
+    ]
+
+    data_obj = %{
+      labels: labels,
+      datasets: data
+    }
+
+    options_obj = [
+      options: %{
+        plugins: %{
+          title: %{
+            display: true,
+            text: "Total number of prize competitions"
+          },
+          legend: %{
+            display: true,
+            position: "bottom"
+          }
+        }
+      }
+    ]
+
+    %{
+      data: data_obj,
+      options: options_obj
+    }
+  end
+
   @impl Stein.Filter
   def filter_on_attribute({"agency_id", value}, query) do
     where(query, [c], c.agency_id == ^value)
