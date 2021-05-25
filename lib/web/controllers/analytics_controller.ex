@@ -27,6 +27,7 @@ defmodule Web.AnalyticsController do
     challenges_hosted_externally = Analytics.challenges_hosted_externally(challenges)
     total_cash_prizes = Analytics.total_cash_prizes(challenges)
     challenges_by_legal_authority = Analytics.challenges_by_legal_authority(challenges)
+    participating_lead_agencies = Analytics.participating_lead_agencies(challenges)
 
     conn
     |> assign(:user, user)
@@ -40,6 +41,7 @@ defmodule Web.AnalyticsController do
     |> assign(:challenges_hosted_externally, challenges_hosted_externally)
     |> assign(:total_cash_prizes, total_cash_prizes)
     |> assign(:challenges_by_legal_authority, challenges_by_legal_authority)
+    |> assign(:participating_lead_agencies, participating_lead_agencies)
     |> assign(:filter, filter)
     |> render("index.html")
   end

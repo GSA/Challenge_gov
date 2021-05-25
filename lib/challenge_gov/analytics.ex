@@ -37,6 +37,19 @@ defmodule ChallengeGov.Analytics do
     end)
   end
 
+  def launched_in_year?(challenge, year) do
+    challenge.start_date.year == year
+  end
+
+  def ongoing_in_year?(challenge, year) do
+    challenge.start_date.year < year and
+      challenge.end_date.year > year
+  end
+
+  def closed_in_year?(challenge, year) do
+    challenge.end_date.year == year
+  end
+
   def all_challenges(challenges) do
     grouped_challenges =
       challenges
@@ -254,6 +267,89 @@ defmodule ChallengeGov.Analytics do
           title: %{
             display: true,
             text: "Challenges by legal authority"
+          },
+          legend: %{
+            display: true,
+            position: "bottom"
+          }
+        }
+      }
+    ]
+
+    %{
+      data: data_obj,
+      options: options_obj
+    }
+  end
+
+  def participating_lead_agencies(challenges) do
+    challenges =
+      Enum.filter(challenges, fn challenge ->
+        !is_nil(challenge.start_date) and !is_nil(challenge.end_date) and
+          !is_nil(challenge.agency_id)
+      end)
+
+    min_year =
+      Enum.min_by(challenges, fn challenge -> challenge.start_date.year end).start_date.year
+
+    max_year = Enum.max_by(challenges, fn challenge -> challenge.end_date.year end).end_date.year
+    year_range = Enum.to_list(min_year..max_year)
+
+    labels = year_range
+
+    launched_data =
+      year_range
+      |> Enum.map(fn year ->
+        challenges
+        |> Enum.filter(fn challenge -> launched_in_year?(challenge, year) end)
+        |> Enum.uniq_by(fn challenge -> challenge.agency_id end)
+        |> Enum.count()
+      end)
+
+    ongoing_data =
+      year_range
+      |> Enum.map(fn year ->
+        challenges
+        |> Enum.filter(fn challenge -> ongoing_in_year?(challenge, year) end)
+        |> Enum.uniq_by(fn challenge -> challenge.agency_id end)
+        |> Enum.count()
+      end)
+
+    closed_data =
+      year_range
+      |> Enum.map(fn year ->
+        challenges
+        |> Enum.filter(fn challenge -> closed_in_year?(challenge, year) end)
+        |> Enum.uniq_by(fn challenge -> challenge.agency_id end)
+        |> Enum.count()
+      end)
+
+    data = [
+      %{
+        label: "Launched",
+        data: launched_data
+      },
+      %{
+        label: "Ongoing",
+        data: ongoing_data
+      },
+      %{
+        label: "Closed",
+        data: closed_data
+      }
+    ]
+
+    data_obj = %{
+      labels: labels,
+      datasets: data
+    }
+
+    options_obj = [
+      options: %{
+        plugins: %{
+          title: %{
+            display: true,
+            text: "Total number of participating lead agencies"
           },
           legend: %{
             display: true,

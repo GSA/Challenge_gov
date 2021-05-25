@@ -23,5 +23,6 @@
     <%= render_graph(@challenges_hosted_externally.data, @challenges_hosted_externally.options) %>
     <%= render_graph(@total_cash_prizes.data, @total_cash_prizes.options) %>
     <%= render_graph(@challenges_by_legal_authority.data, @challenges_by_legal_authority.options) %>
+    <%= render_graph(@participating_lead_agencies.data, @participating_lead_agencies.options) %>
   </div>
 </div>
