@@ -11,7 +11,8 @@
     <div class="row mb-3">
       <div class="col">
         <%= if length(@challenge.phases) > 1 do %>
-          <h2>Submissions for Phase: <span class="font-italic"><%= @phase.title %></span> of Challenge: <span class="font-italic"><%= @challenge.title %></span></h2>
+          <h2><div class="font-italic"><%= @challenge.title %></div></h2>
+          <h2><div class="font-italic"><%= @phase.title %></div></h2>
         <% else %>
           <h2>Submissions for <span class="font-italic"><%= @challenge.title %></span></h2>
         <% end %>

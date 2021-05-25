@@ -10,7 +10,6 @@
       More options
     </button>
     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-      <a class="btn btn-link" href="#">Media</a>
       <%= submission_delete_link(@conn, @submission, @user, label: "Delete", class: "btn btn-default btn-xs") %>
     </div>
   </div>
