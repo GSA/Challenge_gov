@@ -3,6 +3,7 @@ defmodule Web.DashboardView do
 
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Accounts
+  alias Web.Endpoint
 
   def recertification_warning(conn, user) do
     case CertificationLogs.get_current_certification(user) do
@@ -113,13 +114,13 @@ defmodule Web.DashboardView do
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: "/challenges",
+            target: Routes.challenge_path(Endpoint, :index),
             icon: "/images/dashboard_icons/medals.svg",
             title: "Challenge management",
             description: "Manage and view all open and archived challenges."
           ),
           render("_card_link.html",
-            target: "/users",
+            target: Routes.user_path(Endpoint, :index),
             icon: "/images/dashboard_icons/users.svg",
             title: "User management",
             description: "View and edit user roles, permissions, and activities on the platform."
@@ -129,13 +130,13 @@ defmodule Web.DashboardView do
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: "/reports",
+            target: Routes.reports_path(Endpoint, :new),
             icon: "/images/dashboard_icons/reporting.svg",
             title: "Reporting",
             description: "Conduct reporting activities."
           ),
           render("_card_link.html",
-            target: "#",
+            target: Routes.analytics_path(Endpoint, :index),
             icon: "/images/dashboard_icons/analytics.svg",
             title: "Analytics",
             description: "View web analytics related to your challenges."
@@ -145,7 +146,7 @@ defmodule Web.DashboardView do
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: "site_content",
+            target: Routes.site_content_path(Endpoint, :index),
             icon: "/images/dashboard_icons/reporting.svg",
             title: "Site management",
             description: "Manage content and perform site management tasks."
@@ -160,13 +161,13 @@ defmodule Web.DashboardView do
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: "/challenges",
+            target: Routes.challenge_path(Endpoint, :index),
             icon: "/images/dashboard_icons/medals.svg",
             title: "Challenge management",
             description: "Manage and view all open and archived challenges."
           ),
           render("_card_link.html",
-            target: "/challenges/new",
+            target: Routes.challenge_path(Endpoint, :new),
             icon: "/images/dashboard_icons/plus.svg",
             title: "Create a new challenge",
             description: nil
@@ -176,13 +177,13 @@ defmodule Web.DashboardView do
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: "/reports",
+            target: Routes.reports_path(Endpoint, :new),
             icon: "/images/dashboard_icons/reporting.svg",
             title: "Reporting",
             description: "Conduct reporting activities."
           ),
           render("_card_link.html",
-            target: "#",
+            target: Routes.dashboard_path(Endpoint, :index),
             icon: "/images/dashboard_icons/analytics.svg",
             title: "Analytics",
             description: "View web analytics related to your challenges."
@@ -192,7 +193,7 @@ defmodule Web.DashboardView do
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: "#",
+            target: Routes.dashboard_path(Endpoint, :index),
             icon: "/images/dashboard_icons/toolkit.svg",
             title: "Agency toolkit",
             description: "View the Prizes and Challenges Toolkit to learn more."
@@ -206,13 +207,13 @@ defmodule Web.DashboardView do
     content_tag :div, class: "row" do
       [
         render("_card_link.html",
-          target: "/submissions",
+          target: Routes.submission_path(Endpoint, :index),
           icon: "/images/dashboard_icons/submissions.svg",
           title: "My submissions",
           description: "view my challenges submissions."
         ),
         render("_card_link.html",
-          target: "/saved_challenges",
+          target: Routes.saved_challenge_path(Endpoint, :index),
           icon: "/images/dashboard_icons/medals.svg",
           title: "My saved challenges",
           description: "Challenges I've saved."

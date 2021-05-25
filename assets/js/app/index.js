@@ -1,3 +1,4 @@
+import "./_analytics.js";
 import "./_challenge_type_select.js";
 import "./_character_limit.js";
 import "./_currency_input.js";

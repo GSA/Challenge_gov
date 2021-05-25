@@ -61,7 +61,7 @@ defmodule Web.ChallengeControllerTest do
 
     test "failure: access list of challenges as a solver", %{conn: conn} do
       conn = prep_conn_solver(conn)
-      %{current_user: user} = conn.assigns
+      %{current_user: _user} = conn.assigns
 
       conn = get(conn, Routes.challenge_path(conn, :index))
 

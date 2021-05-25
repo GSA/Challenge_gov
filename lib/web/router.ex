@@ -82,6 +82,8 @@ defmodule Web.Router do
     get("/", DashboardController, :index)
     get("/certification_requested", AccessController, :index)
 
+    get("/analytics", AnalyticsController, :index)
+
     resources("/challenges", ChallengeController) do
       resources("/documents", DocumentController, only: [:create])
       resources("/events", EventController, only: [:new, :create])
