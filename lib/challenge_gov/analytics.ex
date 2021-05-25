@@ -50,6 +50,17 @@ defmodule ChallengeGov.Analytics do
     challenge.end_date.year == year
   end
 
+  def get_year_range(challenges) when length(challenges) <= 0, do: Enum.to_list(2000..2021)
+
+  def get_year_range(challenges) do
+    min_year =
+      Enum.min_by(challenges, fn challenge -> challenge.start_date.year end).start_date.year
+
+    max_year = Enum.max_by(challenges, fn challenge -> challenge.end_date.year end).end_date.year
+
+    Enum.to_list(min_year..max_year)
+  end
+
   def all_challenges(challenges) do
     grouped_challenges =
       challenges
@@ -289,11 +300,7 @@ defmodule ChallengeGov.Analytics do
           !is_nil(challenge.agency_id)
       end)
 
-    min_year =
-      Enum.min_by(challenges, fn challenge -> challenge.start_date.year end).start_date.year
-
-    max_year = Enum.max_by(challenges, fn challenge -> challenge.end_date.year end).end_date.year
-    year_range = Enum.to_list(min_year..max_year)
+    year_range = get_year_range(challenges)
 
     labels = year_range
 
@@ -372,11 +379,7 @@ defmodule ChallengeGov.Analytics do
           (challenge.prize_type == "both" or challenge.prize_type == "monetary")
       end)
 
-    min_year =
-      Enum.min_by(challenges, fn challenge -> challenge.start_date.year end).start_date.year
-
-    max_year = Enum.max_by(challenges, fn challenge -> challenge.end_date.year end).end_date.year
-    year_range = Enum.to_list(min_year..max_year)
+    year_range = get_year_range(challenges)
 
     labels = year_range
 
