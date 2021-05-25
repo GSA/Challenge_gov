@@ -207,7 +207,7 @@ defmodule Web.SubmissionController do
           {:ok, submission} ->
             conn
             |> assign(:phase_id, phase.id)
-            |> put_flash(:info, "Submission saved as draft")
+            |> put_flash(:info, "Submission draft saved")
             |> redirect(to: Routes.submission_path(conn, :edit, submission.id))
 
           {:error, changeset} ->
@@ -243,7 +243,7 @@ defmodule Web.SubmissionController do
     %{current_user: user} = conn.assigns
     {:ok, submission} = Submissions.get(id)
 
-    case Submissions.allowed_to_edit?(user, submission) do
+    case Submissions.allowed_to_edit(user, submission) do
       {:ok, submission} ->
         conn
         |> assign(:user, user)
@@ -270,10 +270,11 @@ defmodule Web.SubmissionController do
     submission_params = Map.put_new(submission_params, "submitter_id", submitter.id)
 
     with {:ok, submission} <- Submissions.get(id),
-         {:ok, submission} <- Submissions.allowed_to_edit?(user, submission),
+         {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+         true <- Submissions.has_not_been_submitted?(submission),
          {:ok, submission} <- Submissions.update_draft(submission, submission_params) do
       conn
-      |> put_flash(:info, "Submission saved as draft")
+      |> put_flash(:info, "Submission draft saved")
       |> redirect(to: Routes.submission_path(conn, :edit, submission.id))
     else
       {:error, :not_found} ->
@@ -289,6 +290,11 @@ defmodule Web.SubmissionController do
       {:error, changeset} ->
         {:ok, submission} = Submissions.get(id)
         update_error(conn, changeset, user, submission)
+
+      false ->
+        conn
+        |> put_flash(:error, "Submission cannot be saved as a draft")
+        |> redirect(to: Routes.submission_path(conn, :edit, id))
     end
   end
 
@@ -296,7 +302,7 @@ defmodule Web.SubmissionController do
     %{current_user: user} = conn.assigns
 
     with {:ok, submission} <- Submissions.get(id),
-         {:ok, submission} <- Submissions.allowed_to_edit?(user, submission),
+         {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
          {:ok, submission} <- Submissions.update_review(submission, submission_params) do
       redirect(conn, to: Routes.submission_path(conn, :show, submission.id))
     else
@@ -333,10 +339,10 @@ defmodule Web.SubmissionController do
     %{current_user: user} = conn.assigns
     {:ok, submission} = Submissions.get(id)
 
-    with {:ok, submission} <- Submissions.allowed_to_edit?(user, submission),
+    with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
          {:ok, submission} <- Submissions.submit(submission, Security.extract_remote_ip(conn)) do
       conn
-      |> put_flash(:info, "Submission created")
+      |> put_flash(:info, "Submission saved")
       |> redirect(to: Routes.submission_path(conn, :show, submission.id))
     else
       {:error, :not_found} ->

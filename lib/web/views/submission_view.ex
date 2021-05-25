@@ -38,16 +38,6 @@ defmodule Web.SubmissionView do
     end
   end
 
-  def can_edit?(user, submission) do
-    case Submissions.is_editable?(user, submission) do
-      {:ok, _submission} ->
-        true
-
-      {:error, :not_permitted} ->
-        false
-    end
-  end
-
   def persist_solver_email_on_edit(data) do
     if data.submitter, do: data.submitter.email, else: ""
   end
@@ -168,12 +158,14 @@ defmodule Web.SubmissionView do
     link("Cancel", to: route, class: "btn btn-link")
   end
 
-  def save_draft_button() do
-    submit("Save draft",
-      name: "action",
-      value: "draft",
-      class: "btn btn-outline-secondary mr-2 float-right",
-      formnovalidate: true
-    )
+  def save_draft_button(data) do
+    if Submissions.has_not_been_submitted?(data) do
+      submit("Save draft",
+        name: "action",
+        value: "draft",
+        class: "btn btn-outline-secondary mr-2 float-right",
+        formnovalidate: true
+      )
+    end
   end
 end

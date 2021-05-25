@@ -422,11 +422,34 @@ defmodule Web.SubmissionControllerTest do
       {:ok, submission} = Submissions.get(submission.id)
 
       assert submission.status === "draft"
-      assert get_flash(conn, :info) === "Submission saved as draft"
+      assert get_flash(conn, :info) === "Submission draft saved"
       assert redirected_to(conn) === Routes.submission_path(conn, :edit, submission.id)
     end
 
-    test "updating a submitted submission and saving as draft", %{conn: conn} do
+    test "updating a submitted submission--no save draft option", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
+
+      params = %{
+        "action" => "draft",
+        "submission" => %{
+          "title" => "New test title",
+          "brief_description" => "Test brief description",
+          "description" => "Test description",
+          "external_url" => nil
+        }
+      }
+
+      conn = get(conn, Routes.submission_path(conn, :edit, submission.id))
+      assert html_response(conn, 200) =~ "Review and submit"
+      refute html_response(conn, 200) =~ "Save draft"
+    end
+
+    test "failure: updating a submitted submission and saving as draft", %{conn: conn} do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
@@ -445,11 +468,10 @@ defmodule Web.SubmissionControllerTest do
       }
 
       conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
-
       {:ok, submission} = Submissions.get(submission.id)
 
-      assert submission.status === "draft"
-      assert get_flash(conn, :info) === "Submission saved as draft"
+      assert submission.status === "submitted"
+      assert get_flash(conn, :error) === "Submission cannot be saved as a draft"
       assert redirected_to(conn) === Routes.submission_path(conn, :edit, submission.id)
     end
 
