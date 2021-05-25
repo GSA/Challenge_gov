@@ -1,29 +1,55 @@
-<div class="content-header">
-  <div class="container-fluid" style="max-width: 900px">
-    Analytics Index
+<div class="p-3" style="max-width: 900px">
+  <div class="content-header">
+    <h1>Challenge.gov analytics</h1>
+    <p>Snapshot of all Challenges across the Challenge.gov platform</p>
 
-    <div>
-      Active challenges: <%= @active_challenges_count %>
+    <div class="row" style="font-size: 1.5rem;">
+      <div class="col">
+        <p>Total active</p>
+        <div class="card">
+          <div class="card-body" style="text-align: center; font-size: 3rem;">
+            <%= @active_challenges_count %>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <p>Total archived</p>
+        <div class="card">
+          <div class="card-body" style="text-align: center; font-size: 3rem;">
+            <%= @archived_challenges_count %>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <p>Total in draft</p>
+        <div class="card">
+          <div class="card-body" style="text-align: center; font-size: 3rem;">
+            <%= @draft_challenges_count %>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
-      Archived challenges: <%= @archived_challenges_count %>
-    </div>
-    <div>
-      Draft challenges: <%= @draft_challenges_count %>
-    </div>
-
     <hr/>
+  </div>
 
-    <%= render Web.AnalyticsView, "_filter.html", conn: @conn, filter: @filter, agencies: @agencies, years: @years %>
+  <div class="content">
+    <div class="container">
+      <h3>Trends analytics</h3>
+      <div class="card">
+        <div class="card-body">
+          <%= render Web.AnalyticsView, "_filter.html", conn: @conn, filter: @filter, agencies: @agencies, years: @years %>
 
-    <hr/>
+          <hr/>
 
-    <%= render_graph(@all_challenges.data, @all_challenges.options) %>
-    <%= render_graph(@challenges_by_primary_type.data, @challenges_by_primary_type.options) %>
-    <%= render_graph(@challenges_hosted_externally.data, @challenges_hosted_externally.options) %>
-    <%= render_graph(@total_cash_prizes.data, @total_cash_prizes.options) %>
-    <%= render_graph(@challenges_by_legal_authority.data, @challenges_by_legal_authority.options) %>
-    <%= render_graph(@participating_lead_agencies.data, @participating_lead_agencies.options) %>
-    <%= render_graph(@total_prize_competitions.data, @total_prize_competitions.options) %>
+          <%= render_graph(@all_challenges.data, @all_challenges.options) %>
+          <%= render_graph(@challenges_by_primary_type.data, @challenges_by_primary_type.options) %>
+          <%= render_graph(@challenges_hosted_externally.data, @challenges_hosted_externally.options) %>
+          <%= render_graph(@total_cash_prizes.data, @total_cash_prizes.options) %>
+          <%= render_graph(@challenges_by_legal_authority.data, @challenges_by_legal_authority.options) %>
+          <%= render_graph(@participating_lead_agencies.data, @participating_lead_agencies.options) %>
+          <%= render_graph(@total_prize_competitions.data, @total_prize_competitions.options) %>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
