@@ -22,6 +22,8 @@ defmodule Web.SubmissionController do
 
   plug Web.Plugs.FetchPage when action in [:index, :show, :managed_submissions]
 
+  plug(Web.Plugs.FetchSubmission, [submission_id: "id"] when action in [:edit])
+
   action_fallback(Web.FallbackController)
 
   def index(conn, params = %{"challenge_id" => challenge_id}) do
@@ -252,8 +254,7 @@ defmodule Web.SubmissionController do
   end
 
   def edit(conn, %{"id" => id}) do
-    %{current_user: user} = conn.assigns
-    {:ok, submission} = Submissions.get(id)
+    %{current_user: user, current_submission: submission} = conn.assigns
 
     case Submissions.allowed_to_edit(user, submission) do
       {:ok, submission} ->
