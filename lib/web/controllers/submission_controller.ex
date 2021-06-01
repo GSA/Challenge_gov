@@ -269,20 +269,25 @@ defmodule Web.SubmissionController do
   def edit(conn, %{"id" => id}) do
     %{current_user: user, current_submission: submission} = conn.assigns
 
-    case Submissions.allowed_to_edit(user, submission) do
-      {:ok, submission} ->
-        conn
-        |> assign(:user, user)
-        |> assign(:submission, submission)
-        |> assign(:challenge, submission.challenge)
-        |> assign(:phase, submission.phase)
-        |> assign(:action, action_name(conn))
-        |> assign(:path, Routes.submission_path(conn, :update, id))
-        |> assign(:changeset, Submissions.edit(submission))
-        |> assign(:navbar_text, "Edit submission")
-        |> render("edit.html")
-
+    with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+         {:ok, submission} <- Submissions.is_editable(user, submission) do
+      conn
+      |> assign(:user, user)
+      |> assign(:submission, submission)
+      |> assign(:challenge, submission.challenge)
+      |> assign(:phase, submission.phase)
+      |> assign(:action, action_name(conn))
+      |> assign(:path, Routes.submission_path(conn, :update, id))
+      |> assign(:changeset, Submissions.edit(submission))
+      |> assign(:navbar_text, "Edit submission")
+      |> render("edit.html")
+    else
       {:error, :not_permitted} ->
+        conn
+        |> put_flash(:error, "You are not authorized to edit this submission")
+        |> redirect_by_user_type(user, submission)
+
+      {:error, :not_editable} ->
         conn
         |> put_flash(:error, "Submission cannot be edited")
         |> redirect_by_user_type(user, submission)
@@ -296,6 +301,7 @@ defmodule Web.SubmissionController do
     submission_params = Map.put_new(submission_params, "submitter_id", submitter.id)
 
     with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+         {:ok, submission} <- Submissions.is_editable(user, submission),
          true <- Submissions.has_not_been_submitted?(submission),
          {:ok, submission} <- Submissions.update_draft(submission, submission_params) do
       conn
@@ -303,6 +309,11 @@ defmodule Web.SubmissionController do
       |> redirect(to: Routes.submission_path(conn, :edit, submission.id))
     else
       {:error, :not_permitted} ->
+        conn
+        |> put_flash(:error, "Action not authorized")
+        |> redirect(to: Routes.submission_path(conn, :index))
+
+      {:error, :not_editable} ->
         conn
         |> put_flash(:error, "Submission cannot be edited")
         |> redirect_by_user_type(user, submission)
@@ -321,6 +332,7 @@ defmodule Web.SubmissionController do
     %{current_user: user, current_submission: submission} = conn.assigns
 
     with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+         {:ok, submission} <- Submissions.is_editable(user, submission),
          {:ok, submission} <- Submissions.update_review(submission, submission_params) do
       redirect(conn, to: Routes.submission_path(conn, :show, submission.id))
     else
@@ -328,6 +340,11 @@ defmodule Web.SubmissionController do
         conn
         |> put_flash(:error, "You are not authorized to edit this submission")
         |> redirect_by_user_type(user, submission)
+
+      {:error, :not_editable} ->
+        conn
+        |> put_flash(:error, "Submission cannot be edited")
+        |> redirect(to: Routes.submission_path(conn, :index))
 
       {:error, changeset} ->
         update_error(conn, changeset, user, submission)
@@ -351,6 +368,7 @@ defmodule Web.SubmissionController do
     %{current_user: user, current_submission: submission} = conn.assigns
 
     with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+         {:ok, submission} <- Submissions.is_editable(user, submission),
          {:ok, submission} <- Submissions.submit(submission, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "Submission saved")
@@ -360,6 +378,11 @@ defmodule Web.SubmissionController do
         conn
         |> put_flash(:error, "You are not authorized to edit this submission")
         |> redirect_by_user_type(user, submission)
+
+      {:error, :not_editable} ->
+        conn
+        |> put_flash(:error, "Submission cannot be edited")
+        |> redirect(to: Routes.submission_path(conn, :index))
 
       {:error, changeset} ->
         conn
