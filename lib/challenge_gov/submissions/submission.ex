@@ -44,6 +44,7 @@ defmodule ChallengeGov.Submissions.Submission do
     has_one(:invite, SubmissionInvite)
     has_many(:documents, Document)
     field(:document_ids, :map, virtual: true)
+    field(:document_objects, :map, virtual: true)
 
     # Fields
     field(:title, :string)
