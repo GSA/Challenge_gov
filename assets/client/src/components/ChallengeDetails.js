@@ -18,7 +18,7 @@ import { getPreviousPhase, getCurrentPhase, getNextPhase, phaseInPast, phaseIsCu
 import { ChallengeAnnouncement } from './ChallengeAnnouncement'
 import { ApiUrlContext } from '../ApiUrlContext'
 
-export const ChallengeDetails = ({challenge, preview, print}) => {
+export const ChallengeDetails = ({challenge, preview, print, tab}) => {
   const { apiUrl, imageBase } = useContext(ApiUrlContext)
   const [followTooltipOpen, setFollowTooltipOpen] = useState(false)
 
@@ -319,41 +319,41 @@ export const ChallengeDetails = ({challenge, preview, print}) => {
             </div>
           </section>
         </section>
-        <ChallengeTabs print={print}>
-          <div label="Overview">
+        <ChallengeTabs print={print} tab={tab}>
+          <div label="overview">
             <Overview challenge={challenge} print={print} />
           </div>
           { challenge.events.length > 0 &&
-            <div label="Timeline">
+            <div label="timeline">
               <Timeline challenge={challenge} print={print} />
             </div> 
           }
-          <div label="Prizes">
+          <div label="prizes">
             <Prizes challenge={challenge} print={print} />
           </div>
-          <div label="Rules">
+          <div label="rules">
             <Rules challenge={challenge} print={print} />
           </div>
-          <div label="Judging">
+          <div label="judging">
             <Judging challenge={challenge} print={print} />
           </div>
-          <div label="How to enter">
+          <div label="how to enter">
             <HowToEnter challenge={challenge} print={print} />
           </div>
           { challenge.supporting_documents.length > 0 &&
-            <div label="Resources">
+            <div label="resources">
               <Resources challenge={challenge} />
             </div>
           }
           { (challenge.faq || documentsForSection(challenge, "faq") > 0) &&
-            <div label="FAQ">
+            <div label="faq">
               <FAQ challenge={challenge} print={print} />
             </div>
           }
-          <div label="Contact">
+          <div label="contact">
             <ContactForm preview={preview} />
           </div>
-          <div label="Winners" disabled={!challenge.winner_information} >
+          <div label="winners" disabled={!challenge.winner_information} >
             <Winners challenge={challenge} print={print} />
           </div>
         </ChallengeTabs>

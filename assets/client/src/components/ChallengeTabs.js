@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
+import { useHistory, useRouteMatch, useParams } from "react-router-dom"
+import { generatePath } from 'react-router';
 
-export const ChallengeTabs = ({children, print}) => {
-  const [activeTab, setActiveTab] = useState("Overview")
+export const ChallengeTabs = (props) => {
+  const {children, print, tab} = props
+  const [activeTab, setActiveTab] = useState(tab ?? "overview")
+  const history = useHistory()
+  const currentPath = useRouteMatch()
+  const params = useParams()
 
   const handleTabClick = (label, disabled) => { 
     if (!disabled) {
-      setActiveTab(label) 
+      const path = generatePath(currentPath.path, {challengeId: params.challengeId, tab: label.toLowerCase()});
+      history.push(path)
+      setActiveTab(label)
     }
   }
 
@@ -38,11 +46,12 @@ export const ChallengeTabs = ({children, print}) => {
         {React.Children.map(children, (child) => {
           if (child) {
             const { label, disabled } = child.props;
-            
+            const titleCasedLabel = label === "faq" ? label.toUpperCase() :
+              label[0].toUpperCase() + label.slice(1).toLowerCase();
             return (
               <div {...tabProps(label, disabled)} 
                   onClick={(e) => handleTabClick(label, disabled)}>
-                {label}
+                {titleCasedLabel}
               </div>
             )
           }
