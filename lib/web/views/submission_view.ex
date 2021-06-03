@@ -166,6 +166,26 @@ defmodule Web.SubmissionView do
     link("Cancel", to: route, class: "btn btn-link")
   end
 
+  def accept_terms(conn, form, submission_id, user_id, challenge) do
+    if submission_id == user_id do
+      content_tag(:div, class: FormView.form_group_classes(form, :terms_accepted)) do
+        content_tag(:div, class: "col") do
+          [
+            label(form, :terms_accepted, class: "col") do
+              [
+                checkbox(form, :terms_accepted),
+                " I have read the ",
+                link("rules, terms and conditions ", to: Routes.public_challenge_details_path(conn, :index, challenge.id, "rules"), target: "_blank"),
+                " of this challenge"
+              ]
+            end,
+            error_tag(form, :terms_accepted)
+          ]
+        end
+      end
+    end
+  end
+
   def save_draft_button(data) do
     if Submissions.has_not_been_submitted?(data) do
       submit("Save draft",

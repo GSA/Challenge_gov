@@ -63,24 +63,18 @@
     <%= FormView.text_field(f, :external_url, label: "External URL (optional)") %>
     <br/>
 
+    <%= accept_terms(@conn, f, @data.submitter_id, @user.id, @challenge) %>
     <%= if @data.submitter_id == @user.id do %>
-      <div class="form-group">
-        <div class="col">
-          <%= label f, :terms_accepted do %>
-            <%= checkbox(f, :terms_accepted) %>
-            I have read the <%= link("rules", to: Routes.challenge_path(@conn, :show, @challenge.id)) %> of this challenge.
-          <% end %>
+      <%= if !is_nil(@data.manager_id) and !@data.review_verified do %>
+        <div class="form-group">
+          <div class="col">
+            <%= label f, :review_verified do %>
+              <%= checkbox(f, :review_verified) %>
+              I have reviewed the submission and verify it is accurate.
+            <% end %>
+          </div>
         </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col">
-          <%= label f, :review_verified do %>
-            <%= checkbox(f, :review_verified) %>
-            I have reviewed the submission and verify it is accurate.
-          <% end %>
-        </div>
-      </div>
+      <% end %>
     <% end %>
 
     <%= cancel_button(@conn, @action, @challenge, @phase, @user) %>
