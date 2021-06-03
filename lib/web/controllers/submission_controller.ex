@@ -351,6 +351,7 @@ defmodule Web.SubmissionController do
         conn
         |> assign(:user, user)
         |> assign(:submission, submission)
+        |> assign(:phase, submission.phase)
         |> assign(:action, action_name(conn))
         |> assign(:path, Routes.submission_path(conn, :update, id))
         |> assign(:changeset, changeset)
