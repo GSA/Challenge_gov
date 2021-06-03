@@ -157,6 +157,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> change()
     |> put_change(:status, "submitted")
     |> validate_required_fields
+    |> validate_acceptance(:terms_accepted, message: "must be accepted")
     |> validate_inclusion(:status, status_ids())
   end
 
