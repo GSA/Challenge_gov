@@ -1,9 +1,28 @@
+<%#= render Web.SubmissionView, "_unreviewed_submissions.html", conn: @conn, user: @user, submissions: [], pagination: @pagination, sort: %{}, filter: %{} %>
 <div class="content-header">
   <div class="container-fluid">
     <%= SharedView.render_breadcrumbs([
       %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
       %{text: "Submissions"},
     ])%>
+    <%= if length(@unreviewed_submissions) > 0 && Accounts.is_solver?(@user) do %>
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">
+            <span>Submissions to review</span>
+          </h1>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%= if length(@unreviewed_submissions) > 0 && Accounts.is_solver?(@user) do %>
+  <%= render Web.SubmissionView, "_unreviewed_submissions.html", conn: @conn, user: @user, submissions: @unreviewed_submissions, pagination: @unreviewed_pagination %>
+<% end %>
+
+<div class="content-header">
+  <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">

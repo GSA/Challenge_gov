@@ -64,6 +64,13 @@ defmodule Web.SubmissionController do
 
     sort = Map.get(params, "sort", %{})
 
+    %{page: unreviewed_submissions, pagination: unreviewed_pagination} =
+      Submissions.all_unreviewed_by_submitter_id(
+        user.id,
+        page: String.to_integer(params["unreviewed"]["page"] || "1"),
+        per: 5
+      )
+
     %{page: submissions, pagination: pagination} =
       Submissions.all_by_submitter_id(user.id, filter: filter, sort: sort, page: page, per: per)
 
@@ -71,6 +78,8 @@ defmodule Web.SubmissionController do
     |> assign(:user, user)
     |> assign(:submissions, submissions)
     |> assign(:pagination, pagination)
+    |> assign(:unreviewed_submissions, unreviewed_submissions)
+    |> assign(:unreviewed_pagination, unreviewed_pagination)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> render("index.html")

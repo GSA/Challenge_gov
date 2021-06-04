@@ -166,20 +166,53 @@ defmodule Web.SubmissionView do
     link("Cancel", to: route, class: "btn btn-link")
   end
 
-  def accept_terms(conn, form, submission_id, user_id, challenge) do
-    if is_nil(submission_id) or submission_id == user_id do
-      content_tag(:div) do
-        [
+  def accept_terms(conn, form, submitter_id, user_id, challenge) do
+    if is_nil(submitter_id) or submitter_id == user_id do
+      content_tag(:div, class: "form-group") do
+        content_tag(:div, class: "col") do
+          [
             label(form, :terms_accepted) do
               [
-                checkbox(form, :terms_accepted, class: FormView.form_group_classes(form, :terms_accepted)),
+                checkbox(form, :terms_accepted,
+                  class: FormView.form_group_classes(form, :terms_accepted)
+                ),
                 " I have read the ",
-                link("rules, terms and conditions ", to: Routes.public_challenge_details_path(conn, :index, challenge.id, "rules"), target: "_blank"),
+                link("rules, terms and conditions ",
+                  to: Routes.public_challenge_details_path(conn, :index, challenge.id, "rules"),
+                  target: "_blank"
+                ),
                 " of this challenge",
                 error_tag(form, :terms_accepted)
               ]
             end
-        ]
+          ]
+        end
+      end
+    end
+  end
+
+  def verify_review(form, user_id, submission) do
+    %{
+      submitter_id: submitter_id,
+      manager_id: manager_id,
+      review_verified: review_verified
+    } = submission
+
+    if submitter_id == user_id or (is_nil(manager_id) and !review_verified) do
+      content_tag(:div) do
+        content_tag(:div, class: "col") do
+          [
+            label(form, :review_verified) do
+              [
+                checkbox(form, :review_verified,
+                  class: FormView.form_group_classes(form, :review_verified)
+                ),
+                " I have reviewed the submission and verify it is accurate",
+                error_tag(form, :review_verified)
+              ]
+            end
+          ]
+        end
       end
     end
   end

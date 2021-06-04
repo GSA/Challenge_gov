@@ -304,7 +304,9 @@ defmodule Web.SubmissionControllerTest do
           "title" => "Test title",
           "brief_description" => "Test brief description",
           "description" => "Test description",
-          "external_url" => "Test external url"
+          "external_url" => "Test external url",
+          "terms_accepted" => "true",
+          "review_verified" => "true"
         },
         "challenge_id" => challenge.id,
         "phase_id" => "#{phase.id}"
@@ -514,7 +516,9 @@ defmodule Web.SubmissionControllerTest do
           "title" => "New test title",
           "brief_description" => "New test brief description",
           "description" => "New test description",
-          "external_url" => "www.test_example.com"
+          "external_url" => "www.test_example.com",
+          "terms_accepted" => "true",
+          "review_verified" => "true"
         }
       }
 

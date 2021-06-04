@@ -112,6 +112,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
     |> validate_acceptance(:terms_accepted, message: "must be accepted")
+    |> validate_acceptance(:review_verified, message: "must be accepted")
     |> validate_required([
       :title,
       :brief_description,
@@ -142,6 +143,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
     |> validate_acceptance(:terms_accepted, message: "must be accepted")
+    |> validate_acceptance(:review_verified, message: "must be accepted")
     |> validate_required([
       :title,
       :brief_description,
@@ -155,7 +157,6 @@ defmodule ChallengeGov.Submissions.Submission do
     |> change()
     |> put_change(:status, "submitted")
     |> validate_required_fields
-    |> validate_acceptance(:terms_accepted, message: "must be accepted")
     |> validate_inclusion(:status, status_ids())
   end
 
@@ -176,7 +177,8 @@ defmodule ChallengeGov.Submissions.Submission do
   end
 
   defp validate_required_fields(struct) do
-    %{title: t, brief_description: bd, description: d, terms_accepted: ta} = struct.data
+    %{title: t, brief_description: bd, description: d, terms_accepted: ta, review_verified: rv} =
+      struct.data
 
     struct = if is_blank?(t), do: add_error(struct, :title, "can't be blank"), else: struct
 
@@ -186,6 +188,15 @@ defmodule ChallengeGov.Submissions.Submission do
     struct = if is_blank?(d), do: add_error(struct, :description, "can't be blank"), else: struct
 
     struct = if !ta, do: add_error(struct, :terms_accepted, "must be accepted"), else: struct
+
+    struct =
+      cond do
+        struct.data.manager_id ->
+          struct
+
+        !rv ->
+          add_error(struct, :review_verified, "must verify this submission")
+      end
 
     struct
   end
