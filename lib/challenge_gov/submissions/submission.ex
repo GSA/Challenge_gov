@@ -157,7 +157,6 @@ defmodule ChallengeGov.Submissions.Submission do
     |> change()
     |> put_change(:status, "submitted")
     |> validate_required_fields
-    |> validate_acceptance(:terms_accepted, message: "must be accepted")
     |> validate_inclusion(:status, status_ids())
   end
 
@@ -199,6 +198,15 @@ defmodule ChallengeGov.Submissions.Submission do
           struct
 
         true ->
+          add_error(struct, :review_verified, "must verify this submission")
+      end
+
+    struct =
+      cond do
+        struct.data.manager_id ->
+          struct
+
+        !rv ->
           add_error(struct, :review_verified, "must verify this submission")
       end
 
