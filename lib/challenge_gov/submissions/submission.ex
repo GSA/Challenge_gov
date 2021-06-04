@@ -213,6 +213,11 @@ defmodule ChallengeGov.Submissions.Submission do
           add_error(struct, :review_verified, "must verify this submission")
       end
 
+    struct =
+      if !is_nil(struct.data.manager_id) and !rv,
+        do: add_error(struct, :review_verified, "must verify this submission"),
+        else: struct
+
     struct
   end
 
