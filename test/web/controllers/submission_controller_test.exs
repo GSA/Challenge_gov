@@ -578,7 +578,8 @@ defmodule Web.SubmissionControllerTest do
     #       "brief_description" => "New test brief description",
     #       "description" => "New test description",
     #       "external_url" => "www.test_example.com",
-    #       "terms_accepted" => "true"
+    #       "terms_accepted" => "true",
+    #       "review_verified" => "true"
     #     }
     #   }
 
@@ -598,7 +599,8 @@ defmodule Web.SubmissionControllerTest do
     #           "brief_description" => "New test brief description",
     #           "description" => "New test description",
     #           "external_url" => "www.test_example.com",
-    #           "terms_accepted" => "true"
+    #           "terms_accepted" => "true",
+    #           "review_verified" => "true"
     #         }
     #       }
     # # the following does not execute, but errors, redirects to dashboard and flashes "Submission not found"
