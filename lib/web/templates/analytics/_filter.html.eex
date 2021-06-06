@@ -3,23 +3,23 @@
     <%= inputs_for(f, :year_filter, fn yf -> %>
       <div class="form-group">
         <%= label yf, :target_date_start do %>
-          <%= radio_button yf, :target_date, "start", checked: true %>
+          <%= radio_button yf, :target_date, "start", checked: @filter["year_filter"]["target_date"] == "start" %>
           Filter on start date
         <% end %>
       </div>
       <div class="form-group">
         <%= label yf, :target_date_end do %>
-          <%= radio_button yf, :target_date, "end" %>
+          <%= radio_button yf, :target_date, "end", checked: @filter["year_filter"]["target_date"] == "end" %>
           Filter on end date
         <% end %>
       </div>
       <div class="form-group">
         <%= label yf, :start_year %>
-        <%= select(yf, :start_year, @years, prompt: "Select year", class: "form-control js-select") %>
+        <%= select(yf, :start_year, @years, prompt: "Select year", class: "form-control js-select", selected: @filter["year_filter"]["start_year"]) %>
       </div>
       <div class="form-group">
         <%= label yf, :end_year %>
-        <%= select(yf, :end_year, @years, prompt: "Select year", class: "form-control js-select") %>
+        <%= select(yf, :end_year, @years, prompt: "Select year", class: "form-control js-select", selected: @filter["year_filter"]["end_year"]) %>
       </div>
     <% end) %>
 

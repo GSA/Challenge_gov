@@ -10,7 +10,15 @@ defmodule Web.AnalyticsController do
     %{current_user: user} = conn.assigns
 
     filter = Map.get(params, "filter", %{})
-    year_filter = Map.get(filter, "year_filter", %{})
+
+    year_filter =
+      Map.get(filter, "year_filter", %{
+        "target_date" => "start",
+        "start_year" => "2010",
+        "end_year" => ""
+      })
+
+    filter = Map.put(filter, "year_filter", year_filter)
 
     agencies = Agencies.all_for_select()
     challenges = Analytics.get_challenges(filter: filter)
