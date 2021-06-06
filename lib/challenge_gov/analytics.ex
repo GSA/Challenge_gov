@@ -101,16 +101,7 @@ defmodule ChallengeGov.Analytics do
       ]
     }
 
-    options_obj = [
-      options: %{
-        plugins: %{
-          title: %{
-            display: true,
-            text: "All challenges"
-          }
-        }
-      }
-    ]
+    options_obj = []
 
     %{
       data: data_obj,
@@ -141,13 +132,7 @@ defmodule ChallengeGov.Analytics do
 
     options_obj = [
       options: %{
-        indexAxis: "y",
-        plugins: %{
-          title: %{
-            display: true,
-            text: "Challenges by primary type"
-          }
-        }
+        indexAxis: "y"
       }
     ]
 
@@ -180,16 +165,7 @@ defmodule ChallengeGov.Analytics do
       ]
     }
 
-    options_obj = [
-      options: %{
-        plugins: %{
-          title: %{
-            display: true,
-            text: "Challenges hosted externally"
-          }
-        }
-      }
-    ]
+    options_obj = []
 
     %{
       data: data_obj,
@@ -223,10 +199,6 @@ defmodule ChallengeGov.Analytics do
     options_obj = [
       options: %{
         plugins: %{
-          title: %{
-            display: true,
-            text: "Total cash prizes"
-          },
           legend: %{
             display: false
           },
@@ -285,10 +257,6 @@ defmodule ChallengeGov.Analytics do
     options_obj = [
       options: %{
         plugins: %{
-          title: %{
-            display: true,
-            text: "Challenges by legal authority"
-          },
           legend: %{
             display: true,
             position: "bottom"
@@ -361,10 +329,6 @@ defmodule ChallengeGov.Analytics do
     options_obj = [
       options: %{
         plugins: %{
-          title: %{
-            display: true,
-            text: "Total number of participating lead agencies"
-          },
           legend: %{
             display: true,
             position: "bottom"
@@ -436,10 +400,6 @@ defmodule ChallengeGov.Analytics do
     options_obj = [
       options: %{
         plugins: %{
-          title: %{
-            display: true,
-            text: "Total number of prize competitions"
-          },
           legend: %{
             display: true,
             position: "bottom"

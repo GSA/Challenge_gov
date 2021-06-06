@@ -41,12 +41,25 @@
 
           <hr/>
 
+          <h4>All challenges</h4>
           <%= render_graph(@all_challenges.data, @all_challenges.options) %>
+          <hr/>
+          <h4>Challenges by primary type</h4>
           <%= render_graph(@challenges_by_primary_type.data, @challenges_by_primary_type.options) %>
+          <hr/>
+          <h4>Challenge by hosting</h4>
           <%= render_graph(@challenges_hosted_externally.data, @challenges_hosted_externally.options) %>
+          <hr/>
+          <h4>Total cash prizes</h4>
           <%= render_graph(@total_cash_prizes.data, @total_cash_prizes.options) %>
+          <hr/>
+          <h4>Challenges by legal authority</h4>
           <%= render_graph(@challenges_by_legal_authority.data, @challenges_by_legal_authority.options) %>
+          <hr/>
+          <h4>Total number of participating lead agencies</h4>
           <%= render_graph(@participating_lead_agencies.data, @participating_lead_agencies.options) %>
+          <hr/>
+          <h4>Total number of prize competitions</h4>
           <%= render_graph(@total_prize_competitions.data, @total_prize_competitions.options) %>
         </div>
       </div>
