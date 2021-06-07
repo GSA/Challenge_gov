@@ -13,6 +13,25 @@ Array.from(analyticsGraphs).forEach(el => {
   const graphData = JSON.parse(el.dataset.graphData)
   const graphOptions = JSON.parse(el.dataset.graphOptions)
 
+  if (graphOptions.format == "currency"){
+    graphOptions.scales = {
+      y: {
+        ticks: {
+          callback: (value, index, values) => {
+            return '$' + value.toLocaleString()
+          }
+        }
+      }
+    }
+    graphOptions.plugins.tooltip = {
+      callbacks: {
+        label: function(context) {
+          return '$' + context.parsed.y.toLocaleString()
+        }
+      }
+    }
+  }
+
   const config = {
     type: graphType,
     data: graphData,

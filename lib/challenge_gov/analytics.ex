@@ -78,6 +78,9 @@ defmodule ChallengeGov.Analytics do
     year
   end
 
+  def calculate_prize_amount(challenge = %{imported: true}), do: challenge.prize_total || 0
+  def calculate_prize_amount(challenge), do: (challenge.prize_total || 0) / 1000
+
   def all_challenges(challenges, years) do
     challenges = challenge_prefilter(challenges)
 
@@ -182,7 +185,9 @@ defmodule ChallengeGov.Analytics do
         total_prize_amount =
           challenges
           |> Enum.filter(fn challenge -> challenge.start_date.year == year end)
-          |> Enum.map(fn challenge -> challenge.prize_total || 0 end)
+          |> Enum.map(fn challenge ->
+            calculate_prize_amount(challenge)
+          end)
           |> Enum.sum()
 
         Map.put(acc, year, total_prize_amount)
@@ -198,6 +203,7 @@ defmodule ChallengeGov.Analytics do
 
     options_obj = [
       options: %{
+        format: "currency",
         plugins: %{
           legend: %{
             display: false
