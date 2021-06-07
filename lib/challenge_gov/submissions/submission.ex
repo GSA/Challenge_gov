@@ -187,14 +187,17 @@ defmodule ChallengeGov.Submissions.Submission do
 
     struct = if is_blank?(d), do: add_error(struct, :description, "can't be blank"), else: struct
 
-    struct = if !ta, do: add_error(struct, :terms_accepted, "must be accepted"), else: struct
+    struct = if ta, do: struct, else: add_error(struct, :terms_accepted, "must be accepted")
 
     struct =
       cond do
-        struct.data.manager_id ->
+        is_nil(struct.data.manager_id) ->
           struct
 
-        !rv ->
+        !!struct.data.manager_id and rv ->
+          struct
+
+        true ->
           add_error(struct, :review_verified, "must verify this submission")
       end
 
