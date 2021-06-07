@@ -22,7 +22,7 @@ defmodule Web.SubmissionController do
 
   plug Web.Plugs.FetchPage when action in [:index, :show, :managed_submissions]
 
-  plug(Web.Plugs.FetchSubmission, [submission_id: "id"] when action in [:edit])
+  plug(Web.Plugs.FetchSubmission when action in [:edit])
 
   action_fallback(Web.FallbackController)
 
