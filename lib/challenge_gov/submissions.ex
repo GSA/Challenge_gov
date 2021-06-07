@@ -417,16 +417,6 @@ defmodule ChallengeGov.Submissions do
     })
   end
 
-  def get_all_with_user_id_and_manager(user) do
-    from(s in Submission,
-      where: s.submitter_id == ^user.id,
-      where: not is_nil(s.manager_id),
-      where: s.status == "draft",
-      select: s
-    )
-    |> Repo.all()
-  end
-
   # BOOKMARK: Filter functions
   @impl Stein.Filter
   def filter_on_attribute({"search", value}, query) do
