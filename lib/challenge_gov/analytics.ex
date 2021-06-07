@@ -112,30 +112,67 @@ defmodule ChallengeGov.Analytics do
     }
   end
 
-  def challenges_by_primary_type(challenges, _years) do
-    grouped_challenges =
+  def challenges_by_primary_type(challenges, years) do
+    challenges =
       challenges
       |> challenge_prefilter()
-      |> Enum.group_by(fn challenge -> challenge.primary_type end)
-      |> Enum.reduce(%{}, fn {primary_type, challenges}, acc ->
-        Map.put(acc, primary_type, Enum.count(challenges))
+      |> Enum.filter(fn challenge ->
+        !is_nil(challenge.primary_type)
       end)
 
-    labels = Map.keys(grouped_challenges)
-    data = Map.values(grouped_challenges)
+    labels = years
+
+    data =
+      challenges
+      |> Enum.group_by(fn challenge -> challenge.primary_type end)
+
+    colors = ColorStream.hex() |> Enum.take(Enum.count(data))
+
+    data =
+      data
+      |> Enum.with_index()
+      |> Enum.reduce([], fn {{primary_type, challenges}, index}, acc ->
+        grouped_challenges =
+          Enum.group_by(challenges, fn challenge -> challenge.start_date.year end)
+
+        data =
+          years
+          |> Enum.map(fn year ->
+            grouped_challenges = grouped_challenges[year] || []
+            Enum.count(grouped_challenges)
+          end)
+
+        data = %{
+          label: primary_type,
+          data: data,
+          borderWidth: 1,
+          backgroundColor: "##{Enum.at(colors, index)}"
+        }
+
+        acc ++ [data]
+      end)
 
     data_obj = %{
       labels: labels,
-      datasets: [
-        %{
-          data: data
-        }
-      ]
+      datasets: data
     }
 
     options_obj = [
       options: %{
-        indexAxis: "y"
+        plugins: %{
+          legend: %{
+            display: true,
+            position: "bottom"
+          }
+        },
+        scales: %{
+          x: %{
+            stacked: true
+          },
+          y: %{
+            stacked: true
+          }
+        }
       }
     ]
 
