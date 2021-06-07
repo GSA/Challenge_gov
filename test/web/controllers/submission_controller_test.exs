@@ -547,7 +547,7 @@ defmodule Web.SubmissionControllerTest do
 
       conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
 
-      assert get_flash(conn, :error) === "You are not allowed to edit this submission"
+      assert get_flash(conn, :error) === "You are not authorized to edit this submission"
       assert redirected_to(conn) === Routes.submission_path(conn, :index)
     end
 
