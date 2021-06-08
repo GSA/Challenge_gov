@@ -292,12 +292,18 @@ defmodule ChallengeGov.Analytics do
         !is_nil(challenge.legal_authority)
       end)
 
+    colors = ColorStream.hex() |> Enum.take(2)
+
     labels = years
 
     data =
       challenges
-      |> Enum.group_by(fn challenge -> challenge.legal_authority end)
-      |> Enum.reduce([], fn {legal_authority, challenges}, acc ->
+      |> Enum.group_by(fn challenge ->
+        challenge.legal_authority
+        |> String.downcase()
+        |> String.contains?("competes")
+      end)
+      |> Enum.reduce([], fn {is_america_competes, challenges}, acc ->
         grouped_challenges =
           Enum.group_by(challenges, fn challenge -> challenge.start_date.year end)
 
@@ -308,9 +314,13 @@ defmodule ChallengeGov.Analytics do
             Enum.count(grouped_challenges)
           end)
 
+        {label, color_index} =
+          if is_america_competes, do: {"America Competes", 0}, else: {"Other", 1}
+
         data = %{
-          label: legal_authority,
-          data: data
+          label: label,
+          data: data,
+          backgroundColor: "##{Enum.at(colors, color_index)}"
         }
 
         acc ++ [data]
