@@ -185,13 +185,12 @@ defmodule Web.SubmissionController do
     else
       {:error, :no_current_phase} ->
         conn
-        |> put_flash(:error, "Challenge not currently accepting submissions")
         |> redirect(to: Routes.public_challenge_details_path(conn, :index, challenge_id))
 
       {:error, :not_found} ->
         conn
         |> put_flash(:error, "Challenge not found")
-        |> redirect(to: Routes.public_challenge_details_path(conn, :index, challenge_id))
+        |> redirect(to: Routes.public_challenge_index_path(conn, :index))
     end
   end
 
