@@ -43,13 +43,13 @@ defmodule Web.SubmissionView do
   end
 
   def name_link(conn, submission, query_params \\ []) do
-    link(submission.title || "Submission #{submission.id}",
+    link(submission.title,
       to: Routes.submission_path(conn, :show, submission.id, query_params)
     )
   end
 
   def name_link_url(conn, submission) do
-    link(submission.title || "Submission #{submission.id}",
+    link(submission.title,
       to: Routes.submission_url(conn, :show, submission.id)
     )
   end
