@@ -304,7 +304,9 @@ defmodule Web.SubmissionControllerTest do
           "title" => "Test title",
           "brief_description" => "Test brief description",
           "description" => "Test description",
-          "external_url" => "Test external url"
+          "external_url" => "Test external url",
+          "terms_accepted" => "true",
+          "review_verified" => "true"
         },
         "challenge_id" => challenge.id,
         "phase_id" => "#{phase.id}"
@@ -434,16 +436,6 @@ defmodule Web.SubmissionControllerTest do
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
-      params = %{
-        "action" => "draft",
-        "submission" => %{
-          "title" => "New test title",
-          "brief_description" => "Test brief description",
-          "description" => "Test description",
-          "external_url" => nil
-        }
-      }
-
       conn = get(conn, Routes.submission_path(conn, :edit, submission.id))
       assert html_response(conn, 200) =~ "Review and submit"
       refute html_response(conn, 200) =~ "Save draft"
@@ -514,7 +506,9 @@ defmodule Web.SubmissionControllerTest do
           "title" => "New test title",
           "brief_description" => "New test brief description",
           "description" => "New test description",
-          "external_url" => "www.test_example.com"
+          "external_url" => "www.test_example.com",
+          "terms_accepted" => "true",
+          "review_verified" => "true"
         }
       }
 
@@ -583,7 +577,9 @@ defmodule Web.SubmissionControllerTest do
     #       "title" => "New test title",
     #       "brief_description" => "New test brief description",
     #       "description" => "New test description",
-    #       "external_url" => "www.test_example.com"
+    #       "external_url" => "www.test_example.com",
+    #       "terms_accepted" => "true",
+    #       "review_verified" => "true"
     #     }
     #   }
 
@@ -602,7 +598,9 @@ defmodule Web.SubmissionControllerTest do
     #           "title" => "New test title",
     #           "brief_description" => "New test brief description",
     #           "description" => "New test description",
-    #           "external_url" => "www.test_example.com"
+    #           "external_url" => "www.test_example.com",
+    #           "terms_accepted" => "true",
+    #           "review_verified" => "true"
     #         }
     #       }
     # # the following does not execute, but errors, redirects to dashboard and flashes "Submission not found"

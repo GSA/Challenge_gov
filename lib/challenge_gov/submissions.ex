@@ -51,6 +51,17 @@ defmodule ChallengeGov.Submissions do
     |> Repo.paginate(opts[:page], opts[:per])
   end
 
+  def all_unreviewed_by_submitter_id(user_id, opts \\ []) do
+    Submission
+    |> base_preload
+    |> preload([:phase])
+    |> where([s], is_nil(s.deleted_at))
+    |> where([s], s.submitter_id == ^user_id)
+    |> where([s], not is_nil(s.manager_id))
+    |> where([s], s.review_verified == false)
+    |> Repo.paginate(opts[:page], opts[:per])
+  end
+
   def get(id) do
     Submission
     |> where([s], is_nil(s.deleted_at))
@@ -404,16 +415,6 @@ defmodule ChallengeGov.Submissions do
       action: type,
       details: details
     })
-  end
-
-  def get_all_with_user_id_and_manager(user) do
-    from(s in Submission,
-      where: s.submitter_id == ^user.id,
-      where: not is_nil(s.manager_id),
-      where: s.status == "draft",
-      select: s
-    )
-    |> Repo.all()
   end
 
   # BOOKMARK: Filter functions
