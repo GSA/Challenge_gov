@@ -178,7 +178,13 @@ defmodule Web.SubmissionView do
                 ),
                 " I have read the ",
                 link("rules, terms and conditions ",
-                  to: Routes.public_challenge_details_path(conn, :index, challenge.id, "rules"),
+                  to:
+                    Routes.public_challenge_details_path(
+                      conn,
+                      :index,
+                      challenge.custom_url || challenge.id,
+                      "rules"
+                    ),
                   target: "_blank"
                 ),
                 " of this challenge",
