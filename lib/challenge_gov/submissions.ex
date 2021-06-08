@@ -98,7 +98,11 @@ defmodule ChallengeGov.Submissions do
 
       {:error, _type, changeset, _changes} ->
         changeset = preserve_document_ids_on_error(changeset, params)
-        changeset = %Ecto.Changeset{changeset | data: Repo.preload(changeset.data, [:documents])}
+
+        changeset = %Ecto.Changeset{
+          changeset
+          | data: Repo.preload(changeset.data, [:documents, :submitter])
+        }
 
         {:error, changeset}
     end
@@ -120,7 +124,11 @@ defmodule ChallengeGov.Submissions do
 
       {:error, _type, changeset, _changes} ->
         changeset = preserve_document_ids_on_error(changeset, params)
-        changeset = %Ecto.Changeset{changeset | data: Repo.preload(changeset.data, [:documents])}
+
+        changeset = %Ecto.Changeset{
+          changeset
+          | data: Repo.preload(changeset.data, [:documents, :submitter])
+        }
 
         {:error, changeset}
     end
