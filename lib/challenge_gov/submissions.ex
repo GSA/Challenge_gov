@@ -40,12 +40,16 @@ defmodule ChallengeGov.Submissions do
     |> Repo.paginate(opts[:page], opts[:per])
   end
 
-  def all_by_submitter_id(user_id, opts \\ []) do
+  def all_submissible_by_submitter_id(user_id, opts \\ []) do
     Submission
     |> base_preload
     |> preload([:phase])
     |> where([s], is_nil(s.deleted_at))
     |> where([s], s.submitter_id == ^user_id)
+    |> where(
+      [s],
+      is_nil(s.manager_id) or (not is_nil(s.manager_id) and s.review_verified == true)
+    )
     |> Filter.filter(opts[:filter], __MODULE__)
     |> order_on_attribute(opts[:sort])
     |> Repo.paginate(opts[:page], opts[:per])
