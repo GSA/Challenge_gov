@@ -22,6 +22,8 @@ defmodule Web.SubmissionController do
 
   plug Web.Plugs.FetchPage when action in [:index, :show, :managed_submissions]
 
+  plug(Web.Plugs.FetchSubmission when action in [:edit, :show, :update, :submit, :delete])
+
   action_fallback(Web.FallbackController)
 
   def index(conn, params = %{"challenge_id" => challenge_id}) do
@@ -107,8 +109,7 @@ defmodule Web.SubmissionController do
   end
 
   def show(conn, params = %{"id" => id}) do
-    %{current_user: user, page: page} = conn.assigns
-    {:ok, submission} = Submissions.get(id)
+    %{current_user: user, current_submission: submission, page: page} = conn.assigns
 
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
@@ -252,8 +253,7 @@ defmodule Web.SubmissionController do
   end
 
   def edit(conn, %{"id" => id}) do
-    %{current_user: user} = conn.assigns
-    {:ok, submission} = Submissions.get(id)
+    %{current_user: user, current_submission: submission} = conn.assigns
 
     case Submissions.allowed_to_edit(user, submission) do
       {:ok, submission} ->
@@ -276,8 +276,7 @@ defmodule Web.SubmissionController do
   end
 
   def update(conn, %{"id" => id, "action" => "draft", "submission" => submission_params}) do
-    %{current_user: user} = conn.assigns
-    {:ok, submission} = Submissions.get(id)
+    %{current_user: user, current_submission: submission} = conn.assigns
 
     {submitter, _submission_params} = get_params_by_current_user(submission_params, user)
     submission_params = Map.put_new(submission_params, "submitter_id", submitter.id)
@@ -289,11 +288,6 @@ defmodule Web.SubmissionController do
       |> put_flash(:info, "Submission draft saved")
       |> redirect(to: Routes.submission_path(conn, :edit, submission.id))
     else
-      {:error, :not_found} ->
-        conn
-        |> put_flash(:error, "Submission does not exist")
-        |> redirect_by_user_type(user, submission)
-
       {:error, :not_permitted} ->
         conn
         |> put_flash(:error, "Submission cannot be edited")
@@ -310,8 +304,7 @@ defmodule Web.SubmissionController do
   end
 
   def update(conn, %{"id" => id, "action" => "review", "submission" => submission_params}) do
-    %{current_user: user} = conn.assigns
-    {:ok, submission} = Submissions.get(id)
+    %{current_user: user, current_submission: submission} = conn.assigns
 
     with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
          {:ok, submission} <- Submissions.update_review(submission, submission_params) do
@@ -341,8 +334,7 @@ defmodule Web.SubmissionController do
   end
 
   def submit(conn, %{"id" => id}) do
-    %{current_user: user} = conn.assigns
-    {:ok, submission} = Submissions.get(id)
+    %{current_user: user, current_submission: submission} = conn.assigns
 
     with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
          {:ok, submission} <- Submissions.submit(submission, Security.extract_remote_ip(conn)) do
@@ -367,8 +359,7 @@ defmodule Web.SubmissionController do
   end
 
   def delete(conn, %{"id" => id}) do
-    %{current_user: user} = conn.assigns
-    {:ok, submission} = Submissions.get(id)
+    %{current_user: user, current_submission: submission} = conn.assigns
 
     with {:ok, submission} <- Submissions.allowed_to_delete(user, submission),
          {:ok, submission} <- Submissions.delete(submission) do
