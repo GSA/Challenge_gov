@@ -185,27 +185,51 @@ defmodule ChallengeGov.Analytics do
   def challenges_hosted_externally(challenges, years) do
     challenges = challenge_prefilter(challenges)
 
+    colors = ColorStream.hex() |> Enum.take(2)
+
+    labels = years
+
     data =
-      years
-      |> Enum.reduce(%{}, fn year, acc ->
-        Map.put(
-          acc,
-          year,
-          Enum.count(challenges, fn challenge ->
-            challenge.start_date.year == year and !is_nil(challenge.external_url)
+      challenges
+      |> Enum.group_by(fn challenge -> is_nil(challenge.external_url) end)
+      |> Enum.reduce([], fn {hosted_internally, challenges}, acc ->
+        grouped_challenges =
+          Enum.group_by(challenges, fn challenge -> challenge.start_date.year end)
+
+        data =
+          years
+          |> Enum.map(fn year ->
+            grouped_challenges = grouped_challenges[year] || []
+            Enum.count(grouped_challenges)
           end)
-        )
+
+        {label, color_index} =
+          if hosted_internally, do: {"Hosted on Challenge.gov", 0}, else: {"Hosted externally", 1}
+
+        data = %{
+          label: label,
+          data: data,
+          backgroundColor: "##{Enum.at(colors, color_index)}"
+        }
+
+        acc ++ [data]
       end)
 
     data_obj = %{
-      datasets: [
-        %{
-          data: data
-        }
-      ]
+      labels: labels,
+      datasets: data
     }
 
-    options_obj = []
+    options_obj = [
+      options: %{
+        plugins: %{
+          legend: %{
+            display: true,
+            position: "bottom"
+          }
+        }
+      }
+    ]
 
     %{
       data: data_obj,
