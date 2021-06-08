@@ -72,7 +72,12 @@ defmodule Web.SubmissionController do
       )
 
     %{page: submissions, pagination: pagination} =
-      Submissions.all_by_submitter_id(user.id, filter: filter, sort: sort, page: page, per: per)
+      Submissions.all_submissible_by_submitter_id(user.id,
+        filter: filter,
+        sort: sort,
+        page: page,
+        per: per
+      )
 
     conn
     |> assign(:user, user)

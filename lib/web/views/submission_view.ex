@@ -198,7 +198,7 @@ defmodule Web.SubmissionView do
       review_verified: review_verified
     } = submission
 
-    if submitter_id == user_id or (is_nil(manager_id) and !review_verified) do
+    if submitter_id == user_id and (!!manager_id and !review_verified) do
       content_tag(:div) do
         content_tag(:div, class: "col") do
           [
