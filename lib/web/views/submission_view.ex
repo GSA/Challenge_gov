@@ -43,13 +43,13 @@ defmodule Web.SubmissionView do
   end
 
   def name_link(conn, submission, query_params \\ []) do
-    link(submission.title || "Submission #{submission.id}",
+    link(submission.title,
       to: Routes.submission_path(conn, :show, submission.id, query_params)
     )
   end
 
   def name_link_url(conn, submission) do
-    link(submission.title || "Submission #{submission.id}",
+    link(submission.title,
       to: Routes.submission_url(conn, :show, submission.id)
     )
   end
@@ -145,13 +145,21 @@ defmodule Web.SubmissionView do
     end
   end
 
-  def cancel_button(conn, action, challenge, _opts \\ []) do
+  def cancel_button(conn, action, challenge, phase, user, _opts \\ []) do
     route =
-      case action do
-        a when a === :new or a === :create ->
+      cond do
+        Accounts.has_admin_access?(user) ->
+          Routes.challenge_phase_managed_submission_path(
+            conn,
+            :managed_submissions,
+            challenge.id,
+            phase.id
+          )
+
+        action === :new or action === :create ->
           Routes.public_challenge_details_path(conn, :index, challenge.id)
 
-        a when a === :edit or a === :update or a === :submit ->
+        action === :edit or action === :update or action === :submit ->
           Routes.submission_path(conn, :index)
       end
 

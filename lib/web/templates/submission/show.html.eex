@@ -4,7 +4,7 @@
       <%= SharedView.render_breadcrumbs([
         %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
         %{text: "Submissions", route: Routes.submission_path(@conn, :index)},
-        %{text: @submission.title}
+        %{text: @submission.title || "draft"}
       ])%>
     <% else %>
       <%= SharedView.render_breadcrumbs([
@@ -14,7 +14,7 @@
         %{text: "Phases", route: Routes.challenge_phase_path(@conn, :index, @challenge.id), is_visible: length(@challenge.phases) > 1},
         %{text: @phase.title, route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) > 1},
         %{text: "Submissions", route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) === 1},
-        %{text: @submission.title}
+        %{text: @submission.title || "draft"}
       ])%>
     <% end %>
   </div>
@@ -30,12 +30,12 @@
             <%= if Challenges.allowed_to_edit?(@user, @challenge) do %>
               <div class="form-group">
                 <label class="col"><strong>Submission ID:</strong></label>
-                <div class="col"><%= @submission.id || "None" %></div>
+                <div class="col"><%= @submission.id %></div>
               </div>
             <% end %>
             <div class="form-group">
               <label class="col"><strong>Title:</strong></label>
-              <div class="col"><%= @submission.title || "None" %></div>
+              <div class="col"><%= @submission.title %></div>
             </div>
             <div class="form-group">
               <label class="col"><strong>Brief description:</strong></label>

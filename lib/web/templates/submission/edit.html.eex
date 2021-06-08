@@ -8,14 +8,14 @@
         %{text: "Submissions", route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) === 1},
         %{text: "Phases", route: Routes.challenge_phase_path(@conn, :index, @challenge.id), is_visible: length(@challenge.phases) > 1},
         %{text: @phase.title, route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) > 1},
-        %{text: @submission.title, route: Routes.challenge_phase_submission_path(@conn, :show, @challenge.id, @phase.id, @submission.id)},
+        %{text: @submission.title || "draft", route: Routes.challenge_phase_submission_path(@conn, :show, @challenge.id, @phase.id, @submission.id)},
         %{text: "Edit"}
       ])%>
     <% else %>
       <%= SharedView.render_breadcrumbs([
         %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
         %{text: "Submissions", route: Routes.submission_path(@conn, :index)},
-        %{text: @submission.title, route: Routes.submission_path(@conn, :show, @submission.id), is_visible: @submission.title},
+        %{text: @submission.title || "draft", route: Routes.submission_path(@conn, :show, @submission.id), is_visible: @submission.title},
         %{text: "Edit"},
       ])%>
     <% end %>
@@ -29,7 +29,7 @@
         <div class="card p-3">
           <h4>Edit submission for:</h4>
           <%= render Web.SubmissionView, "_header.html", conn: @conn, challenge: @submission.challenge, phase: @phase %>
-          <%= render Web.SubmissionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.submission_path(@conn, :update, @submission.id), user: @user, challenge: @submission.challenge %>
+          <%= render Web.SubmissionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.submission_path(@conn, :update, @submission.id), user: @user, challenge: @submission.challenge, phase: @phase %>
         </div>
       </div>
     </div>

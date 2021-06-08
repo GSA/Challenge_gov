@@ -1,6 +1,7 @@
 defmodule ChallengeGov.SubmissionDocumentsTest do
   use ChallengeGov.DataCase
 
+  alias ChallengeGov.Submissions
   alias ChallengeGov.SubmissionDocuments
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
@@ -77,6 +78,41 @@ defmodule ChallengeGov.SubmissionDocumentsTest do
       document = SubmissionDocumentHelpers.upload_document(user, "test/fixtures/test.pdf")
 
       {:ok, _document} = SubmissionDocuments.delete(document)
+    end
+  end
+
+  describe "preserving uploaded document(s) on form error" do
+    test "successfully" do
+      user = AccountHelpers.create_user()
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = Enum.at(challenge.phases, 0)
+
+      document =
+        SubmissionDocumentHelpers.upload_document(
+          user,
+          "test/fixtures/test.pdf",
+          "Test File Name"
+        )
+
+      {:error, changeset} =
+        Submissions.create_review(
+          %{
+            "action" => "review",
+            "document_ids" => ["#{document.id}"],
+            "documents" => [document],
+            "submission" => %{
+              "brief_description" => "brief description",
+              "description" => "long description"
+            }
+          },
+          user,
+          challenge,
+          phase
+        )
+
+      assert changeset.errors
+      assert changeset.changes[:document_ids] === ["#{document.id}"]
+      assert hd(changeset.changes[:document_objects]).name === document.name
     end
   end
 end

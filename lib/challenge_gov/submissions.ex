@@ -98,7 +98,11 @@ defmodule ChallengeGov.Submissions do
 
       {:error, _type, changeset, _changes} ->
         changeset = preserve_document_ids_on_error(changeset, params)
-        changeset = %Ecto.Changeset{changeset | data: Repo.preload(changeset.data, [:documents])}
+
+        changeset = %Ecto.Changeset{
+          changeset
+          | data: Repo.preload(changeset.data, [:documents, :submitter])
+        }
 
         {:error, changeset}
     end
@@ -120,7 +124,11 @@ defmodule ChallengeGov.Submissions do
 
       {:error, _type, changeset, _changes} ->
         changeset = preserve_document_ids_on_error(changeset, params)
-        changeset = %Ecto.Changeset{changeset | data: Repo.preload(changeset.data, [:documents])}
+
+        changeset = %Ecto.Changeset{
+          changeset
+          | data: Repo.preload(changeset.data, [:documents, :submitter])
+        }
 
         {:error, changeset}
     end
@@ -219,6 +227,10 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
+  @doc """
+  only solvers editing their own submissions and admins editing admin created
+  submissions are allowed
+  """
   def allowed_to_edit(user, submission) do
     if submission.submitter_id === user.id or
          (Accounts.has_admin_access?(user) and !is_nil(submission.manager_id)) do
@@ -228,6 +240,10 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
+  @doc """
+  only submission for unarchived challenges with the phase still open
+  can be edited
+  """
   def is_editable(%{role: "solver"}, submission) do
     if submission.challenge.sub_status === "archived" do
       {:error, :not_permitted}
@@ -483,10 +499,10 @@ defmodule ChallengeGov.Submissions do
 
     case direction do
       "asc" ->
-        order_by(query, [s, challenge: c], asc_nulls_last: c.title)
+        order_by(query, [s, challenge: c], {:asc_nulls_last, fragment("lower(?)", c.title)})
 
       "desc" ->
-        order_by(query, [s, challenge: c], desc_nulls_last: c.title)
+        order_by(query, [s, challenge: c], {:desc_nulls_last, fragment("lower(?)", c.title)})
 
       _ ->
         query
@@ -498,10 +514,10 @@ defmodule ChallengeGov.Submissions do
 
     case direction do
       "asc" ->
-        order_by(query, [s, phase: p], asc_nulls_last: p.title)
+        order_by(query, [s, phase: p], {:asc_nulls_last, fragment("lower(?)", p.title)})
 
       "desc" ->
-        order_by(query, [s, phase: p], desc_nulls_last: p.title)
+        order_by(query, [s, phase: p], {:desc_nulls_last, fragment("lower(?)", p.title)})
 
       _ ->
         query
@@ -513,10 +529,10 @@ defmodule ChallengeGov.Submissions do
 
     case direction do
       "asc" ->
-        order_by(query, [s, manager: m], asc_nulls_last: m.last_name)
+        order_by(query, [s, manager: m], {:asc_nulls_last, fragment("lower(?)", m.last_name)})
 
       "desc" ->
-        order_by(query, [s, manager: m], desc_nulls_last: m.last_name)
+        order_by(query, [s, manager: m], {:desc_nulls_last, fragment("lower(?)", m.last_name)})
 
       _ ->
         query
@@ -525,23 +541,23 @@ defmodule ChallengeGov.Submissions do
 
   def order_on_attribute(query, sort_columns)
       when is_map(sort_columns) and map_size(sort_columns) > 0 do
-    columns_to_sort =
+    %{direction: direction, column: column} =
       Enum.reduce(sort_columns, [], fn {column, direction}, acc ->
         column = String.to_atom(column)
 
         case direction do
           "asc" ->
-            acc ++ [asc_nulls_last: column]
+            acc ++ %{direction: :asc_nulls_last, column: column}
 
           "desc" ->
-            acc ++ [desc_nulls_last: column]
+            acc ++ %{direction: :desc_nulls_last, column: column}
 
           _ ->
             []
         end
       end)
 
-    order_by(query, [c], ^columns_to_sort)
+    order_by(query, [c], {^direction, fragment("lower(?)", field(c, ^column))})
   end
 
   def order_on_attribute(query, _), do: order_by(query, [c], desc_nulls_last: :id)
