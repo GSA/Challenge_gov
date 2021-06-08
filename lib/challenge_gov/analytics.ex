@@ -18,6 +18,12 @@ defmodule ChallengeGov.Analytics do
     |> Repo.all()
   end
 
+  def challenge_prefilter(challenges) do
+    Enum.filter(challenges, fn challenge ->
+      !is_nil(challenge.start_date) and !is_nil(challenge.end_date)
+    end)
+  end
+
   def active_challenges(all_challenges) do
     Enum.filter(all_challenges, fn challenge ->
       challenge.status == "published" and
@@ -50,31 +56,47 @@ defmodule ChallengeGov.Analytics do
     challenge.end_date.year == year
   end
 
-  def get_year_range(challenges) when length(challenges) <= 0, do: Enum.to_list(2000..2021)
+  def get_year_range(start_year, end_year) do
+    start_year = get_start_year(start_year)
+    end_year = get_end_year(end_year)
 
-  def get_year_range(challenges) do
-    min_year =
-      Enum.min_by(challenges, fn challenge -> challenge.start_date.year end).start_date.year
-
-    max_year = Enum.max_by(challenges, fn challenge -> challenge.end_date.year end).end_date.year
-
-    Enum.to_list(min_year..max_year)
+    Enum.to_list(start_year..end_year)
   end
 
-  def all_challenges(challenges) do
-    grouped_challenges =
-      challenges
-      |> Enum.filter(fn challenge -> !is_nil(challenge.start_date) end)
-      |> Enum.group_by(fn challenge -> challenge.start_date.year end)
-      |> Enum.reduce(%{}, fn {year, challenges}, acc ->
-        Map.put(acc, year, Enum.count(challenges))
+  def get_start_year(""), do: default_start_year()
+  def get_start_year(year), do: year_to_integer(year)
+
+  def default_start_year, do: Repo.one(select(Challenge, [c], min(c.start_date))).year
+
+  def get_end_year(""), do: default_end_year()
+  def get_end_year(year), do: year_to_integer(year)
+
+  def default_end_year, do: DateTime.utc_now().year
+
+  defp year_to_integer(year) do
+    {year, _} = Integer.parse(year)
+    year
+  end
+
+  def calculate_prize_amount(challenge = %{imported: true}), do: challenge.prize_total || 0
+  def calculate_prize_amount(challenge), do: (challenge.prize_total || 0) / 1000
+
+  def all_challenges(challenges, years) do
+    challenges = challenge_prefilter(challenges)
+
+    data =
+      years
+      |> Enum.reduce(%{}, fn year, acc ->
+        Map.put(
+          acc,
+          year,
+          Enum.count(challenges, fn challenge ->
+            challenge.start_date.year == year
+          end)
+        )
       end)
 
-    labels = Map.keys(grouped_challenges)
-    data = Map.values(grouped_challenges)
-
     data_obj = %{
-      labels: labels,
       datasets: [
         %{
           data: data
@@ -82,16 +104,7 @@ defmodule ChallengeGov.Analytics do
       ]
     }
 
-    options_obj = [
-      options: %{
-        plugins: %{
-          title: %{
-            display: true,
-            text: "All challenges"
-          }
-        }
-      }
-    ]
+    options_obj = []
 
     %{
       data: data_obj,
@@ -99,76 +112,65 @@ defmodule ChallengeGov.Analytics do
     }
   end
 
-  def challenges_by_primary_type(challenges) do
-    grouped_challenges =
-      challenges
-      |> Enum.filter(fn challenge -> !is_nil(challenge.start_date) end)
-      |> Enum.group_by(fn challenge -> challenge.primary_type end)
-      |> Enum.reduce(%{}, fn {primary_type, challenges}, acc ->
-        Map.put(acc, primary_type, Enum.count(challenges))
-      end)
-
-    labels = Map.keys(grouped_challenges)
-    data = Map.values(grouped_challenges)
-
-    data_obj = %{
-      labels: labels,
-      datasets: [
-        %{
-          data: data
-        }
-      ]
-    }
-
-    options_obj = [
-      options: %{
-        indexAxis: "y",
-        plugins: %{
-          title: %{
-            display: true,
-            text: "Challenges by primary type"
-          }
-        }
-      }
-    ]
-
-    %{
-      data: data_obj,
-      options: options_obj
-    }
-  end
-
-  def challenges_hosted_externally(challenges) do
+  def challenges_by_primary_type(challenges, years) do
     challenges =
-      Enum.filter(challenges, fn challenge ->
-        !is_nil(challenge.start_date) and !is_nil(challenge.external_url)
-      end)
-
-    grouped_challenges =
       challenges
-      |> Enum.group_by(fn challenge -> challenge.start_date.year end)
-      |> Enum.reduce(%{}, fn {year, challenges}, acc ->
-        Map.put(acc, year, Enum.count(challenges))
+      |> challenge_prefilter()
+      |> Enum.filter(fn challenge ->
+        !is_nil(challenge.primary_type)
       end)
 
-    labels = Map.keys(grouped_challenges)
-    data = Map.values(grouped_challenges)
+    labels = years
+
+    data =
+      challenges
+      |> Enum.group_by(fn challenge -> challenge.primary_type end)
+
+    colors = ColorStream.hex() |> Enum.take(Enum.count(data))
+
+    data =
+      data
+      |> Enum.with_index()
+      |> Enum.reduce([], fn {{primary_type, challenges}, index}, acc ->
+        grouped_challenges =
+          Enum.group_by(challenges, fn challenge -> challenge.start_date.year end)
+
+        data =
+          years
+          |> Enum.map(fn year ->
+            grouped_challenges = grouped_challenges[year] || []
+            Enum.count(grouped_challenges)
+          end)
+
+        data = %{
+          label: primary_type,
+          data: data,
+          borderWidth: 1,
+          backgroundColor: "##{Enum.at(colors, index)}"
+        }
+
+        acc ++ [data]
+      end)
 
     data_obj = %{
       labels: labels,
-      datasets: [
-        %{
-          data: data
-        }
-      ]
+      datasets: data
     }
 
     options_obj = [
       options: %{
         plugins: %{
-          title: %{
+          legend: %{
             display: true,
-            text: "Challenges hosted externally"
+            position: "bottom"
+          }
+        },
+        scales: %{
+          x: %{
+            stacked: true
+          },
+          y: %{
+            stacked: true
           }
         }
       }
@@ -180,26 +182,79 @@ defmodule ChallengeGov.Analytics do
     }
   end
 
-  def total_cash_prizes(challenges) do
-    challenges = Enum.filter(challenges, fn challenge -> !is_nil(challenge.start_date) end)
+  def challenges_hosted_externally(challenges, years) do
+    challenges = challenge_prefilter(challenges)
 
-    grouped_challenges =
+    colors = ColorStream.hex() |> Enum.take(2)
+
+    labels = years
+
+    data =
       challenges
-      |> Enum.group_by(fn challenge -> challenge.start_date.year end)
-      |> Enum.reduce(%{}, fn {year, challenges}, acc ->
+      |> Enum.group_by(fn challenge -> is_nil(challenge.external_url) end)
+      |> Enum.reduce([], fn {hosted_internally, challenges}, acc ->
+        grouped_challenges =
+          Enum.group_by(challenges, fn challenge -> challenge.start_date.year end)
+
+        data =
+          years
+          |> Enum.map(fn year ->
+            grouped_challenges = grouped_challenges[year] || []
+            Enum.count(grouped_challenges)
+          end)
+
+        {label, color_index} =
+          if hosted_internally, do: {"Hosted on Challenge.gov", 0}, else: {"Hosted externally", 1}
+
+        data = %{
+          label: label,
+          data: data,
+          backgroundColor: "##{Enum.at(colors, color_index)}"
+        }
+
+        acc ++ [data]
+      end)
+
+    data_obj = %{
+      labels: labels,
+      datasets: data
+    }
+
+    options_obj = [
+      options: %{
+        plugins: %{
+          legend: %{
+            display: true,
+            position: "bottom"
+          }
+        }
+      }
+    ]
+
+    %{
+      data: data_obj,
+      options: options_obj
+    }
+  end
+
+  def total_cash_prizes(challenges, years) do
+    challenges = challenge_prefilter(challenges)
+
+    data =
+      years
+      |> Enum.reduce(%{}, fn year, acc ->
         total_prize_amount =
           challenges
-          |> Enum.map(fn challenge -> challenge.prize_total || 0 end)
+          |> Enum.filter(fn challenge -> challenge.start_date.year == year end)
+          |> Enum.map(fn challenge ->
+            calculate_prize_amount(challenge)
+          end)
           |> Enum.sum()
 
-        Map.put(acc, year, total_prize_amount / 1000)
+        Map.put(acc, year, total_prize_amount)
       end)
 
-    labels = Map.keys(grouped_challenges)
-    data = Map.values(grouped_challenges)
-
     data_obj = %{
-      labels: labels,
       datasets: [
         %{
           data: data
@@ -209,11 +264,8 @@ defmodule ChallengeGov.Analytics do
 
     options_obj = [
       options: %{
+        format: "currency",
         plugins: %{
-          title: %{
-            display: true,
-            text: "Total cash prizes"
-          },
           legend: %{
             display: false
           },
@@ -232,36 +284,43 @@ defmodule ChallengeGov.Analytics do
     }
   end
 
-  def challenges_by_legal_authority(challenges) do
+  def challenges_by_legal_authority(challenges, years) do
     challenges =
-      Enum.filter(challenges, fn challenge ->
-        !is_nil(challenge.start_date) and !is_nil(challenge.legal_authority)
+      challenges
+      |> challenge_prefilter()
+      |> Enum.filter(fn challenge ->
+        !is_nil(challenge.legal_authority)
       end)
 
-    labels =
-      challenges
-      |> Enum.group_by(fn challenge -> challenge.start_date.year end)
-      |> Enum.sort_by(fn {year, _} -> year end)
-      |> Enum.uniq_by(fn {year, _} -> year end)
-      |> Enum.map(fn {year, _} -> year end)
+    colors = ColorStream.hex() |> Enum.take(2)
+
+    labels = years
 
     data =
       challenges
-      |> Enum.group_by(fn challenge -> challenge.legal_authority end)
-      |> Enum.reduce([], fn {legal_authority, challenges}, acc ->
+      |> Enum.group_by(fn challenge ->
+        challenge.legal_authority
+        |> String.downcase()
+        |> String.contains?("competes")
+      end)
+      |> Enum.reduce([], fn {is_america_competes, challenges}, acc ->
         grouped_challenges =
           Enum.group_by(challenges, fn challenge -> challenge.start_date.year end)
 
         data =
-          labels
+          years
           |> Enum.map(fn year ->
             grouped_challenges = grouped_challenges[year] || []
             Enum.count(grouped_challenges)
           end)
 
+        {label, color_index} =
+          if is_america_competes, do: {"America Competes", 0}, else: {"Other", 1}
+
         data = %{
-          label: legal_authority,
-          data: data
+          label: label,
+          data: data,
+          backgroundColor: "##{Enum.at(colors, color_index)}"
         }
 
         acc ++ [data]
@@ -275,10 +334,6 @@ defmodule ChallengeGov.Analytics do
     options_obj = [
       options: %{
         plugins: %{
-          title: %{
-            display: true,
-            text: "Challenges by legal authority"
-          },
           legend: %{
             display: true,
             position: "bottom"
@@ -293,19 +348,16 @@ defmodule ChallengeGov.Analytics do
     }
   end
 
-  def participating_lead_agencies(challenges) do
+  def participating_lead_agencies(challenges, years) do
     challenges =
-      Enum.filter(challenges, fn challenge ->
-        !is_nil(challenge.start_date) and !is_nil(challenge.end_date) and
-          !is_nil(challenge.agency_id)
-      end)
+      challenges
+      |> challenge_prefilter()
+      |> Enum.filter(fn challenge -> !is_nil(challenge.agency_id) end)
 
-    year_range = get_year_range(challenges)
-
-    labels = year_range
+    labels = years
 
     launched_data =
-      year_range
+      years
       |> Enum.map(fn year ->
         challenges
         |> Enum.filter(fn challenge -> launched_in_year?(challenge, year) end)
@@ -313,36 +365,9 @@ defmodule ChallengeGov.Analytics do
         |> Enum.count()
       end)
 
-    ongoing_data =
-      year_range
-      |> Enum.map(fn year ->
-        challenges
-        |> Enum.filter(fn challenge -> ongoing_in_year?(challenge, year) end)
-        |> Enum.uniq_by(fn challenge -> challenge.agency_id end)
-        |> Enum.count()
-      end)
-
-    closed_data =
-      year_range
-      |> Enum.map(fn year ->
-        challenges
-        |> Enum.filter(fn challenge -> closed_in_year?(challenge, year) end)
-        |> Enum.uniq_by(fn challenge -> challenge.agency_id end)
-        |> Enum.count()
-      end)
-
     data = [
       %{
-        label: "Launched",
         data: launched_data
-      },
-      %{
-        label: "Ongoing",
-        data: ongoing_data
-      },
-      %{
-        label: "Closed",
-        data: closed_data
       }
     ]
 
@@ -351,96 +376,7 @@ defmodule ChallengeGov.Analytics do
       datasets: data
     }
 
-    options_obj = [
-      options: %{
-        plugins: %{
-          title: %{
-            display: true,
-            text: "Total number of participating lead agencies"
-          },
-          legend: %{
-            display: true,
-            position: "bottom"
-          }
-        }
-      }
-    ]
-
-    %{
-      data: data_obj,
-      options: options_obj
-    }
-  end
-
-  def total_prize_competitions(challenges) do
-    challenges =
-      Enum.filter(challenges, fn challenge ->
-        !is_nil(challenge.start_date) and !is_nil(challenge.end_date) and
-          (challenge.prize_type == "both" or challenge.prize_type == "monetary")
-      end)
-
-    year_range = get_year_range(challenges)
-
-    labels = year_range
-
-    launched_data =
-      year_range
-      |> Enum.map(fn year ->
-        challenges
-        |> Enum.filter(fn challenge -> launched_in_year?(challenge, year) end)
-        |> Enum.count()
-      end)
-
-    ongoing_data =
-      year_range
-      |> Enum.map(fn year ->
-        challenges
-        |> Enum.filter(fn challenge -> ongoing_in_year?(challenge, year) end)
-        |> Enum.count()
-      end)
-
-    closed_data =
-      year_range
-      |> Enum.map(fn year ->
-        challenges
-        |> Enum.filter(fn challenge -> closed_in_year?(challenge, year) end)
-        |> Enum.count()
-      end)
-
-    data = [
-      %{
-        label: "Launched",
-        data: launched_data
-      },
-      %{
-        label: "Ongoing",
-        data: ongoing_data
-      },
-      %{
-        label: "Closed",
-        data: closed_data
-      }
-    ]
-
-    data_obj = %{
-      labels: labels,
-      datasets: data
-    }
-
-    options_obj = [
-      options: %{
-        plugins: %{
-          title: %{
-            display: true,
-            text: "Total number of prize competitions"
-          },
-          legend: %{
-            display: true,
-            position: "bottom"
-          }
-        }
-      }
-    ]
+    options_obj = []
 
     %{
       data: data_obj,
