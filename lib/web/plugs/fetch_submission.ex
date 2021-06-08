@@ -21,6 +21,7 @@ defmodule Web.Plugs.FetchSubmission do
         conn
         |> put_flash(:error, "Submission not found")
         |> redirect(to: redirect_route)
+        |> halt()
     end
   end
 end
