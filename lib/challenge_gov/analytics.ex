@@ -365,36 +365,9 @@ defmodule ChallengeGov.Analytics do
         |> Enum.count()
       end)
 
-    ongoing_data =
-      years
-      |> Enum.map(fn year ->
-        challenges
-        |> Enum.filter(fn challenge -> ongoing_in_year?(challenge, year) end)
-        |> Enum.uniq_by(fn challenge -> challenge.agency_id end)
-        |> Enum.count()
-      end)
-
-    closed_data =
-      years
-      |> Enum.map(fn year ->
-        challenges
-        |> Enum.filter(fn challenge -> closed_in_year?(challenge, year) end)
-        |> Enum.uniq_by(fn challenge -> challenge.agency_id end)
-        |> Enum.count()
-      end)
-
     data = [
       %{
-        label: "Launched",
         data: launched_data
-      },
-      %{
-        label: "Ongoing",
-        data: ongoing_data
-      },
-      %{
-        label: "Closed",
-        data: closed_data
       }
     ]
 
@@ -403,87 +376,7 @@ defmodule ChallengeGov.Analytics do
       datasets: data
     }
 
-    options_obj = [
-      options: %{
-        plugins: %{
-          legend: %{
-            display: true,
-            position: "bottom"
-          }
-        }
-      }
-    ]
-
-    %{
-      data: data_obj,
-      options: options_obj
-    }
-  end
-
-  def total_prize_competitions(challenges, years) do
-    challenges =
-      challenges
-      |> challenge_prefilter()
-      |> Enum.filter(fn challenge ->
-        challenge.prize_type == "both" or challenge.prize_type == "monetary"
-      end)
-
-    labels = years
-
-    launched_data =
-      years
-      |> Enum.map(fn year ->
-        challenges
-        |> Enum.filter(fn challenge -> launched_in_year?(challenge, year) end)
-        |> Enum.count()
-      end)
-
-    ongoing_data =
-      years
-      |> Enum.map(fn year ->
-        challenges
-        |> Enum.filter(fn challenge -> ongoing_in_year?(challenge, year) end)
-        |> Enum.count()
-      end)
-
-    closed_data =
-      years
-      |> Enum.map(fn year ->
-        challenges
-        |> Enum.filter(fn challenge -> closed_in_year?(challenge, year) end)
-        |> Enum.count()
-      end)
-
-    data = [
-      %{
-        label: "Launched",
-        data: launched_data
-      },
-      %{
-        label: "Ongoing",
-        data: ongoing_data
-      },
-      %{
-        label: "Closed",
-        data: closed_data
-      }
-    ]
-
-    data_obj = %{
-      labels: labels,
-      datasets: data
-    }
-
-    options_obj = [
-      options: %{
-        plugins: %{
-          legend: %{
-            display: true,
-            position: "bottom"
-          }
-        }
-      }
-    ]
+    options_obj = []
 
     %{
       data: data_obj,

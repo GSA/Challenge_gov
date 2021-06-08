@@ -58,9 +58,6 @@
           <hr/>
           <h4>Total number of participating lead agencies</h4>
           <%= render_graph(@participating_lead_agencies.data, @participating_lead_agencies.options) %>
-          <hr/>
-          <h4>Total number of prize competitions</h4>
-          <%= render_graph(@total_prize_competitions.data, @total_prize_competitions.options) %>
         </div>
       </div>
     </div>

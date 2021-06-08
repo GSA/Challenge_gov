@@ -51,8 +51,6 @@ defmodule Web.AnalyticsController do
     participating_lead_agencies =
       Analytics.participating_lead_agencies(challenges, filter_year_range)
 
-    total_prize_competitions = Analytics.total_prize_competitions(challenges, filter_year_range)
-
     conn
     |> assign(:user, user)
     |> assign(:agencies, agencies)
@@ -66,7 +64,6 @@ defmodule Web.AnalyticsController do
     |> assign(:total_cash_prizes, total_cash_prizes)
     |> assign(:challenges_by_legal_authority, challenges_by_legal_authority)
     |> assign(:participating_lead_agencies, participating_lead_agencies)
-    |> assign(:total_prize_competitions, total_prize_competitions)
     |> assign(:filter, filter)
     |> render("index.html")
   end
