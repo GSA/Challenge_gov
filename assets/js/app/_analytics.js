@@ -5,6 +5,9 @@ Chart.register(BarController, BarElement, CategoryScale, LinearScale, Title, Too
 Chart.defaults.plugins.legend.display = false
 Chart.defaults.scales.category.ticks.autoSkip = false
 Chart.defaults.scales.linear.ticks.precision = 0
+Chart.defaults.plugins.tooltip.filter = (tooltipItems) => {
+  return tooltipItems.parsed.y > 0
+}
 
 const analyticsGraphs = document.getElementsByClassName("js-analytics-graph")
 
