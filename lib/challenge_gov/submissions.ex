@@ -249,7 +249,7 @@ defmodule ChallengeGov.Submissions do
   def allowed_to_edit(user, submission) do
     if submission.submitter_id === user.id or
          (Accounts.has_admin_access?(user) and !is_nil(submission.manager_id)) do
-      is_editable(user, submission)
+      {:ok, submission}
     else
       {:error, :not_permitted}
     end
@@ -261,9 +261,15 @@ defmodule ChallengeGov.Submissions do
   """
   def is_editable(%{role: "solver"}, submission) do
     if submission.challenge.sub_status === "archived" do
-      {:error, :not_permitted}
+      {:error, :not_editable}
     else
-      submission_phase_is_open(submission)
+      case submission_phase_is_open?(submission) do
+        true ->
+          {:ok, submission}
+
+        false ->
+          {:error, :not_editable}
+      end
     end
   end
 
@@ -273,13 +279,13 @@ defmodule ChallengeGov.Submissions do
         if is_nil(submission.manager_id) or
              !!submission.review_verified or
              submission.challenge.sub_status === "archived" do
-          {:error, :not_permitted}
+          {:error, :not_editable}
         else
           {:ok, submission}
         end
 
       false ->
-        {:error, :not_permitted}
+        {:error, :not_editable}
     end
   end
 
@@ -288,26 +294,32 @@ defmodule ChallengeGov.Submissions do
       {:ok, _submission} ->
         true
 
-      {:error, :not_permitted} ->
+      _ ->
         false
     end
   end
 
-  def submission_phase_is_open(submission) do
+  def submission_phase_is_open?(submission) do
     phase_close = submission.phase.end_date
     now = Timex.now()
 
     case Timex.compare(phase_close, now) do
       1 ->
-        {:ok, submission}
+        true
 
       tc when tc == -1 or tc == 0 ->
-        {:error, :not_permitted}
+        false
     end
   end
 
   def allowed_to_delete(%{:id => id}, submission = %{:submitter_id => id}) do
-    submission_phase_is_open(submission)
+    case submission_phase_is_open?(submission) do
+      true ->
+        {:ok, submission}
+
+      false ->
+        {:error, :not_permitted}
+    end
   end
 
   def allowed_to_delete(user, submission) do
