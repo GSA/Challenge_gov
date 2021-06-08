@@ -2,6 +2,7 @@ import { Chart, BarController, BarElement, CategoryScale, LinearScale, Title, To
 
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend)
 
+Chart.defaults.backgroundColor = "#0B4778"
 Chart.defaults.plugins.legend.display = false
 Chart.defaults.scales.category.ticks.autoSkip = false
 Chart.defaults.scales.linear.ticks.precision = 0
