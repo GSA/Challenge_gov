@@ -567,50 +567,50 @@ defmodule Web.SubmissionControllerTest do
       assert redirected_to(conn) === Routes.submission_path(conn, :show, submission.id)
     end
 
-    #   test "attempting to update a submission that was deleted", %{conn: conn} do
-    #     conn = prep_conn(conn)
-    #     %{current_user: user} = conn.assigns
+    # test "attempting to update a submission that was deleted", %{conn: conn} do
+    #   conn = prep_conn(conn)
+    #   %{current_user: user} = conn.assigns
 
-    #     challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+    #   challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
-    #     submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
+    #   submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
-    #     {:ok, submission} = Submissions.delete(submission)
+    #   {:ok, submission} = Submissions.delete(submission)
 
-    #     params = %{
-    #       "action" => "review",
-    #       "submission" => %{
-    #         "title" => "New test title",
-    #         "brief_description" => "New test brief description",
-    #         "description" => "New test description",
-    #         "external_url" => "www.test_example.com"
-    #       }
+    #   params = %{
+    #     "action" => "review",
+    #     "submission" => %{
+    #       "title" => "New test title",
+    #       "brief_description" => "New test brief description",
+    #       "description" => "New test description",
+    #       "external_url" => "www.test_example.com"
     #     }
+    #   }
 
-    #     conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
+    #   conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
 
-    #     assert get_flash(conn, :error) === "This submission does not exist"
-    #     assert redirected_to(conn) === Routes.submission_path(conn, :index)
-    #   end
+    #   assert get_flash(conn, :error) === "This submission does not exist"
+    #   assert redirected_to(conn) === Routes.submission_path(conn, :index)
+    # end
 
-    #   test "attempting to update a submission that doesn't exist", %{conn: conn} do
-    #     conn = prep_conn(conn)
+    #     test "attempting to update a submission that doesn't exist", %{conn: conn} do
+    #       conn = prep_conn(conn)
 
-    #     params = %{
-    #       "action" => "review",
-    #       "submission" => %{
-    #         "title" => "New test title",
-    #         "brief_description" => "New test brief description",
-    #         "description" => "New test description",
-    #         "external_url" => "www.test_example.com"
+    #       params = %{
+    #         "action" => "review",
+    #         "submission" => %{
+    #           "title" => "New test title",
+    #           "brief_description" => "New test brief description",
+    #           "description" => "New test description",
+    #           "external_url" => "www.test_example.com"
+    #         }
     #       }
-    #     }
+    # # the following does not execute, but errors, redirects to dashboard and flashes "Submission not found"
+    #       conn = put(conn, Routes.submission_path(conn, :update, 1), params)
 
-    #     conn = put(conn, Routes.submission_path(conn, :update, 1), params)
-
-    #     assert get_flash(conn, :error) === "This submission does not exist"
-    #     assert redirected_to(conn) === Routes.submission_path(conn, :index)
-    #   end
+    #       assert get_flash(conn, :error) === "This submission does not exist"
+    #       assert redirected_to(conn) === Routes.submission_path(conn, :index)
+    #     end
   end
 
   describe "updating judging status" do
