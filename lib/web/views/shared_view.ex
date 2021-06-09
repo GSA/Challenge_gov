@@ -137,14 +137,21 @@ defmodule Web.SharedView do
 
     {:ok, data} = Jason.encode(first)
 
-    content_tag :ol, class: "breadcrumb" do
-      [
-        content_tag(:span, "", class: "truncated-breadcrumbs", "data-breadcrumbs": data),
-        content_tag :li, class: "breadcrumb-item btn-link" do
-          content_tag(:a, "...", href: "", class: "hidden-breadcrumbs")
-        end,
+    breadcrumb_display =
+      if length(visible_breadcrumbs) > 2 do
+        [
+          content_tag(:span, "", class: "truncated-breadcrumbs", "data-breadcrumbs": data),
+          content_tag :li, class: "breadcrumb-item btn-link" do
+            content_tag(:a, "...", href: "", class: "hidden-breadcrumbs")
+          end,
+          get_breadcrumb_html(breadcrumbs)
+        ]
+      else
         get_breadcrumb_html(breadcrumbs)
-      ]
+      end
+
+    content_tag :ol, class: "breadcrumb" do
+      breadcrumb_display
     end
   end
 
