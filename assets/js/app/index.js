@@ -19,6 +19,7 @@ import "./_submission_invite.js";
 import "./_submission_judging_status.js";
 import "./_sub_agency_select.js";
 import "./_timezone.js";
+import "./_expand_breadcrumbs.js";
 
 // Wizard specific JS (Dependent on some above JS)
 import "./_challenge_wizard_details.js"; 
