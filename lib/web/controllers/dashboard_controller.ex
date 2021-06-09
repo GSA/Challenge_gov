@@ -37,7 +37,7 @@ defmodule Web.DashboardController do
             to:
               Routes.submission_path(
                 Endpoint,
-                :show,
+                :edit,
                 submission.id
               )
           ),
