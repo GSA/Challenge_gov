@@ -1,19 +1,19 @@
-<section class="content-header">
-  <h1>
-    Editing an Event
-  </h1>
-
-  <ol class="breadcrumb">
-    <li>
-      <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
-        <i class="fa fa-dashboard"></i> Home
-      <% end %>
-    </li>
-    <li><%= link("Zones", to: Routes.challenge_path(@conn, :index)) %></li>
-    <li><%= link("Challenge ##{@challenge.id}", to: Routes.challenge_path(@conn, :show, @challenge.id)) %></li>
-    <li class="active">Edit Event</li>
-  </ol>
-</section>
+<div class="content-header">
+  <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Zones", route: Routes.challenge_path(@conn, :index)},
+      %{text: "Challenge ##{@challenge.id}", route: Routes.challenge_path(@conn, :show, @challenge.id)},
+      %{text: "Edit Event"},
+    ])%>
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>
+          Editing an Event
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
 
 <section class="content">
   <div class="row">
