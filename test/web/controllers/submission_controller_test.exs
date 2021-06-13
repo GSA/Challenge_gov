@@ -434,7 +434,7 @@ defmodule Web.SubmissionControllerTest do
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
-      params = %{
+      _params = %{
         "action" => "draft",
         "submission" => %{
           "title" => "New test title",
