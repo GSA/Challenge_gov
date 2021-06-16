@@ -36,7 +36,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
 
     test "successfully adding cash prize only" do
       user = AccountHelpers.create_user()
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id, non_monetary_prizes: "Test non-monetary value"})
 
       {:ok, updated_challenge} =
         Challenges.update(
@@ -55,6 +55,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
 
       assert updated_challenge.prize_type === "monetary"
       assert updated_challenge.prize_total === 10_000
+      assert updated_challenge.non_monetary_prizes === nil
     end
 
     test "successfully adding non monetary prize only" do
@@ -70,7 +71,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
               "section" => "prizes",
               "prize_type" => "non_monetary",
               "non_monetary_prizes" => "Test non monetary prize",
-              "prize_total" => "100.00"
+              "prize_total" => "$100.00"
             }
           },
           user,
