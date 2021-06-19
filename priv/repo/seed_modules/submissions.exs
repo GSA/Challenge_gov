@@ -22,14 +22,15 @@ defmodule Seeds.SeedModules.Submissions do
   end
 
   def generate_submission(solver, challenge, phase) do
-    {:ok, submission} = 
+    {:ok, submission} =
       Submissions.create_review(%{
         "title" => "Seeded Title",
         "brief_description" => "Seeded brief description",
         "description" => "Seeded long description",
+        "terms_accepted" => true,
         "external_url" => "https://www.example.com",
       }, solver, challenge, phase)
-    
+
     Submissions.submit(submission, @remote_ip)
   end
 end
