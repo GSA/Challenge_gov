@@ -12,7 +12,7 @@
 <br/>
 <div>
   <div class="text-bold">Prize total:</div>
-  <div><%= @challenge.prize_total %></div>
+  <div><%= format_currency(@challenge.prize_total) %></div>
 </div>
 <br/>
 <div>

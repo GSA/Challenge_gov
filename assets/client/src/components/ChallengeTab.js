@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Tooltip } from 'reactstrap'
 import { SectionResources } from "./challenge_tabs/SectionResources"
 
-export const ChallengeTab = ({label, downloadsLabel, section, challenge, print, wrapContent = true, children}) => {
+export const ChallengeTab = ({label, downloadsLabel, section, challenge, print, children}) => {
   const [copyTooltipOpen, setCopyTooltipOpen] = useState(false)
 
   useEffect(() => {
@@ -40,18 +40,10 @@ export const ChallengeTab = ({label, downloadsLabel, section, challenge, print, 
         }
       </div>
       <hr/>
-      <section className="card challenge-tab__content">
-        {wrapContent ?  
-          (
-            <div className="card-body">
-              {children}
-            </div>
-          ) : (
-            <>
-              {children}
-            </>
-          )
-        }
+      <section className="challenge-tab__content">
+        <>
+          {children}
+        </>
       </section>
       <SectionResources challenge={challenge} section={section} label={downloadsLabel} />
     </section>

@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { Tooltip } from 'reactstrap'
 import moment from "moment"
+import { stripHtml } from "string-strip-html";
 
 import { ChallengeTabs } from "../components/ChallengeTabs"
 import { Overview } from "../components/challenge_tabs/Overview"
@@ -46,12 +47,12 @@ export const ChallengeDetails = ({challenge, preview, print, tab}) => {
     }
   }
 
-  const renderChallengeTypes = (types) => {
+  const renderChallengeTypes = (types, other_type) => {
     return types.map((t, i) => {
-      if (i == types.length - 1) {
-        return <p key={i}>{t} </p>
+      if (i == types.length - 1 && !challenge.other_type) {
+        return <span key={i}>{`${t} `} </span>
       } else {
-        return <p key={i}>{t}, </p>
+        return <span key={i}>{`${t}; `} </span>
       }
     })
   }
@@ -280,7 +281,7 @@ export const ChallengeDetails = ({challenge, preview, print, tab}) => {
                 }
                 <h4 className="title">{challenge.title}</h4>
                 <h5 className="tagline">{challenge.tagline}</h5>
-                <p className="brief_description">{challenge.brief_description}</p>
+                <div dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
               </div>
               <div className="logo-container">
                 { challenge.logo
@@ -304,11 +305,12 @@ export const ChallengeDetails = ({challenge, preview, print, tab}) => {
               </div>
               {renderWhoCanApply(challenge)}
               <div className="item">
-                { challenge.types.length > 1
-                  ? <p className="info-title">Challenge types:</p>
-                  : <p className="info-title">Challenge type:</p>
+                { challenge.types.length > 1 || challenge.other_type
+                  ? <><span className="info-title">Challenge types:</span><span>{`${challenge.primary_type}; `}</span></>
+                  : <><span className="info-title">Challenge type:</span><span>{`${challenge.primary_type}`}</span></>
                 }
-                {renderChallengeTypes(challenge.types)}
+                {renderChallengeTypes(challenge.types, challenge.other_type)}
+                {challenge.other_type}
               </div>
               { !challenge.prize_total || challenge.prize_total != 0 &&
                 <div className="item">
