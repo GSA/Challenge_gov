@@ -14,6 +14,8 @@ defmodule ChallengeGov.MessageContextStatuses do
 
   def all_for_user(user) do
     MessageContextStatus
+    |> preload([:context])
+    |> order_by([mcs], desc: mcs.updated_at)
     |> where([mcs], mcs.user_id == ^user.id)
     |> Repo.all()
   end

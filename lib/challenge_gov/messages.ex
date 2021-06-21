@@ -10,6 +10,10 @@ defmodule ChallengeGov.Messages do
 
   # alias ChallengeGov.Messages.Message
 
+  # def create(user, message_context) do
+
+  # end
+
   # def create(user, context, context_id, params) do
   #   Multi.new()
   #   |> maybe_create_context(context, context_id)
