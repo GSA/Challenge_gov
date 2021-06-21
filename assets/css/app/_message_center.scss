@@ -1,0 +1,33 @@
+.message_center {
+  &__message_box {
+    position: relative;
+    overflow: hidden;
+    height: 30rem;
+    border: 1px solid #ccc;
+  }
+
+  &__messages {
+    position: absolute;
+    bottom: 0;
+    height: 30rem;
+    padding: 1rem;
+    padding-bottom: 0rem;
+    width: 100%;
+    overflow: scroll;
+
+  }
+
+  &__message {
+    background-color:#bbb;
+    border-radius: .5rem;
+    padding: .5rem;
+    
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  &__message--self {
+    background-color:#eee;
+  }
+}

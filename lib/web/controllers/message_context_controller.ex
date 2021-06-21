@@ -4,6 +4,7 @@ defmodule Web.MessageContextController do
   alias ChallengeGov.Challenges
   alias ChallengeGov.MessageContexts
   alias ChallengeGov.MessageContextStatuses
+  alias ChallengeGov.Messages
 
   def index(conn, _params) do
     %{current_user: user} = conn.assigns
@@ -16,9 +17,15 @@ defmodule Web.MessageContextController do
   end
 
   def show(conn, %{"id" => id}) do
+    %{current_user: user} = conn.assigns
+
     {:ok, message_context} = MessageContexts.get(id)
 
+    message_changeset = Messages.new()
+
     conn
+    |> assign(:user, user)
+    |> assign(:changeset, message_changeset)
     |> assign(:message_context, message_context)
     |> render("show.html")
   end

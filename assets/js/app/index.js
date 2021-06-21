@@ -7,6 +7,7 @@ import "./_custom_url_generator.js";
 import "./_date_conversion.js";
 import "./_datetime_field.js";
 import "./_dynamic_nested_fields.js";
+import "./_message_center.js";
 import "./_phase_winners_file_upload.js";
 import "./_session_timeout.js";
 import "./_radio_button_show.js";

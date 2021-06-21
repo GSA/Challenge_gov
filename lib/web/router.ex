@@ -206,6 +206,8 @@ defmodule Web.Router do
     get("/challenges/preview/:uuid", ChallengeController, :preview)
     resources("/challenges", ChallengeController, only: [:index, :show])
     post("/challenges/:challenge_id/contact_form", ContactFormController, :send_email)
+
+    resources("/messages/:message_context_id", MessageController, only: [:create])
   end
 
   # Public Routes

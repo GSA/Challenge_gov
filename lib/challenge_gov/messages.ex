@@ -3,16 +3,20 @@ defmodule ChallengeGov.Messages do
   Context for Messages
   """
   # alias Ecto.Multi
-  # alias ChallengeGov.Repo
+  alias ChallengeGov.Repo
 
   # alias ChallengeGov.MessageContexts
   # alias ChallengeGov.MessageContextStatuses
 
-  # alias ChallengeGov.Messages.Message
+  alias ChallengeGov.Messages.Message
 
-  # def create(user, message_context) do
+  def new(), do: Message.changeset(%Message{})
 
-  # end
+  def create(user, context, params) do
+    %Message{}
+    |> Message.create_changeset(user, context, params)
+    |> Repo.insert()
+  end
 
   # def create(user, context, context_id, params) do
   #   Multi.new()

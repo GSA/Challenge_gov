@@ -3,4 +3,12 @@ defmodule Web.MessageContextView do
 
   alias Web.FormView
   alias Web.SharedView
+
+  def message_class(user, message) do
+    if message.author_id == user.id do
+      "message_center__message message_center__message--self"
+    else
+      "message_center__message"
+    end
+  end
 end

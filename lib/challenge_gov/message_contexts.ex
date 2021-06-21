@@ -2,6 +2,8 @@ defmodule ChallengeGov.MessageContexts do
   @moduledoc """
   Context for MessageContexts
   """
+  import Ecto.Query
+
   alias Ecto.Multi
   alias ChallengeGov.Repo
 
@@ -10,6 +12,7 @@ defmodule ChallengeGov.MessageContexts do
 
   def get(id) do
     MessageContext
+    |> preload([:messages])
     |> Repo.get(id)
     |> case do
       nil ->

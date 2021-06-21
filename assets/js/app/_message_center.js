@@ -1,0 +1,39 @@
+$(".message_center__message_form").on("submit", (e) => {
+  e.preventDefault()
+
+  const messages = $(".message_center__messages")
+  const quill = $(".message_center .rt-textarea").data("quill")
+
+  if (quill) {
+    if (quill.getLength() > 1) {
+      $.ajax({
+        type: "POST",
+        url: e.target.action,
+        data: $(e.target).serialize(),
+        success: function(res) {
+          appendMessage(messages, res.content, res.class)
+          quill.setContents(null)
+          scrollMessagesToBottom()
+        }
+      });
+    }
+  } else {
+    alert("Something went wrong. Refresh and try again")
+  }
+})
+
+const appendMessage = (container, content, className) => {
+  container.append(`
+    <div class="${className}">
+      ${content}
+    </div>
+    <br/>
+  `)
+}
+
+const scrollMessagesToBottom = () => {
+  const messagesContainer = $(".message_center .message_center__messages");
+  messagesContainer.scrollTop(messagesContainer[0].scrollHeight);
+}
+
+scrollMessagesToBottom()
