@@ -69,6 +69,17 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Get all admins accounts
+  """
+  def all_admins() do
+    User
+    |> where([u], u.role == "super_admin" or u.role == "admin")
+    |> where([u], u.status == "active")
+    |> order_by([u], [{:asc, u.email}])
+    |> Repo.all()
+  end
+
+  @doc """
   Get all public accounts
   """
   @spec public([any()]) :: User.t()

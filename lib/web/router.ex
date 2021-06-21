@@ -171,6 +171,8 @@ defmodule Web.Router do
       as: :restore_challenge_access
     )
 
+    resources("/messages", MessageContextController, only: [:index, :show, :new, :create])
+
     resources("/site_content", SiteContentController, [:index, :show, :edit, :update])
   end
 

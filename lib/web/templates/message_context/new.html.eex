@@ -1,0 +1,9 @@
+New page
+<%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
+  <div class="card-body">
+    <%= hidden_input(f, :context, value: @changeset.changes.context) %>
+    <%= FormView.select_field(f, :context_id, collection: Enum.map(@challenges, &{&1.title, &1.id}), label: "Select a challenge", required: true) %>
+    <%= hidden_input(f, :audience, name: "message_context[audience][]", value: "solvers") %>
+  </div>
+  <%= submit "New message" %>
+<% end) %>

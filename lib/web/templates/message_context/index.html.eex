@@ -1,0 +1,17 @@
+<div class="p-3">
+  <div class="content-header">
+    <h1>Message Center</h1>
+  </div>
+
+  <div class="content">
+    <div class="p-1">
+      <div class="mb-3">
+        <%= link("New Message", to: Routes.message_context_path(@conn, :new, context: "challenge"), class: "btn btn-primary") %>
+      </div>
+      <div class="card">
+        <div class="card-body">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

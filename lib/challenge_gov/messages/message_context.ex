@@ -14,6 +14,12 @@ defmodule ChallengeGov.Messages.MessageContext do
     "submission"
   ]
 
+  # @valid_audiences [
+  #   "admins",
+  #   "challenge_owners",
+  #   "solvers"
+  # ]
+
   @type t :: %__MODULE__{}
   schema "message_contexts" do
     has_many(:messages, Message)
@@ -21,6 +27,7 @@ defmodule ChallengeGov.Messages.MessageContext do
 
     field(:context, :string)
     field(:context_id, :integer)
+    field(:audience, {:array, :string})
 
     timestamps(type: :utc_datetime_usec)
   end
@@ -29,7 +36,8 @@ defmodule ChallengeGov.Messages.MessageContext do
     struct
     |> cast(params, [
       :context,
-      :context_id
+      :context_id,
+      :audience
     ])
     |> validate_inclusion(:context, @valid_contexts)
   end
