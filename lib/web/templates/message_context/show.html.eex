@@ -20,8 +20,18 @@
     <div class="container-fluid">
       <div class="card">
         <div class="card-body">
+          <div class="row">
+            <div class="col">To: <%= display_audience(@message_context) %></div>
+            <div class="col text-right">
+              <%= link "Change", to: "#" %>
+            </div>
+          </div>
+
+          <hr/>
+
           <div class="message_center__message_box">
             <div class="message_center__messages">
+              <div class="message_center__messages_start">This is the beginning of your conversation</div>
               <%= Enum.map(@message_context.messages, fn message -> %>
                 <div class="<%= message_class(@user, message) %>">
                   <%= SharedView.render_safe_html(message.content) %>

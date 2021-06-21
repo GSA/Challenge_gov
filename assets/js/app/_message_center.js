@@ -33,7 +33,9 @@ const appendMessage = (container, content, className) => {
 
 const scrollMessagesToBottom = () => {
   const messagesContainer = $(".message_center .message_center__messages");
-  messagesContainer.scrollTop(messagesContainer[0].scrollHeight);
+  if (messagesContainer[0]) {
+    messagesContainer.scrollTop(messagesContainer[0].scrollHeight);
+  }
 }
 
 scrollMessagesToBottom()

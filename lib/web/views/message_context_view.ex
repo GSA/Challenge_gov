@@ -11,4 +11,10 @@ defmodule Web.MessageContextView do
       "message_center__message"
     end
   end
+
+  def display_audience(message_context) do
+    message_context.audience
+    |> Enum.map(&String.capitalize(&1))
+    |> Enum.join(", ")
+  end
 end
