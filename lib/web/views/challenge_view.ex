@@ -14,7 +14,9 @@ defmodule Web.ChallengeView do
   alias Web.SharedView
 
   def format_currency(amount) do
-    Money.to_string(Money.new(amount, :USD), strip_insignificant_zeros: true)
+    if amount do
+      Money.to_string(Money.new(amount, :USD), strip_insignificant_zeros: true)
+    end
   end
 
   def name_link(conn, challenge) do
