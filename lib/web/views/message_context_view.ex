@@ -18,6 +18,15 @@ defmodule Web.MessageContextView do
     |> Enum.join(", ")
   end
 
+  def display_last_message_snippet(message_context) do
+    last_message =
+      message_context.messages
+      |> Enum.sort_by(& &1.inserted_at)
+      |> Enum.at(-1) || %{content: ""}
+
+    SharedView.render_safe_html(last_message.content)
+  end
+
   def render_star(message_context_status) do
     class = if message_context_status.starred, do: "fas", else: "far"
 

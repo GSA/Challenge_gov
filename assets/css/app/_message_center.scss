@@ -3,6 +3,16 @@
     cursor: pointer;
   }
 
+  &__snippet {
+    * {
+      height: 1.4rem;
+      max-width: 15rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
   &__sidebar {
     height: 100%;
     background-color: #999;

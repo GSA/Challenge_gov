@@ -17,7 +17,7 @@ defmodule ChallengeGov.MessageContextStatuses do
 
   def all_for_user(user, opts \\ []) do
     MessageContextStatus
-    |> preload([:context])
+    |> preload(context: [:messages])
     |> order_by([mcs], desc: mcs.updated_at)
     |> where([mcs], mcs.user_id == ^user.id)
     |> Filter.filter(opts[:filter], __MODULE__)
