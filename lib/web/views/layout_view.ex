@@ -72,6 +72,7 @@ defmodule Web.LayoutView do
   end
 
   def load_filter_panel(conn, view_module) do
+    # credo:disable-for-previous-line
     Phoenix.Controller.action_name(conn) == :index and
       view_module not in [
         Web.DashboardView,
