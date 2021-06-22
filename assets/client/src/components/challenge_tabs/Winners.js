@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import { ChallengeTab } from "../ChallengeTab"
 import { ApiUrlContext } from '../../ApiUrlContext'
 
-export const Winners = ({challenge, phaseWinners, print}) => {
+export const Winners = ({challenge, challengePhases, print}) => {
   const { imageBase } = useContext(ApiUrlContext)
 
   const renderOverviewImage = (phaseWinner) => {
@@ -32,12 +32,8 @@ export const Winners = ({challenge, phaseWinners, print}) => {
   }
 
   const renderPhaseWinners = () => {
-    console.log({phaseWinners})
-    return Object.keys(phaseWinners).map((value, idx) => {
-      const phaseWinner = phaseWinners[value]
-      console.log({phaseWinner})
-      console.log(Object.keys(phaseWinner).length)
-      console.log(Object.keys(phaseWinner.winners).length)
+    return challengePhases.map(phase => {
+      const phaseWinner = phase.phase_winners
       return (
         <div key={phaseWinner.id || idx } className="card">
           <div className="card-body ql-editor">
