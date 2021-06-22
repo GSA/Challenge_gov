@@ -33,11 +33,13 @@ export const Winners = ({challenge, phaseWinners, print}) => {
 
   const renderPhaseWinners = () => {
     console.log({phaseWinners})
-    return Object.keys(phaseWinners).map(value => {
+    return Object.keys(phaseWinners).map((value, idx) => {
       const phaseWinner = phaseWinners[value]
       console.log({phaseWinner})
+      console.log(Object.keys(phaseWinner).length)
+      console.log(Object.keys(phaseWinner.winners).length)
       return (
-        <div key={phaseWinner.id} className="card">
+        <div key={phaseWinner.id || idx } className="card">
           <div className="card-body ql-editor">
             {renderOverviewImage(phaseWinner)}
             <h1 className="my-3">{phaseWinner.phase_title}</h1>
