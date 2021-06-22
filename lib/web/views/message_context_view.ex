@@ -1,6 +1,8 @@
 defmodule Web.MessageContextView do
   use Web, :view
 
+  alias ChallengeGov.MessageContexts
+
   alias Web.FormView
   alias Web.SharedView
 
@@ -16,6 +18,14 @@ defmodule Web.MessageContextView do
     message_context.audience
     |> Enum.map(&String.capitalize(&1))
     |> Enum.join(", ")
+  end
+
+  def display_challenge_title_link(message_context) do
+    challenge = MessageContexts.get_context_record(message_context) || %{title: ""}
+
+    link(challenge.title,
+      to: Routes.challenge_path(Web.Endpoint, :show, message_context.context_id)
+    )
   end
 
   def display_last_message_snippet(message_context) do

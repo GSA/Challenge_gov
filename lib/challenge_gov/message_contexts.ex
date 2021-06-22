@@ -7,6 +7,7 @@ defmodule ChallengeGov.MessageContexts do
   alias Ecto.Multi
   alias ChallengeGov.Repo
 
+  alias ChallengeGov.Challenges
   alias ChallengeGov.MessageContextStatuses
   alias ChallengeGov.Messages.MessageContext
 
@@ -71,5 +72,16 @@ defmodule ChallengeGov.MessageContexts do
     |> Multi.merge(fn %{message_context: message_context} ->
       MessageContextStatuses.create_all_for_message_context(message_context)
     end)
+  end
+
+  def get_context_record(message_context) do
+    case message_context.context do
+      "challenge" ->
+        {:ok, challenge} = Challenges.get(message_context.context_id)
+        challenge
+
+      _ ->
+        nil
+    end
   end
 end
