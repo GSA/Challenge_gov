@@ -13,7 +13,7 @@ defmodule ChallengeGov.MessageContexts do
 
   def get(id) do
     MessageContext
-    |> preload([:messages])
+    |> preload(messages: [:author])
     |> Repo.get(id)
     |> case do
       nil ->

@@ -33,7 +33,7 @@
             <div class="message_center__messages">
               <div class="message_center__messages_start">This is the beginning of your conversation</div>
               <%= Enum.map(@message_context.messages, fn message -> %>
-                <div><%= AccountView.full_name(@user) %></div>
+                <div><%= AccountView.full_name(message.author) %></div>
                 <div class="<%= message_class(@user, message) %>">
                   <%= SharedView.render_safe_html(message.content) %>
                 </div>
