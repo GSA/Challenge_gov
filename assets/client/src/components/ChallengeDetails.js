@@ -244,11 +244,6 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
           <div className="detail-section__follow">
             {renderFollowButton(challenge)}
             {renderFollowTooltip()}
-            {challenge.uuid &&
-              <a className="follow-btn" href={apiUrl + `/public/previews/challenges/${challenge.uuid}?print=true`} target="_blank">
-                <span className="follow-btn"><i className="fas fa-print mr-3"></i>Print challenge</span>
-              </a>
-            }
           </div>
         </>
       )
@@ -322,6 +317,11 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
                   <p>{`$${challenge.prize_total.toLocaleString()}`}</p>
                 </div>
               }
+              {challenge.uuid &&
+              <a className="follow-btn" href={apiUrl + `/public/previews/challenges/${challenge.uuid}?print=true`} target="_blank">
+                <span className="follow-btn"><i className="fas fa-print mr-2"></i>Print challenge</span>
+              </a>
+            }
             </div>
           </section>
         </section>
