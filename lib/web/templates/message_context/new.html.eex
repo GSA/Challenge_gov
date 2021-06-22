@@ -1,9 +1,50 @@
-New page
-<%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
-  <div class="card-body">
-    <%= hidden_input(f, :context, value: @changeset.changes.context) %>
-    <%= FormView.select_field(f, :context_id, collection: Enum.map(@challenges, &{&1.title, &1.id}), label: "Select a challenge", required: true) %>
-    <%= hidden_input(f, :audience, name: "message_context[audience][]", value: "solvers") %>
+<div class="message_center">
+  <div class="content-header">
+    <div class="container-fluid">
+      <%= SharedView.render_breadcrumbs([
+        %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+        %{text: "Message center", route: Routes.message_context_path(Web.Endpoint, :index)},
+        %{text: "New"},
+      ])%>
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">
+            <span>New message</span>
+          </h1>
+        </div>
+      </div>
+    </div>
   </div>
-  <%= submit "New message" %>
-<% end) %>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
+            <%= hidden_input(f, :context, value: @changeset.changes.context) %>
+            <%= FormView.select_field(f, :context_id, collection: Enum.map(@challenges, &{&1.title, &1.id}), label: "Select your challenge", required: true) %>
+            <hr/>
+            <div class="form-group">
+              <label class="col">Send message to</label>
+              <div class="col">
+                <%= checkbox(f, :temp_audience, name: input_name(f, :temp_audience) <> "[challenge_owners]") %>
+                <label>Challenge owners of this challenge</label>
+              </div>
+              <div class="col">
+                <%= checkbox(f, :temp_audience, name: input_name(f, :temp_audience) <> "[solvers]") %>
+                <label>All solvers of this challenge</label>
+              </div>
+              <div class="col">
+                <%= checkbox(f, :temp_audience, name: input_name(f, :temp_audience) <> "[individual]") %>
+                <label>Individual solver of this challenge</label>
+              </div>
+              <%= hidden_input(f, :audience, name: "message_context[audience][]", value: "solvers") %>
+            </div>
+            <hr/>
+            <%= submit "New message", class: "btn btn-primary" %>
+          <% end) %>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
