@@ -63,9 +63,15 @@ export const PreviewPage = () => {
     }
   }
 
-  return (
-    <div className="challenge-preview py-5">
-      {!print &&
+  const renderPreviewItems = () => {
+    if (print) {
+      return (
+        <div className="floating-tile">
+          <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
+        </div>
+      )
+    } else {
+      return (
         <div className="challenge-preview__top row mb-5">
           <div className="col-md-4">
             <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
@@ -74,7 +80,13 @@ export const PreviewPage = () => {
             <PreviewBanner challenge={currentChallenge} />
           </div>
         </div>
-      }
+      )
+    }
+  }
+
+  return (
+    <div className="challenge-preview py-5">
+      {renderPreviewItems()}
       <div className="row">
         <div className="col">
           <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} winners={challengeWinners} preview={true} loading={loadingState} print={print} />
