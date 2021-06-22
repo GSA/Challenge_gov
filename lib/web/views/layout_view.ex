@@ -82,7 +82,8 @@ defmodule Web.LayoutView do
         Web.SubmissionExportView,
         Web.SubmissionInviteView,
         Web.AnalyticsView,
-        Web.MessageContextView
+        Web.MessageContextView,
+        Web.HelpView
       ]
   end
 end
