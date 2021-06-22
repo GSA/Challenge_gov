@@ -171,6 +171,8 @@ defmodule Web.Router do
       as: :restore_challenge_access
     )
 
+    resources("/messages", MessageContextController, only: [:index, :show, :new, :create])
+
     resources("/site_content", SiteContentController, [:index, :show, :edit, :update])
   end
 
@@ -204,6 +206,9 @@ defmodule Web.Router do
     get("/challenges/preview/:uuid", ChallengeController, :preview)
     resources("/challenges", ChallengeController, only: [:index, :show])
     post("/challenges/:challenge_id/contact_form", ContactFormController, :send_email)
+
+    resources("/messages/:message_context_id", MessageController, only: [:create])
+    post("/message_context_status/:id/star", MessageContextStatusController, :toggle_starred)
   end
 
   # Public Routes

@@ -73,14 +73,17 @@ defmodule Web.LayoutView do
 
   def load_filter_panel(conn, view_module) do
     Phoenix.Controller.action_name(conn) == :index and
-      view_module != Web.DashboardView and
-      view_module != Web.AccessView and
-      view_module != Web.SiteContentView and
-      view_module != Web.PhaseView and
-      view_module != Web.PhaseWinnerView and
-      view_module != Web.SubmissionExportView and
-      view_module != Web.SubmissionInviteView and
-      view_module != Web.AnalyticsView
+      view_module not in [
+        Web.DashboardView,
+        Web.AccessView,
+        Web.SiteContentView,
+        Web.PhaseView,
+        Web.PhaseWinnerView,
+        Web.SubmissionExportView,
+        Web.SubmissionInviteView,
+        Web.AnalyticsView,
+        Web.MessageContextView
+      ]
   end
 end
 

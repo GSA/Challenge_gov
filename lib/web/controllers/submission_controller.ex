@@ -122,7 +122,7 @@ defmodule Web.SubmissionController do
     |> render("index_managed.html")
   end
 
-  def show(conn, params = %{"id" => id}) do
+  def show(conn, params = %{"id" => _id}) do
     %{current_user: user, current_submission: submission, page: page} = conn.assigns
 
     filter = Map.get(params, "filter", %{})
@@ -328,7 +328,7 @@ defmodule Web.SubmissionController do
     end
   end
 
-  def update(conn, %{"id" => id, "action" => "review", "submission" => submission_params}) do
+  def update(conn, %{"id" => _id, "action" => "review", "submission" => submission_params}) do
     %{current_user: user, current_submission: submission} = conn.assigns
 
     with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
@@ -396,7 +396,7 @@ defmodule Web.SubmissionController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"id" => _id}) do
     %{current_user: user, current_submission: submission} = conn.assigns
 
     with {:ok, submission} <- Submissions.allowed_to_delete(user, submission),

@@ -1,0 +1,54 @@
+<div class="message_center">
+  <div class="content-header">
+    <div class="container-fluid">
+      <%= SharedView.render_breadcrumbs([
+        %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+        %{text: "Message center", route: Routes.message_context_path(Web.Endpoint, :index)},
+        %{text: "Messages"},
+      ])%>
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">
+            <span>Messages</span>
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">To: <%= display_audience(@message_context) %></div>
+            <div class="col text-right">
+              <%= link "Change", to: "#" %>
+            </div>
+          </div>
+
+          <hr/>
+
+          <div class="message_center__message_box">
+            <div class="message_center__messages">
+              <div class="message_center__messages_start">This is the beginning of your conversation</div>
+              <%= Enum.map(@message_context.messages, fn message -> %>
+                <div class="<%= message_class(@user, message) %>">
+                  <%= SharedView.render_safe_html(message.content) %>
+                </div>
+                <br/>
+              <% end) %>
+            </div>
+          </div>
+          
+          <hr/>
+
+          <%= form_for(@changeset, Routes.api_message_path(@conn, :create, @message_context.id), [class: "message_center__message_form"], fn f -> %>
+            <%= FormView.rt_textarea_field(f, :content) %>
+            <%= submit("Send message", class: "btn btn-primary") %>
+          <% end) %>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

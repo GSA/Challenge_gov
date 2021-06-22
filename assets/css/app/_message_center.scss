@@ -1,0 +1,58 @@
+.message_center {
+  &__star {
+    cursor: pointer;
+  }
+
+  &__snippet {
+    * {
+      height: 1.4rem;
+      max-width: 15rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &__sidebar {
+    height: 100%;
+    background-color: #999;
+    color: #fff;
+  }
+
+  &__message_box {
+    position: relative;
+    overflow: hidden;
+    height: 30rem;
+    border: 1px solid #ccc;
+  }
+
+  &__messages {
+    position: absolute;
+    bottom: 0;
+    height: 30rem;
+    padding: 1rem;
+    padding-bottom: 0rem;
+    width: 100%;
+    overflow: scroll;
+  }
+
+  &__message {
+    background-color:#bbb;
+    border-radius: .5rem;
+    padding: .5rem;
+    
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  &__message--self {
+    background-color:#eee;
+  }
+
+  &__messages_start {
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #999;
+  }
+}
