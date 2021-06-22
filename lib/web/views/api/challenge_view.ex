@@ -87,6 +87,7 @@ defmodule Web.Api.ChallengeView do
       description: HtmlSanitizeEx.basic_html(challenge.description),
       eligibility_requirements: HtmlSanitizeEx.basic_html(challenge.eligibility_requirements),
       end_date: challenge.end_date,
+      upload_logo: challenge.upload_logo,
       events:
         render_many(
           challenge.events,

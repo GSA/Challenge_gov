@@ -288,7 +288,7 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
               <div className="logo-container">
                 { challenge.logo
                   ? <img
-                      className="challenge-logo"
+                      className={challenge.upload_logo ? "custom-logo" : "challenge-logo"}
                       src={imageBase + challenge.logo} alt="challenge logo"
                       title="challenge logo"/>
                   : <img

@@ -286,6 +286,7 @@ defmodule Web.Api.ChallengeControllerTest do
       "terms_equal_rules" => false,
       "prize_type" => "both",
       "primary_type" => "Software and apps",
+      "upload_logo" => nil,
       "multi_phase" => nil,
       "judging_criteria" => "",
       "status" => challenge.status,
