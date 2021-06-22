@@ -40,7 +40,7 @@ export const Winners = ({challenge, phaseWinners, print}) => {
             {renderOverviewImage(phaseWinner)}
             <h1 className="my-3">{phaseWinner.phase_title}</h1>
             <div className="my-3" dangerouslySetInnerHTML={{ __html: phaseWinner.overview }}></div>
-            {phaseWinner.winners.length >= 1 &&
+            {phaseWinner.winners && phaseWinner.winners.length >= 1 &&
               <div className="detail-section winner-grid">{renderWinners(phaseWinner.winners)}</div>
             }
           </div>
