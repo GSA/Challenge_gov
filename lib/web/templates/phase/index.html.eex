@@ -1,23 +1,16 @@
 <div class="content-header">
   <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
-              <i class="fa fa-dashboard"></i> Home
-            <% end %>
-          </li>
-          <li class="breadcrumb-item"><%= link("Challenges", to: Routes.challenge_path(@conn, :index)) %></li>
-          <li class="breadcrumb-item"><%= link(@challenge.title, to: Routes.challenge_path(@conn, :show, @challenge.id)) %></li>
-          <li class="breadcrumb-item active">Phases</li>
-        </ol>
-      </div>
-    </div>
-
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
+      %{text: "Challenges", route: Routes.challenge_path(@conn, :index)},
+      %{text: @challenge.title, route: Routes.challenge_path(@conn, :show, @challenge.id)},
+      %{text: "Phases"},
+    ])%>
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h2>View submissions for <%= @challenge.title %></h2>
+        <h1 class="m-0 text-dark">
+          View submissions for <%= @challenge.title %>
+        </h1>
       </div>
     </div>
 

@@ -2,13 +2,13 @@
   <div class="container-fluid">
     <%= if Accounts.is_solver?(@user) do %>
       <%= SharedView.render_breadcrumbs([
-        %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+        %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
         %{text: "Submissions", route: Routes.submission_path(@conn, :index)},
         %{text: @submission.title || "draft"}
       ])%>
     <% else %>
       <%= SharedView.render_breadcrumbs([
-        %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+        %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
         %{text: "Challenges", route: Routes.challenge_path(@conn, :index)},
         %{text: @challenge.title, route: Routes.challenge_path(@conn, :show, @challenge.id)},
         %{text: "Phases", route: Routes.challenge_phase_path(@conn, :index, @challenge.id), is_visible: length(@challenge.phases) > 1},
