@@ -5,7 +5,6 @@ defmodule Web.Api.ChallengeView do
   alias ChallengeGov.GovDelivery
   alias Web.Api.PaginationView
   alias Web.ChallengeView
-  alias Web.SharedView
 
   def render("index.json", assigns = %{challenges: challenges, pagination: _pagination}) do
     %{

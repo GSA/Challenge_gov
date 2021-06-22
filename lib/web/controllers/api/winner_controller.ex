@@ -4,6 +4,7 @@ defmodule Web.Api.WinnerController do
   alias Web.ErrorView
 
   alias ChallengeGov.PhaseWinners
+  alias ChallengeGov.Winners
 
   plug Web.Plugs.FetchChallenge, [id_param: "phase_winner_id"] when action in [:upload_image]
   plug Web.Plugs.AuthorizeChallenge when action in [:upload_image]

@@ -1027,7 +1027,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> put_change(:non_monetary_prizes, nil)
   end
 
-  defp validate_prizes(struct, params = %{"prize_type" => "non_monetary"}) do
+  defp validate_prizes(struct, _params = %{"prize_type" => "non_monetary"}) do
     struct
     |> validate_required([:non_monetary_prizes])
     |> put_change(:prize_total, 0)

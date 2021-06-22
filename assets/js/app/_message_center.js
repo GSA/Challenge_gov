@@ -11,7 +11,7 @@ $(".message_center__message_form").on("submit", (e) => {
         url: e.target.action,
         data: $(e.target).serialize(),
         success: function(res) {
-          appendMessage(messages, res.content, res.class)
+          appendMessage(messages, res.content, res.class, res.author_name)
           quill.setContents(null)
           scrollMessagesToBottom()
         }
@@ -22,8 +22,9 @@ $(".message_center__message_form").on("submit", (e) => {
   }
 })
 
-const appendMessage = (container, content, className) => {
+const appendMessage = (container, content, className, userName) => {
   container.append(`
+    <div>${userName}</div>
     <div class="${className}">
       ${content}
     </div>

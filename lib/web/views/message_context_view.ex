@@ -3,6 +3,7 @@ defmodule Web.MessageContextView do
 
   alias ChallengeGov.MessageContexts
 
+  alias Web.AccountView
   alias Web.FormView
   alias Web.SharedView
 
