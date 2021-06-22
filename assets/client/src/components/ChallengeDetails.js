@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Tooltip } from 'reactstrap'
 import moment from "moment"
 import { stripHtml } from "string-strip-html";
@@ -19,7 +19,7 @@ import { getPreviousPhase, getCurrentPhase, getNextPhase, phaseInPast, phaseIsCu
 import { ChallengeAnnouncement } from './ChallengeAnnouncement'
 import { ApiUrlContext } from '../ApiUrlContext'
 
-export const ChallengeDetails = ({challenge, preview, print, tab}) => {
+export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
   const { apiUrl, imageBase } = useContext(ApiUrlContext)
   const [followTooltipOpen, setFollowTooltipOpen] = useState(false)
 
@@ -255,8 +255,10 @@ export const ChallengeDetails = ({challenge, preview, print, tab}) => {
     }
   }
 
+  const disableWinners = () => !Object.keys(winners).length >= 1
+
   return (
-    challenge ? (
+    (challenge && !!winners) ? (
       <div className="w-100">
         <section className="hero__wrapper" aria-label="Challenge overview details">
           <section className="hero__content">
@@ -355,8 +357,8 @@ export const ChallengeDetails = ({challenge, preview, print, tab}) => {
           <div label="contact">
             <ContactForm preview={preview} />
           </div>
-          <div label="winners" disabled={!challenge.winner_information} >
-            <Winners challenge={challenge} print={print} />
+          <div label="winners" disabled={disableWinners()}>
+            <Winners challenge={challenge} phaseWinners={winners} print={print} />
           </div>
         </ChallengeTabs>
       </div>

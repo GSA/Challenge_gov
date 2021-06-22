@@ -28,7 +28,7 @@ defmodule ChallengeGov.PhaseWinners do
 
   def get_by_phase_id(phase_id) do
     PhaseWinner
-    |> preload([:winners])
+    |> preload([:winners, :phase])
     |> Repo.get_by(phase_id: phase_id)
     |> case do
       nil ->

@@ -24,6 +24,10 @@
       cursor: not-allowed;
       color: #999999;
     }
+
+    .fa-award {
+      color: #FA9441;
+    }
   }
 
   &__content {
@@ -49,6 +53,14 @@
 
   &__content {
     margin-bottom: 3rem;
+
+    .winner-image {
+      max-width: 100px
+    }
+  }
+
+  .winner-grid {
+    background-color: inherit;
   }
 
   &__resources {

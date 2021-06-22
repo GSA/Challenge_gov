@@ -40,6 +40,12 @@ export const ChallengeTabs = (props) => {
     return disabled ? " challenge-tabs__tab--disabled disabled" : ""
   }
 
+  const renderWinnersIcon = (label, disabled) => {
+    if (label === "winners" && !disabled) {
+      return <i className="fas fa-award mr-2"></i>
+    }
+  }
+
   const renderTabLabels = () => {
     return (
       <ul className="challenge-tabs__list">
@@ -49,8 +55,9 @@ export const ChallengeTabs = (props) => {
             const titleCasedLabel = label === "faq" ? label.toUpperCase() :
               label[0].toUpperCase() + label.slice(1).toLowerCase();
             return (
-              <div {...tabProps(label, disabled)} 
+              <div {...tabProps(label, disabled)}
                   onClick={(e) => handleTabClick(label, disabled)}>
+                {renderWinnersIcon(label, disabled)}
                 {titleCasedLabel}
               </div>
             )

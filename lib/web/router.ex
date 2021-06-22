@@ -209,6 +209,8 @@ defmodule Web.Router do
 
     resources("/messages/:message_context_id", MessageController, only: [:create])
     post("/message_context_status/:id/star", MessageContextStatusController, :toggle_starred)
+
+    get("/phase/:phase_id/winners", WinnerController, :phase_winners)
   end
 
   # Public Routes
