@@ -107,7 +107,7 @@ defmodule ChallengeGov.MessageContextStatuses do
 
     user_ids = admin_user_ids ++ challenge_owner_user_ids ++ solver_user_ids
 
-    user_ids
+    Enum.uniq(user_ids)
   end
 
   def toggle_starred(message_context_status) do
