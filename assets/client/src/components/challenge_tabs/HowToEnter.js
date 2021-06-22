@@ -9,11 +9,7 @@ export const HowToEnter = ({challenge, print}) => {
   const renderPhaseData = (phases) => {
     if (isSinglePhase(challenge)) {
       return (
-        <div className="card">
-          <div className="card-body">
-            <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phases[0].how_to_enter }}></div>
-          </div>
-        </div>
+        <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phases[0].how_to_enter }}></div>
       )
     } else {
       return (

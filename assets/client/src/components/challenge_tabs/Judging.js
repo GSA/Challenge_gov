@@ -9,11 +9,7 @@ export const Judging = ({challenge, print}) => {
   const renderPhaseData = (phases) => {
     if (isSinglePhase(challenge)) {
       return (
-        <div className="card">
-          <div className="card-body">
-            <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phases[0].judging_criteria }}></div>z
-          </div>
-        </div>
+        <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phases[0].judging_criteria }}></div>
       )
     } else {
       return (
