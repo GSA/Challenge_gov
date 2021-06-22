@@ -1,4 +1,14 @@
 .message_center {
+  &__star {
+    cursor: pointer;
+  }
+
+  &__sidebar {
+    height: 100%;
+    background-color: #999;
+    color: #fff;
+  }
+
   &__message_box {
     position: relative;
     overflow: hidden;

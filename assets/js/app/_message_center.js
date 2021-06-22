@@ -39,3 +39,22 @@ const scrollMessagesToBottom = () => {
 }
 
 scrollMessagesToBottom()
+
+$(".message_center__star").on("click", (e) => {
+  url = $(e.target).data("url")
+
+  $.ajax({
+    type: "POST",
+    url: url,
+    success: function(res) {
+      console.log("RES", res)
+      if (res.starred) {
+        $(e.target).removeClass("far")
+        $(e.target).addClass("fas")
+      } else {
+        $(e.target).removeClass("fas")
+        $(e.target).addClass("far")
+      }
+    }
+  });
+})

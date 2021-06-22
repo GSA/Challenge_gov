@@ -2,6 +2,8 @@ defmodule ChallengeGov.MessageContextStatuses do
   @moduledoc """
   Context for MessageContextStatuses
   """
+  @behaviour Stein.Filter
+
   import Ecto.Query
 
   alias Ecto.Multi
@@ -11,13 +13,27 @@ defmodule ChallengeGov.MessageContextStatuses do
   alias ChallengeGov.Challenges
   alias ChallengeGov.Submissions
   alias ChallengeGov.Messages.MessageContextStatus
+  alias Stein.Filter
 
-  def all_for_user(user) do
+  def all_for_user(user, opts \\ []) do
     MessageContextStatus
     |> preload([:context])
     |> order_by([mcs], desc: mcs.updated_at)
     |> where([mcs], mcs.user_id == ^user.id)
+    |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.all()
+  end
+
+  def get(id) do
+    MessageContextStatus
+    |> Repo.get(id)
+    |> case do
+      nil ->
+        {:error, :not_found}
+
+      message_context_status ->
+        {:ok, message_context_status}
+    end
   end
 
   def get(user, context) do
@@ -92,5 +108,17 @@ defmodule ChallengeGov.MessageContextStatuses do
     user_ids = admin_user_ids ++ challenge_owner_user_ids ++ solver_user_ids
 
     user_ids
+  end
+
+  def toggle_starred(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{starred: !message_context_status.starred})
+    |> Repo.update()
+  end
+
+  @impl Stein.Filter
+  def filter_on_attribute({"starred", value}, query) do
+    query
+    |> where([mcs], mcs.starred == ^value)
   end
 end

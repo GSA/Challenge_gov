@@ -208,6 +208,7 @@ defmodule Web.Router do
     post("/challenges/:challenge_id/contact_form", ContactFormController, :send_email)
 
     resources("/messages/:message_context_id", MessageController, only: [:create])
+    post("/message_context_status/:id/star", MessageContextStatusController, :toggle_starred)
   end
 
   # Public Routes

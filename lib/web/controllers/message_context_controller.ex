@@ -6,10 +6,11 @@ defmodule Web.MessageContextController do
   alias ChallengeGov.MessageContextStatuses
   alias ChallengeGov.Messages
 
-  def index(conn, _params) do
+  def index(conn, params) do
     %{current_user: user} = conn.assigns
 
-    message_context_statuses = MessageContextStatuses.all_for_user(user)
+    filter = Map.get(params, "filter", %{})
+    message_context_statuses = MessageContextStatuses.all_for_user(user, filter: filter)
 
     conn
     |> assign(:message_context_statuses, message_context_statuses)
