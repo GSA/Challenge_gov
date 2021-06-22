@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Tooltip } from 'reactstrap'
 import moment from "moment"
+import { stripHtml } from "string-strip-html";
 
 import { ChallengeTabs } from "../components/ChallengeTabs"
 import { Overview } from "../components/challenge_tabs/Overview"
@@ -18,7 +19,7 @@ import { getPreviousPhase, getCurrentPhase, getNextPhase, phaseInPast, phaseIsCu
 import { ChallengeAnnouncement } from './ChallengeAnnouncement'
 import { ApiUrlContext } from '../ApiUrlContext'
 
-export const ChallengeDetails = ({challenge, preview, print, tab}) => {
+export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
   const { apiUrl, imageBase } = useContext(ApiUrlContext)
   const [followTooltipOpen, setFollowTooltipOpen] = useState(false)
 
@@ -46,12 +47,12 @@ export const ChallengeDetails = ({challenge, preview, print, tab}) => {
     }
   }
 
-  const renderChallengeTypes = (types) => {
+  const renderChallengeTypes = (types, other_type) => {
     return types.map((t, i) => {
-      if (i == types.length - 1) {
-        return <p key={i}>{t} </p>
+      if (i == types.length - 1 && !challenge.other_type) {
+        return <span key={i}>{`${t} `} </span>
       } else {
-        return <p key={i}>{t}, </p>
+        return <span key={i}>{`${t}; `} </span>
       }
     })
   }
@@ -254,8 +255,10 @@ export const ChallengeDetails = ({challenge, preview, print, tab}) => {
     }
   }
 
+  const disableWinners = () => !Object.keys(winners).length >= 1
+
   return (
-    challenge ? (
+    (challenge && !!winners) ? (
       <div className="w-100">
         <section className="hero__wrapper" aria-label="Challenge overview details">
           <section className="hero__content">
@@ -280,12 +283,12 @@ export const ChallengeDetails = ({challenge, preview, print, tab}) => {
                 }
                 <h4 className="title">{challenge.title}</h4>
                 <h5 className="tagline">{challenge.tagline}</h5>
-                <p className="brief_description">{challenge.brief_description}</p>
+                <div dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
               </div>
               <div className="logo-container">
                 { challenge.logo
                   ? <img
-                      className="challenge-logo"
+                      className={challenge.upload_logo ? "custom-logo" : "challenge-logo"}
                       src={imageBase + challenge.logo} alt="challenge logo"
                       title="challenge logo"/>
                   : <img
@@ -304,11 +307,12 @@ export const ChallengeDetails = ({challenge, preview, print, tab}) => {
               </div>
               {renderWhoCanApply(challenge)}
               <div className="item">
-                { challenge.types.length > 1
-                  ? <p className="info-title">Challenge types:</p>
-                  : <p className="info-title">Challenge type:</p>
+                { challenge.types.length > 1 || challenge.other_type
+                  ? <><span className="info-title">Challenge types:</span><span>{`${challenge.primary_type}; `}</span></>
+                  : <><span className="info-title">Challenge type:</span><span>{`${challenge.primary_type}`}</span></>
                 }
-                {renderChallengeTypes(challenge.types)}
+                {renderChallengeTypes(challenge.types, challenge.other_type)}
+                {challenge.other_type}
               </div>
               { !challenge.prize_total || challenge.prize_total != 0 &&
                 <div className="item">
@@ -353,8 +357,8 @@ export const ChallengeDetails = ({challenge, preview, print, tab}) => {
           <div label="contact">
             <ContactForm preview={preview} />
           </div>
-          <div label="winners" disabled={!challenge.winner_information} >
-            <Winners challenge={challenge} print={print} />
+          <div label="winners" disabled={disableWinners()}>
+            <Winners challenge={challenge} phaseWinners={winners} print={print} />
           </div>
         </ChallengeTabs>
       </div>
