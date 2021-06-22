@@ -19,7 +19,7 @@ import { getPreviousPhase, getCurrentPhase, getNextPhase, phaseInPast, phaseIsCu
 import { ChallengeAnnouncement } from './ChallengeAnnouncement'
 import { ApiUrlContext } from '../ApiUrlContext'
 
-export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
+export const ChallengeDetails = ({challenge, challengePhases, preview, print, tab}) => {
   const { apiUrl, imageBase } = useContext(ApiUrlContext)
   const [followTooltipOpen, setFollowTooltipOpen] = useState(false)
 
@@ -250,10 +250,20 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
     }
   }
 
-  const disableWinners = () => !Object.keys(winners).length >= 1;
+  const disableWinners = () => {
+    return challengePhases.every(phase => {
+      const phaseWinners = phase.phase_winners
+      return (
+        phaseWinners.length === 0 ||
+        phaseWinners.overview === "" ||
+        !phaseWinners.overview_image_path ||
+        (!!phaseWinners.winners && phaseWinners.winners.length === 0)
+      )
+    })
+  }
 
   return (
-    (challenge && !!winners) ? (
+    (challenge && !!challengePhases) ? (
       <div className="w-100">
         <section className="hero__wrapper" aria-label="Challenge overview details">
           <section className="hero__content">
@@ -358,7 +368,7 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
             <ContactForm preview={preview} />
           </div>
           <div label="winners" disabled={disableWinners()}>
-            <Winners challenge={challenge} phaseWinners={winners} print={print} />
+            <Winners challenge={challenge} challengePhases={challengePhases} print={print} />
           </div>
         </ChallengeTabs>
       </div>
