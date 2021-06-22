@@ -250,16 +250,7 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
     }
   }
 
-  const disableWinners = () => {
-    return (winners.length >= 1 && !Object.keys(winners.winners).length >= 1)
-    // if (winners) {
-    //   console.log({winners})
-    //   console.log(!Object.keys(winners).length >= 1)
-    //   if (winners.winners) {
-    //     console.log(winners.winners)
-    //   }
-    // }
-  }
+  const disableWinners = () => !Object.keys(winners).length >= 1;
 
   return (
     (challenge && !!winners) ? (
