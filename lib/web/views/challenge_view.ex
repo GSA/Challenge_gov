@@ -446,6 +446,14 @@ defmodule Web.ChallengeView do
     )
   end
 
+  def cancel_button(conn) do
+    link("cancel",
+      to: Routes.challenge_path(conn, :index),
+      class: "btn btn-link",
+      formnovalidate: true
+    )
+  end
+
   def save_draft_button(section) do
     if section != Enum.at(Challenges.sections(), -1).id do
       submit("Save Draft",

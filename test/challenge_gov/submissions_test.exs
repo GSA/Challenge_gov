@@ -91,7 +91,9 @@ defmodule ChallengeGov.SubmissionsTest do
             "title" => "Test Title",
             "brief_description" => "Test Brief Description",
             "description" => "Test Description",
-            "external_url" => "www.example.com"
+            "external_url" => "www.example.com",
+            "terms_accepted" => "true",
+            "review_verified" => "true"
           },
           user,
           challenge,
@@ -205,7 +207,7 @@ defmodule ChallengeGov.SubmissionsTest do
       {:ok, updated_submission} =
         Submissions.update_review(
           submission,
-          %{"title" => "New Test Title"}
+          %{"title" => "New Test Title", "terms_accepted" => "true", "review_verified" => "true"}
         )
 
       {:ok, updated_submission} = Submissions.submit(updated_submission)

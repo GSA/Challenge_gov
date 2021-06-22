@@ -44,6 +44,7 @@ defmodule ChallengeGov.Submissions.Submission do
     has_one(:invite, SubmissionInvite)
     has_many(:documents, Document)
     field(:document_ids, :map, virtual: true)
+    field(:document_objects, :map, virtual: true)
 
     # Fields
     field(:title, :string)
@@ -110,6 +111,8 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
+    |> validate_acceptance(:terms_accepted, message: "must be accepted")
+    |> validate_review_verified(params)
     |> validate_required([
       :title,
       :brief_description,
@@ -139,6 +142,8 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
+    |> validate_acceptance(:terms_accepted, message: "must be accepted")
+    |> validate_review_verified(params)
     |> validate_required([
       :title,
       :brief_description,
@@ -172,7 +177,7 @@ defmodule ChallengeGov.Submissions.Submission do
   end
 
   defp validate_required_fields(struct) do
-    %{title: t, brief_description: bd, description: d} = struct.data
+    %{title: t, brief_description: bd, description: d, terms_accepted: ta} = struct.data
 
     struct = if is_blank?(t), do: add_error(struct, :title, "can't be blank"), else: struct
 
@@ -181,7 +186,26 @@ defmodule ChallengeGov.Submissions.Submission do
 
     struct = if is_blank?(d), do: add_error(struct, :description, "can't be blank"), else: struct
 
+    struct = if ta, do: struct, else: add_error(struct, :terms_accepted, "must be accepted")
+
+    struct = validate_review_verified(struct, %{})
+
     struct
+  end
+
+  defp validate_review_verified(struct, params) do
+    rv = struct.data.review_verified || params["review_verified"]
+
+    cond do
+      is_nil(struct.data.manager_id) ->
+        struct
+
+      !!struct.data.manager_id and rv ->
+        struct
+
+      true ->
+        add_error(struct, :review_verified, "must verify this submission")
+    end
   end
 
   defp is_blank?(string) do

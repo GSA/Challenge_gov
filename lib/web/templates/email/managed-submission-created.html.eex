@@ -1,3 +1,3 @@
 <div>A new submission has been created for you</div>
 <b>IMPORTANT: To complete this entry you must review the submission by clicking the link below:</b>
-<%= link("link", to: Routes.challenge_phase_submission_url(Endpoint, :show, @submission.challenge_id, @phase.id, @submission.id)) %>
+<%= link("link", to: Routes.submission_path(Endpoint, :edit, @submission.id)) %>

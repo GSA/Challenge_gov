@@ -22,6 +22,8 @@ defmodule Web.SubmissionController do
 
   plug Web.Plugs.FetchPage when action in [:index, :show, :managed_submissions]
 
+  plug(Web.Plugs.FetchSubmission when action in [:edit, :show, :update, :submit, :delete])
+
   action_fallback(Web.FallbackController)
 
   def index(conn, params = %{"challenge_id" => challenge_id}) do
@@ -62,13 +64,27 @@ defmodule Web.SubmissionController do
 
     sort = Map.get(params, "sort", %{})
 
+    %{page: unreviewed_submissions, pagination: unreviewed_pagination} =
+      Submissions.all_unreviewed_by_submitter_id(
+        user.id,
+        page: String.to_integer(params["unreviewed"]["page"] || "1"),
+        per: 5
+      )
+
     %{page: submissions, pagination: pagination} =
-      Submissions.all_by_submitter_id(user.id, filter: filter, sort: sort, page: page, per: per)
+      Submissions.all_submissible_by_submitter_id(user.id,
+        filter: filter,
+        sort: sort,
+        page: page,
+        per: per
+      )
 
     conn
     |> assign(:user, user)
     |> assign(:submissions, submissions)
     |> assign(:pagination, pagination)
+    |> assign(:unreviewed_submissions, unreviewed_submissions)
+    |> assign(:unreviewed_pagination, unreviewed_pagination)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> render("index.html")
@@ -106,14 +122,13 @@ defmodule Web.SubmissionController do
     |> render("index_managed.html")
   end
 
-  def show(conn, params = %{"id" => id}) do
-    %{current_user: user, page: page} = conn.assigns
+  def show(conn, params = %{"id" => _id}) do
+    %{current_user: user, current_submission: submission, page: page} = conn.assigns
 
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
 
-    with {:ok, submission} <- Submissions.get(id),
-         {:ok, phase} <- Phases.get(submission.phase_id),
+    with {:ok, phase} <- Phases.get(submission.phase_id),
          {:ok, challenge} <- Challenges.get(submission.challenge_id) do
       conn
       |> assign(:user, user)
@@ -126,6 +141,11 @@ defmodule Web.SubmissionController do
       |> assign(:action, action_name(conn))
       |> assign(:navbar_text, submission.title || "Submission #{submission.id}")
       |> render("show.html")
+    else
+      {:error, :not_found} ->
+        conn
+        |> put_flash(:error, "Submission not found")
+        |> redirect_by_user_type(user, submission)
     end
   end
 
@@ -133,7 +153,7 @@ defmodule Web.SubmissionController do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(challenge_id)
 
-    with true <- Accounts.role_at_or_above(user, "challenge_owner"),
+    with true <- Accounts.has_admin_access?(user),
          true <- challenge.sub_status != "archived" do
       phase =
         Enum.find(challenge.phases, fn %{id: id} ->
@@ -152,7 +172,15 @@ defmodule Web.SubmissionController do
       _ ->
         conn
         |> put_flash(:error, "Action not permitted")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
+        |> redirect(
+          to:
+            Routes.challenge_phase_managed_submission_path(
+              conn,
+              :managed_submissions,
+              challenge_id,
+              phase_id
+            )
+        )
     end
   end
 
@@ -172,13 +200,12 @@ defmodule Web.SubmissionController do
     else
       {:error, :no_current_phase} ->
         conn
-        |> put_flash(:error, "No current phase found")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
+        |> redirect(to: Routes.public_challenge_details_path(conn, :index, challenge_id))
 
       {:error, :not_found} ->
         conn
         |> put_flash(:error, "Challenge not found")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
+        |> redirect(to: Routes.public_challenge_index_path(conn, :index))
     end
   end
 
@@ -240,55 +267,58 @@ defmodule Web.SubmissionController do
   end
 
   def edit(conn, %{"id" => id}) do
-    %{current_user: user} = conn.assigns
-    {:ok, submission} = Submissions.get(id)
+    %{current_user: user, current_submission: submission} = conn.assigns
 
-    case Submissions.allowed_to_edit(user, submission) do
-      {:ok, submission} ->
-        conn
-        |> assign(:user, user)
-        |> assign(:submission, submission)
-        |> assign(:challenge, submission.challenge)
-        |> assign(:phase, submission.phase)
-        |> assign(:action, action_name(conn))
-        |> assign(:path, Routes.submission_path(conn, :update, id))
-        |> assign(:changeset, Submissions.edit(submission))
-        |> assign(:navbar_text, "Edit submission")
-        |> render("edit.html")
-
+    with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+         {:ok, submission} <- Submissions.is_editable(user, submission) do
+      conn
+      |> assign(:user, user)
+      |> assign(:submission, submission)
+      |> assign(:challenge, submission.challenge)
+      |> assign(:phase, submission.phase)
+      |> assign(:action, action_name(conn))
+      |> assign(:path, Routes.submission_path(conn, :update, id))
+      |> assign(:changeset, Submissions.edit(submission))
+      |> assign(:navbar_text, "Edit submission")
+      |> render("edit.html")
+    else
       {:error, :not_permitted} ->
         conn
+        |> put_flash(:error, "You are not authorized to edit this submission")
+        |> redirect_by_user_type(user, submission)
+
+      {:error, :not_editable} ->
+        conn
         |> put_flash(:error, "Submission cannot be edited")
-        |> post_delete_redirect(user, submission)
+        |> redirect_by_user_type(user, submission)
     end
   end
 
   def update(conn, %{"id" => id, "action" => "draft", "submission" => submission_params}) do
-    %{current_user: user} = conn.assigns
+    %{current_user: user, current_submission: submission} = conn.assigns
 
     {submitter, _submission_params} = get_params_by_current_user(submission_params, user)
     submission_params = Map.put_new(submission_params, "submitter_id", submitter.id)
 
-    with {:ok, submission} <- Submissions.get(id),
-         {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+    with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+         {:ok, submission} <- Submissions.is_editable(user, submission),
          true <- Submissions.has_not_been_submitted?(submission),
          {:ok, submission} <- Submissions.update_draft(submission, submission_params) do
       conn
       |> put_flash(:info, "Submission draft saved")
       |> redirect(to: Routes.submission_path(conn, :edit, submission.id))
     else
-      {:error, :not_found} ->
-        conn
-        |> put_flash(:error, "Submission does not exist")
-        |> redirect(to: Routes.submission_path(conn, :index))
-
       {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "Submission cannot be edited")
+        |> put_flash(:error, "Action not authorized")
         |> redirect(to: Routes.submission_path(conn, :index))
 
+      {:error, :not_editable} ->
+        conn
+        |> put_flash(:error, "Submission cannot be edited")
+        |> redirect_by_user_type(user, submission)
+
       {:error, changeset} ->
-        {:ok, submission} = Submissions.get(id)
         update_error(conn, changeset, user, submission)
 
       false ->
@@ -298,26 +328,25 @@ defmodule Web.SubmissionController do
     end
   end
 
-  def update(conn, %{"id" => id, "action" => "review", "submission" => submission_params}) do
-    %{current_user: user} = conn.assigns
+  def update(conn, %{"id" => _id, "action" => "review", "submission" => submission_params}) do
+    %{current_user: user, current_submission: submission} = conn.assigns
 
-    with {:ok, submission} <- Submissions.get(id),
-         {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+    with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+         {:ok, submission} <- Submissions.is_editable(user, submission),
          {:ok, submission} <- Submissions.update_review(submission, submission_params) do
       redirect(conn, to: Routes.submission_path(conn, :show, submission.id))
     else
-      {:error, :not_found} ->
-        conn
-        |> put_flash(:error, "This submission does not exist")
-        |> redirect(to: Routes.submission_path(conn, :index))
-
       {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "You are not allowed to edit this submission")
+        |> put_flash(:error, "You are not authorized to edit this submission")
+        |> redirect_by_user_type(user, submission)
+
+      {:error, :not_editable} ->
+        conn
+        |> put_flash(:error, "Submission cannot be edited")
         |> redirect(to: Routes.submission_path(conn, :index))
 
       {:error, changeset} ->
-        {:ok, submission} = Submissions.get(id)
         update_error(conn, changeset, user, submission)
     end
   end
@@ -336,29 +365,30 @@ defmodule Web.SubmissionController do
   end
 
   def submit(conn, %{"id" => id}) do
-    %{current_user: user} = conn.assigns
-    {:ok, submission} = Submissions.get(id)
+    %{current_user: user, current_submission: submission} = conn.assigns
 
     with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+         {:ok, submission} <- Submissions.is_editable(user, submission),
          {:ok, submission} <- Submissions.submit(submission, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "Submission saved")
       |> redirect(to: Routes.submission_path(conn, :show, submission.id))
     else
-      {:error, :not_found} ->
-        conn
-        |> put_flash(:error, "This submission does not exist")
-        |> redirect(to: Routes.submission_path(conn, :index))
-
       {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "You are not allowed to edit this submission")
+        |> put_flash(:error, "You are not authorized to edit this submission")
+        |> redirect_by_user_type(user, submission)
+
+      {:error, :not_editable} ->
+        conn
+        |> put_flash(:error, "Submission cannot be edited")
         |> redirect(to: Routes.submission_path(conn, :index))
 
       {:error, changeset} ->
         conn
         |> assign(:user, user)
         |> assign(:submission, submission)
+        |> assign(:phase, submission.phase)
         |> assign(:action, action_name(conn))
         |> assign(:path, Routes.submission_path(conn, :update, id))
         |> assign(:changeset, changeset)
@@ -366,32 +396,31 @@ defmodule Web.SubmissionController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    %{current_user: user} = conn.assigns
-    {:ok, submission} = Submissions.get(id)
+  def delete(conn, %{"id" => _id}) do
+    %{current_user: user, current_submission: submission} = conn.assigns
 
     with {:ok, submission} <- Submissions.allowed_to_delete(user, submission),
          {:ok, submission} <- Submissions.delete(submission) do
       conn
       |> put_flash(:info, "Submission deleted")
-      |> post_delete_redirect(user, submission)
+      |> redirect_by_user_type(user, submission)
     else
       {:error, :not_permitted} ->
         conn
         |> put_flash(:error, "You are not authorized to delete this submission")
-        |> post_delete_redirect(user, submission)
+        |> redirect_by_user_type(user, submission)
 
       {:error, _changeset} ->
         conn
         |> put_flash(:error, "Something went wrong")
-        |> post_delete_redirect(user, submission)
+        |> redirect_by_user_type(user, submission)
     end
   end
 
-  def post_delete_redirect(conn, %{id: id}, %{submitter_id: id}),
+  def redirect_by_user_type(conn, %{id: id}, %{submitter_id: id}),
     do: redirect(conn, to: Routes.submission_path(conn, :index))
 
-  def post_delete_redirect(conn, user, submission) do
+  def redirect_by_user_type(conn, user, submission) do
     if Accounts.has_admin_access?(user) do
       redirect(conn,
         to:

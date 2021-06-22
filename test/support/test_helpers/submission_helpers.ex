@@ -12,7 +12,9 @@ defmodule ChallengeGov.TestHelpers.SubmissionHelpers do
         "title" => "Test Title",
         "brief_description" => "Test Brief Description",
         "description" => "Test Description",
-        "external_url" => "www.example.com"
+        "external_url" => "www.example.com",
+        "terms_accepted" => "true",
+        "review_verified" => "true"
       },
       attributes
     )

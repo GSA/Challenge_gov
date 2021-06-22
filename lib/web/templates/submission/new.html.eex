@@ -27,7 +27,7 @@
         <div class="card p-3">
           <h4>Create a submission for:</h4>
           <%= render Web.SubmissionView, "_header.html", conn: @conn, challenge: @challenge, phase: @phase %>
-          <%= render Web.SubmissionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.challenge_phase_submission_path(@conn, :create, @challenge.id, @phase.id), user: @user, challenge: @challenge %>
+          <%= render Web.SubmissionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.challenge_phase_submission_path(@conn, :create, @challenge.id, @phase.id), user: @user, challenge: @challenge, phase: @phase %>
         </div>
       </div>
     </div>

@@ -221,6 +221,7 @@ defmodule Web.Router do
     get("/", PageController, :index)
     get("/challenges", PageController, :index, as: :challenge_index)
     get("/challenges#/challenge/:id", PageController, :index, as: :challenge_details)
+    get("/challenges#/challenge/:id/:tab", PageController, :index, as: :challenge_details)
   end
 
   if Mix.env() == :dev do

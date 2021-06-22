@@ -9,7 +9,7 @@ export const DetailsPage = (props) => {
   const [currentChallenge, setCurrentChallenge] = useState()
   const [loadingState, setLoadingState] = useState(true)
 
-  let { challengeId } = useParams();
+  let { challengeId, tab } = useParams();
   const { apiUrl } = useContext(ApiUrlContext)
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export const DetailsPage = (props) => {
   return (
     <div>
       {currentChallenge &&
-        <ChallengeDetails challenge={currentChallenge} />
+        <ChallengeDetails challenge={currentChallenge} tab={tab}/>
       }
     </div>
   )

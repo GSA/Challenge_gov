@@ -225,7 +225,8 @@ defmodule Web.SubmissionControllerTest do
 
       conn = get(conn, Routes.submission_path(conn, :show, submission.id))
 
-      assert conn.status === 404
+      assert conn.status === 302
+      assert get_flash(conn, :error) === "Submission not found"
     end
   end
 
@@ -304,7 +305,9 @@ defmodule Web.SubmissionControllerTest do
           "title" => "Test title",
           "brief_description" => "Test brief description",
           "description" => "Test description",
-          "external_url" => "Test external url"
+          "external_url" => "Test external url",
+          "terms_accepted" => "true",
+          "review_verified" => "true"
         },
         "challenge_id" => challenge.id,
         "phase_id" => "#{phase.id}"
@@ -386,7 +389,7 @@ defmodule Web.SubmissionControllerTest do
 
       conn = get(conn, Routes.submission_path(conn, :edit, submission.id))
 
-      assert get_flash(conn, :error) === "Submission cannot be edited"
+      assert get_flash(conn, :error) === "You are not authorized to edit this submission"
       assert redirected_to(conn) === Routes.submission_path(conn, :index)
     end
   end
@@ -433,16 +436,6 @@ defmodule Web.SubmissionControllerTest do
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
-
-      _params = %{
-        "action" => "draft",
-        "submission" => %{
-          "title" => "New test title",
-          "brief_description" => "Test brief description",
-          "description" => "Test description",
-          "external_url" => nil
-        }
-      }
 
       conn = get(conn, Routes.submission_path(conn, :edit, submission.id))
       assert html_response(conn, 200) =~ "Review and submit"
@@ -514,7 +507,9 @@ defmodule Web.SubmissionControllerTest do
           "title" => "New test title",
           "brief_description" => "New test brief description",
           "description" => "New test description",
-          "external_url" => "www.test_example.com"
+          "external_url" => "www.test_example.com",
+          "terms_accepted" => "true",
+          "review_verified" => "true"
         }
       }
 
@@ -547,7 +542,7 @@ defmodule Web.SubmissionControllerTest do
 
       conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
 
-      assert get_flash(conn, :error) === "You are not allowed to edit this submission"
+      assert get_flash(conn, :error) === "You are not authorized to edit this submission"
       assert redirected_to(conn) === Routes.submission_path(conn, :index)
     end
 
@@ -577,39 +572,19 @@ defmodule Web.SubmissionControllerTest do
 
       {:ok, submission} = Submissions.delete(submission)
 
-      params = %{
-        "action" => "review",
-        "submission" => %{
-          "title" => "New test title",
-          "brief_description" => "New test brief description",
-          "description" => "New test description",
-          "external_url" => "www.test_example.com"
-        }
-      }
+      conn = put(conn, Routes.submission_path(conn, :update, submission.id), %{})
 
-      conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
-
-      assert get_flash(conn, :error) === "This submission does not exist"
-      assert redirected_to(conn) === Routes.submission_path(conn, :index)
+      assert conn.status === 302
+      assert get_flash(conn, :error) === "Submission not found"
     end
 
     test "attempting to update a submission that doesn't exist", %{conn: conn} do
       conn = prep_conn(conn)
 
-      params = %{
-        "action" => "review",
-        "submission" => %{
-          "title" => "New test title",
-          "brief_description" => "New test brief description",
-          "description" => "New test description",
-          "external_url" => "www.test_example.com"
-        }
-      }
+      conn = put(conn, Routes.submission_path(conn, :update, 1), %{})
 
-      conn = put(conn, Routes.submission_path(conn, :update, 1), params)
-
-      assert get_flash(conn, :error) === "This submission does not exist"
-      assert redirected_to(conn) === Routes.submission_path(conn, :index)
+      assert conn.status === 302
+      assert get_flash(conn, :error) === "Submission not found"
     end
   end
 
