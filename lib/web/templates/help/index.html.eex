@@ -1,0 +1,31 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+      %{text: "Help"},
+    ])%>
+  </div>
+</div>
+
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          <span>Help</span>
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div>
+      <%= link("Toolkit", to: "https://www.challenge.gov/toolkit/", target: "_blank") %>
+    </div>
+    <div>
+      <%= link("FAQ", to: "https://www.challenge.gov/toolkit/faq/", target: "_blank") %>
+    </div>
+  </div>
+</section>

@@ -42,6 +42,11 @@ p {
   }
 }
 
+.floating-tile {
+  display: flex;
+  justify-content: center;
+}
+
 .challenge-tile {
   max-width: 405px;
 

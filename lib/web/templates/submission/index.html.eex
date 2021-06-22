@@ -2,7 +2,7 @@
 <div class="content-header">
   <div class="container-fluid">
     <%= SharedView.render_breadcrumbs([
-      %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+      %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
       %{text: "Submissions"},
     ])%>
     <%= if length(@unreviewed_submissions) > 0 && Accounts.is_solver?(@user) do %>

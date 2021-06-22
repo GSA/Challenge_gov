@@ -443,6 +443,10 @@ label {
   cursor: pointer;
 }
 
+.nav-item.hr {
+  border-top: 1px solid #343a40;
+}
+
 .nav-icon {
   &.icon-submissions {
     display: inline-block;

@@ -9,6 +9,7 @@ import { PreviewBanner } from '../components/PreviewBanner';
 export const PreviewPage = () => {
   const [currentChallenge, setCurrentChallenge] = useState()
   const [loadingState, setLoadingState] = useState(null)
+  const [challengeWinners, setChallengeWinners] = useState([])
 
   const isMounted = useRef(false)
 
@@ -35,6 +36,25 @@ export const PreviewPage = () => {
       })
   }, [])
 
+  useEffect(() => {
+    setLoadingState(true)
+    if (!!currentChallenge) {
+      currentChallenge.phases.map(phase => {
+        let phaseWinnerApiPath = base_url + `/api/phase/${phase.id}/winners`
+        axios
+          .get(phaseWinnerApiPath)
+          .then(res => {
+            setChallengeWinners([...challengeWinners, res.data])
+            setLoadingState(false)
+          })
+          .catch(e => {
+            setLoadingState(false)
+            console.log({e})
+          })
+      })
+    }
+  }, [currentChallenge])
+
   const launchPrintDialogue = () => {
     if (loadingState === false) {
       setTimeout(() => {
@@ -43,9 +63,15 @@ export const PreviewPage = () => {
     }
   }
 
-  return (
-    <div className="challenge-preview py-5">
-      {!print &&
+  const renderPreviewItems = () => {
+    if (print) {
+      return (
+        <div className="floating-tile">
+          <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
+        </div>
+      )
+    } else {
+      return (
         <div className="challenge-preview__top row mb-5">
           <div className="col-md-4">
             <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
@@ -54,10 +80,16 @@ export const PreviewPage = () => {
             <PreviewBanner challenge={currentChallenge} />
           </div>
         </div>
-      }
+      )
+    }
+  }
+
+  return (
+    <div className="challenge-preview py-5">
+      {renderPreviewItems()}
       <div className="row">
         <div className="col">
-          <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} preview={true} loading={loadingState} print={print} />
+          <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} winners={challengeWinners} preview={true} loading={loadingState} print={print} />
         </div>
       </div>
     </div>

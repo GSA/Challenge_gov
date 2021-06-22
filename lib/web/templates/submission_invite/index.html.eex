@@ -1,21 +1,13 @@
 <div class="content-header">
   <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
-              <i class="fa fa-dashboard"></i> Home
-            <% end %>
-          </li>
-          <li class="breadcrumb-item"><%= link("Challenges", to: Routes.challenge_path(@conn, :index)) %></li>
-          <li class="breadcrumb-item"><%= link(@challenge.title, to: Routes.challenge_path(@conn, :show, @challenge.id)) %></li>
-          <li class="breadcrumb-item"><%= link("Phases", to: Routes.challenge_phase_path(@conn, :index, @challenge.id)) %></li>
-          <li class="breadcrumb-item"><%= link(@phase.title, to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id)) %></li>
-          <li class="breadcrumb-item active">Invite solvers to next phase</li>
-        </ol>
-      </div>
-    </div>
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
+      %{text: "Challenges", route: Routes.challenge_path(@conn, :index)},
+      %{text: @challenge.title, route: Routes.challenge_path(@conn, :show, @challenge.id)},
+      %{text: "Phases", route: Routes.challenge_phase_path(@conn, :index, @challenge.id)},
+      %{text: @phase.title, route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id)},
+      %{text: "Invite solvers to next phase"}
+    ])%>
 
     <div class="row mb-3">
       <div class="col">

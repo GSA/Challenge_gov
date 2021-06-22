@@ -244,11 +244,6 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
           <div className="detail-section__follow">
             {renderFollowButton(challenge)}
             {renderFollowTooltip()}
-            {challenge.uuid &&
-              <a className="follow-btn" href={apiUrl + `/public/previews/challenges/${challenge.uuid}?print=true`} target="_blank">
-                <span className="follow-btn"><i className="fas fa-print mr-3"></i>Print challenge</span>
-              </a>
-            }
           </div>
         </>
       )
@@ -259,7 +254,7 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
     return (winners.length >= 1 && !Object.keys(winners.winners).length >= 1)
   }
   console.log({winners})
-  console.log(winners.winners})
+  console.log(winners.winners)
   console.log(!Object.keys(winners).length >= 1)
 
   return (
@@ -294,11 +289,11 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
                 { challenge.logo
                   ? <img
                       className={challenge.upload_logo ? "custom-logo" : "challenge-logo"}
-                      src={imageBase + challenge.logo} alt="challenge logo"
+                      src={challenge.logo} alt="challenge logo"
                       title="challenge logo"/>
                   : <img
                       className="agency-logo"
-                      src={imageBase + challenge.agency_logo}
+                      src={challenge.agency_logo}
                       alt={`${challenge.agency_name} logo`}
                       title="Challenge agency logo" />
                 }
@@ -325,6 +320,11 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
                   <p>{`$${challenge.prize_total.toLocaleString()}`}</p>
                 </div>
               }
+              {!print &&
+              <a className="follow-btn" href={apiUrl + `/public/previews/challenges/${challenge.uuid}?print=true`} target="_blank">
+                <span className="follow-btn"><i className="fas fa-print mr-2"></i>Print challenge</span>
+              </a>
+            }
             </div>
           </section>
         </section>
