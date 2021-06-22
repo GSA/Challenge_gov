@@ -7,11 +7,11 @@ defmodule Web.Api.WinnerView do
     %{image_path: Storage.url(image_path)}
   end
 
-  def render("phase_winner.json", assigns = %{phase_winner: []}) do
+  def render("phase_winner.json", _assigns = %{phase_winner: []}) do
     %{}
   end
 
-  def render("phase_winner.json", assigns = %{phase_winner: phase_winner}) do
+  def render("phase_winner.json", _assigns = %{phase_winner: phase_winner}) do
     %{
       id: phase_winner.id,
       inserted_at: phase_winner.inserted_at,
