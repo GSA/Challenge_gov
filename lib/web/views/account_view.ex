@@ -3,6 +3,7 @@ defmodule Web.AccountView do
 
   alias ChallengeGov.Accounts.Avatar
   alias Stein.Storage
+  alias Web.SharedView
 
   def avatar_url(user) do
     case is_nil(user.avatar_key) do

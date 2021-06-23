@@ -3,6 +3,7 @@ defmodule Web.TermsView do
 
   alias ChallengeGov.Agencies
   alias ChallengeGov.Security
+  alias Web.SharedView
 
   def challenge_owner_fields(f, user) do
     if user.data.role == "challenge_owner" do

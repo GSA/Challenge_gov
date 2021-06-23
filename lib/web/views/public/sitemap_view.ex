@@ -4,6 +4,7 @@ defmodule Web.Public.SitemapView do
   import XmlBuilder
 
   alias Web.ChallengeView
+  alias Web.SharedView
 
   def render("rss.xml", %{challenges: challenges}) do
     challenges_xml =

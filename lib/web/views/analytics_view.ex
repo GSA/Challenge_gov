@@ -1,6 +1,8 @@
 defmodule Web.AnalyticsView do
   use Web, :view
 
+  alias Web.SharedView
+
   def render_graph(data, opts \\ []) do
     type = Keyword.get(opts, :type, "bar")
     options = Keyword.get(opts, :options, %{})

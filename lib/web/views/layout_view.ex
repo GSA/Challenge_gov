@@ -5,6 +5,7 @@ defmodule Web.LayoutView do
   alias ChallengeGov.Recaptcha
   alias Web.AccountView
   alias Web.PageTitle
+  alias Web.SharedView
 
   def page_title(conn) do
     view = Phoenix.Controller.view_module(conn)

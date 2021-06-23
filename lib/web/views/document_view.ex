@@ -1,6 +1,8 @@
 defmodule Web.DocumentView do
   use Web, :view
 
+  alias Web.SharedView
+
   def render("show.json", %{document: document}) do
     Map.take(document, [:id, :filename])
   end

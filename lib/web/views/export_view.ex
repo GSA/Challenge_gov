@@ -5,6 +5,7 @@ defmodule Web.ExportView do
 
   alias ChallengeGov.Export.CSV
   alias Web.Api.ChallengeView
+  alias Web.SharedView
 
   def format_content(challenge, format) do
     case format do

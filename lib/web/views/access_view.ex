@@ -1,6 +1,8 @@
 defmodule Web.AccessView do
   use Web, :view
 
+  alias Web.SharedView
+
   def recertification_heading_by_status(user) do
     case user.status == "decertified" do
       true ->

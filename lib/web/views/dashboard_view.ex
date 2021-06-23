@@ -4,6 +4,7 @@ defmodule Web.DashboardView do
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Accounts
   alias Web.Endpoint
+  alias Web.SharedView
 
   def recertification_warning(conn, user) do
     case CertificationLogs.get_current_certification(user) do
