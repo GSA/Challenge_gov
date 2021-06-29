@@ -296,15 +296,16 @@ defmodule Web.SubmissionControllerTest do
       conn = prep_conn_admin(conn)
       %{current_user: user} = conn.assigns
 
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
+
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
       phase = challenge.phases |> Enum.at(0)
 
       params = %{
         "action" => "draft",
         "submission" => %{
-          "title" => "Test title",
-          "terms_accepted" => nil,
-          "review_verified" => nil
+          "solver_addr" => solver_user.email,
+          "title" => "Test title"
         },
         "challenge_id" => challenge.id,
         "phase_id" => "#{phase.id}"
@@ -347,18 +348,19 @@ defmodule Web.SubmissionControllerTest do
       conn = prep_conn_admin(conn)
       %{current_user: user} = conn.assigns
 
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
+
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
       phase = challenge.phases |> Enum.at(0)
 
       params = %{
         "action" => "review",
         "submission" => %{
+          "solver_addr" => solver_user.email,
           "title" => "Test title",
           "brief_description" => "Test brief description",
           "description" => "Test description",
-          "external_url" => "Test external url",
-          "terms_accepted" => nil,
-          "review_verified" => nil
+          "external_url" => "Test external url"
         },
         "challenge_id" => challenge.id,
         "phase_id" => "#{phase.id}"
@@ -392,6 +394,34 @@ defmodule Web.SubmissionControllerTest do
       assert changeset.errors[:title]
       assert changeset.errors[:brief_description]
       assert changeset.errors[:description]
+    end
+
+    test "creating a submission and review as a challenge owner", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+
+      admin_user = AccountHelpers.create_user(%{email: "admin_user_2@example.com", role: "admin"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(admin_user, %{user_id: admin_user.id})
+
+      phase = challenge.phases |> Enum.at(0)
+
+      params = %{
+        "action" => "review",
+        "submission" => %{
+          "title" => "Test title",
+          "brief_description" => "Test brief description",
+          "description" => "Test description",
+          "external_url" => "Test external url"
+        },
+        "challenge_id" => challenge.id,
+        "phase_id" => "#{phase.id}"
+      }
+
+      conn = post(conn, Routes.challenge_submission_path(conn, :create, challenge.id), params)
+
+      assert get_flash(conn, :error) === "You are not authorized"
+      assert redirected_to(conn) === Routes.dashboard_path(conn, :index)
     end
   end
 
@@ -443,10 +473,92 @@ defmodule Web.SubmissionControllerTest do
       assert get_flash(conn, :error) === "You are not authorized to edit this submission"
       assert redirected_to(conn) === Routes.submission_path(conn, :index)
     end
+
+    test "failure: viewing the edit submission form for a solver created submission as an admin",
+         %{conn: conn} do
+      conn = prep_conn_admin(conn)
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(solver_user, %{user_id: solver_user.id})
+
+      submission =
+        SubmissionHelpers.create_submitted_submission(
+          %{
+            "terms_accepted" => "true",
+            "review_verified" => "true"
+          },
+          solver_user,
+          challenge
+        )
+
+      conn = get(conn, Routes.submission_path(conn, :edit, submission.id))
+
+      assert get_flash(conn, :error) === "You are not authorized to edit this submission"
+
+      assert redirected_to(conn) ===
+               Routes.challenge_phase_managed_submission_path(
+                 conn,
+                 :managed_submissions,
+                 submission.challenge_id,
+                 submission.phase_id
+               )
+    end
+
+    test "failure: viewing the edit submission form for an admin created submission that's been verified as an admin",
+         %{conn: conn} do
+      conn = prep_conn_admin(conn)
+      %{current_user: admin_user} = conn.assigns
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(solver_user, %{user_id: solver_user.id})
+
+      submission =
+        SubmissionHelpers.create_submitted_submission(
+          %{
+            "manager_id" => admin_user.id,
+            "terms_accepted" => "true",
+            "review_verified" => "true"
+          },
+          solver_user,
+          challenge
+        )
+
+      conn = get(conn, Routes.submission_path(conn, :edit, submission.id))
+
+      assert get_flash(conn, :error) === "Submission cannot be edited"
+
+      assert redirected_to(conn) ===
+               Routes.challenge_phase_managed_submission_path(
+                 conn,
+                 :managed_submissions,
+                 submission.challenge_id,
+                 submission.phase_id
+               )
+    end
+
+    test "failure: viewing the edit submission form as a Challenge Owner", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: challenge_owner} = conn.assigns
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
+          user_id: challenge_owner.id
+        })
+
+      submission = SubmissionHelpers.create_submitted_submission(%{}, solver_user, challenge)
+
+      conn = get(conn, Routes.submission_path(conn, :edit, submission.id))
+
+      assert get_flash(conn, :error) === "You are not authorized"
+      assert redirected_to(conn) === Routes.dashboard_path(conn, :index)
+    end
   end
 
   describe "update action" do
-    test "updating a draft submission and saving as draft", %{conn: conn} do
+    test "updating a draft submission and saving as draft as a solver", %{conn: conn} do
       conn = prep_conn(conn)
       %{current_user: solver_user} = conn.assigns
       admin_user = AccountHelpers.create_user(%{email: "admin_user_2@example.com", role: "admin"})
@@ -464,6 +576,42 @@ defmodule Web.SubmissionControllerTest do
       params = %{
         "action" => "draft",
         "submission" => %{
+          "title" => "New test title",
+          "brief_description" => "Test brief description",
+          "description" => "Test description",
+          "external_url" => nil
+        }
+      }
+
+      conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
+
+      {:ok, submission} = Submissions.get(submission.id)
+
+      assert submission.status === "draft"
+      assert get_flash(conn, :info) === "Submission draft saved"
+      assert redirected_to(conn) === Routes.submission_path(conn, :edit, submission.id)
+    end
+
+    test "updating a draft submission and saving as draft as an admin", %{conn: conn} do
+      conn = prep_conn_admin(conn)
+      %{current_user: admin_user} = conn.assigns
+
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(admin_user, %{user_id: admin_user.id})
+
+      submission =
+        SubmissionHelpers.create_draft_submission(
+          %{"manager_id" => admin_user.id},
+          admin_user,
+          challenge
+        )
+
+      params = %{
+        "action" => "draft",
+        "submission" => %{
+          "solver_addr" => solver_user.email,
           "title" => "New test title",
           "brief_description" => "Test brief description",
           "description" => "Test description",
@@ -604,9 +752,39 @@ defmodule Web.SubmissionControllerTest do
     end
 
     test "failure: updating a verified submission as an admin", %{conn: conn} do
+      conn = prep_conn_admin(conn)
+      %{current_user: admin_user} = conn.assigns
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(admin_user, %{user_id: admin_user.id})
+
+      submission =
+        SubmissionHelpers.create_submitted_submission(
+          %{
+            "manager_id" => admin_user.id,
+            "terms_accepted" => "true",
+            "review_verified" => "true"
+          },
+          admin_user,
+          challenge
+        )
+
+      params = %{
+        "action" => "review",
+        "submission" => %{
+          "title" => "New test title",
+          "brief_description" => "Test brief description",
+          "description" => "New test description"
+        }
+      }
+
+      conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
+
+      assert get_flash(conn, :error) === "Submission cannot be edited"
+      assert redirected_to(conn) === Routes.submission_path(conn, :index)
     end
 
-    test "updating a submission and sending to review", %{conn: conn} do
+    test "updating a submission and sending to review as a solver", %{conn: conn} do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
@@ -623,6 +801,38 @@ defmodule Web.SubmissionControllerTest do
           "external_url" => "www.test_example.com",
           "terms_accepted" => "true",
           "review_verified" => "true"
+        }
+      }
+
+      conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
+
+      {:ok, submission} = Submissions.get(submission.id)
+
+      assert submission.status === "draft"
+      assert redirected_to(conn) === Routes.submission_path(conn, :show, submission.id)
+    end
+
+    test "updating an admin created submission and sending to review as an admin", %{conn: conn} do
+      conn = prep_conn_admin(conn)
+      %{current_user: admin_user} = conn.assigns
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(admin_user, %{user_id: admin_user.id})
+
+      submission =
+        SubmissionHelpers.create_submitted_submission(
+          %{"manager_id" => admin_user.id},
+          admin_user,
+          challenge
+        )
+
+      params = %{
+        "action" => "review",
+        "submission" => %{
+          "title" => "New test title",
+          "brief_description" => "New test brief description",
+          "description" => "New test description",
+          "external_url" => "www.test_example.com"
         }
       }
 
@@ -698,6 +908,34 @@ defmodule Web.SubmissionControllerTest do
 
       assert conn.status === 302
       assert get_flash(conn, :error) === "Submission not found"
+    end
+
+    test "failure: attempting to update a submission as a Challenge Owner", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: challenge_owner} = conn.assigns
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
+          user_id: challenge_owner.id
+        })
+
+      submission = SubmissionHelpers.create_submitted_submission(%{}, solver_user, challenge)
+
+      params = %{
+        "action" => "review",
+        "submission" => %{
+          "title" => "New test title",
+          "brief_description" => "New test brief description",
+          "description" => "New test description",
+          "external_url" => "www.test_example.com"
+        }
+      }
+
+      conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
+
+      assert get_flash(conn, :error) === "You are not authorized"
+      assert redirected_to(conn) === Routes.dashboard_path(conn, :index)
     end
   end
 
@@ -972,6 +1210,28 @@ defmodule Web.SubmissionControllerTest do
                  submission.challenge_id,
                  submission.phase_id
                )
+    end
+
+    test "failure: deleting a submitted submission as a Challenge Owner", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: challenge_owner} = conn.assigns
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
+          user_id: challenge_owner.id
+        })
+
+      submission =
+        SubmissionHelpers.create_submitted_submission(
+          solver_user,
+          challenge
+        )
+
+      conn = delete(conn, Routes.submission_path(conn, :delete, submission))
+
+      assert get_flash(conn, :error) === "You are not authorized"
+      assert redirected_to(conn) === Routes.dashboard_path(conn, :index)
     end
   end
 
