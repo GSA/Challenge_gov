@@ -270,7 +270,7 @@ defmodule Web.SubmissionControllerTest do
   end
 
   describe "create action" do
-    test "saving as a draft", %{conn: conn} do
+    test "saving as a draft as a solver", %{conn: conn} do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
@@ -292,7 +292,31 @@ defmodule Web.SubmissionControllerTest do
       assert redirected_to(conn) === Routes.submission_path(conn, :edit, id)
     end
 
-    test "creating a submission and review", %{conn: conn} do
+    test "saving as a draft as an admin", %{conn: conn} do
+      conn = prep_conn_admin(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = challenge.phases |> Enum.at(0)
+
+      params = %{
+        "action" => "draft",
+        "submission" => %{
+          "title" => "Test title",
+          "terms_accepted" => nil,
+          "review_verified" => nil
+        },
+        "challenge_id" => challenge.id,
+        "phase_id" => "#{phase.id}"
+      }
+
+      conn = post(conn, Routes.challenge_submission_path(conn, :create, challenge.id), params)
+
+      assert %{id: id} = redirected_params(conn)
+      assert redirected_to(conn) === Routes.submission_path(conn, :edit, id)
+    end
+
+    test "creating a submission and review as a solver", %{conn: conn} do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
@@ -308,6 +332,33 @@ defmodule Web.SubmissionControllerTest do
           "external_url" => "Test external url",
           "terms_accepted" => "true",
           "review_verified" => "true"
+        },
+        "challenge_id" => challenge.id,
+        "phase_id" => "#{phase.id}"
+      }
+
+      conn = post(conn, Routes.challenge_submission_path(conn, :create, challenge.id), params)
+
+      assert %{id: id} = redirected_params(conn)
+      assert redirected_to(conn) === Routes.submission_path(conn, :show, id)
+    end
+
+    test "creating a submission and review as an admin", %{conn: conn} do
+      conn = prep_conn_admin(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      phase = challenge.phases |> Enum.at(0)
+
+      params = %{
+        "action" => "review",
+        "submission" => %{
+          "title" => "Test title",
+          "brief_description" => "Test brief description",
+          "description" => "Test description",
+          "external_url" => "Test external url",
+          "terms_accepted" => nil,
+          "review_verified" => nil
         },
         "challenge_id" => challenge.id,
         "phase_id" => "#{phase.id}"
@@ -491,6 +542,68 @@ defmodule Web.SubmissionControllerTest do
       %{changeset: changeset} = conn.assigns
 
       assert changeset.errors[:description]
+    end
+
+    test "failure: updating a submission as a solver without accepting the terms", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
+
+      params = %{
+        "action" => "review",
+        "submission" => %{
+          "title" => "New test title",
+          "brief_description" => "Test brief description",
+          "description" => "New test description",
+          "terms_accepted" => "false"
+        }
+      }
+
+      conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
+
+      %{changeset: changeset} = conn.assigns
+
+      assert changeset.errors[:terms_accepted]
+    end
+
+    test "failure: updating an unverified submission as a solver without verifying it", %{
+      conn: conn
+    } do
+      conn = prep_conn_admin(conn)
+      %{current_user: user} = conn.assigns
+      solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
+
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      submission =
+        SubmissionHelpers.create_submitted_submission(
+          %{"manager_id" => user.id},
+          solver_user,
+          challenge
+        )
+
+      params = %{
+        "action" => "review",
+        "submission" => %{
+          "title" => "New test title",
+          "brief_description" => "Test brief description",
+          "description" => "New test description",
+          "terms_accepted" => "true",
+          "review_verified" => "false"
+        }
+      }
+
+      conn = put(conn, Routes.submission_path(conn, :update, submission.id), params)
+
+      %{changeset: changeset} = conn.assigns
+
+      assert changeset.errors[:review_verified]
+    end
+
+    test "failure: updating a verified submission as an admin", %{conn: conn} do
     end
 
     test "updating a submission and sending to review", %{conn: conn} do
