@@ -110,6 +110,12 @@ defmodule ChallengeGov.MessageContextStatuses do
     Enum.uniq(user_ids)
   end
 
+  def toggle_read(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{read: !message_context_status.read})
+    |> Repo.update()
+  end
+
   def toggle_starred(message_context_status) do
     message_context_status
     |> MessageContextStatus.changeset(%{starred: !message_context_status.starred})
