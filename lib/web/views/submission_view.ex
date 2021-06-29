@@ -166,7 +166,7 @@ defmodule Web.SubmissionView do
     link("Cancel", to: route, class: "btn btn-link")
   end
 
-  def accept_terms(conn, form, submitter_id, user, challenge) do
+  def accept_terms(conn, form, user, challenge) do
     # show for solvers even on editing
     if Accounts.is_solver?(user) do
       content_tag(:div, class: "form-group") do

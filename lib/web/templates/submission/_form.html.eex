@@ -63,7 +63,7 @@
     <%= FormView.text_field(f, :external_url, label: "External URL (optional)") %>
     <br/>
 
-    <%= accept_terms(@conn, f, @data.submitter_id, @user, @challenge) %>
+    <%= accept_terms(@conn, f, @user, @challenge) %>
     <%= verify_review(f, @user.id, @data) %>
 
     <%= cancel_button(@conn, @action, @challenge, @phase, @user) %>
