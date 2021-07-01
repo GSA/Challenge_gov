@@ -16,6 +16,7 @@ defmodule ChallengeGov.Messages.MessageContextStatus do
 
     field(:read, :boolean, default: false)
     field(:starred, :boolean, default: false)
+    field(:archived, :boolean, default: false)
 
     timestamps(type: :utc_datetime_usec)
   end
@@ -24,7 +25,8 @@ defmodule ChallengeGov.Messages.MessageContextStatus do
     struct
     |> cast(params, [
       :read,
-      :starred
+      :starred,
+      :archived
     ])
   end
 
