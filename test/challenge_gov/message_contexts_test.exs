@@ -1,11 +1,13 @@
 defmodule ChallengeGov.MessageContextsTest do
   use ChallengeGov.DataCase
 
+  alias ChallengeGov.Messages
   alias ChallengeGov.MessageContexts
   alias ChallengeGov.MessageContextStatuses
 
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
+  alias ChallengeGov.TestHelpers.MessageContextStatusHelpers
   alias ChallengeGov.TestHelpers.SubmissionHelpers
 
   describe "creating a message context" do
@@ -58,6 +60,37 @@ defmodule ChallengeGov.MessageContextsTest do
         })
 
       assert message_context.id == message_context_2.id
+    end
+  end
+
+  describe "retrieving the last author" do
+    test "success" do
+      %{
+        message_context: message_context,
+        user_challenge_owner: user_challenge_owner,
+        user_solver: user_solver
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, last_author} = MessageContexts.get_last_author(message_context)
+      assert last_author == nil
+
+      {:ok, _message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test"
+        })
+
+      {:ok, last_author} = MessageContexts.get_last_author(message_context)
+      assert last_author.id == user_challenge_owner.id
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test"
+        })
+
+      {:ok, last_author} = MessageContexts.get_last_author(message_context)
+      assert last_author.id == user_solver.id
     end
   end
 end

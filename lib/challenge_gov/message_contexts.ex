@@ -9,6 +9,7 @@ defmodule ChallengeGov.MessageContexts do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.MessageContextStatuses
+  alias ChallengeGov.Messages.Message
   alias ChallengeGov.Messages.MessageContext
 
   def get(id) do
@@ -83,5 +84,18 @@ defmodule ChallengeGov.MessageContexts do
       _ ->
         nil
     end
+  end
+
+  def get_last_author(message_context) do
+    last_message =
+      Message
+      |> preload([:author])
+      |> where([m], m.message_context_id == ^message_context.id)
+      |> last()
+      |> Repo.one()
+
+    last_author = if last_message, do: last_message.author, else: nil
+
+    {:ok, last_author}
   end
 end
