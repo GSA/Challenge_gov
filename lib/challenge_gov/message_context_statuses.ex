@@ -128,6 +128,18 @@ defmodule ChallengeGov.MessageContextStatuses do
     |> Repo.update()
   end
 
+  def archive(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{archived: true})
+    |> Repo.update()
+  end
+
+  def unarchive(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{archived: false})
+    |> Repo.update()
+  end
+
   @impl Stein.Filter
   def filter_on_attribute({"starred", value}, query) do
     query

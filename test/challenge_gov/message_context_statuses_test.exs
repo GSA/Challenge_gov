@@ -122,7 +122,17 @@ defmodule ChallengeGov.MessageContextStatusesTest do
   end
 
   describe "marking context status as archived" do
-    test "success" do
+    test "success: set" do
+      %{
+        message_context_status: message_context_status
+      } = create_message_context_status()
+
+      {:ok, message_context_status} = MessageContextStatuses.archive(message_context_status)
+
+      assert message_context_status.archived
+    end
+
+    test "success: toggle" do
       %{
         message_context_status: message_context_status
       } = create_message_context_status()
@@ -135,7 +145,19 @@ defmodule ChallengeGov.MessageContextStatusesTest do
   end
 
   describe "marking context status as unarchived" do
-    test "success" do
+    test "success: set" do
+      %{
+        message_context_status: message_context_status
+      } = create_message_context_status()
+
+      {:ok, message_context_status} = MessageContextStatuses.archive(message_context_status)
+
+      {:ok, message_context_status} = MessageContextStatuses.unarchive(message_context_status)
+
+      refute message_context_status.archived
+    end
+
+    test "success: toggle" do
       %{
         message_context_status: message_context_status
       } = create_message_context_status()
