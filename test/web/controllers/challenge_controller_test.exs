@@ -191,8 +191,71 @@ defmodule Web.ChallengeControllerTest do
     end
   end
 
+  describe "edit for challenges" do
+    test "successfully", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "draft"})
+
+      conn = get(conn, Routes.challenge_path(conn, :edit, challenge.id, "general"))
+
+      %{
+        user: user_in_assigns,
+        challenge: challenge_in_assigns,
+        changeset: changeset,
+        path: path,
+        section: section
+      } = conn.assigns
+
+      assert user === user_in_assigns
+      assert challenge.id === challenge_in_assigns.id
+      assert changeset === Challenges.edit(challenge_in_assigns)
+      assert section === "general"
+
+      assert conn.request_path ===
+               Routes.challenge_path(conn, :edit, challenge_in_assigns, "general")
+
+      assert html_response(conn, 200) =~ "Challenge"
+    end
+
+    test "successfully edit a challenge in review as a Challenge Owner", %{conn: conn} do
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: challenge_owner} = conn.assigns
+
+      challenge =
+        ChallengeHelpers.create_challenge(
+          %{user_id: challenge_owner.id, status: "gsa_review", title: "Who's Line is it Anyway?"},
+          challenge_owner
+        )
+
+      conn = get(conn, Routes.challenge_path(conn, :edit, challenge.id, "general"))
+
+      %{
+        current_user: user_in_assigns,
+        challenge: challenge_in_assigns,
+        changeset: changeset,
+        path: path,
+        section: section
+      } = conn.assigns
+
+      assert challenge_owner === user_in_assigns
+      assert challenge.id === challenge_in_assigns.id
+      assert get_flash(conn, :info) === "Challenge removed from the queue"
+      assert html_response(conn, 200) =~ "Challenge"
+      assert challenge_in_assigns.status === "draft"
+    end
+  end
+
   defp prep_conn(conn) do
     user = AccountHelpers.create_user(%{role: "admin"})
+    assign(conn, :current_user, user)
+  end
+
+  defp prep_conn_challenge_owner(conn) do
+    user =
+      AccountHelpers.create_user(%{email: "challenge_owner@example.com", role: "challenge_owner"})
+
     assign(conn, :current_user, user)
   end
 

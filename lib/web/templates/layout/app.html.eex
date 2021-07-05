@@ -139,7 +139,17 @@
               </div>
             </div>
           </div>
-          <% end %>
+        <% end %>
+
+        <%= if get_flash(@conn, :warning) do %>
+          <div class="content-header">
+            <div class="container-fluid">
+              <div class="callout callout-warning">
+                <i class="fa fa-exclamation-circle"></i> <%= get_flash(@conn, :warning) %>
+              </div>
+            </div>
+          </div>
+        <% end %>
       <%= @inner_content %>          
       </div>
       <aside class="control-sidebar control-sidebar-light">

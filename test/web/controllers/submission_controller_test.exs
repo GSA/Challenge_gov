@@ -873,7 +873,9 @@ defmodule Web.SubmissionControllerTest do
   end
 
   defp prep_conn_challenge_owner(conn) do
-    user = AccountHelpers.create_user(%{email: "admin@example.com", role: "challenge_owner"})
+    user =
+      AccountHelpers.create_user(%{email: "challenge_owner@example.com", role: "challenge_owner"})
+
     assign(conn, :current_user, user)
   end
 end
