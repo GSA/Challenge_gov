@@ -89,12 +89,7 @@
                     <% end %>
                   </li>
                 <% end %>
-                <li class="nav-item">
-                  <%= link(to: Routes.message_context_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "messages")}") do %>
-                    <i class="nav-icon fas fa-envelope"></i>
-                    <p>Message Center</p>
-                  <% end %>
-                </li>
+                <%= render_message_center_icon(@conn, u) %>
               </ul>
             </nav>
             <%= if ChallengeGov.Accounts.has_admin_access?(u) do %>
