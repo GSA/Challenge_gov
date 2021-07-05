@@ -155,4 +155,9 @@ defmodule ChallengeGov.MessageContextStatuses do
     query
     |> where([mcs], mcs.starred == ^value)
   end
+
+  def filter_on_attribute({"archived", value}, query) do
+    query
+    |> where([mcs], mcs.archived == ^value)
+  end
 end
