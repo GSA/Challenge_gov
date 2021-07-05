@@ -12,8 +12,12 @@ defmodule Web.MessageContextController do
     filter = Map.get(params, "filter", %{})
     message_context_statuses = MessageContextStatuses.all_for_user(user, filter: filter)
 
+    challenges = MessageContextStatuses.get_challenges_for_user(user)
+
     conn
     |> assign(:message_context_statuses, message_context_statuses)
+    |> assign(:challenges, challenges)
+    |> assign(:filter, filter)
     |> render("index.html")
   end
 
