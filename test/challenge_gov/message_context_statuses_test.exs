@@ -8,6 +8,7 @@ defmodule ChallengeGov.MessageContextStatusesTest do
 
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
+  alias ChallengeGov.TestHelpers.MessageContextStatusHelpers
   alias ChallengeGov.TestHelpers.SubmissionHelpers
 
   @challenge_owner_params %{
@@ -169,6 +170,22 @@ defmodule ChallengeGov.MessageContextStatusesTest do
         MessageContextStatuses.toggle_archived(message_context_status)
 
       refute message_context_status.archived
+    end
+  end
+
+  describe "checking if a user has message context statuses" do
+    test "success: no messages" do
+      user = AccountHelpers.create_user()
+
+      refute MessageContextStatuses.has_messages?(user)
+    end
+
+    test "success: has messages" do
+      %{
+        user_solver: user_solver
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      assert MessageContextStatuses.has_messages?(user_solver)
     end
   end
 end

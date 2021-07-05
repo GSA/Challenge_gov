@@ -140,6 +140,16 @@ defmodule ChallengeGov.MessageContextStatuses do
     |> Repo.update()
   end
 
+  def has_messages?(user) do
+    MessageContextStatus
+    |> where([mcs], mcs.user_id == ^user.id)
+    |> Repo.aggregate(:count, :id)
+    |> case do
+      0 -> false
+      _ -> true
+    end
+  end
+
   @impl Stein.Filter
   def filter_on_attribute({"starred", value}, query) do
     query
