@@ -65,6 +65,7 @@
                       <td class="message_center__snippet"><%= display_last_message_snippet(message_context_status.context) %></td>
                       <td class="message_center__actions">
                         <%= render_archive_icon(message_context_status) %>
+                        <%= render_read_icon(message_context_status) %>
                         <%= link("", to: Routes.message_context_path(@conn, :show, message_context_status.message_context_id), class: "far fa-eye text-black text-decoration-none") %>
                       </td>
                     </tr>

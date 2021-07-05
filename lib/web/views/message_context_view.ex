@@ -111,6 +111,32 @@ defmodule Web.MessageContextView do
     )
   end
 
+  def render_read_icon(message_context_status = %{read: true}) do
+    link("",
+      method: :post,
+      to:
+        Routes.message_context_status_path(
+          Web.Endpoint,
+          :mark_unread,
+          message_context_status.id
+        ),
+      class: "message_center__read fas fa-envelope"
+    )
+  end
+
+  def render_read_icon(message_context_status = %{read: false}) do
+    link("",
+      method: :post,
+      to:
+        Routes.message_context_status_path(
+          Web.Endpoint,
+          :mark_read,
+          message_context_status.id
+        ),
+      class: "message_center__read fas fa-envelope-open"
+    )
+  end
+
   def filter_active_class(conn, _route) do
     _filter = Map.get(conn.params, "filter", %{})
 
