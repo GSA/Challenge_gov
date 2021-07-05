@@ -211,4 +211,20 @@ defmodule ChallengeGov.MessageContextStatusesTest do
       assert MessageContextStatuses.has_messages?(user_solver)
     end
   end
+
+  describe "fetching all challenge ids from messages for a user" do
+    test "success" do
+      %{
+        challenge: challenge,
+        user_solver: user_solver
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      fetched_challenge =
+        user_solver
+        |> MessageContextStatuses.get_challenges_for_user()
+        |> Enum.at(0)
+
+      assert fetched_challenge.id == challenge.id
+    end
+  end
 end

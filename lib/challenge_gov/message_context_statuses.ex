@@ -11,6 +11,7 @@ defmodule ChallengeGov.MessageContextStatuses do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Submissions
   alias ChallengeGov.Messages.MessageContextStatus
   alias Stein.Filter
@@ -108,6 +109,17 @@ defmodule ChallengeGov.MessageContextStatuses do
     user_ids = admin_user_ids ++ challenge_owner_user_ids ++ solver_user_ids
 
     Enum.uniq(user_ids)
+  end
+
+  def get_challenges_for_user(user) do
+    MessageContextStatus
+    |> join(:inner, [mcs], mc in assoc(mcs, :context))
+    |> join(:inner, [mcs, mc], c in Challenge,
+      on: mc.context == "challenge" and mc.context_id == c.id
+    )
+    |> where([mcs], mcs.user_id == ^user.id)
+    |> select([mcs, mc, c], c)
+    |> Repo.all()
   end
 
   def toggle_read(message_context_status) do
