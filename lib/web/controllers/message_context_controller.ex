@@ -22,6 +22,9 @@ defmodule Web.MessageContextController do
 
     {:ok, message_context} = MessageContexts.get(id)
 
+    {:ok, message_context_status} = MessageContextStatuses.get(user, message_context)
+    {:ok, _message_context_status} = MessageContextStatuses.mark_read(message_context_status)
+
     message_changeset = Messages.new()
 
     conn

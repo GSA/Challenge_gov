@@ -46,7 +46,7 @@
 
                 <tbody>
                   <%= Enum.map @message_context_statuses, fn (message_context_status) -> %>
-                    <tr>
+                    <tr class=<%= maybe_unread_class(message_context_status) %>>
                       <td>
                         <input type="checkbox" class="mr-2">
                         <%= render_star(message_context_status) %>

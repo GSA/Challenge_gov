@@ -69,7 +69,17 @@ defmodule ChallengeGov.MessageContextStatusesTest do
   end
 
   describe "marking context status as read" do
-    test "success" do
+    test "success: set" do
+      %{
+        message_context_status: message_context_status
+      } = create_message_context_status()
+
+      {:ok, message_context_status} = MessageContextStatuses.mark_read(message_context_status)
+
+      assert message_context_status.read
+    end
+
+    test "success: toggle" do
       %{
         message_context_status: message_context_status
       } = create_message_context_status()
@@ -81,14 +91,27 @@ defmodule ChallengeGov.MessageContextStatusesTest do
   end
 
   describe "marking context status as unread" do
-    test "success" do
+    test "success: set" do
+      %{
+        message_context_status: message_context_status
+      } = create_message_context_status()
+
+      {:ok, message_context_status} = MessageContextStatuses.mark_read(message_context_status)
+      assert message_context_status.read
+
+      {:ok, message_context_status} = MessageContextStatuses.mark_unread(message_context_status)
+      refute message_context_status.read
+    end
+
+    test "success: toggle" do
       %{
         message_context_status: message_context_status
       } = create_message_context_status()
 
       {:ok, message_context_status} = MessageContextStatuses.toggle_read(message_context_status)
-      {:ok, message_context_status} = MessageContextStatuses.toggle_read(message_context_status)
+      assert message_context_status.read
 
+      {:ok, message_context_status} = MessageContextStatuses.toggle_read(message_context_status)
       refute message_context_status.read
     end
   end

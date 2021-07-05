@@ -66,6 +66,9 @@ defmodule Web.MessageContextView do
     SharedView.render_safe_html(last_message.content)
   end
 
+  def maybe_unread_class(%{read: false}), do: "message_center__row--unread"
+  def maybe_unread_class(%{read: true}), do: "message_center__row--read"
+
   def render_star(message_context_status) do
     class = if message_context_status.starred, do: "fas", else: "far"
 

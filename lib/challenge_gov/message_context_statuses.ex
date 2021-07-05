@@ -116,6 +116,18 @@ defmodule ChallengeGov.MessageContextStatuses do
     |> Repo.update()
   end
 
+  def mark_read(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{read: true})
+    |> Repo.update()
+  end
+
+  def mark_unread(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{read: false})
+    |> Repo.update()
+  end
+
   def toggle_starred(message_context_status) do
     message_context_status
     |> MessageContextStatus.changeset(%{starred: !message_context_status.starred})
