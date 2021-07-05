@@ -27,6 +27,7 @@
             <%= link("All", to: Routes.message_context_path(@conn, :index), class: "btn btn-link #{filter_active_class(@conn, "all")}") %>
             <%= link("Starred", to: Routes.message_context_path(@conn, :index, filter: %{starred: true}), class: "btn btn-link #{filter_active_class(@conn, "starred")}") %>
             <%= link("Unread", to: Routes.message_context_path(@conn, :index, filter: %{read: false}), class: "btn btn-link #{filter_active_class(@conn, "read")}") %>
+            <%= link("Archived", to: Routes.message_context_path(@conn, :index, filter: %{archived: true}), class: "btn btn-link #{filter_active_class(@conn, "archived")}") %>
           </div>
         </div>
       <% end) %>
@@ -62,7 +63,8 @@
                       <td><%= display_last_author_name(message_context_status.context) %></td>
                       <td><%= display_last_author_role(message_context_status.context) %></td>
                       <td class="message_center__snippet"><%= display_last_message_snippet(message_context_status.context) %></td>
-                      <td>
+                      <td class="message_center__actions">
+                        <%= render_archive_icon(message_context_status) %>
                         <%= link("", to: Routes.message_context_path(@conn, :show, message_context_status.message_context_id), class: "far fa-eye text-black text-decoration-none") %>
                       </td>
                     </tr>

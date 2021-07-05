@@ -21,9 +21,13 @@ defmodule ChallengeGov.MessageContextStatuses do
     |> preload(context: [:messages])
     |> order_by([mcs], desc: mcs.updated_at)
     |> where([mcs], mcs.user_id == ^user.id)
+    |> maybe_filter_archived(opts[:filter])
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.all()
   end
+
+  defp maybe_filter_archived(query, %{"archived" => _}), do: query
+  defp maybe_filter_archived(query, _filter), do: where(query, [mcs], mcs.archived != true)
 
   def get(id) do
     MessageContextStatus

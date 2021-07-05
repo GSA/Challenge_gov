@@ -60,4 +60,16 @@
     background-color: #EDF5FF !important;
     font-weight: bold;
   }
+
+  &__actions {
+    a {
+      color: #000000;
+      text-decoration: none !important;
+      margin-right: 1rem;
+    }
+
+    a:last-child {
+      margin-right: 0rem;
+    }
+  }
 }
