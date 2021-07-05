@@ -185,6 +185,11 @@ defmodule ChallengeGov.MessageContextStatuses do
     |> where([mcs], mcs.archived == ^value)
   end
 
+  def filter_on_attribute({"read", value}, query) do
+    query
+    |> where([mcs], mcs.read == ^value)
+  end
+
   def filter_on_attribute({"challenge_id", value}, query) do
     query
     |> join(:inner, [mcs], mc in assoc(mcs, :context))

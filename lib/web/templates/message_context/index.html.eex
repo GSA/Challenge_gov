@@ -26,6 +26,7 @@
           <div class="col text-right">
             <%= link("All", to: Routes.message_context_path(@conn, :index), class: "btn btn-link #{filter_active_class(@conn, "all")}") %>
             <%= link("Starred", to: Routes.message_context_path(@conn, :index, filter: %{starred: true}), class: "btn btn-link #{filter_active_class(@conn, "starred")}") %>
+            <%= link("Unread", to: Routes.message_context_path(@conn, :index, filter: %{read: false}), class: "btn btn-link #{filter_active_class(@conn, "read")}") %>
           </div>
         </div>
       <% end) %>
