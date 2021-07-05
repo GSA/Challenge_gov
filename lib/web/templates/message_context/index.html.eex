@@ -37,6 +37,8 @@
                     <th>Date</th>
                     <th>Challenge title</th>
                     <th>Audience</th>
+                    <th>Last author</th>
+                    <th>Last author role</th>
                     <th>Message snippet</th>
                     <th></th>
                   </tr>
@@ -52,6 +54,8 @@
                       <td><%= Web.SharedView.local_datetime_tag(message_context_status.updated_at) %></td>
                       <td><%= display_challenge_title_link(message_context_status.context) %></td>
                       <td><%= display_audience(message_context_status.context) %></td>
+                      <td><%= display_last_author_name(message_context_status.context) %></td>
+                      <td><%= display_last_author_role(message_context_status.context) %></td>
                       <td class="message_center__snippet"><%= display_last_message_snippet(message_context_status.context) %></td>
                       <td>
                         <%= link("", to: Routes.message_context_path(@conn, :show, message_context_status.message_context_id), class: "far fa-eye text-black text-decoration-none") %>

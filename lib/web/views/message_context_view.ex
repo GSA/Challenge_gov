@@ -29,6 +29,34 @@ defmodule Web.MessageContextView do
     )
   end
 
+  def display_last_author_name(message_context) do
+    {:ok, last_author} =
+      message_context
+      |> MessageContexts.get_last_author()
+
+    case last_author do
+      nil ->
+        ""
+
+      author ->
+        AccountView.full_name(author)
+    end
+  end
+
+  def display_last_author_role(message_context) do
+    {:ok, last_author} =
+      message_context
+      |> MessageContexts.get_last_author()
+
+    case last_author do
+      nil ->
+        ""
+
+      author ->
+        AccountView.role_display(author)
+    end
+  end
+
   def display_last_message_snippet(message_context) do
     last_message =
       message_context.messages
