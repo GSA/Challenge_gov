@@ -52,6 +52,7 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
     message_context = Repo.preload(message_context, [:statuses], force: true)
 
     %{
+      challenge: challenge,
       message_context: message_context,
       challenge_owner_message_context_status: challenge_owner_message_context_status,
       solver_message_context_status: solver_message_context_status,
