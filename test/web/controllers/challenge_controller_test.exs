@@ -204,7 +204,6 @@ defmodule Web.ChallengeControllerTest do
         user: user_in_assigns,
         challenge: challenge_in_assigns,
         changeset: changeset,
-        path: path,
         section: section
       } = conn.assigns
 
@@ -234,8 +233,6 @@ defmodule Web.ChallengeControllerTest do
       %{
         current_user: user_in_assigns,
         challenge: challenge_in_assigns,
-        changeset: changeset,
-        path: path,
         section: section
       } = conn.assigns
 
@@ -243,12 +240,28 @@ defmodule Web.ChallengeControllerTest do
       assert challenge.id === challenge_in_assigns.id
       assert html_response(conn, 200) =~ "Challenge"
       assert challenge_in_assigns.status === "draft"
+      assert section === "general"
+
+      assert conn.request_path ===
+               Routes.challenge_path(conn, :edit, challenge_in_assigns, "general")
+
       assert get_flash(conn, :warning) ===
-        [
-          {:safe, [60, "span", [[32, "class", 61, 34, "h4", 34]], 62, "Challenge Removed from Queue", 60, 47, "span", 62]},
-          {:safe, [60, "br", [], 62, [], 60, 47, "br", 62]},
-          "Once edits are made you will need to resubmit this challenge for GSA approval"
-        ]
+               [
+                 {:safe,
+                  [
+                    60,
+                    "span",
+                    [[32, "class", 61, 34, "h4", 34]],
+                    62,
+                    "Challenge Removed from Queue",
+                    60,
+                    47,
+                    "span",
+                    62
+                  ]},
+                 {:safe, [60, "br", [], 62, [], 60, 47, "br", 62]},
+                 "Once edits are made you will need to resubmit this challenge for GSA approval"
+               ]
     end
 
     test "successfully edit a challenge in review as an admin", %{conn: conn} do
@@ -267,14 +280,50 @@ defmodule Web.ChallengeControllerTest do
         current_user: user_in_assigns,
         challenge: challenge_in_assigns,
         changeset: changeset,
-        path: path,
         section: section
       } = conn.assigns
 
       assert user === user_in_assigns
       assert challenge.id === challenge_in_assigns.id
       assert html_response(conn, 200) =~ "Challenge"
+      assert changeset === Challenges.edit(challenge_in_assigns)
+      assert section === "general"
+
+      assert conn.request_path ===
+               Routes.challenge_path(conn, :edit, challenge_in_assigns, "general")
+
       assert challenge_in_assigns.status === "gsa_review"
+    end
+
+    test "successfully edit a published challenge", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge =
+        ChallengeHelpers.create_challenge(
+          %{user_id: user.id, status: "published", title: "Who's Line is it Anyway?"},
+          user
+        )
+
+      conn = get(conn, Routes.challenge_path(conn, :edit, challenge.id, "general"))
+
+      %{
+        current_user: user_in_assigns,
+        challenge: challenge_in_assigns,
+        changeset: changeset,
+        section: section
+      } = conn.assigns
+
+      assert user === user_in_assigns
+      assert challenge.id === challenge_in_assigns.id
+      assert changeset === Challenges.edit(challenge_in_assigns)
+      assert html_response(conn, 200) =~ "Challenge"
+      assert section === "general"
+
+      assert conn.request_path ===
+               Routes.challenge_path(conn, :edit, challenge_in_assigns, "general")
+
+      assert challenge_in_assigns.status === "published"
     end
   end
 
@@ -411,6 +460,67 @@ defmodule Web.ChallengeControllerTest do
 
       assert redirected_to(conn) ===
                Routes.challenge_path(conn, :edit, challenge.id, to_section.id)
+    end
+
+    test "successfully update a published challenge", %{conn: conn} do
+      # change something
+      # return to review
+      # still published
+      conn = prep_conn_challenge_owner(conn)
+      %{current_user: user} = conn.assigns
+
+      past_publish_date =
+        DateTime.utc_now()
+        |> Timex.shift(days: -1)
+        |> DateTime.to_string()
+
+      challenge =
+        ChallengeHelpers.create_challenge(
+          %{
+            user_id: user.id,
+            status: "published",
+            auto_publish_date: past_publish_date
+          },
+          user
+        )
+
+      params = %{
+        "id" => "#{challenge.id}",
+        "action" => "return_to_review",
+        "challenge" => %{
+          "section" => "general",
+          "agency_id" => AgencyHelpers.create_agency().id,
+          "challenge_id" => "#{challenge.id}",
+          "challenge_manager" => "Challenge Manager",
+          "challenge_manager_email" => "challenge_owner_active@example.com",
+          "federal_partners" => %{
+            "0" => %{
+              "agency_id" => AgencyHelpers.create_agency().id,
+              "sub_agency_id" => AgencyHelpers.create_agency().id
+            }
+          },
+          "fiscal_year" => "FY20",
+          "local_timezone" => "America/New_York",
+          "non_federal_partners" => %{
+            "0" => %{"id" => "1", "name" => "Non federal partner 1"},
+            "1" => %{"id" => "2", "name" => "Non federal partner 2"}
+          },
+          "poc_email" => "new_poc@example.com",
+          "sub_agency_id" => AgencyHelpers.create_agency().id,
+          "user_id" => "#{user.id}"
+        }
+      }
+
+      conn = put(conn, Routes.challenge_path(conn, :update, challenge.id), params)
+
+      {:ok, challenge} = Challenges.get(challenge.id)
+
+      assert challenge.status === "published"
+      assert challenge.poc_email === "new_poc@example.com"
+      assert get_flash(conn, :info) === "changes saved"
+
+      assert redirected_to(conn) ===
+               Routes.challenge_path(conn, :show, challenge.id) <> "#general"
     end
   end
 
