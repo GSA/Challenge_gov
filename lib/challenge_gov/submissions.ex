@@ -62,7 +62,7 @@ defmodule ChallengeGov.Submissions do
     |> where([s], is_nil(s.deleted_at))
     |> where([s], s.submitter_id == ^user_id)
     |> where([s], not is_nil(s.manager_id))
-    |> where([s], s.review_verified == false)
+    |> where([s], s.review_verified == false or is_nil(s.review_verified))
     |> Repo.paginate(opts[:page], opts[:per])
   end
 
