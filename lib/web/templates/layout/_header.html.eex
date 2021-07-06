@@ -20,6 +20,6 @@
         </div>
       </div>
     </form>
-    <%= link("Login", to: Routes.session_path(@conn, :new), class: "header__login") %>
+    <%= link("My account", to: Routes.session_path(@conn, :new), class: "header__login") %>
   </div>
 </nav>
