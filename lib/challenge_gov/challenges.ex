@@ -912,22 +912,21 @@ defmodule ChallengeGov.Challenges do
   end
 
   def set_status(current_user, challenge, status, remote_ip) do
-    result =
-      challenge
-      |> Ecto.Changeset.change()
-      |> Ecto.Changeset.put_change(:status, status)
-      |> Repo.update()
-      |> case do
-        {:ok, challenge} ->
-          add_to_security_log(current_user, challenge, "status_change", remote_ip, %{
-            status: status
-          })
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:status, status)
+    |> Repo.update()
+    |> case do
+      {:ok, challenge} ->
+        add_to_security_log(current_user, challenge, "status_change", remote_ip, %{
+          status: status
+        })
 
-          {:ok, challenge}
+        {:ok, challenge}
 
-        {:error, changeset} ->
-          {:error, changeset}
-      end
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   # BOOKMARK: Advanced status functions

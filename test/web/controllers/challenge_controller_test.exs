@@ -241,9 +241,176 @@ defmodule Web.ChallengeControllerTest do
 
       assert challenge_owner === user_in_assigns
       assert challenge.id === challenge_in_assigns.id
-      assert get_flash(conn, :info) === "Challenge removed from the queue"
       assert html_response(conn, 200) =~ "Challenge"
       assert challenge_in_assigns.status === "draft"
+      assert get_flash(conn, :warning) ===
+        [
+          {:safe, [60, "span", [[32, "class", 61, 34, "h4", 34]], 62, "Challenge Removed from Queue", 60, 47, "span", 62]},
+          {:safe, [60, "br", [], 62, [], 60, 47, "br", 62]},
+          "Once edits are made you will need to resubmit this challenge for GSA approval"
+        ]
+    end
+
+    test "successfully edit a challenge in review as an admin", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge =
+        ChallengeHelpers.create_challenge(
+          %{user_id: user.id, status: "gsa_review", title: "Who's Line is it Anyway?"},
+          user
+        )
+
+      conn = get(conn, Routes.challenge_path(conn, :edit, challenge.id, "general"))
+
+      %{
+        current_user: user_in_assigns,
+        challenge: challenge_in_assigns,
+        changeset: changeset,
+        path: path,
+        section: section
+      } = conn.assigns
+
+      assert user === user_in_assigns
+      assert challenge.id === challenge_in_assigns.id
+      assert html_response(conn, 200) =~ "Challenge"
+      assert challenge_in_assigns.status === "gsa_review"
+    end
+  end
+
+  describe "update for challenges" do
+    test "successfully update a section as a draft", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "draft"})
+
+      params = %{
+        "id" => "#{challenge.id}",
+        "action" => "save_draft",
+        "challenge" => %{
+          "section" => "general",
+          "agency_id" => AgencyHelpers.create_agency().id,
+          "challenge_id" => "#{challenge.id}",
+          "challenge_manager" => "Challenge Manager",
+          "challenge_manager_email" => "challenge_owner_active@example.com",
+          "federal_partners" => %{
+            "0" => %{
+              "agency_id" => AgencyHelpers.create_agency().id,
+              "sub_agency_id" => AgencyHelpers.create_agency().id
+            }
+          },
+          "fiscal_year" => "FY20",
+          "local_timezone" => "America/New_York",
+          "non_federal_partners" => %{
+            "0" => %{"id" => "1", "name" => "Non federal partner 1"},
+            "1" => %{"id" => "2", "name" => "Non federal partner 2"}
+          },
+          "poc_email" => "new_poc@example.com",
+          "sub_agency_id" => AgencyHelpers.create_agency().id,
+          "user_id" => "#{user.id}"
+        }
+      }
+
+      conn = put(conn, Routes.challenge_path(conn, :update, challenge.id), params)
+
+      {:ok, challenge} = Challenges.get(challenge.id)
+
+      assert challenge.status === "draft"
+      assert challenge.poc_email === "new_poc@example.com"
+      assert get_flash(conn, :info) === "Challenge saved as draft"
+      assert redirected_to(conn) === Routes.challenge_path(conn, :edit, challenge.id, "general")
+    end
+
+    test "successfully update a section and return to review", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "draft"})
+
+      params = %{
+        "id" => "#{challenge.id}",
+        "action" => "return_to_review",
+        "challenge" => %{
+          "section" => "general",
+          "agency_id" => AgencyHelpers.create_agency().id,
+          "challenge_id" => "#{challenge.id}",
+          "challenge_manager" => "Challenge Manager",
+          "challenge_manager_email" => "challenge_owner_active@example.com",
+          "federal_partners" => %{
+            "0" => %{
+              "agency_id" => AgencyHelpers.create_agency().id,
+              "sub_agency_id" => AgencyHelpers.create_agency().id
+            }
+          },
+          "fiscal_year" => "FY20",
+          "local_timezone" => "America/New_York",
+          "non_federal_partners" => %{
+            "0" => %{"id" => "1", "name" => "Non federal partner 1"},
+            "1" => %{"id" => "2", "name" => "Non federal partner 2"}
+          },
+          "poc_email" => "new_poc@example.com",
+          "sub_agency_id" => AgencyHelpers.create_agency().id,
+          "user_id" => "#{user.id}"
+        }
+      }
+
+      conn = put(conn, Routes.challenge_path(conn, :update, challenge.id), params)
+
+      {:ok, challenge} = Challenges.get(challenge.id)
+
+      assert challenge.status === "draft"
+      assert challenge.poc_email === "new_poc@example.com"
+      assert get_flash(conn, :info) === "changes saved"
+
+      assert redirected_to(conn) ===
+               Routes.challenge_path(conn, :show, challenge.id) <> "#general"
+    end
+
+    test "successfully update a section and go to next section", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
+
+      challenge = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "draft"})
+
+      params = %{
+        "id" => "#{challenge.id}",
+        "action" => "next",
+        "challenge" => %{
+          "section" => "general",
+          "agency_id" => AgencyHelpers.create_agency().id,
+          "challenge_id" => "#{challenge.id}",
+          "challenge_manager" => "Challenge Manager",
+          "challenge_manager_email" => "challenge_owner_active@example.com",
+          "federal_partners" => %{
+            "0" => %{
+              "agency_id" => AgencyHelpers.create_agency().id,
+              "sub_agency_id" => AgencyHelpers.create_agency().id
+            }
+          },
+          "fiscal_year" => "FY20",
+          "local_timezone" => "America/New_York",
+          "non_federal_partners" => %{
+            "0" => %{"id" => "1", "name" => "Non federal partner 1"},
+            "1" => %{"id" => "2", "name" => "Non federal partner 2"}
+          },
+          "poc_email" => "new_poc@example.com",
+          "sub_agency_id" => AgencyHelpers.create_agency().id,
+          "user_id" => "#{user.id}"
+        }
+      }
+
+      conn = put(conn, Routes.challenge_path(conn, :update, challenge.id), params)
+
+      {:ok, challenge} = Challenges.get(challenge.id)
+
+      to_section = Challenges.to_section("general", "next")
+
+      assert challenge.status === "draft"
+      assert challenge.poc_email === "new_poc@example.com"
+
+      assert redirected_to(conn) ===
+               Routes.challenge_path(conn, :edit, challenge.id, to_section.id)
     end
   end
 

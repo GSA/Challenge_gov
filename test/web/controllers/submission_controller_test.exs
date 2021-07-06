@@ -737,7 +737,7 @@ defmodule Web.SubmissionControllerTest do
 
       different_challenge_owner =
         AccountHelpers.create_user(%{
-          email: "challenge_owner@example.com",
+          email: "challenge_owner2@example.com",
           role: "challenge_owner"
         })
 

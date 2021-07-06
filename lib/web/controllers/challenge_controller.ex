@@ -458,7 +458,11 @@ defmodule Web.ChallengeController do
     end
   end
 
-  defp maybe_reset_challenge_status(conn, user = %{role: "challenge_owner"}, challenge = %{status: "gsa_review"}) do
+  defp maybe_reset_challenge_status(
+         conn,
+         user = %{role: "challenge_owner"},
+         challenge = %{status: "gsa_review"}
+       ) do
     remote_ip = Security.extract_remote_ip(conn)
     {:ok, challenge} = Challenges.set_status(user, challenge, "draft", remote_ip)
 
