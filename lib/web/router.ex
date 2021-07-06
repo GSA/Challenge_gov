@@ -175,6 +175,17 @@ defmodule Web.Router do
 
     resources("/messages", MessageContextController, only: [:index, :show, :new, :create])
 
+    post("/message_context_statuses/:id/mark_read", MessageContextStatusController, :mark_read)
+
+    post(
+      "/message_context_statuses/:id/mark_unread",
+      MessageContextStatusController,
+      :mark_unread
+    )
+
+    post("/message_context_statuses/:id/archive", MessageContextStatusController, :archive)
+    post("/message_context_statuses/:id/unarchive", MessageContextStatusController, :unarchive)
+
     resources("/site_content", SiteContentController, [:index, :show, :edit, :update])
   end
 

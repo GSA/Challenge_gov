@@ -29,6 +29,34 @@ defmodule Web.MessageContextView do
     )
   end
 
+  def display_last_author_name(message_context) do
+    {:ok, last_author} =
+      message_context
+      |> MessageContexts.get_last_author()
+
+    case last_author do
+      nil ->
+        ""
+
+      author ->
+        AccountView.full_name(author)
+    end
+  end
+
+  def display_last_author_role(message_context) do
+    {:ok, last_author} =
+      message_context
+      |> MessageContexts.get_last_author()
+
+    case last_author do
+      nil ->
+        ""
+
+      author ->
+        AccountView.role_display(author)
+    end
+  end
+
   def display_last_message_snippet(message_context) do
     last_message =
       message_context.messages
@@ -37,6 +65,9 @@ defmodule Web.MessageContextView do
 
     SharedView.render_safe_html(last_message.content)
   end
+
+  def maybe_unread_class(%{read: true}), do: "message_center__row--read"
+  def maybe_unread_class(%{read: false}), do: "message_center__row--unread"
 
   def render_star(message_context_status) do
     class = if message_context_status.starred, do: "fas", else: "far"
@@ -54,9 +85,70 @@ defmodule Web.MessageContextView do
     )
   end
 
-  def filter_active_class(conn, _route) do
-    _filter = Map.get(conn.params, "filter", %{})
+  def render_archive_icon(message_context_status = %{archived: true}) do
+    link("",
+      method: :post,
+      to:
+        Routes.message_context_status_path(
+          Web.Endpoint,
+          :unarchive,
+          message_context_status.id
+        ),
+      class: "message_center__archive fas fa-inbox"
+    )
+  end
 
-    "active"
+  def render_archive_icon(message_context_status = %{archived: false}) do
+    link("",
+      method: :post,
+      to:
+        Routes.message_context_status_path(
+          Web.Endpoint,
+          :archive,
+          message_context_status.id
+        ),
+      class: "message_center__archive fas fa-archive"
+    )
+  end
+
+  def render_read_icon(message_context_status = %{read: true}) do
+    link("",
+      method: :post,
+      to:
+        Routes.message_context_status_path(
+          Web.Endpoint,
+          :mark_unread,
+          message_context_status.id
+        ),
+      class: "message_center__read fas fa-envelope"
+    )
+  end
+
+  def render_read_icon(message_context_status = %{read: false}) do
+    link("",
+      method: :post,
+      to:
+        Routes.message_context_status_path(
+          Web.Endpoint,
+          :mark_read,
+          message_context_status.id
+        ),
+      class: "message_center__read fas fa-envelope-open"
+    )
+  end
+
+  def filter_active_class(conn, route) do
+    filter = Map.get(conn.params, "filter", %{})
+
+    cond do
+      Map.get(filter, route) ->
+        "btn-primary"
+
+      route == "all" and filter == %{} ->
+        "btn-primary"
+
+      true ->
+        "btn-link"
+    end
   end
 end

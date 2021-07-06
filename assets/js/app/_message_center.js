@@ -1,3 +1,7 @@
+$(".message_center__challenge_filter").on("change", function() {
+  this.form.submit()
+})
+
 $(".message_center__message_form").on("submit", (e) => {
   e.preventDefault()
 

@@ -2,6 +2,7 @@ defmodule Web.LayoutView do
   use Web, :view
 
   alias ChallengeGov.Accounts
+  alias ChallengeGov.MessageContextStatuses
   alias ChallengeGov.Recaptcha
   alias Web.AccountView
   alias Web.PageTitle
@@ -68,6 +69,33 @@ defmodule Web.LayoutView do
 
       _ ->
         ""
+    end
+  end
+
+  def render_message_center_icon(conn, user) do
+    nav_item_classes = "nav-item"
+    link_classes = "nav-link #{tab_selected(conn, "messages")}"
+
+    [route, nav_item_classes] =
+      if !MessageContextStatuses.has_messages?(user) and Accounts.is_solver?(user) do
+        [
+          "#",
+          nav_item_classes <> " disabled"
+        ]
+      else
+        [
+          Routes.message_context_path(conn, :index),
+          nav_item_classes
+        ]
+      end
+
+    content_tag :li, class: nav_item_classes do
+      link to: route, class: link_classes do
+        [
+          content_tag(:i, "", class: "nav-icon fas fa-envelope"),
+          content_tag(:p, "Message Center")
+        ]
+      end
     end
   end
 

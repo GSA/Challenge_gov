@@ -11,6 +11,7 @@ defmodule ChallengeGov.MessageContextStatuses do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Submissions
   alias ChallengeGov.Messages.MessageContextStatus
   alias Stein.Filter
@@ -20,9 +21,13 @@ defmodule ChallengeGov.MessageContextStatuses do
     |> preload(context: [:messages])
     |> order_by([mcs], desc: mcs.updated_at)
     |> where([mcs], mcs.user_id == ^user.id)
+    |> maybe_filter_archived(opts[:filter])
     |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.all()
   end
+
+  defp maybe_filter_archived(query, %{"archived" => _}), do: query
+  defp maybe_filter_archived(query, _filter), do: where(query, [mcs], mcs.archived != true)
 
   def get(id) do
     MessageContextStatus
@@ -110,15 +115,88 @@ defmodule ChallengeGov.MessageContextStatuses do
     Enum.uniq(user_ids)
   end
 
+  def get_challenges_for_user(user) do
+    MessageContextStatus
+    |> join(:inner, [mcs], mc in assoc(mcs, :context))
+    |> join(:inner, [mcs, mc], c in Challenge,
+      on: mc.context == "challenge" and mc.context_id == c.id
+    )
+    |> where([mcs], mcs.user_id == ^user.id)
+    |> select([mcs, mc, c], c)
+    |> Repo.all()
+  end
+
+  def toggle_read(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{read: !message_context_status.read})
+    |> Repo.update()
+  end
+
+  def mark_read(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{read: true})
+    |> Repo.update()
+  end
+
+  def mark_unread(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{read: false})
+    |> Repo.update()
+  end
+
   def toggle_starred(message_context_status) do
     message_context_status
     |> MessageContextStatus.changeset(%{starred: !message_context_status.starred})
     |> Repo.update()
   end
 
+  def toggle_archived(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{archived: !message_context_status.archived})
+    |> Repo.update()
+  end
+
+  def archive(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{archived: true})
+    |> Repo.update()
+  end
+
+  def unarchive(message_context_status) do
+    message_context_status
+    |> MessageContextStatus.changeset(%{archived: false})
+    |> Repo.update()
+  end
+
+  def has_messages?(user) do
+    MessageContextStatus
+    |> where([mcs], mcs.user_id == ^user.id)
+    |> Repo.aggregate(:count, :id)
+    |> case do
+      0 -> false
+      _ -> true
+    end
+  end
+
   @impl Stein.Filter
   def filter_on_attribute({"starred", value}, query) do
     query
     |> where([mcs], mcs.starred == ^value)
+  end
+
+  def filter_on_attribute({"archived", value}, query) do
+    query
+    |> where([mcs], mcs.archived == ^value)
+  end
+
+  def filter_on_attribute({"read", value}, query) do
+    query
+    |> where([mcs], mcs.read == ^value)
+  end
+
+  def filter_on_attribute({"challenge_id", value}, query) do
+    query
+    |> join(:inner, [mcs], mc in assoc(mcs, :context))
+    |> where([mcs, mc], mc.context == "challenge" and mc.context_id == ^value)
   end
 end

@@ -21,4 +21,10 @@ defmodule Web.AccountView do
   def full_name(user) do
     "#{user.first_name} #{user.last_name}"
   end
+
+  def role_display(user) do
+    user.role
+    |> String.replace("_", " ")
+    |> String.capitalize()
+  end
 end
