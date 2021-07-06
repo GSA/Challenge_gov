@@ -112,7 +112,7 @@ If you would like to seed the database with a default super-admin user, please s
 ```bash
 mix ecto.create
 mix ecto.migrate
-mix run priv/repo/seeds.exs
+mix run priv/repo/seeds_updated.exs
 ```
 
 Once the database is setup, make sure to install javascript dependencies.
