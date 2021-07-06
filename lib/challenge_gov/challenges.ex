@@ -911,6 +911,24 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  def set_status(current_user, challenge, status, remote_ip) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:status, status)
+    |> Repo.update()
+    |> case do
+      {:ok, challenge} ->
+        add_to_security_log(current_user, challenge, "status_change", remote_ip, %{
+          status: status
+        })
+
+        {:ok, challenge}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
   # BOOKMARK: Advanced status functions
   @doc """
   Checks if the challenge should be publicly accessible. Either published or archived
