@@ -137,9 +137,18 @@ defmodule Web.MessageContextView do
     )
   end
 
-  def filter_active_class(conn, _route) do
-    _filter = Map.get(conn.params, "filter", %{})
+  def filter_active_class(conn, route) do
+    filter = Map.get(conn.params, "filter", %{})
 
-    "active"
+    cond do
+      Map.get(filter, route) ->
+        "btn-primary"
+
+      route == "all" and filter == %{} ->
+        "btn-primary"
+
+      true ->
+        "btn-link"
+    end
   end
 end

@@ -24,10 +24,10 @@
               <%= select(f, :challenge_id, Enum.map(@challenges, &{&1.title, &1.id}), value: @filter["challenge_id"], prompt: "Filter by challenge", class: "js-select2 message_center__challenge_filter") %>
           </div>
           <div class="col text-right">
-            <%= link("All", to: Routes.message_context_path(@conn, :index), class: "btn btn-link #{filter_active_class(@conn, "all")}") %>
-            <%= link("Starred", to: Routes.message_context_path(@conn, :index, filter: %{starred: true}), class: "btn btn-link #{filter_active_class(@conn, "starred")}") %>
-            <%= link("Unread", to: Routes.message_context_path(@conn, :index, filter: %{read: false}), class: "btn btn-link #{filter_active_class(@conn, "read")}") %>
-            <%= link("Archived", to: Routes.message_context_path(@conn, :index, filter: %{archived: true}), class: "btn btn-link #{filter_active_class(@conn, "archived")}") %>
+            <%= link("All", to: Routes.message_context_path(@conn, :index), class: "btn #{filter_active_class(@conn, "all")}") %>
+            <%= link("Starred", to: Routes.message_context_path(@conn, :index, filter: %{starred: true}), class: "btn #{filter_active_class(@conn, "starred")}") %>
+            <%= link("Unread", to: Routes.message_context_path(@conn, :index, filter: %{read: false}), class: "btn #{filter_active_class(@conn, "read")}") %>
+            <%= link("Archived", to: Routes.message_context_path(@conn, :index, filter: %{archived: true}), class: "btn #{filter_active_class(@conn, "archived")}") %>
           </div>
         </div>
       <% end) %>
