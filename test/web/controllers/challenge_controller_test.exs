@@ -218,14 +218,14 @@ defmodule Web.ChallengeControllerTest do
       assert html_response(conn, 200) =~ "Challenge"
     end
 
-    test "successfully edit a challenge in review as a Challenge Owner", %{conn: conn} do
-      conn = prep_conn_challenge_owner(conn)
-      %{current_user: challenge_owner} = conn.assigns
+    test "successfully edit a challenge in review", %{conn: conn} do
+      conn = prep_conn(conn)
+      %{current_user: user} = conn.assigns
 
       challenge =
         ChallengeHelpers.create_challenge(
-          %{user_id: challenge_owner.id, status: "gsa_review", title: "Who's Line is it Anyway?"},
-          challenge_owner
+          %{user_id: user.id, status: "gsa_review", title: "Who's Line is it Anyway?"},
+          user
         )
 
       conn = get(conn, Routes.challenge_path(conn, :edit, challenge.id, "general"))
@@ -236,7 +236,7 @@ defmodule Web.ChallengeControllerTest do
         section: section
       } = conn.assigns
 
-      assert challenge_owner === user_in_assigns
+      assert user === user_in_assigns
       assert challenge.id === challenge_in_assigns.id
       assert html_response(conn, 200) =~ "Challenge"
       assert challenge_in_assigns.status === "draft"
@@ -262,37 +262,6 @@ defmodule Web.ChallengeControllerTest do
                  {:safe, [60, "br", [], 62, [], 60, 47, "br", 62]},
                  "Once edits are made you will need to resubmit this challenge for GSA approval"
                ]
-    end
-
-    test "successfully edit a challenge in review as an admin", %{conn: conn} do
-      conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
-
-      challenge =
-        ChallengeHelpers.create_challenge(
-          %{user_id: user.id, status: "gsa_review", title: "Who's Line is it Anyway?"},
-          user
-        )
-
-      conn = get(conn, Routes.challenge_path(conn, :edit, challenge.id, "general"))
-
-      %{
-        current_user: user_in_assigns,
-        challenge: challenge_in_assigns,
-        changeset: changeset,
-        section: section
-      } = conn.assigns
-
-      assert user === user_in_assigns
-      assert challenge.id === challenge_in_assigns.id
-      assert html_response(conn, 200) =~ "Challenge"
-      assert changeset === Challenges.edit(challenge_in_assigns)
-      assert section === "general"
-
-      assert conn.request_path ===
-               Routes.challenge_path(conn, :edit, challenge_in_assigns, "general")
-
-      assert challenge_in_assigns.status === "gsa_review"
     end
 
     test "successfully edit a published challenge", %{conn: conn} do
