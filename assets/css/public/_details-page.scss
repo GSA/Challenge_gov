@@ -317,6 +317,13 @@
         grid-column: 2;
       }
     }
+
+    .winners-section {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: .5rem;
+
+    }
   }
 
 .follow-tooltip {
