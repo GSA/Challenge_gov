@@ -37,7 +37,7 @@
           <div class="card">
             <div class="table-responsive">
               <table class="table table-striped">
-                <thead>
+                <thead class="message_center__header">
                   <tr>
                     <th></th>
                     <th>Date</th>
@@ -52,7 +52,7 @@
 
                 <tbody>
                   <%= Enum.map @message_context_statuses, fn (message_context_status) -> %>
-                    <tr class=<%= maybe_unread_class(message_context_status) %>>
+                    <tr class="message_center__row <%= maybe_unread_class(message_context_status) %>">
                       <td>
                         <input type="checkbox" class="mr-2">
                         <%= render_star(message_context_status) %>

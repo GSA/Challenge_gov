@@ -56,12 +56,39 @@
     color: #999;
   }
 
+  &__header {
+    tr th:last-child {
+      padding: 0 !important;
+    }
+  }
+
   &__row--unread {
-    background-color: #EDF5FF !important;
     font-weight: bold;
   }
 
+  &__row {
+    position: relative;
+
+    &:hover {
+      background-color: #EDF5FF !important;
+      cursor: pointer;
+
+      .message_center__actions {
+        background-color: #EDF5FF !important;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
   &__actions {
+    position: absolute;
+    top: 1px;
+    right: 0;
+    bottom: 1px;
+    display: none;
+    border: none !important;
+
     a {
       color: #000000;
       text-decoration: none !important;
