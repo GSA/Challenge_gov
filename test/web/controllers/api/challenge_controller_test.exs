@@ -1,10 +1,15 @@
 defmodule Web.Api.ChallengeControllerTest do
   use Web.ConnCase
+  use Web, :view
 
   alias ChallengeGov.Challenges
+  alias ChallengeGov.PhaseWinners
+  alias ChallengeGov.Repo
+  alias ChallengeGov.TestHelpers.SubmissionHelpers
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.AgencyHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
+  alias ChallengeGov.TestHelpers
 
   describe "retrieving JSON list of published challenges" do
     test "successfully", %{conn: conn} do
@@ -132,6 +137,81 @@ defmodule Web.Api.ChallengeControllerTest do
         })
 
       expected_json = expected_show_json(challenge)
+
+      conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.id))
+      assert json_response(conn, 200) === expected_json
+    end
+
+    test "successfully for published challenge with winners", %{conn: conn} do
+      user = AccountHelpers.create_user()
+      agency = AgencyHelpers.create_agency()
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(
+        user,
+        %{
+          user_id: user.id,
+          agency_id: agency.id,
+          title: "Test Title 1",
+          description: "Test description 1",
+          status: "published"
+        })
+
+      challenge = Repo.preload(challenge, [:phases])
+
+      submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
+
+      submission = Repo.preload(submission, phase: [:winners])
+
+      {:ok, phase_winner} = PhaseWinners.create(submission.phase)
+
+      PhaseWinners.update(
+        phase_winner,
+        %{
+          "phase_winner" => %{
+            "overview" => "",
+            "overview_delta" => "",
+            "overview_image_path" => "",
+            "winners" => %{
+              "0" => %{
+                "id" => "",
+                "image_path" => "",
+                "name" => "Jane Doe",
+                "place_title" => "1st",
+                "remove" => "false"
+              }
+            }
+          }
+        }
+      )
+
+      submission = Repo.preload(submission, [phase: [winners: [:winners]]], force: true)
+
+      expected_json =
+        Map.merge(
+          expected_show_json(challenge),
+          %{
+            "open_until" => "2021-07-08T05:00:33Z",
+            "upload_logo" => false,
+            "end_date" => TestHelpers.iso_timestamp(hours: 1),
+            "start_date" => TestHelpers.iso_timestamp(),
+            "phases" => [
+              %{
+                "end_date" => TestHelpers.iso_timestamp(hours: 1),
+                "how_to_enter" => "",
+                "id" => submission.phase.id,
+                "judging_criteria" => "",
+                "open_to_submissions" => true,
+                "start_date" => TestHelpers.iso_timestamp(),
+                "title" => nil,
+                "phase_winners" =>
+                  render_one(submission.phase.winners, Web.Api.WinnerView, "phase_winner.json", %{
+                    "phase_title" => submission.phase.title
+                  })
+              }
+            ]
+          }
+        )
 
       conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.id))
       assert json_response(conn, 200) === expected_json
