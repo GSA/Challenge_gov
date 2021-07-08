@@ -20,11 +20,11 @@
           </div>
           <div class="col">
             <div class="row footer__social_links">
-              <a href="#" class="footer__social_link" target="_blank" rel="noopener">
+              <a href="https://twitter.com/ChallengeGov" class="footer__social_link" target="_blank" rel="noopener">
                 <i class="fab fa-twitter"></i>
               </a>
-              <a href="#" class="footer__social_link" target="_blank" rel="noopener">
-                <i class="fab fa-youtube"></i>
+              <a href="https://www.facebook.com/ChallengeGov" class="footer__social_link" target="_blank" rel="noopener">
+                <i class="fab fa-facebook"></i>
               </a>
             </div>
           </div>
