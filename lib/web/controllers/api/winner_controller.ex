@@ -32,15 +32,16 @@ defmodule Web.Api.WinnerController do
     phase_winner =
       case PhaseWinners.get_by_phase_id(phase_id) do
         {:ok, phase_winner} ->
-          phase_winner
+          conn
+          |> assign(:phase_title, phase_winner.phase.title)
+          |> assign(:phase_winner, phase_winner)
+          |> put_status(:ok)
+          |> render("phase_winner.json")
 
         {:error, :no_phase_winner} ->
-          []
+          conn
+          |> put_status(:ok)
+          |> render("phase_winner.json")
       end
-
-    conn
-    |> assign(:phase_winner, phase_winner)
-    |> put_status(:ok)
-    |> render("phase_winner.json")
   end
 end
