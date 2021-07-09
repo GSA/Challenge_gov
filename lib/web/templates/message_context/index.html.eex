@@ -52,7 +52,7 @@
 
                 <tbody>
                   <%= Enum.map @message_context_statuses, fn (message_context_status) -> %>
-                    <tr class="message_center__row <%= maybe_unread_class(message_context_status) %>">
+                    <tr class="message_center__row <%= maybe_unread_class(message_context_status) %> js-clickable-table-row" data-link="<%= Routes.message_context_path(@conn, :show, message_context_status.message_context_id) %>">
                       <td>
                         <input type="checkbox" class="mr-2">
                         <%= render_star(message_context_status) %>
@@ -66,7 +66,6 @@
                       <td class="message_center__actions">
                         <%= render_archive_icon(message_context_status) %>
                         <%= render_read_icon(message_context_status) %>
-                        <%= link("", to: Routes.message_context_path(@conn, :show, message_context_status.message_context_id), class: "far fa-eye text-black text-decoration-none") %>
                       </td>
                     </tr>
                   <% end %>
