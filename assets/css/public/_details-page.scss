@@ -137,9 +137,12 @@
       }
     }
 
-    a.follow-btn {
-      color: #2d618a;;
+    .details__btn {
+      color: #2d618a;
     }
+     .details__btn a.details__btn a.details__btn:visited {
+       color: #2d618a;
+     }
 
     &__follow {
       margin-bottom: 1.5rem;
@@ -152,11 +155,8 @@
       border-radius: 7px;
       border: 1px solid #2d618a;
       box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
-
-      .follow-btn {
-        color: #2d618a;
-      }
     }
+
 
     .item {
       margin-bottom: .5em;
@@ -189,6 +189,16 @@
         color: #B50707;
         font-weight: bold;
         margin: 0 10px 0 5px;
+      }
+    }
+
+    .social-share {
+      width: 60%;
+      text-align: right;
+      padding-right: .25rem;
+
+      .text {
+        margin-left: .5rem;
       }
     }
   }
@@ -273,13 +283,13 @@
     }
 
     .detail-section {
-      grid-template-columns: repeat(auto-fit, 50%);
+      grid-template-columns: repeat(4, 25%);
       grid-template-rows: repeat(4, 1fr);
       row-gap: .5rem;
 
       &__apply {
-        grid-row: 1 / span 2 ;
-        grid-column: 1;
+        grid-row: span 2 ;
+        grid-column: span 2;
 
         .apply-btn {
           width: 80%;
@@ -296,8 +306,8 @@
       }      
 
       &__follow {
-        grid-row: 1 / span 2;
-        grid-column: 1;
+        grid-row: span 2;
+        grid-column: span 2;
         width: 80%;
         display: flex;
         justify-content: center;
@@ -314,7 +324,7 @@
       }
 
       .item {
-        grid-column: 2;
+        grid-column: span 2;
       }
     }
   }

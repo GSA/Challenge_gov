@@ -316,10 +316,14 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
                 </div>
               }
               {!print &&
-              <a className="follow-btn" href={apiUrl + `/public/previews/challenges/${challenge.uuid}?print=true`} target="_blank">
-                <span className="follow-btn"><i className="fas fa-print mr-2"></i>Print challenge</span>
-              </a>
-            }
+                <a className="details__btn" href={apiUrl + `/public/previews/challenges/${challenge.uuid}?details__true`} target="_blank">
+                  <span className="details__btn"><i className="fas fa-print mr-2"></i>Print challenge</span>
+                </a>
+              }
+              <div className="social-share details__btn">
+                <i class="fas fa-share-alt"></i>
+                <span className="text">share</span>
+              </div>
             </div>
           </section>
         </section>
