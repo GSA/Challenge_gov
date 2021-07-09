@@ -197,8 +197,10 @@
       text-align: right;
       padding-right: .25rem;
 
-      .text {
-        margin-left: .5rem;
+      &__btn {
+        i {
+          margin-right: .5rem;
+        }
       }
     }
   }

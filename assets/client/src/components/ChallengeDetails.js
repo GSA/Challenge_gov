@@ -22,8 +22,10 @@ import { ApiUrlContext } from '../ApiUrlContext'
 export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
   const { apiUrl, imageBase } = useContext(ApiUrlContext)
   const [followTooltipOpen, setFollowTooltipOpen] = useState(false)
+  const [shareTooltipOpen, setShareTooltipOpen] = useState(false)
 
   const toggleFollowTooltip = () => setFollowTooltipOpen(!followTooltipOpen)
+  const toggleShareTooltip = () => setShareTooltipOpen(!shareTooltipOpen)
 
   const renderEndDate = (date) => {
     const fiveDaysFromNow = moment().add(5,'d').utc().format()
@@ -99,6 +101,14 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
       <Tooltip placement="bottom" trigger="click" isOpen={followTooltipOpen} target="followChallengeButton" toggle={toggleFollowTooltip} autohide={false} className="follow-tooltip" innerClassName="follow-tooltip__inner" arrowClassName="follow-tooltip__arrow">
         {renderSubscribeButton()}
         {renderSaveButton()}
+      </Tooltip>
+    )
+  }
+
+  const renderShareTooltip = () => {
+    return (
+      <Tooltip placement="bottom" trigger="click" isOpen={shareTooltipOpen} target="shareChallengeButton" toggle={toggleShareTooltip} autohide={false} className="follow-tooltip" innerClassName="follow-tooltip__inner" arrowClassName="follow-tooltip__arrow">
+        <div>this will be something</div>
       </Tooltip>
     )
   }
@@ -321,8 +331,11 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
                 </a>
               }
               <div className="social-share details__btn">
-                <i class="fas fa-share-alt"></i>
-                <span className="text">share</span>
+                <span className="social-share__btn" id="shareChallengeButton">
+                  <i class="fas fa-share-alt"></i>
+                  share
+                </span>
+                {renderShareTooltip()}
               </div>
             </div>
           </section>
