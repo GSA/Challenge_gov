@@ -59,9 +59,9 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
 
   const renderFollowButton = (challenge) => {
     if (challenge.subscriber_count > 0) {
-      return <span className="follow-btn" id="followChallengeButton"><i className="far fa-bookmark mr-3"></i>Follow challenge ({ challenge.subscriber_count })</span>
+      return <span className="details__btn"><i className="far fa-bookmark mr-3"></i>Follow challenge ({ challenge.subscriber_count })</span>
     } else {
-      return <span className="follow-btn" id="followChallengeButton"><i className="far fa-bookmark mr-3"></i>Follow challenge</span>
+      return <span className="details__btn"><i className="far fa-bookmark mr-3"></i>Follow challenge</span>
     }
   }
 
@@ -241,7 +241,7 @@ export const ChallengeDetails = ({challenge, winners, preview, print, tab}) => {
       return (
         <>
           {renderApplyButton(challenge)}
-          <div className="detail-section__follow">
+          <div className="detail-section__follow" id="followChallengeButton">
             {renderFollowButton(challenge)}
             {renderFollowTooltip()}
           </div>
