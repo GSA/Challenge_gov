@@ -9,7 +9,7 @@ defmodule Web.Api.WinnerView do
 
   def render(
         "phase_winner.json",
-        _assigns = %{phase_winner: phase_winner, phase_title: phase_title}
+        _assigns = %{winner: phase_winner, phase_title: phase_title}
       ) do
     %{
       id: phase_winner.id,

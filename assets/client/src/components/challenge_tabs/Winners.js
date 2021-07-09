@@ -33,7 +33,7 @@ export const Winners = ({challenge, challengePhases, print}) => {
 
   const renderPhaseWinners = () => {
     return challengePhases.map(phase => {
-      const phaseWinner = phase.phase_winners
+      const phaseWinner = phase.phase_winner
       if (phaseWinner && Object.keys(phaseWinner).length >= 1) { 
         return (
           <div key={phaseWinner.id || idx } className="card">
@@ -42,8 +42,9 @@ export const Winners = ({challenge, challengePhases, print}) => {
               <h1 className="my-3">{phaseWinner.phase_title}</h1>
               <div className="my-3" dangerouslySetInnerHTML={{ __html: phaseWinner.overview }}></div>
               {phaseWinner.winners && phaseWinner.winners.length >= 1 &&
-                <div className="detail-section winner-grid">{renderWinners(phaseWinner.winners)}</div>
+                <div className="winners-section">{renderWinners(phaseWinner.winners)}</div>
               }
+            </div>
           </div>
         )
       }

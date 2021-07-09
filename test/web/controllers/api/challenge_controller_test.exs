@@ -148,14 +148,15 @@ defmodule Web.Api.ChallengeControllerTest do
 
       challenge =
         ChallengeHelpers.create_single_phase_challenge(
-        user,
-        %{
-          user_id: user.id,
-          agency_id: agency.id,
-          title: "Test Title 1",
-          description: "Test description 1",
-          status: "published"
-        })
+          user,
+          %{
+            user_id: user.id,
+            agency_id: agency.id,
+            title: "Test Title 1",
+            description: "Test description 1",
+            status: "published"
+          }
+        )
 
       challenge = Repo.preload(challenge, [:phases])
 
@@ -187,34 +188,10 @@ defmodule Web.Api.ChallengeControllerTest do
 
       submission = Repo.preload(submission, [phase: [winners: [:winners]]], force: true)
 
-      expected_json =
-        Map.merge(
-          expected_show_json(challenge),
-          %{
-            "open_until" => "2021-07-08T05:00:33Z",
-            "upload_logo" => false,
-            "end_date" => TestHelpers.iso_timestamp(hours: 1),
-            "start_date" => TestHelpers.iso_timestamp(),
-            "phases" => [
-              %{
-                "end_date" => TestHelpers.iso_timestamp(hours: 1),
-                "how_to_enter" => "",
-                "id" => submission.phase.id,
-                "judging_criteria" => "",
-                "open_to_submissions" => true,
-                "start_date" => TestHelpers.iso_timestamp(),
-                "title" => nil,
-                "phase_winners" =>
-                  render_one(submission.phase.winners, Web.Api.WinnerView, "phase_winner.json", %{
-                    "phase_title" => submission.phase.title
-                  })
-              }
-            ]
-          }
-        )
-
       conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.id))
-      assert json_response(conn, 200) === expected_json
+      phase = List.first(json_response(conn, 200)["phases"])
+
+      assert Enum.count(phase["phase_winner"]["winners"]) === 1
     end
 
     test "successfully with archived challenge", %{conn: conn} do

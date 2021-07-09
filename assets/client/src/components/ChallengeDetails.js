@@ -252,13 +252,16 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
   const disableWinners = () => {
     return challengePhases.every(phase => {
-      const phaseWinners = phase.phase_winners
-      return (
-        phaseWinners.length === 0 ||
-        phaseWinners.overview === "" ||
-        !phaseWinners.overview_image_path ||
-        (!!phaseWinners.winners && phaseWinners.winners.length === 0)
-      )
+      const phaseWinner = phase.phase_winner
+      if (!phaseWinner) {
+        return true
+      } else {
+        return (
+          (!phaseWinner.overview || phaseWinner.overview === "") &&
+          !phaseWinner.overview_image_path &&
+          (!!phaseWinner.winners && phaseWinner.winners.length === 0)
+        )
+      }
     })
   }
 
