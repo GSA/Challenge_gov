@@ -9,7 +9,6 @@ defmodule Web.Api.ChallengeControllerTest do
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.AgencyHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
-  alias ChallengeGov.TestHelpers
 
   describe "retrieving JSON list of published challenges" do
     test "successfully", %{conn: conn} do
@@ -186,7 +185,7 @@ defmodule Web.Api.ChallengeControllerTest do
         }
       )
 
-      submission = Repo.preload(submission, [phase: [winners: [:winners]]], force: true)
+      Repo.preload(submission, [phase: [winners: [:winners]]], force: true)
 
       conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.id))
       phase = List.first(json_response(conn, 200)["phases"])
