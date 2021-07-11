@@ -81,7 +81,9 @@ defmodule Web.MessageContextView do
             message_context_status.id
           )
       ],
-      class: "message_center__star fa-star #{class}"
+      class: "message_center__star fa-star #{class}",
+      alt: "Unarchive",
+      tabIndex: 0
     )
   end
 
@@ -94,7 +96,9 @@ defmodule Web.MessageContextView do
           :unarchive,
           message_context_status.id
         ),
-      class: "message_center__archive fas fa-inbox"
+      class: "message_center__archive fas fa-inbox",
+      alt: "Unarchive",
+      tabIndex: 0
     )
   end
 
@@ -107,7 +111,9 @@ defmodule Web.MessageContextView do
           :archive,
           message_context_status.id
         ),
-      class: "message_center__archive fas fa-archive"
+      class: "message_center__archive fas fa-archive",
+      alt: "Archive",
+      tabIndex: 0
     )
   end
 
@@ -120,7 +126,9 @@ defmodule Web.MessageContextView do
           :mark_unread,
           message_context_status.id
         ),
-      class: "message_center__read fas fa-envelope"
+      class: "message_center__read fas fa-envelope",
+      alt: "Mark unread",
+      tabIndex: 0
     )
   end
 
@@ -133,7 +141,9 @@ defmodule Web.MessageContextView do
           :mark_read,
           message_context_status.id
         ),
-      class: "message_center__read fas fa-envelope-open"
+      class: "message_center__read fas fa-envelope-open",
+      alt: "Mark read",
+      tabIndex: 0
     )
   end
 

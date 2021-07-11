@@ -4,9 +4,13 @@
   }
 
   &__snippet {
+    p {
+      margin-bottom: 0;
+    }
+
     * {
       height: 1.4rem;
-      max-width: 15rem;
+      max-width: 20rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -69,9 +73,10 @@
   &__row {
     position: relative;
 
-    &:hover {
+    &:hover, &:focus, &:focus-within {
       background-color: #EDF5FF !important;
       cursor: pointer;
+      outline-offset: -4px;
 
       .message_center__actions {
         background-color: #EDF5FF !important;
@@ -81,11 +86,15 @@
     }
   }
 
+  &__star {
+    color: #FFBE2E;
+  }
+
   &__actions {
     position: absolute;
-    top: 1px;
-    right: 0;
-    bottom: 1px;
+    top: 4px;
+    right: 4px;
+    bottom: 4px;
     display: none;
     border: none !important;
 
