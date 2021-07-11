@@ -30,9 +30,7 @@ defmodule Web.MessageContextView do
   end
 
   def display_last_author_name(message_context) do
-    {:ok, last_author} =
-      message_context
-      |> MessageContexts.get_last_author()
+    last_author = get_last_author(message_context)
 
     case last_author do
       nil ->
@@ -44,9 +42,7 @@ defmodule Web.MessageContextView do
   end
 
   def display_last_author_role(message_context) do
-    {:ok, last_author} =
-      message_context
-      |> MessageContexts.get_last_author()
+    last_author = get_last_author(message_context)
 
     case last_author do
       nil ->
@@ -57,14 +53,17 @@ defmodule Web.MessageContextView do
     end
   end
 
-  def display_last_message_snippet(message_context) do
-    last_message =
-      message_context.messages
-      |> Enum.sort_by(& &1.inserted_at)
-      |> Enum.at(-1) || %{content: ""}
+  defp get_last_author(%{last_message: nil}), do: nil
+  defp get_last_author(%{last_message: last_message}), do: last_message.author
 
-    SharedView.render_safe_html(last_message.content)
+  def display_last_message_snippet(message_context) do
+    last_message_content = get_last_message_content(message_context)
+
+    SharedView.render_safe_html(last_message_content)
   end
+
+  defp get_last_message_content(%{last_message: nil}), do: nil
+  defp get_last_message_content(%{last_message: last_message}), do: last_message.content
 
   def maybe_unread_class(%{read: true}), do: "message_center__row--read"
   def maybe_unread_class(%{read: false}), do: "message_center__row--unread"

@@ -18,8 +18,9 @@ defmodule ChallengeGov.MessageContextStatuses do
 
   def all_for_user(user, opts \\ []) do
     MessageContextStatus
-    |> preload(context: [:messages])
-    |> order_by([mcs], desc: mcs.updated_at)
+    |> preload(context: [:messages, last_message: [:author]])
+    |> join(:inner, [mcs], mc in assoc(mcs, :context))
+    |> order_by([mcs, mc], desc: mc.updated_at)
     |> where([mcs], mcs.user_id == ^user.id)
     |> maybe_filter_archived(opts[:filter])
     |> Filter.filter(opts[:filter], __MODULE__)

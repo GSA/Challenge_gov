@@ -20,6 +20,11 @@ defmodule ChallengeGov.Messages do
 
     Multi.new()
     |> Multi.insert(:message, message_changeset)
+    |> Multi.update(:cache_last_message, fn %{message: message} ->
+      context
+      |> Repo.preload([:last_message])
+      |> Ecto.Changeset.change(last_message: message)
+    end)
     |> Multi.update_all(:message_context_statuses, message_context_status_query,
       set: [read: false]
     )

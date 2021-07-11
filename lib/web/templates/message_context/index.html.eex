@@ -57,7 +57,7 @@
                         <input type="checkbox" class="mr-2 js-table-row-select">
                         <%= render_star(message_context_status) %>
                       </td>
-                      <td><%= Web.SharedView.local_datetime_tag(message_context_status.updated_at) %></td>
+                      <td><%= Web.SharedView.local_datetime_tag(message_context_status.context.updated_at) %></td>
                       <td><%= display_challenge_title_link(message_context_status.context) %></td>
                       <td><%= display_audience(message_context_status.context) %></td>
                       <td><%= display_last_author_name(message_context_status.context) %></td>

@@ -25,6 +25,8 @@ defmodule ChallengeGov.Messages.MessageContext do
     has_many(:messages, Message)
     has_many(:statuses, MessageContextStatus)
 
+    belongs_to(:last_message, Message, on_replace: :nilify)
+
     field(:context, :string)
     field(:context_id, :integer)
     field(:audience, {:array, :string})
