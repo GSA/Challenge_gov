@@ -131,4 +131,26 @@ defmodule ChallengeGov.TestHelpers do
 
     timestamp
   end
+
+  def convert_date_format(date) do
+    date
+    |> DateTime.to_string()
+    |> String.replace(" ", "T")
+  end
+
+  def convert_atoms_to_strings(data) do
+    data
+    |> Enum.reduce([], fn winner, acc ->
+      acc ++
+        [
+          Map.new(winner, fn {key, value} ->
+            if key in [:inserted_at, :updated_at] do
+              {Atom.to_string(key), convert_date_format(value)}
+            else
+              {Atom.to_string(key), value}
+            end
+          end)
+        ]
+    end)
+  end
 end

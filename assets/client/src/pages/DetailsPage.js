@@ -7,7 +7,7 @@ import { ApiUrlContext } from '../ApiUrlContext'
 
 export const DetailsPage = (props) => {
   const [currentChallenge, setCurrentChallenge] = useState()
-  const [challengeWinners, setChallengeWinners] = useState([])
+  const [challengePhases, setChallengePhases] = useState([])
   const [loadingState, setLoadingState] = useState(true)
 
   let { challengeId, tab } = useParams();
@@ -27,6 +27,7 @@ export const DetailsPage = (props) => {
       .get(challengeApiPath)
       .then(res => {
         setCurrentChallenge(res.data)
+        setChallengePhases(res.data.phases)
         setLoadingState(false)
       })
       .catch(e => {
@@ -35,29 +36,10 @@ export const DetailsPage = (props) => {
       })
   }, [])
 
-  useEffect(() => {
-    setLoadingState(true)
-    if (!!currentChallenge) {
-      currentChallenge.phases.map(phase => {
-        let phaseWinnerApiPath = apiUrl + `/api/phase/${phase.id}/winners`
-        axios
-          .get(phaseWinnerApiPath)
-          .then(res => {
-            setChallengeWinners([...challengeWinners, res.data])
-            setLoadingState(false)
-          })
-          .catch(e => {
-            setLoadingState(false)
-            console.log({e})
-          })
-      })
-    }
-  }, [currentChallenge])
-
   return (
     <div>
       {currentChallenge &&
-        <ChallengeDetails challenge={currentChallenge} winners={challengeWinners} tab={tab}/>
+        <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab}/>
       }
     </div>
   )

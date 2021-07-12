@@ -254,7 +254,6 @@ defmodule ChallengeGov.Challenges do
   defp base_preload(challenge) do
     preload(challenge, [
       :non_federal_partners,
-      :phases,
       :events,
       :user,
       :challenge_owner_users,
@@ -262,6 +261,7 @@ defmodule ChallengeGov.Challenges do
       :sub_agency,
       federal_partners: [:agency, :sub_agency],
       federal_partner_agencies: [:sub_agencies],
+      phases: [winners: [:winners]],
       agency: [:sub_agencies]
     ])
   end
@@ -481,7 +481,7 @@ defmodule ChallengeGov.Challenges do
       :challenge_owners,
       :challenge_owner_users,
       :events,
-      phases: ^from(p in Phase, order_by: p.start_date),
+      phases: ^{from(p in Phase, order_by: p.start_date), [winners: :winners]},
       federal_partners: [:agency, :sub_agency]
     ])
     |> Repo.one()

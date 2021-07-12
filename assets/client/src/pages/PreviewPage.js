@@ -9,7 +9,7 @@ import { PreviewBanner } from '../components/PreviewBanner';
 export const PreviewPage = () => {
   const [currentChallenge, setCurrentChallenge] = useState()
   const [loadingState, setLoadingState] = useState(null)
-  const [challengeWinners, setChallengeWinners] = useState([])
+  const [challengePhases, setChallengePhases] = useState([])
 
   const isMounted = useRef(false)
 
@@ -28,6 +28,7 @@ export const PreviewPage = () => {
       .get(challengeApiPath)
       .then(res => {
         setCurrentChallenge(res.data)
+        setChallengePhases(res.data.phases)
         setLoadingState(false)
       })
       .catch(e => {
@@ -35,25 +36,6 @@ export const PreviewPage = () => {
         console.log({e})
       })
   }, [])
-
-  useEffect(() => {
-    setLoadingState(true)
-    if (!!currentChallenge) {
-      currentChallenge.phases.map(phase => {
-        let phaseWinnerApiPath = base_url + `/api/phase/${phase.id}/winners`
-        axios
-          .get(phaseWinnerApiPath)
-          .then(res => {
-            setChallengeWinners([...challengeWinners, res.data])
-            setLoadingState(false)
-          })
-          .catch(e => {
-            setLoadingState(false)
-            console.log({e})
-          })
-      })
-    }
-  }, [currentChallenge])
 
   const launchPrintDialogue = () => {
     if (loadingState === false) {
@@ -89,7 +71,7 @@ export const PreviewPage = () => {
       {renderPreviewItems()}
       <div className="row">
         <div className="col">
-          <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} winners={challengeWinners} preview={true} loading={loadingState} print={print} />
+          <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} challengePhases={challengePhases} preview={true} loading={loadingState} print={print} />
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import { ChallengeTab } from "../ChallengeTab"
 import { ApiUrlContext } from '../../ApiUrlContext'
 
-export const Winners = ({challenge, phaseWinners, print}) => {
+export const Winners = ({challenge, challengePhases, print}) => {
   const { imageBase } = useContext(ApiUrlContext)
 
   const renderOverviewImage = (phaseWinner) => {
@@ -32,24 +32,22 @@ export const Winners = ({challenge, phaseWinners, print}) => {
   }
 
   const renderPhaseWinners = () => {
-    console.log({phaseWinners})
-    return Object.keys(phaseWinners).map((value, idx) => {
-      const phaseWinner = phaseWinners[value]
-      console.log({phaseWinner})
-      console.log(Object.keys(phaseWinner).length)
-      console.log(Object.keys(phaseWinner.winners).length)
-      return (
-        <div key={phaseWinner.id || idx } className="card">
-          <div className="card-body ql-editor">
-            {renderOverviewImage(phaseWinner)}
-            <h1 className="my-3">{phaseWinner.phase_title}</h1>
-            <div className="my-3" dangerouslySetInnerHTML={{ __html: phaseWinner.overview }}></div>
-            {phaseWinner.winners && phaseWinner.winners.length >= 1 &&
-              <div className="detail-section winner-grid">{renderWinners(phaseWinner.winners)}</div>
-            }
+    return challengePhases.map(phase => {
+      const phaseWinner = phase.phase_winner
+      if (phaseWinner && Object.keys(phaseWinner).length >= 1) { 
+        return (
+          <div key={phaseWinner.id || idx } className="card">
+            <div className="card-body ql-editor">
+              {renderOverviewImage(phaseWinner)}
+              <h1 className="my-3">{phaseWinner.phase_title}</h1>
+              <div className="my-3" dangerouslySetInnerHTML={{ __html: phaseWinner.overview }}></div>
+              {phaseWinner.winners && phaseWinner.winners.length >= 1 &&
+                <div className="winners-section">{renderWinners(phaseWinner.winners)}</div>
+              }
+            </div>
           </div>
-        </div>
-      )
+        )
+      }
     })
   }
 
