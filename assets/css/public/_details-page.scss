@@ -392,3 +392,68 @@
     }
   }
 }
+
+.share-tooltip {
+  .tooltip.show {
+    opacity: 1;
+  }
+
+  p {
+    padding: 0px;
+  }
+
+  &__inner {
+    max-width: unset;
+    padding: 1rem;
+    border-radius: 10px;
+    opacity: 1;
+    background-color: #fff;
+    box-shadow: 0 2px 8px 0 rgba(0, 94, 162, 0.2);
+    color: black;
+    text-align: left;
+
+    button {
+      margin: 0 .5rem;
+    }
+  }
+
+  &__arrow::before {
+    border-top-color: #fff !important;
+    border-bottom-color: #fff !important;
+    opacity: 1;
+    box-shadow: 0 2px 8px 0 rgba(0, 94, 162, 0.2);
+  }
+
+  &__button {
+    padding: .5rem 1rem;
+    border-radius: 5px;
+    background-color: #fff;
+
+    &:hover {
+      background-color: #f9f9f9;
+      box-shadow: 0 2px 8px 0 rgba(0, 94, 162, 0.2);
+      transition: .25s;
+    }
+  }
+
+  &__divider {
+    display: flex;
+    padding: 2rem 0rem;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    &:before, &:after {
+      content: '';
+      color: #c3c3c3;
+      border-top: 2px solid;
+      margin: 0 20px 0 0;
+      flex: 1 0 20px;
+    }
+
+    &:after {
+      margin: 0 0 0 20px;
+    }
+  }
+}
