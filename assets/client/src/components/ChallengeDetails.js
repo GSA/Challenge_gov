@@ -53,6 +53,8 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
   }
 
   const renderChallengeTypes = (types, other_type) => {
+    if (types.every(v => v === "")) return
+
     return types.map((t, i) => {
       if (i == types.length - 1 && !challenge.other_type) {
         return <span key={i}>{`${t} `} </span>
@@ -351,7 +353,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
               </div>
               {renderWhoCanApply(challenge)}
               <div className="item">
-                { challenge.types.length > 1 || challenge.other_type
+                { (challenge.types.length > 1 && challenge.types.every(v => v != "")) || challenge.other_type
                   ? <><span className="info-title">Challenge types:</span><span>{`${challenge.primary_type}; `}</span></>
                   : <><span className="info-title">Challenge type:</span><span>{`${challenge.primary_type}`}</span></>
                 }
