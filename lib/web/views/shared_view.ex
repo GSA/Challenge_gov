@@ -120,22 +120,54 @@ defmodule Web.SharedView do
   def render_breadcrumbs(breadcrumbs) do
     content_tag :div, class: "row mb-2" do
       content_tag :div, class: "col" do
-        content_tag :ol, class: "breadcrumb" do
-          Enum.map(breadcrumbs, fn breadcrumb ->
-            text = Map.get(breadcrumb, :text)
-            route = Map.get(breadcrumb, :route, nil)
-            is_visible = Map.get(breadcrumb, :is_visible, true)
-
-            if is_visible do
-              content_tag :li, class: "breadcrumb-item #{if is_nil(route), do: 'active'}" do
-                content_tag(:a, text, href: route)
-              end
-            else
-              []
-            end
-          end)
-        end
+        maybe_truncate_breadcrumbs(breadcrumbs)
       end
     end
+  end
+
+  def maybe_truncate_breadcrumbs(breadcrumbs) do
+    visible_breadcrumbs =
+      Enum.filter(breadcrumbs, fn breadcrumb ->
+        !Map.has_key?(breadcrumb, :is_visible) or !!breadcrumb.is_visible
+      end)
+
+    {first, last_two} = Enum.split(visible_breadcrumbs, -2)
+
+    breadcrumbs = if length(visible_breadcrumbs) > 2, do: last_two, else: breadcrumbs
+
+    {:ok, data} = Jason.encode(first)
+
+    breadcrumb_display =
+      if length(visible_breadcrumbs) > 2 do
+        [
+          content_tag(:span, "", class: "truncated-breadcrumbs", "data-breadcrumbs": data),
+          content_tag :li, class: "breadcrumb-item btn-link" do
+            content_tag(:a, "...", href: "", class: "hidden-breadcrumbs")
+          end,
+          get_breadcrumb_html(breadcrumbs)
+        ]
+      else
+        get_breadcrumb_html(breadcrumbs)
+      end
+
+    content_tag :ol, class: "breadcrumb" do
+      breadcrumb_display
+    end
+  end
+
+  def get_breadcrumb_html(breadcrumbs) do
+    Enum.map(breadcrumbs, fn breadcrumb ->
+      text = Map.get(breadcrumb, :text)
+      route = Map.get(breadcrumb, :route, nil)
+      is_visible = Map.get(breadcrumb, :is_visible, true)
+
+      if is_visible do
+        content_tag :li, class: "breadcrumb-item #{if is_nil(route), do: 'active'}" do
+          content_tag(:a, text, href: route)
+        end
+      else
+        []
+      end
+    end)
   end
 end

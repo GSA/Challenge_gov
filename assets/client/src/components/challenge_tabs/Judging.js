@@ -9,9 +9,7 @@ export const Judging = ({challenge, print}) => {
   const renderPhaseData = (phases) => {
     if (isSinglePhase(challenge)) {
       return (
-        <div>
-          <div dangerouslySetInnerHTML={{ __html: phases[0].judging_criteria }}></div>
-        </div>
+        <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phases[0].judging_criteria }}></div>
       )
     } else {
       return (
@@ -20,7 +18,7 @@ export const Judging = ({challenge, print}) => {
             phases.map((phase, index) => {
               return (
                 <AccordionSection key={phase.id} phase={phase} index={index} print={print}>
-                  <div dangerouslySetInnerHTML={{ __html: phase.judging_criteria }}></div>
+                  <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phase.judging_criteria }}></div>
                 </AccordionSection>
               )
             })
@@ -32,7 +30,9 @@ export const Judging = ({challenge, print}) => {
 
   return (
     <ChallengeTab label="Judging" downloadsLabel="Additional judging documents" section="judging" challenge={challenge} wrapContent={isSinglePhase(challenge)} print={print}>
-      {renderPhaseData(challenge.phases)}
+      <div className="card">
+        {renderPhaseData(challenge.phases)}
+      </div>
     </ChallengeTab>
   )
 }

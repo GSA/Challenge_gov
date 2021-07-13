@@ -1,0 +1,82 @@
+<div class="message_center">
+  <div class="content-header">
+    <div class="container-fluid">
+      <%= SharedView.render_breadcrumbs([
+        %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+        %{text: "Message center"},
+      ])%>
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">
+            <span>Message center</span>
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="container-fluid">
+      <%= form_for(@conn, Routes.message_context_path(@conn, :index, filter: @filter), [method: :get, as: :filter], fn f -> %>
+        <div class="row mb-3">
+          <div class="col">
+            <%= link("New Message", to: Routes.message_context_path(@conn, :new, context: "challenge"), class: "btn btn-primary mr-3") %>
+              <%= select(f, :challenge_id, Enum.map(@challenges, &{&1.title, &1.id}), value: @filter["challenge_id"], prompt: "Filter by challenge", class: "js-select2 message_center__challenge_filter") %>
+          </div>
+          <div class="col text-right">
+            <%= link("All", to: Routes.message_context_path(@conn, :index), class: "btn #{filter_active_class(@conn, "all")}") %>
+            <%= link("Starred", to: Routes.message_context_path(@conn, :index, filter: %{starred: true}), class: "btn #{filter_active_class(@conn, "starred")}") %>
+            <%= link("Unread", to: Routes.message_context_path(@conn, :index, filter: %{read: false}), class: "btn #{filter_active_class(@conn, "read")}") %>
+            <%= link("Archived", to: Routes.message_context_path(@conn, :index, filter: %{archived: true}), class: "btn #{filter_active_class(@conn, "archived")}") %>
+          </div>
+        </div>
+      <% end) %>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Date</th>
+                    <th>Challenge title</th>
+                    <th>Audience</th>
+                    <th>Last author</th>
+                    <th>Last author role</th>
+                    <th>Message snippet</th>
+                    <th></th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <%= Enum.map @message_context_statuses, fn (message_context_status) -> %>
+                    <tr class=<%= maybe_unread_class(message_context_status) %>>
+                      <td>
+                        <input type="checkbox" class="mr-2">
+                        <%= render_star(message_context_status) %>
+                      </td>
+                      <td><%= Web.SharedView.local_datetime_tag(message_context_status.updated_at) %></td>
+                      <td><%= display_challenge_title_link(message_context_status.context) %></td>
+                      <td><%= display_audience(message_context_status.context) %></td>
+                      <td><%= display_last_author_name(message_context_status.context) %></td>
+                      <td><%= display_last_author_role(message_context_status.context) %></td>
+                      <td class="message_center__snippet"><%= display_last_message_snippet(message_context_status.context) %></td>
+                      <td class="message_center__actions">
+                        <%= render_archive_icon(message_context_status) %>
+                        <%= render_read_icon(message_context_status) %>
+                        <%= link("", to: Routes.message_context_path(@conn, :show, message_context_status.message_context_id), class: "far fa-eye text-black text-decoration-none") %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%#= SharedView.pagination(path: Routes.submission_path(@conn, :index), pagination: @pagination) %>
+    </div>
+  </section>
+</div>

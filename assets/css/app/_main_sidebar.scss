@@ -1,0 +1,9 @@
+.main-sidebar {
+  .nav-item.disabled {
+    opacity: .60;
+
+    .nav-link {
+      cursor: not-allowed;
+    }
+  }
+}

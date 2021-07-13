@@ -7,12 +7,14 @@ import { ApiUrlContext } from '../ApiUrlContext'
 
 export const DetailsPage = (props) => {
   const [currentChallenge, setCurrentChallenge] = useState()
+  const [challengePhases, setChallengePhases] = useState([])
   const [loadingState, setLoadingState] = useState(true)
 
-  let { challengeId } = useParams();
+  let { challengeId, tab } = useParams();
   const { apiUrl } = useContext(ApiUrlContext)
 
   useEffect(() => {
+    setLoadingState(true)
     // TODO: Temporary hiding of layout on chal details until the layout is moved
     $(".top-banner").hide()
     $(".help-section").hide()
@@ -25,6 +27,7 @@ export const DetailsPage = (props) => {
       .get(challengeApiPath)
       .then(res => {
         setCurrentChallenge(res.data)
+        setChallengePhases(res.data.phases)
         setLoadingState(false)
       })
       .catch(e => {
@@ -36,7 +39,7 @@ export const DetailsPage = (props) => {
   return (
     <div>
       {currentChallenge &&
-        <ChallengeDetails challenge={currentChallenge} />
+        <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab}/>
       }
     </div>
   )

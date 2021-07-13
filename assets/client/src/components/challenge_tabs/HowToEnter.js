@@ -9,9 +9,7 @@ export const HowToEnter = ({challenge, print}) => {
   const renderPhaseData = (phases) => {
     if (isSinglePhase(challenge)) {
       return (
-        <div>
-          <div dangerouslySetInnerHTML={{ __html: phases[0].how_to_enter }}></div>
-        </div>
+        <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phases[0].how_to_enter }}></div>
       )
     } else {
       return (
@@ -20,7 +18,7 @@ export const HowToEnter = ({challenge, print}) => {
             phases.map((phase, index) => {
               return (
                 <AccordionSection key={phase.id} phase={phase} index={index} print={print}>
-                  <div dangerouslySetInnerHTML={{ __html: phase.how_to_enter }}></div>
+                  <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phase.how_to_enter }}></div>
                 </AccordionSection>
               )
             })
@@ -32,7 +30,9 @@ export const HowToEnter = ({challenge, print}) => {
 
   return (
     <ChallengeTab label="How to enter" downloadsLabel="Additional documents on how to enter" section="how_to_enter" challenge={challenge} wrapContent={isSinglePhase(challenge)} print={print}>
-      {renderPhaseData(challenge.phases)}
+      <div className="card">
+        {renderPhaseData(challenge.phases)}
+      </div>
     </ChallengeTab>
   )
 }

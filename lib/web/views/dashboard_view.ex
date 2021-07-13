@@ -217,6 +217,12 @@ defmodule Web.DashboardView do
           icon: "/images/dashboard_icons/medals.svg",
           title: "My saved challenges",
           description: "Challenges I've saved."
+        ),
+        render("_card_link.html",
+          target: Routes.help_path(Endpoint, :index),
+          icon: "/images/dashboard_icons/help.svg",
+          title: "Help",
+          description: "Help Center"
         )
       ]
     end

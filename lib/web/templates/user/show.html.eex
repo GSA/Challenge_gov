@@ -1,22 +1,15 @@
 <div class="content-header">
   <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
+      %{text: "Users", route: Routes.user_path(@conn, :index)},
+      %{text: AccountView.full_name(@user)}
+    ])%>
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">
           <%= "#{AccountView.full_name(@user)} (#{(@user.email)})" %>
         </h1>
-      </div>
-
-      <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item">
-            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
-              <i class="fa fa-dashboard"></i> Home
-            <% end %>
-          </li>
-          <li class="breadcrumb-item"><%= link("Users", to: Routes.user_path(@conn, :index)) %></li>
-          <li class="breadcrumb-item active"><%= AccountView.full_name(@user) %></li>
-        </ol>
       </div>
     </div>
   </div>

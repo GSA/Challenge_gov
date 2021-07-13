@@ -155,6 +155,8 @@ defmodule Web.Router do
 
     resources("/saved_challenges", SavedChallengeController, only: [:index, :delete])
 
+    get("/help", HelpController, :index)
+
     get("/exports/challenges/:id/:format", ExportController, :export_challenge)
 
     get("/reports/security_log", ReportsController, :export_security_log)
@@ -170,6 +172,19 @@ defmodule Web.Router do
     post("/users/:user_id/challenge/:challenge_id", UserController, :restore_challenge_access,
       as: :restore_challenge_access
     )
+
+    resources("/messages", MessageContextController, only: [:index, :show, :new, :create])
+
+    post("/message_context_statuses/:id/mark_read", MessageContextStatusController, :mark_read)
+
+    post(
+      "/message_context_statuses/:id/mark_unread",
+      MessageContextStatusController,
+      :mark_unread
+    )
+
+    post("/message_context_statuses/:id/archive", MessageContextStatusController, :archive)
+    post("/message_context_statuses/:id/unarchive", MessageContextStatusController, :unarchive)
 
     resources("/site_content", SiteContentController, [:index, :show, :edit, :update])
   end
@@ -204,6 +219,11 @@ defmodule Web.Router do
     get("/challenges/preview/:uuid", ChallengeController, :preview)
     resources("/challenges", ChallengeController, only: [:index, :show])
     post("/challenges/:challenge_id/contact_form", ContactFormController, :send_email)
+
+    resources("/messages/:message_context_id", MessageController, only: [:create])
+    post("/message_context_status/:id/star", MessageContextStatusController, :toggle_starred)
+
+    get("/phase/:phase_id/winners", WinnerController, :phase_winners)
   end
 
   # Public Routes
@@ -216,6 +236,7 @@ defmodule Web.Router do
     get("/", PageController, :index)
     get("/challenges", PageController, :index, as: :challenge_index)
     get("/challenges#/challenge/:id", PageController, :index, as: :challenge_details)
+    get("/challenges#/challenge/:id/:tab", PageController, :index, as: :challenge_details)
   end
 
   if Mix.env() == :dev do

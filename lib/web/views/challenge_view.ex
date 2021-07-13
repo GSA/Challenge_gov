@@ -13,6 +13,10 @@ defmodule Web.ChallengeView do
   alias Web.FormView
   alias Web.SharedView
 
+  def format_currency(amount) do
+    Money.to_string(Money.new(amount, :USD), strip_insignificant_zeros: true)
+  end
+
   def name_link(conn, challenge) do
     link(challenge.title, to: Routes.challenge_path(conn, :show, challenge.id))
   end
@@ -443,6 +447,14 @@ defmodule Web.ChallengeView do
       name: "action",
       value: "return_to_review",
       class: "usa-button"
+    )
+  end
+
+  def cancel_button(conn) do
+    link("cancel",
+      to: Routes.challenge_path(conn, :index),
+      class: "btn btn-link",
+      formnovalidate: true
     )
   end
 

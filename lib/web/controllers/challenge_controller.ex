@@ -1,5 +1,6 @@
 defmodule Web.ChallengeController do
   use Web, :controller
+  use Phoenix.HTML
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.Security
@@ -155,8 +156,9 @@ defmodule Web.ChallengeController do
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       conn
-      |> assign(:user, user)
       |> assign(:challenge, challenge)
+      |> maybe_reset_challenge_status(user, challenge)
+      |> assign(:user, user)
       |> assign(:path, Routes.challenge_path(conn, :update, id))
       |> assign(:action, action_name(conn))
       |> assign(:show_info, false)
@@ -455,4 +457,23 @@ defmodule Web.ChallengeController do
       |> redirect(to: Routes.challenge_path(conn, :edit, challenge.id, section))
     end
   end
+
+  defp maybe_reset_challenge_status(
+         conn,
+         user,
+         challenge = %{status: "gsa_review"}
+       ) do
+    remote_ip = Security.extract_remote_ip(conn)
+    {:ok, challenge} = Challenges.set_status(user, challenge, "draft", remote_ip)
+
+    conn
+    |> put_flash(:warning, [
+      content_tag(:span, "Challenge Removed from Queue", class: "h4"),
+      content_tag(:br, ""),
+      "Once edits are made you will need to resubmit this challenge for GSA approval"
+    ])
+    |> assign(:challenge, challenge)
+  end
+
+  defp maybe_reset_challenge_status(conn, _user, _challenge), do: conn
 end

@@ -2,7 +2,6 @@ defmodule ChallengeGov.Winners do
   @moduledoc """
   Context for winners
   """
-
   alias Ecto.Multi
   alias Stein.Storage
   alias ChallengeGov.Repo

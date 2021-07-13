@@ -1,7 +1,11 @@
 defmodule Web.Api.ChallengeControllerTest do
   use Web.ConnCase
+  use Web, :view
 
   alias ChallengeGov.Challenges
+  alias ChallengeGov.PhaseWinners
+  alias ChallengeGov.Repo
+  alias ChallengeGov.TestHelpers.SubmissionHelpers
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.AgencyHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
@@ -135,6 +139,58 @@ defmodule Web.Api.ChallengeControllerTest do
 
       conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.id))
       assert json_response(conn, 200) === expected_json
+    end
+
+    test "successfully for published challenge with winners", %{conn: conn} do
+      user = AccountHelpers.create_user()
+      agency = AgencyHelpers.create_agency()
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(
+          user,
+          %{
+            user_id: user.id,
+            agency_id: agency.id,
+            title: "Test Title 1",
+            description: "Test description 1",
+            status: "published"
+          }
+        )
+
+      challenge = Repo.preload(challenge, [:phases])
+
+      submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
+
+      submission = Repo.preload(submission, phase: [:winners])
+
+      {:ok, phase_winner} = PhaseWinners.create(submission.phase)
+
+      PhaseWinners.update(
+        phase_winner,
+        %{
+          "phase_winner" => %{
+            "overview" => "",
+            "overview_delta" => "",
+            "overview_image_path" => "",
+            "winners" => %{
+              "0" => %{
+                "id" => "",
+                "image_path" => "",
+                "name" => "Jane Doe",
+                "place_title" => "1st",
+                "remove" => "false"
+              }
+            }
+          }
+        }
+      )
+
+      Repo.preload(submission, [phase: [winners: [:winners]]], force: true)
+
+      conn = get(conn, Routes.api_challenge_path(conn, :show, challenge.id))
+      phase = List.first(json_response(conn, 200)["phases"])
+
+      assert Enum.count(phase["phase_winner"]["winners"]) === 1
     end
 
     test "successfully with archived challenge", %{conn: conn} do
@@ -280,8 +336,13 @@ defmodule Web.Api.ChallengeControllerTest do
       "fiscal_year" => "FY20",
       "custom_url" => nil,
       "end_date" => nil,
-      "prize_description" => "",
-      "faq" => "",
+      "prize_description" => nil,
+      "faq" => nil,
+      "other_type" => nil,
+      "terms_equal_rules" => false,
+      "prize_type" => "both",
+      "primary_type" => "Software and apps",
+      "upload_logo" => nil,
       "multi_phase" => nil,
       "judging_criteria" => "",
       "status" => challenge.status,

@@ -1,21 +1,14 @@
 <div class="content-header">
   <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
+      %{text: "Site Management"},
+    ])%>
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">
           Site Management
         </h1>
-      </div>
-
-      <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item">
-            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
-              <i class="fa fa-dashboard"></i> Home
-            <% end %>
-          </li>
-          <li class="breadcrumb-item active">Site Management</li>
-        </ol>
       </div>
     </div>
   </div>

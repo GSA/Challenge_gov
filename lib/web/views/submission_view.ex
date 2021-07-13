@@ -43,13 +43,13 @@ defmodule Web.SubmissionView do
   end
 
   def name_link(conn, submission, query_params \\ []) do
-    link(submission.title || "Submission #{submission.id}",
+    link(submission.title,
       to: Routes.submission_path(conn, :show, submission.id, query_params)
     )
   end
 
   def name_link_url(conn, submission) do
-    link(submission.title || "Submission #{submission.id}",
+    link(submission.title,
       to: Routes.submission_url(conn, :show, submission.id)
     )
   end
@@ -145,17 +145,83 @@ defmodule Web.SubmissionView do
     end
   end
 
-  def cancel_button(conn, action, challenge, _opts \\ []) do
+  def cancel_button(conn, action, challenge, phase, user, _opts \\ []) do
     route =
-      case action do
-        a when a === :new or a === :create ->
+      cond do
+        Accounts.has_admin_access?(user) ->
+          Routes.challenge_phase_managed_submission_path(
+            conn,
+            :managed_submissions,
+            challenge.id,
+            phase.id
+          )
+
+        action === :new or action === :create ->
           Routes.public_challenge_details_path(conn, :index, challenge.id)
 
-        a when a === :edit or a === :update or a === :submit ->
+        action === :edit or action === :update or action === :submit ->
           Routes.submission_path(conn, :index)
       end
 
     link("Cancel", to: route, class: "btn btn-link")
+  end
+
+  def accept_terms(conn, form, user, challenge) do
+    # show for solvers even on editing
+    if Accounts.is_solver?(user) do
+      content_tag(:div, class: "form-group") do
+        content_tag(:div, class: "col") do
+          [
+            label(form, :terms_accepted) do
+              [
+                checkbox(form, :terms_accepted,
+                  class: FormView.form_group_classes(form, :terms_accepted)
+                ),
+                " I have read the ",
+                link("rules, terms and conditions ",
+                  to:
+                    Routes.public_challenge_details_path(
+                      conn,
+                      :index,
+                      challenge.custom_url || challenge.id,
+                      "rules"
+                    ),
+                  target: "_blank"
+                ),
+                " of this challenge",
+                error_tag(form, :terms_accepted)
+              ]
+            end
+          ]
+        end
+      end
+    end
+  end
+
+  def verify_review(form, user_id, submission) do
+    %{
+      submitter_id: submitter_id,
+      manager_id: manager_id,
+      review_verified: review_verified
+    } = submission
+
+    if submitter_id == user_id and (!!manager_id and !review_verified) do
+      content_tag(:div) do
+        content_tag(:div, class: "col") do
+          [
+            label(form, :review_verified) do
+              [
+                checkbox(form, :review_verified,
+                  class: FormView.form_group_classes(form, :review_verified)
+                ),
+                " I have reviewed the submission and verify it is accurate",
+                error_tag(form, :review_verified)
+              ]
+            end
+          ]
+        end
+      end
+    end
   end
 
   def save_draft_button(data) do

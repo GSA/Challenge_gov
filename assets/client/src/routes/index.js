@@ -14,6 +14,10 @@ export const IndexRoutes = [
   },
   {
     component: DetailsPage,
+    path: "/challenge/:challengeId/:tab"
+  },
+  {
+    component: DetailsPage,
     path: "/challenge/:challengeId"
   }
 ];

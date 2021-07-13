@@ -1,3 +1,22 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
+      %{text: "Challenges"},
+    ])%>
+    <%# if pending, show pending title %>
+    <%= if length(@pending_challenges) > 0 && Accounts.has_admin_access?(@user) do %>
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">
+            <span>Pending Challenges</span>
+          </h1>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
 <%= if length(@pending_challenges) > 0 && Accounts.has_admin_access?(@user) do %>
   <%= render Web.ChallengeView, "_pending_challenges.html", conn: @conn, user: @user, challenges: @pending_challenges, pagination: @pending_pagination, sort: %{}, filter: %{} %>
 <% end %>
@@ -6,20 +25,8 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <%= link(to: Routes.dashboard_path(@conn, :index)) do %>
-              <i class="fa fa-dashboard"></i> Home
-            <% end %>
-          </li>
-          <li class="breadcrumb-item active">Challenges</li>
-        </ol>
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-sm-6">
         <h1 class="m-0 text-dark">
-          <span>Challenges</span>
+          <span>All Challenges</span>
           <div class="btn-group">
             <%= link "New", to: Routes.challenge_path(@conn, :new, show_info: true), class: "btn btn-primary" %>
           </div>

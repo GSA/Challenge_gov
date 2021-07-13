@@ -9,7 +9,11 @@ defmodule Web.Api.PhaseView do
       end_date: phase.end_date,
       open_to_submissions: phase.open_to_submissions,
       judging_criteria: HtmlSanitizeEx.basic_html(phase.judging_criteria),
-      how_to_enter: HtmlSanitizeEx.basic_html(phase.how_to_enter)
+      how_to_enter: HtmlSanitizeEx.basic_html(phase.how_to_enter),
+      phase_winner:
+        render_one(phase.winners, Web.Api.WinnerView, "phase_winner.json", %{
+          phase_title: phase.title
+        })
     }
   end
 end

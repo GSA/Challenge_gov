@@ -2,6 +2,7 @@ defmodule Web.LayoutView do
   use Web, :view
 
   alias ChallengeGov.Accounts
+  alias ChallengeGov.MessageContextStatuses
   alias ChallengeGov.Recaptcha
   alias Web.AccountView
   alias Web.PageTitle
@@ -71,16 +72,48 @@ defmodule Web.LayoutView do
     end
   end
 
+  def render_message_center_icon(conn, user) do
+    nav_item_classes = "nav-item"
+    link_classes = "nav-link #{tab_selected(conn, "messages")}"
+
+    [route, nav_item_classes] =
+      if !MessageContextStatuses.has_messages?(user) and Accounts.is_solver?(user) do
+        [
+          "#",
+          nav_item_classes <> " disabled"
+        ]
+      else
+        [
+          Routes.message_context_path(conn, :index),
+          nav_item_classes
+        ]
+      end
+
+    content_tag :li, class: nav_item_classes do
+      link to: route, class: link_classes do
+        [
+          content_tag(:i, "", class: "nav-icon fas fa-envelope"),
+          content_tag(:p, "Message Center")
+        ]
+      end
+    end
+  end
+
   def load_filter_panel(conn, view_module) do
+    # credo:disable-for-previous-line
     Phoenix.Controller.action_name(conn) == :index and
-      view_module != Web.DashboardView and
-      view_module != Web.AccessView and
-      view_module != Web.SiteContentView and
-      view_module != Web.PhaseView and
-      view_module != Web.PhaseWinnerView and
-      view_module != Web.SubmissionExportView and
-      view_module != Web.SubmissionInviteView and
-      view_module != Web.AnalyticsView
+      view_module not in [
+        Web.DashboardView,
+        Web.AccessView,
+        Web.SiteContentView,
+        Web.PhaseView,
+        Web.PhaseWinnerView,
+        Web.SubmissionExportView,
+        Web.SubmissionInviteView,
+        Web.AnalyticsView,
+        Web.MessageContextView,
+        Web.HelpView
+      ]
   end
 end
 

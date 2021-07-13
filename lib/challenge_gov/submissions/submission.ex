@@ -44,6 +44,7 @@ defmodule ChallengeGov.Submissions.Submission do
     has_one(:invite, SubmissionInvite)
     has_many(:documents, Document)
     field(:document_ids, :map, virtual: true)
+    field(:document_objects, :map, virtual: true)
 
     # Fields
     field(:title, :string)
@@ -54,8 +55,8 @@ defmodule ChallengeGov.Submissions.Submission do
     field(:external_url, :string)
     field(:status, :string)
     field(:judging_status, :string, default: "not_selected")
-    field(:terms_accepted, :boolean, default: false)
-    field(:review_verified, :boolean, default: false)
+    field(:terms_accepted, :boolean, default: nil)
+    field(:review_verified, :boolean, default: nil)
 
     # Meta Timestamps
     field(:deleted_at, :utc_datetime)
@@ -110,6 +111,8 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
+    |> validate_review_verify(params)
+    |> validate_terms(params)
     |> validate_required([
       :title,
       :brief_description,
@@ -139,6 +142,8 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
+    |> validate_review_verify(params)
+    |> validate_terms(params)
     |> validate_required([
       :title,
       :brief_description,
@@ -181,7 +186,80 @@ defmodule ChallengeGov.Submissions.Submission do
 
     struct = if is_blank?(d), do: add_error(struct, :description, "can't be blank"), else: struct
 
+    struct = validate_terms(struct)
+
+    struct = validate_review_verify(struct)
+
     struct
+  end
+
+  defp validate_terms(struct) do
+    ta = get_field(struct, :terms_accepted)
+
+    cond do
+      is_nil(ta) ->
+        struct
+
+      !!ta ->
+        struct
+
+      true ->
+        add_error(struct, :terms_accepted, "must be accepted")
+    end
+  end
+
+  defp validate_terms(struct, params) do
+    ta = params["terms_accepted"]
+
+    cond do
+      is_nil(ta) ->
+        struct
+
+      ta === "true" ->
+        struct
+
+      true ->
+        add_error(struct, :terms_accepted, "must be accepted")
+    end
+  end
+
+  defp validate_review_verify(struct) do
+    rv = get_field(struct, :review_verified)
+    manager_id = get_field(struct, :manager_id)
+
+    cond do
+      is_nil(manager_id) ->
+        struct
+
+      is_nil(rv) ->
+        struct
+
+      !!manager_id and !!rv ->
+        struct
+
+      true ->
+        add_error(struct, :review_verified, "must verify this submission")
+    end
+  end
+
+  defp validate_review_verify(struct, params) do
+    rv = params["review_verified"]
+    manager_id_changes = params["manager_id"]
+    manager_id_struct = get_field(struct, :manager_id)
+
+    cond do
+      is_nil(manager_id_changes) and is_nil(manager_id_struct) ->
+        struct
+
+      is_nil(rv) ->
+        struct
+
+      (!!manager_id_struct or !!manager_id_changes) and rv === "true" ->
+        struct
+
+      true ->
+        add_error(struct, :review_verified, "must verify this submission")
+    end
   end
 
   defp is_blank?(string) do

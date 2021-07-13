@@ -5,6 +5,7 @@ defmodule Web.ReportsView do
 
   alias ChallengeGov.Reports.CSV
   alias Web.FormView
+  alias Web.SharedView
 
   def render_security_log("security-log-header.csv", _assigns) do
     headers = [
