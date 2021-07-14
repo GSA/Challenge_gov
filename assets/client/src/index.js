@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter, Redirect, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Redirect, Switch, Route } from "react-router-dom";
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
@@ -39,9 +39,9 @@ const renderRouter = () => (
     apiUrl: apiUrl || window.location.origin,
     imageBase: imageBase || ""
   }}>
-    <HashRouter>
+    <BrowserRouter basename="/public">
       <Application />
-    </HashRouter>
+    </BrowserRouter>
   </ApiUrlContext.Provider>
 )
 
