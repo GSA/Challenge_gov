@@ -13,6 +13,20 @@
 
     <title>Challenge.Gov</title>
 
+    <%= if Map.has_key?(@conn.assigns, :og_description) do %>
+      <meta property="og:description" content="<%= @conn.assigns.og_description %>" />
+    <% end %>
+
+    <%= if Map.has_key?(assigns, :og_image) do %>
+      <meta property="og:image" content="<%= @og_image %>">
+    <% end %>
+
+    <%= if Map.has_key?(@conn.assigns, :og_title) do %>
+      <meta property="og:title" content="<%= @conn.assigns.og_title %>">
+    <% end %>
+
+    <meta name="twitter:card" content="summary_large_image">
+
     <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
   </head>
 
