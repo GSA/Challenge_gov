@@ -1,7 +1,9 @@
 <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
   <div class="card-body">
     <%= FormView.rt_textarea_field(f, :content) %>
-  </div>            
+    <%= FormView.datetime_field(f, :start_date) %>
+    <%= FormView.datetime_field(f, :end_date) %>
+  </div>
 
   <div class="card-footer">
     <%= submit("Submit", class: "btn btn-primary pull-right") %>

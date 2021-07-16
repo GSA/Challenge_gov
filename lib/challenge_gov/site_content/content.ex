@@ -13,6 +13,8 @@ defmodule ChallengeGov.SiteContent.Content do
     field(:section, :string)
     field(:content, :string)
     field(:content_delta, :string)
+    field(:start_date, :utc_datetime)
+    field(:end_date, :utc_datetime)
   end
 
   def changeset(struct, params) do
@@ -20,7 +22,9 @@ defmodule ChallengeGov.SiteContent.Content do
     |> cast(params, [
       :section,
       :content,
-      :content_delta
+      :content_delta,
+      :start_date,
+      :end_date
     ])
     |> unique_constraint(:section)
   end
