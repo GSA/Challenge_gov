@@ -277,6 +277,24 @@ body {
   }
 }
 
+.site-wide-banner {
+  i {
+    font-size: 2rem;
+    margin-right: 1rem;
+  }
+
+  .callout {
+    background-color: #FAF3D1;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .ql-editor {
+    padding: 0;
+  }
+}
+
 @media (min-width: 768px) {
   .modal-content {
     margin: 10% 25% 0 30%;

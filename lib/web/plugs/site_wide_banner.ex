@@ -1,6 +1,6 @@
 defmodule Web.Plugs.SiteWideBanner do
   @moduledoc """
-  Check for site wide banner and apply
+  Check for site wide banner and apply if currently active
   """
 
   import Plug.Conn
@@ -10,16 +10,26 @@ defmodule Web.Plugs.SiteWideBanner do
   def init(default), do: default
 
   def call(conn, _opts) do
-    {:ok, banner_content} = SiteContent.get("site_wide_banner")
-    case is_nil(banner_content.content) do
-      false ->
-        IO.puts "RIGHT HERE - got one"
-        IO.inspect(banner_content, label: "RIGHT HERE - banner_content")
-        assign(conn, :site_wide_banner, banner_content)
+    {:ok, banner} = SiteContent.get("site_wide_banner")
 
+    case banner_is_active?(banner) do
       true ->
-        IO.puts "RIGHT HERE - nop"
+        assign(conn, :site_wide_banner, banner)
+
+      false ->
         conn
+    end
+  end
+
+  defp banner_is_active?(banner) do
+    now = DateTime.utc_now()
+
+    if is_nil(banner.start_date) or is_nil(banner.end_date) do
+      false
+    else
+      !is_nil(banner.content) and
+        DateTime.compare(now, banner.start_date) === :gt and
+        DateTime.compare(now, banner.end_date) === :lt
     end
   end
 end
