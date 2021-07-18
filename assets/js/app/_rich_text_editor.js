@@ -80,13 +80,17 @@ $(".rt-textarea").each(function(textarea) {
   let deltaInput = $(`#${fieldName}_delta`)
   let initialDelta = JSON.parse(deltaInput.val() || "{}")
 
-  // preliminary code to go in
-  // if (!!Object.keys(initialDelta).length) {
-  //   quill.setContents(initialDelta)
-  // } else {
-  //   const strippedText = stripHtml(richTextInput).result
-  //   quill.setText(strippedText + "\n")
-  // }
+  const richTextDeltaValue = richTextInput[0].defaultValue
+  const deltaInputValue = deltaInput[0].defaultValue
+
+  console.log("field has val but not delta val", richTextDeltaValue != "" && deltaInputValue === "")
+
+  if (richTextDeltaValue != "" && deltaInputValue === "") {
+    const strippedText = stripHtml(richTextInput[0].defaultValue).result
+    quill.setText(strippedText + "\n")
+  } else {
+    quill.setContents(initialDelta)
+  }
 
   // test code
   console.log({richTextInput})
