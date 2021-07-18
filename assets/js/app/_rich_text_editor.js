@@ -1,5 +1,6 @@
 import Quill from "quill"
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html"
+import { stripHtml } from "string-strip-html";
 
 // Rich text generator
 let toolbarOptions = [
@@ -78,6 +79,13 @@ $(".rt-textarea").each(function(textarea) {
   let richTextInput = $(`#${fieldName}`)
   let deltaInput = $(`#${fieldName}_delta`)
   let initialDelta = JSON.parse(deltaInput.val() || "{}")
+
+  // test code
+  console.log({richTextInput})
+  console.log({deltaInput})
+  console.log("deltaParse/initialDelta", {initialDelta})
+  console.log("rich text is nil?", !richTextInput)
+  console.log("stripped rich text", stripHtml(richTextInput).result)
 
   quill.setContents(initialDelta)
 
