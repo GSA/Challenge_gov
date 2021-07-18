@@ -84,6 +84,12 @@ $(".rt-textarea").each(function(textarea) {
   const deltaInputValue = deltaInput[0].defaultValue
 
   console.log("field has val but not delta val", richTextDeltaValue != "" && deltaInputValue === "")
+  console.log({richTextInput})
+  console.log({richTextDeltaValue})
+  console.log("richTextDeltaValue != emptString", richTextDeltaValue != "")
+  console.log({deltaInput})
+  console.log({deltaInputValue})
+  console.log("deltaInputValue === emptString", deltaInputValue === "")
 
   if (richTextDeltaValue != "" && deltaInputValue === "") {
     const strippedText = stripHtml(richTextInput[0].defaultValue).result
@@ -93,8 +99,6 @@ $(".rt-textarea").each(function(textarea) {
   }
 
   // test code
-  console.log({richTextInput})
-  console.log({deltaInput})
   console.log("deltaParse/initialDelta", {initialDelta})
   console.log("initialDelta is full obj/has length?", !!Object.keys(initialDelta).length)
   console.log("stripped rich text", stripHtml(richTextInput[0].defaultValue).result)
