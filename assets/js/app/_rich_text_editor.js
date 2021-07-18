@@ -80,12 +80,20 @@ $(".rt-textarea").each(function(textarea) {
   let deltaInput = $(`#${fieldName}_delta`)
   let initialDelta = JSON.parse(deltaInput.val() || "{}")
 
+  // preliminary code to go in
+  // if (!!Object.keys(initialDelta).length) {
+  //   quill.setContents(initialDelta)
+  // } else {
+  //   const strippedText = stripHtml(richTextInput).result
+  //   quill.setText(strippedText + "\n")
+  // }
+
   // test code
   console.log({richTextInput})
   console.log({deltaInput})
   console.log("deltaParse/initialDelta", {initialDelta})
-  console.log("rich text is nil?", !richTextInput)
-  console.log("stripped rich text", stripHtml(richTextInput).result)
+  console.log("initialDelta is full obj/has length?", !!Object.keys(initialDelta).length)
+  console.log("stripped rich text", stripHtml(richTextInput.defaultValue).result)
 
   quill.setContents(initialDelta)
 
