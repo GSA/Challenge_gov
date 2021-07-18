@@ -4,10 +4,11 @@ defmodule ChallengeGov.TestHelpers do
   """
 
   alias ChallengeGov.Accounts
+  alias ChallengeGov.Agencies
   alias ChallengeGov.Challenges
   alias ChallengeGov.Repo
+  alias ChallengeGov.SiteContent
   alias ChallengeGov.SupportingDocuments
-  alias ChallengeGov.Agencies
   alias ChallengeGov.Timeline
 
   defp user_attributes(attributes) do
@@ -22,6 +23,33 @@ defmodule ChallengeGov.TestHelpers do
       },
       attributes
     )
+  end
+
+  def create_site_wide_banner(attributes \\ %{}) do
+    {:ok, content} = SiteContent.get("site_wide_banner")
+
+    start_date =
+      DateTime.utc_now()
+      |> DateTime.add(-60 * 60 * 24, :second)
+      |> DateTime.to_string()
+
+    end_date =
+      DateTime.utc_now()
+      |> DateTime.add(60 * 60 * 24, :second)
+      |> DateTime.to_string()
+
+    params =
+      Map.merge(
+        %{
+          "content" => "<p>Banner info</p>",
+          "content_delta" => "{\"ops\":[{\"attributes\"{\"insert\":\"\\nBanner info\\n\"}]}",
+          "end_date" => end_date,
+          "start_date" => start_date
+        },
+        attributes
+      )
+
+    SiteContent.update(content, params)
   end
 
   def create_user(attributes \\ %{}) do
