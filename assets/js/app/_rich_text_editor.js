@@ -93,7 +93,7 @@ $(".rt-textarea").each(function(textarea) {
   console.log({deltaInput})
   console.log("deltaParse/initialDelta", {initialDelta})
   console.log("initialDelta is full obj/has length?", !!Object.keys(initialDelta).length)
-  console.log("stripped rich text", stripHtml(richTextInput.defaultValue).result)
+  console.log("stripped rich text", stripHtml(richTextInput[0].defaultValue).result)
 
   quill.setContents(initialDelta)
 
