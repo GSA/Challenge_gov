@@ -279,4 +279,41 @@ defmodule ChallengeGov.MessagesTest do
       assert message.status == "sent"
     end
   end
+
+  describe "fetching a draft message" do
+    test "success: with ID" do
+      %{
+        user_challenge_owner: user_challenge_owner,
+        message_context: message_context
+      } = create_message_context_status()
+
+      {:ok, message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      {:ok, fetched_message} = Messages.get_draft(message.id)
+
+      assert message.id == fetched_message.id
+      assert fetched_message.status == "draft"
+    end
+
+    test "failure: no draft message with given ID" do
+      %{
+        user_challenge_owner: user_challenge_owner,
+        message_context: message_context
+      } = create_message_context_status()
+
+      {:ok, message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      assert {:error, :not_found} == Messages.get_draft(message.id)
+    end
+  end
 end

@@ -20,7 +20,21 @@ defmodule ChallengeGov.Messages do
     |> Repo.all()
   end
 
+  def get_draft(id) do
+    Message
+    |> Repo.get_by(id: id, status: "draft")
+    |> case do
+      nil ->
+        {:error, :not_found}
+
+      draft_message ->
+        {:ok, draft_message}
+    end
+  end
+
   def new(), do: Message.changeset(%Message{})
+
+  def edit(message), do: Message.changeset(message)
 
   def create(user, context, params) do
     Multi.new()

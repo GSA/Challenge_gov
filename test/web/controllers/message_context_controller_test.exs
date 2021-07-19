@@ -309,4 +309,38 @@ defmodule Web.MessageContextControllerTest do
       assert html_response(conn, 200)
     end
   end
+
+  describe "viewing message context with a draft message" do
+    test "success", %{conn: conn} do
+      %{
+        message_context: message_context,
+        user_challenge_owner: user_challenge_owner
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      conn = prep_conn(conn, user_challenge_owner)
+
+      {:ok, message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :show,
+            message_context.id,
+            message_id: message.id
+          )
+        )
+
+      %{changeset: changeset} = conn.assigns
+
+      assert changeset.data.id == message.id
+      assert html_response(conn, 200)
+    end
+  end
 end
