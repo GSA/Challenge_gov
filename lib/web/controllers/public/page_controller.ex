@@ -27,10 +27,7 @@ defmodule Web.Public.PageController do
 
   defp get_open_graph_image(challenge) do
     if challenge.upload_logo do
-      custom_image_path =
-        Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
-
-      Routes.static_url(Web.Endpoint, custom_image_path)
+      Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
     else
       Routes.static_url(Web.Endpoint, "/images/challenge-logo.png")
     end
