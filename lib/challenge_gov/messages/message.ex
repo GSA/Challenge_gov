@@ -9,6 +9,11 @@ defmodule ChallengeGov.Messages.Message do
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Messages.MessageContext
 
+  @valid_statuses [
+    "draft",
+    "sent"
+  ]
+
   @type t :: %__MODULE__{}
   schema "messages" do
     belongs_to(:author, User)
@@ -17,6 +22,8 @@ defmodule ChallengeGov.Messages.Message do
     field(:content, :string)
     field(:content_delta, :string)
 
+    field(:status, :string, default: "sent")
+
     timestamps(type: :utc_datetime_usec)
   end
 
@@ -24,8 +31,10 @@ defmodule ChallengeGov.Messages.Message do
     struct
     |> cast(params, [
       :content,
-      :content_delta
+      :content_delta,
+      :status
     ])
+    |> validate_inclusion(:status, @valid_statuses)
   end
 
   def create_changeset(struct, user, context, params \\ %{}) do

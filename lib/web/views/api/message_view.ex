@@ -9,6 +9,7 @@ defmodule Web.Api.MessageView do
       author_id: message.author_id,
       author_name: AccountView.full_name(message.author),
       content: message.content,
+      status: message.status,
       class: MessageContextView.message_class(user, message)
     }
   end

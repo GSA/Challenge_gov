@@ -2,22 +2,41 @@ $(".message_center__challenge_filter").on("change", function() {
   this.form.submit()
 })
 
+$(".message_center__message_form button[type=submit]").on("click", (e) => {
+  e.preventDefault()
+
+  const messageForm = $(".message_center__message_form")
+  const actionValue = $(e.target).val()
+
+  messageForm.data("action", actionValue)
+  messageForm.submit()
+})
+
 $(".message_center__message_form").on("submit", (e) => {
   e.preventDefault()
 
   const messages = $(".message_center__messages")
   const quill = $(".message_center .rt-textarea").data("quill")
 
+  const action = encodeURIComponent($(e.target).data("action"))
+  const formData = `${$(e.target).serialize()}&message[status]=${action}`
+
   if (quill) {
     if (quill.getLength() > 1) {
       $.ajax({
         type: "POST",
         url: e.target.action,
-        data: $(e.target).serialize(),
+        data: formData,
         success: function(res) {
-          appendMessage(messages, res.content, res.class, res.author_name)
-          quill.setContents(null)
-          scrollMessagesToBottom()
+          switch (res.status) {
+            case "sent":
+              handleMessageSent(res, messages, quill);
+              break;
+
+            case "draft":
+              handleMessageDraft();
+              break;
+          }
         }
       });
     }
@@ -25,6 +44,16 @@ $(".message_center__message_form").on("submit", (e) => {
     alert("Something went wrong. Refresh and try again")
   }
 })
+
+const handleMessageSent = (res, messages, quill) => {
+  appendMessage(messages, res.content, res.class, res.author_name)
+  quill.setContents(null)
+  scrollMessagesToBottom()
+}
+
+const handleMessageDraft = () => {
+  alert("Message saved as draft")
+}
 
 const appendMessage = (container, content, className, userName) => {
   container.append(`

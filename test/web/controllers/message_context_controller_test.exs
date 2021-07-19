@@ -1,6 +1,7 @@
 defmodule Web.MessageContextControllerTest do
   use Web.ConnCase
 
+  alias ChallengeGov.Messages
   alias ChallengeGov.MessageContextStatuses
   alias ChallengeGov.TestHelpers.MessageContextStatusHelpers
 
@@ -218,6 +219,93 @@ defmodule Web.MessageContextControllerTest do
 
       assert Enum.empty?(message_context_statuses)
 
+      assert html_response(conn, 200)
+    end
+  end
+
+  describe "viewing drafts" do
+    test "success", %{conn: conn} do
+      %{
+        message_context: message_context,
+        user_challenge_owner: user_challenge_owner
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      conn = prep_conn(conn, user_challenge_owner)
+
+      {:ok, _message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :drafts
+          )
+        )
+
+      %{draft_messages: draft_messages} = conn.assigns
+
+      assert length(draft_messages) == 1
+      assert html_response(conn, 200)
+    end
+
+    @tag :skip
+    # TODO: This needs to properly fetch all relevant drafts for a challenge owner
+    test "success: as second challenge owner", %{conn: conn} do
+      %{
+        message_context: message_context,
+        user_challenge_owner: user_challenge_owner,
+        user_challenge_owner_2: user_challenge_owner_2
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      conn = prep_conn(conn, user_challenge_owner_2)
+
+      {:ok, _message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :drafts
+          )
+        )
+
+      %{draft_messages: draft_messages} = conn.assigns
+
+      assert length(draft_messages) == 1
+      assert html_response(conn, 200)
+    end
+
+    test "success: as solver no drafts", %{conn: conn} do
+      %{
+        user_solver: user_solver
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      conn = prep_conn(conn, user_solver)
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :drafts
+          )
+        )
+
+      %{draft_messages: draft_messages} = conn.assigns
+
+      assert Enum.empty?(draft_messages)
       assert html_response(conn, 200)
     end
   end

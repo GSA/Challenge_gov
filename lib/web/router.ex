@@ -173,6 +173,7 @@ defmodule Web.Router do
       as: :restore_challenge_access
     )
 
+    get("/messages/drafts", MessageContextController, :drafts)
     resources("/messages", MessageContextController, only: [:index, :show, :new, :create])
 
     post("/message_context_statuses/:id/mark_read", MessageContextStatusController, :mark_read)
