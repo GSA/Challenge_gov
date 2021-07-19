@@ -17,7 +17,7 @@
 
   <section class="content">
     <div class="container-fluid">
-      <%= form_for(@conn, Routes.message_context_path(@conn, :index, filter: @filter), [method: :get, as: :filter], fn f -> %>
+      <%= form_for(@conn, Routes.message_context_path(@conn, :drafts, filter: @filter), [method: :get, as: :filter], fn f -> %>
         <div class="row mb-3">
           <div class="col">
             <%= link("New Message", to: Routes.message_context_path(@conn, :new, context: "challenge"), class: "btn btn-primary mr-3") %>
