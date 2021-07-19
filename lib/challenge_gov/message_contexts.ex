@@ -16,6 +16,7 @@ defmodule ChallengeGov.MessageContexts do
     messages_query =
       Message
       |> where([m], m.status == "sent")
+      |> order_by([m], m.updated_at)
       |> preload([:author])
 
     MessageContext
