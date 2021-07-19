@@ -32,7 +32,7 @@ defmodule Web.Public.PageController do
 
       Routes.static_url(Web.Endpoint, custom_image_path)
     else
-      Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.svg")
+      Routes.static_url(Web.Endpoint, "/images/challenge-logo.png")
     end
   end
 end
