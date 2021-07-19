@@ -10,6 +10,7 @@ defmodule Web.Router do
     plug :put_secure_browser_headers
     plug :put_root_layout, {Web.LayoutView, :root}
     plug Web.Plugs.FetchUser
+    plug(Web.Plugs.SiteWideBanner)
   end
 
   pipeline :api do

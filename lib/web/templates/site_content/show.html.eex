@@ -31,10 +31,28 @@
             <br/>
 
             <dt>Content</dd>
-            <hr>
             <dd>
               <%= SharedView.render_safe_html(@content.content) %>
             </dd>
+            <br/>
+
+            <%= if @content.start_date do %>
+              <dt>
+                <span class="text-bold">Start date: </span>
+              </dt>
+              <dd>
+                <span class="js-local-datetime"><%= @content.start_date %></span>
+              </dd>
+            <% end %>
+
+            <%= if @content.end_date do %>
+              <dt>
+                <span class="text-bold">End date: </span>
+              </dt>
+              <dd>
+                <span class="js-local-datetime"><%= @content.end_date %></span>
+              </dd>
+            <% end %>
           </div>
         </div>
       </div>
