@@ -13,17 +13,11 @@
 
     <title>Challenge.Gov</title>
 
-    <%= if Map.has_key?(@conn.assigns, :og_description) do %>
-      <meta property="og:description" content="<%= @conn.assigns.og_description %>" />
-    <% end %>
+    <meta property="og:description" content="Challenge.Gov emppowers federal agencies to engage public solvers in challenges and prize competitions to identify innovative solutions to critical issues." />
 
-    <%= if Map.has_key?(assigns, :og_image) do %>
-      <meta property="og:image" content="<%= @og_image %>">
-    <% end %>
+    <meta property="og:image" content="https://challenge-portal-dev.app.cloud.gov/images/challenge-logo-ac86bd43b87671f7ff2531f2f4452982.png?vsn=d">
 
-    <%= if Map.has_key?(@conn.assigns, :og_title) do %>
-      <meta property="og:title" content="<%= @conn.assigns.og_title %>">
-    <% end %>
+    <meta property="og:title" content="Challenge.Gov">
 
     <meta name="twitter:card" content="summary_large_image">
 
