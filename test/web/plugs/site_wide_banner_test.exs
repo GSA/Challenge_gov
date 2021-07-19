@@ -1,7 +1,6 @@
 defmodule Web.Plugs.SiteWideBannerTest do
   use Web.ConnCase
 
-  alias Web.Plugs.SiteWideBanner
   alias ChallengeGov.TestHelpers.AccountHelpers
 
   describe "checks for banner" do

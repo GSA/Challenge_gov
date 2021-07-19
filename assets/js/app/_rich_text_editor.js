@@ -80,30 +80,17 @@ $(".rt-textarea").each(function(textarea) {
   let deltaInput = $(`#${fieldName}_delta`)
   let initialDelta = JSON.parse(deltaInput.val() || "{}")
 
-  const richTextDeltaValue = richTextInput[0].defaultValue
-  const deltaInputValue = deltaInput[0].defaultValue
+  const richTextDeltaValue = richTextInput.val()
+  const deltaInputValue = deltaInput.val()
 
-  console.log("field has val but not delta val", richTextDeltaValue != "" && deltaInputValue === "")
-  console.log({richTextInput})
-  console.log({richTextDeltaValue})
-  console.log("richTextDeltaValue != emptString", richTextDeltaValue != "")
-  console.log({deltaInput})
-  console.log({deltaInputValue})
-  console.log("deltaInputValue === emptString", deltaInputValue === "")
-
-  if (richTextDeltaValue != "" && deltaInputValue === "") {
-    const strippedText = stripHtml(richTextInput[0].defaultValue).result
-    quill.setText(strippedText + "\n")
+  // if text value but no delta, convert text and set contents
+  // (eg editor set on field after field value already existed as a string only)
+  if (richTextDeltaValue && !deltaInputValue) {
+    const delta = quill.clipboard.convert(richTextDeltaValue)
+    quill.setContents(delta, 'silent')
   } else {
     quill.setContents(initialDelta)
   }
-
-  // test code
-  console.log("deltaParse/initialDelta", {initialDelta})
-  console.log("initialDelta is full obj/has length?", !!Object.keys(initialDelta).length)
-  console.log("stripped rich text", stripHtml(richTextInput[0].defaultValue).result)
-
-  quill.setContents(initialDelta)
 
   quill.on("text-change", function(delta, oldDelta, source) {
     let cfg = {}
