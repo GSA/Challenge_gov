@@ -34,7 +34,7 @@ $(".message_center__message_form").on("submit", (e) => {
               break;
 
             case "draft":
-              handleMessageDraft();
+              handleMessageDraft(res, e.target);
               break;
           }
         }
@@ -49,9 +49,11 @@ const handleMessageSent = (res, messages, quill) => {
   appendMessage(messages, res.content, res.class, res.author_name)
   quill.setContents(null)
   scrollMessagesToBottom()
+  removeMessageIdQueryParam()
 }
 
-const handleMessageDraft = () => {
+const handleMessageDraft = (res, form) => {
+  $(form).append(`<input type='hidden' value=${res.id}`)
   alert("Message saved as draft")
 }
 
@@ -102,4 +104,11 @@ const toggleStar = (e) => {
       }
     }
   });
+
+}
+
+const removeMessageIdQueryParam = () => {
+  history.replaceState && history.replaceState(
+    null, '', location.pathname + location.search.replace(/[\?&]message_id=[^&]+/, '').replace(/^&/, '?')
+  );
 }

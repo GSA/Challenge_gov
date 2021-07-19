@@ -32,7 +32,7 @@ defmodule Web.MessageContextController do
         "status" => "draft"
       })
 
-    draft_messages = Messages.all(preload: [:context], filter: filter)
+    draft_messages = Messages.all(preload: [:author, :context], filter: filter)
 
     challenges = MessageContextStatuses.get_challenges_for_user(user)
 

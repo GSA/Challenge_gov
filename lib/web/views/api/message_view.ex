@@ -6,6 +6,7 @@ defmodule Web.Api.MessageView do
 
   def render("create.json", %{user: user, message: message}) do
     %{
+      id: message.id,
       author_id: message.author_id,
       author_name: AccountView.full_name(message.author),
       content: message.content,

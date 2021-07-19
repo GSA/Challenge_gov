@@ -13,6 +13,7 @@ defmodule Web.Api.MessageController do
     %{current_user: user} = conn.assigns
 
     {:ok, message_context} = MessageContexts.get(message_context_id)
+
     {:ok, message} = Messages.create(user, message_context, message_params)
 
     conn

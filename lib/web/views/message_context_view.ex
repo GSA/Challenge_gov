@@ -62,6 +62,10 @@ defmodule Web.MessageContextView do
     SharedView.render_safe_html(last_message_content)
   end
 
+  def display_message_snippet(message) do
+    SharedView.render_safe_html(message.content)
+  end
+
   defp get_last_message_content(%{last_message: nil}), do: nil
   defp get_last_message_content(%{last_message: last_message}), do: last_message.content
 
