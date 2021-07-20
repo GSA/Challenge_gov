@@ -24,15 +24,9 @@ defmodule Web.MessageContextController do
   def drafts(conn, params) do
     %{current_user: user} = conn.assigns
 
-    filter =
-      params
-      |> Map.get("filter", %{})
-      |> Map.merge(%{
-        "author_id" => user.id,
-        "status" => "draft"
-      })
+    filter = Map.get(params, "filter", %{})
 
-    draft_messages = Messages.all(preload: [:author, :context], filter: filter)
+    draft_messages = Messages.all_drafts_for_user(user, filter: filter)
 
     challenges = MessageContextStatuses.get_challenges_for_user(user)
 

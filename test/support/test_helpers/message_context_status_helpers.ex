@@ -60,6 +60,9 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
     {:ok, challenge_owner_message_context_status} =
       MessageContextStatuses.get(user_challenge_owner, message_context)
 
+    {:ok, challenge_owner_2_message_context_status} =
+      MessageContextStatuses.get(user_challenge_owner_2, message_context)
+
     {:ok, solver_message_context_status} =
       MessageContextStatuses.create(user_solver, message_context)
 
@@ -69,6 +72,7 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
       challenge: challenge,
       message_context: message_context,
       challenge_owner_message_context_status: challenge_owner_message_context_status,
+      challenge_owner_2_message_context_status: challenge_owner_2_message_context_status,
       solver_message_context_status: solver_message_context_status,
       user_challenge_owner: user_challenge_owner,
       user_challenge_owner_2: user_challenge_owner_2,

@@ -3,6 +3,7 @@ defmodule Web.MessageContextControllerTest do
 
   alias ChallengeGov.Messages
   alias ChallengeGov.MessageContextStatuses
+  alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.MessageContextStatusHelpers
 
   defp prep_conn(conn, user) do
@@ -254,8 +255,6 @@ defmodule Web.MessageContextControllerTest do
       assert html_response(conn, 200)
     end
 
-    @tag :skip
-    # TODO: This needs to properly fetch all relevant drafts for a challenge owner
     test "success: as second challenge owner", %{conn: conn} do
       %{
         message_context: message_context,
@@ -284,6 +283,42 @@ defmodule Web.MessageContextControllerTest do
       %{draft_messages: draft_messages} = conn.assigns
 
       assert length(draft_messages) == 1
+      assert html_response(conn, 200)
+    end
+
+    test "success: as admin don't see challenge owner drafts", %{conn: conn} do
+      %{
+        message_context: message_context,
+        user_challenge_owner: user_challenge_owner
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      user_super_admin =
+        AccountHelpers.create_user(%{
+          email: "super_admin@example.com",
+          role: "super_admin"
+        })
+
+      conn = prep_conn(conn, user_super_admin)
+
+      {:ok, _message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :drafts
+          )
+        )
+
+      %{draft_messages: draft_messages} = conn.assigns
+
+      assert Enum.empty?(draft_messages)
       assert html_response(conn, 200)
     end
 

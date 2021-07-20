@@ -20,6 +20,34 @@ defmodule ChallengeGov.Messages do
     |> Repo.all()
   end
 
+  def all_drafts_for_user(user, opts \\ []) do
+    case user.role do
+      "challenge_owner" ->
+        Message
+        |> join(:inner, [m], mc in assoc(m, :context), as: :context)
+        |> join(:inner, [m], a in assoc(m, :author), as: :author)
+        |> join(:inner, [context: mc], mcs in assoc(mc, :statuses),
+          on: mcs.user_id == ^user.id,
+          as: :context_statuses
+        )
+        |> preload([:author, :context])
+        |> order_by([m], desc: m.updated_at)
+        |> where([m], m.status == "draft")
+        |> where([author: a], a.id == ^user.id or a.role == "challenge_owner")
+        |> Repo.all()
+
+      _ ->
+        filter =
+          opts[:filter]
+          |> Map.merge(%{
+            "author_id" => user.id,
+            "status" => "draft"
+          })
+
+        all(preload: [:author, :context], filter: filter)
+    end
+  end
+
   def get_draft(id) do
     Message
     |> Repo.get_by(id: id, status: "draft")
@@ -107,8 +135,14 @@ defmodule ChallengeGov.Messages do
   end
 
   def filter_on_attribute({"challenge_id", value}, query) do
-    query
-    |> join(:inner, [m], mc in assoc(m, :context))
-    |> where([m, mc], mc.context == "challenge" and mc.context_id == ^value)
+    if has_named_binding?(query, :context) do
+      query
+      # |> join(:inner, [m], mc in assoc(m, :context))
+      |> where([context: mc], mc.context == "challenge" and mc.context_id == ^value)
+    else
+      query
+      |> join(:inner, [m], mc in assoc(m, :context))
+      |> where([m, mc], mc.context == "challenge" and mc.context_id == ^value)
+    end
   end
 end

@@ -30,7 +30,7 @@ $(".message_center__message_form").on("submit", (e) => {
         success: function(res) {
           switch (res.status) {
             case "sent":
-              handleMessageSent(res, messages, quill);
+              handleMessageSent(res, e.target, messages, quill);
               break;
 
             case "draft":
@@ -45,15 +45,19 @@ $(".message_center__message_form").on("submit", (e) => {
   }
 })
 
-const handleMessageSent = (res, messages, quill) => {
+const handleMessageSent = (res, form, messages, quill) => {
   appendMessage(messages, res.content, res.class, res.author_name)
   quill.setContents(null)
   scrollMessagesToBottom()
   removeMessageIdQueryParam()
+  $('#message_id').remove()
 }
 
 const handleMessageDraft = (res, form) => {
-  $(form).append(`<input type='hidden' value=${res.id}`)
+  if ($("#message_id").length === 0) {
+    $(form).append(`<input id='message_id' name='message[id]' type='hidden' value=${res.id}>`)
+  }
+  addMessageIdQueryParam(res.id)
   alert("Message saved as draft")
 }
 
@@ -110,5 +114,11 @@ const toggleStar = (e) => {
 const removeMessageIdQueryParam = () => {
   history.replaceState && history.replaceState(
     null, '', location.pathname + location.search.replace(/[\?&]message_id=[^&]+/, '').replace(/^&/, '?')
+  );
+}
+
+const addMessageIdQueryParam = (id) => {
+  history.replaceState && history.replaceState(
+    null, '', location.pathname + `?message_id=${id}`
   );
 }
