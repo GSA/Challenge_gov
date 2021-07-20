@@ -45,14 +45,25 @@ const scrollMessagesToBottom = () => {
 
 scrollMessagesToBottom()
 
+$(".message_center__star").on("keydown", (e) => {
+  if (e.keyCode == 13 || e.keyCode == 32) {
+    toggleStar(e)
+  }
+})
+
 $(".message_center__star").on("click", (e) => {
-  url = $(e.target).data("url")
+  toggleStar(e)
+})
+
+const toggleStar = (e) => {
+  e.stopPropagation()
+
+  const url = $(e.target).data("url")
 
   $.ajax({
     type: "POST",
     url: url,
     success: function(res) {
-      console.log("RES", res)
       if (res.starred) {
         $(e.target).removeClass("far")
         $(e.target).addClass("fas")
@@ -62,4 +73,4 @@ $(".message_center__star").on("click", (e) => {
       }
     }
   });
-})
+}

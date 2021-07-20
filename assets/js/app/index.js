@@ -19,6 +19,7 @@ import "./_submission_file_upload.js";
 import "./_submission_invite.js";
 import "./_submission_judging_status.js";
 import "./_sub_agency_select.js";
+import "./_table.js";
 import "./_timezone.js";
 import "./_expand_breadcrumbs.js";
 
