@@ -119,8 +119,7 @@
         color: #000;
         background-color: #FA9441;
         border-radius: 7px;
-        border: 1px solid #C9C9C9;
-        box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
+        border: 1px solid #FA9441;
       }
 
       a[disabled] .apply-btn {
@@ -144,19 +143,38 @@
        color: #2d618a;
      }
 
-    &__follow {
-      margin-bottom: 1.5rem;
+    &__split-btns {
       height: 100%;
-      width: 100%;
+      width: 80%;
+      grid-row: 3 / span 2;
+      grid-column: span 2;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      border-radius: 7px;
-      border: 1px solid #2d618a;
-      box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
-    }
+      justify-content: space-between;
 
+      .follow-btn {
+        margin-bottom: 1.5rem;
+        height: 100%;
+        width: 49%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 7px;
+        border: 1px solid #2d618a;
+      }
+
+      .social-share-btn {
+        margin-bottom: 1.5rem;
+        height: 100%;
+        width: 49%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 7px;
+        border: 1px solid #2d618a;
+      }
+    }
 
     .item {
       margin-bottom: .5em;
@@ -189,18 +207,6 @@
         color: #B50707;
         font-weight: bold;
         margin: 0 10px 0 5px;
-      }
-    }
-
-    .social-share {
-      width: 60%;
-      text-align: right;
-      padding-right: .25rem;
-
-      &__btn {
-        i {
-          margin-right: .5rem;
-        }
       }
     }
   }
@@ -299,30 +305,44 @@
           color: #000;
           background-color: #FA9441;
           border-radius: 7px;
-          border: 1px solid #C9C9C9;
-          box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
+          border: 1px solid #FA9441;
         }        
         p {
           width: 80%;
         }
       }      
 
-      &__follow {
-        grid-row: span 2;
-        grid-column: span 2;
+      &__split-btns {
+        height: 100%;
         width: 80%;
+        grid-row: 3 / span 2;
+        grid-column: span 2;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: space-between;
 
         .follow-btn {
-          // width: 80%;
-          // padding: 0 40px;
+          margin-bottom: 1.5rem;
+          height: 100%;
+          width: 49%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          border-radius: 7px;
+          border: 1px solid #2d618a;
         }
-      }
 
-      &__apply + &__follow {
-        grid-row: 3 / span 2;
+        .social-share {
+          margin-bottom: 1.5rem;
+          height: 100%;
+          width: 49%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          border-radius: 7px;
+          border: 1px solid #2d618a;
+        }
       }
 
       .item {
