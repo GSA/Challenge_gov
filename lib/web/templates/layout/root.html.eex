@@ -13,13 +13,17 @@
 
     <title>Challenge.Gov</title>
 
-    <meta property="og:description" content="Challenge.Gov emppowers federal agencies to engage public solvers in challenges and prize competitions to identify innovative solutions to critical issues." />
+    <meta property="og:description" content="Challenge.Gov empowers federal agencies to engage public solvers in challenges and prize competitions to identify innovative solutions to critical issues." />
 
-    <meta property="og:image" content="https://challenge-portal-dev.app.cloud.gov/images/challenge-logo-ac86bd43b87671f7ff2531f2f4452982.png?vsn=d">
+    <meta property="og:image" content="https://challenge-portal-dev.app.cloud.gov/images/challenge-logo-small-ac86bd43b87671f7ff2531f2f4452982.png?vsn=d">
 
     <meta property="og:title" content="Challenge.Gov">
 
     <meta name="twitter:card" content="summary_large_image">
+
+    <meta property="og:url" content="https://www.challenge.gov/">
+
+    <meta property="og:type" content="website">
 
     <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
   </head>
