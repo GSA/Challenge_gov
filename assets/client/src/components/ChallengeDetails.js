@@ -64,9 +64,9 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
   const renderFollowButton = (challenge) => {
     if (challenge.subscriber_count > 0) {
-      return <span className="details__btn"><i className="far fa-bookmark mr-3"></i>Follow challenge ({ challenge.subscriber_count })</span>
+      return <span className="details__btn"><i className="far fa-bookmark mr-2"></i>Follow challenge ({ challenge.subscriber_count })</span>
     } else {
-      return <span className="details__btn"><i className="far fa-bookmark mr-3"></i>Follow challenge</span>
+      return <span className="details__btn"><i className="far fa-bookmark mr-2"></i>Follow challenge</span>
     }
   }
 
@@ -246,9 +246,18 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
       return (
         <>
           {renderApplyButton(challenge)}
-          <div className="detail-section__follow" id="followChallengeButton">
-            {renderFollowButton(challenge)}
-            {renderFollowTooltip()}
+          <div className="detail-section__split-btns">
+            <div className="follow-btn" id="followChallengeButton">
+              {renderFollowButton(challenge)}
+              {renderFollowTooltip()}
+            </div>
+            <div className="social-share-btn" id="shareChallengeButton">
+              <span className="details__btn">
+                <i className="fas fa-share-alt mr-2"></i>
+                share
+              </span>
+              <SocialSharingTooltip shareTooltipOpen={shareTooltipOpen} toggleShareTooltip={toggleShareTooltip} />
+            </div>
           </div>
         </>
       )
@@ -334,18 +343,9 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                 </div>
               }
               {!print &&
-                <>
-                  <a className="follow__btn" href={apiUrl + `/public/previews/challenges/${challenge.uuid}?print=true`} target="_blank">
-                    <span className="details__btn"><i className="fas fa-print mr-2"></i>Print challenge</span>
-                  </a>
-                  <div className="social-share details__btn">
-                    <span className="social-share__btn" id="shareChallengeButton">
-                      <i className="fas fa-share-alt"></i>
-                      share
-                    </span>
-                    <SocialSharingTooltip shareTooltipOpen={shareTooltipOpen} toggleShareTooltip={toggleShareTooltip} />
-                  </div>
-                </>
+                <a className="follow__btn" href={apiUrl + `/public/previews/challenges/${challenge.uuid}?print=true`} target="_blank">
+                  <span className="details__btn"><i className="fas fa-print mr-2"></i>Print challenge</span>
+                </a>
               }
             </div>
           </section>
