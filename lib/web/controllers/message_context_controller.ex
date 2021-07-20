@@ -21,6 +21,39 @@ defmodule Web.MessageContextController do
     |> render("index.html")
   end
 
+  def drafts(conn, params) do
+    %{current_user: user} = conn.assigns
+
+    filter = Map.get(params, "filter", %{})
+
+    draft_messages = Messages.all_drafts_for_user(user, filter: filter)
+
+    challenges = MessageContextStatuses.get_challenges_for_user(user)
+
+    conn
+    |> assign(:draft_messages, draft_messages)
+    |> assign(:challenges, challenges)
+    |> assign(:filter, filter)
+    |> render("drafts.html")
+  end
+
+  def show(conn, %{"id" => id, "message_id" => message_id}) do
+    %{current_user: user} = conn.assigns
+
+    {:ok, message_context} = MessageContexts.get(id)
+
+    {:ok, message_context_status} = MessageContextStatuses.get(user, message_context)
+    {:ok, _message_context_status} = MessageContextStatuses.mark_read(message_context_status)
+
+    {:ok, draft_message} = Messages.get_draft(message_id)
+
+    conn
+    |> assign(:user, user)
+    |> assign(:changeset, Messages.edit(draft_message))
+    |> assign(:message_context, message_context)
+    |> render("show.html")
+  end
+
   def show(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
 

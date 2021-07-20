@@ -17,18 +17,18 @@
 
   <section class="content">
     <div class="container-fluid">
-      <%= form_for(@conn, Routes.message_context_path(@conn, :index, filter: @filter), [method: :get, as: :filter], fn f -> %>
+      <%= form_for(@conn, Routes.message_context_path(@conn, :drafts, filter: @filter), [method: :get, as: :filter], fn f -> %>
         <div class="row mb-3">
           <div class="col">
             <%= link("New Message", to: Routes.message_context_path(@conn, :new, context: "challenge"), class: "btn btn-primary mr-3") %>
               <%= select(f, :challenge_id, Enum.map(@challenges, &{&1.title, &1.id}), value: @filter["challenge_id"], prompt: "Filter by challenge", class: "js-select2 message_center__challenge_filter") %>
           </div>
           <div class="col text-right">
-            <%= link("All", to: Routes.message_context_path(@conn, :index), class: "btn #{filter_active_class(@conn, "all")}") %>
+            <%= link("All", to: Routes.message_context_path(@conn, :index), class: "btn btn-link") %>
             <%= link("Starred", to: Routes.message_context_path(@conn, :index, filter: %{starred: true}), class: "btn #{filter_active_class(@conn, "starred")}") %>
             <%= link("Unread", to: Routes.message_context_path(@conn, :index, filter: %{read: false}), class: "btn #{filter_active_class(@conn, "read")}") %>
             <%= link("Archived", to: Routes.message_context_path(@conn, :index, filter: %{archived: true}), class: "btn #{filter_active_class(@conn, "archived")}") %>
-            <%= link("Drafts", to: Routes.message_context_path(@conn, :drafts), class: "btn btn-link") %>
+            <%= link("Drafts", to: Routes.message_context_path(@conn, :drafts), class: "btn btn-primary") %>
           </div>
         </div>
       <% end) %>
@@ -44,30 +44,26 @@
                     <th>Date</th>
                     <th>Challenge title</th>
                     <th>Audience</th>
-                    <th>Last author</th>
-                    <th>Last author role</th>
+                    <th>Author</th>
+                    <th>Author role</th>
                     <th>Message snippet</th>
                     <th></th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  <%= Enum.map @message_context_statuses, fn (message_context_status) -> %>
-                    <tr class="message_center__row <%= maybe_unread_class(message_context_status) %> js-clickable-table-row" data-link="<%= Routes.message_context_path(@conn, :show, message_context_status.message_context_id) %>" tabindex="0">
+                  <%= Enum.map @draft_messages, fn (draft_message) -> %>
+                    <tr class="message_center__row js-clickable-table-row" data-link="<%= Routes.message_context_path(@conn, :show, draft_message.message_context_id, message_id: draft_message.id) %>" tabindex="0">
                       <td>
                         <input type="checkbox" class="mr-2 js-table-row-select">
-                        <%= render_star(message_context_status) %>
                       </td>
-                      <td><%= Web.SharedView.local_datetime_tag(message_context_status.context.updated_at) %></td>
-                      <td><%= display_challenge_title_link(message_context_status.context) %></td>
-                      <td><%= display_audience(message_context_status.context) %></td>
-                      <td><%= display_last_author_name(message_context_status.context) %></td>
-                      <td><%= display_last_author_role(message_context_status.context) %></td>
-                      <td class="message_center__snippet"><%= display_last_message_snippet(message_context_status.context) %></td>
-                      <td class="message_center__actions">
-                        <%= render_archive_icon(message_context_status) %>
-                        <%= render_read_icon(message_context_status) %>
-                      </td>
+                      <td><%= Web.SharedView.local_datetime_tag(draft_message.updated_at) %></td>
+                      <td><%= display_challenge_title_link(draft_message.context) %></td>
+                      <td><%= display_audience(draft_message.context) %></td>
+                      <td><%= AccountView.full_name(draft_message.author) %></td>
+                      <td><%= AccountView.role_display(draft_message.author) %></td>
+                      <td class="message_center__snippet"><%= display_message_snippet(draft_message) %></td>
+                      <td></td>
                     </tr>
                   <% end %>
                 </tbody>

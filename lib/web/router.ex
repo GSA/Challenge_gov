@@ -174,6 +174,7 @@ defmodule Web.Router do
       as: :restore_challenge_access
     )
 
+    get("/messages/drafts", MessageContextController, :drafts)
     resources("/messages", MessageContextController, only: [:index, :show, :new, :create])
 
     post("/message_context_statuses/:id/mark_read", MessageContextStatusController, :mark_read)
@@ -221,7 +222,8 @@ defmodule Web.Router do
     resources("/challenges", ChallengeController, only: [:index, :show])
     post("/challenges/:challenge_id/contact_form", ContactFormController, :send_email)
 
-    resources("/messages/:message_context_id", MessageController, only: [:create])
+    post("/messages/:message_context_id", MessageController, :create)
+    put("/messages/:message_context_id", MessageController, :create)
     post("/message_context_status/:id/star", MessageContextStatusController, :toggle_starred)
 
     get("/phase/:phase_id/winners", WinnerController, :phase_winners)

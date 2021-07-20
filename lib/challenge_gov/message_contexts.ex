@@ -13,8 +13,14 @@ defmodule ChallengeGov.MessageContexts do
   alias ChallengeGov.Messages.MessageContext
 
   def get(id) do
+    messages_query =
+      Message
+      |> where([m], m.status == "sent")
+      |> order_by([m], m.updated_at)
+      |> preload([:author])
+
     MessageContext
-    |> preload(messages: [:author])
+    |> preload(messages: ^messages_query)
     |> Repo.get(id)
     |> case do
       nil ->

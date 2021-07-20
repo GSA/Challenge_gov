@@ -45,8 +45,12 @@
           <hr/>
 
           <%= form_for(@changeset, Routes.api_message_path(@conn, :create, @message_context.id), [class: "message_center__message_form"], fn f -> %>
+            <%= if @changeset.data.id do %>
+              <%= hidden_input f, :id %>
+            <% end %>
             <%= FormView.rt_textarea_field(f, :content) %>
-            <%= submit("Send message", class: "btn btn-primary") %>
+            <%= submit("Save draft", class: "btn btn-primary mr-3", name: "message_status", value: "draft") %>
+            <%= submit("Send message", class: "btn btn-primary", name: "message_status", value: "sent") %>
           <% end) %>
         </div>
       </div>
