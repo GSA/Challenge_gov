@@ -278,16 +278,19 @@ body {
 }
 
 .site-wide-banner {
-  i {
-    font-size: 2rem;
-    margin-right: 1rem;
-  }
-
   .callout {
     background-color: #FAF3D1;
     padding: 0 1rem;
     display: flex;
     align-items: center;
+
+    i {
+      margin-right: 1rem;
+
+      &:before {
+        font-size: 150%;
+      }
+    }
   }
 
   .ql-editor {
