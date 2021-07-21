@@ -26,7 +26,7 @@ let toolbarOptions = [
   // Setup some default options
   [{ 'size': [] }],
   [ 'bold', 'italic', 'underline', 'strike' ],
-  [{ 'header': '1' }, { 'header': '2' }, 'blockquote'],
+  [{ 'header': '1' }, { 'header': '2' }],
   [{ 'list': 'ordered' }, { 'list': 'bullet'}, { 'indent': '-1' }, { 'indent': '+1' }],
   [ 'link' ], // ['image', 'video', 'formula' ],
   [ 'clean' ]
