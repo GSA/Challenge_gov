@@ -279,10 +279,6 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     })
   }
 
-console.log("logo", challenge.logo)
-console.log("agency_logo", challenge.agency_logo)
-console.log("federal_partners", challenge.federal_partners)
-console.log("upload_logo", challenge.upload_logo)
   return (
     (challenge && !!challengePhases) ? (
       <div className="w-100">
