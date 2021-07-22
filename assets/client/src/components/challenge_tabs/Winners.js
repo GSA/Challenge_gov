@@ -12,7 +12,7 @@ export const Winners = ({challenge, challengePhases, print}) => {
           src={imageBase + phaseWinner.overview_image_path}
           alt="Phase Winner image"
           title="Phase Winner image"
-          className="mt-3"
+          className="phase-image mt-3"
         />
       )
     }
