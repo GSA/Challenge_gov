@@ -593,7 +593,6 @@ defmodule Web.ChallengeView do
 
   def agency_logo(challenge) do
     # credo:disable-for-next-line
-    IO.inspect(challenge, label: "RIGHT HERE - challenge")
     Routes.static_url(Web.Endpoint, "/images/agency-logo-placeholder.svg")
   end
 

@@ -22,7 +22,8 @@
           </div>
 
           <div class="form-group">
-            <%= hidden_input winner, :image_path, data: [field: :image_path] %>
+            <%= hidden_input winner, :image_key, data: [field: :image_key] %>
+            <%= hidden_input winner, :image_extension, data: [field: :image_extension] %>
           </div>
           
           <div class="form-group">

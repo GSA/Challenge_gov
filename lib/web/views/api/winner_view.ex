@@ -2,9 +2,10 @@ defmodule Web.Api.WinnerView do
   use Web, :view
 
   alias Stein.Storage
+  alias ChallengeGov.PhaseWinners
 
-  def render("upload_image.json", %{image_path: image_path}) do
-    %{image_path: Storage.url(image_path)}
+  def render("upload_image.json", %{key: key, extension: extension}) do
+    %{key: key, extension: extension}
   end
 
   def render(
@@ -16,7 +17,7 @@ defmodule Web.Api.WinnerView do
       inserted_at: phase_winner.inserted_at,
       overview: phase_winner.overview,
       overview_delta: phase_winner.overview_delta,
-      overview_image_path: phase_winner.overview_image_path,
+      overview_image_path: Storage.url(PhaseWinners.overview_image_path(phase_winner)),
       phase_title: phase_title,
       phase_id: phase_winner.phase_id,
       status: phase_winner.status,

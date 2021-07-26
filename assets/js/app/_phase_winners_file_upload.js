@@ -16,13 +16,14 @@ $(".winners-overview").on("change", "#phase_winner_overview_image", (e) => {
 
   if (file) {
     $.ajax({
-      url: `/api/phase_winners/${phaseWinnerId}/upload_overview_image`, 
+      url: `/api/phase_winners/${phaseWinnerId}/upload_overview_image`,
       type: "post",
       processData: false,
       contentType: false,
       data: fd,
-      success: function({overview_image_path}) {
-        $("#phase_winner_overview_image_path").val(overview_image_path)
+      success: function({key, extension}) {
+        $("#phase_winner_overview_image_key").val(key)
+        $("#phase_winner_overview_image_extension").val(extension)
       },
       error: function(err) {
         console.log("Something went wrong", err)
@@ -50,8 +51,9 @@ $(".winners-overview").on("change", "[data-field=image]", (e) => {
       processData: false,
       contentType: false,
       data: fd,
-      success: function({image_path}) {
-        $(imagePathElement).val(image_path)
+      success: function({key, extension}) {
+        $(imagePathElement).val(key)
+        $(imagePathElement).val(extension)
       },
       error: function(err) {
         console.log("Something went wrong", err)
