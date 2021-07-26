@@ -7,6 +7,7 @@ defmodule ChallengeGov.Messages.MessageContext do
   import Ecto.Changeset
 
   alias ChallengeGov.Messages.Message
+  alias ChallengeGov.Messages.MessageContext
   alias ChallengeGov.Messages.MessageContextStatus
 
   @valid_contexts [
@@ -14,14 +15,16 @@ defmodule ChallengeGov.Messages.MessageContext do
     "submission"
   ]
 
-  # @valid_audiences [
-  #   "admins",
-  #   "challenge_owners",
-  #   "solvers"
-  # ]
+  @valid_audiences [
+    "all",
+    "admins",
+    "challenge_owners"
+  ]
 
   @type t :: %__MODULE__{}
   schema "message_contexts" do
+    belongs_to(:parent, MessageContext)
+    has_many(:contexts, MessageContext)
     has_many(:messages, Message)
     has_many(:statuses, MessageContextStatus)
 
@@ -29,7 +32,7 @@ defmodule ChallengeGov.Messages.MessageContext do
 
     field(:context, :string)
     field(:context_id, :integer)
-    field(:audience, {:array, :string})
+    field(:audience, :string)
 
     timestamps(type: :utc_datetime_usec)
   end
@@ -41,6 +44,7 @@ defmodule ChallengeGov.Messages.MessageContext do
       :context_id,
       :audience
     ])
-    |> validate_inclusion(:context, @valid_contexts)
+    |> validate_inclusion(:context, [nil | @valid_contexts])
+    |> validate_inclusion(:audience, @valid_audiences)
   end
 end

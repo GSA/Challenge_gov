@@ -18,13 +18,13 @@ defmodule ChallengeGov.MessageContextsTest do
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
       _submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
 
-      _prepped_message_context = MessageContexts.new(["solvers"])
+      _prepped_message_context = MessageContexts.new("all")
 
       {:ok, message_context} =
         MessageContexts.create(%{
           "context" => "challenge",
           "context_id" => challenge.id,
-          "audience" => ["solvers"]
+          "audience" => "all"
         })
 
       user_context_status = Enum.at(MessageContextStatuses.all_for_user(user), 0)
@@ -43,20 +43,20 @@ defmodule ChallengeGov.MessageContextsTest do
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
       _submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
 
-      _prepped_message_context = MessageContexts.new(["solvers"])
+      _prepped_message_context = MessageContexts.new("all")
 
       {:ok, message_context} =
         MessageContexts.create(%{
           "context" => "challenge",
           "context_id" => challenge.id,
-          "audience" => ["solvers"]
+          "audience" => "all"
         })
 
       {:ok, message_context_2} =
         MessageContexts.create(%{
           "context" => "challenge",
           "context_id" => challenge.id,
-          "audience" => ["solvers"]
+          "audience" => "all"
         })
 
       assert message_context.id == message_context_2.id
