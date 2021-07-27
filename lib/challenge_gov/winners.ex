@@ -39,6 +39,8 @@ defmodule ChallengeGov.Winners do
   end
 
   # Uploads
+  def image_path(_phase_winner, nil, nil), do: nil
+
   def image_path(phase_winner, key, extension),
     do: "/phase_winners/#{phase_winner.id}/winner_image_#{key}#{extension}"
 

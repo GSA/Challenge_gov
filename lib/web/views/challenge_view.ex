@@ -588,14 +588,11 @@ defmodule Web.ChallengeView do
   def agency_logo(%{agency: agency = %{avatar_key: avatar_key}}) when not is_nil(avatar_key),
     do: AgencyView.avatar_url(agency)
 
-  # def agency_logo(_challenge),
-  #   do: Routes.static_url(Web.Endpoint, "/images/agency-logo-placeholder.svg")
+  def agency_logo(_challenge),
+    do: Routes.static_url(Web.Endpoint, "/images/agency-logo-placeholder.svg")
 
-  def agency_logo(challenge) do
-    # credo:disable-for-next-line
-    Routes.static_url(Web.Endpoint, "/images/agency-logo-placeholder.svg")
-  end
-
+  @spec winner_img(atom | %{:winner_image_key => any, optional(any) => any}, any) ::
+          {:safe, [binary | list | 60 | 62, ...]}
   def winner_img(challenge, opts \\ []) do
     case is_nil(challenge.winner_image_key) do
       true ->

@@ -31,10 +31,18 @@ export const Winners = ({challenge, challengePhases, print}) => {
     })
   }
 
+  const hasPhaseWinnerData = (phaseWinner) => {
+    return (
+      (!!phaseWinner.overview && phaseWinner.overview != "") ||
+      !!phaseWinner.overview_image_path ||
+      (!!phaseWinner.winners && phaseWinner.winners.length > 0)
+    )
+  }
+
   const renderPhaseWinners = () => {
     return challengePhases.map(phase => {
       const phaseWinner = phase.phase_winner
-      if (phaseWinner && Object.keys(phaseWinner).length >= 1) { 
+      if (phaseWinner && Object.keys(phaseWinner).length >= 1 && hasPhaseWinnerData(phaseWinner)) {
         return (
           <div key={phaseWinner.id || idx } className="card">
             <div className="card-body ql-editor">

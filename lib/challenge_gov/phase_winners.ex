@@ -130,6 +130,8 @@ defmodule ChallengeGov.PhaseWinners do
   defp maybe_handle_winner_removal(winner, _winner_params), do: {:ok, winner}
 
   # Uploads
+  def overview_image_path(_phase_winner, nil, nil), do: nil
+
   def overview_image_path(phase_winner, key, extension),
     do: "/phase_winners/#{phase_winner.id}/overview_image_#{key}#{extension}"
 
@@ -162,7 +164,7 @@ defmodule ChallengeGov.PhaseWinners do
   defp maybe_remove_overview_image(phase_winner, _phase_winner_params), do: {:ok, phase_winner}
 
   defp remove_overview_image(phase_winner) do
-    case Storage.delete(phase_winner.overview_image_path) do
+    case Storage.delete(overview_image_path(phase_winner)) do
       :ok ->
         phase_winner
         |> PhaseWinner.overview_image_changeset(nil, nil)

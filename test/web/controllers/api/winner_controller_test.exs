@@ -72,12 +72,17 @@ defmodule Web.Api.WinnerControllerTest do
   end
 
   defp expected_show_json(phase_winner, phase_title) do
+    overview_image_path =
+      if PhaseWinners.overview_image_path(phase_winner),
+        do: Storage.url(PhaseWinners.overview_image_path(phase_winner)),
+        else: nil
+
     %{
       "id" => phase_winner.id,
       "inserted_at" => TestHelpers.convert_date_format(phase_winner.inserted_at),
       "overview" => phase_winner.overview,
       "overview_delta" => phase_winner.overview_delta,
-      "overview_image_path" => phase_winner.overview_image_path,
+      "overview_image_path" => overview_image_path,
       "phase_title" => phase_title,
       "phase_id" => phase_winner.phase_id,
       "status" => phase_winner.status,
