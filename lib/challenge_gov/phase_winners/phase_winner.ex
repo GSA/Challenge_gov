@@ -32,7 +32,8 @@ defmodule ChallengeGov.PhaseWinners.PhaseWinner do
     field(:overview_delta, :string)
 
     # Uploads
-    field(:overview_image_path, :string)
+    field(:overview_image_key, Ecto.UUID)
+    field(:overview_image_extension, :string)
 
     # Timestamps
     timestamps(type: :utc_datetime_usec)
@@ -44,7 +45,8 @@ defmodule ChallengeGov.PhaseWinners.PhaseWinner do
       :status,
       :overview,
       :overview_delta,
-      :overview_image_path
+      :overview_image_key,
+      :overview_image_extension
     ])
     |> put_change(:phase_id, phase.id)
     |> unique_constraint(:phase_id)
@@ -57,14 +59,16 @@ defmodule ChallengeGov.PhaseWinners.PhaseWinner do
       :status,
       :overview,
       :overview_delta,
-      :overview_image_path
+      :overview_image_key,
+      :overview_image_extension
     ])
     |> validate_inclusion(:status, @statuses)
   end
 
-  def overview_image_changeset(struct, path) do
+  def overview_image_changeset(struct, key, extension) do
     struct
     |> change()
-    |> put_change(:overview_image_path, path)
+    |> put_change(:overview_image_key, key)
+    |> put_change(:overview_image_extension, extension)
   end
 end

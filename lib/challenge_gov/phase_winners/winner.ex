@@ -18,7 +18,8 @@ defmodule ChallengeGov.PhaseWinners.Winner do
     field :place_title, :string
 
     # Uploads
-    field(:image_path, :string)
+    field(:image_key, Ecto.UUID)
+    field(:image_extension, :string)
 
     # Timestamps
     timestamps(type: :utc_datetime_usec)
@@ -30,13 +31,15 @@ defmodule ChallengeGov.PhaseWinners.Winner do
       :phase_winner_id,
       :name,
       :place_title,
-      :image_path
+      :image_key,
+      :image_extension
     ])
   end
 
-  def image_changeset(struct, path) do
+  def image_changeset(struct, key, extension) do
     struct
     |> change()
-    |> put_change(:image_path, path)
+    |> put_change(:image_key, key)
+    |> put_change(:image_extension, extension)
   end
 end

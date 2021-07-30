@@ -7,7 +7,8 @@
         <label>Winners description (optional)</label>
         <%= FormView.rt_textarea_field(f, :overview) %>
         <label>Winners overview image (optional)</label>
-        <%= hidden_input f, :overview_image_path %>
+        <%= hidden_input f, :overview_image_key %>
+        <%= hidden_input f, :overview_image_extension %>
         <%= FormView.file_field(f, :overview_image, label: false) %>
         <%= render_remove_image_checkbox(f, :overview_image) %>
       </div>

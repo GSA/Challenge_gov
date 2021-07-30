@@ -39,8 +39,14 @@ defmodule ChallengeGov.Winners do
   end
 
   # Uploads
+  def image_path(_phase_winner, nil, nil), do: nil
+
   def image_path(phase_winner, key, extension),
     do: "/phase_winners/#{phase_winner.id}/winner_image_#{key}#{extension}"
+
+  def image_path(phase_winner) do
+    image_path(phase_winner, phase_winner.image_key, phase_winner.image_extension)
+  end
 
   def upload_image(phase_winner, image) do
     file = Storage.prep_file(image)
@@ -50,7 +56,9 @@ defmodule ChallengeGov.Winners do
 
     case Storage.upload(file, path, meta: meta) do
       :ok ->
-        {:ok, path}
+        phase_winner
+        |> Winner.image_changeset(key, file.extension)
+        |> Repo.update()
 
       {:error, reason} ->
         {:error, reason}
@@ -58,10 +66,10 @@ defmodule ChallengeGov.Winners do
   end
 
   def remove_image(winner) do
-    case Storage.delete(winner.image_path) do
+    case Storage.delete(image_path(winner)) do
       :ok ->
         winner
-        |> Winner.image_changeset(nil)
+        |> Winner.image_changeset(nil, nil)
         |> Repo.update()
 
       {:error, _reason} ->

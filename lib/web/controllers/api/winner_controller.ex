@@ -13,10 +13,11 @@ defmodule Web.Api.WinnerController do
     {:ok, phase_winner} = PhaseWinners.get(id)
 
     case Winners.upload_image(phase_winner, image) do
-      {:ok, image_path} ->
+      {:ok, winner} ->
         conn
         |> put_status(:created)
-        |> assign(:image_path, image_path)
+        |> assign(:key, winner.image_key)
+        |> assign(:extension, winner.image_extension)
         |> render("upload_image.json")
 
       {:error, changeset} ->

@@ -90,6 +90,11 @@ defmodule ChallengeGov.PhaseWinners do
 
         Winner.changeset(winner, winner_params)
       end)
+      |> Multi.run({:winner, index, :maybe_handle_images}, fn _repo, changes ->
+        winner = Map.get(changes, {:winner, index, :update})
+
+        maybe_handle_winner_images(winner, winner_params)
+      end)
       |> Multi.run({:winner, index, :maybe_handle_removal}, fn _repo, changes ->
         winner = Map.get(changes, {:winner, index, :update})
 
@@ -103,19 +108,40 @@ defmodule ChallengeGov.PhaseWinners do
   defp maybe_get_winner(""), do: {:ok, %Winner{}}
   defp maybe_get_winner(id), do: {:ok, Repo.get(Winner, id) || %Winner{}}
 
-  defp maybe_handle_winner_removal(winner, %{"remove" => "true"}) do
-    Winners.delete(winner)
+  defp maybe_handle_winner_images(winner, %{"remove_image" => "true", "image" => image}) do
+    {:ok, winner} = Winners.remove_image(winner)
+    Winners.upload_image(winner, image)
   end
 
-  defp maybe_handle_winner_removal(winner, %{"remove_image" => "true"}) do
+  defp maybe_handle_winner_images(winner, %{"remove_image" => "true"}) do
     Winners.remove_image(winner)
+  end
+
+  defp maybe_handle_winner_images(winner, %{"image" => image}) do
+    Winners.upload_image(winner, image)
+  end
+
+  defp maybe_handle_winner_images(winner, _winner_params), do: {:ok, winner}
+
+  defp maybe_handle_winner_removal(winner, %{"remove" => "true"}) do
+    Winners.delete(winner)
   end
 
   defp maybe_handle_winner_removal(winner, _winner_params), do: {:ok, winner}
 
   # Uploads
+  def overview_image_path(_phase_winner, nil, nil), do: nil
+
   def overview_image_path(phase_winner, key, extension),
     do: "/phase_winners/#{phase_winner.id}/overview_image_#{key}#{extension}"
+
+  def overview_image_path(phase_winner) do
+    overview_image_path(
+      phase_winner,
+      phase_winner.overview_image_key,
+      phase_winner.overview_image_extension
+    )
+  end
 
   def upload_overview_image(phase_winner, overview_image) do
     file = Storage.prep_file(overview_image)
@@ -125,7 +151,7 @@ defmodule ChallengeGov.PhaseWinners do
 
     case Storage.upload(file, path, meta: meta) do
       :ok ->
-        {:ok, path}
+        {:ok, key, file.extension}
 
       {:error, reason} ->
         {:error, reason}
@@ -138,10 +164,10 @@ defmodule ChallengeGov.PhaseWinners do
   defp maybe_remove_overview_image(phase_winner, _phase_winner_params), do: {:ok, phase_winner}
 
   defp remove_overview_image(phase_winner) do
-    case Storage.delete(phase_winner.overview_image_path) do
+    case Storage.delete(overview_image_path(phase_winner)) do
       :ok ->
         phase_winner
-        |> PhaseWinner.overview_image_changeset(nil)
+        |> PhaseWinner.overview_image_changeset(nil, nil)
         |> Repo.update()
 
       {:error, _reason} ->

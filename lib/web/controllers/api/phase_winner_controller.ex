@@ -12,10 +12,11 @@ defmodule Web.Api.PhaseWinnerController do
     %{current_phase_winner: phase_winner} = conn.assigns
 
     case PhaseWinners.upload_overview_image(phase_winner, overview_image) do
-      {:ok, overview_image_path} ->
+      {:ok, key, extension} ->
         conn
         |> put_status(:created)
-        |> assign(:overview_image_path, overview_image_path)
+        |> assign(:key, key)
+        |> assign(:extension, extension)
         |> render("upload_overview_image.json")
 
       {:error, changeset} ->
