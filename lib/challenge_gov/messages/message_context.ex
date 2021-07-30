@@ -140,7 +140,7 @@ defmodule ChallengeGov.Messages.MessageContext do
   @type t :: %__MODULE__{}
   schema "message_contexts" do
     belongs_to(:parent, MessageContext)
-    has_many(:contexts, MessageContext)
+    has_many(:contexts, MessageContext, foreign_key: :parent_id)
     has_many(:messages, Message)
     has_many(:statuses, MessageContextStatus)
 
@@ -158,8 +158,10 @@ defmodule ChallengeGov.Messages.MessageContext do
     |> cast(params, [
       :context,
       :context_id,
-      :audience
+      :audience,
+      :parent_id
     ])
+    |> foreign_key_constraint(:parent_id)
     |> validate_inclusion(:context, [nil | @valid_contexts])
     |> validate_inclusion(:audience, @valid_audiences)
   end

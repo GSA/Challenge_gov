@@ -14,6 +14,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.NonFederalPartner
   alias ChallengeGov.Challenges.Phase
+  alias ChallengeGov.Submissions.Submission
   alias ChallengeGov.Challenges.TimelineEvent
   alias ChallengeGov.Submissions.SubmissionExport
   alias ChallengeGov.SupportingDocuments.Document
@@ -38,6 +39,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete, on_delete: :delete_all)
 
     has_many(:phases, Phase, on_replace: :delete)
+    has_many(:submissions, Submission)
 
     has_many(:submission_exports, SubmissionExport)
 
