@@ -21,6 +21,12 @@ config :challenge_gov, ChallengeGov.Mailer,
   from: "challenge_gov@example.com",
   adapter: Bamboo.TestAdapter
 
+config :wallaby, otp_app: :challenge_gov, js_logger: nil, screenshot_on_failure: true
+
+config :challenge_gov, :sql_sandbox, true
+
+config :challenge_gov, Web.Endpoint, server: true
+
 config :bcrypt_elixir, :log_rounds, 4
 
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
