@@ -31,33 +31,3 @@ $(".winners-overview").on("change", "#phase_winner_overview_image", (e) => {
     })
   }
 })
-
-$(".winners-overview").on("change", "[data-field=image]", (e) => {
-  form = e.target.form
-  phaseWinnerId = $(form).data("phase-winner-id")
-  formGroup = e.target.closest(".form-group")
-  rowElement = e.target.closest(".grid-row")
-  imagePathElement = $(rowElement).find("[data-field=image_path]")
-
-  file = $(e.target).prop("files")[0]
-
-  fd = new FormData()
-  fd.append("image", file)
-
-  if (file) {
-    $.ajax({
-      url: `/api/phase_winners/${phaseWinnerId}/upload_winner_image`, 
-      type: "post",
-      processData: false,
-      contentType: false,
-      data: fd,
-      success: function({key, extension}) {
-        $(imagePathElement).val(key)
-        $(imagePathElement).val(extension)
-      },
-      error: function(err) {
-        console.log("Something went wrong", err)
-      }
-    })
-  }
-})
