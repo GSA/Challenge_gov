@@ -42,7 +42,7 @@
                     <td><%= link(submission.challenge.title, to: Routes.challenge_path(@conn, :show, submission.challenge.id)) %></td>
                     <%= multi_phase_column_content(@challenge, submission.phase.title) %>
                     <td><%= status_display_name(submission) %></td>
-                    <td><%= submission.review_verified %></td>
+                    <td id="review-verified"><%= review_verified_column_content(submission.review_verified) %></td>
                     <td><%= submission.manager.first_name <> " " <> submission.manager.last_name %></td>
                     <td>
                       <%= render Web.SubmissionView, "_actions.html", conn: @conn, challenge: @challenge, user: @user, submission: submission %>
