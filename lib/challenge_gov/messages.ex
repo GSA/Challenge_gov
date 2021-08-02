@@ -49,6 +49,18 @@ defmodule ChallengeGov.Messages do
     end
   end
 
+  def get(id) do
+    Message
+    |> Repo.get_by(id: id)
+    |> case do
+      nil ->
+        {:error, :not_found}
+
+      message ->
+        {:ok, message}
+    end
+  end
+
   def get_draft(id) do
     Message
     |> Repo.get_by(id: id, status: "draft")

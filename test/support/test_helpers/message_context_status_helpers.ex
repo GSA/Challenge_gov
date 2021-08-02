@@ -39,6 +39,8 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
         user_id: user_challenge_owner.id
       })
 
+    submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
+
     %ChallengeOwner{}
     |> ChallengeOwner.changeset(%{
       "challenge_id" => challenge.id,
@@ -55,8 +57,6 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
 
     message_context = Repo.preload(message_context, [:statuses])
 
-    _submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
-
     {:ok, challenge_owner_message_context_status} =
       MessageContextStatuses.get(user_challenge_owner, message_context)
 
@@ -64,12 +64,13 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
       MessageContextStatuses.get(user_challenge_owner_2, message_context)
 
     {:ok, solver_message_context_status} =
-      MessageContextStatuses.create(user_solver, message_context)
+      MessageContextStatuses.get(user_solver, message_context)
 
     message_context = Repo.preload(message_context, [:statuses], force: true)
 
     %{
       challenge: challenge,
+      submission: submission,
       message_context: message_context,
       challenge_owner_message_context_status: challenge_owner_message_context_status,
       challenge_owner_2_message_context_status: challenge_owner_2_message_context_status,
