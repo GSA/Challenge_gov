@@ -21,14 +21,23 @@ defmodule ChallengeGov.MessagesTest do
     role: "solver"
   }
 
+  @solver_params_2 %{
+    email: "solver_2@example.com",
+    role: "solver"
+  }
+
   defp create_message_context_status() do
     user_challenge_owner = AccountHelpers.create_user(@challenge_owner_params)
     user_solver = AccountHelpers.create_user(@solver_params)
+    user_solver_2 = AccountHelpers.create_user(@solver_params_2)
 
     challenge =
       ChallengeHelpers.create_single_phase_challenge(user_challenge_owner, %{
         user_id: user_challenge_owner.id
       })
+
+    SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
+    SubmissionHelpers.create_submitted_submission(%{}, user_solver_2, challenge)
 
     {:ok, message_context} =
       MessageContexts.create(%{
@@ -39,21 +48,27 @@ defmodule ChallengeGov.MessagesTest do
 
     message_context = Repo.preload(message_context, [:statuses])
 
-    assert length(message_context.statuses) == 1
+    {:ok, message_context_status_challenge_owner} =
+      MessageContextStatuses.get(user_challenge_owner, message_context)
 
-    _submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
+    {:ok, message_context_status_solver} =
+      MessageContextStatuses.get(user_solver, message_context)
 
-    {:ok, message_context_status} = MessageContextStatuses.create(user_solver, message_context)
+    {:ok, message_context_status_solver_2} =
+      MessageContextStatuses.get(user_solver_2, message_context)
 
-    message_context = Repo.preload(message_context, [:statuses], force: true)
-
-    assert length(message_context.statuses) == 2
+    assert length(message_context.statuses) == 3
 
     %{
       user_challenge_owner: user_challenge_owner,
       user_solver: user_solver,
+      user_solver_2: user_solver_2,
       message_context: message_context,
-      message_context_status: message_context_status
+      # Placeholder for existing tests
+      message_context_status: message_context_status_solver,
+      message_context_status_challenge_owner: message_context_status_challenge_owner,
+      message_context_status_solver: message_context_status_solver,
+      message_context_status_solver_2: message_context_status_solver_2
     }
   end
 
@@ -314,6 +329,393 @@ defmodule ChallengeGov.MessagesTest do
         })
 
       assert {:error, :not_found} == Messages.get_draft(message.id)
+    end
+  end
+
+  describe "creating a sent message as a solver on a challenge context" do
+    test "success: creates solver context and attaches message to it" do
+      %{
+        user_solver: user_solver,
+        user_solver_2: user_solver_2,
+        message_context: message_context
+      } = create_message_context_status()
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 1
+
+      {:ok, _message} =
+        Messages.create(user_solver_2, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 1
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver_2} = MessageContexts.get("solver", user_solver_2.id, "all")
+
+      message_context_solver_2 =
+        Repo.preload(message_context_solver_2, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver_2.statuses) == 2
+      assert length(message_context_solver_2.messages) == 1
+    end
+
+    test "success: finds solver context and attaches message to it" do
+      %{
+        user_solver: user_solver,
+        message_context: message_context
+      } = create_message_context_status()
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 1
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 2
+    end
+  end
+
+  describe "creating a draft message as a solver on a challenge context" do
+    test "success: creates solver context and attaches message to it" do
+      %{
+        user_solver: user_solver,
+        message_context: message_context
+      } = create_message_context_status()
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 1
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 2
+    end
+
+    test "success: finds solver context and attaches message to it" do
+      %{
+        user_solver: user_solver,
+        message_context: message_context
+      } = create_message_context_status()
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 1
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 2
+    end
+  end
+
+  describe "creating a message as a solver on a solver context" do
+    test "success: attach sent message to solver context" do
+      %{
+        user_solver: user_solver,
+        message_context: message_context
+      } = create_message_context_status()
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 1
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context_solver, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 2
+    end
+
+    test "success: attach draft message to solver context" do
+      %{
+        user_solver: user_solver,
+        message_context: message_context
+      } = create_message_context_status()
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 1
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context_solver, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 2
+    end
+  end
+
+  describe "creating a message as a non solver on a solver context" do
+    test "success: attach sent message to solver context" do
+      %{
+        user_challenge_owner: user_challenge_owner,
+        user_solver: user_solver,
+        message_context: message_context
+      } = create_message_context_status()
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 1
+
+      {:ok, _message} =
+        Messages.create(user_challenge_owner, message_context_solver, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 2
+    end
+
+    test "success: attach draft message to solver context" do
+      %{
+        user_challenge_owner: user_challenge_owner,
+        user_solver: user_solver,
+        message_context: message_context
+      } = create_message_context_status()
+
+      {:ok, _message} =
+        Messages.create(user_solver, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "sent"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 1
+
+      {:ok, _message} =
+        Messages.create(user_challenge_owner, message_context_solver, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      message_context = Repo.preload(message_context, [:statuses, :messages], force: true)
+
+      assert length(message_context.statuses) == 2
+      assert Enum.empty?(message_context.messages)
+
+      {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
+
+      message_context_solver =
+        Repo.preload(message_context_solver, [:statuses, :messages], force: true)
+
+      assert length(message_context_solver.statuses) == 2
+      assert length(message_context_solver.messages) == 2
     end
   end
 end

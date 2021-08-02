@@ -100,13 +100,28 @@ defmodule ChallengeGov.Messages.MessageContext do
   Thread Type: I-2
   Description: Thread spawned from a solver responding to thread type B-3
   Parent ID: ID of the broadcast message context this context spawned from
+  Context: solver
+  Context ID: ID of the solver that responded
+  Audience: all
+  Who can create: 
+    - Solver: By replying to a thread type B-3
+  Who can see: 
+    - Admin: All
+    - Challenge Owner: Related to the parent context challenge, 
+    - Solver: Referenced by context_id
+  What happens on reply:
+    - Admin: Sends another message in same thread
+    - Challenge Owner: Sends another message in same thread
+    - Solver: Sends another message in same thread
+
+  Thread Type: I-3
+  Description: Thread spawned from an admin or challenge owner directly messaging a submission
   Context: submission
   Context ID: ID of the submission being messaged
   Audience: all
   Who can create: 
     - Admin: Messaging a solver/submission or group of them making individual contexts for each
     - Challenge Owner: Messaging a solver/submission or group of them making individual contexts for each
-    - Solver: By replying to a thread type B-3
   Who can see: 
     - Admin: All
     - Challenge Owner: Related to the parent context challenge, 
@@ -128,7 +143,8 @@ defmodule ChallengeGov.Messages.MessageContext do
   @valid_contexts [
     "challenge",
     "challenge_owner",
-    "submission"
+    "submission",
+    "solver"
   ]
 
   @valid_audiences [

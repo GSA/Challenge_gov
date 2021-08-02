@@ -8,6 +8,7 @@ defmodule ChallengeGov.Messages do
   alias Ecto.Multi
   alias ChallengeGov.Repo
 
+  alias ChallengeGov.MessageContexts
   alias ChallengeGov.Messages.Message
   alias ChallengeGov.Messages.MessageContextStatus
   alias Stein.Filter
@@ -65,6 +66,8 @@ defmodule ChallengeGov.Messages do
   def edit(message), do: Message.changeset(message)
 
   def create(user, context, params) do
+    {:ok, context} = MessageContexts.maybe_switch_to_isolated_context(user, context)
+
     Multi.new()
     |> Multi.run(:find_message, fn repo, _changes ->
       message_id = Map.get(params, "id", nil)
