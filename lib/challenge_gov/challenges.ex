@@ -481,6 +481,7 @@ defmodule ChallengeGov.Challenges do
       :challenge_owners,
       :challenge_owner_users,
       :events,
+      :submissions,
       phases: ^{from(p in Phase, order_by: p.start_date), [winners: :winners]},
       federal_partners: [:agency, :sub_agency]
     ])

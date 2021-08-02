@@ -111,6 +111,39 @@ defmodule ChallengeGov.MessageContextStatuses do
       |> Submissions.all()
       |> Enum.map(& &1.submitter_id)
 
+    message_context = Repo.preload(message_context, [:contexts])
+
+    # Should exclude solvers that already have a child context that is one of their submissions
+    solver_user_ids_to_exclude =
+      message_context.contexts
+      |> Enum.map(fn context ->
+        {:ok, submission} = Submissions.get(context.context_id)
+        submission.submitter_id
+      end)
+
+    user_ids =
+      admin_user_ids ++
+        challenge_owner_user_ids ++ (solver_user_ids -- solver_user_ids_to_exclude)
+
+    Enum.uniq(user_ids)
+  end
+
+  def get_user_ids_for_message_context(message_context = %{context: "submission"}) do
+    %{context_id: context_id, audience: _audience} = message_context
+
+    {:ok, submission} = Submissions.get(context_id)
+    submission = Repo.preload(submission, challenge: [:challenge_owners])
+
+    admin_user_ids =
+      Accounts.all_admins()
+      |> Enum.map(& &1.id)
+
+    challenge_owner_user_ids =
+      submission.challenge.challenge_owners
+      |> Enum.map(& &1.user_id)
+
+    solver_user_ids = [submission.submitter_id]
+
     user_ids = admin_user_ids ++ challenge_owner_user_ids ++ solver_user_ids
 
     Enum.uniq(user_ids)

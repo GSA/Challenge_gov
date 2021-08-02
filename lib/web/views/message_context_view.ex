@@ -17,8 +17,8 @@ defmodule Web.MessageContextView do
 
   def display_audience(message_context) do
     message_context.audience
-    |> Enum.map(&String.capitalize(&1))
-    |> Enum.join(", ")
+    |> String.replace("_", " ")
+    |> String.capitalize()
   end
 
   def display_challenge_title_link(message_context) do

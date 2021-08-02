@@ -34,7 +34,7 @@ defmodule ChallengeGov.MessageContextStatusesTest do
       MessageContexts.create(%{
         "context" => "challenge",
         "context_id" => challenge.id,
-        "audience" => ["solvers"]
+        "audience" => "all"
       })
 
     message_context = Repo.preload(message_context, [:statuses])
