@@ -24,10 +24,7 @@ defmodule ChallengeGov.SubmissionTest do
     |> click(link("Submit"))
     |> assert_text("Submission saved")
 
-    submission_id =
-      session
-      |> current_url()
-      |> String.slice(-2..-1)
+    submission_id = get_submission_id(session)
 
     session
     |> click(link("< Back to submissions"))
@@ -57,10 +54,7 @@ defmodule ChallengeGov.SubmissionTest do
     |> assert_text("Submission saved")
 
     # Submission is not found in table to be judged
-    submission_id =
-      session
-      |> current_url()
-      |> String.slice(-2..-1)
+    submission_id = get_submission_id(session)
 
     session
     |> click(link("< Back to submissions"))
@@ -114,5 +108,12 @@ defmodule ChallengeGov.SubmissionTest do
     session
     |> visit("/dev_accounts")
     |> click(button("Solver Active"))
+  end
+
+  defp get_submission_id(session) do
+    session
+    |> current_url()
+    |> String.split("/")
+    |> List.last()
   end
 end
