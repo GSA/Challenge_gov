@@ -539,13 +539,15 @@ form {
   max-height: 200px;
 }
 
-/* rich text editor (submission show) */
+/* rich text editor reset for default p tag */
 
-.ql-editor {
-  padding: 0 7.5px;
+  /* (submission show) */
 
-  p {
-    padding: 0;
-    margin: 0;
+  .editor-text-reset {
+    padding: 0 7.5px;
+
+    p {
+      padding: 0;
+      margin: 0;
+    }
   }
-}

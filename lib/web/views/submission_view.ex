@@ -62,10 +62,10 @@ defmodule Web.SubmissionView do
 
     case Timex.compare(end_date, now) do
       1 ->
-        "Closes"
+        content_tag(:span, "Closes")
 
       tc when tc == -1 or tc == 0 ->
-        "CLOSED"
+        content_tag(:span, "CLOSED", class: "text-bold")
     end
   end
 
@@ -186,6 +186,20 @@ defmodule Web.SubmissionView do
         link(opts[:label] || "Edit",
           to: Routes.submission_path(conn, :edit, submission.id),
           class: "btn btn-link float-right"
+        )
+
+      false ->
+        nil
+    end
+  end
+
+  def submit_button(conn, submission, user, opts \\ []) do
+    case Submissions.is_editable?(user, submission) && submission.status !== "submitted" do
+      true ->
+        link(opts[:label] || "Submit",
+          to: Routes.submission_path(conn, :submit, submission.id),
+          method: :put,
+          class: "btn btn-primary float-right"
         )
 
       false ->

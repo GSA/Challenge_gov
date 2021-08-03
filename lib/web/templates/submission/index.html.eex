@@ -55,7 +55,7 @@
                   </p>
                   <%= phase_number(submission) %>
                   <p class="challenge-tile__submission-info" aria-label="Submission close">
-                    <span><%= close_header(submission.phase.end_date) %></span>
+                    <%= close_header(submission.phase.end_date) %>
                     <span class="js-local-datetime"><%= submission.phase.end_date %></span>
                   </p>
                   <p class="challenge-tile__submission-info" aria-label="Submission status">

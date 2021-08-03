@@ -24,11 +24,9 @@ defmodule ChallengeGov.SubmissionTest do
     |> click(link("Submit"))
     |> assert_text("Submission saved")
 
-    submission_id = get_submission_id(session)
-
     session
     |> click(link("< Back to submissions"))
-    |> assert_text("#{submission_id}")
+    |> assert_text("#{challenge.title}")
   end
 
   feature "create a submission as an admin", %{session: session} do
