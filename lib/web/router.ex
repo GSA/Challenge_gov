@@ -242,7 +242,7 @@ defmodule Web.Router do
     get("/challenges#/challenge/:id/:tab", PageController, :index, as: :challenge_details)
   end
 
-  if Mix.env() == :dev do
+  if Mix.env() == :dev || Mix.env() == :test do
     scope "/dev_accounts", Web, as: :dev_accounts do
       pipe_through([:browser, :signed_out])
 

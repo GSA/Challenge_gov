@@ -83,6 +83,7 @@ defmodule ChallengeGov.MixProject do
       {:sweet_xml, "~> 0.6.6"},
       {:text_delta, "~> 1.1.0"},
       {:timex, "~> 3.5"},
+      {:wallaby, "~> 0.28.0", runtime: false, only: :test},
       {:xml_builder, "~> 2.1.1", override: true}
     ]
   end

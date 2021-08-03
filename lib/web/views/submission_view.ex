@@ -157,6 +157,10 @@ defmodule Web.SubmissionView do
     end
   end
 
+  def review_verified_column_content(true), do: "yes"
+
+  def review_verified_column_content(_review_verified), do: "no"
+
   def status_display_name(submission) do
     Submissions.status_label(submission.status)
   end

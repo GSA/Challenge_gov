@@ -4,6 +4,10 @@ defmodule Web.Endpoint do
   plug RemoteIp
   plug CORSPlug
 
+  if Application.get_env(:challenge_gov, :sql_sandbox) do
+    plug Phoenix.Ecto.SQL.Sandbox
+  end
+
   @session_options [
     store: :cookie,
     key: "_challenge_gov_key",

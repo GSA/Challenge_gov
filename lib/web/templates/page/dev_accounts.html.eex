@@ -11,7 +11,7 @@
   <br/>
   <div>
     <h1>Admin Accounts</h1>
-    <%= button("Active", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "admin_active@example.com"), method: :post, class: "btn btn-primary") %>
+    <%= button("Admin Active", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "admin_active@example.com"), method: :post, class: "btn btn-primary") %>
     <%= button("Pending", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "admin_pending@example.com"), method: :post, class: "btn btn-primary") %>
     <%= button("Suspended", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "admin_suspended@example.com"), method: :post, class: "btn btn-primary") %>
     <%= button("Revoked", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "admin_revoked@example.com"), method: :post, class: "btn btn-primary") %>
@@ -31,7 +31,7 @@
   <br/>
   <div>
     <h1>Solver Accounts</h1>
-    <%= button("Active", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "solver_active@example.com"), method: :post, class: "btn btn-primary") %>
+    <%= button("Solver Active", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "solver_active@example.com"), method: :post, class: "btn btn-primary") %>
     <%= button("Pending", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "solver_pending@example.com"), method: :post, class: "btn btn-primary") %>
     <%= button("Suspended", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "solver_suspended@example.com"), method: :post, class: "btn btn-primary") %>
     <%= button("Revoked", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "solver_revoked@example.com"), method: :post, class: "btn btn-primary") %>
