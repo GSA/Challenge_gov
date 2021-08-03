@@ -13,6 +13,155 @@ defmodule ChallengeGov.MessageContexts do
   alias ChallengeGov.MessageContextStatuses
   alias ChallengeGov.Messages.Message
   alias ChallengeGov.Messages.MessageContext
+  alias ChallengeGov.Messages.MessageContextStatus
+
+  def sync_for_user(user) do
+    case user.role do
+      "super_admin" ->
+        sync_for_admin(user)
+
+      "admin" ->
+        sync_for_admin(user)
+
+      "challenge_owner" ->
+        sync_for_challenge_owner(user)
+
+      "solver" ->
+        sync_for_solver(user)
+    end
+  end
+
+  def sync_for_admin(user) do
+    contexts = Repo.all(MessageContext)
+
+    contexts
+    |> Enum.reduce(Multi.new(), fn context, multi ->
+      case MessageContextStatuses.get(user, context) do
+        {:ok, _context_status} ->
+          multi
+
+        {:error, :not_found} ->
+          changeset =
+            MessageContextStatus.create_changeset(%MessageContextStatus{}, user.id, context.id)
+
+          Multi.insert(multi, {:insert_context_status, user.id, context.id}, changeset)
+      end
+    end)
+    |> Repo.transaction()
+  end
+
+  def sync_for_challenge_owner(user) do
+    contexts =
+      MessageContext
+      |> preload([:parent, :contexts])
+      |> Repo.all()
+
+    contexts
+    |> Enum.reduce(Multi.new(), fn context, multi ->
+      sync_context(multi, user, context)
+    end)
+    |> Repo.transaction()
+  end
+
+  def sync_for_solver(user) do
+    contexts =
+      MessageContext
+      |> preload([:parent, :contexts])
+      |> Repo.all()
+
+    contexts
+    |> Enum.reduce(Multi.new(), fn context, multi ->
+      sync_context(multi, user, context)
+    end)
+    |> Repo.transaction()
+  end
+
+  def sync_context(multi, user = %{role: "challenge_owner"}, context = %{context: "challenge"}) do
+    challenge = get_context_record(context)
+
+    if Challenges.is_challenge_owner?(user, challenge) do
+      case MessageContextStatuses.get(user, context) do
+        {:ok, _context_status} ->
+          multi
+
+        {:error, :not_found} ->
+          changeset =
+            MessageContextStatus.create_changeset(%MessageContextStatus{}, user.id, context.id)
+
+          Multi.insert(multi, {:insert_context_status, user.id, context.id}, changeset)
+      end
+    else
+      # TODO: Do nothing or delete if exists
+      multi
+    end
+  end
+
+  def sync_context(multi, user = %{role: "challenge_owner"}, context = %{context: "solver"}) do
+    challenge = get_context_record(context.parent)
+
+    if Challenges.is_challenge_owner?(user, challenge) do
+      case MessageContextStatuses.get(user, context) do
+        {:ok, _context_status} ->
+          multi
+
+        {:error, :not_found} ->
+          changeset =
+            MessageContextStatus.create_changeset(%MessageContextStatus{}, user.id, context.id)
+
+          Multi.insert(multi, {:insert_context_status, user.id, context.id}, changeset)
+      end
+    else
+      # TODO: Do nothing or delete if exists
+      multi
+    end
+  end
+
+  def sync_context(multi, user = %{role: "solver"}, context = %{context: "challenge"}) do
+    challenge = get_context_record(context)
+
+    context = Repo.preload(context, [:contexts])
+    user = Repo.preload(user, [:submissions])
+
+    user_challenge_ids = Enum.map(user.submissions, & &1.challenge_id)
+    context_solver_ids = Enum.map(context.contexts, & &1.context_id)
+
+    if Enum.member?(user_challenge_ids, challenge.id) and
+         !Enum.member?(context_solver_ids, user.id) do
+      case MessageContextStatuses.get(user, context) do
+        {:ok, _context_status} ->
+          multi
+
+        {:error, :not_found} ->
+          changeset =
+            MessageContextStatus.create_changeset(%MessageContextStatus{}, user.id, context.id)
+
+          Multi.insert(multi, {:insert_context_status, user.id, context.id}, changeset)
+      end
+    else
+      # TODO: Do nothing or delete if exists
+      multi
+    end
+  end
+
+  def sync_context(multi, user = %{role: "solver"}, context = %{context: "solver"}) do
+    if context.context_id == user.id do
+      case MessageContextStatuses.get(user, context) do
+        {:ok, _context_status} ->
+          multi
+
+        {:error, :not_found} ->
+          changeset =
+            MessageContextStatus.create_changeset(%MessageContextStatus{}, user.id, context.id)
+
+          Multi.insert(multi, {:insert_context_status, user.id, context.id}, changeset)
+      end
+    else
+      # TODO: Do nothing or delete if exists
+      multi
+    end
+  end
+
+  def sync_context(multi, _user, _context), do: multi
 
   def get(id) do
     messages_query =

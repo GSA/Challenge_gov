@@ -1,6 +1,7 @@
 defmodule ChallengeGov.MessageContextsTest do
   use ChallengeGov.DataCase
 
+  alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Messages
   alias ChallengeGov.MessageContexts
   alias ChallengeGov.MessageContextStatuses
@@ -292,6 +293,85 @@ defmodule ChallengeGov.MessageContextsTest do
 
       {:ok, last_author_solver_context} = MessageContexts.get_last_author(solver_isolated_context)
       assert last_author_solver_context.id == user_challenge_owner.id
+    end
+  end
+
+  describe "sync message contexts" do
+    test "success: for admin" do
+      MessageContextStatusHelpers.create_message_context_status()
+
+      user_admin = AccountHelpers.create_user(%{role: "admin", email: "admin@example.com"})
+
+      MessageContexts.sync_for_user(user_admin)
+
+      user_admin = Repo.preload(user_admin, [:message_context_statuses])
+
+      assert length(user_admin.message_context_statuses) == 1
+    end
+
+    test "success: for challenge_owner" do
+      %{
+        message_context: message_context,
+        user_solver: user_solver
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      user_challenge_owner_new =
+        AccountHelpers.create_user(%{
+          role: "challenge_owner",
+          email: "challenge_owner_new@example.com"
+        })
+
+      Messages.create(user_solver, message_context, %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      })
+
+      challenge = MessageContexts.get_context_record(message_context)
+
+      %ChallengeOwner{}
+      |> ChallengeOwner.changeset(%{
+        "challenge_id" => challenge.id,
+        "user_id" => user_challenge_owner_new.id
+      })
+      |> Repo.insert()
+
+      MessageContexts.sync_for_user(user_challenge_owner_new)
+
+      user_challenge_owner_new =
+        Repo.preload(user_challenge_owner_new, [:message_context_statuses])
+
+      assert length(user_challenge_owner_new.message_context_statuses) == 2
+    end
+
+    test "success: for solver" do
+      %{
+        challenge: challenge,
+        message_context: message_context,
+        user_solver: user_solver
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      Messages.create(user_solver, message_context, %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      })
+
+      MessageContexts.sync_for_user(user_solver)
+
+      user_solver = Repo.preload(user_solver, [:message_context_statuses])
+      assert length(user_solver.message_context_statuses) == 1
+
+      user_solver_new =
+        AccountHelpers.create_user(%{role: "solver", email: "solver_new@example.com"})
+
+      _submission_new =
+        SubmissionHelpers.create_submitted_submission(%{}, user_solver_new, challenge)
+
+      MessageContexts.sync_for_user(user_solver_new)
+
+      user_solver_new = Repo.preload(user_solver_new, [:message_context_statuses])
+      assert length(user_solver_new.message_context_statuses) == 1
     end
   end
 end
