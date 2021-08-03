@@ -182,9 +182,14 @@ defmodule ChallengeGov.MessageContexts do
     end
   end
 
-  def get(context, context_id, audience) do
+  def get(context, context_id, audience, parent_id \\ "") do
     MessageContext
-    |> Repo.get_by(context: context, context_id: context_id, audience: audience)
+    |> where(
+      [mc],
+      mc.context == ^context and mc.context_id == ^context_id and mc.audience == ^audience
+    )
+    |> maybe_filter_parent_id(parent_id)
+    |> Repo.one()
     |> case do
       nil ->
         {:error, :not_found}
@@ -193,6 +198,11 @@ defmodule ChallengeGov.MessageContexts do
         {:ok, message_context}
     end
   end
+
+  defp maybe_filter_parent_id(query, ""), do: query
+
+  defp maybe_filter_parent_id(query, parent_id),
+    do: where(query, [mc], mc.parent_id == ^parent_id)
 
   def new(context) do
     %MessageContext{}
@@ -227,13 +237,14 @@ defmodule ChallengeGov.MessageContexts do
   end
 
   defp find_or_create_message_context(multi, params) do
+    parent_id = Map.get(params, "parent_id", "")
     context = Map.get(params, "context")
     context_id = Map.get(params, "context_id")
     audience = Map.get(params, "audience")
 
     multi
     |> Multi.run(:message_context, fn _repo, _changes ->
-      case get(context, context_id, audience) do
+      case get(context, context_id, audience, parent_id) do
         {:ok, message_context} ->
           {:ok, message_context}
 
