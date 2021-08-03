@@ -2,6 +2,7 @@ defmodule Web.MessageContextView do
   use Web, :view
 
   alias ChallengeGov.MessageContexts
+  alias ChallengeGov.Repo
 
   alias Web.AccountView
   alias Web.FormView
@@ -15,17 +16,38 @@ defmodule Web.MessageContextView do
     end
   end
 
-  def display_audience(message_context) do
+  def display_audience(%{role: "solver"}, message_context = %{context: "solver"}) do
     message_context.audience
     |> String.replace("_", " ")
     |> String.capitalize()
   end
 
-  def display_challenge_title_link(message_context) do
+  def display_audience(_user, message_context = %{context: "solver"}) do
+    solver = MessageContexts.get_context_record(message_context)
+
+    AccountView.full_name(solver)
+  end
+
+  def display_audience(_user, message_context) do
+    message_context.audience
+    |> String.replace("_", " ")
+    |> String.capitalize()
+  end
+
+  def display_challenge_title_link(message_context = %{context: "challenge"}) do
     challenge = MessageContexts.get_context_record(message_context) || %{title: ""}
 
     link(challenge.title,
       to: Routes.challenge_path(Web.Endpoint, :show, message_context.context_id)
+    )
+  end
+
+  def display_challenge_title_link(message_context = %{context: "solver"}) do
+    message_context = Repo.preload(message_context, [:parent])
+    challenge = MessageContexts.get_context_record(message_context.parent) || %{title: ""}
+
+    link(challenge.title,
+      to: Routes.challenge_path(Web.Endpoint, :show, message_context.parent.context_id)
     )
   end
 

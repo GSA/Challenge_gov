@@ -59,7 +59,7 @@
                       </td>
                       <td><%= Web.SharedView.local_datetime_tag(draft_message.updated_at) %></td>
                       <td><%= display_challenge_title_link(draft_message.context) %></td>
-                      <td><%= display_audience(draft_message.context) %></td>
+                      <td><%= display_audience(@user, draft_message.context) %></td>
                       <td><%= AccountView.full_name(draft_message.author) %></td>
                       <td><%= AccountView.role_display(draft_message.author) %></td>
                       <td class="message_center__snippet"><%= display_message_snippet(draft_message) %></td>

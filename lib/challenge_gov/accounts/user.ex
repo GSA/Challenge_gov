@@ -13,6 +13,7 @@ defmodule ChallengeGov.Accounts.User do
   alias ChallengeGov.Submissions
   alias ChallengeGov.Submissions.Submission
   alias ChallengeGov.Agencies.Member
+  alias ChallengeGov.Messages.MessageContextStatus
 
   @type t :: %__MODULE__{}
 
@@ -50,6 +51,7 @@ defmodule ChallengeGov.Accounts.User do
     has_many(:submissions, Submission, foreign_key: :submitter_id)
     has_many(:managed_submissions, {"managed_submissions", Submission}, foreign_key: :manager_id)
     has_many(:submission_documents, Submissions.Document)
+    has_many(:message_context_statuses, MessageContextStatus)
 
     # Fields
     field(:role, :string, read_after_writes: true)

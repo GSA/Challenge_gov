@@ -149,6 +149,28 @@ defmodule ChallengeGov.MessageContextStatuses do
     Enum.uniq(user_ids)
   end
 
+  def get_user_ids_for_message_context(message_context = %{context: "solver"}) do
+    message_context = Repo.preload(message_context, [:parent])
+    %{context_id: context_id, audience: _audience} = message_context
+
+    {:ok, challenge} = Challenges.get(message_context.parent.context_id)
+    challenge = Repo.preload(challenge, [:challenge_owners])
+
+    admin_user_ids =
+      Accounts.all_admins()
+      |> Enum.map(& &1.id)
+
+    challenge_owner_user_ids =
+      challenge.challenge_owners
+      |> Enum.map(& &1.user_id)
+
+    solver_user_ids = [context_id]
+
+    user_ids = admin_user_ids ++ challenge_owner_user_ids ++ solver_user_ids
+
+    Enum.uniq(user_ids)
+  end
+
   def get_challenges_for_user(user) do
     MessageContextStatus
     |> join(:inner, [mcs], mc in assoc(mcs, :context))

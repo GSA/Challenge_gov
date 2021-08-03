@@ -1,13 +1,125 @@
 defmodule Web.MessageContextControllerTest do
   use Web.ConnCase
 
+  alias ChallengeGov.Repo
+
+  alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Messages
+  alias ChallengeGov.MessageContexts
   alias ChallengeGov.MessageContextStatuses
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.MessageContextStatusHelpers
+  alias ChallengeGov.TestHelpers.SubmissionHelpers
 
   defp prep_conn(conn, user) do
     assign(conn, :current_user, user)
+  end
+
+  describe "sync message context statuses on index" do
+    test "success: for admin", %{conn: conn} do
+      MessageContextStatusHelpers.create_message_context_status()
+
+      user_admin = AccountHelpers.create_user(%{role: "admin", email: "admin@example.com"})
+
+      conn = prep_conn(conn, user_admin)
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :index
+          )
+        )
+
+      %{message_context_statuses: message_context_statuses} = conn.assigns
+
+      assert length(message_context_statuses) == 1
+
+      assert html_response(conn, 200)
+    end
+
+    test "success: for challenge owner", %{conn: conn} do
+      %{
+        message_context: message_context,
+        user_solver: user_solver
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      user_challenge_owner_new =
+        AccountHelpers.create_user(%{
+          role: "challenge_owner",
+          email: "challenge_owner_new@example.com"
+        })
+
+      Messages.create(user_solver, message_context, %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      })
+
+      challenge = MessageContexts.get_context_record(message_context)
+
+      %ChallengeOwner{}
+      |> ChallengeOwner.changeset(%{
+        "challenge_id" => challenge.id,
+        "user_id" => user_challenge_owner_new.id
+      })
+      |> Repo.insert()
+
+      conn = prep_conn(conn, user_challenge_owner_new)
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :index
+          )
+        )
+
+      %{message_context_statuses: message_context_statuses} = conn.assigns
+
+      assert length(message_context_statuses) == 2
+
+      assert html_response(conn, 200)
+    end
+
+    test "success: for solver", %{conn: conn} do
+      %{
+        challenge: challenge,
+        message_context: message_context,
+        user_solver: user_solver
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      Messages.create(user_solver, message_context, %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      })
+
+      user_solver_new =
+        AccountHelpers.create_user(%{role: "solver", email: "solver_new@example.com"})
+
+      _submission_new =
+        SubmissionHelpers.create_submitted_submission(%{}, user_solver_new, challenge)
+
+      conn = prep_conn(conn, user_solver_new)
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :index
+          )
+        )
+
+      %{message_context_statuses: message_context_statuses} = conn.assigns
+
+      assert length(message_context_statuses) == 1
+
+      assert html_response(conn, 200)
+    end
   end
 
   describe "filter starred" do

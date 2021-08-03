@@ -9,12 +9,15 @@ defmodule Web.MessageContextController do
   def index(conn, params) do
     %{current_user: user} = conn.assigns
 
+    MessageContexts.sync_for_user(user)
+
     filter = Map.get(params, "filter", %{})
     message_context_statuses = MessageContextStatuses.all_for_user(user, filter: filter)
 
     challenges = MessageContextStatuses.get_challenges_for_user(user)
 
     conn
+    |> assign(:user, user)
     |> assign(:message_context_statuses, message_context_statuses)
     |> assign(:challenges, challenges)
     |> assign(:filter, filter)
@@ -31,6 +34,7 @@ defmodule Web.MessageContextController do
     challenges = MessageContextStatuses.get_challenges_for_user(user)
 
     conn
+    |> assign(:user, user)
     |> assign(:draft_messages, draft_messages)
     |> assign(:challenges, challenges)
     |> assign(:filter, filter)
@@ -47,10 +51,13 @@ defmodule Web.MessageContextController do
 
     {:ok, draft_message} = Messages.get_draft(message_id)
 
+    messages = MessageContexts.maybe_merge_parent_messages(message_context)
+
     conn
     |> assign(:user, user)
     |> assign(:changeset, Messages.edit(draft_message))
     |> assign(:message_context, message_context)
+    |> assign(:messages, messages)
     |> render("show.html")
   end
 
@@ -64,10 +71,13 @@ defmodule Web.MessageContextController do
 
     message_changeset = Messages.new()
 
+    messages = MessageContexts.maybe_merge_parent_messages(message_context)
+
     conn
     |> assign(:user, user)
     |> assign(:changeset, message_changeset)
     |> assign(:message_context, message_context)
+    |> assign(:messages, messages)
     |> render("show.html")
   end
 
