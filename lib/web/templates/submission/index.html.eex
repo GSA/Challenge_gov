@@ -37,39 +37,34 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <div class="card">
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <%= sortable_header(@conn, @sort, @filter, "id", "ID") %>
-                  <%= sortable_header(@conn, @sort, @filter, "title", "Name") %>
-                  <%= sortable_header(@conn, @sort, @filter, "challenge", "Challenge") %>
-                  <%= sortable_header(@conn, @sort, @filter, "phase", "Phase") %>
-                  <%= sortable_header(@conn, @sort, @filter, "status", "Status") %>
-                  <%= if Accounts.has_admin_access?(@user) do %>
-                    <th>Submitter</th>
-                  <% end %>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <%= Enum.map @submissions, fn (submission) -> %>
-                  <tr>
-                    <td><%= submission.id %></td>
-                    <td><%= name_link(@conn, submission) %></td>
-                    <td><%= link(submission.challenge.title, to: Routes.public_challenge_details_path(@conn, :index, submission.challenge.id), target: "_blank") %></td>
-                    <td><%= submission.phase.title %></td>
-                    <td><%= status_display_name(submission) %></td>
-                    <td>
-                      <%= render Web.SubmissionView, "_actions.html", conn: @conn, user: @user, submission: submission %>
-                    </td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
+        <div class="cards">
+          <%= Enum.map @submissions, fn (submission) -> %>
+            <div class="challenge-tile card">
+              <%= link to: Routes.submission_path(@conn, :show, submission.id) do %>
+                <div class="image_wrapper">
+                  <%= img_tag(
+                    ChallengeView.logo_url(submission.challenge),
+                    alt: "Challenge logo",
+                    title: "Challenge logo",
+                    class: "w-100"
+                  ) %>
+                </div>
+                <div class="challenge-tile__text-wrapper submission-wrapper">
+                  <p class="challenge-tile__submission-info" aria-label="Challenge title">
+                    <span class="title"><%= SharedView.truncate_string(submission.challenge.title, 90) %></span>
+                  </p>
+                  <%= phase_number(submission) %>
+                  <p class="challenge-tile__submission-info" aria-label="Submission close">
+                    <span><%= close_header(submission.phase.end_date) %></span>
+                    <span class="js-local-datetime"><%= submission.phase.end_date %></span>
+                  </p>
+                  <p class="challenge-tile__submission-info" aria-label="Submission status">
+                    <span><%= submission.status %></span>
+                  </p>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

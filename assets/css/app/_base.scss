@@ -538,3 +538,14 @@ form {
 .review-logo {
   max-height: 200px;
 }
+
+/* rich text editor (submission show) */
+
+.ql-editor {
+  padding: 0 7.5px;
+
+  p {
+    padding: 0;
+    margin: 0;
+  }
+}

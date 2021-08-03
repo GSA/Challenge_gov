@@ -64,6 +64,10 @@ p {
     display: grid;
   }
 
+  .submission-wrapper {
+    padding: 1rem 0;
+  }
+
   &__title {
     font-size: 1.125rem;
     font-weight: bold;
@@ -96,6 +100,17 @@ p {
   &__date {
     font-size: .875rem;
     color: $font-color;
+  }
+
+  &__submission-info {
+    font-size: 1.125rem;
+    margin: 0;
+    color: $font-color;
+
+    .title {
+      font-weight: bold;
+      font-size: larger;
+    }
   }
 
   &.challenge-tile {

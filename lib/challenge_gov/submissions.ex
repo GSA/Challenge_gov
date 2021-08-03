@@ -43,7 +43,7 @@ defmodule ChallengeGov.Submissions do
   def all_submissible_by_submitter_id(user_id, opts \\ []) do
     Submission
     |> base_preload
-    |> preload([:phase])
+    |> preload([:phase, challenge: [:phases]])
     |> where([s], is_nil(s.deleted_at))
     |> where([s], s.submitter_id == ^user_id)
     |> where(
@@ -58,7 +58,7 @@ defmodule ChallengeGov.Submissions do
   def all_unreviewed_by_submitter_id(user_id, opts \\ []) do
     Submission
     |> base_preload
-    |> preload([:phase])
+    |> preload([:phase, challenge: [:phases]])
     |> where([s], is_nil(s.deleted_at))
     |> where([s], s.submitter_id == ^user_id)
     |> where([s], not is_nil(s.manager_id))
