@@ -4,18 +4,6 @@ defmodule Web.SharedView do
   alias Stein.Storage
   alias Web.SharedView
 
-  def truncate_string(string, len) do
-    string_length = String.length(string)
-
-    if string_length <= len do
-      string
-    else
-      overage = string_length - len
-      truncated_string = String.slice(string, (len + 1)..overage)
-      truncated_string <> "..."
-    end
-  end
-
   def session_timeout(conn) do
     Map.get(conn.private.plug_session, "session_timeout_at")
   end
