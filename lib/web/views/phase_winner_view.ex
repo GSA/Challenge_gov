@@ -3,6 +3,8 @@ defmodule Web.PhaseWinnerView do
 
   alias Web.FormView
   alias Web.SharedView
+  alias ChallengeGov.PhaseWinners
+  alias ChallengeGov.Winners
 
   def render_title(challenge, phase) do
     content_tag :h1 do
@@ -10,15 +12,19 @@ defmodule Web.PhaseWinnerView do
     end
   end
 
-  def render_overview_image(%{overview_image_path: nil}), do: nil
+  def render_overview_image(%{overview_image_key: nil}), do: nil
 
-  def render_overview_image(%{overview_image_path: overview_image_path}),
-    do: img_tag(SharedView.upload_url(overview_image_path))
+  def render_overview_image(phase_winner) do
+    overview_image_path = PhaseWinners.overview_image_path(phase_winner)
+    img_tag(SharedView.upload_url(overview_image_path))
+  end
 
-  def render_winner_image(%{image_path: nil}), do: nil
+  def render_winner_image(%{image_key: nil}), do: nil
 
-  def render_winner_image(%{image_path: image_path}),
-    do: img_tag(SharedView.upload_url(image_path))
+  def render_winner_image(winner) do
+    image_path = Winners.image_path(winner)
+    img_tag(SharedView.upload_url(image_path))
+  end
 
   def render_remove_image_checkbox(form, image_field, opts \\ []) do
     content_tag :label do

@@ -54,6 +54,10 @@
   &__content {
     margin-bottom: 3rem;
 
+    .phase-image {
+      max-height: 300px
+    }
+
     .winner-image {
       max-width: 100px
     }

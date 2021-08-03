@@ -3,7 +3,6 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
   Helper factory functions for message context statuses
   """
 
-  alias ChallengeGov.Challenges
   alias ChallengeGov.Challenges.ChallengeOwner
   alias ChallengeGov.Repo
 
