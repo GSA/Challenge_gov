@@ -5,6 +5,7 @@ defmodule Web.SubmissionView do
   alias ChallengeGov.Challenges
   alias ChallengeGov.Submissions
 
+  alias Web.ChallengeView
   alias Web.DocumentView
   alias Web.FormView
   alias Web.SharedView
@@ -35,6 +36,36 @@ defmodule Web.SubmissionView do
           ]
         end
       ]
+    end
+  end
+
+  def phase_number(submission) do
+    if submission.challenge.is_multi_phase do
+      total_num_phases = Enum.count(submission.challenge.phases)
+
+      phase_num =
+        Enum.find_index(
+          submission.challenge.phases,
+          fn phase -> phase.id === submission.phase.id end
+        )
+
+      content_tag :p, class: "challenge-tile__submission-info", aria_label: "Challenge title" do
+        content_tag :span do
+          "Phase #{phase_num + 1} of #{total_num_phases}"
+        end
+      end
+    end
+  end
+
+  def close_header(end_date) do
+    now = Timex.now()
+
+    case Timex.compare(end_date, now) do
+      1 ->
+        "Closes"
+
+      tc when tc == -1 or tc == 0 ->
+        "CLOSED"
     end
   end
 
@@ -136,11 +167,24 @@ defmodule Web.SubmissionView do
         link(opts[:label] || "Delete",
           to: Routes.submission_path(conn, :delete, submission.id),
           method: :delete,
-          class: "btn btn-link text-danger",
+          class: "btn btn-link float-right text-danger",
           data: [confirm: "Are you sure you want to delete this submission?"]
         )
 
       {:error, :not_permitted} ->
+        nil
+    end
+  end
+
+  def submission_edit_link(conn, submission, user, opts \\ []) do
+    case Submissions.is_editable?(user, submission) do
+      true ->
+        link(opts[:label] || "Edit",
+          to: Routes.submission_path(conn, :edit, submission.id),
+          class: "btn btn-link float-right"
+        )
+
+      false ->
         nil
     end
   end

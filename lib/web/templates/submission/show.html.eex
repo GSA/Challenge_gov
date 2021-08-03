@@ -39,11 +39,11 @@
             </div>
             <div class="form-group">
               <label class="col"><strong>Brief description:</strong></label>
-              <div class="col"><%= SharedView.render_safe_html(@submission.brief_description) %></div>
+              <div class="col ql-editor"><%= SharedView.render_safe_html(@submission.brief_description) %></div>
             </div>
             <div class="form-group">
               <label class="col"><strong>Description:</strong></label>
-              <div class="col"><%= SharedView.render_safe_html(@submission.description) %></div>
+              <div class="col ql-editor"><%= SharedView.render_safe_html(@submission.description) %></div>
             </div>
             <%= if @submission.external_url do %>
               <div class="form-group">
@@ -84,13 +84,12 @@
               <div class="col"><%= SharedView.local_datetime_tag(@submission.updated_at) %></div>
             </div>
 
-            <%= if @submission.submitter.id == @user.id or @submission.manager_id == @user.id  do %>
-              <%= link("Edit", to: Routes.submission_path(@conn, :edit, @submission.id), class: "btn btn-link float-right") %>
+            <%= submission_delete_link(@conn, @submission, @user, label: "Delete") %>
+            <%= submission_edit_link(@conn, @submission, @user, label: "Edit") %>
 
-              <%= if @submission.status !== "submitted" do %>
-                <%= link("Submit", to: Routes.submission_path(@conn, :submit, @submission.id), method: :put, class: "btn btn-primary float-right") %>
-              <% end %>
-            <% end %>              
+            <%= if @submission.status !== "submitted" do %>
+              <%= link("Submit", to: Routes.submission_path(@conn, :submit, @submission.id), method: :put, class: "btn btn-primary float-right") %>
+            <% end %>
           </section>
         </div>
         <%= if Accounts.has_admin_access?(@user) do %>
