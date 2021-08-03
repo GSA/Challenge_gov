@@ -17,6 +17,7 @@ defmodule Web.MessageContextController do
     challenges = MessageContextStatuses.get_challenges_for_user(user)
 
     conn
+    |> assign(:user, user)
     |> assign(:message_context_statuses, message_context_statuses)
     |> assign(:challenges, challenges)
     |> assign(:filter, filter)
@@ -33,6 +34,7 @@ defmodule Web.MessageContextController do
     challenges = MessageContextStatuses.get_challenges_for_user(user)
 
     conn
+    |> assign(:user, user)
     |> assign(:draft_messages, draft_messages)
     |> assign(:challenges, challenges)
     |> assign(:filter, filter)

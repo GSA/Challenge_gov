@@ -16,7 +16,19 @@ defmodule Web.MessageContextView do
     end
   end
 
-  def display_audience(message_context) do
+  def display_audience(%{role: "solver"}, message_context = %{context: "solver"}) do
+    message_context.audience
+    |> String.replace("_", " ")
+    |> String.capitalize()
+  end
+
+  def display_audience(_user, message_context = %{context: "solver"}) do
+    solver = MessageContexts.get_context_record(message_context)
+
+    AccountView.full_name(solver)
+  end
+
+  def display_audience(_user, message_context) do
     message_context.audience
     |> String.replace("_", " ")
     |> String.capitalize()
