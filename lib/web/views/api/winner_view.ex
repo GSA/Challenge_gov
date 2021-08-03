@@ -15,7 +15,8 @@ defmodule Web.Api.WinnerView do
       ) do
     overview_image_path =
       if PhaseWinners.overview_image_path(phase_winner),
-        do: Storage.url(PhaseWinners.overview_image_path(phase_winner)),
+        do:
+          Storage.url(PhaseWinners.overview_image_path(phase_winner), signed: [expires_in: 3600]),
         else: nil
 
     %{
@@ -40,7 +41,7 @@ defmodule Web.Api.WinnerView do
   def render("winners.json", %{winner: winner}) do
     image_path =
       if Winners.image_path(winner),
-        do: Storage.url(Winners.image_path(winner)),
+        do: Storage.url(Winners.image_path(winner), signed: [expires_in: 3600]),
         else: nil
 
     %{
