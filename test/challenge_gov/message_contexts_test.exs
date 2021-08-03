@@ -329,12 +329,13 @@ defmodule ChallengeGov.MessageContextsTest do
 
       challenge = MessageContexts.get_context_record(message_context)
 
-      %ChallengeOwner{}
-      |> ChallengeOwner.changeset(%{
-        "challenge_id" => challenge.id,
-        "user_id" => user_challenge_owner_new.id
-      })
-      |> Repo.insert()
+      {:ok, challenge_owner} =
+        %ChallengeOwner{}
+        |> ChallengeOwner.changeset(%{
+          "challenge_id" => challenge.id,
+          "user_id" => user_challenge_owner_new.id
+        })
+        |> Repo.insert()
 
       MessageContexts.sync_for_user(user_challenge_owner_new)
 
@@ -342,6 +343,15 @@ defmodule ChallengeGov.MessageContextsTest do
         Repo.preload(user_challenge_owner_new, [:message_context_statuses])
 
       assert length(user_challenge_owner_new.message_context_statuses) == 2
+
+      Repo.delete(challenge_owner)
+
+      MessageContexts.sync_for_user(user_challenge_owner_new)
+
+      user_challenge_owner_new =
+        Repo.preload(user_challenge_owner_new, [:message_context_statuses], force: true)
+
+      assert Enum.empty?(user_challenge_owner_new.message_context_statuses)
     end
 
     test "success: for solver" do

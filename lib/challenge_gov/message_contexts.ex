@@ -91,8 +91,13 @@ defmodule ChallengeGov.MessageContexts do
           Multi.insert(multi, {:insert_context_status, user.id, context.id}, changeset)
       end
     else
-      # TODO: Do nothing or delete if exists
-      multi
+      case MessageContextStatuses.get(user, context) do
+        {:ok, context_status} ->
+          Multi.delete(multi, {:delete_context_status, user.id, context.id}, context_status)
+
+        {:error, :not_found} ->
+          multi
+      end
     end
   end
 
@@ -111,8 +116,13 @@ defmodule ChallengeGov.MessageContexts do
           Multi.insert(multi, {:insert_context_status, user.id, context.id}, changeset)
       end
     else
-      # TODO: Do nothing or delete if exists
-      multi
+      case MessageContextStatuses.get(user, context) do
+        {:ok, context_status} ->
+          Multi.delete(multi, {:delete_context_status, user.id, context.id}, context_status)
+
+        {:error, :not_found} ->
+          multi
+      end
     end
   end
 
@@ -138,8 +148,13 @@ defmodule ChallengeGov.MessageContexts do
           Multi.insert(multi, {:insert_context_status, user.id, context.id}, changeset)
       end
     else
-      # TODO: Do nothing or delete if exists
-      multi
+      case MessageContextStatuses.get(user, context) do
+        {:ok, context_status} ->
+          Multi.delete(multi, {:delete_context_status, user.id, context.id}, context_status)
+
+        {:error, :not_found} ->
+          multi
+      end
     end
   end
 
@@ -156,8 +171,13 @@ defmodule ChallengeGov.MessageContexts do
           Multi.insert(multi, {:insert_context_status, user.id, context.id}, changeset)
       end
     else
-      # TODO: Do nothing or delete if exists
-      multi
+      case MessageContextStatuses.get(user, context) do
+        {:ok, context_status} ->
+          Multi.delete(multi, {:delete_context_status, user.id, context.id}, context_status)
+
+        {:error, :not_found} ->
+          multi
+      end
     end
   end
 
