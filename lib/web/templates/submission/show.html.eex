@@ -39,11 +39,11 @@
             </div>
             <div class="form-group">
               <label class="col"><strong>Brief description:</strong></label>
-              <div class="col ql-editor"><%= SharedView.render_safe_html(@submission.brief_description) %></div>
+              <div class="col ql-editor editor-text-reset"><%= SharedView.render_safe_html(@submission.brief_description) %></div>
             </div>
             <div class="form-group">
               <label class="col"><strong>Description:</strong></label>
-              <div class="col ql-editor"><%= SharedView.render_safe_html(@submission.description) %></div>
+              <div class="col ql-editor editor-text-reset"><%= SharedView.render_safe_html(@submission.description) %></div>
             </div>
             <%= if @submission.external_url do %>
               <div class="form-group">
@@ -86,10 +86,8 @@
 
             <%= submission_delete_link(@conn, @submission, @user, label: "Delete") %>
             <%= submission_edit_link(@conn, @submission, @user, label: "Edit") %>
+            <%= submit_button(@conn, @submission, @user, label: "Submit") %>
 
-            <%= if @submission.status !== "submitted" do %>
-              <%= link("Submit", to: Routes.submission_path(@conn, :submit, @submission.id), method: :put, class: "btn btn-primary float-right") %>
-            <% end %>
           </section>
         </div>
         <%= if Accounts.has_admin_access?(@user) do %>
