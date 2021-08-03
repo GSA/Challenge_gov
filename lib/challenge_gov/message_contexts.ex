@@ -226,7 +226,7 @@ defmodule ChallengeGov.MessageContexts do
 
   def maybe_merge_parent_messages(message_context) do
     (message_context.messages ++ get_parent_messages(message_context))
-    |> Enum.sort_by(& &1.updated_at)
+    |> Enum.sort_by(& &1.updated_at, &<=/2)
   end
 
   def get_parent_messages(%{parent_id: nil}), do: []
