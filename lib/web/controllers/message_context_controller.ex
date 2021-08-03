@@ -51,10 +51,13 @@ defmodule Web.MessageContextController do
 
     {:ok, draft_message} = Messages.get_draft(message_id)
 
+    messages = MessageContexts.maybe_merge_parent_messages(message_context)
+
     conn
     |> assign(:user, user)
     |> assign(:changeset, Messages.edit(draft_message))
     |> assign(:message_context, message_context)
+    |> assign(:messages, messages)
     |> render("show.html")
   end
 
@@ -68,10 +71,13 @@ defmodule Web.MessageContextController do
 
     message_changeset = Messages.new()
 
+    messages = MessageContexts.maybe_merge_parent_messages(message_context)
+
     conn
     |> assign(:user, user)
     |> assign(:changeset, message_changeset)
     |> assign(:message_context, message_context)
+    |> assign(:messages, messages)
     |> render("show.html")
   end
 

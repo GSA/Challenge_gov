@@ -204,6 +204,18 @@ defmodule ChallengeGov.MessageContexts do
   defp maybe_filter_parent_id(query, parent_id),
     do: where(query, [mc], mc.parent_id == ^parent_id)
 
+  def maybe_merge_parent_messages(message_context) do
+    (message_context.messages ++ get_parent_messages(message_context))
+    |> Enum.sort_by(& &1.updated_at)
+  end
+
+  def get_parent_messages(%{parent_id: nil}), do: []
+
+  def get_parent_messages(%{parent_id: parent_id}) do
+    {:ok, message_context} = get(parent_id)
+    message_context.messages
+  end
+
   def new(context) do
     %MessageContext{}
     |> MessageContext.changeset(%{context: context})
