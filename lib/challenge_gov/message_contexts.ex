@@ -236,6 +236,25 @@ defmodule ChallengeGov.MessageContexts do
     message_context.messages
   end
 
+  def check_solver_child_context(
+        user = %{role: "solver"},
+        message_context = %{context: "challenge"}
+      ) do
+    message_context = Repo.preload(message_context, [:contexts])
+
+    case Enum.find(message_context.contexts, fn context ->
+           context.context == "solver" and context.context_id == user.id
+         end) do
+      nil ->
+        {:ok, message_context}
+
+      solver_message_context ->
+        get(solver_message_context.id)
+    end
+  end
+
+  def check_solver_child_context(_user, message_context), do: {:ok, message_context}
+
   def new(context) do
     %MessageContext{}
     |> MessageContext.changeset(%{context: context})

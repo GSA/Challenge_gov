@@ -45,6 +45,7 @@ defmodule Web.MessageContextController do
     %{current_user: user} = conn.assigns
 
     {:ok, message_context} = MessageContexts.get(id)
+    {:ok, message_context} = MessageContexts.check_solver_child_context(user, message_context)
 
     {:ok, message_context_status} = MessageContextStatuses.get(user, message_context)
     {:ok, _message_context_status} = MessageContextStatuses.mark_read(message_context_status)
@@ -65,6 +66,7 @@ defmodule Web.MessageContextController do
     %{current_user: user} = conn.assigns
 
     {:ok, message_context} = MessageContexts.get(id)
+    {:ok, message_context} = MessageContexts.check_solver_child_context(user, message_context)
 
     {:ok, message_context_status} = MessageContextStatuses.get(user, message_context)
     {:ok, _message_context_status} = MessageContextStatuses.mark_read(message_context_status)
