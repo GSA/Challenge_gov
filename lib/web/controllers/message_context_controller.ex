@@ -9,6 +9,8 @@ defmodule Web.MessageContextController do
   def index(conn, params) do
     %{current_user: user} = conn.assigns
 
+    MessageContexts.sync_for_user(user)
+
     filter = Map.get(params, "filter", %{})
     message_context_statuses = MessageContextStatuses.all_for_user(user, filter: filter)
 
