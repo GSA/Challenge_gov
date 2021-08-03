@@ -2,6 +2,7 @@ defmodule Web.MessageContextView do
   use Web, :view
 
   alias ChallengeGov.MessageContexts
+  alias ChallengeGov.Repo
 
   alias Web.AccountView
   alias Web.FormView
@@ -21,11 +22,20 @@ defmodule Web.MessageContextView do
     |> String.capitalize()
   end
 
-  def display_challenge_title_link(message_context) do
+  def display_challenge_title_link(message_context = %{context: "challenge"}) do
     challenge = MessageContexts.get_context_record(message_context) || %{title: ""}
 
     link(challenge.title,
       to: Routes.challenge_path(Web.Endpoint, :show, message_context.context_id)
+    )
+  end
+
+  def display_challenge_title_link(message_context = %{context: "solver"}) do
+    message_context = Repo.preload(message_context, [:parent])
+    challenge = MessageContexts.get_context_record(message_context.parent) || %{title: ""}
+
+    link(challenge.title,
+      to: Routes.challenge_path(Web.Endpoint, :show, message_context.parent.context_id)
     )
   end
 
