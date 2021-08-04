@@ -22,8 +22,8 @@ defmodule Web.AgencyView do
         img_tag(url, opts)
 
       false ->
-        url = Storage.url(Avatar.avatar_path(agency, "thumbnail"), signed: [expires_in: 3600])
-        opts = Keyword.merge([alt: "Agency Logo"], opts)
+        url = Storage.url(Avatar.avatar_path(agency, "original"), signed: [expires_in: 3600])
+        opts = Keyword.merge([alt: "Agency Logo", style: "max-height: 200px"], opts)
         img_tag(url, opts)
     end
   end

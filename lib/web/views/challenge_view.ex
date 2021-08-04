@@ -518,8 +518,8 @@ defmodule Web.ChallengeView do
         AgencyView.avatar_img(challenge.agency, opts)
 
       false ->
-        url = Storage.url(Logo.logo_path(challenge, "thumbnail"), signed: [expires_in: 3600])
-        opts = Keyword.merge([alt: "Challenge Logo"], opts)
+        url = Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
+        opts = Keyword.merge([alt: "Challenge Logo", style: "max-height: 200px"], opts)
         img_tag(url, opts)
     end
   end
@@ -591,8 +591,6 @@ defmodule Web.ChallengeView do
   def agency_logo(_challenge),
     do: Routes.static_url(Web.Endpoint, "/images/agency-logo-placeholder.svg")
 
-  @spec winner_img(atom | %{:winner_image_key => any, optional(any) => any}, any) ::
-          {:safe, [binary | list | 60 | 62, ...]}
   def winner_img(challenge, opts \\ []) do
     case is_nil(challenge.winner_image_key) do
       true ->

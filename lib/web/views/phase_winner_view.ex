@@ -16,14 +16,14 @@ defmodule Web.PhaseWinnerView do
 
   def render_overview_image(phase_winner) do
     overview_image_path = PhaseWinners.overview_image_path(phase_winner)
-    img_tag(SharedView.upload_url(overview_image_path))
+    img_tag(SharedView.upload_url(overview_image_path), style: "max-height: 200px")
   end
 
   def render_winner_image(%{image_key: nil}), do: nil
 
   def render_winner_image(winner) do
     image_path = Winners.image_path(winner)
-    img_tag(SharedView.upload_url(image_path))
+    img_tag(SharedView.upload_url(image_path), style: "max-height: 200px")
   end
 
   def render_remove_image_checkbox(form, image_field, opts \\ []) do
