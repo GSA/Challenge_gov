@@ -102,7 +102,7 @@
   <label class="control-label"><%= FormView.label_field @form, :upload_logo, label: "Upload challenge logo", required: true %></label>
   <div class="ml-3">
     <p>
-      This logo will appear on the challenge tile on the homepage and on the challenge details page in the the header.
+      Ideal image has an aspect ratio of 2:1, twice the width as height. Images will be a fixed size on Challenge tiles. 
     </p>
     <div class="col upload-logo">
       <div class="row">
