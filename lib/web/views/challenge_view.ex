@@ -591,8 +591,6 @@ defmodule Web.ChallengeView do
   def agency_logo(_challenge),
     do: Routes.static_url(Web.Endpoint, "/images/agency-logo-placeholder.svg")
 
-  @spec winner_img(atom | %{:winner_image_key => any, optional(any) => any}, any) ::
-          {:safe, [binary | list | 60 | 62, ...]}
   def winner_img(challenge, opts \\ []) do
     case is_nil(challenge.winner_image_key) do
       true ->
