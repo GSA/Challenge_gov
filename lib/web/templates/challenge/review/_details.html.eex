@@ -54,7 +54,7 @@
 <br/>
 <div>
   <div class="text-bold">Logo:</div>
-  <%= logo_img(@challenge, class: "review-logo") %>
+  <%= logo_img(@challenge) %>
 </div>
 <br/>
 <div>
