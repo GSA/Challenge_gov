@@ -223,6 +223,7 @@ defmodule Web.ChallengeController do
         "return_to_review" ->
           conn
           |> put_flash(:info, "Changes saved")
+          |> maybe_put_flash_subscriber_update(challenge)
           |> redirect(to: Routes.challenge_path(conn, :show, challenge.id) <> "##{section}")
 
         "submit" ->
@@ -242,6 +243,7 @@ defmodule Web.ChallengeController do
               ") with your question and Challenge ID number #{challenge.id}."
             ]
           )
+          |> maybe_put_flash_subscriber_update(challenge)
           |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
 
         _ ->
@@ -484,10 +486,13 @@ defmodule Web.ChallengeController do
       "published" ->
         conn
         |> put_flash(:info, [
-          content_tag(:span, "Challenge updated", class: "h4 mb-0"),
+          content_tag(:p, "Challenge updated", class: "h4 mb-0"),
           content_tag(
             :p,
-            "Please share critical updates with Solvers that have saved this challenge <<link: GovDelivery>>"
+            [
+              "Please share critical updates with Solvers that have saved this challenge ",
+              link("Govdelivery", to: Routes.challenge_bulletin_path(conn, :new, challenge.id))
+            ]
           )
         ])
 

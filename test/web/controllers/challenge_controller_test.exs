@@ -432,9 +432,6 @@ defmodule Web.ChallengeControllerTest do
     end
 
     test "successfully update a published challenge", %{conn: conn} do
-      # change something
-      # return to review
-      # still published
       conn = prep_conn_challenge_owner(conn)
       %{current_user: user} = conn.assigns
 
@@ -486,7 +483,44 @@ defmodule Web.ChallengeControllerTest do
 
       assert challenge.status === "published"
       assert challenge.poc_email === "new_poc@example.com"
-      assert get_flash(conn, :info) === "changes saved"
+      assert get_flash(conn, :info) ===
+               [
+                 safe: [
+                   60,
+                   "p",
+                   [[32, "class", 61, 34, "h4 mb-0", 34]],
+                   62,
+                   "Challenge updated",
+                   60,
+                   47,
+                   "p",
+                   62
+                 ],
+                 safe: [
+                   60,
+                   "p",
+                   [],
+                   62,
+                   [
+                     "Please share critical updates with Solvers that have saved this challenge ",
+                     [
+                       60,
+                       "a",
+                       [[32, "href", 61, 34, "/challenges/#{challenge.id}/bulletin/new", 34]],
+                       62,
+                       "Govdelivery",
+                       60,
+                       47,
+                       "a",
+                       62
+                     ]
+                   ],
+                   60,
+                   47,
+                   "p",
+                   62
+                 ]
+               ]
 
       assert redirected_to(conn) ===
                Routes.challenge_path(conn, :show, challenge.id) <> "#general"
