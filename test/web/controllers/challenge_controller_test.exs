@@ -250,17 +250,27 @@ defmodule Web.ChallengeControllerTest do
                  {:safe,
                   [
                     60,
-                    "span",
-                    [[32, "class", 61, 34, "h4", 34]],
+                    "p",
+                    [[32, "class", 61, 34, "h4 mb-0", 34]],
                     62,
                     "Challenge Removed from Queue",
                     60,
                     47,
-                    "span",
+                    "p",
                     62
                   ]},
-                 {:safe, [60, "br", [], 62, [], 60, 47, "br", 62]},
-                 "Once edits are made you will need to resubmit this challenge for GSA approval"
+                 {:safe,
+                  [
+                    60,
+                    "p",
+                    [],
+                    62,
+                    "Once edits are made you will need to resubmit this challenge for GSA approval",
+                    60,
+                    47,
+                    "p",
+                    62
+                  ]}
                ]
     end
 
@@ -379,7 +389,7 @@ defmodule Web.ChallengeControllerTest do
 
       assert challenge.status === "draft"
       assert challenge.poc_email === "new_poc@example.com"
-      assert get_flash(conn, :info) === "changes saved"
+      assert get_flash(conn, :info) === "Changes saved"
 
       assert redirected_to(conn) ===
                Routes.challenge_path(conn, :show, challenge.id) <> "#general"
@@ -483,6 +493,7 @@ defmodule Web.ChallengeControllerTest do
 
       assert challenge.status === "published"
       assert challenge.poc_email === "new_poc@example.com"
+
       assert get_flash(conn, :info) ===
                [
                  safe: [
