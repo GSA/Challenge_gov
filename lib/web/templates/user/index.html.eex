@@ -45,7 +45,7 @@
                     <td><%= user.status %></td>
                     <td>
                       <%= link("View", to: Routes.user_path(@conn, :show, user.id), class: "btn btn-default btn-xs") %>
-                      <%= link("Edit", to: Routes.user_path(@conn, :edit, user.id), class: "btn btn-default btn-xs") %>
+                      <%= user_edit_link(@conn, user, @current_user) %>
                     </td>
                   </tr>
                 <% end %>
