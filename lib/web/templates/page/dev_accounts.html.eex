@@ -21,7 +21,7 @@
   <br/>
   <div>
     <h1>Challenge Owner Accounts</h1>
-    <%= button("Active", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "challenge_owner_active@example.com"), method: :post, class: "btn btn-primary") %>
+    <%= button("Challenge Owner Active", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "challenge_owner_active@example.com"), method: :post, class: "btn btn-primary") %>
     <%= button("Pending", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "challenge_owner_pending@example.com"), method: :post, class: "btn btn-primary") %>
     <%= button("Suspended", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "challenge_owner_suspended@example.com"), method: :post, class: "btn btn-primary") %>
     <%= button("Revoked", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "challenge_owner_revoked@example.com"), method: :post, class: "btn btn-primary") %>

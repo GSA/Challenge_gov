@@ -74,6 +74,26 @@ defmodule ChallengeGov.SubmissionTest do
     |> visit("/dev_accounts")
     |> click(button("Solver Active"))
     |> assert_text("New submission to review")
+
+    # review and accept as a solver
+    session
+    |> click(link("here"))
+    |> set_value(css("#submission_terms_accepted"), :selected)
+    |> set_value(css("#submission_review_verified"), :selected)
+    |> click(button("Review and submit"))
+    |> click(link("Submit"))
+    |> assert_text("Submission saved")
+
+    # find submission appear in table for judging
+    session
+    |> click(link("solver_active@example.com"))
+    |> click(link("Logout"))
+    |> visit("/dev_accounts")
+    |> click(button("Challenge Owner Active"))
+    |> click(link("Challenge management"))
+    |> click(link("View"))
+    |> click(link("View submissions"))
+    |> has_text?(submission_id)
   end
 
   defp create_challenge() do
