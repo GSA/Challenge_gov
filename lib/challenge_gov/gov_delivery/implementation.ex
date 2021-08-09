@@ -13,6 +13,8 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery
+  alias Web.Endpoint
+  alias Web.Router.Helpers, as: Routes
 
   @impl ChallengeGov.GovDelivery
   def remove_topic(challenge) do
@@ -283,9 +285,21 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       }
     ]
 
+    header_img =
+      {:img,
+       %{
+         src: Routes.static_path(Endpoint, "/images/email-header.png"),
+         alt: "Challenge.Gov logo",
+         title: "Challenge.Gov logo"
+       }, nil}
+
     elements = [
+      {:header, nil, [header_img]},
       {:email, nil, user.email},
       {"send-notifications", %{type: "boolean"}, "true"},
+      {:body, nil,
+       {:cdata,
+        File.read!("lib/challenge_gov/gov_delivery/emails/subscribe_challenge_body.html.eex")}},
       {:topics, %{type: "array"}, general_topic}
     ]
 
