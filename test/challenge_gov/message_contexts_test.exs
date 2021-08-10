@@ -300,7 +300,7 @@ defmodule ChallengeGov.MessageContextsTest do
     test "success: for admin" do
       MessageContextStatusHelpers.create_message_context_status()
 
-      user_admin = AccountHelpers.create_user(%{role: "admin", email: "admin@example.com"})
+      user_admin = AccountHelpers.create_user(%{role: "admin", email: "new_admin@example.com"})
 
       MessageContexts.sync_for_user(user_admin)
 
@@ -382,6 +382,118 @@ defmodule ChallengeGov.MessageContextsTest do
 
       user_solver_new = Repo.preload(user_solver_new, [:message_context_statuses])
       assert length(user_solver_new.message_context_statuses) == 1
+    end
+  end
+
+  describe "permission checks: create" do
+    test "success: super_admin" do
+      user = AccountHelpers.create_user(%{role: "super_admin"})
+      assert MessageContexts.user_can_create?(user)
+    end
+
+    test "success: admin" do
+      user = AccountHelpers.create_user(%{role: "admin"})
+      assert MessageContexts.user_can_create?(user)
+    end
+
+    test "success: challenge_owner" do
+      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+      assert MessageContexts.user_can_create?(user)
+    end
+
+    test "success: solver" do
+      user = AccountHelpers.create_user(%{role: "solver"})
+      refute MessageContexts.user_can_create?(user)
+    end
+  end
+
+  describe "permission checks: view" do
+    test "success: super_admin" do
+      %{
+        user_super_admin: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      assert MessageContexts.user_can_view?(user, context)
+    end
+
+    test "success: admin" do
+      %{
+        user_admin: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      assert MessageContexts.user_can_view?(user, context)
+    end
+
+    test "success: challenge_owner" do
+      %{
+        user_challenge_owner: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      new_user =
+        AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+
+      assert MessageContexts.user_can_view?(user, context)
+      refute MessageContexts.user_can_view?(new_user, context)
+    end
+
+    test "success: solver" do
+      %{
+        user_solver: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      new_user = AccountHelpers.create_user(%{role: "solver", email: "new_user@example.com"})
+
+      assert MessageContexts.user_can_view?(user, context)
+      refute MessageContexts.user_can_view?(new_user, context)
+    end
+  end
+
+  describe "permission checks: message" do
+    test "success: super_admin" do
+      %{
+        user_super_admin: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      assert MessageContexts.user_can_message?(user, context)
+    end
+
+    test "success: admin" do
+      %{
+        user_admin: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      assert MessageContexts.user_can_message?(user, context)
+    end
+
+    test "success: challenge_owner" do
+      %{
+        user_challenge_owner: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      new_user =
+        AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+
+      assert MessageContexts.user_can_message?(user, context)
+      refute MessageContexts.user_can_message?(new_user, context)
+    end
+
+    test "success: solver" do
+      %{
+        user_solver: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      new_user = AccountHelpers.create_user(%{role: "solver", email: "new_user@example.com"})
+
+      assert MessageContexts.user_can_message?(user, context)
+      refute MessageContexts.user_can_message?(new_user, context)
     end
   end
 end

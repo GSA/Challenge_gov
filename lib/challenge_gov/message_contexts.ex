@@ -386,6 +386,20 @@ defmodule ChallengeGov.MessageContexts do
     end)
   end
 
+  def user_can_create?(%{role: "solver"}), do: false
+  def user_can_create?(_user), do: true
+
+  def user_can_view?(user, context) do
+    case MessageContextStatuses.get(user, context) do
+      {:ok, _message_context_status} -> true
+      {:error, :not_found} -> false
+    end
+  end
+
+  def user_can_message?(user, context) do
+    user_can_view?(user, context)
+  end
+
   def maybe_switch_to_isolated_context(
         user = %{role: "solver"},
         context = %{context: "challenge"}

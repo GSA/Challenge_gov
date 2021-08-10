@@ -19,7 +19,7 @@ defmodule Web.MessageContextControllerTest do
     test "success: for admin", %{conn: conn} do
       MessageContextStatusHelpers.create_message_context_status()
 
-      user_admin = AccountHelpers.create_user(%{role: "admin", email: "admin@example.com"})
+      user_admin = AccountHelpers.create_user(%{role: "admin", email: "new_admin@example.com"})
 
       conn = prep_conn(conn, user_admin)
 
@@ -406,7 +406,7 @@ defmodule Web.MessageContextControllerTest do
 
       user_super_admin =
         AccountHelpers.create_user(%{
-          email: "super_admin@example.com",
+          email: "new_super_admin@example.com",
           role: "super_admin"
         })
 
