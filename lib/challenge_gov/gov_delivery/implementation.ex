@@ -308,8 +308,16 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
     customized_body = render_to_string(Web.BulletinView, "body.html", body: body)
 
+    header_img =
+      {:img,
+       %{
+         src: Routes.static_path(Endpoint, "/images/email-header.png"),
+         alt: "Challenge.Gov logo",
+         title: "Challenge.Gov logo"
+       }, nil}
+
     elements = [
-      {:header, nil, Routes.static_path(Endpoint, "/images/email-header.png")},
+      {:header, nil, [header_img]},
       {:subject, nil, subject},
       {:body, nil, {:cdata, customized_body}},
       {:topics, %{type: "array"}, challenge_topic}
