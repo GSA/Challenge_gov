@@ -10,9 +10,12 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   @behaviour ChallengeGov.GovDelivery
 
   import SweetXml
+  import Phoenix.View
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery
+  alias Web.Endpoint
+  alias Web.Router.Helpers, as: Routes
 
   @impl ChallengeGov.GovDelivery
   def remove_topic(challenge) do
@@ -303,9 +306,12 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       }
     ]
 
+    customized_body = render_to_string(Web.BulletinView, "body.html", body: body)
+
     elements = [
+      {:header, nil, Routes.static_path(Endpoint, "/images/email-header.png")},
       {:subject, nil, subject},
-      {:body, nil, {:cdata, body}},
+      {:body, nil, {:cdata, customized_body}},
       {:topics, %{type: "array"}, challenge_topic}
     ]
 
