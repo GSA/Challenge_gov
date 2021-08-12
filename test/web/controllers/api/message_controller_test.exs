@@ -9,6 +9,7 @@ defmodule Web.Api.MessageControllerTest do
   alias Web.AccountView
   alias Web.MessageContextView
 
+  alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.MessageContextStatusHelpers
 
   defp prep_conn(conn, user) do
@@ -196,6 +197,138 @@ defmodule Web.Api.MessageControllerTest do
       assert json_response(conn, 200) === expected_show_json(user_challenge_owner, message)
       assert message.author_id === user_challenge_owner.id
       assert message.message_context_id === message_context_solver.id
+    end
+  end
+
+  describe "permissions for creating" do
+    test "success: super admin", %{conn: conn} do
+      %{
+        user_super_admin: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      conn = prep_conn(conn, user)
+
+      message_params = %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      }
+
+      conn = post(conn, Routes.api_message_path(conn, :create, context), message: message_params)
+
+      context = Repo.preload(context, [:messages], force: true)
+      message = Repo.preload(Enum.at(context.messages, 0), [:author])
+
+      assert json_response(conn, 200) === expected_show_json(user, message)
+    end
+
+    test "success: admin", %{conn: conn} do
+      %{
+        user_admin: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      conn = prep_conn(conn, user)
+
+      message_params = %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      }
+
+      conn = post(conn, Routes.api_message_path(conn, :create, context), message: message_params)
+
+      context = Repo.preload(context, [:messages], force: true)
+      message = Repo.preload(Enum.at(context.messages, 0), [:author])
+
+      assert json_response(conn, 200) === expected_show_json(user, message)
+    end
+
+    test "success: challenge owner", %{conn: conn} do
+      %{
+        user_challenge_owner: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      conn = prep_conn(conn, user)
+
+      message_params = %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      }
+
+      conn = post(conn, Routes.api_message_path(conn, :create, context), message: message_params)
+
+      context = Repo.preload(context, [:messages], force: true)
+      message = Repo.preload(Enum.at(context.messages, 0), [:author])
+
+      assert json_response(conn, 200) === expected_show_json(user, message)
+    end
+
+    test "failure: challenge owner unrelated to context", %{conn: conn} do
+      %{
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      user = AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+
+      conn = prep_conn(conn, user)
+
+      message_params = %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      }
+
+      conn = post(conn, Routes.api_message_path(conn, :create, context), message: message_params)
+
+      assert json_response(conn, 401) === %{}
+    end
+
+    test "success: solver", %{conn: conn} do
+      %{
+        user_solver: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      conn = prep_conn(conn, user)
+
+      message_params = %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      }
+
+      conn = post(conn, Routes.api_message_path(conn, :create, context), message: message_params)
+
+      message_id = json_response(conn, 200)["id"]
+      {:ok, message} = Messages.get(message_id)
+
+      message = Repo.preload(message, [:author])
+
+      assert json_response(conn, 200) === expected_show_json(user, message)
+    end
+
+    test "failure: solver unrelated to context", %{conn: conn} do
+      %{
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      user = AccountHelpers.create_user(%{role: "solver", email: "new_user@example.com"})
+
+      conn = prep_conn(conn, user)
+
+      message_params = %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      }
+
+      conn = post(conn, Routes.api_message_path(conn, :create, context), message: message_params)
+
+      assert json_response(conn, 401) === %{}
     end
   end
 

@@ -396,6 +396,16 @@ defmodule ChallengeGov.MessageContexts do
     end
   end
 
+  def user_can_message?(user = %{role: "solver"}, context = %{context: "challenge"}) do
+    case maybe_switch_to_isolated_context(user, context) do
+      {:ok, context} ->
+        user_can_view?(user, context)
+
+      _ ->
+        false
+    end
+  end
+
   def user_can_message?(user, context) do
     user_can_view?(user, context)
   end
@@ -404,12 +414,16 @@ defmodule ChallengeGov.MessageContexts do
         user = %{role: "solver"},
         context = %{context: "challenge"}
       ) do
-    create(%{
-      "parent_id" => context.id,
-      "context" => "solver",
-      "context_id" => user.id,
-      "audience" => "all"
-    })
+    challenge = get_context_record(context)
+
+    if Challenges.is_solver?(user, challenge) do
+      create(%{
+        "parent_id" => context.id,
+        "context" => "solver",
+        "context_id" => user.id,
+        "audience" => "all"
+      })
+    end
   end
 
   def maybe_switch_to_isolated_context(_user, context), do: {:ok, context}
