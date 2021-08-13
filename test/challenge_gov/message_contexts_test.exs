@@ -490,10 +490,75 @@ defmodule ChallengeGov.MessageContextsTest do
         message_context: context
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      new_user = AccountHelpers.create_user(%{role: "solver", email: "new_user@example.com"})
-
       assert MessageContexts.user_can_message?(user, context)
-      refute MessageContexts.user_can_message?(new_user, context)
+    end
+
+    test "failure: unrelated solver" do
+      %{
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      user = AccountHelpers.create_user(%{role: "solver", email: "new_user@example.com"})
+
+      refute MessageContexts.user_can_message?(user, context)
+    end
+  end
+
+  describe "permission checks: user related" do
+    test "success: challenge owner related to challenge context" do
+      %{
+        user_challenge_owner: user,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      assert MessageContexts.user_related_to_context?(user, context)
+    end
+
+    test "success: challenge owner related to solver context" do
+      %{
+        user_challenge_owner: user,
+        user_solver: user_solver,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, solver_context} =
+        MessageContexts.create(%{
+          "context" => "solver",
+          "context_id" => user_solver.id,
+          "audience" => "all",
+          "parent_id" => context.id
+        })
+
+      assert MessageContexts.user_related_to_context?(user, solver_context)
+    end
+
+    test "failure: challenge owner not related to challenge context" do
+      %{
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+
+      refute MessageContexts.user_related_to_context?(user, context)
+    end
+
+    test "failure: challenge owner not related to solver context" do
+      %{
+        user_solver: user_solver,
+        message_context: context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, solver_context} =
+        MessageContexts.create(%{
+          "context" => "solver",
+          "context_id" => user_solver.id,
+          "audience" => "all",
+          "parent_id" => context.id
+        })
+
+      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+
+      refute MessageContexts.user_related_to_context?(user, solver_context)
     end
   end
 end

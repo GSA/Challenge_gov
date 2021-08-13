@@ -765,5 +765,244 @@ defmodule Web.MessageContextControllerTest do
       assert changeset.data.id == message.id
       assert html_response(conn, 200)
     end
+
+    test "success: challenge owner viewing another challenge owner draft", %{conn: conn} do
+      %{
+        message_context: message_context,
+        user_challenge_owner: user_challenge_owner,
+        user_challenge_owner_2: user_challenge_owner_2
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      conn = prep_conn(conn, user_challenge_owner_2)
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :show,
+            message_context.id,
+            message_id: message.id
+          )
+        )
+
+      %{changeset: changeset} = conn.assigns
+
+      assert changeset.data.id == message.id
+      assert html_response(conn, 200)
+    end
+
+    test "success: challenge owner viewing another challenge owner draft on solver context", %{
+      conn: conn
+    } do
+      %{
+        message_context: message_context,
+        user_challenge_owner: user_challenge_owner,
+        user_challenge_owner_2: user_challenge_owner_2,
+        user_solver: user_solver
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, solver_message_context} =
+        MessageContexts.create(%{
+          "context" => "solver",
+          "context_id" => user_solver.id,
+          "audience" => "all",
+          "parent_id" => message_context.id
+        })
+
+      {:ok, message} =
+        Messages.create(user_challenge_owner, solver_message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      conn = prep_conn(conn, user_challenge_owner_2)
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :show,
+            solver_message_context.id,
+            message_id: message.id
+          )
+        )
+
+      %{changeset: changeset} = conn.assigns
+
+      assert changeset.data.id == message.id
+      assert html_response(conn, 200)
+    end
+
+    test "failure: invalid author", %{conn: conn} do
+      %{
+        user_super_admin: user_super_admin,
+        user_challenge_owner: user_challenge_owner,
+        message_context: message_context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      conn = prep_conn(conn, user_super_admin)
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :show,
+            message_context.id,
+            message_id: message.id
+          )
+        )
+
+      assert html_response(conn, 302)
+      assert redirected_to(conn) == Routes.message_context_path(conn, :show, message_context.id)
+    end
+
+    test "failure: invalid author challenge owner", %{conn: conn} do
+      %{
+        user_challenge_owner: user_challenge_owner,
+        message_context: message_context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      new_user =
+        AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+
+      conn = prep_conn(conn, new_user)
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :show,
+            message_context.id,
+            message_id: message.id
+          )
+        )
+
+      assert html_response(conn, 302)
+      assert redirected_to(conn) == Routes.message_context_path(conn, :show, message_context.id)
+    end
+
+    test "failure: invalid author challenge owner on solver context", %{conn: conn} do
+      %{
+        message_context: message_context,
+        user_challenge_owner: user_challenge_owner,
+        user_solver: user_solver
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, solver_message_context} =
+        MessageContexts.create(%{
+          "context" => "solver",
+          "context_id" => user_solver.id,
+          "audience" => "all",
+          "parent_id" => message_context.id
+        })
+
+      {:ok, message} =
+        Messages.create(user_challenge_owner, solver_message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      new_user =
+        AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+
+      conn = prep_conn(conn, new_user)
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :show,
+            solver_message_context.id,
+            message_id: message.id
+          )
+        )
+
+      assert html_response(conn, 302)
+      redir_path = Routes.message_context_path(conn, :show, solver_message_context.id)
+      assert redirected_to(conn) == redir_path
+
+      conn = prep_conn(recycle(conn), new_user)
+      conn = get(conn, redir_path)
+
+      assert get_flash(conn, :error) == "You can not view that thread"
+      assert html_response(conn, 302)
+      redir_path = Routes.message_context_path(conn, :index)
+      assert redirected_to(conn) == redir_path
+    end
+
+    test "failure: message not part of context", %{conn: conn} do
+      %{
+        user_challenge_owner: user_challenge_owner,
+        message_context: message_context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      new_user =
+        AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(new_user, %{
+          user_id: new_user.id
+        })
+
+      {:ok, new_message_context} =
+        MessageContexts.create(%{
+          "context" => "challenge",
+          "context_id" => challenge.id,
+          "audience" => "all"
+        })
+
+      conn = prep_conn(conn, new_user)
+
+      conn =
+        get(
+          conn,
+          Routes.message_context_path(
+            conn,
+            :show,
+            new_message_context.id,
+            message_id: message.id
+          )
+        )
+
+      assert html_response(conn, 302)
+
+      assert redirected_to(conn) ==
+               Routes.message_context_path(conn, :show, new_message_context.id)
+    end
   end
 end

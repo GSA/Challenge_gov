@@ -396,6 +396,7 @@ defmodule ChallengeGov.MessageContexts do
     end
   end
 
+  # TODO: Double check test for this
   def user_can_message?(user = %{role: "solver"}, context = %{context: "challenge"}) do
     case maybe_switch_to_isolated_context(user, context) do
       {:ok, context} ->
@@ -409,6 +410,22 @@ defmodule ChallengeGov.MessageContexts do
   def user_can_message?(user, context) do
     user_can_view?(user, context)
   end
+
+  def user_related_to_context?(
+        user = %{role: "challenge_owner"},
+        context = %{context: "challenge"}
+      ) do
+    challenge = get_context_record(context)
+    Challenges.is_challenge_owner?(user, challenge)
+  end
+
+  def user_related_to_context?(user = %{role: "challenge_owner"}, context = %{context: "solver"}) do
+    context = Repo.preload(context, [:parent])
+    challenge = get_context_record(context.parent)
+    Challenges.is_challenge_owner?(user, challenge)
+  end
+
+  def user_related_to_context?(_user, _context), do: false
 
   def maybe_switch_to_isolated_context(
         user = %{role: "solver"},

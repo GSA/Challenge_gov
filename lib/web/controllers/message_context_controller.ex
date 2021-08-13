@@ -8,7 +8,6 @@ defmodule Web.MessageContextController do
 
   def index(conn, params) do
     %{current_user: user} = conn.assigns
-
     MessageContexts.sync_for_user(user)
 
     filter = Map.get(params, "filter", %{})
@@ -26,6 +25,7 @@ defmodule Web.MessageContextController do
 
   def drafts(conn, params) do
     %{current_user: user} = conn.assigns
+    MessageContexts.sync_for_user(user)
 
     filter = Map.get(params, "filter", %{})
 
@@ -43,27 +43,35 @@ defmodule Web.MessageContextController do
 
   def show(conn, %{"id" => id, "message_id" => message_id}) do
     %{current_user: user} = conn.assigns
+    MessageContexts.sync_for_user(user)
 
     {:ok, message_context} = MessageContexts.get(id)
     {:ok, message_context} = MessageContexts.check_solver_child_context(user, message_context)
 
-    {:ok, message_context_status} = MessageContextStatuses.get(user, message_context)
-    {:ok, _message_context_status} = MessageContextStatuses.mark_read(message_context_status)
-
-    {:ok, draft_message} = Messages.get_draft(message_id)
-
     messages = MessageContexts.maybe_merge_parent_messages(message_context)
 
-    conn
-    |> assign(:user, user)
-    |> assign(:changeset, Messages.edit(draft_message))
-    |> assign(:message_context, message_context)
-    |> assign(:messages, messages)
-    |> render("show.html")
+    with {:ok, message_context_status} <- MessageContextStatuses.get(user, message_context),
+         {:ok, _message_context_status} <-
+           MessageContextStatuses.mark_read(message_context_status),
+         {:ok, draft_message} <- Messages.get_draft(message_id),
+         {:ok, draft_message} <- Messages.can_view_draft?(user, draft_message),
+         true <- MessageContexts.user_can_view?(user, message_context) do
+      conn
+      |> assign(:user, user)
+      |> assign(:changeset, Messages.edit(draft_message))
+      |> assign(:message_context, message_context)
+      |> assign(:messages, messages)
+      |> render("show.html")
+    else
+      _ ->
+        conn
+        |> redirect(to: Routes.message_context_path(conn, :show, message_context))
+    end
   end
 
   def show(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
+    MessageContexts.sync_for_user(user)
 
     {:ok, message_context} = MessageContexts.get(id)
     {:ok, message_context} = MessageContexts.check_solver_child_context(user, message_context)
