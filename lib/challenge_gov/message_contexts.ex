@@ -11,6 +11,7 @@ defmodule ChallengeGov.MessageContexts do
   alias ChallengeGov.Challenges
   alias ChallengeGov.Submissions
   alias ChallengeGov.MessageContextStatuses
+  alias ChallengeGov.Messages
   alias ChallengeGov.Messages.Message
   alias ChallengeGov.Messages.MessageContext
   alias ChallengeGov.Messages.MessageContextStatus
@@ -287,14 +288,14 @@ defmodule ChallengeGov.MessageContexts do
     end
   end
 
-  defp find_or_create_message_context(multi, params) do
+  defp find_or_create_message_context(multi, params, multi_key \\ :message_context) do
     parent_id = Map.get(params, "parent_id", "")
     context = Map.get(params, "context")
     context_id = Map.get(params, "context_id")
     audience = Map.get(params, "audience")
 
     multi
-    |> Multi.run(:message_context, fn _repo, _changes ->
+    |> Multi.run(multi_key, fn _repo, _changes ->
       case get(context, context_id, audience, parent_id) do
         {:ok, message_context} ->
           {:ok, message_context}
@@ -337,9 +338,11 @@ defmodule ChallengeGov.MessageContexts do
   #   )
   # end
 
-  defp maybe_migrate_message_context_status(multi) do
+  defp maybe_migrate_message_context_status(multi, multi_key \\ :message_context) do
     multi
-    |> Multi.merge(fn %{message_context: message_context} ->
+    |> Multi.merge(fn changes ->
+      message_context = Map.get(changes, multi_key)
+
       case message_context.context do
         "solver" ->
           migrate_existing_message_context_status(message_context)
@@ -379,10 +382,78 @@ defmodule ChallengeGov.MessageContexts do
     end
   end
 
-  defp create_message_context_statuses(multi) do
+  defp create_message_context_statuses(multi, multi_key \\ :message_context) do
     multi
-    |> Multi.merge(fn %{message_context: message_context} ->
+    |> Multi.merge(fn changes ->
+      message_context = Map.get(changes, multi_key)
       MessageContextStatuses.create_all_for_message_context(message_context)
+    end)
+  end
+
+  def multi_submission_message(user, challenge_id, solver_ids, message_content) do
+    challenge_context_params = %{
+      "context" => "challenge",
+      "context_id" => challenge_id,
+      "audience" => "all"
+    }
+
+    Multi.new()
+    |> find_or_create_message_context(challenge_context_params)
+    |> Multi.merge(fn %{message_context: challenge_context} ->
+      find_or_create_and_message_solver_contexts_multi(
+        user,
+        challenge_context,
+        solver_ids,
+        message_content
+      )
+    end)
+    |> Repo.transaction()
+  end
+
+  defp find_or_create_and_message_solver_contexts_multi(
+         user,
+         challenge_context,
+         solver_ids,
+         message_content
+       ) do
+    solver_ids
+    |> Enum.reduce(Multi.new(), fn solver_id, multi ->
+      solver_context_multi_key = {:fetch_solver_context, solver_id}
+
+      solver_context_params = %{
+        "context" => "solver",
+        "context_id" => solver_id,
+        "audience" => "all",
+        "parent_id" => challenge_context.id
+      }
+
+      multi
+      |> Multi.merge(fn _changes ->
+        Multi.new()
+        |> find_or_create_message_context(solver_context_params, solver_context_multi_key)
+        |> maybe_migrate_message_context_status(solver_context_multi_key)
+        |> create_message_context_statuses(solver_context_multi_key)
+        |> attach_solver_context_message(
+          user,
+          solver_id,
+          message_content,
+          solver_context_multi_key
+        )
+      end)
+    end)
+  end
+
+  defp attach_solver_context_message(
+         multi,
+         user,
+         solver_id,
+         message_content,
+         solver_context_multi_key
+       ) do
+    multi
+    |> Multi.run({:attach_message, solver_id}, fn _repo, changes ->
+      solver_context = Map.get(changes, solver_context_multi_key)
+      Messages.create(user, solver_context, message_content)
     end)
   end
 
