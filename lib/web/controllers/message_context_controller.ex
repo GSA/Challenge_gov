@@ -135,4 +135,18 @@ defmodule Web.MessageContextController do
         |> redirect(to: Routes.message_context_path(conn, :index))
     end
   end
+
+  def bulk_message(conn, %{
+        "challenge_id" => challenge_id,
+        "solver_ids" => solver_ids,
+        "message_content" => message_content
+      }) do
+    %{current_user: user} = conn.assigns
+
+    MessageContexts.multi_submission_message(user, challenge_id, solver_ids, message_content)
+
+    conn
+    |> put_flash(:info, "Message sent to selected submissions")
+    |> redirect(to: Routes.message_context_path(conn, :index))
+  end
 end
