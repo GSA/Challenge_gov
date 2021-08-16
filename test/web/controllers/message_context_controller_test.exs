@@ -526,6 +526,37 @@ defmodule Web.MessageContextControllerTest do
     end
   end
 
+  describe "render new message page for multi messaging" do
+    test "success", %{conn: conn} do
+      challenge_owner =
+        AccountHelpers.create_user(%{role: "challenge_owner", email: "co@example.com"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
+          user_id: challenge_owner.id
+        })
+
+      solver_1 = AccountHelpers.create_user(%{role: "solver", email: "s1@example.com"})
+      submission_1 = SubmissionHelpers.create_submitted_submission(%{}, solver_1, challenge)
+
+      solver_2 = AccountHelpers.create_user(%{role: "solver", email: "s2@example.com"})
+      submission_2 = SubmissionHelpers.create_submitted_submission(%{}, solver_2, challenge)
+
+      submission_ids = [submission_1.id, submission_2.id]
+
+      conn = prep_conn(conn, challenge_owner)
+
+      query_params = %{
+        "cid" => challenge.id,
+        "sid" => submission_ids
+      }
+
+      conn = get(conn, Routes.message_context_path(conn, :new), query_params)
+
+      assert html_response(conn, 200)
+    end
+  end
+
   describe "multi messaging submission for a challenge" do
     test "success: with no existing parent challenge context", %{conn: conn} do
       challenge_owner =
@@ -542,7 +573,7 @@ defmodule Web.MessageContextControllerTest do
       solver_2 = AccountHelpers.create_user(%{role: "solver", email: "s2@example.com"})
       submission_2 = SubmissionHelpers.create_submitted_submission(%{}, solver_2, challenge)
 
-      solver_ids = [submission_1.submitter_id, submission_2.submitter_id]
+      submission_ids = [submission_1.id, submission_2.id]
 
       message_content = %{
         "content" => "Test",
@@ -554,8 +585,9 @@ defmodule Web.MessageContextControllerTest do
 
       conn =
         post(conn, Routes.message_context_path(conn, :bulk_message, challenge.id), %{
-          "solver_ids" => solver_ids,
-          "message_content" => message_content
+          "submission_ids" => submission_ids,
+          "content" => message_content["content"],
+          "content_delta" => message_content["content_delta"]
         })
 
       {:ok, challenge_message_context} = MessageContexts.get("challenge", challenge.id, "all")
@@ -611,7 +643,7 @@ defmodule Web.MessageContextControllerTest do
           "parent_id" => challenge_message_context.id
         })
 
-      solver_ids = [submission_1.submitter_id, submission_2.submitter_id]
+      submission_ids = [submission_1.id, submission_2.id]
 
       message_content = %{
         "content" => "Test",
@@ -623,8 +655,9 @@ defmodule Web.MessageContextControllerTest do
 
       conn =
         post(conn, Routes.message_context_path(conn, :bulk_message, challenge.id), %{
-          "solver_ids" => solver_ids,
-          "message_content" => message_content
+          "submission_ids" => submission_ids,
+          "content" => message_content["content"],
+          "content_delta" => message_content["content_delta"]
         })
 
       {:ok, challenge_message_context} = MessageContexts.get("challenge", challenge.id, "all")

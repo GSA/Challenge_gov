@@ -2,7 +2,7 @@ $(".message_center__challenge_filter").on("change", function() {
   this.form.submit()
 })
 
-$(".message_center__message_form button[type=submit]").on("click", (e) => {
+$(".message_center__message_form .js-message-center-new-message").on("click", (e) => {
   e.preventDefault()
 
   const messageForm = $(".message_center__message_form")

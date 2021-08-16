@@ -5,6 +5,7 @@ defmodule Web.MessageContextController do
   alias ChallengeGov.MessageContexts
   alias ChallengeGov.MessageContextStatuses
   alias ChallengeGov.Messages
+  alias ChallengeGov.Submissions
 
   def index(conn, params) do
     %{current_user: user} = conn.assigns
@@ -98,6 +99,17 @@ defmodule Web.MessageContextController do
     end
   end
 
+  def new(conn, %{"cid" => challenge_id, "sid" => submission_ids}) do
+    %{current_user: _user} = conn.assigns
+
+    conn
+    |> assign(:challenge_id, challenge_id)
+    |> assign(:submission_ids, submission_ids)
+    |> assign(:changeset, conn)
+    |> assign(:path, Routes.message_context_path(conn, :bulk_message, challenge_id))
+    |> render("new_multi_submission_message.html")
+  end
+
   def new(conn, %{"context" => context}) do
     %{current_user: user} = conn.assigns
 
@@ -136,12 +148,24 @@ defmodule Web.MessageContextController do
     end
   end
 
-  def bulk_message(conn, %{
-        "challenge_id" => challenge_id,
-        "solver_ids" => solver_ids,
-        "message_content" => message_content
-      }) do
+  def bulk_message(
+        conn,
+        %{
+          "challenge_id" => challenge_id,
+          "submission_ids" => submission_ids,
+          "content" => content,
+          "content_delta" => content_delta
+        }
+      ) do
     %{current_user: user} = conn.assigns
+
+    solver_ids = Submissions.solver_ids_from_submission_ids(submission_ids)
+
+    message_content = %{
+      "content" => content,
+      "content_delta" => content_delta,
+      "status" => "sent"
+    }
 
     MessageContexts.multi_submission_message(user, challenge_id, solver_ids, message_content)
 
