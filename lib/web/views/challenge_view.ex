@@ -109,16 +109,7 @@ defmodule Web.ChallengeView do
   def challenge_submissions_link(conn, challenge, user, opts \\ []) do
     if (user.role == "challenge_owner" or
           Accounts.has_admin_access?(user)) and length(challenge.phases) > 0 do
-      link_location =
-        if length(challenge.phases) > 1,
-          do: Routes.challenge_phase_path(conn, :index, challenge.id),
-          else:
-            Routes.challenge_phase_path(
-              conn,
-              :show,
-              challenge.id,
-              Enum.at(challenge.phases, 0).id
-            )
+      link_location = manage_submissions_initial_path(conn, challenge)
 
       link(
         opts[:label] || "View submissions",
@@ -130,6 +121,18 @@ defmodule Web.ChallengeView do
         )
       )
     end
+  end
+
+  def manage_submissions_initial_path(conn, challenge) do
+    if length(challenge.phases) > 1,
+      do: Routes.challenge_phase_path(conn, :index, challenge.id),
+      else:
+        Routes.challenge_phase_path(
+          conn,
+          :show,
+          challenge.id,
+          Enum.at(challenge.phases, 0).id
+        )
   end
 
   def challenge_edit_link(conn, challenge, opts \\ []) do

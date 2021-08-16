@@ -6,16 +6,20 @@
         <div class="card">
           <%= render_submission_filter_helper_text(@challenge, @phase, @filter) %>
           <%= render_manage_submissions_button(@conn, @user, @challenge, @phase) %>
-<%  # to: Routes.challenge_phase_submission_path(@conn, :new, @challenge.id, @phase.id)) %>
+          <%# to: Routes.challenge_phase_submission_path(@conn, :new, @challenge.id, @phase.id)) %>
           <%= render_manage_invite_button(@conn, @challenge, @phase, @filter) %>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <%= render Web.PhaseView, "submission_table/_header.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, filter: @filter, sort: @sort %>
-              <%= render Web.PhaseView, "submission_table/_content.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, submissions: @submissions, page: @pagination.current, sort: @sort, filter: @filter %>
-            </table>
-          </div>
+          <%= form_for(@conn, Routes.message_context_path(@conn, :new), [method: :get], fn f -> %>
+            <%= hidden_input f, :cid, value: @challenge.id %>
+            <%= render_message_submissions_button(@conn, @challenge) %>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <%= render Web.PhaseView, "submission_table/_header.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, filter: @filter, sort: @sort %>
+                <%= render Web.PhaseView, "submission_table/_content.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, submissions: @submissions, page: @pagination.current, sort: @sort, filter: @filter %>
+              </table>
+            </div>
 
-          <%= Web.SharedView.pagination(path: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id, filter: @filter, sort: @sort), pagination: @pagination) %>
+            <%= Web.SharedView.pagination(path: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id, filter: @filter, sort: @sort), pagination: @pagination) %>
+          <% end) %>
         </div>
       </div>
     </div>

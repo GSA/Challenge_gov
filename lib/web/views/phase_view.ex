@@ -23,6 +23,12 @@ defmodule Web.PhaseView do
     end
   end
 
+  def render_message_submissions_button(_conn, _challenge) do
+    content_tag(:span, class: "submission-filter__helper-text p-3", style: "display: inline;") do
+      submit("Message solvers", class: "btn btn-primary mb-3")
+    end
+  end
+
   def status(phase) do
     cond do
       Phases.is_past?(phase) ->

@@ -7,6 +7,8 @@ defmodule Web.MessageContextController do
   alias ChallengeGov.Messages
   alias ChallengeGov.Submissions
 
+  alias Web.ChallengeView
+
   def index(conn, params) do
     %{current_user: user} = conn.assigns
     MessageContexts.sync_for_user(user)
@@ -107,6 +109,17 @@ defmodule Web.MessageContextController do
     |> assign(:submission_ids, submission_ids)
     |> assign(:changeset, conn)
     |> assign(:path, Routes.message_context_path(conn, :bulk_message, challenge_id))
+    |> render("new_multi_submission_message.html")
+  end
+
+  def new(conn, %{"cid" => challenge_id}) do
+    %{current_user: _user} = conn.assigns
+
+    {:ok, challenge} = Challenges.get(challenge_id)
+
+    conn
+    |> put_flash(:error, "Please select submissions to message")
+    |> redirect(to: ChallengeView.manage_submissions_initial_path(conn, challenge))
     |> render("new_multi_submission_message.html")
   end
 

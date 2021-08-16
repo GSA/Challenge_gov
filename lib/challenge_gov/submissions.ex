@@ -355,6 +355,7 @@ defmodule ChallengeGov.Submissions do
       {:ok, submission} = get(submission_id)
       submission.submitter_id
     end)
+    |> Enum.uniq()
   end
 
   # Attach supporting document functions
