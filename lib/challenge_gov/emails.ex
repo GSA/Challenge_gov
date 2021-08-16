@@ -112,6 +112,13 @@ defmodule ChallengeGov.Emails do
     |> render("contact_confirmation.html")
   end
 
+  def account_activation(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Challenge.gov - your account has been activated")
+    |> render("account_activation.html")
+  end
+
   def submission_invite(submission_invite) do
     base_email()
     |> to(submission_invite.submission.submitter.email)
