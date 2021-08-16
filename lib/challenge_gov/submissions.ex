@@ -201,7 +201,7 @@ defmodule ChallengeGov.Submissions do
     |> case do
       {:ok, submission} ->
         submission = new_form_preload(submission)
-        send_submission_confirmation_email(submission)
+        maybe_send_submission_confirmation_email(submission)
         challenge_owner_new_submission_email(submission)
         add_to_security_log(submission.submitter, submission, "submit", remote_ip)
         SubmissionExports.check_for_outdated(submission.phase_id)
@@ -220,10 +220,16 @@ defmodule ChallengeGov.Submissions do
     end)
   end
 
-  defp send_submission_confirmation_email(submission) do
-    submission
-    |> Emails.submission_confirmation()
-    |> Mailer.deliver_later()
+  defp maybe_send_submission_confirmation_email(submission) do
+    if !is_manager_submitted_submission?(submission) do
+      submission
+      |> Emails.submission_confirmation()
+      |> Mailer.deliver_later()
+    end
+  end
+
+  defp is_manager_submitted_submission?(submission) do
+    submission.manager_id && !submission.review_verified
   end
 
   defp send_submission_review_email(user, phase, submission) do
