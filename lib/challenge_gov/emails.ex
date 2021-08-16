@@ -10,7 +10,7 @@ defmodule ChallengeGov.Emails do
   def pending_challenge_email(challenge) do
     base_email()
     |> to("team@challenge.gov")
-    |> subject("Challenge Review Needed")
+    |> subject("Challenge.gov - Challenge Review Needed")
     |> assign(:challenge, challenge)
     |> render("pending-challenge-email.html")
   end
@@ -18,7 +18,7 @@ defmodule ChallengeGov.Emails do
   def challenge_rejection_email(user, challenge) do
     base_email()
     |> to(user.email)
-    |> subject("Challenge.gov - Edits Requested: ##{challenge.id} #{challenge.title}")
+    |> subject("Challenge.gov - Edits Requested: #{challenge.title}")
     |> assign(:challenge, challenge)
     |> assign(:message, challenge.rejection_message)
     |> render("challenge-rejection-email.html")
@@ -43,11 +43,7 @@ defmodule ChallengeGov.Emails do
   def managed_submission_submission(user, _manager, submission) do
     base_email()
     |> to(user.email)
-    |> subject(
-      "Challenge.gov - Submission created for #{submission.challenge.id} #{
-        submission.challenge.title
-      }"
-    )
+    |> subject("Challenge.gov - Submission created for #{submission.challenge.title}")
     |> assign(:submission, submission)
     |> assign(:challenge, submission.challenge)
     |> render("submission-submission-managed.html")
@@ -57,11 +53,7 @@ defmodule ChallengeGov.Emails do
   def new_submission_submission(user, submission) do
     base_email()
     |> to(user.email)
-    |> subject(
-      "Challenge.gov - Submission created for #{submission.challenge.id} #{
-        submission.challenge.title
-      }"
-    )
+    |> subject("Challenge.gov - Submission created for #{submission.challenge.title}")
     |> assign(:submission, submission)
     |> assign(:challenge, submission.challenge)
     |> render("submission-submission.html")
@@ -70,7 +62,7 @@ defmodule ChallengeGov.Emails do
   def submission_review(user, phase, submission) do
     base_email()
     |> to(user.email)
-    |> subject("Action needed. New submission notification")
+    |> subject("Challenge.gov - Action needed. New submission notification")
     |> assign(:submission, submission)
     |> assign(:phase, phase)
     |> render("managed-submission-created.html")
@@ -79,11 +71,7 @@ defmodule ChallengeGov.Emails do
   def submission_confirmation(submission) do
     base_email()
     |> to(submission.submitter.email)
-    |> subject(
-      "Challenge.gov - Submission created for #{submission.challenge.id} #{
-        submission.challenge.title
-      }"
-    )
+    |> subject("Challenge.gov - Submission created for #{submission.challenge.title}")
     |> assign(:submission, submission)
     |> assign(:challenge, submission.challenge)
     |> render("submission-confirmation.html")
@@ -107,7 +95,7 @@ defmodule ChallengeGov.Emails do
   def contact(poc_email, challenge, public_email, body) do
     base_email()
     |> to(poc_email)
-    |> subject("Challenge #{challenge.id}: Question from Public Visitor")
+    |> subject("Challenge.gov - #{challenge.title}: Message from Public Visitor")
     |> put_header("Reply-To", public_email)
     |> assign(:public_email, public_email)
     |> assign(:challenge, challenge)
@@ -118,7 +106,7 @@ defmodule ChallengeGov.Emails do
   def contact_confirmation(public_email, challenge, body) do
     base_email()
     |> to(public_email)
-    |> subject("Challenge #{challenge.id}: Contact Confirmation")
+    |> subject("Challenge.gov - Challenge #{challenge.title}: Contact Confirmation")
     |> assign(:challenge, challenge)
     |> assign(:body, body)
     |> render("contact_confirmation.html")
@@ -128,7 +116,9 @@ defmodule ChallengeGov.Emails do
     base_email()
     |> to(submission_invite.submission.submitter.email)
     |> subject(
-      "You have been invited to the next phase of #{submission_invite.submission.challenge.title}"
+      "Challenge.gov - You have been invited to the next phase of #{
+        submission_invite.submission.challenge.title
+      }"
     )
     |> assign(:submission_invite, submission_invite)
     |> assign(:challenge, submission_invite.submission.challenge)
