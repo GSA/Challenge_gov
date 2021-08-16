@@ -317,7 +317,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     customized_body = render_to_string(Web.BulletinView, "body.html", body: body)
 
     elements = [
-      {:header, nil, header_img},
+      {:header, nil, [header_img]},
       {:subject, nil, subject},
       {:body, nil, {:cdata, customized_body}},
       {:topics, %{type: "array"}, challenge_topic}
