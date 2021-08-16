@@ -14,4 +14,8 @@ defmodule Web.Api.MessageView do
       class: MessageContextView.message_class(user, message)
     }
   end
+
+  def render("error.json", _assigns) do
+    %{}
+  end
 end

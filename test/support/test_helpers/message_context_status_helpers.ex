@@ -13,6 +13,16 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
   alias ChallengeGov.MessageContexts
   alias ChallengeGov.MessageContextStatuses
 
+  @super_admin_params %{
+    email: "super_admin@example.com",
+    role: "super_admin"
+  }
+
+  @admin_params %{
+    email: "admin@example.com",
+    role: "admin"
+  }
+
   @challenge_owner_params %{
     email: "challenge_owner@example.com",
     role: "challenge_owner"
@@ -29,6 +39,8 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
   }
 
   def create_message_context_status() do
+    user_super_admin = AccountHelpers.create_user(@super_admin_params)
+    user_admin = AccountHelpers.create_user(@admin_params)
     user_challenge_owner = AccountHelpers.create_user(@challenge_owner_params)
     user_challenge_owner_2 = AccountHelpers.create_user(@challenge_owner_2_params)
     user_solver = AccountHelpers.create_user(@solver_params)
@@ -74,6 +86,8 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
       challenge_owner_message_context_status: challenge_owner_message_context_status,
       challenge_owner_2_message_context_status: challenge_owner_2_message_context_status,
       solver_message_context_status: solver_message_context_status,
+      user_super_admin: user_super_admin,
+      user_admin: user_admin,
       user_challenge_owner: user_challenge_owner,
       user_challenge_owner_2: user_challenge_owner_2,
       user_solver: user_solver

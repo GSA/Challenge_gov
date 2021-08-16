@@ -726,6 +726,19 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
+  Checks if a user has a submission for the challenge
+  """
+  def is_solver?(user, challenge) do
+    challenge = Repo.preload(challenge, [:submissions])
+
+    challenge.submissions
+    |> Enum.map(fn submission ->
+      submission.submitter_id
+    end)
+    |> Enum.member?(user.id)
+  end
+
+  @doc """
   Restores access to a user's challlenges
   """
   def restore_access(user, challenge) do

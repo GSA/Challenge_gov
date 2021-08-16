@@ -9,6 +9,7 @@ defmodule ChallengeGov.MessagesTest do
 
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
+  alias ChallengeGov.TestHelpers.MessageContextStatusHelpers
   alias ChallengeGov.TestHelpers.SubmissionHelpers
 
   @challenge_owner_params %{
@@ -329,6 +330,64 @@ defmodule ChallengeGov.MessagesTest do
         })
 
       assert {:error, :not_found} == Messages.get_draft(message.id)
+    end
+  end
+
+  describe "can view draft" do
+    test "success: author" do
+      %{
+        user_challenge_owner: user,
+        message_context: message_context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, message} =
+        Messages.create(user, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      {:ok, fetched_message} = Messages.get_draft(message.id)
+
+      assert {:ok, _message} = Messages.can_view_draft?(user, fetched_message)
+    end
+
+    test "success: related challenge owner" do
+      %{
+        user_challenge_owner: user_challenge_owner,
+        user_challenge_owner_2: user,
+        message_context: message_context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      {:ok, fetched_message} = Messages.get_draft(message.id)
+
+      assert {:ok, _message} = Messages.can_view_draft?(user, fetched_message)
+    end
+
+    test "failure: unrelated user" do
+      %{
+        user_solver: user,
+        user_challenge_owner: user_challenge_owner,
+        message_context: message_context
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      {:ok, message} =
+        Messages.create(user_challenge_owner, message_context, %{
+          "content" => "Test",
+          "content_delta" => "Test",
+          "status" => "draft"
+        })
+
+      {:ok, fetched_message} = Messages.get_draft(message.id)
+
+      assert Messages.can_view_draft?(user, fetched_message) == {:error, :cant_view_draft}
     end
   end
 
