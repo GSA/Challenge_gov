@@ -138,6 +138,17 @@ defmodule ChallengeGov.Messages do
 
   defp maybe_set_recipients_unread(%{status: "draft"}), do: {:ok, nil}
 
+  def can_view_draft?(user, message) do
+    message = Repo.preload(message, context: [:parent])
+
+    if user.id == message.author_id or
+         MessageContexts.user_related_to_context?(user, message.context) do
+      {:ok, message}
+    else
+      {:error, :cant_view_draft}
+    end
+  end
+
   @impl Stein.Filter
   def filter_on_attribute({"status", value}, query) do
     query

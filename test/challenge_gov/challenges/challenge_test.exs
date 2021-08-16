@@ -6,6 +6,7 @@ defmodule ChallengeGov.ChallengeTest do
   alias ChallengeGov.Emails
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
+  alias ChallengeGov.TestHelpers.SubmissionHelpers
 
   describe "submit challenge" do
     test "successfully" do
@@ -185,6 +186,43 @@ defmodule ChallengeGov.ChallengeTest do
       assert open_multi_phase_challenge.sub_status === "open"
       assert closed_multi_phase_challenge.sub_status === "closed"
       assert archived_multi_phase_challenge.sub_status === "archived"
+    end
+  end
+
+  describe "check user relations to challenge" do
+    test "success: is challenge owner for challenge" do
+      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      assert Challenges.is_challenge_owner?(user, challenge)
+    end
+
+    test "failure: is not challenge owner for challenge" do
+      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+
+      other_user =
+        AccountHelpers.create_user(%{role: "challenge_owner", email: "other@example.com"})
+
+      refute Challenges.is_challenge_owner?(other_user, challenge)
+    end
+
+    test "success: is solver on challenge" do
+      user = AccountHelpers.create_user(%{role: "solver"})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      _submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
+
+      assert Challenges.is_solver?(user, challenge)
+    end
+
+    test "success: is not solver on challenge" do
+      user = AccountHelpers.create_user(%{role: "solver"})
+      challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
+      _submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
+
+      other_user = AccountHelpers.create_user(%{role: "solver", email: "other@example.com"})
+
+      refute Challenges.is_solver?(other_user, challenge)
     end
   end
 end

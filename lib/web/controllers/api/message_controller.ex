@@ -14,12 +14,20 @@ defmodule Web.Api.MessageController do
 
     {:ok, message_context} = MessageContexts.get(message_context_id)
 
-    {:ok, message} = Messages.create(user, message_context, message_params)
+    case MessageContexts.user_can_message?(user, message_context) do
+      true ->
+        {:ok, message} = Messages.create(user, message_context, message_params)
 
-    conn
-    |> put_status(:ok)
-    |> assign(:user, user)
-    |> assign(:message, message)
-    |> render("create.json")
+        conn
+        |> put_status(:ok)
+        |> assign(:user, user)
+        |> assign(:message, message)
+        |> render("create.json")
+
+      false ->
+        conn
+        |> put_status(:unauthorized)
+        |> render("error.json")
+    end
   end
 end
