@@ -8,17 +8,23 @@
           <%= render_manage_submissions_button(@conn, @user, @challenge, @phase) %>
           <%# to: Routes.challenge_phase_submission_path(@conn, :new, @challenge.id, @phase.id)) %>
           <%= render_manage_invite_button(@conn, @challenge, @phase, @filter) %>
-          <%= form_for(@conn, Routes.message_context_path(@conn, :new), [method: :get], fn f -> %>
+          <%= form_for(@conn, Routes.message_context_path(@conn, :bulk_new),  fn f -> %>
             <%= hidden_input f, :cid, value: @challenge.id %>
-            <%= render_message_submissions_button(@conn, @challenge) %>
+            <%= render_message_submissions_button(Routes.message_context_path(@conn, :bulk_new)) %>
             <div class="table-responsive">
               <table class="table table-striped">
                 <%= render Web.PhaseView, "submission_table/_header.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, filter: @filter, sort: @sort %>
-                <%= render Web.PhaseView, "submission_table/_content.html", conn: @conn, user: @user, challenge: @challenge, phase: @phase, submissions: @submissions, page: @pagination.current, sort: @sort, filter: @filter %>
-              </table>
+                <%= render Web.PhaseView, "submission_table/_content.html", 
+                  conn: @conn, user: @user, challenge: @challenge, phase: @phase, submissions: @submissions, 
+                  checked_selected_submission_ids: @checked_selected_submission_ids,
+                  page: @pagination.current, sort: @sort, filter: @filter %>
+              </table> 
+              <%= Enum.map @hidden_selected_submission_ids, fn submission_id -> %>
+                <%= hidden_input f, "sid[]", value: submission_id %>
+              <% end %>
             </div>
 
-            <%= Web.SharedView.pagination(path: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id, filter: @filter, sort: @sort), pagination: @pagination) %>
+            <%= Web.SharedView.pagination_post(path: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id, filter: @filter, sort: @sort), pagination: @pagination) %>
           <% end) %>
         </div>
       </div>

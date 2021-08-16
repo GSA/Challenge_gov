@@ -175,6 +175,7 @@ defmodule Web.Router do
     )
 
     get("/messages/drafts", MessageContextController, :drafts)
+    post("/messages/bulk_message/new", MessageContextController, :bulk_new)
     post("/messages/bulk_message/:challenge_id", MessageContextController, :bulk_message)
     resources("/messages", MessageContextController, only: [:index, :show, :new, :create])
 

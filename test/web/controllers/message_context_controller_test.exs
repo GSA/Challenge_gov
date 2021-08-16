@@ -551,7 +551,7 @@ defmodule Web.MessageContextControllerTest do
         "sid" => submission_ids
       }
 
-      conn = get(conn, Routes.message_context_path(conn, :new), query_params)
+      conn = post(conn, Routes.message_context_path(conn, :bulk_new), query_params)
 
       assert html_response(conn, 200)
     end

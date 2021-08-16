@@ -67,6 +67,19 @@ defmodule Web.SharedView do
     end
   end
 
+  def pagination_post(opts) do
+    pagination = opts[:pagination]
+    opts = Keyword.put_new(opts, :pagination_param, nil)
+
+    case pagination.total <= 1 do
+      true ->
+        []
+
+      false ->
+        render("_pagination_post.html", opts)
+    end
+  end
+
   def parse_markdown(value) do
     with false <- is_nil(value),
          {:ok, markdown, _} <- Earmark.as_html(value) do

@@ -101,28 +101,6 @@ defmodule Web.MessageContextController do
     end
   end
 
-  def new(conn, %{"cid" => challenge_id, "sid" => submission_ids}) do
-    %{current_user: _user} = conn.assigns
-
-    conn
-    |> assign(:challenge_id, challenge_id)
-    |> assign(:submission_ids, submission_ids)
-    |> assign(:changeset, conn)
-    |> assign(:path, Routes.message_context_path(conn, :bulk_message, challenge_id))
-    |> render("new_multi_submission_message.html")
-  end
-
-  def new(conn, %{"cid" => challenge_id}) do
-    %{current_user: _user} = conn.assigns
-
-    {:ok, challenge} = Challenges.get(challenge_id)
-
-    conn
-    |> put_flash(:error, "Please select submissions to message")
-    |> redirect(to: ChallengeView.manage_submissions_initial_path(conn, challenge))
-    |> render("new_multi_submission_message.html")
-  end
-
   def new(conn, %{"context" => context}) do
     %{current_user: user} = conn.assigns
 
@@ -159,6 +137,28 @@ defmodule Web.MessageContextController do
         |> put_flash(:error, "You can not start a message thread")
         |> redirect(to: Routes.message_context_path(conn, :index))
     end
+  end
+
+  def bulk_new(conn, %{"cid" => challenge_id, "sid" => submission_ids}) do
+    %{current_user: _user} = conn.assigns
+
+    conn
+    |> assign(:challenge_id, challenge_id)
+    |> assign(:submission_ids, submission_ids)
+    |> assign(:changeset, conn)
+    |> assign(:path, Routes.message_context_path(conn, :bulk_message, challenge_id))
+    |> render("new_multi_submission_message.html")
+  end
+
+  def bulk_new(conn, %{"cid" => challenge_id}) do
+    %{current_user: _user} = conn.assigns
+
+    {:ok, challenge} = Challenges.get(challenge_id)
+
+    conn
+    |> put_flash(:error, "Please select submissions to message")
+    |> redirect(to: ChallengeView.manage_submissions_initial_path(conn, challenge))
+    |> render("new_multi_submission_message.html")
   end
 
   def bulk_message(

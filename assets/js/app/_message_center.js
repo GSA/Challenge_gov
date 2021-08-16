@@ -122,3 +122,28 @@ const addMessageIdQueryParam = (id) => {
     null, '', location.pathname + `?message_id=${id}`
   );
 }
+
+// Multi submission message table functionality
+$(document).ready(() => {
+  const checkMultiSubmissionButtonStatus = () => {
+    if (checkForSubmissionIDCheckboxes() || checkForHiddenSubmissionIDInputs()) {
+      $(".js-multi-submission-msg-btn").prop("disabled", false)
+    } else {
+      $(".js-multi-submission-msg-btn").prop("disabled", true)
+    }
+  }
+
+  const checkForSubmissionIDCheckboxes = () => {
+    return $(".js-table-row-select").is(":checked")
+  }
+
+  const checkForHiddenSubmissionIDInputs = () => {
+    return $("input[name='sid[]'][type='hidden']").length > 0
+  }
+
+  checkMultiSubmissionButtonStatus()
+
+  $(".submission-management-table-body .js-table-row-select").on("click", e => {
+    checkMultiSubmissionButtonStatus()
+  })
+})

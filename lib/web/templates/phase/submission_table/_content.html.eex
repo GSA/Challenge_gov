@@ -1,7 +1,7 @@
-<tbody class="main-container">
+<tbody class="main-container submission-management-table-body">
   <%= Enum.map @submissions, fn (submission) -> %>
     <tr>
-      <td><input type="checkbox" name="sid[]" value="<%= submission.id %>" class="js-table-row-select"></td>
+      <td><input type="checkbox" name="sid[]" value="<%= submission.id %>" class="js-table-row-select" <%= if Enum.member?(@checked_selected_submission_ids, submission.id), do: "checked" %>></td>
       <td><%= submission.id %></td>
       <td><%= SubmissionView.name_link(@conn, submission, page: @page, filter: @filter, sort: @sort) %></td>
       <td class="js-local-datetime"><%= submission.updated_at %></td>
