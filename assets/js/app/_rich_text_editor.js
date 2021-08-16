@@ -33,7 +33,13 @@ let toolbarOptions = [
 ]
 
 $(".rt-textarea").each(function(textarea) {
+  var SizeStyle = Quill.import('attributors/style/size');
+  // var IndentStyle = Quill.import('attributors/style/indent');
+  Quill.register(SizeStyle, true);
+  // Quill.register(IndentStyle, true);
+
   let element = this
+
   let quill = new Quill(element, {
     theme: 'snow',
     placeholder: "Enter text...",
