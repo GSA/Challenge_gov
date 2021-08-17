@@ -360,14 +360,15 @@ defmodule ChallengeGov.Accounts do
         case get_by_email(userinfo["email"]) do
           {:error, :not_found} ->
             %{"email" => email} = userinfo
+            {role, status} = default_role_and_status_for_email(email)
 
             create(remote_ip, %{
               email: email,
-              role: default_role_for_email(email),
+              role: role,
               token: userinfo["sub"],
               terms_of_use: nil,
               privacy_guidelines: nil,
-              status: "pending"
+              status: status
             })
 
           {:ok, user} ->
@@ -389,13 +390,13 @@ defmodule ChallengeGov.Accounts do
     end
   end
 
-  defp default_role_for_email(email) do
+  defp default_role_and_status_for_email(email) do
     case Security.default_challenge_owner?(email) do
       true ->
-        "challenge_owner"
+        {"challenge_owner", "pending"}
 
       false ->
-        "solver"
+        {"solver", "active"}
     end
   end
 

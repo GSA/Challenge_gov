@@ -132,8 +132,8 @@
         <%= if get_flash(@conn, :info) do %>
           <div class="content-header">
             <div class="container-fluid">
-              <div class="callout callout-success">
-                <i class="fa fa-info-circle"></i> <%= get_flash(@conn, :info) %>
+              <div class="callout callout-success d-flex align-items-center">
+                <i class="fa fa-check-circle h4 mb-0 flash-icon"></i><span><%= get_flash(@conn, :info) %></span>
               </div>
             </div>
           </div>
@@ -142,8 +142,8 @@
         <%= if get_flash(@conn, :error) do %>
           <div class="content-header">
             <div class="container-fluid">
-              <div class="callout callout-danger">
-                <i class="fa fa-exclamation-circle"></i> <%= get_flash(@conn, :error) %>
+              <div class="callout callout-danger d-flex align-items-center">
+                <i class="fa fa-exclamation-circle h4 mb-0 flash-icon"></i><span><%= get_flash(@conn, :error) %></span>
               </div>
             </div>
           </div>
@@ -152,8 +152,8 @@
         <%= if get_flash(@conn, :warning) do %>
           <div class="content-header">
             <div class="container-fluid">
-              <div class="callout callout-warning">
-                <i class="fa fa-exclamation-circle"></i> <%= get_flash(@conn, :warning) %>
+              <div class="callout callout-warning d-flex align-items-center">
+                <i class="fa fa-exclamation-circle h4 mb-0 flash-icon"></i><span><%= get_flash(@conn, :warning) %></span>
               </div>
             </div>
           </div>
