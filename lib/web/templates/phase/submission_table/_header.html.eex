@@ -1,5 +1,6 @@
 <thead>
   <tr>
+    <th></th>
     <%= sortable_header(@conn, @sort, @filter, "id", "ID", @phase) %>
     <%= sortable_header(@conn, @sort, @filter, "title", "Title", @phase) %>
     <%= sortable_header(@conn, @sort, @filter, "updated_at", "Last Updated", @phase) %>

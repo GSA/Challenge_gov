@@ -1,0 +1,41 @@
+<div class="message_center">
+  <div class="content-header">
+    <div class="container-fluid">
+      <%= SharedView.render_breadcrumbs([
+        %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+        %{text: "Message center", route: Routes.message_context_path(Web.Endpoint, :index)},
+        %{text: "Messages"},
+      ])%>
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">
+            <span>Messages</span>
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">To: <%= display_multi_submission_titles(@submission_ids) %></div>
+          </div>
+
+          <hr/>
+
+          <%= form_for(@changeset, @path, [class: "message_center__bulk_message_form"], fn f -> %>
+            <%= Enum.map(@submission_ids, fn submission_id -> %>
+              <%= hidden_input f, "submission_ids[]", value: submission_id %>
+            <% end) %>
+            <%= FormView.rt_textarea_field_alt(f, :content) %>
+            <%#= submit("Save draft", class: "btn btn-primary mr-3", name: "message_status", value: "draft") %>
+            <%= submit("Send message", class: "btn btn-primary", name: "message_status", value: "sent") %>
+          <% end) %>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

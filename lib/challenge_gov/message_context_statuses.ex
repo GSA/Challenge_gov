@@ -117,8 +117,8 @@ defmodule ChallengeGov.MessageContextStatuses do
     solver_user_ids_to_exclude =
       message_context.contexts
       |> Enum.map(fn context ->
-        {:ok, submission} = Submissions.get(context.context_id)
-        submission.submitter_id
+        {:ok, solver} = Accounts.get(context.context_id)
+        solver.id
       end)
 
     user_ids =

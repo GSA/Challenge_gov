@@ -3,6 +3,7 @@ defmodule Web.MessageContextView do
 
   alias ChallengeGov.MessageContexts
   alias ChallengeGov.Repo
+  alias ChallengeGov.Submissions
 
   alias Web.AccountView
   alias Web.FormView
@@ -32,6 +33,15 @@ defmodule Web.MessageContextView do
     message_context.audience
     |> String.replace("_", " ")
     |> String.capitalize()
+  end
+
+  def display_multi_submission_titles(submission_ids) do
+    submission_ids
+    |> Enum.map(fn submission_id ->
+      {:ok, submission} = Submissions.get(submission_id)
+      submission.title
+    end)
+    |> Enum.join(", ")
   end
 
   def display_challenge_title_link(message_context = %{context: "challenge"}) do

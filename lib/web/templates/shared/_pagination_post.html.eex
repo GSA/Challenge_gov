@@ -1,0 +1,59 @@
+<%= if !@pagination.empty? do %>
+  <div class="p-3">
+    <nav>
+      <ul class="pagination">
+        <%= if @pagination.current == 1 do %>
+          <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+          </li>
+        <% else %>
+          <li class="page-item">
+            <%= submit(formaction: SharedView.public_page_path(@path, 1), class: "page-link") do %>
+              &laquo;
+            <% end %>
+          </li>
+        <% end %>
+
+        <%= if SharedView.more_previous?(@pagination) do %>
+          <li class="page-item disabled">
+            <span class="page-link">&hellip;</span>
+          </li>
+        <% end %>
+
+        <%= Enum.map(SharedView.previous_pagination(@pagination), fn (page) -> %>
+          <li class="page-item">
+            <%= submit(page, formaction: SharedView.public_page_path(@path, page, @pagination_param), class: "page-link") %>
+          </li>
+        <% end) %>
+
+        <li class="page-item active">
+          <span class="page-link"><%= @pagination.current %></span>
+        </li>
+
+        <%= Enum.map(SharedView.next_pagination(@pagination), fn (page) -> %>
+          <li class="page-item">
+            <%= submit(page, formaction: SharedView.public_page_path(@path, page, @pagination_param), class: "page-link") %>
+          </li>
+        <% end) %>
+
+        <%= if SharedView.more_next?(@pagination) do %>
+          <li class="page-item disabled">
+            <span>&hellip;</span>
+          </li>
+        <% end %>
+
+        <%= if @pagination.current == @pagination.total do %>
+          <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+          </li>
+        <% else %>
+          <li class="page-item">
+            <%= submit(formaction: SharedView.public_page_path(@path, @pagination.total, @pagination_param), class: "page-link") do %>
+              &raquo;
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+  </div>
+<% end %>

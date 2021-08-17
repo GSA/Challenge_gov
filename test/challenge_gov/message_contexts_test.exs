@@ -212,13 +212,119 @@ defmodule ChallengeGov.MessageContextsTest do
     end
   end
 
-  # TODO: work on these multi context creations
-  describe "creating multiple message contexts" do
-    @tag :skip
-    test "success: creating multiple submission contexts with no existing parent context"
+  describe "finding or creating multiple solver message contexts" do
+    test "success: with no existing parent challenge context" do
+      challenge_owner =
+        AccountHelpers.create_user(%{role: "challenge_owner", email: "co@example.com"})
 
-    @tag :skip
-    test "success: creating multiple submission contexts with some that already exist"
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
+          user_id: challenge_owner.id
+        })
+
+      solver_1 = AccountHelpers.create_user(%{role: "solver", email: "s1@example.com"})
+      submission_1 = SubmissionHelpers.create_submitted_submission(%{}, solver_1, challenge)
+
+      solver_2 = AccountHelpers.create_user(%{role: "solver", email: "s2@example.com"})
+      submission_2 = SubmissionHelpers.create_submitted_submission(%{}, solver_2, challenge)
+
+      solver_ids = [submission_1.submitter_id, submission_2.submitter_id]
+
+      message_content = %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      }
+
+      MessageContexts.multi_submission_message(
+        challenge_owner,
+        challenge.id,
+        solver_ids,
+        message_content
+      )
+
+      {:ok, challenge_message_context} = MessageContexts.get("challenge", challenge.id, "all")
+      challenge_message_context = Repo.preload(challenge_message_context, [:messages])
+      assert Enum.empty?(challenge_message_context.messages)
+
+      {:ok, solver_message_context_1} =
+        MessageContexts.get("solver", solver_1.id, "all", challenge_message_context.id)
+
+      solver_message_context_1 = Repo.preload(solver_message_context_1, [:messages])
+      assert length(solver_message_context_1.messages) == 1
+      assert Enum.at(solver_message_context_1.messages, 0).content == "Test"
+
+      {:ok, solver_message_context_2} =
+        MessageContexts.get("solver", solver_2.id, "all", challenge_message_context.id)
+
+      solver_message_context_2 = Repo.preload(solver_message_context_2, [:messages])
+      assert length(solver_message_context_2.messages) == 1
+      assert Enum.at(solver_message_context_2.messages, 0).content == "Test"
+    end
+
+    test "success: with existing parent challenge context" do
+      challenge_owner =
+        AccountHelpers.create_user(%{role: "challenge_owner", email: "co@example.com"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
+          user_id: challenge_owner.id
+        })
+
+      solver_1 = AccountHelpers.create_user(%{role: "solver", email: "s1@example.com"})
+      submission_1 = SubmissionHelpers.create_submitted_submission(%{}, solver_1, challenge)
+
+      solver_2 = AccountHelpers.create_user(%{role: "solver", email: "s2@example.com"})
+      submission_2 = SubmissionHelpers.create_submitted_submission(%{}, solver_2, challenge)
+
+      {:ok, challenge_message_context} =
+        MessageContexts.create(%{
+          "context" => "challenge",
+          "context_id" => challenge.id,
+          "audience" => "all"
+        })
+
+      {:ok, _solver_message_context_1} =
+        MessageContexts.create(%{
+          "context" => "solver",
+          "context_id" => submission_1.submitter_id,
+          "audience" => "all",
+          "parent_id" => challenge_message_context.id
+        })
+
+      solver_ids = [submission_1.submitter_id, submission_2.submitter_id]
+
+      message_content = %{
+        "content" => "Test",
+        "content_delta" => "Test",
+        "status" => "sent"
+      }
+
+      MessageContexts.multi_submission_message(
+        challenge_owner,
+        challenge.id,
+        solver_ids,
+        message_content
+      )
+
+      {:ok, challenge_message_context} = MessageContexts.get("challenge", challenge.id, "all")
+      challenge_message_context = Repo.preload(challenge_message_context, [:messages])
+      assert Enum.empty?(challenge_message_context.messages)
+
+      {:ok, solver_message_context_1} =
+        MessageContexts.get("solver", solver_1.id, "all", challenge_message_context.id)
+
+      solver_message_context_1 = Repo.preload(solver_message_context_1, [:messages])
+      assert length(solver_message_context_1.messages) == 1
+      assert Enum.at(solver_message_context_1.messages, 0).content == "Test"
+
+      {:ok, solver_message_context_2} =
+        MessageContexts.get("solver", solver_2.id, "all", challenge_message_context.id)
+
+      solver_message_context_2 = Repo.preload(solver_message_context_2, [:messages])
+      assert length(solver_message_context_2.messages) == 1
+      assert Enum.at(solver_message_context_2.messages, 0).content == "Test"
+    end
   end
 
   describe "finding existing message context" do

@@ -49,8 +49,8 @@
               <%= hidden_input f, :id %>
             <% end %>
             <%= FormView.rt_textarea_field(f, :content) %>
-            <%= submit("Save draft", class: "btn btn-primary mr-3", name: "message_status", value: "draft") %>
-            <%= submit("Send message", class: "btn btn-primary", name: "message_status", value: "sent") %>
+            <%= submit("Save draft", class: "btn btn-primary mr-3 js-message-center-new-message", name: "message_status", value: "draft") %>
+            <%= submit("Send message", class: "btn btn-primary js-message-center-new-message", name: "message_status", value: "sent") %>
           <% end) %>
         </div>
       </div>
