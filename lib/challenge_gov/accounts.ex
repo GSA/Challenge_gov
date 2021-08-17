@@ -26,7 +26,7 @@ defmodule ChallengeGov.Accounts do
         User.roles()
 
       "admin" ->
-        Enum.slice(User.roles(), 2..2)
+        Enum.slice(User.roles(), 2..3)
     end
   end
 

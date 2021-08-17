@@ -1,0 +1,13 @@
+<%= if !Challenges.allowed_to_submit?(@user) do %>
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="callout callout-warning d-flex align-items-center">
+        <i class="fa fa-exclamation-circle h4 mb-0 flash-icon"></i>
+        <span>
+          <p class="h4 mb-0">Please note a Challenge Manager with a .gov or .mil email will need to submit</p>
+          <p>You will only be able to save and edit this challenge, your edits will not be submitted</p>
+        </span>
+      </div>
+    </div>
+  </div>
+<% end %>

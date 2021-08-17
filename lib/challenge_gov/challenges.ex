@@ -20,6 +20,7 @@ defmodule ChallengeGov.Challenges do
   alias ChallengeGov.Phases
   alias ChallengeGov.Repo
   alias ChallengeGov.SavedChallenges
+  alias ChallengeGov.Security
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.SupportingDocuments
   alias ChallengeGov.Timeline.Event
@@ -696,6 +697,16 @@ defmodule ChallengeGov.Challenges do
       {:error, :not_permitted} -> false
     end
   end
+
+  def allowed_to_submit?(%{role: "super_admin"}), do: true
+
+  def allowed_to_submit?(%{role: "admin"}), do: true
+
+  def allowed_to_submit?(user = %{role: "challenge_owner"}) do
+    Security.default_challenge_owner?(user.email)
+  end
+
+  def allowed_to_submit?(_user), do: false
 
   @doc """
   Checks if a user can send a bulletin
