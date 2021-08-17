@@ -228,7 +228,7 @@ defmodule ChallengeGov.MessageContexts do
   def maybe_merge_parent_messages(message_context) do
     (message_context.messages ++ get_parent_messages(message_context))
     |> Enum.sort_by(& &1.updated_at, fn a, b ->
-      Date.compare(a, b) == :lt
+      DateTime.compare(a, b) == :lt
     end)
   end
 
