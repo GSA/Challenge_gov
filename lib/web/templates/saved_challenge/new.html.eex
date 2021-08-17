@@ -3,7 +3,7 @@
     <div class="card-body justify-content-center">
       <h4 class="text-center mb-5">You are saving the following challenge to your saved list.</h4>
       <div class="text-center mb-5">
-        <%= ChallengeView.logo_img(@challenge, class: "w-50 mx-auto") %>
+        <%= ChallengeView.logo_img(@challenge, class: "mx-auto") %>
       </div>
       <h4 class="text-center mb-5"><%= @challenge.title %></h4>
       <div>

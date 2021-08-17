@@ -26,6 +26,32 @@ defmodule Web.UserView do
     end
   end
 
+  def user_edit_link(conn, user, current_user = %{role: "super_admin"}) do
+    case Accounts.get_role_rank(current_user.role) > Accounts.get_role_rank(user.role) do
+      true ->
+        nil
+
+      false ->
+        link("Edit",
+          to: Routes.user_path(conn, :edit, user.id),
+          class: "btn btn-default btn-xs"
+        )
+    end
+  end
+
+  def user_edit_link(conn, user, current_user = %{role: "admin"}) do
+    case Accounts.get_role_rank(current_user.role) >= Accounts.get_role_rank(user.role) do
+      true ->
+        nil
+
+      false ->
+        link("Edit",
+          to: Routes.user_path(conn, :edit, user.id),
+          class: "btn btn-default btn-xs"
+        )
+    end
+  end
+
   def certification_info(certification) do
     now = Timex.to_unix(Timex.now())
     expiration_date = certification.expires_at

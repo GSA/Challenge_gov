@@ -26,7 +26,7 @@ defmodule ChallengeGov.Accounts do
         User.roles()
 
       "admin" ->
-        Enum.slice(User.roles(), 2..2)
+        Enum.slice(User.roles(), 2..3)
     end
   end
 
@@ -678,37 +678,7 @@ defmodule ChallengeGov.Accounts do
   def activate(user, originator, remote_ip) do
     previous_status = user.status
 
-    changeset =
-      user
-      |> Ecto.Changeset.change()
-      |> Ecto.Changeset.put_change(:status, "active")
-      |> maybe_update_request_renewal(user)
-
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.update(:user, changeset)
-      |> Ecto.Multi.run(:log, fn _repo, _changes ->
-        SecurityLogs.track(%{
-          originator_id: originator.id,
-          originator_role: originator.role,
-          originator_identifier: originator.email,
-          originator_remote_ip: remote_ip,
-          target_id: user.id,
-          target_type: user.role,
-          target_identifier: user.email,
-          action: "status_change",
-          details: %{previous_status: previous_status, new_status: "active"}
-        })
-      end)
-      |> Repo.transaction()
-
-    case result do
-      {:ok, %{user: user}} ->
-        {:ok, user}
-
-      {:error, _type, changeset, _changes} ->
-        {:error, changeset}
-    end
+    activate(user, previous_status, originator, remote_ip)
   end
 
   @doc """
@@ -741,11 +711,18 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, %{user: user}} ->
+        send_activation_email(user)
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
+  end
+
+  defp send_activation_email(user) do
+    user
+    |> Emails.account_activation()
+    |> Mailer.deliver_later()
   end
 
   defp maybe_update_request_renewal(struct, user) do
