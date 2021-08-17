@@ -27,18 +27,17 @@
             <div class="form-group">
               <label class="col">Send message to</label>
               <div class="col">
-                <%= checkbox(f, :temp_audience, name: input_name(f, :temp_audience) <> "challenge_owners") %>
-                <label>Challenge owners of this challenge</label>
+                <%= label do %>
+                  <%= radio_button(f, :audience, "all", class: "mr-2", required: true) %>
+                  All members of this challenge
+                <% end %>
               </div>
               <div class="col">
-                <%= checkbox(f, :temp_audience, name: input_name(f, :temp_audience) <> "all") %>
-                <label>All solvers of this challenge</label>
+                <%= label do %>
+                  <%= radio_button(f, :audience, "individual", class: "mr-2", required: true) %>
+                  Individual solver of this challenge
+                <% end %>
               </div>
-              <div class="col">
-                <%= checkbox(f, :temp_audience, name: input_name(f, :temp_audience) <> "individual") %>
-                <label>Individual solver of this challenge</label>
-              </div>
-              <%= hidden_input(f, :audience, name: "message_context[audience]", value: "all") %>
             </div>
             <hr/>
             <%= submit "New message", class: "btn btn-primary" %>

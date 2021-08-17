@@ -355,6 +355,15 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
+  def solver_ids_from_submission_ids(submission_ids) do
+    submission_ids
+    |> Enum.map(fn submission_id ->
+      {:ok, submission} = get(submission_id)
+      submission.submitter_id
+    end)
+    |> Enum.uniq()
+  end
+
   # Attach supporting document functions
   defp attach_documents(multi, %{document_ids: ids}) do
     attach_documents(multi, %{"document_ids" => ids})

@@ -5,6 +5,9 @@ defmodule Web.MessageContextController do
   alias ChallengeGov.MessageContexts
   alias ChallengeGov.MessageContextStatuses
   alias ChallengeGov.Messages
+  alias ChallengeGov.Submissions
+
+  alias Web.ChallengeView
 
   def index(conn, params) do
     %{current_user: user} = conn.assigns
@@ -119,13 +122,20 @@ defmodule Web.MessageContextController do
     end
   end
 
-  def create(conn, %{"message_context" => message_context}) do
-    %{current_user: user} = conn.assigns
+  def create(conn, %{"message_context" => context_params = %{"audience" => "individual"}}) do
+    {:ok, challenge} = Challenges.get(context_params["context_id"])
 
-    {:ok, message_context} = MessageContexts.create(message_context)
+    conn
+    |> redirect(to: ChallengeView.manage_submissions_initial_path(conn, challenge))
+  end
+
+  def create(conn, %{"message_context" => context_params}) do
+    %{current_user: user} = conn.assigns
 
     case MessageContexts.user_can_create?(user) do
       true ->
+        {:ok, message_context} = MessageContexts.create(context_params)
+
         conn
         |> redirect(to: Routes.message_context_path(conn, :show, message_context.id))
 
@@ -134,5 +144,53 @@ defmodule Web.MessageContextController do
         |> put_flash(:error, "You can not start a message thread")
         |> redirect(to: Routes.message_context_path(conn, :index))
     end
+  end
+
+  def bulk_new(conn, %{"cid" => challenge_id, "sid" => submission_ids}) do
+    %{current_user: _user} = conn.assigns
+
+    conn
+    |> assign(:challenge_id, challenge_id)
+    |> assign(:submission_ids, submission_ids)
+    |> assign(:changeset, conn)
+    |> assign(:path, Routes.message_context_path(conn, :bulk_message, challenge_id))
+    |> render("new_multi_submission_message.html")
+  end
+
+  def bulk_new(conn, %{"cid" => challenge_id}) do
+    %{current_user: _user} = conn.assigns
+
+    {:ok, challenge} = Challenges.get(challenge_id)
+
+    conn
+    |> put_flash(:error, "Please select submissions to message")
+    |> redirect(to: ChallengeView.manage_submissions_initial_path(conn, challenge))
+    |> render("new_multi_submission_message.html")
+  end
+
+  def bulk_message(
+        conn,
+        %{
+          "challenge_id" => challenge_id,
+          "submission_ids" => submission_ids,
+          "content" => content,
+          "content_delta" => content_delta
+        }
+      ) do
+    %{current_user: user} = conn.assigns
+
+    solver_ids = Submissions.solver_ids_from_submission_ids(submission_ids)
+
+    message_content = %{
+      "content" => content,
+      "content_delta" => content_delta,
+      "status" => "sent"
+    }
+
+    MessageContexts.multi_submission_message(user, challenge_id, solver_ids, message_content)
+
+    conn
+    |> put_flash(:info, "Message sent to selected submissions")
+    |> redirect(to: Routes.message_context_path(conn, :index))
   end
 end

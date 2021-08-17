@@ -90,6 +90,8 @@ defmodule Web.Router do
       resources("/events", EventController, only: [:new, :create])
       resources("/bulletin", BulletinController, only: [:new, :create])
 
+      post("/phases/:id", PhaseController, :show)
+
       resources("/phases", PhaseController, only: [:index, :show]) do
         get("/submissions/managed", SubmissionController, :managed_submissions,
           as: :managed_submission
@@ -175,6 +177,8 @@ defmodule Web.Router do
     )
 
     get("/messages/drafts", MessageContextController, :drafts)
+    post("/messages/bulk_message/new", MessageContextController, :bulk_new)
+    post("/messages/bulk_message/:challenge_id", MessageContextController, :bulk_message)
     resources("/messages", MessageContextController, only: [:index, :show, :new, :create])
 
     post("/message_context_statuses/:id/mark_read", MessageContextStatusController, :mark_read)

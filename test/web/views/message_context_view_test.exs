@@ -7,6 +7,9 @@ defmodule Web.MessageContextViewTest do
   alias Web.AccountView
   alias Web.MessageContextView
 
+  alias ChallengeGov.TestHelpers.AccountHelpers
+  alias ChallengeGov.TestHelpers.ChallengeHelpers
+  alias ChallengeGov.TestHelpers.SubmissionHelpers
   alias ChallengeGov.TestHelpers.MessageContextStatusHelpers
 
   describe "display challenge title link" do
@@ -106,6 +109,41 @@ defmodule Web.MessageContextViewTest do
       {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
 
       assert MessageContextView.display_audience(user_solver, message_context_solver) == "All"
+    end
+  end
+
+  describe "display multi submission titles" do
+    test "success" do
+      challenge_owner =
+        AccountHelpers.create_user(%{role: "challenge_owner", email: "co@example.com"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
+          user_id: challenge_owner.id
+        })
+
+      solver_1 = AccountHelpers.create_user(%{role: "solver", email: "s1@example.com"})
+
+      submission_1 =
+        SubmissionHelpers.create_submitted_submission(
+          %{"title" => "Submission 1"},
+          solver_1,
+          challenge
+        )
+
+      solver_2 = AccountHelpers.create_user(%{role: "solver", email: "s2@example.com"})
+
+      submission_2 =
+        SubmissionHelpers.create_submitted_submission(
+          %{"title" => "Submission 2"},
+          solver_2,
+          challenge
+        )
+
+      submission_ids = [submission_1.id, submission_2.id]
+
+      assert MessageContextView.display_multi_submission_titles(submission_ids) ==
+               "Submission 1, Submission 2"
     end
   end
 
