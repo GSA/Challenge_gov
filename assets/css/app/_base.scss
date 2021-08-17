@@ -9,6 +9,20 @@ body {
   background-color: #dedede;
 }
 
+a {
+  color: #0076D6;
+}
+
+.btn-primary {
+  background-color: #0076D6;
+  border-color: #0076D6;
+}
+
+.btn-info {
+  background-color: #107484;
+  border-color: #107484;
+}
+
 .required {
   color: #ff0000;
 }
@@ -270,7 +284,7 @@ body {
 }
 
 .callout a {
-  color: #007bff;
+  color: #0076D6;
 
   &:hover {
     color: #0056b3;
