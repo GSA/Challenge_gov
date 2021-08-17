@@ -122,13 +122,20 @@ defmodule Web.MessageContextController do
     end
   end
 
-  def create(conn, %{"message_context" => message_context}) do
-    %{current_user: user} = conn.assigns
+  def create(conn, %{"message_context" => context_params = %{"audience" => "individual"}}) do
+    {:ok, challenge} = Challenges.get(context_params["context_id"])
 
-    {:ok, message_context} = MessageContexts.create(message_context)
+    conn
+    |> redirect(to: ChallengeView.manage_submissions_initial_path(conn, challenge))
+  end
+
+  def create(conn, %{"message_context" => context_params}) do
+    %{current_user: user} = conn.assigns
 
     case MessageContexts.user_can_create?(user) do
       true ->
+        {:ok, message_context} = MessageContexts.create(context_params)
+
         conn
         |> redirect(to: Routes.message_context_path(conn, :show, message_context.id))
 
