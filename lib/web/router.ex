@@ -90,6 +90,8 @@ defmodule Web.Router do
       resources("/events", EventController, only: [:new, :create])
       resources("/bulletin", BulletinController, only: [:new, :create])
 
+      post("/phases/:id", PhaseController, :show)
+
       resources("/phases", PhaseController, only: [:index, :show]) do
         get("/submissions/managed", SubmissionController, :managed_submissions,
           as: :managed_submission

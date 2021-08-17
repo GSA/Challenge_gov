@@ -46,7 +46,11 @@ defmodule Web.PhaseController do
 
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
-    selected_submission_ids = Map.get(params, "sid", [])
+
+    selected_submission_ids =
+      params
+      |> Map.get("sid", [])
+      |> Enum.map(&String.to_integer/1)
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
@@ -90,7 +94,7 @@ defmodule Web.PhaseController do
       |> assign(:phase, phase)
       |> assign(:submissions, submissions)
       |> assign(:has_closed_phases, Challenges.has_closed_phases?(challenge))
-      |> assign(:selected_submission_ids, selected_submission_ids)
+      |> assign(:selected_submission_ids, MapSet.to_list(selected_submission_ids))
       |> assign(:checked_selected_submission_ids, checked_selected_submission_ids)
       |> assign(:hidden_selected_submission_ids, hidden_selected_submission_ids)
       |> assign(:pagination, pagination)
