@@ -43,6 +43,10 @@ a {
   background-color: $orange-30v;
 }
 
+.overflow-visible{
+  overflow: visible;
+}
+
 /* post sign-in screen: lib/web/templates/admin/terms/index.html.eex */
 
 .rules-of-behavior {
