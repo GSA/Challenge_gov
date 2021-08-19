@@ -27,7 +27,7 @@ defmodule ChallengeGov.Emails do
   def challenge_submission(user, challenge) do
     base_email()
     |> to(user.email)
-    |> subject("Challenge.gov - Your challenge has been received")
+    |> subject("Challenge.gov - Your challenge has been submitted")
     |> assign(:challenge, challenge)
     |> render("challenge_submission.html")
   end

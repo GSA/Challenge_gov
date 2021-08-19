@@ -40,7 +40,7 @@
         <div class="cards">
           <%= Enum.map @submissions, fn (submission) -> %>
             <div class="challenge-tile card">
-              <%= link to: Routes.submission_path(@conn, :show, submission.id) do %>
+              <%= link to: Routes.submission_path(@conn, :edit, submission.id) do %>
                 <div class="image_wrapper">
                   <%= img_tag(
                     ChallengeView.logo_url(submission.challenge),
