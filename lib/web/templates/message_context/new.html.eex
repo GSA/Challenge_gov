@@ -28,6 +28,12 @@
               <label class="col">Send message to</label>
               <div class="col">
                 <%= label do %>
+                  <%= radio_button(f, :audience, "challenge_owners", class: "mr-2", required: true) %>
+                  Challenge owners of this challenge
+                <% end %>
+              </div>
+              <div class="col">
+                <%= label do %>
                   <%= radio_button(f, :audience, "all", class: "mr-2", required: true) %>
                   All members of this challenge
                 <% end %>
