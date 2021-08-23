@@ -516,6 +516,12 @@ defmodule ChallengeGov.MessageContextsTest do
         "status" => "sent"
       })
 
+      MessageContexts.create(%{
+        "context" => "challenge",
+        "context_id" => challenge.id,
+        "audience" => "challenge_owners"
+      })
+
       MessageContexts.sync_for_user(user_solver)
 
       user_solver = Repo.preload(user_solver, [:message_context_statuses])
