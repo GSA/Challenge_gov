@@ -29,8 +29,9 @@ defmodule ChallengeGov.ChallengeTest do
     |> execute_script(
       "document.getElementsByClassName('ql-editor')[1].innerHTML = 'Full description here.'"
     )
-    |> click(radio_button(["challenge[upload_logo]"]))
-    # |> click(Query.text("Upload my own logo", count: 1))
+    |> execute_script(
+      "document.getElementById('challenge_upload_logo_true').click()"
+    )
 
     session
     |> resize_window(900, 2500)
@@ -42,7 +43,7 @@ defmodule ChallengeGov.ChallengeTest do
   # then sign in as .gov manager and submit
 
   defp create_and_sign_in_challenge_manager(session) do
-    AccountHelpers.create_user(%{email: "challenge_manager_active@example.com", role: "challenge_owner"})
+    AccountHelpers.create_user(%{email: "challenge_owner_active@example.com", role: "challenge_owner"})
 
     session
     |> visit("/dev_accounts")
