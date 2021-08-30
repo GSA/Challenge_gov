@@ -44,6 +44,49 @@ defmodule ChallengeGov.MessageContextsTest do
       assert user_solver_context_status.message_context_id == message_context.id
     end
 
+    test "success: admin creating a context with a challenge owner audience around a challenge" do
+      user_admin =
+        AccountHelpers.create_user(%{
+          email: "admin@example.com",
+          role: "admin"
+        })
+
+      user_challenge_owner =
+        AccountHelpers.create_user(%{
+          email: "challenge_owner@example.com",
+          role: "challenge_owner"
+        })
+
+      user_solver = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
+
+      challenge =
+        ChallengeHelpers.create_single_phase_challenge(user_challenge_owner, %{
+          user_id: user_challenge_owner.id
+        })
+
+      _submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
+
+      _prepped_message_context = MessageContexts.new("all")
+
+      {:ok, message_context} =
+        MessageContexts.create(%{
+          "context" => "challenge",
+          "context_id" => challenge.id,
+          "audience" => "challenge_owners"
+        })
+
+      user_admin_context_status = Enum.at(MessageContextStatuses.all_for_user(user_admin), 0)
+
+      user_challenge_owner_context_status =
+        Enum.at(MessageContextStatuses.all_for_user(user_challenge_owner), 0)
+
+      user_solver_context_status = Enum.at(MessageContextStatuses.all_for_user(user_solver), 0)
+
+      assert user_admin_context_status.message_context_id == message_context.id
+      assert user_challenge_owner_context_status.message_context_id == message_context.id
+      refute user_solver_context_status
+    end
+
     # Parent contexts might not exist for submission contexts
     @tag :skip
     test "success: creating a submission context with an already existing parent challenge message context" do
@@ -471,6 +514,12 @@ defmodule ChallengeGov.MessageContextsTest do
         "content" => "Test",
         "content_delta" => "Test",
         "status" => "sent"
+      })
+
+      MessageContexts.create(%{
+        "context" => "challenge",
+        "context_id" => challenge.id,
+        "audience" => "challenge_owners"
       })
 
       MessageContexts.sync_for_user(user_solver)

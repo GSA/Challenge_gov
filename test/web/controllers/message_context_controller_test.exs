@@ -526,6 +526,100 @@ defmodule Web.MessageContextControllerTest do
     end
   end
 
+  describe "creating a challenge message context with challenge owners audience" do
+    test "success: admin", %{conn: conn} do
+      user = AccountHelpers.create_user(%{role: "admin"})
+      conn = prep_conn(conn, user)
+
+      challenge_owner =
+        AccountHelpers.create_user(%{
+          role: "challenge_owner",
+          email: "challenge_owner@example.com"
+        })
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{user_id: challenge_owner.id}, challenge_owner)
+
+      message_context_attributes = %{
+        "context" => "challenge",
+        "context_id" => challenge.id,
+        "audience" => "challenge_owners"
+      }
+
+      conn =
+        post(conn, Routes.message_context_path(conn, :create), %{
+          "message_context" => message_context_attributes
+        })
+
+      {:ok, context} = MessageContexts.get("challenge", challenge.id, "challenge_owners")
+
+      assert html_response(conn, 302)
+      assert redirected_to(conn) == Routes.message_context_path(conn, :show, context.id)
+    end
+
+    test "success: challenge owner", %{conn: conn} do
+      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+      conn = prep_conn(conn, user)
+
+      challenge_owner =
+        AccountHelpers.create_user(%{
+          role: "challenge_owner",
+          email: "challenge_owner@example.com"
+        })
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{user_id: challenge_owner.id}, challenge_owner)
+
+      message_context_attributes = %{
+        "context" => "challenge",
+        "context_id" => challenge.id,
+        "audience" => "challenge_owners"
+      }
+
+      conn =
+        post(conn, Routes.message_context_path(conn, :create), %{
+          "message_context" => message_context_attributes
+        })
+
+      {:ok, context} = MessageContexts.get("challenge", challenge.id, "challenge_owners")
+
+      assert html_response(conn, 302)
+      assert redirected_to(conn) == Routes.message_context_path(conn, :show, context.id)
+    end
+
+    test "failure: solver", %{conn: conn} do
+      user = AccountHelpers.create_user(%{role: "solver"})
+      conn = prep_conn(conn, user)
+
+      challenge_owner =
+        AccountHelpers.create_user(%{
+          role: "challenge_owner",
+          email: "challenge_owner@example.com"
+        })
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{user_id: challenge_owner.id}, challenge_owner)
+
+      message_context_attributes = %{
+        "context" => "challenge",
+        "context_id" => challenge.id,
+        "audience" => "challenge_owners"
+      }
+
+      conn =
+        post(conn, Routes.message_context_path(conn, :create), %{
+          "message_context" => message_context_attributes
+        })
+
+      assert {:error, :not_found} =
+               MessageContexts.get("challenge", challenge.id, "challenge_owners")
+
+      assert get_flash(conn, :error) == "You can not start a message thread"
+      assert html_response(conn, 302)
+      assert redirected_to(conn) == Routes.message_context_path(conn, :index)
+    end
+  end
+
   describe "render new message page for multi messaging" do
     test "success", %{conn: conn} do
       challenge_owner =
