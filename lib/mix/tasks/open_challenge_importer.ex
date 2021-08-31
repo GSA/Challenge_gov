@@ -10,20 +10,28 @@ defmodule Mix.Tasks.OpenChallengeImporter do
   def run(_file) do
     Mix.Task.run("app.start")
 
-    result = File.read!("lib/mix/tasks/sample_data/feed-open-parsed.json")
+    result = File.read!("lib/mix/tasks/sample_data/feed-open.json")
+
+    # BOOKMARK: Set proper headers for this CSV and try opening them
+    # Figure out other problem fields to export or only export when problems detected
+    # Go to fixing any editing using imported=true to skip validations
+    output_file = ImportHelper.prep_import_output_file("feed-open.csv")
 
     import_user_id = ImportHelper.import_user().id
 
     case Jason.decode(result) do
       {:ok, json} ->
         json["_challenge"]
-        |> Enum.map(fn challenge ->
+        |> Enum.each(fn challenge ->
+          ImportHelper.create_import_output_file(output_file, challenge)
           create_challenge(challenge, import_user_id)
         end)
 
       {:error, error} ->
         error
     end
+
+    File.close(output_file)
   end
 
   @doc """

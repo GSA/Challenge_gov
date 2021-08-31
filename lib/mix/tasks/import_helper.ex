@@ -86,12 +86,15 @@ defmodule Mix.Tasks.ImportHelper do
 
     {:ok, tmp_file} = Stein.Storage.Temp.create(extname: extension)
 
-    response =
-      Finch.request(
-        HTTPClient,
-        :get,
-        "https://www.challenge.gov/assets/netlify-uploads/#{filename}"
-      )
+    request = Finch.build(:get, "https://www.challenge.gov/assets/netlify-uploads/#{filename}")
+    response = Finch.request(request, HTTPClient)
+
+    # response =
+    #   Finch.request(
+    #     HTTPClient,
+    #     :get,
+    #     "https://www.challenge.gov/assets/netlify-uploads/#{filename}"
+    #   )
 
     case response do
       {:ok, %{status: 200, body: body}} ->
@@ -161,6 +164,13 @@ defmodule Mix.Tasks.ImportHelper do
       |> String.replace(~r"(?=.*)\,(?=.*)", "")
       |> String.replace(~r"(?=.*)\$(?=.*)", "")
       |> Integer.parse()
+      |> case do
+        :error ->
+          {0, 0}
+
+        result ->
+          result
+      end
 
     number
   end
@@ -179,10 +189,20 @@ defmodule Mix.Tasks.ImportHelper do
   # Types Helper
   def format_types(""), do: []
 
+  def format_types(nil), do: []
+
+  def format_types(types) when is_bitstring(types) do
+    if String.contains?(types, ";") do
+      types
+      |> String.split(";")
+      |> Enum.map(fn x -> String.trim(x) end)
+    else
+      [types]
+    end
+  end
+
   def format_types(types) do
     types
-    |> String.split(";")
-    |> Enum.map(fn x -> String.trim(x) end)
   end
 
   # Logo Helpers
@@ -194,7 +214,9 @@ defmodule Mix.Tasks.ImportHelper do
 
     {:ok, tmp_file} = Stein.Storage.Temp.create(extname: extension)
 
-    case Finch.request(HTTPClient, :get, logo_url) do
+    request = Finch.build(:get, logo_url)
+
+    case Finch.request(request, HTTPClient) do
       {:ok, %{status: 200, body: body}} ->
         File.write!(tmp_file, body, [:binary])
 
@@ -295,5 +317,35 @@ defmodule Mix.Tasks.ImportHelper do
       utc_datetime ->
         utc_datetime
     end
+  end
+
+  def prep_import_output_file(filename) do
+    File.mkdir_p("tmp/import_output")
+    {:ok, file} = File.open("tmp/import_output/#{filename}", [:write])
+
+    headers = [
+      "Challenge ID",
+      "Challenge Title",
+      "Challenge Types",
+      "Prize Total"
+    ]
+
+    headers = Enum.join(headers, ",")
+    IO.binwrite(file, headers <> "\n")
+
+    file
+  end
+
+  def create_import_output_file(file, json) do
+    values = [
+      json["challenge-id"],
+      json["challenge-title"],
+      json["type-of-challenge"],
+      json["total-prize-offered-cash"]
+    ]
+
+    values = Enum.join(values, ",")
+
+    IO.binwrite(file, values <> "\n")
   end
 end
