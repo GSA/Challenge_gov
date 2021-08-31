@@ -5,7 +5,7 @@ defmodule ChallengeGov.Recaptcha do
 
   @type token() :: String.t()
 
-  @callback valid_token?(token()) :: boolean()
+  @callback valid_token?(token()) :: tuple()
 
   @module Application.get_env(:challenge_gov, :recaptcha)[:module]
 
