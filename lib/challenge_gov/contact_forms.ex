@@ -34,10 +34,16 @@ defmodule ChallengeGov.ContactForms do
   defp check_recaptcha(changeset, params) do
     recaptcha_token = Map.get(params, "recaptchaToken")
 
-    if Recaptcha.valid_token?(recaptcha_token) do
-      changeset
-    else
-      Ecto.Changeset.add_error(changeset, :recaptcha, "Invalid reCaptcha token. Please try again")
+    case Recaptcha.valid_token?(recaptcha_token) do
+      {:ok, _score} ->
+        changeset
+
+      {:error, reason} ->
+        Ecto.Changeset.add_error(
+          changeset,
+          :recaptcha,
+          "Invalid reCaptcha token (#{reason}). Please try again"
+        )
     end
   end
 end
