@@ -2,10 +2,13 @@ defmodule ChallengeGov.ChallengeTest do
   use Web.FeatureCase, async: true
 
   alias ChallengeGov.TestHelpers.AccountHelpers
+  alias ChallengeGov.TestHelpers
 
   feature "create a challenge as a Challenge Manager", %{session: session} do
     create_and_sign_in_challenge_manager(session)
     year = String.slice("#{Timex.today.year}", -2..-1)
+
+    start_date = "2021-08-30T22:22"
 
     session
     |> click(link("Challenge management"))
@@ -32,10 +35,39 @@ defmodule ChallengeGov.ChallengeTest do
     |> execute_script(
       "document.getElementById('challenge_upload_logo_true').click()"
     )
+    |> execute_script(
+      "document.getElementById('challenge_auto_publish_date_picker').focus()"
+    )
+    |> execute_script(
+      "document.getElementById('challenge_auto_publish_date_picker').value = '#{start_date}'"
+    )
+    |> execute_script(
+      "document.getElementById('challenge_auto_publish_date').value = '#{start_date}'"
+    )
+    # multi-phase false & and single phase date range
+
+    |> accept_alert(fn(session) ->
+      execute_script(session,
+      "document.getElementById('challenge_is_multi_phase_false').click()"
+    )
+    end)
+    # |> execute_script(
+    #   "document.getElementById('challenge_is_multi_phase_false').click()"
+    # )
+    # |> execute_script(
+    #   "document.getElementById('challenge_phases_0_start_date_picker').focus()"
+    # )
+    # |> execute_script(
+    #   "document.getElementById('challenge_phases_0_start_date_picker').value = '#{start_date}'"
+    # )
+    # |> execute_script(
+    #   "document.getElementById('challenge_phases_0_start_date').value = '#{start_date}'"
+    # )
 
     session
     |> resize_window(900, 2500)
     |> take_screenshot()
+    # |> click(button("Next"))
 
     # assert .com manager can't submit
   end
