@@ -2,17 +2,45 @@ defmodule ChallengeGov.ChallengeTest do
   use Web.FeatureCase, async: true
 
   alias ChallengeGov.TestHelpers.AccountHelpers
-  alias ChallengeGov.TestHelpers
 
   feature "create a challenge as a Challenge Manager", %{session: session} do
     create_and_sign_in_challenge_manager(session)
     year = String.slice("#{Timex.today.year}", -2..-1)
 
-    start_date = "2021-08-30T22:22"
+    {:ok, publish_date_picker} =
+      Timex.now()
+      |> Timex.shift(days: 1)
+      |> Timex.format("{YYYY}-{0M}-{0D}T{0h12}:{m}")
+
+    {:ok, publish_date} =
+      Timex.now()
+      |> Timex.shift(days: 1)
+      |> Timex.format("{YYYY}-{0M}-{0D} {0h12}:{m}:{s}Z")
+
+    {:ok, start_date_picker} =
+      Timex.now()
+      |> Timex.shift(days: 2)
+      |> Timex.format("{YYYY}-{0M}-{0D}T{0h12}:{m}")
+
+    {:ok, start_date} =
+      Timex.now()
+      |> Timex.shift(days: 2)
+      |> Timex.format("{YYYY}-{0M}-{0D} {0h12}:{m}:{s}Z")
+
+    {:ok, end_date_picker} =
+      Timex.now()
+      |> Timex.shift(days: 3)
+      |> Timex.format("{YYYY}-{0M}-{0D}T{0h12}:{m}")
+
+    {:ok, end_date} =
+      Timex.now()
+      |> Timex.shift(days: 3)
+      |> Timex.format("{YYYY}-{0M}-{0D} {0h12}:{m}:{s}Z")
 
     session
     |> click(link("Challenge management"))
     |> click(link("New"))
+    |> assert_text("Please note a Challenge Manager with a .gov or .mil email will need to submit")
     |> fill_in(text_field("Challenge manager of record"), with: "email@example.com")
     |> fill_in(text_field("Challenge manager email"), with: "email@example.com")
     |> fill_in(text_field("Point of contact email"), with: "email@example.com")
@@ -33,41 +61,76 @@ defmodule ChallengeGov.ChallengeTest do
       "document.getElementsByClassName('ql-editor')[1].innerHTML = 'Full description here.'"
     )
     |> execute_script(
-      "document.getElementById('challenge_upload_logo_true').click()"
+      "document.getElementById('challenge_upload_logo_false').click()"
     )
     |> execute_script(
       "document.getElementById('challenge_auto_publish_date_picker').focus()"
     )
     |> execute_script(
-      "document.getElementById('challenge_auto_publish_date_picker').value = '#{start_date}'"
+      "document.getElementById('challenge_auto_publish_date_picker').value = '#{publish_date_picker}'"
     )
     |> execute_script(
-      "document.getElementById('challenge_auto_publish_date').value = '#{start_date}'"
+      "document.getElementById('challenge_auto_publish_date').value = '#{publish_date}'"
     )
-    # multi-phase false & and single phase date range
 
-    |> accept_alert(fn(session) ->
-      execute_script(session,
-      "document.getElementById('challenge_is_multi_phase_false').click()"
-    )
-    end)
-    # |> execute_script(
-    #   "document.getElementById('challenge_is_multi_phase_false').click()"
-    # )
-    # |> execute_script(
-    #   "document.getElementById('challenge_phases_0_start_date_picker').focus()"
-    # )
-    # |> execute_script(
-    #   "document.getElementById('challenge_phases_0_start_date_picker').value = '#{start_date}'"
-    # )
-    # |> execute_script(
-    #   "document.getElementById('challenge_phases_0_start_date').value = '#{start_date}'"
-    # )
+    # multi-phase false and accept confirm alert
 
     session
-    |> resize_window(900, 2500)
+    |> accept_confirm(fn(session) ->
+      execute_script(session,
+        "document.getElementById('challenge_is_multi_phase_false').click()"
+      )
+    end)
+
+    # single phase date range
+
+    session
+    |> execute_script(
+      "document.getElementById('challenge_phases_0_start_date_picker').focus()"
+    )
+    |> execute_script(
+      "document.getElementById('challenge_phases_0_start_date_picker').value = '#{start_date_picker}'"
+    )
+    |> execute_script(
+      "document.getElementById('challenge_phases_0_start_date').value = '#{start_date}'"
+    )
+    |> execute_script(
+      "document.getElementById('challenge_phases_0_end_date_picker').focus()"
+    )
+    |> execute_script(
+      "document.getElementById('challenge_phases_0_end_date_picker').value = '#{end_date_picker}'"
+    )
+    |> execute_script(
+      "document.getElementById('challenge_phases_0_end_date').value = '#{end_date}'"
+    )
+    |> click(button("Next"))
+
+    # Timeline
+    session
+    |> click(css(".add-nested-section"))
+    |> fill_in(text_field("Timeline event title"), with: "Event 1")
+    |> execute_script(
+      "document.getElementById('challenge_timeline_events_0_date_picker').focus()"
+    )
+    |> execute_script(
+      "document.getElementById('challenge_timeline_events_0_date_picker').value = '#{end_date_picker}'"
+    )
+    |> execute_script(
+      "document.getElementById('challenge_timeline_events_0_date').value = '#{end_date}'"
+    )
+    |> click(button("Next"))
+
+    # Prizes
+    session
+    |> execute_script(
+      "document.getElementById('challenge_prize_type_non_monetary').click()"
+    )
+    |> fill_in(text_field("Non-monetary prize award"), with: "Prizes other than cash")
+    |> click(button("Next"))
+
+    session
+    |> resize_window(900, 1500)
     |> take_screenshot()
-    # |> click(button("Next"))
 
     # assert .com manager can't submit
   end
