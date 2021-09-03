@@ -127,6 +127,20 @@ defmodule ChallengeGov.MessageContexts do
     end
   end
 
+  def sync_context(
+        multi,
+        user = %{role: "solver"},
+        context = %{context: "challenge", audience: "challenge_owners"}
+      ) do
+    case MessageContextStatuses.get(user, context) do
+      {:ok, context_status} ->
+        Multi.delete(multi, {:delete_context_status, user.id, context.id}, context_status)
+
+      {:error, :not_found} ->
+        multi
+    end
+  end
+
   def sync_context(multi, user = %{role: "solver"}, context = %{context: "challenge"}) do
     challenge = get_context_record(context)
 

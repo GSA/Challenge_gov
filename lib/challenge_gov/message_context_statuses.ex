@@ -93,6 +93,26 @@ defmodule ChallengeGov.MessageContextStatuses do
     end)
   end
 
+  def get_user_ids_for_message_context(
+        message_context = %{context: "challenge", audience: "challenge_owners"}
+      ) do
+    %{context_id: context_id, audience: _audience} = message_context
+
+    {:ok, challenge} = Challenges.get(context_id)
+
+    admin_user_ids =
+      Accounts.all_admins()
+      |> Enum.map(& &1.id)
+
+    challenge_owner_user_ids =
+      challenge.challenge_owners
+      |> Enum.map(& &1.user_id)
+
+    user_ids = admin_user_ids ++ challenge_owner_user_ids
+
+    Enum.uniq(user_ids)
+  end
+
   def get_user_ids_for_message_context(message_context = %{context: "challenge"}) do
     %{context_id: context_id, audience: _audience} = message_context
 

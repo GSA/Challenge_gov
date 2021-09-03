@@ -14,7 +14,9 @@ export const SectionResources = ({label, section, challenge}) => {
     return (
       documents.map((document) => {
         return (
-          <a className="card challenge-tab__resource" key={document.id} target="_blank" href={document.url}>{document.display_name}</a>
+          <li>
+            <a className="challenge-tab__resource" key={document.id} target="_blank" href={document.url}>{document.display_name}</a>
+          </li>
         )
       })
     )
@@ -26,8 +28,10 @@ export const SectionResources = ({label, section, challenge}) => {
         <>
           <div className="challenge-tab__header">{label || "Additional documents"}</div>
           <hr/>
-          <section className="challenge-tab__resources">
-            {renderResources()}
+          <section className="card challenge-tab__resources">
+            <ul>
+              {renderResources()}
+            </ul>
           </section>
         </>
       )
