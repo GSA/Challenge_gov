@@ -169,6 +169,44 @@ defmodule Web.MessageContextViewTest do
     end
   end
 
+  describe "rendering audience column" do
+    test "success: header" do
+      %{
+        user_challenge_owner: user
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      assert MessageContextView.maybe_render_audience_header(user) ==
+               {:safe, [60, "th", [], 62, "Audience", 60, 47, "th", 62]}
+    end
+
+    test "failure: do not render header for solver" do
+      %{
+        user_solver: user
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      refute MessageContextView.maybe_render_audience_header(user)
+    end
+
+    test "success: column" do
+      %{
+        message_context: context,
+        user_challenge_owner: user
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      assert MessageContextView.maybe_render_audience_column(user, context) ==
+               {:safe, [60, "td", [], 62, "All", 60, 47, "td", 62]}
+    end
+
+    test "failure: do not render column for solver" do
+      %{
+        message_context: context,
+        user_solver: user
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      refute MessageContextView.maybe_render_audience_column(user, context)
+    end
+  end
+
   describe "rendering new message button" do
     test "success", %{conn: conn} do
       %{

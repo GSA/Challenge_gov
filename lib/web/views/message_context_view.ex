@@ -104,6 +104,14 @@ defmodule Web.MessageContextView do
   def maybe_unread_class(%{read: true}), do: "message_center__row--read"
   def maybe_unread_class(%{read: false}), do: "message_center__row--unread"
 
+  def maybe_render_audience_header(%{role: "solver"}), do: nil
+  def maybe_render_audience_header(_user), do: content_tag(:th, "Audience")
+
+  def maybe_render_audience_column(%{role: "solver"}, _message_context), do: nil
+
+  def maybe_render_audience_column(user, message_context),
+    do: content_tag(:td, display_audience(user, message_context))
+
   def render_new_message_button(_conn, %{role: "solver"}), do: nil
 
   def render_new_message_button(conn, _user) do
