@@ -4,7 +4,7 @@ defmodule ChallengeGov.ChallengeTest do
   alias ChallengeGov.TestHelpers.AccountHelpers
 
   feature "create a challenge as a Challenge Manager", %{session: session} do
-    create_and_sign_in_challenge_manager(session)
+    create_and_sign_in_gov_challenge_manager(session)
     year = String.slice("#{Timex.today.year}", -2..-1)
 
     {:ok, publish_date_picker} =
@@ -40,7 +40,6 @@ defmodule ChallengeGov.ChallengeTest do
     session
     |> click(link("Challenge management"))
     |> click(link("New"))
-    |> assert_text("Please note a Challenge Manager with a .gov or .mil email will need to submit")
     |> fill_in(text_field("Challenge manager of record"), with: "email@example.com")
     |> fill_in(text_field("Challenge manager email"), with: "email@example.com")
     |> fill_in(text_field("Point of contact email"), with: "email@example.com")
@@ -128,25 +127,50 @@ defmodule ChallengeGov.ChallengeTest do
     |> fill_in(text_field("Non-monetary prize award"), with: "Prizes other than cash")
     |> click(button("Next"))
 
+    # Rules
     session
-    |> resize_window(900, 1500)
-    |> take_screenshot()
+    |> execute_script(
+      "document.getElementsByClassName('ql-editor')[0].innerHTML = 'Eligibilty requirements described here.'"
+    )
+    |> execute_script(
+      "document.getElementsByClassName('ql-editor')[1].innerHTML = 'Rules described here.'"
+    )
+    |> execute_script(
+      "document.getElementsByClassName('ql-editor')[2].innerHTML = 'Terms and conditions described here.'"
+    )
+    |> click(select("Legal authority"))
+    |> click(option("Direct Prize Authority"))
+    |> click(button("Next"))
 
-    # assert .com manager can't submit
+    # Judging
+    session
+    |> execute_script(
+      "document.getElementsByClassName('ql-editor')[0].innerHTML = 'Judging criteria described here.'"
+    )
+    |> click(button("Next"))
+
+    # How to enter
+    session
+    |> execute_script(
+      "document.getElementsByClassName('ql-editor')[0].innerHTML = 'How to enter described here.'"
+    )
+    |> click(button("Next"))
+
+    #  Add resources
+    session
+    |> click(button("Next"))
+
+    # Submit
+    session
+    |> click(button("Submit"))
+    |> has?(Query.text("Your Challenge was submitted on"))
   end
 
-  # then sign in as .gov manager and submit
-
-  defp create_and_sign_in_challenge_manager(session) do
-    AccountHelpers.create_user(%{email: "challenge_owner_active@example.com", role: "challenge_owner"})
+  defp create_and_sign_in_gov_challenge_manager(session) do
+    AccountHelpers.create_user(%{email: "challenge_owner_active@example.gov", role: "challenge_owner"})
 
     session
     |> visit("/dev_accounts")
-    |> click(button("Challenge Manager Active"))
+    |> click(button("Gov Challenge Manager Active"))
   end
 end
-
-
-# add federal parners
-# |> find(data("child", "federal_partners"))
-# |> click(select("Agency name"), option("Department of Education"))
