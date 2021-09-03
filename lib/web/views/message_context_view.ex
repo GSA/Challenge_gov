@@ -104,6 +104,15 @@ defmodule Web.MessageContextView do
   def maybe_unread_class(%{read: true}), do: "message_center__row--read"
   def maybe_unread_class(%{read: false}), do: "message_center__row--unread"
 
+  def render_new_message_button(_conn, %{role: "solver"}), do: nil
+
+  def render_new_message_button(conn, _user) do
+    link("New Message",
+      to: Routes.message_context_path(conn, :new, context: "challenge"),
+      class: "btn btn-primary mr-3"
+    )
+  end
+
   def render_star(message_context_status) do
     class = if message_context_status.starred, do: "fas", else: "far"
 
