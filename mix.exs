@@ -41,6 +41,7 @@ defmodule ChallengeGov.MixProject do
   defp deps do
     [
       {:bamboo_smtp, "~> 2.1.0"},
+      {:browser, "~> 0.4.4"},
       {:cors_plug, "~> 2.0"},
       {:excoveralls, "~> 0.10", only: :test},
       {:color_stream, "~> 0.0.1"},
