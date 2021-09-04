@@ -12,7 +12,7 @@
         <td>
           <%= Enum.map(challenge.challenge_owners, fn owner -> %>
             <%= if is_nil(owner.revoked_at) do %>
-              <div><%= Web.UserView.name_link(@conn, owner.user) %></div>
+              <div><%= Web.UserView.name_link(@conn, owner.user, show_email: false) %></div>
             <% end %>
           <% end) %>
         </td>
