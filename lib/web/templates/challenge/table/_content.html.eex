@@ -21,27 +21,25 @@
       <td>
         <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
           <%= link("View", to: Routes.challenge_path(@conn, :show, challenge.id), class: "btn btn-default btn-xs mr-2") %>
-          <div class="btn-group btn-group-sm ml-2" role="group">
-            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              More options
-            </button>
-            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-              <%= challenge_submissions_link(@conn, challenge, @user, class: "btn btn-link btn-xs") %>
+          <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+            More options
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <%= challenge_submissions_link(@conn, challenge, @user, class: "btn btn-link btn-xs") %>
+            <hr/>
+            <%= link "Preview", to: Routes.public_preview_path(@conn, :index, challenge.uuid), target: "_blank", class: "btn btn-link btn-xs" %>
+            <hr/>
+            <%= link "Print", to: Routes.public_preview_path(@conn, :index, challenge.uuid, print: true), target: "_blank", class: "btn btn-link btn-xs" %>
+            <hr/>
+            <%= link "Download JSON", to: Routes.export_path(@conn, :export_challenge, challenge.id, "json"), target: "_blank", class: "btn btn-link btn-xs" %>
+            <hr/>
+            <%= link "Download CSV", to: Routes.export_path(@conn, :export_challenge, challenge.id, "csv"), target: "_blank", class: "btn btn-link btn-xs" %>
+            <hr/>
+            <%= if not is_nil(challenge.gov_delivery_topic) do %>
+              <%= link("Send Bulletin", to: Routes.challenge_bulletin_path(@conn, :new, challenge.id), class: "btn btn-link btn-xs") %>
               <hr/>
-              <%= link "Preview", to: Routes.public_preview_path(@conn, :index, challenge.uuid), target: "_blank", class: "btn btn-link btn-xs" %>
-              <hr/>
-              <%= link "Print", to: Routes.public_preview_path(@conn, :index, challenge.uuid, print: true), target: "_blank", class: "btn btn-link btn-xs" %>
-              <hr/>
-              <%= link "Download JSON", to: Routes.export_path(@conn, :export_challenge, challenge.id, "json"), target: "_blank", class: "btn btn-link btn-xs" %>
-              <hr/>
-              <%= link "Download CSV", to: Routes.export_path(@conn, :export_challenge, challenge.id, "csv"), target: "_blank", class: "btn btn-link btn-xs" %>
-              <hr/>
-              <%= if not is_nil(challenge.gov_delivery_topic) do %>
-                <%= link("Send Bulletin", to: Routes.challenge_bulletin_path(@conn, :new, challenge.id), class: "btn btn-link btn-xs") %>
-                <hr/>
-              <% end %>
-              <%= challenge_delete_link(@conn, challenge, @user, label: "Delete", class: "btn btn-link text-danger btn-xs") %>
-            </div>
+            <% end %>
+            <%= challenge_delete_link(@conn, challenge, @user, label: "Delete", class: "btn btn-link text-danger btn-xs") %>
           </div>
         </div>
       </td>

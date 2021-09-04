@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card">
-          <div class="table-responsive overflow-visible">
+          <div class="table-responsive">
             <table class="table table-striped">
               <%= render Web.ChallengeView, "table/_header.html", conn: @conn, user: @user, filter: @filter, sort: @sort, sortable: @sortable %>
               <%= render Web.ChallengeView, "table/_content.html", conn: @conn, user: @user, challenges: @challenges %>
