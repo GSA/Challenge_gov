@@ -259,18 +259,11 @@ defmodule Web.ChallengeView do
 
   def datetime_picker(conn, form, name, label) do
     if Browser.firefox?(conn) do
-      datetime_select(
-        form,
-        name,
-        label: label,
-        class:
-          Enum.join(
-            [FormView.form_control_classes(form, :auto_publish_date), "js-datetime-input"],
-            " "
-          ),
-        id: "challenge_auto_publish_date_picker",
-        required: true
-      )
+      [
+        date_input(form, name, placeholder: "2018-07-22"),
+        content_tag(:span, "", class: "mr-2"),
+        time_input(form, name)
+      ]
     else
       datetime_local_input(
         form,
