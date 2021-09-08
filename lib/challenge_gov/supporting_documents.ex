@@ -54,7 +54,9 @@ defmodule ChallengeGov.SupportingDocuments do
       {:content_disposition, ~s{attachment; filename="#{file.filename}"}}
     ]
 
-    case Storage.upload(file, path, meta: meta) do
+    allowed_extensions = [".pdf", ".txt", ".csv", ".jpg", ".png", ".tiff"]
+
+    case Storage.upload(file, path, meta: meta, extensions: allowed_extensions) do
       :ok ->
         user
         |> Ecto.build_assoc(:supporting_documents)
