@@ -257,12 +257,20 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def datetime_picker(conn, form, name, label) do
+  def auto_publish_date(conn, form, name, label) do
     if Browser.firefox?(conn) do
       [
-        date_input(form, name, placeholder: "2018-07-22"),
+        date_input(form, name,
+          id: "challenge_auto_publish_date_picker",
+          class: "js-date-input",
+          required: true
+        ),
         content_tag(:span, "", class: "mr-2"),
-        time_input(form, name)
+        time_input(form, name,
+          id: "challenge_auto_publish_time_picker",
+          class: "js-time-input",
+          required: true
+        )
       ]
     else
       datetime_local_input(
