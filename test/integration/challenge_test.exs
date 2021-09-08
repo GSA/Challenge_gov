@@ -1,4 +1,4 @@
-defmodule ChallengeGov.ChallengeTest do
+defmodule ChallengeGov.ChallengeIntegrationTest do
   use Web.FeatureCase, async: true
 
   alias ChallengeGov.TestHelpers.AccountHelpers
@@ -160,34 +160,6 @@ defmodule ChallengeGov.ChallengeTest do
     session
     |> visit("/dev_accounts")
     |> click(button("Gov Challenge Manager Active"))
-  end
-
-  defp create_and_sign_in_challenge_manager(session) do
-    AccountHelpers.create_user(%{
-      email: "challenge_owner_active@example.com",
-      role: "challenge_owner"
-    })
-
-    session
-    |> visit("/dev_accounts")
-    |> click(button("Challenge Manager Active Non Gov"))
-  end
-
-  defp create_gov_challenge_manager() do
-    AccountHelpers.create_user(%{
-      email: "challenge_owner_active@example.gov",
-      first_name: "Chanel",
-      last_name: "Nguyen",
-      role: "challenge_owner"
-    })
-  end
-
-  defp create_and_sign_in_admin(session) do
-    AccountHelpers.create_user(%{email: "admin_active@example.com", role: "admin"})
-
-    session
-    |> visit("/dev_accounts")
-    |> click(button("Admin Active"))
   end
 
   defp publish_date_picker() do
