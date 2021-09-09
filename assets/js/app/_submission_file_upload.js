@@ -4,6 +4,10 @@ $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
   jqXHR.setRequestHeader('X-CSRF-Token', csrf_token);
 });
 
+$("#submission_document").on("change", function() {
+  $(this).removeClass("is-invalid")
+})
+
 $("#submission_document_upload").on("click", function(e) {
   name_input = $("#submission_document_name")
   name = name_input.val()
@@ -45,7 +49,11 @@ $("#submission_document_upload").on("click", function(e) {
       },
       error: function(err) {
         console.log("Something went wrong")
-        handleFileUploadError(err.responseJSON.errors)
+        if(err["solver_addr"]) {
+          handleFileUploadError(err.responseJSON.errors)
+        } else {
+          $(file_input).addClass("is-invalid")
+        }
       }
     })
   }
