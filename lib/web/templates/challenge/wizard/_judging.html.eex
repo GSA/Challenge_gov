@@ -21,6 +21,7 @@
     <br/>
     <input class="challenge_document_file form-file-control" type="file">
     <div class="challenge_document_upload btn btn-primary">Upload file</div>
+    <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
   </div>              
 
   <br/>

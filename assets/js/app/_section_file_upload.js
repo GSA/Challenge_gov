@@ -4,6 +4,10 @@ $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
   jqXHR.setRequestHeader('X-CSRF-Token', csrf_token);
 });
 
+$(".challenge-file-upload").on("change", ".challenge_document_file", function() {
+  $(this).removeClass("is-invalid")
+})
+
 $(".challenge-file-upload").on("click", ".challenge_document_upload", function() {
   parentComponent = $(this).parents(".challenge-file-upload")
 
@@ -46,6 +50,7 @@ $(".challenge-file-upload").on("click", ".challenge_document_upload", function()
       },
       error: function(err) {
         console.log("Something went wrong")
+        $(fileInput).addClass("is-invalid")
       }
     })
   }
