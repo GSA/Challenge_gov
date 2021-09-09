@@ -21,7 +21,7 @@
       <div class="col individual-winners">
         <h2>Add individual winners with name, rank and photo (optional)</h2>
 
-        <%= render Web.PhaseWinnerView, "winners/_form.html", form: f %>
+        <%= render Web.PhaseWinnerView, "winners/_form.html", form: f, upload_error: @upload_error %>
       </div>
 
       <hr/>

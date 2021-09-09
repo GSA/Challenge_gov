@@ -1,5 +1,8 @@
 <div id="winners-form">
   <div class="js-dynamic-nested-items">
+    <%= if @upload_error do %>
+      <div class="mb-3 invalid-feedback d-block">Files must be .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+    <% end %>
     <%= inputs_for(@form, :winners, [skip_hidden: true], fn winner -> %>
       <div class="js-dynamic-nested-item grid-row mb-2" data-index=<%= winner.index %>>
         <div class="form-group">
