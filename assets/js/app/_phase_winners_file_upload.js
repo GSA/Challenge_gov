@@ -5,11 +5,16 @@ $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
 });
 
 $(".winners-overview").on("change", "#phase_winner_overview_image", (e) => {
+  $(e.target).removeClass("is-invalid")
+})
+
+$(".winners-overview").on("change", "#phase_winner_overview_image", (e) => {
   form = e.target.form
   phaseWinnerId = $(form).data("phase-winner-id")
   formGroup = e.target.closest(".form-group")
 
-  file = $(e.target).prop("files")[0]
+  fileInput = $(e.target)
+  file = fileInput.prop("files")[0]
 
   fd = new FormData()
   fd.append("overview_image", file)
@@ -27,6 +32,7 @@ $(".winners-overview").on("change", "#phase_winner_overview_image", (e) => {
       },
       error: function(err) {
         console.log("Something went wrong", err)
+        $(fileInput).addClass("is-invalid")
       }
     })
   }

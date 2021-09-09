@@ -9,7 +9,10 @@
         <label>Winners overview image (optional)</label>
         <%= hidden_input f, :overview_image_key %>
         <%= hidden_input f, :overview_image_extension %>
-        <%= FormView.file_field(f, :overview_image, label: false) %>
+        <div class="mb-3">
+          <input class="form-control-file" id="phase_winner_overview_image" name="phase_winner[overview_image]" type="file">
+          <div class="invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+        </div>
         <%= render_remove_image_checkbox(f, :overview_image) %>
       </div>
 
