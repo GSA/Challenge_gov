@@ -36,6 +36,7 @@
           <span data-user="<%= @user.email %>", id="current_user"></span>
           <div id="submission_document_upload" class="btn btn-primary">Upload file</div>
           <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+          <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
         </div>
         <span id="submission_document_upload__error-no-email" class="js-error-tag text-danger"></span>
       </div>

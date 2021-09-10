@@ -32,6 +32,7 @@
           <div class="form-group">
             <div><%= label winner, :image, "Upload image (optional)", class: "control-label" %></div>
             <%= file_input winner, :image, data: [field: :image] %>
+            <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
           </div>
 
           <div class="form-group">
@@ -73,6 +74,7 @@
         <div class="js-dynamic-nested-group form-group">
           <div><label class="control-label">Upload image (optional)</label></div>
           <%= file_input :template, :field, data: [field: :image] %>
+          <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
         </div>
 
         <div class="js-dynamic-nested-group form-group">

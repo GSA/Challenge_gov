@@ -11,7 +11,8 @@
         <%= hidden_input f, :overview_image_extension %>
         <div class="mb-3">
           <input class="form-control-file" id="phase_winner_overview_image" name="phase_winner[overview_image]" type="file">
-          <div class="invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+          <div class="invalid-feedback">File must be a .jpg, .jpeg, .png, .gif </div>
+          <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
         </div>
         <%= render_remove_image_checkbox(f, :overview_image) %>
       </div>
