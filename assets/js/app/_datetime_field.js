@@ -43,8 +43,15 @@ $("body").on("input", ".js-time-input", function() {
 })
 
 function setCombinedDatetimeValue(input) {
-  let date = $(".js-date-input").val()
-  let time = $(".js-time-input").val()
+  let date =
+    Object.values(input[0].classList).includes("js-date-input")
+      ? input.val()
+      : input.siblings(".js-date-input").val()
+  let time =
+    Object.values(input[0].classList).includes("js-time-input")
+      ? input.val()
+      : input.siblings(".js-time-input").val()
+
   let utc_time = moment(`${date} ${time}`).utc().format()
 
   utc_time === "Invalid date" ? null : input.siblings("input[type=hidden]").val(utc_time)
