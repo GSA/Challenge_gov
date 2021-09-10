@@ -87,7 +87,7 @@
     <%= Enum.map(@documents, fn document -> %>
       <div class="challenge_uploaded_document">
         <i class="fa fa-paperclip mr-1"></i>
-        <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %>
+        <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
         <%= link to: "", data: [document_id: document.id], class: "challenge_uploaded_document_delete" do %>
           <i class="fa fa-trash"></i>
         <% end %>

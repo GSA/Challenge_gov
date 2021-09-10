@@ -21,6 +21,6 @@
 <div>
   <div class="text-bold">Supporting documents:</div>
   <%= Enum.map(documents_for_section(@challenge.supporting_documents, "judging"), fn document -> %>
-    <div><%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %></div>
+    <div><%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %></div>
   <% end) %>
 </div>
