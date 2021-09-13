@@ -6,10 +6,16 @@ defmodule Web.UserView do
   alias Web.SharedView
   alias Web.FormView
 
-  def name_link(conn, user) do
-    link("#{user.first_name} #{user.last_name} (#{user.email})",
-      to: Routes.user_path(conn, :show, user.id)
-    )
+  def name_link(conn, user, opts \\ [show_email: true]) do
+    if opts[:show_email] == true do
+      link("#{user.first_name} #{user.last_name} (#{user.email})",
+        to: Routes.user_path(conn, :show, user.id)
+      )
+    else
+      link("#{user.first_name} #{user.last_name}",
+        to: Routes.user_path(conn, :show, user.id)
+      )
+    end
   end
 
   def phone_number(%{phone_number: nil}), do: "Not Provided"
