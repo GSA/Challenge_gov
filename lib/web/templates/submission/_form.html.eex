@@ -35,6 +35,8 @@
           <%= file_input f, :document, name: "submission[document][file]", class: "my-3" %>
           <span data-user="<%= @user.email %>", id="current_user"></span>
           <div id="submission_document_upload" class="btn btn-primary">Upload file</div>
+          <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+          <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
         </div>
         <span id="submission_document_upload__error-no-email" class="js-error-tag text-danger"></span>
       </div>
@@ -42,7 +44,7 @@
         <%= Enum.map(@data.documents, fn document -> %>
           <div class="row submission-document-row">
             <i class="fa fa-paperclip mr-1"></i>
-            <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank") %>
+            <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
             <%= link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
               <i class="fa fa-trash"></i>
             <% end %>
@@ -51,7 +53,7 @@
         <%= Enum.map(@changeset.changes[:document_objects] || [], fn document -> %>
           <div class="row submission-document-row">
             <i class="fa fa-paperclip mr-1"></i>
-            <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank") %>
+            <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
             <%= link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
               <i class="fa fa-trash"></i>
             <% end %>

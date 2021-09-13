@@ -6,6 +6,7 @@ import "./_custom_select.js";
 import "./_custom_url_generator.js";
 import "./_date_conversion.js";
 import "./_datetime_field.js";
+import "./_download_confirm.js";
 import "./_dynamic_nested_fields.js";
 import "./_message_center.js";
 import "./_phase_winners_file_upload.js";

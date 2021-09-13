@@ -15,11 +15,18 @@ export const SectionResources = ({label, section, challenge}) => {
       documents.map((document) => {
         return (
           <li>
-            <a className="challenge-tab__resource" key={document.id} target="_blank" href={document.url}>{document.display_name}</a>
+            <a className="challenge-tab__resource" key={document.id} target="_blank" href={document.url} onClick={displayWarning}>{document.display_name}</a>
           </li>
         )
       })
     )
+  }
+
+  const displayWarning = (e) => {
+    let response = confirm("You are about to download a file that was provided to Challenge.gov by a third party.  All file sharing presents risk. It is recommended that you scan all downloaded files for malicious content.")
+    if (response == false) {
+      e.preventDefault()
+    }
   }
 
   return (

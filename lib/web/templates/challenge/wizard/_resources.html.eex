@@ -15,6 +15,7 @@
   <br/>
   <p>This image will display at the top of the resources section</p>
   <%= FormView.file_field(@form, :resource_banner, label: false) do %>
+    <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
     <br/>
     <%= if @data.resource_banner_key do %>
       <p>Current resource banner:</p>
@@ -35,6 +36,8 @@
     <br/>
     <input class="challenge_document_file form-file-control" type="file">
     <div class="challenge_document_upload btn btn-primary">Upload file</div>
+    <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+    <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
   </div>              
 
   <br/>
@@ -43,7 +46,7 @@
     <%= Enum.map(@documents, fn document -> %>
       <div class="challenge_uploaded_document">
         <i class="fa fa-paperclip mr-1"></i>
-        <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %>
+        <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
         <%= link to: "", data: [document_id: document.id], class: "challenge_uploaded_document_delete" do %>
           <i class="fa fa-trash"></i>
         <% end %>
@@ -62,6 +65,8 @@
     <br/>
     <input class="challenge_document_file form-file-control" type="file">
     <div class="challenge_document_upload btn btn-primary">Upload file</div>
+    <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+    <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
   </div>              
 
   <br/>
@@ -70,7 +75,7 @@
     <%= Enum.map(documents_for_section(@changeset.data.supporting_documents, "faq"), fn document -> %>
       <div class="challenge_uploaded_document">
         <i class="fa fa-paperclip mr-1"></i>
-        <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %>
+        <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
         <%= link to: "", data: [document_id: document.id], class: "challenge_uploaded_document_delete" do %>
           <i class="fa fa-trash"></i>
         <% end %>

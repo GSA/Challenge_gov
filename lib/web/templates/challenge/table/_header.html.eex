@@ -9,7 +9,7 @@
       <th>Type</th>
       <th>Subscribers</th>
       <%= if Accounts.has_admin_access?(@user) do %>
-        <th>Owners</th>
+        <th>Managers</th>
         <%= sortable_header(@conn, @sort, @filter, "agency", "Agency") %>
       <% end %>
       <th>Actions</th>
@@ -22,7 +22,7 @@
       <th>Type</th>
       <th>Subscribers</th>
       <%= if Accounts.has_admin_access?(@user) do %>
-        <th>Owners</th>
+        <th>Managers</th>
         <th>Agency</th>
       <% end %>
       <th>Actions</th>

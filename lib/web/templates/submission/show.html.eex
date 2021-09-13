@@ -59,7 +59,7 @@
                   <div class="submission-documents-list">
                     <%= Enum.map(@submission.documents, fn document -> %>
                       <div class="row submission-document-row">
-                        <div class="col"><%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank") %></div>
+                        <div class="col"><%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %></div>
                       </div>
                     <% end) %>
                   </div>

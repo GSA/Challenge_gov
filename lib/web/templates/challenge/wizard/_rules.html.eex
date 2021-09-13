@@ -35,6 +35,8 @@
     <br/>
     <input class="challenge_document_file form-file-control" type="file">
     <div class="challenge_document_upload btn btn-primary">Upload file</div>
+    <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+    <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
   </div>              
 
   <br/>
@@ -43,7 +45,7 @@
     <%= Enum.map(@documents, fn document -> %>
       <div class="challenge_uploaded_document">
         <i class="fa fa-paperclip mr-1"></i>
-        <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %>
+        <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
         <%= link to: "", data: [document_id: document.id], class: "challenge_uploaded_document_delete" do %>
           <i class="fa fa-trash"></i>
         <% end %>

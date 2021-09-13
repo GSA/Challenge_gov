@@ -52,6 +52,7 @@ defmodule Web.PhaseWinnerController do
         |> assign(:challenge, challenge)
         |> assign(:phase, phase)
         |> assign(:changeset, PhaseWinners.edit(phase_winner))
+        |> assign(:upload_error, false)
         |> assign(:action, Routes.phase_winner_path(conn, :update, phase.id))
         |> render("edit.html")
 
@@ -74,12 +75,25 @@ defmodule Web.PhaseWinnerController do
         {:ok, _phase_winner} = PhaseWinners.create(phase, %{"phase_winner" => %{}})
         redirect(conn, to: Routes.phase_winner_path(conn, :edit, phase.id))
 
+      {:error, :something_went_wrong} ->
+        {:ok, phase_winner} = PhaseWinners.get_by_phase_id(phase.id)
+
+        conn
+        |> assign(:user, user)
+        |> assign(:challenge, challenge)
+        |> assign(:phase, phase)
+        |> assign(:changeset, PhaseWinners.edit(phase_winner))
+        |> assign(:upload_error, true)
+        |> assign(:action, Routes.phase_winner_path(conn, :update, phase.id))
+        |> render("edit.html")
+
       {:error, changeset} ->
         conn
         |> assign(:user, user)
         |> assign(:challenge, challenge)
         |> assign(:phase, phase)
         |> assign(:changeset, changeset)
+        |> assign(:action, Routes.phase_winner_path(conn, :update, phase.id))
         |> render("edit.html")
     end
   end

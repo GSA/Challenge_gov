@@ -168,4 +168,75 @@ defmodule Web.MessageContextViewTest do
       assert MessageContextView.filter_active_class(conn, "non_active_filter") == "btn-link"
     end
   end
+
+  describe "rendering audience column" do
+    test "success: header" do
+      %{
+        user_challenge_owner: user
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      assert MessageContextView.maybe_render_audience_header(user) ==
+               {:safe, [60, "th", [], 62, "Audience", 60, 47, "th", 62]}
+    end
+
+    test "failure: do not render header for solver" do
+      %{
+        user_solver: user
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      refute MessageContextView.maybe_render_audience_header(user)
+    end
+
+    test "success: column" do
+      %{
+        message_context: context,
+        user_challenge_owner: user
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      assert MessageContextView.maybe_render_audience_column(user, context) ==
+               {:safe, [60, "td", [], 62, "All", 60, 47, "td", 62]}
+    end
+
+    test "failure: do not render column for solver" do
+      %{
+        message_context: context,
+        user_solver: user
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      refute MessageContextView.maybe_render_audience_column(user, context)
+    end
+  end
+
+  describe "rendering new message button" do
+    test "success", %{conn: conn} do
+      %{
+        user_challenge_owner: user
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      assert MessageContextView.render_new_message_button(conn, user) ==
+               {:safe,
+                [
+                  60,
+                  "a",
+                  [
+                    [32, "class", 61, 34, "btn btn-primary mr-3", 34],
+                    [32, "href", 61, 34, "/messages/new?context=challenge", 34]
+                  ],
+                  62,
+                  "New Message",
+                  60,
+                  47,
+                  "a",
+                  62
+                ]}
+    end
+
+    test "failure: do not render for solver", %{conn: conn} do
+      %{
+        user_solver: user
+      } = MessageContextStatusHelpers.create_message_context_status()
+
+      refute MessageContextView.render_new_message_button(conn, user)
+    end
+  end
 end

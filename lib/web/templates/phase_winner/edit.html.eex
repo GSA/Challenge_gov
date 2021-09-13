@@ -20,7 +20,8 @@
       changeset: @changeset, 
       action: @action,
       challenge: @challenge,
-      phase: @phase
+      phase: @phase,
+      upload_error: @upload_error
     %>
   </div>
 </div>
