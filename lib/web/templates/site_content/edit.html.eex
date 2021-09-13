@@ -21,7 +21,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card">        
-          <%= render Web.SiteContentView, "_form.html", changeset: @changeset, data: @changeset.data, path: Routes.site_content_path(@conn, :update, @content.section) %>
+          <%= render Web.SiteContentView, "_form.html", changeset: @changeset, data: @changeset.data, section: @content.section, path: Routes.site_content_path(@conn, :update, @content.section) %>
         </div>
       </div>
     </div>
