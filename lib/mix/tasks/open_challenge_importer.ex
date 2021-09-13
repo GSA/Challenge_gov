@@ -9,6 +9,7 @@ defmodule Mix.Tasks.OpenChallengeImporter do
 
   def run(_file) do
     Mix.Task.run("app.start")
+    Logger.configure(level: :error)
 
     result = File.read!("lib/mix/tasks/sample_data/feed-open.json")
 
@@ -38,6 +39,8 @@ defmodule Mix.Tasks.OpenChallengeImporter do
   Create a challenge based off mapped fields
   """
   def create_challenge(json, import_user_id) do
+    scanned_types = ImportHelper.scan_types(json["challenge-id"], json["type-of-challenge"])
+
     result =
       Challenges.import_create(%{
         "id" => json["challenge-id"],
@@ -55,9 +58,9 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         "tagline" => json["tagline"],
         "legal_authority" => json["legal-authority"],
         "fiscal_year" => json["fiscal-year"],
-        "primary_type" => Enum.at(ImportHelper.format_types(json["type-of-challenge"]), 0),
-        "types" => Enum.slice(ImportHelper.format_types(json["type-of-challenge"]), 1..3),
-        "other_type" => Enum.join(ImportHelper.format_types(json["type-of-challenge"]), ";"),
+        "primary_type" => Enum.at(scanned_types, 0),
+        "types" => Enum.slice(scanned_types, 1..3),
+        "other_type" => Enum.at(scanned_types, 4),
         "prize_total" => ImportHelper.sanitize_prize_amount(json["total-prize-offered-cash"]),
         "federal_partners" =>
           ImportHelper.match_federal_partners(json["partner-agencies-federal"]),
