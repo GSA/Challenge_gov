@@ -13,14 +13,14 @@
 <div>
   <div class="text-bold">Resource documents:</div>
   <%= Enum.map(documents_for_section(@challenge.supporting_documents, "resources"), fn document -> %>
-    <div><%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %></div>
+    <div><%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %></div>
   <% end) %>
 </div>
 <br/>
 <div>
   <div class="text-bold">FAQ documents:</div>
   <%= Enum.map(documents_for_section(@challenge.supporting_documents, "faq"), fn document -> %>
-    <div><%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank") %></div>
+    <div><%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %></div>
   <% end) %>
 </div>
 <br/>
