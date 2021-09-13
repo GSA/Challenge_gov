@@ -82,12 +82,6 @@
                       <p>Users</p>
                     <% end %>
                   </li>
-                  <li class="nav-item">
-                    <%= link(to: Routes.agency_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "agencies")}") do %>
-                      <i class="nav-icon fas fa-building"></i>
-                      <p>Agencies</p>
-                    <% end %>
-                  </li>
                 <% end %>
                 <%= render_message_center_icon(@conn, u) %>
               </ul>
@@ -96,15 +90,27 @@
               <nav class="mt-5">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                   <li class="nav-item">
-                    <%= link(to: Routes.reports_path(@conn, :new), class: "nav-link #{tab_selected(@conn, "reports")}") do %>
-                    <i class="nav-icon fas fa-download"></i>
-                    <p>Reports</p>
-                    <% end %>
-                  </li>
-                  <li class="nav-item">
                     <%= link(to: Routes.site_content_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "site_content")}") do %>
                     <i class="nav-icon fas fa-list-alt"></i>
                     <p>Site Management</p>
+                    <% end %>
+                  </li>
+                  <li class="nav-item">
+                    <%= link(to: Routes.analytics_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "analytics")}") do %>
+                    <i class="nav-icon fa fa-th-large"></i>
+                    <p>Analytics</p>
+                    <% end %>
+                  </li>
+                </ul>
+              </nav>
+            <% end %>
+            <%= if ChallengeGov.Accounts.is_challenge_owner?(u) do %>
+              <nav class="mt-5">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                  <li class="nav-item">
+                    <%= link(to: Routes.analytics_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "analytics")}") do %>
+                    <i class="nav-icon fa fa-th-large"></i>
+                    <p>Analytics</p>
                     <% end %>
                   </li>
                 </ul>
