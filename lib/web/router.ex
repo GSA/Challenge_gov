@@ -164,6 +164,7 @@ defmodule Web.Router do
 
     get("/reports/security_log", ReportsController, :export_security_log)
     get("/reports/certification_log", ReportsController, :export_certification_log)
+    get("/reports", ReportsController, :new)
 
     resources("/agencies", AgencyController)
     post("/agencies/:id/remove_logo", AgencyController, :remove_logo, as: :agency)

@@ -2,8 +2,6 @@ defmodule Web.SiteContentController do
   use Web, :controller
 
   alias ChallengeGov.SiteContent
-  alias ChallengeGov.Reports.Report
-  alias ChallengeGov.Reports
 
   plug Web.Plugs.FetchPage when action in [:index]
 
@@ -19,9 +17,7 @@ defmodule Web.SiteContentController do
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
 
-    [years, months, days] = Reports.generate_date_options()
     site_content = SiteContent.all(filter: filter, sort: sort, page: page, per: per)
-    changeset = Report.changeset(%Report{}, %{"year" => nil, "month" => nil, "day" => nil})
 
     conn
     |> assign(:user, user)
@@ -29,10 +25,6 @@ defmodule Web.SiteContentController do
     |> assign(:sort, sort)
     |> assign(:site_content, site_content.page)
     |> assign(:pagination, site_content.pagination)
-    |> assign(:years, years)
-    |> assign(:months, months)
-    |> assign(:days, days)
-    |> assign(:changeset, changeset)
     |> render("index.html")
   end
 
