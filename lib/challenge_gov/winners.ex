@@ -54,7 +54,9 @@ defmodule ChallengeGov.Winners do
     path = image_path(phase_winner, key, file.extension)
     meta = [{:content_disposition, ~s{attachment; filename="#{file.filename}"}}]
 
-    case Storage.upload(file, path, meta: meta) do
+    allowed_extensions = [".jpg", ".jpeg", ".png", ".gif"]
+
+    case Storage.upload(file, path, meta: meta, extensions: allowed_extensions) do
       :ok ->
         phase_winner
         |> Winner.image_changeset(key, file.extension)

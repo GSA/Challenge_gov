@@ -3,6 +3,7 @@ defmodule Web.Api.DocumentController do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.SupportingDocuments
+  alias Web.ErrorView
 
   action_fallback(Web.FallbackController)
 
@@ -20,6 +21,12 @@ defmodule Web.Api.DocumentController do
       |> put_status(:ok)
       |> assign(:document, document)
       |> render("show.json")
+    else
+      _error ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> put_view(ErrorView)
+        |> render("errors.json")
     end
   end
 

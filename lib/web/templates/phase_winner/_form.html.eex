@@ -9,7 +9,11 @@
         <label>Winners overview image (optional)</label>
         <%= hidden_input f, :overview_image_key %>
         <%= hidden_input f, :overview_image_extension %>
-        <%= FormView.file_field(f, :overview_image, label: false) %>
+        <div class="mb-3">
+          <input class="form-control-file" id="phase_winner_overview_image" name="phase_winner[overview_image]" type="file">
+          <div class="invalid-feedback">File must be a .jpg, .jpeg, .png, .gif </div>
+          <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
+        </div>
         <%= render_remove_image_checkbox(f, :overview_image) %>
       </div>
 
@@ -18,7 +22,7 @@
       <div class="col individual-winners">
         <h2>Add individual winners with name, rank and photo (optional)</h2>
 
-        <%= render Web.PhaseWinnerView, "winners/_form.html", form: f %>
+        <%= render Web.PhaseWinnerView, "winners/_form.html", form: f, upload_error: @upload_error %>
       </div>
 
       <hr/>

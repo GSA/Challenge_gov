@@ -79,6 +79,8 @@
     <br/>
     <input class="challenge_document_file form-file-control" type="file">
     <div class="challenge_document_upload btn btn-primary">Upload file</div>
+    <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+    <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
   </div>
 
   <br/>
@@ -120,6 +122,7 @@
       <div class="row logo-file-field collapse">
         <%= FormView.file_field(@form, :logo, label: "Logo", required: true) %>
       </div>
+      <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
     </div>
     <%= if @data.logo_key do %>
       <p>Current logo:</p>
