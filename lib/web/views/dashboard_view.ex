@@ -130,26 +130,16 @@ defmodule Web.DashboardView do
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: Routes.reports_path(Endpoint, :new),
+            target: Routes.site_content_path(Endpoint, :index),
             icon: "/images/dashboard_icons/reporting.svg",
-            title: "Reporting",
-            description: "Conduct reporting activities."
+            title: "Site management",
+            description: "Manage content and perform site management tasks."
           ),
           render("_card_link.html",
             target: Routes.analytics_path(Endpoint, :index),
             icon: "/images/dashboard_icons/analytics.svg",
             title: "Analytics",
             description: "View web analytics related to your challenges."
-          )
-        ]
-      end,
-      content_tag :div, class: "row" do
-        [
-          render("_card_link.html",
-            target: Routes.site_content_path(Endpoint, :index),
-            icon: "/images/dashboard_icons/reporting.svg",
-            title: "Site management",
-            description: "Manage content and perform site management tasks."
           )
         ]
       end

@@ -5,13 +5,14 @@ defmodule Web.ReportsController do
   alias ChallengeGov.CertificationLogs
   alias Web.ReportsView
   alias ChallengeGov.Reports.Report
+  alias ChallengeGov.Reports
 
   plug(Web.Plugs.EnsureRole, [:super_admin, :admin])
 
   def new(conn, _params) do
     %{current_user: user} = conn.assigns
 
-    [years, months, days] = generate_date_options()
+    [years, months, days] = Reports.generate_date_options()
 
     changeset = Report.changeset(%Report{}, %{"year" => nil, "month" => nil, "day" => nil})
 
@@ -47,7 +48,7 @@ defmodule Web.ReportsController do
         conn
 
       {:error, changeset} ->
-        [years, months, days] = generate_date_options()
+        [years, months, days] = Reports.generate_date_options()
         %{current_user: user} = conn.assigns
 
         conn
@@ -95,17 +96,5 @@ defmodule Web.ReportsController do
       end)
 
     conn
-  end
-
-  def generate_date_options do
-    months =
-      Enum.reduce(1..12, [], fn num, acc ->
-        Enum.concat(acc, [{Timex.month_name(num), num}])
-      end)
-
-    days = Range.new(1, 31)
-    years = Range.new(Timex.now().year, 2020)
-
-    [years, months, days]
   end
 end
