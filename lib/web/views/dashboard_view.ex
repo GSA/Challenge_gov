@@ -3,6 +3,7 @@ defmodule Web.DashboardView do
 
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Accounts
+  alias ChallengeGov.MessageContextStatuses
   alias Web.Endpoint
 
   def recertification_warning(conn, user) do
@@ -102,10 +103,23 @@ defmodule Web.DashboardView do
         challenge_owner_card_links()
 
       Accounts.is_solver?(user) ->
-        solver_card_links()
+        solver_card_links(user)
 
       true ->
         content_tag(:div, "")
+    end
+  end
+
+  defp render_solver_message_center_link(user) do
+    if MessageContextStatuses.has_messages?(user) do
+      render("_card_link.html",
+        target: Routes.message_context_path(Endpoint, :index),
+        icon: "/images/dashboard_icons/reporting.svg",
+        title: "Message Center",
+        description: "View and send messages to Challenge.Gov users."
+      )
+    else
+      []
     end
   end
 
@@ -130,26 +144,26 @@ defmodule Web.DashboardView do
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: Routes.reports_path(Endpoint, :new),
+            target: Routes.message_context_path(Endpoint, :index),
             icon: "/images/dashboard_icons/reporting.svg",
-            title: "Reporting",
-            description: "Conduct reporting activities."
+            title: "Message Center",
+            description: "View and send messages to Challenge.Gov users."
           ),
           render("_card_link.html",
-            target: Routes.analytics_path(Endpoint, :index),
-            icon: "/images/dashboard_icons/analytics.svg",
-            title: "Analytics",
-            description: "View web analytics related to your challenges."
+            target: Routes.site_content_path(Endpoint, :index),
+            icon: "/images/dashboard_icons/reporting.svg",
+            title: "Site management",
+            description: "Manage content and perform site management tasks."
           )
         ]
       end,
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: Routes.site_content_path(Endpoint, :index),
-            icon: "/images/dashboard_icons/reporting.svg",
-            title: "Site management",
-            description: "Manage content and perform site management tasks."
+            target: Routes.analytics_path(Endpoint, :index),
+            icon: "/images/dashboard_icons/analytics.svg",
+            title: "Analytics",
+            description: "View web analytics related to your challenges."
           )
         ]
       end
@@ -177,10 +191,10 @@ defmodule Web.DashboardView do
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: Routes.reports_path(Endpoint, :new),
+            target: Routes.message_context_path(Endpoint, :index),
             icon: "/images/dashboard_icons/reporting.svg",
-            title: "Reporting",
-            description: "Conduct reporting activities."
+            title: "Message Center",
+            description: "View and send messages to Challenge.Gov users."
           ),
           render("_card_link.html",
             target: Routes.dashboard_path(Endpoint, :index),
@@ -203,7 +217,7 @@ defmodule Web.DashboardView do
     ]
   end
 
-  defp solver_card_links() do
+  defp solver_card_links(user) do
     content_tag :div, class: "row" do
       [
         render("_card_link.html",
@@ -223,7 +237,8 @@ defmodule Web.DashboardView do
           icon: "/images/dashboard_icons/help.svg",
           title: "Help",
           description: "Help Center"
-        )
+        ),
+        render_solver_message_center_link(user)
       ]
     end
   end

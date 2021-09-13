@@ -7,7 +7,7 @@
       <div class="ml-3 d-flex flex-column justify-content-center">
         <h3 class="dashboard-card__title"><%= @title %></h3>
         <%= if @description do %>
-          <p class="mb-0"><%= @description %></p>
+          <span class="mb-0"><%= @description %></span>
         <% end %>
       </div>
     </div>

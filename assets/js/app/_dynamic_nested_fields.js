@@ -117,8 +117,14 @@ $(".timeline-event-fields").on("click", ".add-nested-section", (e) => {
 
     label.attr("for", newId)
 
-    inputs.attr("id", newId)
-          .attr("name", newName)
+    if (Object.keys(inputs).length > 3) {
+      $(Object.values(inputs)[0]).attr("id", `${newId}_picker`)
+      $(Object.values(inputs)[1]).attr("id", newId)
+    } else {
+      inputs.attr("id", newId)
+    }
+
+    inputs.attr("name", newName)
           .prop("required", true)
   })
 

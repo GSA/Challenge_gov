@@ -49,7 +49,7 @@
       <div class="form-group nested-form-group">
         <div class="form-group">
           <label for="challenge_phases_0_start_date">Phase 1 submission start date and time</label><span class="required">*</span>
-          <input class="form-control js-datetime-input" id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="datetime-local" required="true">
+          <input class="form-control js-datetime-input" id="challenge_phases_0_start_date_picker" label="Start date" name="challenge[phases][0][start_date]" type="datetime-local" required="true">
           <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">              
         </div>
       </div>
@@ -57,7 +57,7 @@
       <div class="form-group nested-form-group">
         <div class="form-group">
           <label for="challenge_phases_0_start_date">Phase 1 submission end date and time *</label>
-          <input class="form-control js-datetime-input" id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="datetime-local" required="true">
+          <input class="form-control js-datetime-input" id="challenge_phases_0_end_date_picker" label="End date" name="challenge[phases][0][end_date]" type="datetime-local" required="true">
           <input id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="hidden">              
         </div>
       </div>

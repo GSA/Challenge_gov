@@ -15,3 +15,34 @@
 </div>
 
 <%= render Web.SiteContentView, "table/_table.html", conn: @conn, user: @user, site_content: @site_content, pagination: @pagination, sort: @sort, filter: @filter, sortable: true %>
+
+<br/>
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 d-flex">
+        <div class="card nav_card mr-5">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <dl class="h-75">
+              <dt>Reporting</dt>
+              <dd>Certification and security reports</dd>
+              <br>
+            </dl>
+            <%= link "View Reports", to: Routes.reports_path(@conn, :new), class: "btn btn-primary" %>
+          </div>
+        </div>
+        <div class="card nav_card">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <dl class="h-75">
+              <dt>Agencies</dt>
+              <dd>View and manage agencies</dd>
+              <br>
+            </dl>
+            <%= link "View Agencies", to: Routes.agency_path(@conn, :index), class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

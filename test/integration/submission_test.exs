@@ -1,4 +1,4 @@
-defmodule ChallengeGov.SubmissionTest do
+defmodule ChallengeGov.SubmissionIntegrationTest do
   use Web.FeatureCase, async: true
 
   alias ChallengeGov.TestHelpers.AccountHelpers
