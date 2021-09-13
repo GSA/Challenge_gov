@@ -101,6 +101,14 @@
                     <p>Site Management</p>
                     <% end %>
                   </li>
+                  <%= if ChallengeGov.Accounts.has_admin_access?(u) do %>
+                    <li class="nav-item">
+                      <%= link(to: Routes.analytics_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "analytics")}") do %>
+                      <i class="nav-icon fa fa-th-large"></i>
+                      <p>Analytics</p>
+                      <% end %>
+                    </li>
+                  <% end %>
                 </ul>
               </nav>
             <% end %>
