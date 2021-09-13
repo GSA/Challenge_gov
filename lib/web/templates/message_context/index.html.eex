@@ -20,8 +20,8 @@
       <%= form_for(@conn, Routes.message_context_path(@conn, :index, filter: @filter), [method: :get, as: :filter], fn f -> %>
         <div class="row mb-3">
           <div class="col">
-            <%= link("New Message", to: Routes.message_context_path(@conn, :new, context: "challenge"), class: "btn btn-primary mr-3") %>
-              <%= select(f, :challenge_id, Enum.map(@challenges, &{&1.title, &1.id}), value: @filter["challenge_id"], prompt: "Filter by challenge", class: "js-select2 message_center__challenge_filter") %>
+            <%= render_new_message_button(@conn, @user) %>
+            <%= select(f, :challenge_id, Enum.map(@challenges, &{&1.title, &1.id}), value: @filter["challenge_id"], prompt: "Filter by challenge", class: "js-select2 message_center__challenge_filter") %>
           </div>
           <div class="col text-right">
             <%= link("All", to: Routes.message_context_path(@conn, :index), class: "btn #{filter_active_class(@conn, "all")}") %>
@@ -43,7 +43,7 @@
                     <th></th>
                     <th>Date</th>
                     <th>Challenge title</th>
-                    <th>Audience</th>
+                    <%= maybe_render_audience_header(@user) %>
                     <th>Last author</th>
                     <th>Last author role</th>
                     <th>Message snippet</th>
@@ -60,7 +60,7 @@
                       </td>
                       <td><%= Web.SharedView.local_datetime_tag(message_context_status.context.updated_at) %></td>
                       <td><%= display_challenge_title_link(message_context_status.context) %></td>
-                      <td><%= display_audience(@user, message_context_status.context) %></td>
+                      <%= maybe_render_audience_column(@user, message_context_status.context) %>
                       <td><%= display_last_author_name(message_context_status.context) %></td>
                       <td><%= display_last_author_role(message_context_status.context) %></td>
                       <td class="message_center__snippet"><%= display_last_message_snippet(message_context_status.context) %></td>

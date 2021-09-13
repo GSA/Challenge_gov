@@ -22,9 +22,6 @@
         <div class="card-body">
           <div class="row">
             <div class="col">To: <%= display_audience(@user, @message_context) %></div>
-            <div class="col text-right">
-              <%= link "Change", to: "#" %>
-            </div>
           </div>
 
           <hr/>
