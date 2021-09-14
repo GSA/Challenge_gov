@@ -1,6 +1,6 @@
 <%= hidden_input @form, :timeline_events, value: [] %>
 
-<h3>Add timeline details</h3>
+<h3>Timeline (optional)</h3>
 <br/>
 
 <p>Add events to your timeline (optional)</p>
@@ -16,10 +16,13 @@
 
         <div class="<%= FormView.nested_form_group_classes(@form, :phases, :title, 0) %> row">
           <div class="col">
-            <%= label timeline_event_form, :title, "Timeline event title" %>
-            <span class="required">*</span>
-            <%= text_input timeline_event_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, timeline_event_form.index)}", required: true %>
-            <%= error_tag(timeline_event_form, :title) %>
+            <div class="form-group">
+              <%= label timeline_event_form, :title, "Timeline event title" %>
+              <span class="required">*</span>
+              <%= text_input timeline_event_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, timeline_event_form.index)}", required: true %>
+              <%= error_tag(timeline_event_form, :title) %>
+              <p class="ml-2 text-muted">If you have key dates you want reflected, please include them in your description text. Consider including key dates for informational webinars, judging period, winner announcements, different phases, etc.</p>
+            </div>
           </div>
         </div>
 
@@ -34,6 +37,7 @@
               )%>    
               <%= hidden_input(timeline_event_form, :date) %>
               <%= error_tag(timeline_event_form, :date) %>
+              <p class="ml-2 text-muted">Use this format: MM/DD/YYYY TIME OF DAY (Example: 06/19/2020 05:00 PM).</p>
             </div>
           </div>
         </div>
@@ -57,6 +61,7 @@
           <%= label :template, :title, "Timeline event title", class: "template-label" %>
           <span class="required">*</span>
           <%= text_input :template, :title, class: "form-control template-input" %>
+          <p class="ml-2 text-muted">If you have key dates you want reflected, please include them in your Description text. Consider including key dates for informational webinars, judging period, winner announcements, different phases, etc.</p>
         </div>
       </div>
 
@@ -69,6 +74,7 @@
               class: Enum.join([FormView.form_control_classes(@form, :date), "js-datetime-input template-input"], " ")
             )%>    
             <%= hidden_input(:template, :date, class: "template-input") %>
+            <p class="ml-2 text-muted">Use this format: MM/DD/YYYY TIME OF DAY (Example: 06/19/2020 05:00 PM).</p>
           </div>
         </div>
       </div>

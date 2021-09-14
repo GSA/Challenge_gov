@@ -1,4 +1,4 @@
-<h4>Add resources</h4>
+<h4>Resources</h4>
 <br/>
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 <br/>
@@ -7,13 +7,14 @@
   <label for="challenge_prize_description">Frequently asked questions (optional)</label>
   <%= FormView.rt_textarea_field(@form, :faq) %>
 </div>
-<br/>
+<p class="ml-2 mb-4 text-muted">Provide a general summary of any information you want your solvers to know about the challenge.</p>
 <hr/>
 
 <div class="col">
   <label class="control-label">Upload image (optional)</label>
   <br/>
-  <p>This image will display at the top of the resources section</p>
+  <p class="ml-2 mb-0 text-muted">Provide any image you wish to display at the top of the resources section for the public solvers.</p>
+  <p class="ml-2 text-muted"><em>This image will display at the top of the resources section</em></p>
   <%= FormView.file_field(@form, :resource_banner, label: false) do %>
     <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
     <br/>
@@ -30,6 +31,7 @@
 
 <div class="challenge-file-upload col" data-section=<%= @section %>>
   <label class="control-label">Upload supporting documents (optional)</label>
+  <p class="ml-2 text-muted">If you are unable to host challenge related documents on an agency or challenge specific site you can provide additional documentation within the resources tab. All files must be 508 compliant.</p>
   <div class="col">
     <label for="challenge_document_name" class="control-label">File name (optional)</label>
     <input class="challenge_document_name form-control" type="text">

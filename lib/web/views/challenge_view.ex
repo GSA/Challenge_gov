@@ -309,7 +309,7 @@ defmodule Web.ChallengeView do
       [
         label(form, :challenge_owners, class: "col-md-4") do
           [
-            "Challenge Owners ",
+            "Challenge Managers ",
             content_tag(:span, "*", class: "required")
           ]
         end,

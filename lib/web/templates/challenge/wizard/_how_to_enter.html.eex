@@ -1,11 +1,11 @@
-<h4>Add how to enter details</h4>
-<br/>
+<h4>How to Enter</h4>
+<p class="ml-2 mb-0 text-muted form__note"><em>listed per phase</em></p>
+<p class="ml-2 text-muted">Provide any specific instructions or entry guidelines your solvers need to know, including any registration requirements.</p>
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
-<br/>
 
 <%= inputs_for(@form, :phases, fn ff -> %>
   <div class="col">
-    <label><%= "Phase #{ff.index + 1}: #{ff.data.title}" %> <span class="required">*</span></label>
+    <label><%= "Entry details - phase #{ff.index + 1}: #{ff.data.title}" %> <span class="required">*</span></label>
     <%= FormView.rt_textarea_field(ff, :how_to_enter) %>
   </div>
   <br/>
@@ -14,3 +14,4 @@
 <div class="col">
   <%= FormView.text_field(@form, :how_to_enter_link, label: "External website how-to-enter link (optional)") %>
 </div>
+<p class="ml-2 text-muted"><b>How to Enter:</b> Provide the website URL or email address that is specific to any entry guidelines.</p>
