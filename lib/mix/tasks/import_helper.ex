@@ -190,17 +190,25 @@ defmodule Mix.Tasks.ImportHelper do
   end
 
   # Types Helper
-  def scan_types(challenge_id, types) do
+  def scan_types(challenge_id, types, mappings \\ %{}) do
     types = format_types(types)
 
-    Enum.flat_map(types, fn type ->
-      if Enum.member?(Challenge.challenge_types(), type) do
-        [type]
-      else
-        closest_match = find_closest_matching_type(type)
-        verify_type_match(challenge_id, type, closest_match)
-      end
-    end)
+    scanned_types =
+      Enum.flat_map(types, fn type ->
+        if Enum.member?(Challenge.challenge_types(), type) do
+          [type]
+        else
+          closest_match = find_closest_matching_type(type)
+          verify_type_match(challenge_id, type, closest_match, mappings)
+        end
+      end)
+
+    mappings = generate_type_mappings(mappings, types, scanned_types)
+
+    # credo:disable-for-next-line
+    IO.inspect(mappings)
+
+    {scanned_types, mappings}
   end
 
   defp find_closest_matching_type(type) do
@@ -209,19 +217,25 @@ defmodule Mix.Tasks.ImportHelper do
     end)
   end
 
-  defp verify_type_match(challenge_id, type, closest_match) do
+  defp verify_type_match(challenge_id, type, closest_match, mappings) do
     score = String.jaro_distance(closest_match, type)
 
-    response =
-      Mix.shell().yes?("""
-      Does this look right?
-      ID #{challenge_id}: #{type} -> #{closest_match} (#{score})
-      """)
+    existing_type_map = Map.get(mappings, type)
 
-    if response do
-      [closest_match]
+    if existing_type_map do
+      [existing_type_map]
     else
-      pick_new_types()
+      response =
+        Mix.shell().yes?("""
+        Does this look right?
+        ID #{challenge_id}: #{type} -> #{closest_match} (#{score})
+        """)
+
+      if response do
+        [closest_match]
+      else
+        pick_new_types()
+      end
     end
   end
 
@@ -259,6 +273,18 @@ defmodule Mix.Tasks.ImportHelper do
     {result, _index} = Enum.at(available_types, response)
 
     result
+  end
+
+  def generate_type_mappings(mappings, types, scanned_types) do
+    if length(types) == length(scanned_types) do
+      types
+      |> Enum.with_index()
+      |> Enum.reduce(mappings, fn {type, index}, mappings ->
+        Map.put_new(mappings, type, Enum.at(scanned_types, index))
+      end)
+    else
+      mappings
+    end
   end
 
   def format_types(""), do: []

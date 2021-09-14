@@ -13,9 +13,6 @@ defmodule Mix.Tasks.OpenChallengeImporter do
 
     result = File.read!("lib/mix/tasks/sample_data/feed-open.json")
 
-    # BOOKMARK: Set proper headers for this CSV and try opening them
-    # Figure out other problem fields to export or only export when problems detected
-    # Go to fixing any editing using imported=true to skip validations
     output_file = ImportHelper.prep_import_output_file("feed-open.csv")
 
     import_user_id = ImportHelper.import_user().id
@@ -23,9 +20,10 @@ defmodule Mix.Tasks.OpenChallengeImporter do
     case Jason.decode(result) do
       {:ok, json} ->
         json["_challenge"]
-        |> Enum.each(fn challenge ->
+        # credo:disable-for-next-line
+        |> Enum.reduce(%{}, fn challenge, mappings ->
           ImportHelper.create_import_output_file(output_file, challenge)
-          create_challenge(challenge, import_user_id)
+          create_challenge(challenge, import_user_id, mappings)
         end)
 
       {:error, error} ->
@@ -38,8 +36,9 @@ defmodule Mix.Tasks.OpenChallengeImporter do
   @doc """
   Create a challenge based off mapped fields
   """
-  def create_challenge(json, import_user_id) do
-    scanned_types = ImportHelper.scan_types(json["challenge-id"], json["type-of-challenge"])
+  def create_challenge(json, import_user_id, mappings) do
+    {scanned_types, mappings} =
+      ImportHelper.scan_types(json["challenge-id"], json["type-of-challenge"], mappings)
 
     result =
       Challenges.import_create(%{
@@ -94,5 +93,7 @@ defmodule Mix.Tasks.OpenChallengeImporter do
       {:error, error} ->
         error
     end
+
+    mappings
   end
 end
