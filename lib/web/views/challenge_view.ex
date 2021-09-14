@@ -85,8 +85,15 @@ defmodule Web.ChallengeView do
   end
 
   defp status_auto_publish_date(%{status: "approved", auto_publish_date: auto_publish_date})
-       when not is_nil(auto_publish_date),
-       do: " (Publishes #{SharedView.readable_datetime(auto_publish_date)})"
+       when not is_nil(auto_publish_date) do
+    [
+      " (Publishes ",
+      content_tag(:span, "#{SharedView.readable_datetime(auto_publish_date)}",
+        class: "js-local-datetime"
+      ),
+      ")"
+    ]
+  end
 
   defp status_auto_publish_date(_), do: ""
 
