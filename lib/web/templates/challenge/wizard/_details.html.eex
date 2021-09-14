@@ -70,7 +70,7 @@
 
 <div class="col">
   <label><%= "Long description (4000 character limit)" %> <span class="required">*</span></label>
-  <%= FormView.rt_textarea_field(@form, :description) %>
+  <%= FormView.rt_textarea_field(@form, :description, limit: 4000) %>
   <p class="ml-2 text-muted">Provide a detailed overview of your challenge, including any background on the problem you’re trying to solve, and any key dates you want to highlight.</p>
 </div>
 

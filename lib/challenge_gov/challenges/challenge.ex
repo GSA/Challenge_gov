@@ -75,6 +75,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:type, :string)
     field(:description, :string)
     field(:description_delta, :string)
+    field(:description_length, :integer, virtual: true)
     field(:brief_description, :string)
     field(:brief_description_delta, :string)
     field(:brief_description_length, :integer, virtual: true)
@@ -284,6 +285,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :tagline,
       :description,
       :description_delta,
+      :description_length,
       :brief_description,
       :brief_description_delta,
       :brief_description_length,
