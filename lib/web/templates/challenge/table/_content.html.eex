@@ -4,8 +4,8 @@
       <td><%= challenge.id %></td>
       <td><%= challenge.title %></td>
       <td><%= status_display_name(challenge) %></td>
-      <td><%= Web.SharedView.readable_date(challenge.start_date) %></td>
-      <td><%= Web.SharedView.readable_date(challenge.end_date) %></td>
+      <td class="js-local-date"><%= Web.SharedView.readable_date(challenge.start_date) %></td>
+      <td class="js-local-date"><%= Web.SharedView.readable_date(challenge.end_date) %></td>
       <td><%= challenge.primary_type %></td>
       <td><%= challenge.gov_delivery_subscribers %></td>
       <%= if Accounts.has_admin_access?(@user) do %>
