@@ -2,6 +2,7 @@
   <div class="container-fluid">
     <%= SharedView.render_breadcrumbs([
       %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
+      %{text: "Site Management", route: Routes.site_content_path(@conn, :index)},
       %{text: "Agencies"}
     ])%>
     <div class="row mb-2">
