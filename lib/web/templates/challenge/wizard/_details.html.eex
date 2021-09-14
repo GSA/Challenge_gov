@@ -5,14 +5,17 @@
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 <br/>
 
-<%= FormView.text_field(@form, :title, label: "Challenge title", limit: 90, required: true) %>
-<%= FormView.text_field(@form, :tagline, label: "Tagline (help text: Appears on challenge tiles)", limit: 90, required: true) %>
+<%= FormView.text_field(@form, :title, label: "Challenge title (90 character limit)", limit: 90, required: true) %>
+<p class="ml-2 text-muted">Provide the official title of your challenge. Your challenge title will appear in your challenge’s listing tile on the Challenge.gov homepage.</p>
+<%= FormView.text_field(@form, :tagline, label: "Tagline (90 character limit)", limit: 90, required: true) %>
+<p class="ml-2 text-muted">Provide a clear one-sentence call to action for solvers - essentially your challenge’s headline. It is required that taglines be limited to 90 characters or less. The tagline will also appear at the top of your individual challenge page, and on the challenge preview tile.</p>
 
 <hr/>
 
-<%= FormView.select_field(@form, :primary_type, collection: Challenges.challenge_types(), class: "js-challenge-type", label: "Primary challenge type ", prompt: "", required: true) %>
+<%= FormView.select_field(@form, :primary_type, collection: Challenges.challenge_types(), class: "js-challenge-type", label: "Primary challenge type (select from list)", prompt: "", required: true) %>
+<p class="ml-2 text-muted">Select a category that best describes your challenge.</p>
 <div class="<%= FormView.form_group_classes(@form, :types) %>">
-  <label for="challenge_types" class="col">Additional challenge type (optional)</label>
+  <label for="challenge_types" class="col">Additional challenge type <em>(optional)</em></label>
   <div class="col">
     <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
@@ -22,7 +25,7 @@
   </div>
 </div>
 <div class="<%= FormView.form_group_classes(@form, :types) %>">
-  <label for="challenge_types" class="col">Additional challenge type (optional)</label>
+  <label for="challenge_types" class="col">Additional challenge type <em>(optional)</em></label>
   <div class="col">
     <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
@@ -32,7 +35,7 @@
   </div>
 </div>
 <div class="<%= FormView.form_group_classes(@form, :types) %>">
-  <label for="challenge_types" class="col">Additional challenge type (optional)</label>
+  <label for="challenge_types" class="col">Additional challenge type <em>(optional)</em></label>
   <div class="col">
     <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
@@ -41,32 +44,34 @@
     <%= error_tag(@form, :types) %>
   </div>
 </div>
-<%= FormView.text_field(@form, :other_type, label: "Other challenge type (optional)", limit: 45) %>
+<%= FormView.text_field(@form, :other_type, label: "Other challenge type (optional) (45 character limit)", limit: 45) %>
+<p class="ml-2 text-muted">Free type a category that best describe your challenge</p>
 
 <hr/>
 
 <div class="form-group">
   <%= label @form, :custom_url, "Custom url (optional)", class: "col-md-4" %>
   <div class="ml-2">
-    <p>If no custom URL is provided, the challenge URL will default to the challenge title.</p>
+    <p class="ml-2 text-muted">If no custom URL is provided, the challenge URL will default to the challenge title.</p>
     <span>https://www.challenge.gov/#/challenge/</span><span id="custom-url-example"></span>
   </div>
   <%= FormView.text_field(@form, :custom_url, label: nil, placeholder: "my-custom-challenge-name") %>
 </div>
 
-<p class="ml-2 mb-0">Existing external challenge link (optional)</p>
-<%= FormView.text_field(@form, :external_url, label: "If the challenge is hosted outside of the Challenge.gov platform, enter the link for users to visit that website.") %>
-
+<%= FormView.text_field(@form, :external_url, label: "Existing external challenge link (optional)") %>
+<p class="ml-2 text-muted">If the challenge is hosted outside of the Challenge.gov platform, enter the link for users to visit that website.</p>
 <hr/>
 
 <div class="col">
-  <label for="brief_description">Short description <span class="required">*</span></label>
+  <label for="brief_description">Short description (200 character limit)<span class="required">*</span></label>
   <%= FormView.rt_textarea_field(@form, :brief_description, limit: 200) %>
+  <p class="ml-2 text-muted">Provide a general overview of your challenge, including any background on the problem you’re trying to solve.</p>
 </div>
 
 <div class="col">
-  <label><%= "Long description" %> <span class="required">*</span></label>
-  <%= FormView.rt_textarea_field(@form, :description) %>
+  <label><%= "Long description (4000 character limit)" %> <span class="required">*</span></label>
+  <%= FormView.rt_textarea_field(@form, :description, limit: 4000) %>
+  <p class="ml-2 text-muted">Provide a detailed overview of your challenge, including any background on the problem you’re trying to solve, and any key dates you want to highlight.</p>
 </div>
 
 <hr/>
@@ -82,8 +87,7 @@
     <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
     <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
   </div>
-
-  <br/>
+  <p class="ml-2 mt-2 text-muted">Provide any tables, PDFs or other resources you wish to be included as a resource for the public solvers.</p>
 
   <div class="challenge_uploaded_documents">
     <%= Enum.map(@documents, fn document -> %>
@@ -103,8 +107,8 @@
 <div class="col">
   <label class="control-label"><%= FormView.label_field @form, :upload_logo, label: "Upload challenge logo", required: true %></label>
   <div class="ml-3">
-    <p>
-      Ideal image has an aspect ratio of 2:1, twice the width as height. Images will be a fixed size on Challenge tiles. 
+    <p class="ml-2 text-muted">
+      Optimal size for display on Challenge.gov is an aspect ratio of 2:1. If you don’t have a logo, your challenge will display with your agency seal.
     </p>
     <div class="col upload-logo">
       <div class="row">
@@ -136,9 +140,9 @@
 <br/>
 
 <h4>Publish date</h4>
-<p>
-  Once your challenge is approved, your challenge will be listed on Challenge.gov based on the date you specify below. 
-  Please allow up to one business day for approval and publishing of your content
+<p class="ml-2 text-muted">
+  Once your challenge is approved, your challenge will be listed on Challenge.gov based on the date you specify. 
+  Please allow up to <b>one to two business days</b> for approval and publishing of your content. Use this format: MM/DD/YYYY TIME OF DAY (Example: 06/19/2020 05:00 PM).
 </p>
 
 <label class="control-label col-md-4">
@@ -160,9 +164,12 @@
 <br/>
 
 <h4>Is this a multi-phase challenge?</h4>
-<p>
-  A multiphase challenge has a series of discrete phases each consiting of, for example, 
-  submission intake, judging, and participant selection
+<p class="ml-2 text-muted">
+  A multiphase challenge has a series of separate phases each consisting of, for example, submission intake, judging, and participant selection.
+<br/>
+  <b>Submission Start:</b> Provide time and date for when your challenge opens for submissions. Use this format: MM/DD/YYYY TIME OF DAY (Example: 06/19/2020 05:00 PM).  Note: All times will be listed on the site in the users local time.
+<br/>
+  <b>Submission End:</b> Provide time and date for your submission deadline. Use this format: MM/DD/YYYY TIME OF DAY (Example: 06/19/2020 05:00 PM).  Note: All times will be listed on the site in the users local time.
 </p>
 <p>
   Example: Phase One -- Ideas, Phase Two -- Prototyping, Phase Three -- Demonstration of Final Product

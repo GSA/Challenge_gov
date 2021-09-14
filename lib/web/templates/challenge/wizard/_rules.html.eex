@@ -1,4 +1,4 @@
-<h4>Add rules details</h4>
+<h4>Rules</h4>
 <br/>
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 <br/>
@@ -7,28 +7,32 @@
   <label><%= "Eligibility requirements" %> <span class="required">*</span></label>
   <%= FormView.rt_textarea_field(@form, :eligibility_requirements) %>
 </div>
+<p class="ml-2 text-muted">Provide the eligibility requirements for your challenge.</p>
 
 <div class="col">
   <label><%= "Rules" %> <span class="required">*</span></label>
   <%= FormView.rt_textarea_field(@form, :rules) %>
 </div>
+<p class="ml-2 text-muted">Provide the rules for your challenge. If your rules are lengthy, consider providing a more digestible summary and then a link to an official document or web page with the complete rules.</p>
 
 <%= FormView.checkbox_field(@form, :terms_equal_rules, label: "Terms and conditions same as rules", class: "js-terms-equal-rules", required: true) %>
+<p class="ml-2 text-muted">Select if the terms & conditions are the same as rules or provide the terms & conditions for your challenge.</p>
 
 <div class="col">
   <label><%= "Terms and conditions" %> <span class="required">*</span></label>
   <%= FormView.rt_textarea_field(@form, :terms_and_conditions) %>
 </div>
 
-<%= FormView.select_field(@form, :legal_authority, collection: Challenges.legal_authority(), label: "Legal authority", prompt: "Choose a legal authority", required: true) %>
+<%= FormView.select_field(@form, :legal_authority, collection: Challenges.legal_authority(), label: "Legal authority (select from list)", prompt: "Choose a legal authority", required: true) %>
 <%= FormView.text_field(@form, :legal_authority, label: "Enter other legal authority name") %>
+<p class="ml-2 mb-4 text-muted">Provide the legal authority under which you are running the challenge.</p>
 
-<br/>
 <hr/>
 <br/>
 
 <div class="challenge-file-upload col" data-section=<%= @section %>>
   <label class="control-label">Upload rules documents (optional)</label>
+  <p class="ml-2 text-muted">Provide any tables, PDFs you wish to provide as rules documentation. All files must be 508 compliant.</p>
   <div class="col">
     <label for="challenge_document_name" class="control-label">File name (optional)</label>
     <input class="challenge_document_name form-control" type="text">

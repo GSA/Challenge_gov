@@ -50,7 +50,7 @@ defmodule Web.FormView do
             ["#{abs(chars_remaining)} characters over limit", base_classes <> " is-invalid"]
           end
 
-        content_tag(:p, label_content, class: label_classes)
+        content_tag(:span, label_content, class: label_classes)
       else
         ""
       end
