@@ -257,7 +257,7 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def auto_publish_date(conn, form, name, label, id_prefix) do
+  def date_and_time_inputs(conn, form, name, label, id_prefix) do
     if Browser.firefox?(conn) do
       [
         content_tag(:input, "",
@@ -281,7 +281,7 @@ defmodule Web.ChallengeView do
         label: label,
         class:
           Enum.join(
-            [FormView.form_control_classes(form, :auto_publish_date), "js-datetime-input"],
+            [FormView.form_control_classes(form, name), "js-datetime-input"],
             " "
           ),
         id: "#{id_prefix}_date_picker",

@@ -16,7 +16,7 @@
             <div class="<%= FormView.form_group_classes(phase_form, :start_date) %>">
               <%= label phase_form, :start_date, "Submission start date and time" %>
               <span class="required">*</span>
-              <%= auto_publish_date(@conn, @form, :start_date, "Start date", "challenge_phases_0_start") %>
+              <%= date_and_time_inputs(@conn, @form, :start_date, "Start date", "challenge_phases_0_start") %>
               <%= hidden_input(phase_form, :start_date, label: "Start date") %>
               <%= error_tag(phase_form, :start_date) %>
             </div>
@@ -26,7 +26,7 @@
             <div class="<%= FormView.form_group_classes(phase_form, :end_date) %>">
               <%= label phase_form, :end_date, "Submission end date and time" %>
               <span class="required">*</span>
-              <%= auto_publish_date(@conn, @form, :end_date, "End date", "challenge_phases_0_end") %>
+              <%= date_and_time_inputs(@conn, @form, :end_date, "End date", "challenge_phases_0_end") %>
               <%= hidden_input(phase_form, :end_date, label: "End date") %>
               <%= error_tag(phase_form, :end_date) %>
             </div>
@@ -43,7 +43,7 @@
       <div class="form-group nested-form-group">
         <div class="form-group">
           <label for="challenge_phases_0_start_date">Phase 1 submission start date and time</label><span class="required">*</span>
-          <%= auto_publish_date(@conn, @form, "challenge[phases][0][start_date]", "Phase 1 submission end date and time *", "challenge_phases_0_start") %>
+          <%= date_and_time_inputs(@conn, @form, "challenge[phases][0][start_date]", "Phase 1 submission end date and time *", "challenge_phases_0_start") %>
           <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">              
         </div>
       </div>
@@ -51,7 +51,7 @@
       <div class="form-group nested-form-group">
         <div class="form-group">
           <label for="challenge_phases_0_start_date">Phase 1 submission end date and time *</label>
-          <%= auto_publish_date(@conn, @form, "challenge[phases][0][end_date]", "Phase 1 submission end date and time *", "challenge_phases_0_end") %>
+          <%= date_and_time_inputs(@conn, @form, "challenge[phases][0][end_date]", "Phase 1 submission end date and time *", "challenge_phases_0_end") %>
           <input id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="hidden">              
         </div>
       </div>
