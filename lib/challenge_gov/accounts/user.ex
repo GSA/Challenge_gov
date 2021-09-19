@@ -8,7 +8,7 @@ defmodule ChallengeGov.Accounts.User do
   import Ecto.Changeset
 
   alias ChallengeGov.Challenges.Challenge
-  alias ChallengeGov.Challenges.ChallengeOwner
+  alias ChallengeGov.Challenges.ChallengeManager
   alias ChallengeGov.SupportingDocuments.Document
   alias ChallengeGov.Submissions
   alias ChallengeGov.Submissions.Submission
@@ -20,7 +20,7 @@ defmodule ChallengeGov.Accounts.User do
   @roles [
     %{id: "super_admin", label: "Super Admin", rank: 1},
     %{id: "admin", label: "Admin", rank: 2},
-    %{id: "challenge_owner", label: "Challenge Owner", rank: 3},
+    %{id: "challenge_manager", label: "Challenge Manager", rank: 3},
     %{id: "solver", label: "Solver", rank: 4}
   ]
 
@@ -44,8 +44,8 @@ defmodule ChallengeGov.Accounts.User do
   schema "users" do
     # Associations
     has_many(:challenges, Challenge)
-    has_many(:challenge_owners, ChallengeOwner)
-    has_many(:challenge_owner_challenges, through: [:challenge_owners, :challenge])
+    has_many(:challenge_managers, ChallengeManager)
+    has_many(:challenge_manager_challenges, through: [:challenge_managers, :challenge])
     has_many(:members, Member)
     has_many(:supporting_documents, Document)
     has_many(:submissions, Submission, foreign_key: :submitter_id)

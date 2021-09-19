@@ -1,6 +1,6 @@
-defmodule ChallengeGov.Challenges.ChallengeOwner do
+defmodule ChallengeGov.Challenges.ChallengeManager do
   @moduledoc """
-  ChallengeOwner schema
+  ChallengeManager schema
   """
 
   use Ecto.Schema
@@ -12,7 +12,7 @@ defmodule ChallengeGov.Challenges.ChallengeOwner do
 
   @type t :: %__MODULE__{}
 
-  schema "challenge_owners" do
+  schema "challenge_managers" do
     belongs_to(:challenge, Challenge)
     belongs_to(:user, User)
     field(:revoked_at, :utc_datetime)

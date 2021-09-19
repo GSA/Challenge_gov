@@ -12,7 +12,7 @@ defmodule Web.SubmissionInviteControllerTest do
       user = AccountHelpers.create_user(%{role: "super_admin"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_owner"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
       phase = Enum.at(challenge.phases, 0)
 

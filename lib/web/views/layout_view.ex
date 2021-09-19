@@ -161,12 +161,12 @@ defmodule Web.PageTitle do
   end
 
   defp get({Admin.UserView, :index, _}) do
-    "Admin - Challenge Owners"
+    "Admin - Challenge Managers"
   end
 
   defp get({Admin.UserView, :show, assigns}) do
     user = Map.get(assigns, :user, %{})
-    "Admin - Viewing Challenge Owner - #{user.first_name} #{user.last_name}"
+    "Admin - Viewing Challenge Manager - #{user.first_name} #{user.last_name}"
   end
 
   defp get({SessionView, :new, _}) do
@@ -198,15 +198,15 @@ defmodule Web.PageTitle do
   end
 
   defp get({AccountView, :index, _}) do
-    "Challenge Owners"
+    "Challenge Managers"
   end
 
   defp get({AccountView, :edit, _}) do
-    "Editing Challenge Owner"
+    "Editing Challenge Manager"
   end
 
   defp get({AccountView, :show, assigns}) do
-    "Challenge Owner - #{assigns.account.first_name} #{assigns.account.last_name}"
+    "Challenge Manager - #{assigns.account.first_name} #{assigns.account.last_name}"
   end
 
   defp get({AgencyView, :index, _}) do

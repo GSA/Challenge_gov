@@ -9,7 +9,7 @@ defmodule ChallengeGov.Challenges do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.Challenges.Challenge
-  alias ChallengeGov.Challenges.ChallengeOwner
+  alias ChallengeGov.Challenges.ChallengeManager
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.Phase
@@ -77,7 +77,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
-  Import challenges: no user, owner, documents or security logging
+  Import challenges: no user, manager, documents or security logging
   """
   def import_create(challenge_params) do
     challenge_params =
@@ -116,9 +116,9 @@ defmodule ChallengeGov.Challenges do
         :challenge,
         changeset_for_action(%Challenge{}, challenge_params, action)
       )
-      |> attach_initial_owner(user)
+      |> attach_initial_manager(user)
       |> attach_federal_partners(challenge_params)
-      |> attach_challenge_owners(challenge_params)
+      |> attach_challenge_managers(challenge_params)
       |> attach_documents(challenge_params)
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, challenge_params)
@@ -157,7 +157,7 @@ defmodule ChallengeGov.Challenges do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset_for_action(challenge, challenge_params, action))
       |> attach_federal_partners(challenge_params)
-      |> attach_challenge_owners(challenge_params)
+      |> attach_challenge_managers(challenge_params)
       |> attach_documents(challenge_params)
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, challenge_params)
@@ -186,7 +186,7 @@ defmodule ChallengeGov.Challenges do
 
     params =
       params
-      |> Map.put_new("challenge_owners", [])
+      |> Map.put_new("challenge_managers", [])
       |> Map.put_new("federal_partners", [])
       |> Map.put_new("non_federal_partners", [])
       |> Map.put_new("events", [])
@@ -202,7 +202,7 @@ defmodule ChallengeGov.Challenges do
       Ecto.Multi.new()
       |> Ecto.Multi.update(:challenge, changeset)
       |> attach_federal_partners(params)
-      |> attach_challenge_owners(params)
+      |> attach_challenge_managers(params)
       |> Ecto.Multi.run(:event, fn _repo, %{challenge: challenge} ->
         maybe_create_event(challenge, changeset)
       end)
@@ -243,7 +243,7 @@ defmodule ChallengeGov.Challenges do
       :phases,
       :events,
       :user,
-      :challenge_owner_users,
+      :challenge_manager_users,
       :supporting_documents,
       :sub_agency,
       federal_partners: [:agency, :sub_agency],
@@ -257,7 +257,7 @@ defmodule ChallengeGov.Challenges do
       :non_federal_partners,
       :events,
       :user,
-      :challenge_owner_users,
+      :challenge_manager_users,
       :supporting_documents,
       :sub_agency,
       federal_partners: [:agency, :sub_agency],
@@ -412,9 +412,9 @@ defmodule ChallengeGov.Challenges do
     |> base_preload
   end
 
-  defp base_all_for_user_query(%{id: id, role: "challenge_owner"}) do
+  defp base_all_for_user_query(%{id: id, role: "challenge_manager"}) do
     base_query()
-    |> join(:inner, [c], co in assoc(c, :challenge_owners))
+    |> join(:inner, [c], co in assoc(c, :challenge_managers))
     |> where([c, co], co.user_id == ^id and is_nil(co.revoked_at))
   end
 
@@ -479,8 +479,8 @@ defmodule ChallengeGov.Challenges do
       :non_federal_partners,
       :agency,
       :sub_agency,
-      :challenge_owners,
-      :challenge_owner_users,
+      :challenge_managers,
+      :challenge_manager_users,
       :events,
       :submissions,
       phases: ^{from(p in Phase, order_by: p.start_date), [winners: :winners]},
@@ -496,9 +496,9 @@ defmodule ChallengeGov.Challenges do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:challenge, create_challenge(user, params))
-      |> attach_initial_owner(user)
+      |> attach_initial_manager(user)
       |> attach_federal_partners(params)
-      |> attach_challenge_owners(params)
+      |> attach_challenge_managers(params)
       |> attach_documents(params)
       |> Ecto.Multi.run(:logo, fn _repo, %{challenge: challenge} ->
         Logo.maybe_upload_logo(challenge, params)
@@ -529,7 +529,7 @@ defmodule ChallengeGov.Challenges do
   defp create_challenge(user, params) do
     user
     |> Ecto.build_assoc(:challenges)
-    |> Map.put(:challenge_owner_users, [])
+    |> Map.put(:challenge_manager_users, [])
     |> Map.put(:federal_partners, [])
     |> Map.put(:federal_partner_agencies, [])
     |> Challenge.create_changeset(params, user)
@@ -574,11 +574,11 @@ defmodule ChallengeGov.Challenges do
 
   defp maybe_create_federal_partner(_agency_id, _sub_agency_id, _changes), do: {:ok, nil}
 
-  # Attach challenge owners functions
-  defp attach_initial_owner(multi, user) do
+  # Attach challenge managers functions
+  defp attach_initial_manager(multi, user) do
     Ecto.Multi.run(multi, {:user, user.id}, fn _repo, changes ->
-      %ChallengeOwner{}
-      |> ChallengeOwner.changeset(%{
+      %ChallengeManager{}
+      |> ChallengeManager.changeset(%{
         user_id: user.id,
         challenge_id: changes.challenge.id
       })
@@ -586,24 +586,24 @@ defmodule ChallengeGov.Challenges do
     end)
   end
 
-  # Attach challenge owners functions
-  defp attach_challenge_owners(multi, %{challenge_owners: ids}) do
-    attach_challenge_owners(multi, %{"challenge_owners" => ids})
+  # Attach challenge managers functions
+  defp attach_challenge_managers(multi, %{challenge_managers: ids}) do
+    attach_challenge_managers(multi, %{"challenge_managers" => ids})
   end
 
-  defp attach_challenge_owners(multi, %{"challenge_owners" => ids}) do
+  defp attach_challenge_managers(multi, %{"challenge_managers" => ids}) do
     multi =
-      Ecto.Multi.run(multi, :delete_owners, fn _repo, changes ->
+      Ecto.Multi.run(multi, :delete_managers, fn _repo, changes ->
         {:ok,
          Repo.delete_all(
-           from(co in ChallengeOwner, where: co.challenge_id == ^changes.challenge.id)
+           from(co in ChallengeManager, where: co.challenge_id == ^changes.challenge.id)
          )}
       end)
 
     Enum.reduce(ids, multi, fn user_id, multi ->
       Ecto.Multi.run(multi, {:user, user_id}, fn _repo, changes ->
-        %ChallengeOwner{}
-        |> ChallengeOwner.changeset(%{
+        %ChallengeManager{}
+        |> ChallengeManager.changeset(%{
           user_id: user_id,
           challenge_id: changes.challenge.id
         })
@@ -612,7 +612,7 @@ defmodule ChallengeGov.Challenges do
     end)
   end
 
-  defp attach_challenge_owners(multi, _params), do: multi
+  defp attach_challenge_managers(multi, _params), do: multi
 
   # Attach supporting document functions
   defp attach_documents(multi, %{document_ids: ids}) do
@@ -683,7 +683,7 @@ defmodule ChallengeGov.Challenges do
   Checks if a user is allowed to edit a challenge
   """
   def allowed_to_edit(user, challenge) do
-    if is_challenge_owner?(user, challenge) or
+    if is_challenge_manager?(user, challenge) or
          Accounts.has_admin_access?(user) do
       {:ok, challenge}
     else
@@ -702,8 +702,8 @@ defmodule ChallengeGov.Challenges do
 
   def allowed_to_submit?(%{role: "admin"}), do: true
 
-  def allowed_to_submit?(user = %{role: "challenge_owner"}) do
-    Security.default_challenge_owner?(user.email)
+  def allowed_to_submit?(user = %{role: "challenge_manager"}) do
+    Security.default_challenge_manager?(user.email)
   end
 
   def allowed_to_submit?(_user), do: false
@@ -712,7 +712,7 @@ defmodule ChallengeGov.Challenges do
   Checks if a user can send a bulletin
   """
   def can_send_bulletin(user, challenge) do
-    if (is_challenge_owner?(user, challenge) or
+    if (is_challenge_manager?(user, challenge) or
           Accounts.has_admin_access?(user)) and
          challenge.gov_delivery_topic != nil and
          challenge.gov_delivery_topic != "" do
@@ -723,10 +723,10 @@ defmodule ChallengeGov.Challenges do
   end
 
   @doc """
-  Checks if a user is in the list of owners for a challenge and not revoked
+  Checks if a user is in the list of managers for a challenge and not revoked
   """
-  def is_challenge_owner?(user, challenge) do
-    challenge.challenge_owners
+  def is_challenge_manager?(user, challenge) do
+    challenge.challenge_managers
     |> Enum.reject(fn co ->
       !is_nil(co.revoked_at)
     end)
@@ -753,7 +753,7 @@ defmodule ChallengeGov.Challenges do
   Restores access to a user's challlenges
   """
   def restore_access(user, challenge) do
-    ChallengeOwner
+    ChallengeManager
     |> where([co], co.user_id == ^user.id and co.challenge_id == ^challenge.id)
     |> Repo.update_all(set: [revoked_at: nil])
   end
@@ -967,7 +967,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_submittable?(challenge, user) do
-    (Accounts.has_admin_access?(user) or is_challenge_owner?(user, challenge)) and
+    (Accounts.has_admin_access?(user) or is_challenge_manager?(user, challenge)) and
       is_submittable?(challenge)
   end
 
@@ -1030,7 +1030,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_editable?(challenge, user) do
-    (is_challenge_owner?(user, challenge) or Accounts.has_admin_access?(user)) and
+    (is_challenge_manager?(user, challenge) or Accounts.has_admin_access?(user)) and
       edit_with_wizard?(challenge)
   end
 
@@ -1194,16 +1194,16 @@ defmodule ChallengeGov.Challenges do
   end
 
   defp send_challenge_rejection_emails(challenge) do
-    Enum.map(challenge.challenge_owner_users, fn owner ->
-      owner
+    Enum.map(challenge.challenge_manager_users, fn manager ->
+      manager
       |> Emails.challenge_rejection_email(challenge)
       |> Mailer.deliver_later()
     end)
   end
 
   defp maybe_send_submission_confirmation(challenge, action) when action === "submit" do
-    Enum.map(challenge.challenge_owner_users, fn owner ->
-      owner
+    Enum.map(challenge.challenge_manager_users, fn manager ->
+      manager
       |> Emails.challenge_submission(challenge)
       |> Mailer.deliver_later()
     end)
@@ -1294,17 +1294,17 @@ defmodule ChallengeGov.Challenges do
       challenge
       |> Challenge.publish_changeset()
       |> Repo.update()
-      |> email_challenge_owners("challenge_auto_publish")
+      |> email_challenge_managers("challenge_auto_publish")
     end)
   end
 
-  defp email_challenge_owners({:ok, challenge}, template) do
-    challenge = Repo.preload(challenge, [:challenge_owner_users])
+  defp email_challenge_managers({:ok, challenge}, template) do
+    challenge = Repo.preload(challenge, [:challenge_manager_users])
 
-    Enum.map(challenge.challenge_owner_users, fn owner ->
+    Enum.map(challenge.challenge_manager_users, fn manager ->
       case template do
         "challenge_auto_publish" ->
-          owner
+          manager
           |> Emails.challenge_auto_published(challenge)
           |> Mailer.deliver_later()
 
@@ -1314,7 +1314,7 @@ defmodule ChallengeGov.Challenges do
     end)
   end
 
-  defp email_challenge_owners(_, _), do: nil
+  defp email_challenge_managers(_, _), do: nil
 
   # Used in search filter
   defp maybe_filter_id(query, id) do
@@ -1367,7 +1367,7 @@ defmodule ChallengeGov.Challenges do
 
   def filter_on_attribute({"user_ids", ids}, query) do
     query
-    |> join(:inner, [c], co in assoc(c, :challenge_owners))
+    |> join(:inner, [c], co in assoc(c, :challenge_managers))
     |> where([co], co.user_id in ^ids)
   end
 

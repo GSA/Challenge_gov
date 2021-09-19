@@ -91,7 +91,7 @@ defmodule Web.SavedChallengeControllerTest do
   #     assert html_response(conn, 200) =~ "Challenge successfully saved"
   #   end
 
-  #   test "redirect when not owner", %{conn: conn} do
+  #   test "redirect when not manager", %{conn: conn} do
   #     conn = prep_conn(conn)
   #     %{current_user: user} = conn.assigns
 
@@ -243,7 +243,7 @@ defmodule Web.SavedChallengeControllerTest do
       assert redirected_to(conn) == Routes.saved_challenge_path(conn, :index)
     end
 
-    test "failure when not owner", %{conn: conn} do
+    test "failure when not manager", %{conn: conn} do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 

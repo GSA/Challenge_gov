@@ -67,7 +67,7 @@
                     <% end %>
                   </li>
                 <% end %>
-                <%= if Accounts.role_at_or_above(u, "challenge_owner") do %>
+                <%= if Accounts.role_at_or_above(u, "challenge_manager") do %>
                   <li class="nav-item">
                     <%= link(to: Routes.challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "challenges")}") do %>
                       <i class="nav-icon fas fa-award"></i>
@@ -104,7 +104,7 @@
                 </ul>
               </nav>
             <% end %>
-            <%= if ChallengeGov.Accounts.is_challenge_owner?(u) do %>
+            <%= if ChallengeGov.Accounts.is_challenge_manager?(u) do %>
               <nav class="mt-5">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                   <li class="nav-item">

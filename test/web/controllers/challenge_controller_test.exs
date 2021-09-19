@@ -11,7 +11,8 @@ defmodule Web.ChallengeControllerTest do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
 
-      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com", role: "challenge_owner"})
+      user_2 =
+        AccountHelpers.create_user(%{email: "user_2@example.com", role: "challenge_manager"})
 
       _challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
       _challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
@@ -321,7 +322,7 @@ defmodule Web.ChallengeControllerTest do
           "agency_id" => AgencyHelpers.create_agency().id,
           "challenge_id" => "#{challenge.id}",
           "challenge_manager" => "Challenge Manager",
-          "challenge_manager_email" => "challenge_owner_active@example.com",
+          "challenge_manager_email" => "challenge_manager_active@example.com",
           "federal_partners" => %{
             "0" => %{
               "agency_id" => AgencyHelpers.create_agency().id,
@@ -364,7 +365,7 @@ defmodule Web.ChallengeControllerTest do
           "agency_id" => AgencyHelpers.create_agency().id,
           "challenge_id" => "#{challenge.id}",
           "challenge_manager" => "Challenge Manager",
-          "challenge_manager_email" => "challenge_owner_active@example.com",
+          "challenge_manager_email" => "challenge_manager_active@example.com",
           "federal_partners" => %{
             "0" => %{
               "agency_id" => AgencyHelpers.create_agency().id,
@@ -409,7 +410,7 @@ defmodule Web.ChallengeControllerTest do
           "agency_id" => AgencyHelpers.create_agency().id,
           "challenge_id" => "#{challenge.id}",
           "challenge_manager" => "Challenge Manager",
-          "challenge_manager_email" => "challenge_owner_active@example.com",
+          "challenge_manager_email" => "challenge_manager_active@example.com",
           "federal_partners" => %{
             "0" => %{
               "agency_id" => AgencyHelpers.create_agency().id,
@@ -442,7 +443,7 @@ defmodule Web.ChallengeControllerTest do
     end
 
     test "successfully update a published challenge", %{conn: conn} do
-      conn = prep_conn_challenge_owner(conn)
+      conn = prep_conn_challenge_manager(conn)
       %{current_user: user} = conn.assigns
 
       past_publish_date =
@@ -468,7 +469,7 @@ defmodule Web.ChallengeControllerTest do
           "agency_id" => AgencyHelpers.create_agency().id,
           "challenge_id" => "#{challenge.id}",
           "challenge_manager" => "Challenge Manager",
-          "challenge_manager_email" => "challenge_owner_active@example.com",
+          "challenge_manager_email" => "challenge_manager_active@example.com",
           "federal_partners" => %{
             "0" => %{
               "agency_id" => AgencyHelpers.create_agency().id,
@@ -543,9 +544,12 @@ defmodule Web.ChallengeControllerTest do
     assign(conn, :current_user, user)
   end
 
-  defp prep_conn_challenge_owner(conn) do
+  defp prep_conn_challenge_manager(conn) do
     user =
-      AccountHelpers.create_user(%{email: "challenge_owner@example.com", role: "challenge_owner"})
+      AccountHelpers.create_user(%{
+        email: "challenge_manager@example.com",
+        role: "challenge_manager"
+      })
 
     assign(conn, :current_user, user)
   end

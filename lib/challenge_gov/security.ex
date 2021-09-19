@@ -5,8 +5,8 @@ defmodule ChallengeGov.Security do
 
   alias ChallengeGov.SecurityLogs
 
-  def challenge_owner_assumed_tlds do
-    var = Application.get_env(:challenge_gov, :challenge_owner_assumed_tlds)
+  def challenge_manager_assumed_tlds do
+    var = Application.get_env(:challenge_gov, :challenge_manager_assumed_tlds)
 
     case parse_list_env(var) do
       nil ->
@@ -17,15 +17,15 @@ defmodule ChallengeGov.Security do
     end
   end
 
-  def default_challenge_owner?(email) do
+  def default_challenge_manager?(email) do
     escaped_gov_tld = Regex.escape(".gov")
     matching_gov_string = ".*#{escaped_gov_tld}$"
     gov_regex = Regex.compile!(matching_gov_string)
-    Regex.match?(gov_regex, email) or assume_challenge_owner?(email)
+    Regex.match?(gov_regex, email) or assume_challenge_manager?(email)
   end
 
-  def assume_challenge_owner?(email) do
-    tlds = challenge_owner_assumed_tlds()
+  def assume_challenge_manager?(email) do
+    tlds = challenge_manager_assumed_tlds()
 
     regexs =
       Enum.map(tlds, fn tld ->

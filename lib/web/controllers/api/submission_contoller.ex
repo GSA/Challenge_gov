@@ -7,7 +7,7 @@ defmodule Web.Api.SubmissionController do
 
   plug(
     Web.Plugs.EnsureRole,
-    [:admin, :super_admin, :challenge_owner] when action in [:update_judging_status]
+    [:admin, :super_admin, :challenge_manager] when action in [:update_judging_status]
   )
 
   def update_judging_status(conn, params = %{"id" => id, "judging_status" => judging_status}) do

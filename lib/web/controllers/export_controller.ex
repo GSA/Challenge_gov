@@ -4,7 +4,7 @@ defmodule Web.ExportController do
   alias ChallengeGov.Challenges
   alias Web.ExportView
 
-  plug(Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_owner])
+  plug(Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_manager])
 
   def export_challenge(conn, %{"id" => id, "format" => format}) do
     %{current_user: user} = conn.assigns

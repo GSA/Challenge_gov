@@ -10,7 +10,7 @@ defmodule Web.ChallengeController do
 
   plug(
     Web.Plugs.EnsureRole,
-    [:super_admin, :admin, :challenge_owner]
+    [:super_admin, :admin, :challenge_manager]
   )
 
   action_fallback(Web.FallbackController)

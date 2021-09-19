@@ -24,8 +24,8 @@ defmodule ChallengeGov.MessageContexts do
       "admin" ->
         sync_for_admin(user)
 
-      "challenge_owner" ->
-        sync_for_challenge_owner(user)
+      "challenge_manager" ->
+        sync_for_challenge_manager(user)
 
       "solver" ->
         sync_for_solver(user)
@@ -51,7 +51,7 @@ defmodule ChallengeGov.MessageContexts do
     |> Repo.transaction()
   end
 
-  def sync_for_challenge_owner(user) do
+  def sync_for_challenge_manager(user) do
     contexts =
       MessageContext
       |> preload([:parent, :contexts])
@@ -77,10 +77,10 @@ defmodule ChallengeGov.MessageContexts do
     |> Repo.transaction()
   end
 
-  def sync_context(multi, user = %{role: "challenge_owner"}, context = %{context: "challenge"}) do
+  def sync_context(multi, user = %{role: "challenge_manager"}, context = %{context: "challenge"}) do
     challenge = get_context_record(context)
 
-    if Challenges.is_challenge_owner?(user, challenge) do
+    if Challenges.is_challenge_manager?(user, challenge) do
       case MessageContextStatuses.get(user, context) do
         {:ok, _context_status} ->
           multi
@@ -102,10 +102,10 @@ defmodule ChallengeGov.MessageContexts do
     end
   end
 
-  def sync_context(multi, user = %{role: "challenge_owner"}, context = %{context: "solver"}) do
+  def sync_context(multi, user = %{role: "challenge_manager"}, context = %{context: "solver"}) do
     challenge = get_context_record(context.parent)
 
-    if Challenges.is_challenge_owner?(user, challenge) do
+    if Challenges.is_challenge_manager?(user, challenge) do
       case MessageContextStatuses.get(user, context) do
         {:ok, _context_status} ->
           multi
@@ -130,7 +130,7 @@ defmodule ChallengeGov.MessageContexts do
   def sync_context(
         multi,
         user = %{role: "solver"},
-        context = %{context: "challenge", audience: "challenge_owners"}
+        context = %{context: "challenge", audience: "challenge_managers"}
       ) do
     case MessageContextStatuses.get(user, context) do
       {:ok, context_status} ->
@@ -378,7 +378,7 @@ defmodule ChallengeGov.MessageContexts do
 
       parent_message_context ->
         # TODO: Currently if there is a parent context then the new context is a "solver" context
-        # This will eventually handle "challenge_owner" contexts as well but may work the same
+        # This will eventually handle "challenge_manager" contexts as well but may work the same
         migrate_message_context_status(message_context, parent_message_context)
     end
   end
@@ -499,17 +499,20 @@ defmodule ChallengeGov.MessageContexts do
   end
 
   def user_related_to_context?(
-        user = %{role: "challenge_owner"},
+        user = %{role: "challenge_manager"},
         context = %{context: "challenge"}
       ) do
     challenge = get_context_record(context)
-    Challenges.is_challenge_owner?(user, challenge)
+    Challenges.is_challenge_manager?(user, challenge)
   end
 
-  def user_related_to_context?(user = %{role: "challenge_owner"}, context = %{context: "solver"}) do
+  def user_related_to_context?(
+        user = %{role: "challenge_manager"},
+        context = %{context: "solver"}
+      ) do
     context = Repo.preload(context, [:parent])
     challenge = get_context_record(context.parent)
-    Challenges.is_challenge_owner?(user, challenge)
+    Challenges.is_challenge_manager?(user, challenge)
   end
 
   def user_related_to_context?(_user, _context), do: false
@@ -538,9 +541,9 @@ defmodule ChallengeGov.MessageContexts do
         {:ok, challenge} = Challenges.get(message_context.context_id)
         challenge
 
-      "challenge_owner" ->
-        {:ok, challenge_owner} = Accounts.get(message_context.context_id)
-        challenge_owner
+      "challenge_manager" ->
+        {:ok, challenge_manager} = Accounts.get(message_context.context_id)
+        challenge_manager
 
       "submission" ->
         {:ok, submission} = Submissions.get(message_context.context_id)

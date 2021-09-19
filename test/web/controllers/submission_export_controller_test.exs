@@ -9,7 +9,7 @@ defmodule Web.SubmissionExportControllerTest do
       user = AccountHelpers.create_user(%{role: "super_admin"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_owner"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
 
       challenge =
         ChallengeHelpers.create_closed_single_phase_challenge(user2, %{user_id: user2.id})
@@ -29,7 +29,7 @@ defmodule Web.SubmissionExportControllerTest do
       user = AccountHelpers.create_user(%{role: "admin"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_owner"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
 
       challenge =
         ChallengeHelpers.create_closed_single_phase_challenge(user2, %{user_id: user2.id})
@@ -45,8 +45,8 @@ defmodule Web.SubmissionExportControllerTest do
       assert html_response(conn, 200)
     end
 
-    test "success: as challenge owner of challenge", %{conn: conn} do
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+    test "success: as challenge manager of challenge", %{conn: conn} do
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
       conn = prep_conn(conn, user)
 
       challenge = ChallengeHelpers.create_closed_single_phase_challenge(user, %{user_id: user.id})
@@ -63,7 +63,7 @@ defmodule Web.SubmissionExportControllerTest do
     end
 
     test "failure: challenge has no closed phases", %{conn: conn} do
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
       conn = prep_conn(conn, user)
 
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
@@ -75,7 +75,7 @@ defmodule Web.SubmissionExportControllerTest do
     end
 
     test "failure: challenge not found", %{conn: conn} do
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
       conn = prep_conn(conn, user)
 
       conn = get(conn, Routes.submission_export_path(conn, :index, -1))
@@ -85,11 +85,11 @@ defmodule Web.SubmissionExportControllerTest do
       assert redirected_to(conn) == Routes.dashboard_path(conn, :index)
     end
 
-    test "failure: as a different challenge owner", %{conn: conn} do
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+    test "failure: as a different challenge manager", %{conn: conn} do
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_owner"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
       _challenge_2 = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 
@@ -107,7 +107,7 @@ defmodule Web.SubmissionExportControllerTest do
       user = AccountHelpers.create_user(%{role: "solver"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_owner"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
       _challenge_2 = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 
@@ -130,7 +130,7 @@ defmodule Web.SubmissionExportControllerTest do
       user = AccountHelpers.create_user(%{role: "super_admin"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_owner"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
 
       challenge =
         ChallengeHelpers.create_closed_single_phase_challenge(user2, %{user_id: user2.id})
@@ -156,7 +156,7 @@ defmodule Web.SubmissionExportControllerTest do
       user = AccountHelpers.create_user(%{role: "super_admin"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_owner"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
 
       challenge = ChallengeHelpers.create_open_multi_phase_challenge(user2, %{user_id: user2.id})
 

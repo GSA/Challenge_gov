@@ -58,11 +58,11 @@ defmodule ChallengeGov.SavedChallenges do
     end
   end
 
-  def check_owner(user, saved_challenge) do
+  def check_manager(user, saved_challenge) do
     if user.id === saved_challenge.user_id do
       {:ok, saved_challenge}
     else
-      {:error, :wrong_owner}
+      {:error, :wrong_manager}
     end
   end
 

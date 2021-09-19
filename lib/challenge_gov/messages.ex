@@ -23,7 +23,7 @@ defmodule ChallengeGov.Messages do
 
   def all_drafts_for_user(user, opts \\ []) do
     case user.role do
-      "challenge_owner" ->
+      "challenge_manager" ->
         Message
         |> join(:inner, [m], mc in assoc(m, :context), as: :context)
         |> join(:inner, [m], a in assoc(m, :author), as: :author)
@@ -34,7 +34,7 @@ defmodule ChallengeGov.Messages do
         |> preload([:author, :context])
         |> order_by([m], desc: m.updated_at)
         |> where([m], m.status == "draft")
-        |> where([author: a], a.id == ^user.id or a.role == "challenge_owner")
+        |> where([author: a], a.id == ^user.id or a.role == "challenge_manager")
         |> Repo.all()
 
       _ ->

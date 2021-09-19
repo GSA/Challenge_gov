@@ -20,10 +20,10 @@ defmodule Web.Api.MessageControllerTest do
     test "success: non solver on challenge context", %{conn: conn} do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       message_params = %{
         "content" => "Test",
@@ -39,16 +39,16 @@ defmodule Web.Api.MessageControllerTest do
       message_context = Repo.preload(message_context, [:messages], force: true)
       message = Repo.preload(Enum.at(message_context.messages, 0), [:author])
 
-      assert json_response(conn, 200) === expected_show_json(user_challenge_owner, message)
+      assert json_response(conn, 200) === expected_show_json(user_challenge_manager, message)
     end
 
     test "success: non solver draft on challenge context", %{conn: conn} do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       message_params = %{
         "content" => "Test",
@@ -64,16 +64,16 @@ defmodule Web.Api.MessageControllerTest do
       message_context = Repo.preload(message_context, [:messages], force: true)
       message = Repo.preload(Enum.at(message_context.messages, 0), [:author])
 
-      assert json_response(conn, 200) === expected_show_json(user_challenge_owner, message)
+      assert json_response(conn, 200) === expected_show_json(user_challenge_manager, message)
     end
 
     test "success: non solver update draft on challenge context", %{conn: conn} do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       message_params = %{
         "content" => "Test",
@@ -81,9 +81,9 @@ defmodule Web.Api.MessageControllerTest do
         "status" => "draft"
       }
 
-      {:ok, message} = Messages.create(user_challenge_owner, message_context, message_params)
+      {:ok, message} = Messages.create(user_challenge_manager, message_context, message_params)
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       message_params = %{
         "id" => message.id,
@@ -100,7 +100,7 @@ defmodule Web.Api.MessageControllerTest do
       {:ok, message} = Messages.get_draft(message_id)
       message = Repo.preload(message, [:author])
 
-      assert json_response(conn, 200) === expected_show_json(user_challenge_owner, message)
+      assert json_response(conn, 200) === expected_show_json(user_challenge_manager, message)
     end
 
     test "success: solver on challenge context", %{conn: conn} do
@@ -166,14 +166,14 @@ defmodule Web.Api.MessageControllerTest do
       assert message.message_context_id === message_context_solver.id
     end
 
-    test "success: challenge owner on solver context", %{conn: conn} do
+    test "success: challenge manager on solver context", %{conn: conn} do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         user_solver: user_solver
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       message_params = %{
         "content" => "Test",
@@ -194,8 +194,8 @@ defmodule Web.Api.MessageControllerTest do
 
       message = Repo.preload(message, [:author])
 
-      assert json_response(conn, 200) === expected_show_json(user_challenge_owner, message)
-      assert message.author_id === user_challenge_owner.id
+      assert json_response(conn, 200) === expected_show_json(user_challenge_manager, message)
+      assert message.author_id === user_challenge_manager.id
       assert message.message_context_id === message_context_solver.id
     end
   end
@@ -245,9 +245,9 @@ defmodule Web.Api.MessageControllerTest do
       assert json_response(conn, 200) === expected_show_json(user, message)
     end
 
-    test "success: challenge owner", %{conn: conn} do
+    test "success: challenge manager", %{conn: conn} do
       %{
-        user_challenge_owner: user,
+        user_challenge_manager: user,
         message_context: context
       } = MessageContextStatusHelpers.create_message_context_status()
 
@@ -267,12 +267,13 @@ defmodule Web.Api.MessageControllerTest do
       assert json_response(conn, 200) === expected_show_json(user, message)
     end
 
-    test "failure: challenge owner unrelated to context", %{conn: conn} do
+    test "failure: challenge manager unrelated to context", %{conn: conn} do
       %{
         message_context: context
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      user = AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+      user =
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "new_user@example.com"})
 
       conn = prep_conn(conn, user)
 

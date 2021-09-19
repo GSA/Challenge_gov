@@ -7,7 +7,7 @@ defmodule Web.PhaseController do
 
   plug Web.Plugs.FetchPage, [per: 10] when action in [:show]
 
-  plug Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_owner]
+  plug Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_manager]
 
   def index(conn, %{"challenge_id" => challenge_id}) do
     %{current_user: user} = conn.assigns

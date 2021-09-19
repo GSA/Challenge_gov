@@ -4,10 +4,10 @@
 <h3>Add general information</h3>
 <br/>
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
-<%= wizard_challenge_owners_field(@form, @user, @changeset) %>
+<%= wizard_challenge_managers_field(@form, @user, @changeset) %>
 <p class="ml-2 text-muted">Provide the name of the challenge manager.</p>
 <%= if !Accounts.has_admin_access?(@user) do %>
-  <p class="ml-2 text-muted">Contact GSA admin at <a href="mailto:team@challenge.gov" target="_blank">team@challenge.gov</a> to add additional challenge owners.</p>
+  <p class="ml-2 text-muted">Contact GSA admin at <a href="mailto:team@challenge.gov" target="_blank">team@challenge.gov</a> to add additional challenge managers.</p>
 <% end %>
 <%= FormView.text_field(@form, :challenge_manager, label: "Challenge manager of record (does not appear on public listing)", required: true) %>
 <p class="ml-2 text-muted">Provide the name of the challenge manager.  For Challenge.Gov team use only. This does not display on the public site.</p>

@@ -10,7 +10,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Agencies.Agency
   alias ChallengeGov.Challenges
-  alias ChallengeGov.Challenges.ChallengeOwner
+  alias ChallengeGov.Challenges.ChallengeManager
   alias ChallengeGov.Challenges.FederalPartner
   alias ChallengeGov.Challenges.NonFederalPartner
   alias ChallengeGov.Challenges.Phase
@@ -31,8 +31,8 @@ defmodule ChallengeGov.Challenges.Challenge do
     belongs_to(:sub_agency, Agency)
     has_many(:events, Event, on_replace: :delete, on_delete: :delete_all)
     has_many(:supporting_documents, Document, on_delete: :delete_all)
-    has_many(:challenge_owners, ChallengeOwner, on_delete: :delete_all)
-    has_many(:challenge_owner_users, through: [:challenge_owners, :user])
+    has_many(:challenge_managers, ChallengeManager, on_delete: :delete_all)
+    has_many(:challenge_manager_users, through: [:challenge_managers, :user])
     has_many(:federal_partners, FederalPartner, on_delete: :delete_all)
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
 
@@ -128,15 +128,15 @@ defmodule ChallengeGov.Challenges.Challenge do
     timestamps(type: :utc_datetime_usec)
   end
 
-  # - Challenge owner starts the form → saves it as a draft - Draft
-  # - Challenge owner submit for review from PMO - GSA Review
+  # - Challenge manager starts the form → saves it as a draft - Draft
+  # - Challenge manager submit for review from PMO - GSA Review
   #   - (2a) GSA Admin approves the challenge (waiting to be published according to date specified)- Approved
-  #   - (2b) GSA Admin requests edits from Challenge Owner (i.e. date is wrong)- Edits Requested**
-  # - Challenge Owner updates the edits and re-submit to GSA Admin - GSA Review
+  #   - (2b) GSA Admin requests edits from Challenge Manager (i.e. date is wrong)- Edits Requested**
+  # - Challenge Manager updates the edits and re-submit to GSA Admin - GSA Review
   # - Challenge goes Live - Published
   # - Challenge is archived - Archived
   # - Published status but updating Winners & FAQ and submitted to GSA Admin - GSA Review
-  # - Challenge Owner updates an Archived challenge posting - goes to "GSA Review" -> GSA Admin approves -> status back to Archived
+  # - Challenge Manager updates an Archived challenge posting - goes to "GSA Review" -> GSA Admin approves -> status back to Archived
   @statuses [
     %{id: "draft", label: "Draft"},
     %{id: "gsa_review", label: "GSA review"},

@@ -20,13 +20,13 @@ defmodule Seeds.SeedModules.Accounts do
     create_role_of_status("admin", "deactivated")
     create_role_of_status("admin", "decertified")
 
-    # Challenge Owners
-    create_role_of_status("challenge_owner", "active")
-    create_role_of_status("challenge_owner", "pending")
-    create_role_of_status("challenge_owner", "suspended")
-    create_role_of_status("challenge_owner", "revoked")
-    create_role_of_status("challenge_owner", "deactivated")
-    create_role_of_status("challenge_owner", "decertified")
+    # Challenge Managers
+    create_role_of_status("challenge_manager", "active")
+    create_role_of_status("challenge_manager", "pending")
+    create_role_of_status("challenge_manager", "suspended")
+    create_role_of_status("challenge_manager", "revoked")
+    create_role_of_status("challenge_manager", "deactivated")
+    create_role_of_status("challenge_manager", "decertified")
 
     # Solvers
     create_role_of_status("solver", "active")
