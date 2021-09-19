@@ -197,7 +197,7 @@ defmodule Web.DashboardView do
             description: "View and send messages to Challenge.Gov users."
           ),
           render("_card_link.html",
-            target: Routes.dashboard_path(Endpoint, :index),
+            target: Routes.analytics_path(Endpoint, :index),
             icon: "/images/dashboard_icons/analytics.svg",
             title: "Analytics",
             description: "View web analytics related to your challenges."
