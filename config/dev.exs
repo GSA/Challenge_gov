@@ -91,7 +91,7 @@ config :challenge_gov, ChallengeGov.Repo,
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
 config :challenge_gov, ChallengeGov.Mailer,
-  from: "support@challenge.gov",
+  from: "team@challenge.gov",
   adapter: Bamboo.LocalAdapter
 
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
