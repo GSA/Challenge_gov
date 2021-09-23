@@ -117,16 +117,22 @@
           Upload my own logo
         <% end %>
       </div>
+      <div class="row logo-file-field collapse">
+        <div class="d-flex flex-column">
+          <%= FormView.file_field(@form, :logo, label: false, required: true, class: "col-md-10") %>
+          <small class="form-text text-muted font-italic mt-0 mb-2 col">Allowed file types: .jpg, .jpeg, .png, .gif</small>
+          <%= FormView.text_field(@form, :logo_alt_text, label: "Add custom alt text (optional)", class: "col-md-10") %>
+          <small class="form-text text-muted font-italic mt-0 col">Please be desciptive of the image. If no custom text is provided, alt text will be 'challenge logo'</small>
+          <br/>
+          <br/>
+        </div>
+      </div>
       <div class="row">
         <%= label class: "control-label" do %>
           <%= radio_button(@form, :upload_logo, false, class: "mr-2", required: true) %>
           Use default challenge.gov logo
         <% end %>
       </div>
-      <div class="row logo-file-field collapse">
-        <%= FormView.file_field(@form, :logo, label: "Logo", required: true) %>
-      </div>
-      <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
     </div>
     <%= if @data.logo_key do %>
       <p>Current logo:</p>
