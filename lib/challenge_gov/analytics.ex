@@ -10,6 +10,37 @@ defmodule ChallengeGov.Analytics do
   alias ChallengeGov.Repo
   alias Stein.Filter
 
+  @prussian_blue "#112F4E"
+  @deep_saffron "#FA9441"
+  @french_sky_blue "#81AEFC"
+  @up_maroon "#780116"
+  @bittersweet "#F96462"
+  @ivory "#FFFFF2"
+  @eton_blue "#8BBF9F"
+  @nickel "#706C61"
+
+  @colors [
+    @prussian_blue,
+    @deep_saffron,
+    @french_sky_blue,
+    @up_maroon,
+    @bittersweet,
+    @ivory,
+    @eton_blue,
+    @nickel
+  ]
+
+  @primary_type_color_mapping %{
+    "Technology demonstration and hardware" => @prussian_blue,
+    "Ideas" => @deep_saffron,
+    "Analytics, visualizations, algorithms" => @french_sky_blue,
+    "Nominations" => @up_maroon,
+    "Business plans" => @bittersweet,
+    "Software and apps" => @ivory,
+    "Scientific" => @eton_blue,
+    "Creative (multimedia & design)" => @nickel
+  }
+
   def get_challenges(opts \\ []) do
     Challenge
     |> where([c], not is_nil(c.start_date))
@@ -99,7 +130,8 @@ defmodule ChallengeGov.Analytics do
     data_obj = %{
       datasets: [
         %{
-          data: data
+          data: data,
+          backgroundColor: Enum.at(@colors, 0)
         }
       ]
     }
@@ -126,12 +158,10 @@ defmodule ChallengeGov.Analytics do
       challenges
       |> Enum.group_by(fn challenge -> challenge.primary_type end)
 
-    colors = ColorStream.hex() |> Enum.take(Enum.count(data))
-
     data =
       data
       |> Enum.with_index()
-      |> Enum.reduce([], fn {{primary_type, challenges}, index}, acc ->
+      |> Enum.reduce([], fn {{primary_type, challenges}, _index}, acc ->
         grouped_challenges =
           Enum.group_by(challenges, fn challenge -> challenge.start_date.year end)
 
@@ -146,7 +176,7 @@ defmodule ChallengeGov.Analytics do
           label: primary_type,
           data: data,
           borderWidth: 1,
-          backgroundColor: "##{Enum.at(colors, index)}"
+          backgroundColor: Map.get(@primary_type_color_mapping, primary_type)
         }
 
         acc ++ [data]
@@ -185,8 +215,6 @@ defmodule ChallengeGov.Analytics do
   def challenges_hosted_externally(challenges, years) do
     challenges = challenge_prefilter(challenges)
 
-    colors = ColorStream.hex() |> Enum.take(2)
-
     labels = years
 
     data =
@@ -209,11 +237,12 @@ defmodule ChallengeGov.Analytics do
         data = %{
           label: label,
           data: data,
-          backgroundColor: "##{Enum.at(colors, color_index)}"
+          backgroundColor: Enum.at(@colors, color_index)
         }
 
         acc ++ [data]
       end)
+      |> Enum.reverse()
 
     data_obj = %{
       labels: labels,
@@ -257,7 +286,8 @@ defmodule ChallengeGov.Analytics do
     data_obj = %{
       datasets: [
         %{
-          data: data
+          data: data,
+          backgroundColor: Enum.at(@colors, 0)
         }
       ]
     }
@@ -292,8 +322,6 @@ defmodule ChallengeGov.Analytics do
         !is_nil(challenge.legal_authority)
       end)
 
-    colors = ColorStream.hex() |> Enum.take(2)
-
     labels = years
 
     data =
@@ -320,11 +348,12 @@ defmodule ChallengeGov.Analytics do
         data = %{
           label: label,
           data: data,
-          backgroundColor: "##{Enum.at(colors, color_index)}"
+          backgroundColor: Enum.at(@colors, color_index)
         }
 
         acc ++ [data]
       end)
+      |> Enum.reverse()
 
     data_obj = %{
       labels: labels,
@@ -367,7 +396,8 @@ defmodule ChallengeGov.Analytics do
 
     data = [
       %{
-        data: launched_data
+        data: launched_data,
+        backgroundColor: Enum.at(@colors, 0)
       }
     ]
 
