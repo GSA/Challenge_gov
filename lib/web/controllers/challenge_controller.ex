@@ -466,7 +466,7 @@ defmodule Web.ChallengeController do
          challenge = %{status: "gsa_review"}
        ) do
     remote_ip = Security.extract_remote_ip(conn)
-    {:ok, challenge} = Challenges.set_status(user, challenge, "draft", remote_ip)
+    {:ok, challenge} = Challenges.set_statuses(user, challenge, "draft", nil, remote_ip)
 
     conn
     |> put_flash(:warning, [

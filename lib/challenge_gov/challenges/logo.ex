@@ -28,19 +28,20 @@ defmodule ChallengeGov.Challenges.Logo do
 
     case Map.has_key?(params, "logo") and Map.get(params, "logo") != "" do
       true ->
-        upload_logo(challenge, Map.get(params, "logo"))
+        upload_logo(challenge, Map.get(params, "logo"), Map.get(params, "logo_alt_text"))
 
       false ->
         {:ok, challenge}
     end
   end
 
-  def upload_logo(challenge, file) do
+  def upload_logo(challenge, file, alt_text) do
     file = Storage.prep_file(file)
 
     key = UUID.uuid4()
     path = logo_path("original", key, file.extension)
-    changeset = Challenge.logo_changeset(challenge, key, file.extension)
+    alt_text = if is_nil(alt_text) or alt_text === "", do: "Challenge logo", else: alt_text
+    changeset = Challenge.logo_changeset(challenge, key, file.extension, alt_text)
 
     with :ok <- upload(file, path),
          {:ok, challenge} <- Repo.update(changeset) do

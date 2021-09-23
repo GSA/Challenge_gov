@@ -91,6 +91,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
   defp complete_timeline_section(session) do
     session
+    |> execute_script("$('document').ready(function(){ console.log('waiting') });")
     |> click(css(".add-nested-section"))
     |> fill_in(text_field("Timeline event title"), with: "Event 1")
     |> execute_script(

@@ -560,7 +560,7 @@ defmodule Web.ChallengeView do
 
       false ->
         url = Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
-        opts = Keyword.merge([alt: "Challenge Logo", style: "max-height: 200px"], opts)
+        opts = Keyword.merge([alt: challenge.logo_alt_text, style: "max-height: 200px"], opts)
         img_tag(url, opts)
     end
   end

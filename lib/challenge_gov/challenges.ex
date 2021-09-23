@@ -936,6 +936,26 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  def set_statuses(current_user, challenge, status, sub_status, remote_ip) do
+    challenge
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_change(:status, status)
+    |> Ecto.Changeset.put_change(:sub_status, sub_status)
+    |> Repo.update()
+    |> case do
+      {:ok, challenge} ->
+        add_to_security_log(current_user, challenge, "status_change", remote_ip, %{
+          status: status,
+          sub_status: sub_status
+        })
+
+        {:ok, challenge}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
   def set_status(current_user, challenge, status, remote_ip) do
     challenge
     |> Ecto.Changeset.change()

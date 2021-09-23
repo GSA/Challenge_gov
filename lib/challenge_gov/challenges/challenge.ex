@@ -53,6 +53,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     # Images
     field(:logo_key, Ecto.UUID)
     field(:logo_extension, :string)
+    field(:logo_alt_text, :string)
 
     field(:winner_image_key, Ecto.UUID)
     field(:winner_image_extension, :string)
@@ -667,11 +668,12 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   # Image changesets
-  def logo_changeset(struct, key, extension) do
+  def logo_changeset(struct, key, extension, alt_text) do
     struct
     |> change()
     |> put_change(:logo_key, key)
     |> put_change(:logo_extension, extension)
+    |> put_change(:logo_alt_text, alt_text)
   end
 
   def winner_image_changeset(struct, key, extension) do
@@ -707,6 +709,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     struct
     |> put_change(:logo_key, nil)
     |> put_change(:logo_extension, nil)
+    |> put_change(:logo_alt_text, nil)
   end
 
   defp validate_upload_logo(struct, _params), do: struct

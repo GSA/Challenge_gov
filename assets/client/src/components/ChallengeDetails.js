@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import moment from "moment"
 import { stripHtml } from "string-strip-html";
 import { Tooltip } from 'reactstrap'
+import NumberFormat from 'react-number-format';
 
 import { ChallengeTabs } from "../components/ChallengeTabs"
 import { Overview } from "../components/challenge_tabs/Overview"
@@ -311,7 +312,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                 { challenge.logo
                   ? <img
                       className={challenge.upload_logo ? "custom-logo" : "challenge-logo"}
-                      src={challenge.logo} alt="challenge logo"
+                      src={challenge.logo} alt={challenge.logo_alt_text}
                       title="challenge logo"/>
                   : <img
                       className="agency-logo"
@@ -339,7 +340,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
               { !challenge.prize_total || challenge.prize_total != 0 &&
                 <div className="item">
                   <p className="info-title">Total cash prizes:</p>
-                  <p>{`$${challenge.prize_total.toLocaleString()}`}</p>
+                  <NumberFormat value={challenge.prize_total/100} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 </div>
               }
               {!print &&
