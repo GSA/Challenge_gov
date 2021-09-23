@@ -3,7 +3,7 @@
     <%= SharedView.render_breadcrumbs([
       %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
       %{text: "Challenges", route: Routes.challenge_path(@conn, :index)},
-      %{text: "New"},
+      %{text: @challenge && @challenge.title || "New"}
     ])%>
     <%= render Web.ChallengeView, "_challenge_manager_banner.html", user: @user %>
     <div class="row mb-2">

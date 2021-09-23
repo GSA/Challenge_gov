@@ -1,0 +1,39 @@
+<nav class="mt-2">
+  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+    <li class="nav-item">
+      <%= link(to: Routes.dashboard_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "dashboard")}")  do %>
+        <i class="nav-icon fa fa-th-large"></i>
+        <p>Dashboard</p>
+      <% end %>
+    </li>
+    <li class="nav-item">
+      <%= link(to: Routes.user_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "users")}") do %>
+        <i class="nav-icon fas fa-users"></i>
+        <p>Users</p>
+      <% end %>
+    </li>
+    <li class="nav-item">
+      <%= link(to: Routes.challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "challenges")}") do %>
+        <i class="nav-icon fas fa-award"></i>
+        <p>Challenges</p>
+      <% end %>
+    </li>
+  </ul>
+</nav>
+<nav class="mt-5">
+  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+    <%= render_message_center_icon(@conn, @user) %>
+    <li class="nav-item">
+      <%= link(to: Routes.analytics_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "analytics")}") do %>
+      <i class="nav-icon fas fa-chart-bar"></i>
+      <p>Analytics</p>
+      <% end %>
+    </li>
+    <li class="nav-item">
+      <%= link(to: Routes.site_content_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "site_content")}") do %>
+      <i class="nav-icon fas fa-list-alt"></i>
+      <p>Site Management</p>
+      <% end %>
+    </li>
+  </ul>
+</nav>
