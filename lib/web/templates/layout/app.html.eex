@@ -48,7 +48,7 @@
             <%= if Accounts.role_at_or_below(u, "solver") do %>
               <%= render Web.LayoutView, "side_nav/_solver.html", conn: @conn, user: u %>
             <% end %>
-            <%= if ChallengeGov.Accounts.is_challenge_owner?(u) do %>
+            <%= if ChallengeGov.Accounts.is_challenge_manager?(u) do %>
               <%= render Web.LayoutView, "side_nav/_challenge_manager.html", conn: @conn, user: u %>
             <% end %>
             <%= if ChallengeGov.Accounts.has_admin_access?(u) do %>

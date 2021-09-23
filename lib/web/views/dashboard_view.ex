@@ -53,8 +53,8 @@ defmodule Web.DashboardView do
       Accounts.has_admin_access?(user) ->
         admin_header(wrapper_classes)
 
-      Accounts.is_challenge_owner?(user) ->
-        challenge_owner_header(wrapper_classes)
+      Accounts.is_challenge_manager?(user) ->
+        challenge_manager_header(wrapper_classes)
 
       Accounts.is_solver?(user) ->
         solver_header(wrapper_classes)
@@ -73,7 +73,7 @@ defmodule Web.DashboardView do
     end
   end
 
-  defp challenge_owner_header(wrapper_classes) do
+  defp challenge_manager_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
         content_tag(:h3, "Welcome to the Challenge.gov portal."),
@@ -99,8 +99,8 @@ defmodule Web.DashboardView do
       Accounts.has_admin_access?(user) ->
         admin_card_links()
 
-      Accounts.is_challenge_owner?(user) ->
-        challenge_owner_card_links()
+      Accounts.is_challenge_manager?(user) ->
+        challenge_manager_card_links()
 
       Accounts.is_solver?(user) ->
         solver_card_links(user)
@@ -170,7 +170,7 @@ defmodule Web.DashboardView do
     ]
   end
 
-  defp challenge_owner_card_links() do
+  defp challenge_manager_card_links() do
     [
       content_tag :div, class: "row" do
         [

@@ -5,7 +5,7 @@ defmodule Web.SubmissionExportController do
   alias ChallengeGov.Phases
   alias ChallengeGov.SubmissionExports
 
-  plug(Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_owner])
+  plug(Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_manager])
 
   def index(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns

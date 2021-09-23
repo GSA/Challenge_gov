@@ -154,8 +154,8 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
   defp create_and_sign_in_gov_challenge_manager(session) do
     AccountHelpers.create_user(%{
-      email: "challenge_owner_active@example.gov",
-      role: "challenge_owner"
+      email: "challenge_manager_active@example.gov",
+      role: "challenge_manager"
     })
 
     session

@@ -1,7 +1,7 @@
 defmodule ChallengeGov.MessageContextsTest do
   use ChallengeGov.DataCase
 
-  alias ChallengeGov.Challenges.ChallengeOwner
+  alias ChallengeGov.Challenges.ChallengeManager
   alias ChallengeGov.Messages
   alias ChallengeGov.MessageContexts
   alias ChallengeGov.MessageContextStatuses
@@ -12,18 +12,18 @@ defmodule ChallengeGov.MessageContextsTest do
   alias ChallengeGov.TestHelpers.SubmissionHelpers
 
   describe "creating a message context" do
-    test "success: challenge owner creating broadcast context around a challenge" do
-      user_challenge_owner =
+    test "success: challenge manager creating broadcast context around a challenge" do
+      user_challenge_manager =
         AccountHelpers.create_user(%{
-          email: "challenge_owner@example.com",
-          role: "challenge_owner"
+          email: "challenge_manager@example.com",
+          role: "challenge_manager"
         })
 
       user_solver = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(user_challenge_owner, %{
-          user_id: user_challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(user_challenge_manager, %{
+          user_id: user_challenge_manager.id
         })
 
       _submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
@@ -37,31 +37,33 @@ defmodule ChallengeGov.MessageContextsTest do
           "audience" => "all"
         })
 
-      user_context_status = Enum.at(MessageContextStatuses.all_for_user(user_challenge_owner), 0)
+      user_context_status =
+        Enum.at(MessageContextStatuses.all_for_user(user_challenge_manager), 0)
+
       user_solver_context_status = Enum.at(MessageContextStatuses.all_for_user(user_solver), 0)
 
       assert user_context_status.message_context_id == message_context.id
       assert user_solver_context_status.message_context_id == message_context.id
     end
 
-    test "success: admin creating a context with a challenge owner audience around a challenge" do
+    test "success: admin creating a context with a challenge manager audience around a challenge" do
       user_admin =
         AccountHelpers.create_user(%{
           email: "admin@example.com",
           role: "admin"
         })
 
-      user_challenge_owner =
+      user_challenge_manager =
         AccountHelpers.create_user(%{
-          email: "challenge_owner@example.com",
-          role: "challenge_owner"
+          email: "challenge_manager@example.com",
+          role: "challenge_manager"
         })
 
       user_solver = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(user_challenge_owner, %{
-          user_id: user_challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(user_challenge_manager, %{
+          user_id: user_challenge_manager.id
         })
 
       _submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
@@ -72,35 +74,35 @@ defmodule ChallengeGov.MessageContextsTest do
         MessageContexts.create(%{
           "context" => "challenge",
           "context_id" => challenge.id,
-          "audience" => "challenge_owners"
+          "audience" => "challenge_managers"
         })
 
       user_admin_context_status = Enum.at(MessageContextStatuses.all_for_user(user_admin), 0)
 
-      user_challenge_owner_context_status =
-        Enum.at(MessageContextStatuses.all_for_user(user_challenge_owner), 0)
+      user_challenge_manager_context_status =
+        Enum.at(MessageContextStatuses.all_for_user(user_challenge_manager), 0)
 
       user_solver_context_status = Enum.at(MessageContextStatuses.all_for_user(user_solver), 0)
 
       assert user_admin_context_status.message_context_id == message_context.id
-      assert user_challenge_owner_context_status.message_context_id == message_context.id
+      assert user_challenge_manager_context_status.message_context_id == message_context.id
       refute user_solver_context_status
     end
 
     # Parent contexts might not exist for submission contexts
     @tag :skip
     test "success: creating a submission context with an already existing parent challenge message context" do
-      user_challenge_owner =
+      user_challenge_manager =
         AccountHelpers.create_user(%{
-          email: "challenge_owner@example.com",
-          role: "challenge_owner"
+          email: "challenge_manager@example.com",
+          role: "challenge_manager"
         })
 
       user_solver = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(user_challenge_owner, %{
-          user_id: user_challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(user_challenge_manager, %{
+          user_id: user_challenge_manager.id
         })
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
@@ -115,12 +117,12 @@ defmodule ChallengeGov.MessageContextsTest do
           "audience" => "all"
         })
 
-      user_context_statuses = MessageContextStatuses.all_for_user(user_challenge_owner)
+      user_context_statuses = MessageContextStatuses.all_for_user(user_challenge_manager)
       user_context_status = Enum.at(user_context_statuses, 0)
       user_solver_context_statuses = MessageContextStatuses.all_for_user(user_solver)
       user_solver_context_status = Enum.at(user_solver_context_statuses, 0)
 
-      # Both challenge owner and solver will have a context status pointing to the initial broadcast context
+      # Both challenge manager and solver will have a context status pointing to the initial broadcast context
       assert user_context_status.message_context_id == message_context.id
       assert length(user_context_statuses) == 1
       assert user_solver_context_status.message_context_id == message_context.id
@@ -135,7 +137,7 @@ defmodule ChallengeGov.MessageContextsTest do
           "audience" => "all"
         })
 
-      user_context_statuses = MessageContextStatuses.all_for_user(user_challenge_owner)
+      user_context_statuses = MessageContextStatuses.all_for_user(user_challenge_manager)
       user_context_status = Enum.at(user_context_statuses, 0)
       user_solver_context_statuses = MessageContextStatuses.all_for_user(user_solver)
       user_solver_context_status = Enum.at(user_solver_context_statuses, 0)
@@ -150,17 +152,17 @@ defmodule ChallengeGov.MessageContextsTest do
     # Parent contexts might not exist for submission contexts
     @tag :skip
     test "success: creating a submission context without an existing parent challenge message context" do
-      user_challenge_owner =
+      user_challenge_manager =
         AccountHelpers.create_user(%{
-          email: "challenge_owner@example.com",
-          role: "challenge_owner"
+          email: "challenge_manager@example.com",
+          role: "challenge_manager"
         })
 
       user_solver = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(user_challenge_owner, %{
-          user_id: user_challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(user_challenge_manager, %{
+          user_id: user_challenge_manager.id
         })
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
@@ -173,7 +175,7 @@ defmodule ChallengeGov.MessageContextsTest do
           "audience" => "all"
         })
 
-      user_context_statuses = MessageContextStatuses.all_for_user(user_challenge_owner)
+      user_context_statuses = MessageContextStatuses.all_for_user(user_challenge_manager)
       user_context_status = Enum.at(user_context_statuses, 0)
       user_solver_context_statuses = MessageContextStatuses.all_for_user(user_solver)
       user_solver_context_status = Enum.at(user_solver_context_statuses, 0)
@@ -188,17 +190,17 @@ defmodule ChallengeGov.MessageContextsTest do
     # Parent contexts might not exist for submission contexts
     @tag :skip
     test "success: creating a challenge broadcast context and attaching related existing submission message contexts to it" do
-      user_challenge_owner =
+      user_challenge_manager =
         AccountHelpers.create_user(%{
-          email: "challenge_owner@example.com",
-          role: "challenge_owner"
+          email: "challenge_manager@example.com",
+          role: "challenge_manager"
         })
 
       user_solver = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(user_challenge_owner, %{
-          user_id: user_challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(user_challenge_manager, %{
+          user_id: user_challenge_manager.id
         })
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
@@ -211,14 +213,14 @@ defmodule ChallengeGov.MessageContextsTest do
           "audience" => "all"
         })
 
-      user_context_statuses = MessageContextStatuses.all_for_user(user_challenge_owner)
+      user_context_statuses = MessageContextStatuses.all_for_user(user_challenge_manager)
       user_context_status_context_ids = Enum.map(user_context_statuses, & &1.message_context_id)
       user_solver_context_statuses = MessageContextStatuses.all_for_user(user_solver)
 
       user_solver_context_status_context_ids =
         Enum.map(user_solver_context_statuses, & &1.message_context_id)
 
-      # Both challenge owner and solver will have a context status pointing to the initial broadcast context
+      # Both challenge manager and solver will have a context status pointing to the initial broadcast context
       assert user_context_status_context_ids == [submission_message_context.id]
       assert length(user_context_statuses) == 1
       assert user_solver_context_status_context_ids == [submission_message_context.id]
@@ -238,7 +240,7 @@ defmodule ChallengeGov.MessageContextsTest do
       assert length(message_context.contexts) == 1
       assert submission_message_context.parent_id == message_context.id
 
-      user_context_statuses = MessageContextStatuses.all_for_user(user_challenge_owner)
+      user_context_statuses = MessageContextStatuses.all_for_user(user_challenge_manager)
       user_context_status_context_ids = Enum.map(user_context_statuses, & &1.message_context_id)
       user_solver_context_statuses = MessageContextStatuses.all_for_user(user_solver)
 
@@ -257,12 +259,12 @@ defmodule ChallengeGov.MessageContextsTest do
 
   describe "finding or creating multiple solver message contexts" do
     test "success: with no existing parent challenge context" do
-      challenge_owner =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "co@example.com"})
+      challenge_manager =
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "co@example.com"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
-          user_id: challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(challenge_manager, %{
+          user_id: challenge_manager.id
         })
 
       solver_1 = AccountHelpers.create_user(%{role: "solver", email: "s1@example.com"})
@@ -280,7 +282,7 @@ defmodule ChallengeGov.MessageContextsTest do
       }
 
       MessageContexts.multi_submission_message(
-        challenge_owner,
+        challenge_manager,
         challenge.id,
         solver_ids,
         message_content
@@ -306,12 +308,12 @@ defmodule ChallengeGov.MessageContextsTest do
     end
 
     test "success: with existing parent challenge context" do
-      challenge_owner =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "co@example.com"})
+      challenge_manager =
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "co@example.com"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
-          user_id: challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(challenge_manager, %{
+          user_id: challenge_manager.id
         })
 
       solver_1 = AccountHelpers.create_user(%{role: "solver", email: "s1@example.com"})
@@ -344,7 +346,7 @@ defmodule ChallengeGov.MessageContextsTest do
       }
 
       MessageContexts.multi_submission_message(
-        challenge_owner,
+        challenge_manager,
         challenge.id,
         solver_ids,
         message_content
@@ -402,7 +404,7 @@ defmodule ChallengeGov.MessageContextsTest do
     test "success" do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         user_solver: user_solver
       } = MessageContextStatusHelpers.create_message_context_status()
 
@@ -410,13 +412,13 @@ defmodule ChallengeGov.MessageContextsTest do
       assert last_author == nil
 
       {:ok, _message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test"
         })
 
       {:ok, last_author} = MessageContexts.get_last_author(message_context)
-      assert last_author.id == user_challenge_owner.id
+      assert last_author.id == user_challenge_manager.id
 
       # A solver creating a message on a "challenge" context will get their own context
       # This means the last author will not change on the parent and instead be on their own context
@@ -429,19 +431,19 @@ defmodule ChallengeGov.MessageContextsTest do
       {:ok, solver_isolated_context} = MessageContexts.get("solver", user_solver.id, "all")
 
       {:ok, last_author} = MessageContexts.get_last_author(message_context)
-      assert last_author.id == user_challenge_owner.id
+      assert last_author.id == user_challenge_manager.id
 
       {:ok, last_author_solver_context} = MessageContexts.get_last_author(solver_isolated_context)
       assert last_author_solver_context.id == user_solver.id
 
       {:ok, _message} =
-        Messages.create(user_challenge_owner, solver_isolated_context, %{
+        Messages.create(user_challenge_manager, solver_isolated_context, %{
           "content" => "Test",
           "content_delta" => "Test"
         })
 
       {:ok, last_author_solver_context} = MessageContexts.get_last_author(solver_isolated_context)
-      assert last_author_solver_context.id == user_challenge_owner.id
+      assert last_author_solver_context.id == user_challenge_manager.id
     end
   end
 
@@ -458,16 +460,16 @@ defmodule ChallengeGov.MessageContextsTest do
       assert length(user_admin.message_context_statuses) == 1
     end
 
-    test "success: for challenge_owner" do
+    test "success: for challenge_manager" do
       %{
         message_context: message_context,
         user_solver: user_solver
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      user_challenge_owner_new =
+      user_challenge_manager_new =
         AccountHelpers.create_user(%{
-          role: "challenge_owner",
-          email: "challenge_owner_new@example.com"
+          role: "challenge_manager",
+          email: "challenge_manager_new@example.com"
         })
 
       Messages.create(user_solver, message_context, %{
@@ -478,29 +480,29 @@ defmodule ChallengeGov.MessageContextsTest do
 
       challenge = MessageContexts.get_context_record(message_context)
 
-      {:ok, challenge_owner} =
-        %ChallengeOwner{}
-        |> ChallengeOwner.changeset(%{
+      {:ok, challenge_manager} =
+        %ChallengeManager{}
+        |> ChallengeManager.changeset(%{
           "challenge_id" => challenge.id,
-          "user_id" => user_challenge_owner_new.id
+          "user_id" => user_challenge_manager_new.id
         })
         |> Repo.insert()
 
-      MessageContexts.sync_for_user(user_challenge_owner_new)
+      MessageContexts.sync_for_user(user_challenge_manager_new)
 
-      user_challenge_owner_new =
-        Repo.preload(user_challenge_owner_new, [:message_context_statuses])
+      user_challenge_manager_new =
+        Repo.preload(user_challenge_manager_new, [:message_context_statuses])
 
-      assert length(user_challenge_owner_new.message_context_statuses) == 2
+      assert length(user_challenge_manager_new.message_context_statuses) == 2
 
-      Repo.delete(challenge_owner)
+      Repo.delete(challenge_manager)
 
-      MessageContexts.sync_for_user(user_challenge_owner_new)
+      MessageContexts.sync_for_user(user_challenge_manager_new)
 
-      user_challenge_owner_new =
-        Repo.preload(user_challenge_owner_new, [:message_context_statuses], force: true)
+      user_challenge_manager_new =
+        Repo.preload(user_challenge_manager_new, [:message_context_statuses], force: true)
 
-      assert Enum.empty?(user_challenge_owner_new.message_context_statuses)
+      assert Enum.empty?(user_challenge_manager_new.message_context_statuses)
     end
 
     test "success: for solver" do
@@ -519,7 +521,7 @@ defmodule ChallengeGov.MessageContextsTest do
       MessageContexts.create(%{
         "context" => "challenge",
         "context_id" => challenge.id,
-        "audience" => "challenge_owners"
+        "audience" => "challenge_managers"
       })
 
       MessageContexts.sync_for_user(user_solver)
@@ -551,8 +553,8 @@ defmodule ChallengeGov.MessageContextsTest do
       assert MessageContexts.user_can_create?(user)
     end
 
-    test "success: challenge_owner" do
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+    test "success: challenge_manager" do
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
       assert MessageContexts.user_can_create?(user)
     end
 
@@ -581,14 +583,14 @@ defmodule ChallengeGov.MessageContextsTest do
       assert MessageContexts.user_can_view?(user, context)
     end
 
-    test "success: challenge_owner" do
+    test "success: challenge_manager" do
       %{
-        user_challenge_owner: user,
+        user_challenge_manager: user,
         message_context: context
       } = MessageContextStatusHelpers.create_message_context_status()
 
       new_user =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "new_user@example.com"})
 
       assert MessageContexts.user_can_view?(user, context)
       refute MessageContexts.user_can_view?(new_user, context)
@@ -626,14 +628,14 @@ defmodule ChallengeGov.MessageContextsTest do
       assert MessageContexts.user_can_message?(user, context)
     end
 
-    test "success: challenge_owner" do
+    test "success: challenge_manager" do
       %{
-        user_challenge_owner: user,
+        user_challenge_manager: user,
         message_context: context
       } = MessageContextStatusHelpers.create_message_context_status()
 
       new_user =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "new_user@example.com"})
 
       assert MessageContexts.user_can_message?(user, context)
       refute MessageContexts.user_can_message?(new_user, context)
@@ -660,18 +662,18 @@ defmodule ChallengeGov.MessageContextsTest do
   end
 
   describe "permission checks: user related" do
-    test "success: challenge owner related to challenge context" do
+    test "success: challenge manager related to challenge context" do
       %{
-        user_challenge_owner: user,
+        user_challenge_manager: user,
         message_context: context
       } = MessageContextStatusHelpers.create_message_context_status()
 
       assert MessageContexts.user_related_to_context?(user, context)
     end
 
-    test "success: challenge owner related to solver context" do
+    test "success: challenge manager related to solver context" do
       %{
-        user_challenge_owner: user,
+        user_challenge_manager: user,
         user_solver: user_solver,
         message_context: context
       } = MessageContextStatusHelpers.create_message_context_status()
@@ -687,17 +689,17 @@ defmodule ChallengeGov.MessageContextsTest do
       assert MessageContexts.user_related_to_context?(user, solver_context)
     end
 
-    test "failure: challenge owner not related to challenge context" do
+    test "failure: challenge manager not related to challenge context" do
       %{
         message_context: context
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
 
       refute MessageContexts.user_related_to_context?(user, context)
     end
 
-    test "failure: challenge owner not related to solver context" do
+    test "failure: challenge manager not related to solver context" do
       %{
         user_solver: user_solver,
         message_context: context
@@ -711,7 +713,7 @@ defmodule ChallengeGov.MessageContextsTest do
           "parent_id" => context.id
         })
 
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
 
       refute MessageContexts.user_related_to_context?(user, solver_context)
     end

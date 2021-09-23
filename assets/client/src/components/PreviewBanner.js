@@ -14,7 +14,7 @@ export const PreviewBanner = ({challenge}) => {
             <div>
               You are viewing a preview of this challenge. 
               Any changes are not live and are not available to the public 
-              until submitted on the "Review and submit" page by the Challenge Owner
+              until submitted on the "Review and submit" page by the Challenge Manager
             </div>
             <br/>
             <div>

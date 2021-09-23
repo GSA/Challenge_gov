@@ -42,8 +42,8 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
       |> Repo.insert()
 
     if !is_nil(user) do
-      %Challenges.ChallengeOwner{}
-      |> Challenges.ChallengeOwner.changeset(%{
+      %Challenges.ChallengeManager{}
+      |> Challenges.ChallengeManager.changeset(%{
         user_id: user.id,
         challenge_id: challenge.id
       })

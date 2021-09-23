@@ -16,7 +16,7 @@ defmodule ChallengeGov.ChallengeTest do
         ChallengeHelpers.create_single_phase_challenge(user, %{
           user_id: user.id,
           status: "draft",
-          challenge_owners: [user.id]
+          challenge_managers: [user.id]
         })
 
       params = %{"action" => "submit", "challenge" => %{"section" => "review"}}
@@ -190,21 +190,21 @@ defmodule ChallengeGov.ChallengeTest do
   end
 
   describe "check user relations to challenge" do
-    test "success: is challenge owner for challenge" do
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+    test "success: is challenge manager for challenge" do
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
-      assert Challenges.is_challenge_owner?(user, challenge)
+      assert Challenges.is_challenge_manager?(user, challenge)
     end
 
-    test "failure: is not challenge owner for challenge" do
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+    test "failure: is not challenge manager for challenge" do
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       other_user =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "other@example.com"})
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "other@example.com"})
 
-      refute Challenges.is_challenge_owner?(other_user, challenge)
+      refute Challenges.is_challenge_manager?(other_user, challenge)
     end
 
     test "success: is solver on challenge" do

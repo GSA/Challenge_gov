@@ -3,7 +3,7 @@ defmodule Web.MessageContextControllerTest do
 
   alias ChallengeGov.Repo
 
-  alias ChallengeGov.Challenges.ChallengeOwner
+  alias ChallengeGov.Challenges.ChallengeManager
   alias ChallengeGov.Messages
   alias ChallengeGov.MessageContexts
   alias ChallengeGov.MessageContextStatuses
@@ -40,16 +40,16 @@ defmodule Web.MessageContextControllerTest do
       assert html_response(conn, 200)
     end
 
-    test "success: for challenge owner", %{conn: conn} do
+    test "success: for challenge manager", %{conn: conn} do
       %{
         message_context: message_context,
         user_solver: user_solver
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      user_challenge_owner_new =
+      user_challenge_manager_new =
         AccountHelpers.create_user(%{
-          role: "challenge_owner",
-          email: "challenge_owner_new@example.com"
+          role: "challenge_manager",
+          email: "challenge_manager_new@example.com"
         })
 
       Messages.create(user_solver, message_context, %{
@@ -60,14 +60,14 @@ defmodule Web.MessageContextControllerTest do
 
       challenge = MessageContexts.get_context_record(message_context)
 
-      %ChallengeOwner{}
-      |> ChallengeOwner.changeset(%{
+      %ChallengeManager{}
+      |> ChallengeManager.changeset(%{
         "challenge_id" => challenge.id,
-        "user_id" => user_challenge_owner_new.id
+        "user_id" => user_challenge_manager_new.id
       })
       |> Repo.insert()
 
-      conn = prep_conn(conn, user_challenge_owner_new)
+      conn = prep_conn(conn, user_challenge_manager_new)
 
       conn =
         get(
@@ -126,14 +126,14 @@ defmodule Web.MessageContextControllerTest do
   describe "filter starred" do
     test "success", %{conn: conn} do
       %{
-        challenge_owner_message_context_status: challenge_owner_message_context_status,
-        user_challenge_owner: user_challenge_owner
+        challenge_manager_message_context_status: challenge_manager_message_context_status,
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       {:ok, _message_context_status} =
-        MessageContextStatuses.toggle_starred(challenge_owner_message_context_status)
+        MessageContextStatuses.toggle_starred(challenge_manager_message_context_status)
 
       conn =
         get(
@@ -154,10 +154,10 @@ defmodule Web.MessageContextControllerTest do
 
     test "success: none", %{conn: conn} do
       %{
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       conn =
         get(
@@ -180,14 +180,14 @@ defmodule Web.MessageContextControllerTest do
   describe "filter archived" do
     test "success", %{conn: conn} do
       %{
-        challenge_owner_message_context_status: challenge_owner_message_context_status,
-        user_challenge_owner: user_challenge_owner
+        challenge_manager_message_context_status: challenge_manager_message_context_status,
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       {:ok, _message_context_status} =
-        MessageContextStatuses.toggle_archived(challenge_owner_message_context_status)
+        MessageContextStatuses.toggle_archived(challenge_manager_message_context_status)
 
       conn =
         get(
@@ -208,10 +208,10 @@ defmodule Web.MessageContextControllerTest do
 
     test "success: none", %{conn: conn} do
       %{
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       conn =
         get(
@@ -234,14 +234,14 @@ defmodule Web.MessageContextControllerTest do
   describe "filter read" do
     test "success", %{conn: conn} do
       %{
-        challenge_owner_message_context_status: challenge_owner_message_context_status,
-        user_challenge_owner: user_challenge_owner
+        challenge_manager_message_context_status: challenge_manager_message_context_status,
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       {:ok, _message_context_status} =
-        MessageContextStatuses.toggle_read(challenge_owner_message_context_status)
+        MessageContextStatuses.toggle_read(challenge_manager_message_context_status)
 
       conn =
         get(
@@ -262,10 +262,10 @@ defmodule Web.MessageContextControllerTest do
 
     test "success: none", %{conn: conn} do
       %{
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       conn =
         get(
@@ -289,10 +289,10 @@ defmodule Web.MessageContextControllerTest do
     test "success", %{conn: conn} do
       %{
         challenge: challenge,
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       conn =
         get(
@@ -314,10 +314,10 @@ defmodule Web.MessageContextControllerTest do
     test "success: none", %{conn: conn} do
       %{
         challenge: challenge,
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       conn =
         get(
@@ -356,8 +356,8 @@ defmodule Web.MessageContextControllerTest do
       assert html_response(conn, 200)
     end
 
-    test "success: challenge owner", %{conn: conn} do
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+    test "success: challenge manager", %{conn: conn} do
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
       conn = prep_conn(conn, user)
 
       conn = get(conn, Routes.message_context_path(conn, :new), %{"context" => "challenge"})
@@ -382,14 +382,14 @@ defmodule Web.MessageContextControllerTest do
       user = AccountHelpers.create_user(%{role: "super_admin"})
       conn = prep_conn(conn, user)
 
-      challenge_owner =
+      challenge_manager =
         AccountHelpers.create_user(%{
-          role: "challenge_owner",
-          email: "challenge_owner@example.com"
+          role: "challenge_manager",
+          email: "challenge_manager@example.com"
         })
 
       challenge =
-        ChallengeHelpers.create_challenge(%{user_id: challenge_owner.id}, challenge_owner)
+        ChallengeHelpers.create_challenge(%{user_id: challenge_manager.id}, challenge_manager)
 
       message_context_attributes = %{
         "context" => "challenge",
@@ -412,14 +412,14 @@ defmodule Web.MessageContextControllerTest do
       user = AccountHelpers.create_user(%{role: "admin"})
       conn = prep_conn(conn, user)
 
-      challenge_owner =
+      challenge_manager =
         AccountHelpers.create_user(%{
-          role: "challenge_owner",
-          email: "challenge_owner@example.com"
+          role: "challenge_manager",
+          email: "challenge_manager@example.com"
         })
 
       challenge =
-        ChallengeHelpers.create_challenge(%{user_id: challenge_owner.id}, challenge_owner)
+        ChallengeHelpers.create_challenge(%{user_id: challenge_manager.id}, challenge_manager)
 
       message_context_attributes = %{
         "context" => "challenge",
@@ -438,8 +438,8 @@ defmodule Web.MessageContextControllerTest do
       assert redirected_to(conn) == Routes.message_context_path(conn, :show, context.id)
     end
 
-    test "success: challenge owner", %{conn: conn} do
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+    test "success: challenge manager", %{conn: conn} do
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
       conn = prep_conn(conn, user)
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id}, user)
@@ -463,18 +463,18 @@ defmodule Web.MessageContextControllerTest do
 
     # TODO: Low priority check to add and test
     @tag :skip
-    test "failure: challenge owner for unrelated challenge", %{conn: conn} do
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+    test "failure: challenge manager for unrelated challenge", %{conn: conn} do
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
       conn = prep_conn(conn, user)
 
-      challenge_owner =
+      challenge_manager =
         AccountHelpers.create_user(%{
-          role: "challenge_owner",
-          email: "challenge_owner@example.com"
+          role: "challenge_manager",
+          email: "challenge_manager@example.com"
         })
 
       challenge =
-        ChallengeHelpers.create_challenge(%{user_id: challenge_owner.id}, challenge_owner)
+        ChallengeHelpers.create_challenge(%{user_id: challenge_manager.id}, challenge_manager)
 
       message_context_attributes = %{
         "context" => "challenge",
@@ -498,14 +498,14 @@ defmodule Web.MessageContextControllerTest do
       user = AccountHelpers.create_user(%{role: "solver"})
       conn = prep_conn(conn, user)
 
-      challenge_owner =
+      challenge_manager =
         AccountHelpers.create_user(%{
-          role: "challenge_owner",
-          email: "challenge_owner@example.com"
+          role: "challenge_manager",
+          email: "challenge_manager@example.com"
         })
 
       challenge =
-        ChallengeHelpers.create_challenge(%{user_id: challenge_owner.id}, challenge_owner)
+        ChallengeHelpers.create_challenge(%{user_id: challenge_manager.id}, challenge_manager)
 
       message_context_attributes = %{
         "context" => "challenge",
@@ -526,24 +526,24 @@ defmodule Web.MessageContextControllerTest do
     end
   end
 
-  describe "creating a challenge message context with challenge owners audience" do
+  describe "creating a challenge message context with challenge managers audience" do
     test "success: admin", %{conn: conn} do
       user = AccountHelpers.create_user(%{role: "admin"})
       conn = prep_conn(conn, user)
 
-      challenge_owner =
+      challenge_manager =
         AccountHelpers.create_user(%{
-          role: "challenge_owner",
-          email: "challenge_owner@example.com"
+          role: "challenge_manager",
+          email: "challenge_manager@example.com"
         })
 
       challenge =
-        ChallengeHelpers.create_challenge(%{user_id: challenge_owner.id}, challenge_owner)
+        ChallengeHelpers.create_challenge(%{user_id: challenge_manager.id}, challenge_manager)
 
       message_context_attributes = %{
         "context" => "challenge",
         "context_id" => challenge.id,
-        "audience" => "challenge_owners"
+        "audience" => "challenge_managers"
       }
 
       conn =
@@ -551,29 +551,29 @@ defmodule Web.MessageContextControllerTest do
           "message_context" => message_context_attributes
         })
 
-      {:ok, context} = MessageContexts.get("challenge", challenge.id, "challenge_owners")
+      {:ok, context} = MessageContexts.get("challenge", challenge.id, "challenge_managers")
 
       assert html_response(conn, 302)
       assert redirected_to(conn) == Routes.message_context_path(conn, :show, context.id)
     end
 
-    test "success: challenge owner", %{conn: conn} do
-      user = AccountHelpers.create_user(%{role: "challenge_owner"})
+    test "success: challenge manager", %{conn: conn} do
+      user = AccountHelpers.create_user(%{role: "challenge_manager"})
       conn = prep_conn(conn, user)
 
-      challenge_owner =
+      challenge_manager =
         AccountHelpers.create_user(%{
-          role: "challenge_owner",
-          email: "challenge_owner@example.com"
+          role: "challenge_manager",
+          email: "challenge_manager@example.com"
         })
 
       challenge =
-        ChallengeHelpers.create_challenge(%{user_id: challenge_owner.id}, challenge_owner)
+        ChallengeHelpers.create_challenge(%{user_id: challenge_manager.id}, challenge_manager)
 
       message_context_attributes = %{
         "context" => "challenge",
         "context_id" => challenge.id,
-        "audience" => "challenge_owners"
+        "audience" => "challenge_managers"
       }
 
       conn =
@@ -581,7 +581,7 @@ defmodule Web.MessageContextControllerTest do
           "message_context" => message_context_attributes
         })
 
-      {:ok, context} = MessageContexts.get("challenge", challenge.id, "challenge_owners")
+      {:ok, context} = MessageContexts.get("challenge", challenge.id, "challenge_managers")
 
       assert html_response(conn, 302)
       assert redirected_to(conn) == Routes.message_context_path(conn, :show, context.id)
@@ -591,19 +591,19 @@ defmodule Web.MessageContextControllerTest do
       user = AccountHelpers.create_user(%{role: "solver"})
       conn = prep_conn(conn, user)
 
-      challenge_owner =
+      challenge_manager =
         AccountHelpers.create_user(%{
-          role: "challenge_owner",
-          email: "challenge_owner@example.com"
+          role: "challenge_manager",
+          email: "challenge_manager@example.com"
         })
 
       challenge =
-        ChallengeHelpers.create_challenge(%{user_id: challenge_owner.id}, challenge_owner)
+        ChallengeHelpers.create_challenge(%{user_id: challenge_manager.id}, challenge_manager)
 
       message_context_attributes = %{
         "context" => "challenge",
         "context_id" => challenge.id,
-        "audience" => "challenge_owners"
+        "audience" => "challenge_managers"
       }
 
       conn =
@@ -612,7 +612,7 @@ defmodule Web.MessageContextControllerTest do
         })
 
       assert {:error, :not_found} =
-               MessageContexts.get("challenge", challenge.id, "challenge_owners")
+               MessageContexts.get("challenge", challenge.id, "challenge_managers")
 
       assert get_flash(conn, :error) == "You can not start a message thread"
       assert html_response(conn, 302)
@@ -622,12 +622,12 @@ defmodule Web.MessageContextControllerTest do
 
   describe "render new message page for multi messaging" do
     test "success", %{conn: conn} do
-      challenge_owner =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "co@example.com"})
+      challenge_manager =
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "co@example.com"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
-          user_id: challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(challenge_manager, %{
+          user_id: challenge_manager.id
         })
 
       solver_1 = AccountHelpers.create_user(%{role: "solver", email: "s1@example.com"})
@@ -638,7 +638,7 @@ defmodule Web.MessageContextControllerTest do
 
       submission_ids = [submission_1.id, submission_2.id]
 
-      conn = prep_conn(conn, challenge_owner)
+      conn = prep_conn(conn, challenge_manager)
 
       query_params = %{
         "cid" => challenge.id,
@@ -653,12 +653,12 @@ defmodule Web.MessageContextControllerTest do
 
   describe "multi messaging submission for a challenge" do
     test "success: with no existing parent challenge context", %{conn: conn} do
-      challenge_owner =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "co@example.com"})
+      challenge_manager =
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "co@example.com"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
-          user_id: challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(challenge_manager, %{
+          user_id: challenge_manager.id
         })
 
       solver_1 = AccountHelpers.create_user(%{role: "solver", email: "s1@example.com"})
@@ -675,7 +675,7 @@ defmodule Web.MessageContextControllerTest do
         "status" => "sent"
       }
 
-      conn = prep_conn(conn, challenge_owner)
+      conn = prep_conn(conn, challenge_manager)
 
       conn =
         post(conn, Routes.message_context_path(conn, :bulk_message, challenge.id), %{
@@ -708,12 +708,12 @@ defmodule Web.MessageContextControllerTest do
     end
 
     test "success: with existing parent challenge context", %{conn: conn} do
-      challenge_owner =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "co@example.com"})
+      challenge_manager =
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "co@example.com"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
-          user_id: challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(challenge_manager, %{
+          user_id: challenge_manager.id
         })
 
       solver_1 = AccountHelpers.create_user(%{role: "solver", email: "s1@example.com"})
@@ -745,7 +745,7 @@ defmodule Web.MessageContextControllerTest do
         "status" => "sent"
       }
 
-      conn = prep_conn(conn, challenge_owner)
+      conn = prep_conn(conn, challenge_manager)
 
       conn =
         post(conn, Routes.message_context_path(conn, :bulk_message, challenge.id), %{
@@ -815,9 +815,9 @@ defmodule Web.MessageContextControllerTest do
       assert html_response(conn, 200)
     end
 
-    test "success: challenge owner", %{conn: conn} do
+    test "success: challenge manager", %{conn: conn} do
       %{
-        user_challenge_owner: user,
+        user_challenge_manager: user,
         message_context: context
       } = MessageContextStatusHelpers.create_message_context_status()
 
@@ -828,12 +828,13 @@ defmodule Web.MessageContextControllerTest do
       assert html_response(conn, 200)
     end
 
-    test "failure: challenge owner unrelated to context", %{conn: conn} do
+    test "failure: challenge manager unrelated to context", %{conn: conn} do
       %{
         message_context: context
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      user = AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+      user =
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "new_user@example.com"})
 
       conn = prep_conn(conn, user)
 
@@ -878,13 +879,13 @@ defmodule Web.MessageContextControllerTest do
     test "success", %{conn: conn} do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       {:ok, _message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
@@ -905,17 +906,17 @@ defmodule Web.MessageContextControllerTest do
       assert html_response(conn, 200)
     end
 
-    test "success: as second challenge owner", %{conn: conn} do
+    test "success: as second challenge manager", %{conn: conn} do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner,
-        user_challenge_owner_2: user_challenge_owner_2
+        user_challenge_manager: user_challenge_manager,
+        user_challenge_manager_2: user_challenge_manager_2
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner_2)
+      conn = prep_conn(conn, user_challenge_manager_2)
 
       {:ok, _message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
@@ -936,10 +937,10 @@ defmodule Web.MessageContextControllerTest do
       assert html_response(conn, 200)
     end
 
-    test "success: as admin don't see challenge owner drafts", %{conn: conn} do
+    test "success: as admin don't see challenge manager drafts", %{conn: conn} do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
       user_super_admin =
@@ -951,7 +952,7 @@ defmodule Web.MessageContextControllerTest do
       conn = prep_conn(conn, user_super_admin)
 
       {:ok, _message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
@@ -999,13 +1000,13 @@ defmodule Web.MessageContextControllerTest do
     test "success", %{conn: conn} do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
@@ -1028,21 +1029,21 @@ defmodule Web.MessageContextControllerTest do
       assert html_response(conn, 200)
     end
 
-    test "success: challenge owner viewing another challenge owner draft", %{conn: conn} do
+    test "success: challenge manager viewing another challenge manager draft", %{conn: conn} do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner,
-        user_challenge_owner_2: user_challenge_owner_2
+        user_challenge_manager: user_challenge_manager,
+        user_challenge_manager_2: user_challenge_manager_2
       } = MessageContextStatusHelpers.create_message_context_status()
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
         })
 
-      conn = prep_conn(conn, user_challenge_owner_2)
+      conn = prep_conn(conn, user_challenge_manager_2)
 
       conn =
         get(
@@ -1061,13 +1062,14 @@ defmodule Web.MessageContextControllerTest do
       assert html_response(conn, 200)
     end
 
-    test "success: challenge owner viewing another challenge owner draft on solver context", %{
-      conn: conn
-    } do
+    test "success: challenge manager viewing another challenge manager draft on solver context",
+         %{
+           conn: conn
+         } do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner,
-        user_challenge_owner_2: user_challenge_owner_2,
+        user_challenge_manager: user_challenge_manager,
+        user_challenge_manager_2: user_challenge_manager_2,
         user_solver: user_solver
       } = MessageContextStatusHelpers.create_message_context_status()
 
@@ -1080,13 +1082,13 @@ defmodule Web.MessageContextControllerTest do
         })
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, solver_message_context, %{
+        Messages.create(user_challenge_manager, solver_message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
         })
 
-      conn = prep_conn(conn, user_challenge_owner_2)
+      conn = prep_conn(conn, user_challenge_manager_2)
 
       conn =
         get(
@@ -1108,12 +1110,12 @@ defmodule Web.MessageContextControllerTest do
     test "failure: invalid author", %{conn: conn} do
       %{
         user_super_admin: user_super_admin,
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         message_context: message_context
       } = MessageContextStatusHelpers.create_message_context_status()
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
@@ -1136,21 +1138,21 @@ defmodule Web.MessageContextControllerTest do
       assert redirected_to(conn) == Routes.message_context_path(conn, :show, message_context.id)
     end
 
-    test "failure: invalid author challenge owner", %{conn: conn} do
+    test "failure: invalid author challenge manager", %{conn: conn} do
       %{
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         message_context: message_context
       } = MessageContextStatusHelpers.create_message_context_status()
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
         })
 
       new_user =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "new_user@example.com"})
 
       conn = prep_conn(conn, new_user)
 
@@ -1169,10 +1171,10 @@ defmodule Web.MessageContextControllerTest do
       assert redirected_to(conn) == Routes.message_context_path(conn, :show, message_context.id)
     end
 
-    test "failure: invalid author challenge owner on solver context", %{conn: conn} do
+    test "failure: invalid author challenge manager on solver context", %{conn: conn} do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         user_solver: user_solver
       } = MessageContextStatusHelpers.create_message_context_status()
 
@@ -1185,14 +1187,14 @@ defmodule Web.MessageContextControllerTest do
         })
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, solver_message_context, %{
+        Messages.create(user_challenge_manager, solver_message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
         })
 
       new_user =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "new_user@example.com"})
 
       conn = prep_conn(conn, new_user)
 
@@ -1222,19 +1224,19 @@ defmodule Web.MessageContextControllerTest do
 
     test "failure: message not part of context", %{conn: conn} do
       %{
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         message_context: message_context
       } = MessageContextStatusHelpers.create_message_context_status()
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
         })
 
       new_user =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "new_user@example.com"})
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "new_user@example.com"})
 
       challenge =
         ChallengeHelpers.create_single_phase_challenge(new_user, %{

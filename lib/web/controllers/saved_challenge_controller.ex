@@ -50,7 +50,7 @@ defmodule Web.SavedChallengeController do
     %{current_user: user} = conn.assigns
 
     with {:ok, saved_challenge} <- SavedChallenges.get(id),
-         {:ok, saved_challenge} <- SavedChallenges.check_owner(user, saved_challenge) do
+         {:ok, saved_challenge} <- SavedChallenges.check_manager(user, saved_challenge) do
       conn
       |> assign(:challenge, saved_challenge.challenge)
       |> render("show.html")
@@ -60,7 +60,7 @@ defmodule Web.SavedChallengeController do
         |> put_flash(:error, "Saved challenge not found")
         |> redirect(to: Routes.saved_challenge_path(conn, :index))
 
-      {:error, :wrong_owner} ->
+      {:error, :wrong_manager} ->
         conn
         |> put_flash(:error, "Permission denied")
         |> redirect(to: Routes.saved_challenge_path(conn, :index))

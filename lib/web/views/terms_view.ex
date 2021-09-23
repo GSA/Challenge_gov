@@ -4,8 +4,8 @@ defmodule Web.TermsView do
   alias ChallengeGov.Agencies
   alias ChallengeGov.Security
 
-  def challenge_owner_fields(f, user) do
-    if user.data.role == "challenge_owner" do
+  def challenge_manager_fields(f, user) do
+    if user.data.role == "challenge_manager" do
       [
         content_tag(:div, class: "input") do
           [
@@ -21,13 +21,13 @@ defmodule Web.TermsView do
     end
   end
 
-  def challenge_owner_assumed_content(user) do
-    case Security.assume_challenge_owner?(user.email) do
+  def challenge_manager_assumed_content(user) do
+    case Security.assume_challenge_manager?(user.email) do
       true ->
         [
           content_tag(:div, class: "page-center") do
             [
-              content_tag(:p, "You have been registered as a Challenge Owner and
+              content_tag(:p, "You have been registered as a Challenge Manager and
               will be able to create Challenges to go live on Challenge.gov."),
               content_tag(:p) do
                 [

@@ -30,8 +30,8 @@ defmodule ChallengeGov.AutoPublishTest do
       Enum.map(challenges_for_publish, fn challenge ->
         {:ok, challenge} = Challenges.get(challenge.id)
 
-        Enum.map(challenge.challenge_owner_users, fn owner ->
-          assert_delivered_email(Emails.challenge_auto_published(owner, challenge))
+        Enum.map(challenge.challenge_manager_users, fn manager ->
+          assert_delivered_email(Emails.challenge_auto_published(manager, challenge))
         end)
       end)
     end

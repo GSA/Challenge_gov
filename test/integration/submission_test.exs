@@ -79,8 +79,8 @@ defmodule ChallengeGov.SubmissionIntegrationTest do
   defp create_challenge() do
     user =
       AccountHelpers.create_user(%{
-        email: "challenge_owner_active@example.com",
-        role: "challenge_owner"
+        email: "challenge_manager_active@example.com",
+        role: "challenge_manager"
       })
 
     challenge =

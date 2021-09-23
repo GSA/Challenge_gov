@@ -40,9 +40,10 @@ defmodule Web.ExportControllerTest do
     end
 
     test "failure: not authorized", %{conn: conn} do
-      conn = prep_conn(conn, "challenge_owner")
+      conn = prep_conn(conn, "challenge_manager")
 
-      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com", role: "challenge_owner"})
+      user_2 =
+        AccountHelpers.create_user(%{email: "user_2@example.com", role: "challenge_manager"})
 
       challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
 

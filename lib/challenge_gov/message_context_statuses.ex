@@ -94,7 +94,7 @@ defmodule ChallengeGov.MessageContextStatuses do
   end
 
   def get_user_ids_for_message_context(
-        message_context = %{context: "challenge", audience: "challenge_owners"}
+        message_context = %{context: "challenge", audience: "challenge_managers"}
       ) do
     %{context_id: context_id, audience: _audience} = message_context
 
@@ -104,11 +104,11 @@ defmodule ChallengeGov.MessageContextStatuses do
       Accounts.all_admins()
       |> Enum.map(& &1.id)
 
-    challenge_owner_user_ids =
-      challenge.challenge_owners
+    challenge_manager_user_ids =
+      challenge.challenge_managers
       |> Enum.map(& &1.user_id)
 
-    user_ids = admin_user_ids ++ challenge_owner_user_ids
+    user_ids = admin_user_ids ++ challenge_manager_user_ids
 
     Enum.uniq(user_ids)
   end
@@ -122,8 +122,8 @@ defmodule ChallengeGov.MessageContextStatuses do
       Accounts.all_admins()
       |> Enum.map(& &1.id)
 
-    challenge_owner_user_ids =
-      challenge.challenge_owners
+    challenge_manager_user_ids =
+      challenge.challenge_managers
       |> Enum.map(& &1.user_id)
 
     solver_user_ids =
@@ -143,7 +143,7 @@ defmodule ChallengeGov.MessageContextStatuses do
 
     user_ids =
       admin_user_ids ++
-        challenge_owner_user_ids ++ (solver_user_ids -- solver_user_ids_to_exclude)
+        challenge_manager_user_ids ++ (solver_user_ids -- solver_user_ids_to_exclude)
 
     Enum.uniq(user_ids)
   end
@@ -152,19 +152,19 @@ defmodule ChallengeGov.MessageContextStatuses do
     %{context_id: context_id, audience: _audience} = message_context
 
     {:ok, submission} = Submissions.get(context_id)
-    submission = Repo.preload(submission, challenge: [:challenge_owners])
+    submission = Repo.preload(submission, challenge: [:challenge_managers])
 
     admin_user_ids =
       Accounts.all_admins()
       |> Enum.map(& &1.id)
 
-    challenge_owner_user_ids =
-      submission.challenge.challenge_owners
+    challenge_manager_user_ids =
+      submission.challenge.challenge_managers
       |> Enum.map(& &1.user_id)
 
     solver_user_ids = [submission.submitter_id]
 
-    user_ids = admin_user_ids ++ challenge_owner_user_ids ++ solver_user_ids
+    user_ids = admin_user_ids ++ challenge_manager_user_ids ++ solver_user_ids
 
     Enum.uniq(user_ids)
   end
@@ -174,19 +174,19 @@ defmodule ChallengeGov.MessageContextStatuses do
     %{context_id: context_id, audience: _audience} = message_context
 
     {:ok, challenge} = Challenges.get(message_context.parent.context_id)
-    challenge = Repo.preload(challenge, [:challenge_owners])
+    challenge = Repo.preload(challenge, [:challenge_managers])
 
     admin_user_ids =
       Accounts.all_admins()
       |> Enum.map(& &1.id)
 
-    challenge_owner_user_ids =
-      challenge.challenge_owners
+    challenge_manager_user_ids =
+      challenge.challenge_managers
       |> Enum.map(& &1.user_id)
 
     solver_user_ids = [context_id]
 
-    user_ids = admin_user_ids ++ challenge_owner_user_ids ++ solver_user_ids
+    user_ids = admin_user_ids ++ challenge_manager_user_ids ++ solver_user_ids
 
     Enum.uniq(user_ids)
   end

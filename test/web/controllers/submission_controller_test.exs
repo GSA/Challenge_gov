@@ -92,24 +92,24 @@ defmodule Web.SubmissionControllerTest do
       assert fetched_submission.id === submission.id
     end
 
-    test "success: viewing a submission of single phase challenge as challenge_owner", %{
+    test "success: viewing a submission of single phase challenge as challenge_manager", %{
       conn: conn
     } do
-      conn = prep_conn_challenge_owner(conn)
-      %{current_user: challenge_owner} = conn.assigns
+      conn = prep_conn_challenge_manager(conn)
+      %{current_user: challenge_manager} = conn.assigns
 
-      submission_owner =
-        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+      submission_manager =
+        AccountHelpers.create_user(%{email: "submission_manager@example.com", role: "solver"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
-          user_id: challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(challenge_manager, %{
+          user_id: challenge_manager.id
         })
 
       submission =
         SubmissionHelpers.create_submitted_submission(
           %{},
-          submission_owner,
+          submission_manager,
           challenge
         )
 
@@ -124,18 +124,18 @@ defmodule Web.SubmissionControllerTest do
                "<i>#{challenge.title}</i>"
     end
 
-    test "success: viewing a submission of multi phase challenge as challenge_owner", %{
+    test "success: viewing a submission of multi phase challenge as challenge_manager", %{
       conn: conn
     } do
-      conn = prep_conn_challenge_owner(conn)
-      %{current_user: challenge_owner} = conn.assigns
+      conn = prep_conn_challenge_manager(conn)
+      %{current_user: challenge_manager} = conn.assigns
 
-      submission_owner =
-        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+      submission_manager =
+        AccountHelpers.create_user(%{email: "submission_manager@example.com", role: "solver"})
 
       challenge =
-        ChallengeHelpers.create_multi_phase_challenge(challenge_owner, %{
-          user_id: challenge_owner.id
+        ChallengeHelpers.create_multi_phase_challenge(challenge_manager, %{
+          user_id: challenge_manager.id
         })
 
       _phase = Enum.at(challenge.phases, 0)
@@ -143,7 +143,7 @@ defmodule Web.SubmissionControllerTest do
       submission =
         SubmissionHelpers.create_submitted_submission(
           %{},
-          submission_owner,
+          submission_manager,
           challenge
         )
 
@@ -159,18 +159,18 @@ defmodule Web.SubmissionControllerTest do
     end
 
     test "success: viewing a submission of single phase challenge as admin", %{conn: conn} do
-      conn = prep_conn_challenge_owner(conn)
+      conn = prep_conn_challenge_manager(conn)
       %{current_user: admin} = conn.assigns
 
-      submission_owner =
-        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+      submission_manager =
+        AccountHelpers.create_user(%{email: "submission_manager@example.com", role: "solver"})
 
       challenge = ChallengeHelpers.create_single_phase_challenge(admin, %{user_id: admin.id})
 
       submission =
         SubmissionHelpers.create_submitted_submission(
           %{},
-          submission_owner,
+          submission_manager,
           challenge
         )
 
@@ -186,11 +186,11 @@ defmodule Web.SubmissionControllerTest do
     end
 
     test "success: viewing a submission of multi phase challenge as admin", %{conn: conn} do
-      conn = prep_conn_challenge_owner(conn)
+      conn = prep_conn_challenge_manager(conn)
       %{current_user: admin} = conn.assigns
 
-      submission_owner =
-        AccountHelpers.create_user(%{email: "submission_owner@example.com", role: "solver"})
+      submission_manager =
+        AccountHelpers.create_user(%{email: "submission_manager@example.com", role: "solver"})
 
       challenge = ChallengeHelpers.create_multi_phase_challenge(admin, %{user_id: admin.id})
       _phase = Enum.at(challenge.phases, 0)
@@ -198,7 +198,7 @@ defmodule Web.SubmissionControllerTest do
       submission =
         SubmissionHelpers.create_submitted_submission(
           %{},
-          submission_owner,
+          submission_manager,
           challenge
         )
 
@@ -396,8 +396,8 @@ defmodule Web.SubmissionControllerTest do
       assert changeset.errors[:description]
     end
 
-    test "creating a submission and review as a challenge owner", %{conn: conn} do
-      conn = prep_conn_challenge_owner(conn)
+    test "creating a submission and review as a challenge manager", %{conn: conn} do
+      conn = prep_conn_challenge_manager(conn)
 
       admin_user = AccountHelpers.create_user(%{email: "admin_user_2@example.com", role: "admin"})
 
@@ -538,14 +538,14 @@ defmodule Web.SubmissionControllerTest do
                )
     end
 
-    test "failure: viewing the edit submission form as a Challenge Owner", %{conn: conn} do
-      conn = prep_conn_challenge_owner(conn)
-      %{current_user: challenge_owner} = conn.assigns
+    test "failure: viewing the edit submission form as a Challenge Manager", %{conn: conn} do
+      conn = prep_conn_challenge_manager(conn)
+      %{current_user: challenge_manager} = conn.assigns
       solver_user = AccountHelpers.create_user(%{email: "solver@example.com"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
-          user_id: challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(challenge_manager, %{
+          user_id: challenge_manager.id
         })
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, solver_user, challenge)
@@ -910,14 +910,14 @@ defmodule Web.SubmissionControllerTest do
       assert get_flash(conn, :error) === "Submission not found"
     end
 
-    test "failure: attempting to update a submission as a Challenge Owner", %{conn: conn} do
-      conn = prep_conn_challenge_owner(conn)
-      %{current_user: challenge_owner} = conn.assigns
+    test "failure: attempting to update a submission as a Challenge Manager", %{conn: conn} do
+      conn = prep_conn_challenge_manager(conn)
+      %{current_user: challenge_manager} = conn.assigns
       solver_user = AccountHelpers.create_user(%{email: "solver@example.com"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
-          user_id: challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(challenge_manager, %{
+          user_id: challenge_manager.id
         })
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, solver_user, challenge)
@@ -1082,18 +1082,18 @@ defmodule Web.SubmissionControllerTest do
       assert updated_submission.judging_status === "not_selected"
     end
 
-    test "failure: challenge owner not authorized", %{conn: conn} do
-      conn = prep_conn_challenge_owner(conn)
+    test "failure: challenge manager not authorized", %{conn: conn} do
+      conn = prep_conn_challenge_manager(conn)
       %{current_user: user} = conn.assigns
 
-      different_challenge_owner =
+      different_challenge_manager =
         AccountHelpers.create_user(%{
-          email: "challenge_owner2@example.com",
-          role: "challenge_owner"
+          email: "challenge_manager2@example.com",
+          role: "challenge_manager"
         })
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(different_challenge_owner, %{
+        ChallengeHelpers.create_single_phase_challenge(different_challenge_manager, %{
           user_id: user.id
         })
 
@@ -1212,14 +1212,14 @@ defmodule Web.SubmissionControllerTest do
                )
     end
 
-    test "failure: deleting a submitted submission as a Challenge Owner", %{conn: conn} do
-      conn = prep_conn_challenge_owner(conn)
-      %{current_user: challenge_owner} = conn.assigns
+    test "failure: deleting a submitted submission as a Challenge Manager", %{conn: conn} do
+      conn = prep_conn_challenge_manager(conn)
+      %{current_user: challenge_manager} = conn.assigns
       solver_user = AccountHelpers.create_user(%{email: "solver@example.com", role: "solver"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
-          user_id: challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(challenge_manager, %{
+          user_id: challenge_manager.id
         })
 
       submission =
@@ -1245,9 +1245,12 @@ defmodule Web.SubmissionControllerTest do
     assign(conn, :current_user, user)
   end
 
-  defp prep_conn_challenge_owner(conn) do
+  defp prep_conn_challenge_manager(conn) do
     user =
-      AccountHelpers.create_user(%{email: "challenge_owner@example.com", role: "challenge_owner"})
+      AccountHelpers.create_user(%{
+        email: "challenge_manager@example.com",
+        role: "challenge_manager"
+      })
 
     assign(conn, :current_user, user)
   end

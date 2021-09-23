@@ -12,9 +12,9 @@ defmodule ChallengeGov.MessagesTest do
   alias ChallengeGov.TestHelpers.MessageContextStatusHelpers
   alias ChallengeGov.TestHelpers.SubmissionHelpers
 
-  @challenge_owner_params %{
-    email: "challenge_owner@example.com",
-    role: "challenge_owner"
+  @challenge_manager_params %{
+    email: "challenge_manager@example.com",
+    role: "challenge_manager"
   }
 
   @solver_params %{
@@ -28,13 +28,13 @@ defmodule ChallengeGov.MessagesTest do
   }
 
   defp create_message_context_status() do
-    user_challenge_owner = AccountHelpers.create_user(@challenge_owner_params)
+    user_challenge_manager = AccountHelpers.create_user(@challenge_manager_params)
     user_solver = AccountHelpers.create_user(@solver_params)
     user_solver_2 = AccountHelpers.create_user(@solver_params_2)
 
     challenge =
-      ChallengeHelpers.create_single_phase_challenge(user_challenge_owner, %{
-        user_id: user_challenge_owner.id
+      ChallengeHelpers.create_single_phase_challenge(user_challenge_manager, %{
+        user_id: user_challenge_manager.id
       })
 
     SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
@@ -49,8 +49,8 @@ defmodule ChallengeGov.MessagesTest do
 
     message_context = Repo.preload(message_context, [:statuses])
 
-    {:ok, message_context_status_challenge_owner} =
-      MessageContextStatuses.get(user_challenge_owner, message_context)
+    {:ok, message_context_status_challenge_manager} =
+      MessageContextStatuses.get(user_challenge_manager, message_context)
 
     {:ok, message_context_status_solver} =
       MessageContextStatuses.get(user_solver, message_context)
@@ -61,13 +61,13 @@ defmodule ChallengeGov.MessagesTest do
     assert length(message_context.statuses) == 3
 
     %{
-      user_challenge_owner: user_challenge_owner,
+      user_challenge_manager: user_challenge_manager,
       user_solver: user_solver,
       user_solver_2: user_solver_2,
       message_context: message_context,
       # Placeholder for existing tests
       message_context_status: message_context_status_solver,
-      message_context_status_challenge_owner: message_context_status_challenge_owner,
+      message_context_status_challenge_manager: message_context_status_challenge_manager,
       message_context_status_solver: message_context_status_solver,
       message_context_status_solver_2: message_context_status_solver_2
     }
@@ -76,38 +76,38 @@ defmodule ChallengeGov.MessagesTest do
   describe "creating a sent message" do
     test "success" do
       %{
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         user_solver: user_solver,
         message_context: message_context
       } = create_message_context_status()
 
-      {:ok, challenge_owner_context} =
-        MessageContextStatuses.get(user_challenge_owner, message_context)
+      {:ok, challenge_manager_context} =
+        MessageContextStatuses.get(user_challenge_manager, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.get(user_solver, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.toggle_read(solver_context)
 
-      refute challenge_owner_context.read
+      refute challenge_manager_context.read
       assert solver_context.read
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test"
         })
 
-      {:ok, challenge_owner_context} =
-        MessageContextStatuses.get(user_challenge_owner, message_context)
+      {:ok, challenge_manager_context} =
+        MessageContextStatuses.get(user_challenge_manager, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.get(user_solver, message_context)
 
       {:ok, message_context} = MessageContexts.get(message_context.id)
 
-      assert challenge_owner_context.read
+      assert challenge_manager_context.read
       refute solver_context.read
 
-      assert message.author_id == user_challenge_owner.id
+      assert message.author_id == user_challenge_manager.id
       assert message.message_context_id == message_context.id
       assert message.content == "Test"
       assert message.content_delta == "Test"
@@ -118,39 +118,39 @@ defmodule ChallengeGov.MessagesTest do
   describe "creating a draft message" do
     test "success: new draft" do
       %{
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         user_solver: user_solver,
         message_context: message_context
       } = create_message_context_status()
 
-      {:ok, challenge_owner_context} =
-        MessageContextStatuses.get(user_challenge_owner, message_context)
+      {:ok, challenge_manager_context} =
+        MessageContextStatuses.get(user_challenge_manager, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.get(user_solver, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.toggle_read(solver_context)
 
-      refute challenge_owner_context.read
+      refute challenge_manager_context.read
       assert solver_context.read
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
         })
 
-      {:ok, challenge_owner_context} =
-        MessageContextStatuses.get(user_challenge_owner, message_context)
+      {:ok, challenge_manager_context} =
+        MessageContextStatuses.get(user_challenge_manager, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.get(user_solver, message_context)
 
       {:ok, message_context} = MessageContexts.get(message_context.id)
 
-      assert challenge_owner_context.read
+      assert challenge_manager_context.read
       assert solver_context.read
 
-      assert message.author_id == user_challenge_owner.id
+      assert message.author_id == user_challenge_manager.id
       assert message.message_context_id == message_context.id
       assert message.content == "Test"
       assert message.content_delta == "Test"
@@ -159,23 +159,23 @@ defmodule ChallengeGov.MessagesTest do
 
     test "success: update draft" do
       %{
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         user_solver: user_solver,
         message_context: message_context
       } = create_message_context_status()
 
-      {:ok, challenge_owner_context} =
-        MessageContextStatuses.get(user_challenge_owner, message_context)
+      {:ok, challenge_manager_context} =
+        MessageContextStatuses.get(user_challenge_manager, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.get(user_solver, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.toggle_read(solver_context)
 
-      refute challenge_owner_context.read
+      refute challenge_manager_context.read
       assert solver_context.read
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
@@ -183,17 +183,17 @@ defmodule ChallengeGov.MessagesTest do
 
       initial_message_id = message.id
 
-      {:ok, challenge_owner_context} =
-        MessageContextStatuses.get(user_challenge_owner, message_context)
+      {:ok, challenge_manager_context} =
+        MessageContextStatuses.get(user_challenge_manager, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.get(user_solver, message_context)
 
       {:ok, message_context} = MessageContexts.get(message_context.id)
 
-      assert challenge_owner_context.read
+      assert challenge_manager_context.read
       assert solver_context.read
 
-      assert message.author_id == user_challenge_owner.id
+      assert message.author_id == user_challenge_manager.id
       assert message.message_context_id == message_context.id
       assert message.content == "Test"
       assert message.content_delta == "Test"
@@ -201,24 +201,24 @@ defmodule ChallengeGov.MessagesTest do
       assert message.id == initial_message_id
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "id" => message.id,
           "content" => "Test updated",
           "content_delta" => "Test updated",
           "status" => "draft"
         })
 
-      {:ok, challenge_owner_context} =
-        MessageContextStatuses.get(user_challenge_owner, message_context)
+      {:ok, challenge_manager_context} =
+        MessageContextStatuses.get(user_challenge_manager, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.get(user_solver, message_context)
 
       {:ok, message_context} = MessageContexts.get(message_context.id)
 
-      assert challenge_owner_context.read
+      assert challenge_manager_context.read
       assert solver_context.read
 
-      assert message.author_id == user_challenge_owner.id
+      assert message.author_id == user_challenge_manager.id
       assert message.message_context_id == message_context.id
       assert message.content == "Test updated"
       assert message.content_delta == "Test updated"
@@ -230,39 +230,39 @@ defmodule ChallengeGov.MessagesTest do
   describe "sending a draft message" do
     test "success" do
       %{
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         user_solver: user_solver,
         message_context: message_context
       } = create_message_context_status()
 
-      {:ok, challenge_owner_context} =
-        MessageContextStatuses.get(user_challenge_owner, message_context)
+      {:ok, challenge_manager_context} =
+        MessageContextStatuses.get(user_challenge_manager, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.get(user_solver, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.toggle_read(solver_context)
 
-      refute challenge_owner_context.read
+      refute challenge_manager_context.read
       assert solver_context.read
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
         })
 
-      {:ok, challenge_owner_context} =
-        MessageContextStatuses.get(user_challenge_owner, message_context)
+      {:ok, challenge_manager_context} =
+        MessageContextStatuses.get(user_challenge_manager, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.get(user_solver, message_context)
 
       {:ok, message_context} = MessageContexts.get(message_context.id)
 
-      assert challenge_owner_context.read
+      assert challenge_manager_context.read
       assert solver_context.read
 
-      assert message.author_id == user_challenge_owner.id
+      assert message.author_id == user_challenge_manager.id
       assert message.message_context_id == message_context.id
       assert message.content == "Test"
       assert message.content_delta == "Test"
@@ -270,24 +270,24 @@ defmodule ChallengeGov.MessagesTest do
       assert message.status == "draft"
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "id" => message.id,
           "content" => "Test sent",
           "content_delta" => "Test sent",
           "status" => "sent"
         })
 
-      {:ok, challenge_owner_context} =
-        MessageContextStatuses.get(user_challenge_owner, message_context)
+      {:ok, challenge_manager_context} =
+        MessageContextStatuses.get(user_challenge_manager, message_context)
 
       {:ok, solver_context} = MessageContextStatuses.get(user_solver, message_context)
 
       {:ok, message_context} = MessageContexts.get(message_context.id)
 
-      assert challenge_owner_context.read
+      assert challenge_manager_context.read
       refute solver_context.read
 
-      assert message.author_id == user_challenge_owner.id
+      assert message.author_id == user_challenge_manager.id
       assert message.message_context_id == message_context.id
       assert message.content == "Test sent"
       assert message.content_delta == "Test sent"
@@ -299,12 +299,12 @@ defmodule ChallengeGov.MessagesTest do
   describe "fetching a draft message" do
     test "success: with ID" do
       %{
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         message_context: message_context
       } = create_message_context_status()
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
@@ -318,12 +318,12 @@ defmodule ChallengeGov.MessagesTest do
 
     test "failure: no draft message with given ID" do
       %{
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         message_context: message_context
       } = create_message_context_status()
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "sent"
@@ -336,7 +336,7 @@ defmodule ChallengeGov.MessagesTest do
   describe "can view draft" do
     test "success: author" do
       %{
-        user_challenge_owner: user,
+        user_challenge_manager: user,
         message_context: message_context
       } = MessageContextStatusHelpers.create_message_context_status()
 
@@ -352,15 +352,15 @@ defmodule ChallengeGov.MessagesTest do
       assert {:ok, _message} = Messages.can_view_draft?(user, fetched_message)
     end
 
-    test "success: related challenge owner" do
+    test "success: related challenge manager" do
       %{
-        user_challenge_owner: user_challenge_owner,
-        user_challenge_owner_2: user,
+        user_challenge_manager: user_challenge_manager,
+        user_challenge_manager_2: user,
         message_context: message_context
       } = MessageContextStatusHelpers.create_message_context_status()
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
@@ -374,12 +374,12 @@ defmodule ChallengeGov.MessagesTest do
     test "failure: unrelated user" do
       %{
         user_solver: user,
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         message_context: message_context
       } = MessageContextStatusHelpers.create_message_context_status()
 
       {:ok, message} =
-        Messages.create(user_challenge_owner, message_context, %{
+        Messages.create(user_challenge_manager, message_context, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"
@@ -683,7 +683,7 @@ defmodule ChallengeGov.MessagesTest do
   describe "creating a message as a non solver on a solver context" do
     test "success: attach sent message to solver context" do
       %{
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         user_solver: user_solver,
         message_context: message_context
       } = create_message_context_status()
@@ -709,7 +709,7 @@ defmodule ChallengeGov.MessagesTest do
       assert length(message_context_solver.messages) == 1
 
       {:ok, _message} =
-        Messages.create(user_challenge_owner, message_context_solver, %{
+        Messages.create(user_challenge_manager, message_context_solver, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "sent"
@@ -731,7 +731,7 @@ defmodule ChallengeGov.MessagesTest do
 
     test "success: attach draft message to solver context" do
       %{
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         user_solver: user_solver,
         message_context: message_context
       } = create_message_context_status()
@@ -757,7 +757,7 @@ defmodule ChallengeGov.MessagesTest do
       assert length(message_context_solver.messages) == 1
 
       {:ok, _message} =
-        Messages.create(user_challenge_owner, message_context_solver, %{
+        Messages.create(user_challenge_manager, message_context_solver, %{
           "content" => "Test",
           "content_delta" => "Test",
           "status" => "draft"

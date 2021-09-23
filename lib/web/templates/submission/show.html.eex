@@ -100,7 +100,7 @@
             <%= link "< Back to submissions", to: Routes.submission_path(@conn, :index, filter: @filter, sort: @sort) %>
           </div>
         <% end %>
-        <%= if Accounts.is_challenge_owner?(@user) do %>
+        <%= if Accounts.is_challenge_manager?(@user) do %>
           <div class="col mb-4">
             <%= link "< Back to submissions", to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id) %>
           </div>

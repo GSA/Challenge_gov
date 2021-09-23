@@ -43,7 +43,7 @@ config :challenge_gov,
   account_deactivation_warning_two_in_days: 5,
   account_decertify_in_days: 365,
   log_retention_in_days: 180,
-  challenge_owner_assumed_tlds: [".mil"]
+  challenge_manager_assumed_tlds: [".mil"]
 
 config :challenge_gov, Oban,
   repo: ChallengeGov.Repo,

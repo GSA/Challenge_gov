@@ -29,8 +29,8 @@ defmodule Web.ChallengeView do
     link(challenge.title, to: Routes.public_challenge_details_url(conn, :index, challenge.id))
   end
 
-  def challenge_owners_list(challenge) do
-    challenge.challenge_owner_users
+  def challenge_managers_list(challenge) do
+    challenge.challenge_manager_users
     |> Enum.map(&"#{&1.first_name} #{&1.last_name} (#{&1.email})")
     |> Enum.join(", ")
   end
@@ -107,7 +107,7 @@ defmodule Web.ChallengeView do
   def published_sub_status_display(_challenge, _attached), do: ""
 
   def challenge_submissions_link(conn, challenge, user, opts \\ []) do
-    if (user.role == "challenge_owner" or
+    if (user.role == "challenge_manager" or
           Accounts.has_admin_access?(user)) and length(challenge.phases) > 0 do
       link_location = manage_submissions_initial_path(conn, challenge)
 
@@ -161,7 +161,7 @@ defmodule Web.ChallengeView do
   end
 
   def challenge_delete_link(conn, challenge, user, opts \\ []) do
-    if (user.role == "challenge_owner" and challenge.status == "draft") or
+    if (user.role == "challenge_manager" and challenge.status == "draft") or
          Accounts.has_admin_access?(user) do
       link(
         opts[:label] || "Delete",
@@ -197,15 +197,15 @@ defmodule Web.ChallengeView do
   end
 
   @doc """
-  Only shows challenge owner field if the person is an admin and a challenge is being edited
+  Only shows challenge manager field if the person is an admin and a challenge is being edited
   """
-  def challenge_owner_field(form, user, action) do
+  def challenge_manager_field(form, user, action) do
     if (action == :edit or action == :update) and Accounts.has_admin_access?(user) do
       content_tag :div, class: FormView.form_group_classes(form, :user_id) do
         [
           label(form, :user_id, class: "col-md-4") do
             [
-              "Owner ",
+              "Manager ",
               content_tag(:span, "*", class: "required")
             ]
           end,
@@ -223,15 +223,15 @@ defmodule Web.ChallengeView do
   end
 
   @doc """
-  Only shows challenge owners multiselect if the person is an admin and a challenge is being edited
+  Only shows challenge managers multiselect if the person is an admin and a challenge is being edited
   """
-  def challenge_owners_field(form, user, changeset, action) do
+  def challenge_managers_field(form, user, changeset, action) do
     if (action == :edit or action == :update) and Accounts.has_admin_access?(user) do
-      content_tag :div, class: FormView.form_group_classes(form, :challenge_owners) do
+      content_tag :div, class: FormView.form_group_classes(form, :challenge_managers) do
         [
-          label(form, :challenge_owners, class: "col-md-4") do
+          label(form, :challenge_managers, class: "col-md-4") do
             [
-              "Challenge Owners ",
+              "Challenge Managers ",
               content_tag(:span, "*", class: "required")
             ]
           end,
@@ -239,21 +239,21 @@ defmodule Web.ChallengeView do
             [
               multiple_select(
                 form,
-                :challenge_owners,
+                :challenge_managers,
                 Enum.map(
                   Accounts.all_for_select(),
                   &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}
                 ),
-                selected: Enum.map(changeset.data.challenge_owner_users, & &1.id),
+                selected: Enum.map(changeset.data.challenge_manager_users, & &1.id),
                 class: "form-control js-multiselect"
               ),
-              error_tag(form, :challenge_owners)
+              error_tag(form, :challenge_managers)
             ]
           end
         ]
       end
     else
-      hidden_challenge_owners_field(form, changeset)
+      hidden_challenge_managers_field(form, changeset)
     end
   end
 
@@ -289,25 +289,25 @@ defmodule Web.ChallengeView do
   end
 
   @doc """
-  Hidden challenge owner field to keep existing challenge owners from being wiped if none are passed
+  Hidden challenge manager field to keep existing challenge managers from being wiped if none are passed
   """
-  def hidden_challenge_owners_field(form, changeset) do
+  def hidden_challenge_managers_field(form, changeset) do
     multiple_select(
       form,
-      :challenge_owners,
+      :challenge_managers,
       Enum.map(
         Accounts.all_for_select(),
         &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}
       ),
-      selected: Enum.map(changeset.data.challenge_owner_users, & &1.id),
+      selected: Enum.map(changeset.data.challenge_manager_users, & &1.id),
       style: "display: none;"
     )
   end
 
-  def wizard_challenge_owners_field(form, user, changeset) do
-    content_tag :div, class: FormView.form_group_classes(form, :challenge_owners) do
+  def wizard_challenge_managers_field(form, user, changeset) do
+    content_tag :div, class: FormView.form_group_classes(form, :challenge_managers) do
       [
-        label(form, :challenge_owners, class: "col-md-4") do
+        label(form, :challenge_managers, class: "col-md-4") do
           [
             "Challenge Managers ",
             content_tag(:span, "*", class: "required")
@@ -317,27 +317,27 @@ defmodule Web.ChallengeView do
           [
             multiple_select(
               form,
-              :challenge_owners,
+              :challenge_managers,
               Enum.map(
                 Accounts.all_for_select(),
                 &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}
               ),
-              selected: initial_challenge_owners(form, user, changeset),
+              selected: initial_challenge_managers(form, user, changeset),
               class: "form-control js-multiselect",
               disabled: !Accounts.has_admin_access?(user)
             ),
-            error_tag(form, :challenge_owners)
+            error_tag(form, :challenge_managers)
           ]
         end
       ]
     end
   end
 
-  defp initial_challenge_owners(form, user, changeset) do
-    if Accounts.is_challenge_owner?(user) and Enum.empty?(form.data.challenge_owners) do
+  defp initial_challenge_managers(form, user, changeset) do
+    if Accounts.is_challenge_manager?(user) and Enum.empty?(form.data.challenge_managers) do
       user.id
     else
-      Enum.map(changeset.data.challenge_owner_users, & &1.id)
+      Enum.map(changeset.data.challenge_manager_users, & &1.id)
     end
   end
 

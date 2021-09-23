@@ -9,12 +9,12 @@
         <dd><%= link(@challenge.user.email, to: Routes.user_path(@conn, :show, @challenge.user_id)) %></dd>
         <br/>
 
-        <dt>Owners</dd>
+        <dt>Managers</dd>
         <dd>
           <ul>
-            <%= Enum.map(@challenge.challenge_owners, fn owner -> %>
-              <%= if is_nil(owner.revoked_at) do %>
-                <li><%= Web.UserView.name_link(@conn, owner.user) %></li>
+            <%= Enum.map(@challenge.challenge_managers, fn manager -> %>
+              <%= if is_nil(manager.revoked_at) do %>
+                <li><%= Web.UserView.name_link(@conn, manager.user) %></li>
               <% end %>
             <% end) %>
           </ul>

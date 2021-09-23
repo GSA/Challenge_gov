@@ -9,7 +9,7 @@ defmodule ChallengeGov.Accounts do
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Challenges.Challenge
-  alias ChallengeGov.Challenges.ChallengeOwner
+  alias ChallengeGov.Challenges.ChallengeManager
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias ChallengeGov.Recaptcha
@@ -391,9 +391,9 @@ defmodule ChallengeGov.Accounts do
   end
 
   defp default_role_and_status_for_email(email) do
-    case Security.default_challenge_owner?(email) do
+    case Security.default_challenge_manager?(email) do
       true ->
-        {"challenge_owner", "pending"}
+        {"challenge_manager", "pending"}
 
       false ->
         {"solver", "active"}
@@ -574,19 +574,19 @@ defmodule ChallengeGov.Accounts do
   def is_admin?(_), do: false
 
   @doc """
-  Check if a user is a challenge owner
+  Check if a user is a challenge manager
 
-      iex> Accounts.is_challenge_owner?(%User{role: "challenge_owner"})
+      iex> Accounts.is_challenge_manager?(%User{role: "challenge_manager"})
       true
 
-      iex> Accounts.is_challenge_owner?(%User{role: "challenge_owner"})
+      iex> Accounts.is_challenge_manager?(%User{role: "challenge_manager"})
       false
   """
-  def is_challenge_owner?(user)
+  def is_challenge_manager?(user)
 
-  def is_challenge_owner?(%{role: "challenge_owner"}), do: true
+  def is_challenge_manager?(%{role: "challenge_manager"}), do: true
 
-  def is_challenge_owner?(_), do: false
+  def is_challenge_manager?(_), do: false
 
   @doc """
   Check if a user is a solver
@@ -594,7 +594,7 @@ defmodule ChallengeGov.Accounts do
       iex> Accounts.is_solver?(%User{role: "solver"})
       true
 
-      iex> Accounts.is_solver?(%User{role: "challenge_owner"})
+      iex> Accounts.is_solver?(%User{role: "challenge_manager"})
       false
   """
   def is_solver?(user)
@@ -802,7 +802,7 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, %{user: user}} ->
-        revoke_challenge_ownership(user)
+        revoke_challenge_managership(user)
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -874,7 +874,7 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, %{user: user}} ->
-        revoke_challenge_ownership(user)
+        revoke_challenge_managership(user)
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
@@ -885,8 +885,8 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Removes a user's access to their challenges while preserving they previously had access
   """
-  def revoke_challenge_ownership(user) do
-    ChallengeOwner
+  def revoke_challenge_managership(user) do
+    ChallengeManager
     |> where([co], co.user_id == ^user.id)
     |> Repo.update_all(set: [revoked_at: Timex.now()])
   end
@@ -894,7 +894,7 @@ defmodule ChallengeGov.Accounts do
   def revoked_challenges(user) do
     Challenge
     |> where([c], is_nil(c.deleted_at))
-    |> join(:inner, [c], co in assoc(c, :challenge_owners))
+    |> join(:inner, [c], co in assoc(c, :challenge_managers))
     |> where([c, co], co.user_id == ^user.id and not is_nil(co.revoked_at))
     |> Repo.all()
   end
