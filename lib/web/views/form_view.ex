@@ -403,10 +403,17 @@ defmodule Web.FormView do
         label(form, field, class: "col-md-4")
       end
 
+    class =
+      if opts[:class] do
+        opts[:class]
+      else
+        "col-md-8"
+      end
+
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label,
-        content_tag(:div, class: "col-md-8") do
+        content_tag(:div, class: class) do
           [
             file_input(form, field, class: classes),
             error_tag(form, field),

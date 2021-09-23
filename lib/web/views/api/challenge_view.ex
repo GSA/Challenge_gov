@@ -29,6 +29,7 @@ defmodule Web.Api.ChallengeView do
       agency_name: ChallengeView.agency_name(challenge),
       agency_logo: ChallengeView.agency_logo(challenge),
       logo: ChallengeView.logo_url(challenge),
+      logo_alt_text: challenge.logo_alt_text,
       open_until: Challenges.find_end_date(challenge),
       start_date: challenge.start_date,
       end_date: challenge.end_date,
@@ -111,6 +112,7 @@ defmodule Web.Api.ChallengeView do
       judging_criteria: HtmlSanitizeEx.basic_html(challenge.judging_criteria),
       legal_authority: challenge.legal_authority,
       logo: ChallengeView.logo_url(challenge),
+      logo_alt_text: challenge.logo_alt_text,
       multi_phase: challenge.multi_phase,
       non_federal_partners:
         render_many(
