@@ -17,7 +17,7 @@
       <%= cond do %>
         <% Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge) -> %>
           <%= link("Add winners", to: "#", class: "btn btn-primary disabled", disabled: true) %>
-        <% Challenges.is_challenge_owner?(@user, @challenge) -> %>
+        <% Challenges.is_challenge_manager?(@user, @challenge) -> %>
           <%= link("Add winners", to: Routes.phase_winner_path(@conn, :index, @challenge.id), class: "btn btn-primary") %>
         <% true -> %>
       <% end %>

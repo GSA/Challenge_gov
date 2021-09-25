@@ -11,9 +11,9 @@ defmodule ChallengeGov.MessageContextStatusesTest do
   alias ChallengeGov.TestHelpers.MessageContextStatusHelpers
   alias ChallengeGov.TestHelpers.SubmissionHelpers
 
-  @challenge_owner_params %{
-    email: "challenge_owner@example.com",
-    role: "challenge_owner"
+  @challenge_manager_params %{
+    email: "challenge_manager@example.com",
+    role: "challenge_manager"
   }
 
   @solver_params %{
@@ -22,12 +22,12 @@ defmodule ChallengeGov.MessageContextStatusesTest do
   }
 
   defp create_message_context_status() do
-    user_challenge_owner = AccountHelpers.create_user(@challenge_owner_params)
+    user_challenge_manager = AccountHelpers.create_user(@challenge_manager_params)
     user_solver = AccountHelpers.create_user(@solver_params)
 
     challenge =
-      ChallengeHelpers.create_single_phase_challenge(user_challenge_owner, %{
-        user_id: user_challenge_owner.id
+      ChallengeHelpers.create_single_phase_challenge(user_challenge_manager, %{
+        user_id: user_challenge_manager.id
       })
 
     {:ok, message_context} =

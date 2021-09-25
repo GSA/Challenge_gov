@@ -35,7 +35,7 @@ defmodule Web.Plugs.FetchChallenge do
   defp load_challenge(conn, id) do
     case Challenges.get(id) do
       {:ok, challenge} ->
-        challenge = Repo.preload(challenge, :challenge_owners)
+        challenge = Repo.preload(challenge, :challenge_managers)
 
         assign(conn, :current_challenge, challenge)
 
@@ -47,7 +47,7 @@ defmodule Web.Plugs.FetchChallenge do
   defp load_challenge_through_phase(conn, id) do
     case Phases.get(id) do
       {:ok, phase} ->
-        phase = Repo.preload(phase, challenge: [:challenge_owners])
+        phase = Repo.preload(phase, challenge: [:challenge_managers])
 
         conn
         |> assign(:current_challenge, phase.challenge)
@@ -61,7 +61,7 @@ defmodule Web.Plugs.FetchChallenge do
   defp load_challenge_through_phase_winner(conn, id) do
     case PhaseWinners.get(id) do
       {:ok, phase_winner} ->
-        phase_winner = Repo.preload(phase_winner, phase: [challenge: [:challenge_owners]])
+        phase_winner = Repo.preload(phase_winner, phase: [challenge: [:challenge_managers]])
 
         conn
         |> assign(:current_challenge, phase_winner.phase.challenge)

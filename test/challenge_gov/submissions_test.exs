@@ -197,10 +197,10 @@ defmodule ChallengeGov.SubmissionsTest do
       challenge =
         ChallengeHelpers.create_single_phase_challenge(user, %{
           user_id: user.id,
-          challenge_owners: [user.id, user_2.id]
+          challenge_managers: [user.id, user_2.id]
         })
 
-      challenge = Repo.preload(challenge, [:challenge_owner_users])
+      challenge = Repo.preload(challenge, [:challenge_manager_users])
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
@@ -221,8 +221,8 @@ defmodule ChallengeGov.SubmissionsTest do
       assert updated_submission.status === "submitted"
       assert_delivered_email(Emails.submission_confirmation(updated_submission))
 
-      Enum.map(submission.challenge.challenge_owner_users, fn owner ->
-        assert_delivered_email(Emails.new_submission_submission(owner, updated_submission))
+      Enum.map(submission.challenge.challenge_manager_users, fn manager ->
+        assert_delivered_email(Emails.new_submission_submission(manager, updated_submission))
       end)
     end
 

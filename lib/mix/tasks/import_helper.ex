@@ -27,7 +27,7 @@ defmodule Mix.Tasks.ImportHelper do
             email: "importer@challenge.gov",
             first_name: "Importer",
             last_name: "User",
-            role: "challenge_owner",
+            role: "challenge_manager",
             terms_of_use: DateTime.truncate(DateTime.utc_now(), :second),
             privacy_guidelines: DateTime.truncate(DateTime.utc_now(), :second),
             status: "active"

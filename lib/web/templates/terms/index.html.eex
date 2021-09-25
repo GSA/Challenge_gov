@@ -6,7 +6,7 @@
 <section class="content registration-content">
   <div class="row col-md-9 registration-row justify-content-center">
       <%= form_for(@changeset, Routes.terms_path(@conn, :create), [method: :post], fn f -> %>
-        <%= challenge_owner_fields(f, @changeset) %>
+        <%= challenge_manager_fields(f, @changeset) %>
         <div class="input">
           <%= label(f, :first_name, class: "label-text") do %>
             First Name*

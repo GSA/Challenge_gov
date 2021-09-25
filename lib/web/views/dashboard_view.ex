@@ -53,8 +53,8 @@ defmodule Web.DashboardView do
       Accounts.has_admin_access?(user) ->
         admin_header(wrapper_classes)
 
-      Accounts.is_challenge_owner?(user) ->
-        challenge_owner_header(wrapper_classes)
+      Accounts.is_challenge_manager?(user) ->
+        challenge_manager_header(wrapper_classes)
 
       Accounts.is_solver?(user) ->
         solver_header(wrapper_classes)
@@ -73,7 +73,7 @@ defmodule Web.DashboardView do
     end
   end
 
-  defp challenge_owner_header(wrapper_classes) do
+  defp challenge_manager_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
         content_tag(:h3, "Welcome to the Challenge.gov portal."),
@@ -99,8 +99,8 @@ defmodule Web.DashboardView do
       Accounts.has_admin_access?(user) ->
         admin_card_links()
 
-      Accounts.is_challenge_owner?(user) ->
-        challenge_owner_card_links()
+      Accounts.is_challenge_manager?(user) ->
+        challenge_manager_card_links()
 
       Accounts.is_solver?(user) ->
         solver_card_links(user)
@@ -128,16 +128,16 @@ defmodule Web.DashboardView do
       content_tag :div, class: "row" do
         [
           render("_card_link.html",
-            target: Routes.challenge_path(Endpoint, :index),
-            icon: "/images/dashboard_icons/medals.svg",
-            title: "Challenge management",
-            description: "Manage and view all open and archived challenges."
-          ),
-          render("_card_link.html",
             target: Routes.user_path(Endpoint, :index),
             icon: "/images/dashboard_icons/users.svg",
             title: "User management",
             description: "View and edit user roles, permissions, and activities on the platform."
+          ),
+          render("_card_link.html",
+            target: Routes.challenge_path(Endpoint, :index),
+            icon: "/images/dashboard_icons/medals.svg",
+            title: "Challenge management",
+            description: "Manage and view all open and archived challenges."
           )
         ]
       end,
@@ -150,27 +150,27 @@ defmodule Web.DashboardView do
             description: "View and send messages to Challenge.Gov users."
           ),
           render("_card_link.html",
-            target: Routes.site_content_path(Endpoint, :index),
-            icon: "/images/dashboard_icons/reporting.svg",
-            title: "Site management",
-            description: "Manage content and perform site management tasks."
-          )
-        ]
-      end,
-      content_tag :div, class: "row" do
-        [
-          render("_card_link.html",
             target: Routes.analytics_path(Endpoint, :index),
             icon: "/images/dashboard_icons/analytics.svg",
             title: "Analytics",
             description: "View web analytics related to your challenges."
           )
         ]
+      end,
+      content_tag :div, class: "row" do
+        [
+          render("_card_link.html",
+            target: Routes.site_content_path(Endpoint, :index),
+            icon: "/images/dashboard_icons/reporting.svg",
+            title: "Site management",
+            description: "Manage content and perform site management tasks."
+          )
+        ]
       end
     ]
   end
 
-  defp challenge_owner_card_links() do
+  defp challenge_manager_card_links() do
     [
       content_tag :div, class: "row" do
         [
@@ -197,7 +197,7 @@ defmodule Web.DashboardView do
             description: "View and send messages to Challenge.Gov users."
           ),
           render("_card_link.html",
-            target: Routes.dashboard_path(Endpoint, :index),
+            target: Routes.analytics_path(Endpoint, :index),
             icon: "/images/dashboard_icons/analytics.svg",
             title: "Analytics",
             description: "View web analytics related to your challenges."
@@ -206,6 +206,12 @@ defmodule Web.DashboardView do
       end,
       content_tag :div, class: "row" do
         [
+          render("_card_link.html",
+            target: Routes.help_path(Endpoint, :index),
+            icon: "/images/dashboard_icons/help.svg",
+            title: "Help",
+            description: "Help Center"
+          ),
           render("_card_link.html",
             target: Routes.dashboard_path(Endpoint, :index),
             icon: "/images/dashboard_icons/toolkit.svg",

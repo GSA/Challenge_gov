@@ -10,9 +10,9 @@
       <td><%= challenge.gov_delivery_subscribers %></td>
       <%= if Accounts.has_admin_access?(@user) do %>
         <td>
-          <%= Enum.map(challenge.challenge_owners, fn owner -> %>
-            <%= if is_nil(owner.revoked_at) do %>
-              <div><%= Web.UserView.name_link(@conn, owner.user, show_email: false) %></div>
+          <%= Enum.map(challenge.challenge_managers, fn manager -> %>
+            <%= if is_nil(manager.revoked_at) do %>
+              <div><%= Web.UserView.name_link(@conn, manager.user, show_email: false) %></div>
             <% end %>
           <% end) %>
         </td>

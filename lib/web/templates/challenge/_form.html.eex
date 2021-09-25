@@ -2,8 +2,8 @@
   <div class="card-body">
     <div>
       <div>
-        <%= challenge_owner_field(f, @user, @action) %>
-        <%= challenge_owners_field(f, @user, @changeset, @action) %>
+        <%= challenge_manager_field(f, @user, @action) %>
+        <%= challenge_managers_field(f, @user, @changeset, @action) %>
         <%= challenge_status_field(f, @user, @action) %>
         <%= FormView.file_field(f, :logo, label: "Logo") do %>
           <%= if @data.logo_key do %>

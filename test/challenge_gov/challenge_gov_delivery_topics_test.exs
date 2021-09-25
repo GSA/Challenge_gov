@@ -12,7 +12,7 @@ defmodule ChallengeGov.ChallengeGovDeliveryTopicsTest do
       ChallengeHelpers.create_single_phase_challenge(user, %{
         user_id: user.id,
         status: "draft",
-        challenge_owners: [user.id]
+        challenge_managers: [user.id]
       })
 
       open_multi_phase_challenge =

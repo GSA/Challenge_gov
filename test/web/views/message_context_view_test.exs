@@ -69,16 +69,16 @@ defmodule Web.MessageContextViewTest do
     test "success: challenge context" do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      assert MessageContextView.display_audience(user_challenge_owner, message_context) == "All"
+      assert MessageContextView.display_audience(user_challenge_manager, message_context) == "All"
     end
 
     test "success: solver context as non solver" do
       %{
         message_context: message_context,
-        user_challenge_owner: user_challenge_owner,
+        user_challenge_manager: user_challenge_manager,
         user_solver: user_solver
       } = MessageContextStatusHelpers.create_message_context_status()
 
@@ -90,7 +90,7 @@ defmodule Web.MessageContextViewTest do
 
       {:ok, message_context_solver} = MessageContexts.get("solver", user_solver.id, "all")
 
-      assert MessageContextView.display_audience(user_challenge_owner, message_context_solver) ==
+      assert MessageContextView.display_audience(user_challenge_manager, message_context_solver) ==
                AccountView.full_name(user_solver)
     end
 
@@ -114,12 +114,12 @@ defmodule Web.MessageContextViewTest do
 
   describe "display multi submission titles" do
     test "success" do
-      challenge_owner =
-        AccountHelpers.create_user(%{role: "challenge_owner", email: "co@example.com"})
+      challenge_manager =
+        AccountHelpers.create_user(%{role: "challenge_manager", email: "co@example.com"})
 
       challenge =
-        ChallengeHelpers.create_single_phase_challenge(challenge_owner, %{
-          user_id: challenge_owner.id
+        ChallengeHelpers.create_single_phase_challenge(challenge_manager, %{
+          user_id: challenge_manager.id
         })
 
       solver_1 = AccountHelpers.create_user(%{role: "solver", email: "s1@example.com"})
@@ -172,7 +172,7 @@ defmodule Web.MessageContextViewTest do
   describe "rendering audience column" do
     test "success: header" do
       %{
-        user_challenge_owner: user
+        user_challenge_manager: user
       } = MessageContextStatusHelpers.create_message_context_status()
 
       assert MessageContextView.maybe_render_audience_header(user) ==
@@ -190,7 +190,7 @@ defmodule Web.MessageContextViewTest do
     test "success: column" do
       %{
         message_context: context,
-        user_challenge_owner: user
+        user_challenge_manager: user
       } = MessageContextStatusHelpers.create_message_context_status()
 
       assert MessageContextView.maybe_render_audience_column(user, context) ==
@@ -210,7 +210,7 @@ defmodule Web.MessageContextViewTest do
   describe "rendering new message button" do
     test "success", %{conn: conn} do
       %{
-        user_challenge_owner: user
+        user_challenge_manager: user
       } = MessageContextStatusHelpers.create_message_context_status()
 
       assert MessageContextView.render_new_message_button(conn, user) ==

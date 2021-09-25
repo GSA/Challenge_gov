@@ -150,7 +150,7 @@ defmodule Web.UserController do
   def maybe_decertify_user_manually(user, "decertified", _previous_status) do
     with {:ok, user} <-
            Accounts.update(user, %{terms_of_use: nil, privacy_guidelines: nil}) do
-      Accounts.revoke_challenge_ownership(user)
+      Accounts.revoke_challenge_managership(user)
     end
   end
 

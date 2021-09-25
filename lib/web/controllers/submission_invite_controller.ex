@@ -8,7 +8,7 @@ defmodule Web.SubmissionInviteController do
 
   plug(
     Web.Plugs.EnsureRole,
-    [:super_admin, :admin, :challenge_owner] when action not in [:show, :accept]
+    [:super_admin, :admin, :challenge_manager] when action not in [:show, :accept]
   )
 
   def index(conn, %{"phase_id" => phase_id}) do

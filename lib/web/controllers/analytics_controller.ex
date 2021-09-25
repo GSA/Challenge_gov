@@ -4,7 +4,7 @@ defmodule Web.AnalyticsController do
   alias ChallengeGov.Agencies
   alias ChallengeGov.Analytics
 
-  plug(Web.Plugs.EnsureRole, [:super_admin, :admin])
+  plug(Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_manager])
 
   def index(conn, params) do
     %{current_user: user} = conn.assigns

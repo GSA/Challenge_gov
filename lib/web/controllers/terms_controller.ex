@@ -19,7 +19,7 @@ defmodule Web.TermsController do
     %{"user" => user_params} = params
 
     updated_params =
-      case user_role == "challenge_owner" do
+      case user_role == "challenge_manager" do
         true ->
           %{"user" => %{"agency_id" => agency_id}} = params
           Map.put(user_params, "agency_id", String.to_integer(agency_id))

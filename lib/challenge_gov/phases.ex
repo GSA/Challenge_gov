@@ -35,7 +35,7 @@ defmodule ChallengeGov.Phases do
 
   defp base_query(query) do
     query
-    |> preload([:submissions, challenge: [:challenge_owners]])
+    |> preload([:submissions, challenge: [:challenge_managers]])
   end
 
   def is_current?(%{start_date: start_date, end_date: end_date}) do

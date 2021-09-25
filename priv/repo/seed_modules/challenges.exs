@@ -8,7 +8,7 @@ defmodule Seeds.SeedModules.Challenges do
   def run() do
     IO.inspect "Seeding Challenges"
 
-    {:ok, challenge_owner} = Accounts.get_by_email("challenge_owner_active@example.com")
+    {:ok, challenge_manager} = Accounts.get_by_email("challenge_manager_active@example.com")
 
     {:ok, agency} = Agencies.get_by_name("Department of Agriculture")
     {:ok, sub_agency} = Agencies.get_by_name("Agricultural Marketing Service")
@@ -19,8 +19,8 @@ defmodule Seeds.SeedModules.Challenges do
     federal_partners = [{fed_partner_agency, fed_partner_sub_agency}]
 
     [
-      generate_challenge(challenge_owner, agency, sub_agency: sub_agency, federal_partners: federal_partners, non_fed_count: 2, timeline_event_count: 3),
-      generate_challenge(challenge_owner, agency, sub_agency: sub_agency, federal_partners: federal_partners, non_fed_count: 2, phase_count: 3)
+      generate_challenge(challenge_manager, agency, sub_agency: sub_agency, federal_partners: federal_partners, non_fed_count: 2, timeline_event_count: 3),
+      generate_challenge(challenge_manager, agency, sub_agency: sub_agency, federal_partners: federal_partners, non_fed_count: 2, phase_count: 3)
     ]
   end
 

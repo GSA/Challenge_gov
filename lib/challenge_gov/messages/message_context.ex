@@ -17,40 +17,40 @@ defmodule ChallengeGov.Messages.MessageContext do
     - Admin
   Who can see: 
     - Admin: All
-    - Challenge Owner: All
+    - Challenge Manager: All
     - Solver: All
   What happens on reply:
     - Admin: Sends another broadcast message in same thread
-    - Challenge Owner: Can't reply
+    - Challenge Manager: Can't reply
     - Solver: Can't reply
 
   Thread Type: B-2
-  Description: Admin created thread that broadcasts messages to all challenge owners
-  Audience: challenge_owners
+  Description: Admin created thread that broadcasts messages to all challenge managers
+  Audience: challenge_managers
   Who can create: 
     - Admin
   Who can see: 
     - Admin: All 
-    - Challenge Owner: All
+    - Challenge Manager: All
   What happens on reply:
     - Admin: Sends another broadcast message in same thread
-    - Challenge Owner: Creates a new message context of type I-1
+    - Challenge Manager: Creates a new message context of type I-1
 
   Thread Type: B-3
-  Description: Admin or challenge owner created thread that broadcasts messages to all users related to challenge
+  Description: Admin or challenge manager created thread that broadcasts messages to all users related to challenge
   Context: challenge
   Context ID: challenge_id
   Audience: all
   Who can create: 
     - Admin
-    - Challenge Owner
+    - Challenge Manager
   Who can see: 
     - Admin: All 
-    - Challenge Owner: An owner of the challenge referenced
+    - Challenge Manager: An manager of the challenge referenced
     - Solver: Has a submission on the challenge referenced
   What happens on reply:
     - Admin: Sends another broadcast message in same thread
-    - Challenge Owner: Sends another broadcast message in same thread
+    - Challenge Manager: Sends another broadcast message in same thread
     - Solver: Creates a new message context of type I-2
 
   Group Contexts
@@ -66,36 +66,36 @@ defmodule ChallengeGov.Messages.MessageContext do
     - Admin: Sends another message in same thread
 
   Thread Type: G-2
-  Description: Admin or challenge owner created group thread around a challenge
+  Description: Admin or challenge manager created group thread around a challenge
   Context: challenge
   Context ID: challenge_id
-  Audience: challenge_owners
+  Audience: challenge_managers
   Who can create: 
     - Admin
-    - Challenge Owner
+    - Challenge Manager
   Who can see: 
     - Admin: All
-    - Challenge Owner: Related to the challenge referenced by context_id
+    - Challenge Manager: Related to the challenge referenced by context_id
   What happens on reply:
     - Admin: Sends another message in same thread
-    - Challenge Owner: Sends another message in same thread
+    - Challenge Manager: Sends another message in same thread
 
   Isolated Contexts
   -----------------
   Thread Type: I-1
-  Description: Thread spawned from a challenge owner responding to thread type B-2
+  Description: Thread spawned from a challenge manager responding to thread type B-2
   Parent ID: ID of the broadcast message context this context spawned from
-  Context: challenge_owner
-  Context ID: ID of the challenge owner being messaged
+  Context: challenge_manager
+  Context ID: ID of the challenge manager being messaged
   Audience: all
   Who can create:
-    - Challenge Owner: By replying to a thread type B-2
+    - Challenge Manager: By replying to a thread type B-2
   Who can see:
     - Admin: All 
-    - Challenge Owner: Referenced by context_id
+    - Challenge Manager: Referenced by context_id
   What happens on reply:
     - Admin: Sends another message in same thread
-    - Challenge Owner: Sends another message in same thread
+    - Challenge Manager: Sends another message in same thread
 
   Thread Type: I-2
   Description: Thread spawned from a solver responding to thread type B-3
@@ -107,28 +107,28 @@ defmodule ChallengeGov.Messages.MessageContext do
     - Solver: By replying to a thread type B-3
   Who can see: 
     - Admin: All
-    - Challenge Owner: Related to the parent context challenge, 
+    - Challenge Manager: Related to the parent context challenge, 
     - Solver: Referenced by context_id
   What happens on reply:
     - Admin: Sends another message in same thread
-    - Challenge Owner: Sends another message in same thread
+    - Challenge Manager: Sends another message in same thread
     - Solver: Sends another message in same thread
 
   Thread Type: I-3
-  Description: Thread spawned from an admin or challenge owner directly messaging a submission
+  Description: Thread spawned from an admin or challenge manager directly messaging a submission
   Context: submission
   Context ID: ID of the submission being messaged
   Audience: all
   Who can create: 
     - Admin: Messaging a solver/submission or group of them making individual contexts for each
-    - Challenge Owner: Messaging a solver/submission or group of them making individual contexts for each
+    - Challenge Manager: Messaging a solver/submission or group of them making individual contexts for each
   Who can see: 
     - Admin: All
-    - Challenge Owner: Related to the parent context challenge, 
+    - Challenge Manager: Related to the parent context challenge, 
     - Solver: Related to submission being referenced by context_id
   What happens on reply:
     - Admin: Sends another message in same thread
-    - Challenge Owner: Sends another message in same thread
+    - Challenge Manager: Sends another message in same thread
     - Solver: Sends another message in same thread
   """
 
@@ -142,7 +142,7 @@ defmodule ChallengeGov.Messages.MessageContext do
 
   @valid_contexts [
     "challenge",
-    "challenge_owner",
+    "challenge_manager",
     "submission",
     "solver"
   ]
@@ -150,7 +150,7 @@ defmodule ChallengeGov.Messages.MessageContext do
   @valid_audiences [
     "all",
     "admins",
-    "challenge_owners"
+    "challenge_managers"
   ]
 
   @type t :: %__MODULE__{}

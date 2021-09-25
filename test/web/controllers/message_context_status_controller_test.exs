@@ -10,11 +10,11 @@ defmodule Web.MessageContextStatusControllerTest do
   describe "mark read" do
     test "success", %{conn: conn} do
       %{
-        challenge_owner_message_context_status: challenge_owner_message_context_status,
-        user_challenge_owner: user_challenge_owner
+        challenge_manager_message_context_status: challenge_manager_message_context_status,
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       conn =
         post(
@@ -22,7 +22,7 @@ defmodule Web.MessageContextStatusControllerTest do
           Routes.message_context_status_path(
             conn,
             :mark_read,
-            challenge_owner_message_context_status.id
+            challenge_manager_message_context_status.id
           )
         )
 
@@ -34,11 +34,11 @@ defmodule Web.MessageContextStatusControllerTest do
   describe "mark unread" do
     test "success", %{conn: conn} do
       %{
-        challenge_owner_message_context_status: challenge_owner_message_context_status,
-        user_challenge_owner: user_challenge_owner
+        challenge_manager_message_context_status: challenge_manager_message_context_status,
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       conn =
         post(
@@ -46,7 +46,7 @@ defmodule Web.MessageContextStatusControllerTest do
           Routes.message_context_status_path(
             conn,
             :mark_unread,
-            challenge_owner_message_context_status.id
+            challenge_manager_message_context_status.id
           )
         )
 
@@ -58,11 +58,11 @@ defmodule Web.MessageContextStatusControllerTest do
   describe "archive" do
     test "success", %{conn: conn} do
       %{
-        challenge_owner_message_context_status: challenge_owner_message_context_status,
-        user_challenge_owner: user_challenge_owner
+        challenge_manager_message_context_status: challenge_manager_message_context_status,
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       conn =
         post(
@@ -70,7 +70,7 @@ defmodule Web.MessageContextStatusControllerTest do
           Routes.message_context_status_path(
             conn,
             :archive,
-            challenge_owner_message_context_status.id
+            challenge_manager_message_context_status.id
           )
         )
 
@@ -82,11 +82,11 @@ defmodule Web.MessageContextStatusControllerTest do
   describe "unarchive" do
     test "success", %{conn: conn} do
       %{
-        challenge_owner_message_context_status: challenge_owner_message_context_status,
-        user_challenge_owner: user_challenge_owner
+        challenge_manager_message_context_status: challenge_manager_message_context_status,
+        user_challenge_manager: user_challenge_manager
       } = MessageContextStatusHelpers.create_message_context_status()
 
-      conn = prep_conn(conn, user_challenge_owner)
+      conn = prep_conn(conn, user_challenge_manager)
 
       conn =
         post(
@@ -94,7 +94,7 @@ defmodule Web.MessageContextStatusControllerTest do
           Routes.message_context_status_path(
             conn,
             :unarchive,
-            challenge_owner_message_context_status.id
+            challenge_manager_message_context_status.id
           )
         )
 

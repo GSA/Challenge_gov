@@ -195,14 +195,14 @@ defmodule ChallengeGov.Submissions do
 
   def submit(submission, remote_ip \\ nil) do
     submission
-    |> Repo.preload(challenge: [:challenge_owner_users])
+    |> Repo.preload(challenge: [:challenge_manager_users])
     |> Submission.submit_changeset()
     |> Repo.update()
     |> case do
       {:ok, submission} ->
         submission = new_form_preload(submission)
         maybe_send_submission_confirmation_email(submission)
-        challenge_owner_new_submission_email(submission)
+        challenge_manager_new_submission_email(submission)
         add_to_security_log(submission.submitter, submission, "submit", remote_ip)
         SubmissionExports.check_for_outdated(submission.phase_id)
         {:ok, submission}
@@ -212,9 +212,9 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
-  defp challenge_owner_new_submission_email(submission) do
-    Enum.map(submission.challenge.challenge_owner_users, fn owner ->
-      owner
+  defp challenge_manager_new_submission_email(submission) do
+    Enum.map(submission.challenge.challenge_manager_users, fn manager ->
+      manager
       |> Emails.new_submission_submission(submission)
       |> Mailer.deliver_later()
     end)

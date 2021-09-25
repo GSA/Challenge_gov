@@ -3,7 +3,7 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
   Helper factory functions for message context statuses
   """
 
-  alias ChallengeGov.Challenges.ChallengeOwner
+  alias ChallengeGov.Challenges.ChallengeManager
   alias ChallengeGov.Repo
 
   alias ChallengeGov.TestHelpers.AccountHelpers
@@ -23,14 +23,14 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
     role: "admin"
   }
 
-  @challenge_owner_params %{
-    email: "challenge_owner@example.com",
-    role: "challenge_owner"
+  @challenge_manager_params %{
+    email: "challenge_manager@example.com",
+    role: "challenge_manager"
   }
 
-  @challenge_owner_2_params %{
-    email: "challenge_owner_2@example.com",
-    role: "challenge_owner"
+  @challenge_manager_2_params %{
+    email: "challenge_manager_2@example.com",
+    role: "challenge_manager"
   }
 
   @solver_params %{
@@ -41,21 +41,21 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
   def create_message_context_status() do
     user_super_admin = AccountHelpers.create_user(@super_admin_params)
     user_admin = AccountHelpers.create_user(@admin_params)
-    user_challenge_owner = AccountHelpers.create_user(@challenge_owner_params)
-    user_challenge_owner_2 = AccountHelpers.create_user(@challenge_owner_2_params)
+    user_challenge_manager = AccountHelpers.create_user(@challenge_manager_params)
+    user_challenge_manager_2 = AccountHelpers.create_user(@challenge_manager_2_params)
     user_solver = AccountHelpers.create_user(@solver_params)
 
     challenge =
-      ChallengeHelpers.create_single_phase_challenge(user_challenge_owner, %{
-        user_id: user_challenge_owner.id
+      ChallengeHelpers.create_single_phase_challenge(user_challenge_manager, %{
+        user_id: user_challenge_manager.id
       })
 
     submission = SubmissionHelpers.create_submitted_submission(%{}, user_solver, challenge)
 
-    %ChallengeOwner{}
-    |> ChallengeOwner.changeset(%{
+    %ChallengeManager{}
+    |> ChallengeManager.changeset(%{
       "challenge_id" => challenge.id,
-      "user_id" => user_challenge_owner_2.id
+      "user_id" => user_challenge_manager_2.id
     })
     |> Repo.insert()
 
@@ -68,11 +68,11 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
 
     message_context = Repo.preload(message_context, [:statuses])
 
-    {:ok, challenge_owner_message_context_status} =
-      MessageContextStatuses.get(user_challenge_owner, message_context)
+    {:ok, challenge_manager_message_context_status} =
+      MessageContextStatuses.get(user_challenge_manager, message_context)
 
-    {:ok, challenge_owner_2_message_context_status} =
-      MessageContextStatuses.get(user_challenge_owner_2, message_context)
+    {:ok, challenge_manager_2_message_context_status} =
+      MessageContextStatuses.get(user_challenge_manager_2, message_context)
 
     {:ok, solver_message_context_status} =
       MessageContextStatuses.get(user_solver, message_context)
@@ -83,13 +83,13 @@ defmodule ChallengeGov.TestHelpers.MessageContextStatusHelpers do
       challenge: challenge,
       submission: submission,
       message_context: message_context,
-      challenge_owner_message_context_status: challenge_owner_message_context_status,
-      challenge_owner_2_message_context_status: challenge_owner_2_message_context_status,
+      challenge_manager_message_context_status: challenge_manager_message_context_status,
+      challenge_manager_2_message_context_status: challenge_manager_2_message_context_status,
       solver_message_context_status: solver_message_context_status,
       user_super_admin: user_super_admin,
       user_admin: user_admin,
-      user_challenge_owner: user_challenge_owner,
-      user_challenge_owner_2: user_challenge_owner_2,
+      user_challenge_manager: user_challenge_manager,
+      user_challenge_manager_2: user_challenge_manager_2,
       user_solver: user_solver
     }
   end
