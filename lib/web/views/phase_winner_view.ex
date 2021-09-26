@@ -2,6 +2,7 @@ defmodule Web.PhaseWinnerView do
   use Web, :view
 
   alias Web.FormView
+  alias ChallengeGov.Challenges
   alias Web.SharedView
   alias ChallengeGov.PhaseWinners
   alias ChallengeGov.Winners
