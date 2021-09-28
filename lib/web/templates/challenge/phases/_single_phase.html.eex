@@ -16,8 +16,10 @@
             <div class="<%= FormView.form_group_classes(phase_form, :start_date) %>">
               <%= label phase_form, :start_date, "Submission start date and time" %>
               <span class="required">*</span>
-              <%= date_and_time_inputs(@conn, @form, :start_date, "Start date", "challenge_phases_0_start") %>
-              <%= hidden_input(phase_form, :start_date, label: "Start date") %>
+              <div>
+                <%= date_and_time_inputs(@conn, @form, :start_date, "Start date", "challenge_phases_0_start") %>
+                <%= hidden_input(phase_form, :start_date, label: "Start date") %>
+              </div>
               <%= error_tag(phase_form, :start_date) %>
             </div>
           </div>
@@ -26,8 +28,10 @@
             <div class="<%= FormView.form_group_classes(phase_form, :end_date) %>">
               <%= label phase_form, :end_date, "Submission end date and time" %>
               <span class="required">*</span>
-              <%= date_and_time_inputs(@conn, @form, :end_date, "End date", "challenge_phases_0_end") %>
-              <%= hidden_input(phase_form, :end_date, label: "End date") %>
+              <div>
+                <%= date_and_time_inputs(@conn, @form, :end_date, "End date", "challenge_phases_0_end") %>
+                <%= hidden_input(phase_form, :end_date, label: "End date") %>
+              </div>
               <%= error_tag(phase_form, :end_date) %>
             </div>
           </div>
