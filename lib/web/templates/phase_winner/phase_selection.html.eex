@@ -12,7 +12,7 @@
 <div class="content">
   <h1>Winners for <%= @challenge.title %></h1>
   <div class="grid-row">
-    <%= for p <- @challenge.phases do %>        
+    <%= for p <- Challenges.get_closed_phases(@challenge) do %>
     <div class="card winner-manage grid-col flex-2">
       <div class="card-body">
         <div class="winner-title">

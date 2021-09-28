@@ -14,12 +14,12 @@
         <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-danger") %>
       <% end %>
       
-      <%= cond do %>
-        <% Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge) -> %>
-          <%= link("Add winners", to: "#", class: "btn btn-primary disabled", disabled: true) %>
-        <% Challenges.is_challenge_manager?(@user, @challenge) -> %>
+      <%= if Challenges.allowed_to_edit(@user, @challenge) do %>
+        <%= if length(Challenges.get_closed_phases(@challenge)) > 0 do %>
           <%= link("Add winners", to: Routes.phase_winner_path(@conn, :index, @challenge.id), class: "btn btn-primary") %>
-        <% true -> %>
+        <% else %>
+          <%= link("Add winners", to: "#", class: "btn btn-primary disabled", disabled: true) %>
+        <% end %>
       <% end %>
 
       <%= if Challenges.is_published?(@challenge) do %>
