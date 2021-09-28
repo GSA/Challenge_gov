@@ -8,7 +8,7 @@ defmodule Seeds.SeedModules.Challenges do
   def run() do
     IO.inspect "Seeding Challenges"
 
-    {:ok, challenge_manager} = Accounts.get_by_email("challenge_manager_active@example.com")
+    {:ok, challenge_manager} = Accounts.get_by_email("challenge_manager_active@example.gov")
 
     {:ok, agency} = Agencies.get_by_name("Department of Agriculture")
     {:ok, sub_agency} = Agencies.get_by_name("Agricultural Marketing Service")
