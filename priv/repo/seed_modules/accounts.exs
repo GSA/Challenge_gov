@@ -28,6 +28,19 @@ defmodule Seeds.SeedModules.Accounts do
     create_role_of_status("challenge_manager", "deactivated")
     create_role_of_status("challenge_manager", "decertified")
 
+    # .gov Challenge Manager
+    Accounts.system_create(%{
+      token: Ecto.UUID.generate(),
+      role: "challenge_manager",
+      status: "active",
+      email: "challenge_manager_active@example.gov",
+      first_name: generate_name("challenge_manager"),
+      last_name: generate_name("active"),
+      last_active: last_active_for_role("challenge_manager"),
+      terms_of_use: terms_and_privacy_for_role("challenge_manager"),
+      privacy_guidelines: terms_and_privacy_for_role("challenge_manager")
+    })
+
     # Solvers
     create_role_of_status("solver", "active")
     create_role_of_status("solver", "pending")
