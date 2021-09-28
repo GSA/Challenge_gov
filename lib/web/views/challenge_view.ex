@@ -257,6 +257,35 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def date_and_time_inputs(conn, name, label, id_prefix) do
+    if Browser.firefox?(conn) do
+      [
+        content_tag(:input, "",
+          type: "date",
+          id: "#{id_prefix}_date_picker",
+          class: "js-date-input",
+          required: true
+        ),
+        content_tag(:span, "", class: "mr-2"),
+        content_tag(:input, "",
+          type: "time",
+          id: "#{id_prefix}_time_picker",
+          class: "js-time-input",
+          required: true
+        )
+      ]
+    else
+      content_tag(:input, "",
+        class: "form-control js-datetime-input",
+        id: "#{id_prefix}_date",
+        label: label,
+        name: name,
+        type: "datetime-local",
+        required: true
+      )
+    end
+  end
+
   def date_and_time_inputs(conn, form, name, label, id_prefix) do
     if Browser.firefox?(conn) do
       [
