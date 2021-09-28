@@ -4,7 +4,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   alias ChallengeGov.TestHelpers.AccountHelpers
 
   feature "create a challenge as a Challenge Manager", %{session: session} do
-    create_and_sign_in_gov_challenge_manager(session)
+    create_and_sign_in_challenge_manager(session)
 
     session
     |> click(link("Challenge management"))
@@ -152,7 +152,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> click(button("Next"))
   end
 
-  defp create_and_sign_in_gov_challenge_manager(session) do
+  defp create_and_sign_in_challenge_manager(session) do
     AccountHelpers.create_user(%{
       email: "challenge_manager_active@example.gov",
       role: "challenge_manager"
@@ -160,7 +160,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
     session
     |> visit("/dev_accounts")
-    |> click(button("Gov Challenge Manager Active"))
+    |> click(button("Challenge Manager Active"))
   end
 
   defp publish_date_picker() do
