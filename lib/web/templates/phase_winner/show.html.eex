@@ -19,14 +19,16 @@
         <hr/>
         <h2>Winner Overview Info</h2>
         <%= SharedView.render_safe_html(@phase_winner.overview) %>
-        <%= render_overview_image(@phase_winner) %>
+        <div class="pl-4"><%= render_overview_image(@phase_winner) %></div>
         <hr/>
         <h2>Individual Winner Info</h2>
         <%= Enum.map(@phase_winner.winners, fn winner -> %>
-          <div>Place title: <%= winner.place_title %></div>
-          <div>Name: <%= winner.name %></div>
-          <div><%= render_winner_image(winner) %></div>
-          <br/>
+          <div class="pl-4">
+            <div>Place title: <%= winner.place_title %></div>
+            <div>Name: <%= winner.name %></div>
+            <div class="my-3"><%= render_winner_image(winner) %></div>
+            <br/>
+          </div>
         <% end) %>
       </div>
     </div>

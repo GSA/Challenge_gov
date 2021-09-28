@@ -14,7 +14,10 @@
           <div class="invalid-feedback">File must be a .jpg, .jpeg, .png, .gif </div>
           <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
         </div>
-        <%= render_remove_image_checkbox(f, :overview_image) %>
+        <div class="my-3"><%= render_overview_image(@changeset.data) %></div>
+        <%= if @changeset.data do %>
+          <%= render_remove_image_checkbox(f, :overview_image) %>
+        <% end %>
       </div>
 
       <hr/>

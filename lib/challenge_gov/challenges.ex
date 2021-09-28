@@ -489,6 +489,12 @@ defmodule ChallengeGov.Challenges do
     |> Repo.one()
   end
 
+  def get_closed_phases(%{phases: phases}) do
+    Enum.filter(phases, fn phase ->
+      Phases.is_past?(phase)
+    end)
+  end
+
   @doc """
   Submit a new challenge for a user
   """
