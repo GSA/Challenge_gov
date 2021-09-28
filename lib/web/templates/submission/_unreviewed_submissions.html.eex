@@ -9,7 +9,7 @@
                 <div class="image_wrapper">
                   <%= img_tag(
                     ChallengeView.logo_url(submission.challenge),
-                    alt: {submission.challenge.logo_alt_text},
+                    alt: submission.challenge.logo_alt_text,
                     title: "Challenge logo",
                     class: "w-100"
                   ) %>
