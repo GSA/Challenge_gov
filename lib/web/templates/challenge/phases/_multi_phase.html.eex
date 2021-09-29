@@ -18,7 +18,7 @@
             <div class="col">
               <%= label phase_form, :title, "Phase #{phase_form.index + 1} title" %>
               <span class="required">*</span>
-              <%= text_input phase_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, phase_form.index)}", required: true %>
+              <%= text_input phase_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, phase_form.index)}" %>
               <%= error_tag(phase_form, :title) %>
             </div>
           </div>
@@ -83,8 +83,8 @@
             <div class="form-group col">
               <label for="challenge_phases_0_start_date">Phase 1 submission start date and time *</label>
               <div>
-                <%= date_and_time_inputs(@conn, :start_date, "Start date", "challenge_phases_1_start") %>
-                <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">            
+                <%= new_date_and_time_inputs(@conn, :start_date, "Start date", "challenge_phases_0_start") %>
+                <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@
             <div class="form-group col">
               <label for="challenge_phases_0_start_date">Phase 1 submission end date and time *</label>
               <div>
-                <%= date_and_time_inputs(@conn, :end_date, "End date", "challenge_phases_1_end") %>
+                <%= new_date_and_time_inputs(@conn, :end_date, "End date", "challenge_phases_0_end") %>
                 <input id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="hidden">
               </div>
             </div>
@@ -130,7 +130,7 @@
           <div class="<%= FormView.form_group_classes(@form, :start_date) %> col">
             <%= label :template, :start_date, class: "template-label" %>
             <div>
-              <%= date_and_time_inputs(@conn, @form, :start_date, "Start date", "challenge_phases_1_start") %>
+              <%= date_and_time_inputs(@conn, @form, :start_date, "Start date", "challenge_phases_1_start", required: false) %>
               <%= hidden_input(:template, :start_date, label: "Start date", class: "template-input") %>
             </div>
           </div>
@@ -140,7 +140,7 @@
           <div class="<%= FormView.form_group_classes(@form, :end_date) %> col">
             <%= label :template, :end_date, class: "template-label" %>
             <div>
-              <%= date_and_time_inputs(@conn, @form, :end_date, "End date", "challenge_phases_1_end") %>
+              <%= date_and_time_inputs(@conn, @form, :end_date, "End date", "challenge_phases_1_end", required: false) %>
               <%= hidden_input(:template, :end_date, label: "End date", class: "template-input") %>
             </div>
           </div>
