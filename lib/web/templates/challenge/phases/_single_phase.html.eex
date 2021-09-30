@@ -47,7 +47,7 @@
       <div class="form-group nested-form-group">
         <div class="form-group">
           <label for="challenge_phases_0_start_date">Phase 1 submission start date and time</label><span class="required">*</span>
-          <%= date_and_time_inputs(@conn, @form, "challenge[phases][0][start_date]", "Phase 1 submission end date and time *", "challenge_phases_0_start") %>
+          <%= date_and_time_inputs(@conn, @form, :start_date, "Phase 1 submission end date and time *", "challenge_phases_0_start") %>
           <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">              
         </div>
       </div>
@@ -55,7 +55,7 @@
       <div class="form-group nested-form-group">
         <div class="form-group">
           <label for="challenge_phases_0_start_date">Phase 1 submission end date and time *</label>
-          <%= date_and_time_inputs(@conn, @form, "challenge[phases][0][end_date]", "Phase 1 submission end date and time *", "challenge_phases_0_end") %>
+          <%= date_and_time_inputs(@conn, @form, :end_date, "Phase 1 submission end date and time *", "challenge_phases_0_end") %>
           <input id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="hidden">              
         </div>
       </div>
