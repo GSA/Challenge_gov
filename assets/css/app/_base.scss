@@ -19,9 +19,15 @@ a {
 }
 
 .btn-info {
-  background-color: #107484;
-  border-color: #107484;
+  background-color: #1A4480;
+  border-color: #1A4480;
+
+  &:hover {
+    background-color: #112F4E;
+    border-color: #112F4E;
+  }
 }
+
 
 .required {
   color: #ff0000;

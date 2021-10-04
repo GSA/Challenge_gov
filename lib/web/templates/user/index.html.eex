@@ -7,10 +7,10 @@
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">
-          <span>Users</span>          
-          <a class="btn btn-info" data-widget="control-sidebar" href="#">Filter</a>
+          <span>Users</span>
+          <a class="btn btn-info" data-widget="control-sidebar" href="#">Search</a>
           <%= if is_map(@filter) && map_size(@filter) > 0 do %>
-            <%= link "clear filters", to: Routes.user_path(@conn, :index), class: "btn btn-link" %>
+            <%= link "Clear search", to: Routes.user_path(@conn, :index), class: "btn btn-link" %>
           <% end %>
         </h1>
       </div>
