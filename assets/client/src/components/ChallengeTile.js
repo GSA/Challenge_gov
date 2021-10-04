@@ -99,7 +99,7 @@ export const ChallengeTile = ({challenge, preview}) => {
         <Link to={preview ? "#" : `/challenge/${challenge.custom_url || challenge.id}`} aria-label="View challenge details">
           <div className="image_wrapper">
             { challenge.logo
-              ? <img src={challenge.logo} alt={challenge.logo_alt_text} title="Challenge logo" className="w-100"/>
+              ? <img src={imageBase + challenge.logo} alt={challenge.logo_alt_text} title="Challenge logo" className="w-100"/>
               : <img
                   src={challenge.agency_logo}
                   alt="Challenge agency logo"
