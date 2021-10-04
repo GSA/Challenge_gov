@@ -46,7 +46,7 @@ defmodule Web.LayoutView do
   def tab_selected(conn, "dashboard") do
     case conn.path_info == [] do
       true ->
-        "active"
+        "icon-active"
 
       false ->
         ""
@@ -56,19 +56,19 @@ defmodule Web.LayoutView do
   def tab_selected(conn, route) do
     case conn.path_info do
       ["admin", ^route] ->
-        "active"
+        "icon-active"
 
       ["admin", ^route, _] ->
-        "active"
+        "icon-active"
 
       [^route] ->
-        "active"
+        "icon-active"
 
       [^route, _, _, _] ->
-        "active"
+        "icon-active"
 
       [^route, _] ->
-        "active"
+        "icon-active"
 
       _ ->
         ""

@@ -6,4 +6,13 @@
       cursor: not-allowed;
     }
   }
+
+  .icon-active {
+    background-color: #112F4E;
+    color: white !important;
+
+    &:hover {
+      color: #343a40 !important;
+    }
+  }
 }

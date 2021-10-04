@@ -8,7 +8,9 @@
   }
 
   &__icon-container {
-    width: 52px; 
+    min-width: 60px;
+    width: 10%;
+    height: 100%;
     text-align: center;
   }
 }
