@@ -67,8 +67,8 @@ defmodule Web.DashboardView do
   defp admin_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
-        content_tag(:h3, "Welcome to the Challenge.gov portal."),
-        content_tag(:p, "Engage with the features below to manage your workflows.")
+        content_tag(:h3, "Welcome to the Challenge.Gov portal"),
+        content_tag(:p, "Engage with the features below to manage your workflows.", class: "p-0")
       ]
     end
   end
