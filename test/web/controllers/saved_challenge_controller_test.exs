@@ -11,10 +11,39 @@ defmodule Web.SavedChallengeControllerTest do
       %{current_user: user} = conn.assigns
 
       user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
-      challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
-      challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
-      challenge_3 = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "archived"})
-      challenge_4 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
+
+      challenge =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user_2.id,
+          start_date: Timex.shift(Timex.now(), days: -1),
+          end_date: Timex.shift(Timex.now(), days: 1),
+          status: "published"
+        })
+
+      challenge_2 =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user_2.id,
+          start_date: Timex.shift(Timex.now(), days: -1),
+          end_date: Timex.shift(Timex.now(), days: 1),
+          status: "published"
+        })
+
+      challenge_3 =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user_2.id,
+          start_date: Timex.shift(Timex.now(), days: -2),
+          end_date: Timex.shift(Timex.now(), days: -1),
+          status: "published",
+          sub_status: "archived"
+        })
+
+      challenge_4 =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          start_date: Timex.shift(Timex.now(), days: -1),
+          end_date: Timex.shift(Timex.now(), days: 1),
+          status: "published"
+        })
 
       {:ok, _saved_challenge} = SavedChallenges.create(user, challenge)
       {:ok, _saved_challenge_2} = SavedChallenges.create(user, challenge_2)
