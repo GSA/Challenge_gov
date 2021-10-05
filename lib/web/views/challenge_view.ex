@@ -292,14 +292,22 @@ defmodule Web.ChallengeView do
         content_tag(:input, "",
           type: "date",
           id: "#{id_prefix}_date_picker",
-          class: "js-date-input",
+          class:
+            Enum.join(
+              [FormView.form_control_classes(form, name), "js-date-input"],
+              " "
+            ),
           required: opts[:required]
         ),
         content_tag(:span, "", class: "mr-2"),
         content_tag(:input, "",
           type: "time",
           id: "#{id_prefix}_time_picker",
-          class: "js-time-input",
+          class:
+            Enum.join(
+              [FormView.form_control_classes(form, name), "js-time-input"],
+              " "
+            ),
           required: opts[:required]
         )
       ]
