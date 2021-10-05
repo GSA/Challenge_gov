@@ -38,7 +38,7 @@
           <div class="col-md-12">
             <div class="cards">
               <%= Enum.map @submissions, fn (submission) -> %>
-                <div class="challenge-tile card">
+                <div class="challenge-tile card mr-4">
                   <%= link to: Routes.submission_path(@conn, :edit, submission.id) do %>
                     <div class="image_wrapper">
                       <%= img_tag(
@@ -49,15 +49,15 @@
                       ) %>
                     </div>
                     <div class="challenge-tile__text-wrapper submission-wrapper">
-                      <p class="challenge-tile__submission-info" aria-label="Challenge title">
+                      <p class="challenge-tile__info" aria-label="Challenge title">
                         <span class="title"><%= submission.challenge.title %></span>
                       </p>
                       <%= phase_number(submission) %>
-                      <p class="challenge-tile__submission-info" aria-label="Submission close">
+                      <p class="challenge-tile__info" aria-label="Submission close">
                         <%= close_header(submission.phase.end_date) %>
                         <span class="js-local-datetime"><%= submission.phase.end_date %></span>
                       </p>
-                      <p class="challenge-tile__submission-info" aria-label="Submission status">
+                      <p class="challenge-tile__info" aria-label="Submission status">
                         <span><%= submission.status %></span>
                       </p>
                     </div>

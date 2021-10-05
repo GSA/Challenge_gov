@@ -15,15 +15,15 @@
                   ) %>
                 </div>
                 <div class="challenge-tile__text-wrapper submission-wrapper">
-                  <p class="challenge-tile__submission-info" aria-label="Challenge title">
+                  <p class="challenge-tile__info" aria-label="Challenge title">
                     <span class="title"><%= submission.challenge.title %></span>
                   </p>
                   <%= phase_number(submission) %>
-                  <p class="challenge-tile__submission-info" aria-label="Submission close">
+                  <p class="challenge-tile__info" aria-label="Submission close">
                     <span><%= close_header(submission.phase.end_date) %></span>
                     <%= content_tag("span", submission.phase.end_date, class: "js-local-datetime") %>
                   </p>
-                  <p class="challenge-tile__submission-info" aria-label="Submission status">
+                  <p class="challenge-tile__info" aria-label="Submission status">
                     <span>review required</span>
                   </p>
                 </div>
