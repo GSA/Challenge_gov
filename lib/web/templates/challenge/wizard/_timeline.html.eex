@@ -67,7 +67,7 @@
           <div class="<%= FormView.form_group_classes(@form, :date) %> col">
             <%= label :template, :date, "Date", class: "template-label" %>
             <span class="required">*</span>
-            <%= date_and_time_inputs(@conn, @form, :date, "Date", "challenge_timeline_events_1", required: false) %>
+            <%= date_and_time_inputs(@conn, @form, :date, "Date", "challenge_timeline_events", required: false) %>
             <%= hidden_input(:template, :date, class: "template-input") %>
             <p class="ml-2 text-muted">Use this format: MM/DD/YYYY TIME OF DAY (Example: 06/19/2020 05:00 PM).</p>
           </div>

@@ -130,7 +130,7 @@
           <div class="<%= FormView.form_group_classes(@form, :start_date) %> col">
             <%= label :template, :start_date, class: "template-label" %>
             <div>
-              <%= date_and_time_inputs(@conn, @form, :start_date, "Start date", "challenge_phases_1_start", required: false) %>
+              <%= date_and_time_inputs(@conn, @form, :start_date, "Start date", "challenge_phases_start", required: false) %>
               <%= hidden_input(:template, :start_date, label: "Start date", class: "template-input") %>
             </div>
           </div>
@@ -140,7 +140,7 @@
           <div class="<%= FormView.form_group_classes(@form, :end_date) %> col">
             <%= label :template, :end_date, class: "template-label" %>
             <div>
-              <%= date_and_time_inputs(@conn, @form, :end_date, "End date", "challenge_phases_1_end", required: false) %>
+              <%= date_and_time_inputs(@conn, @form, :end_date, "End date", "challenge_phases_end", required: false) %>
               <%= hidden_input(:template, :end_date, label: "End date", class: "template-input") %>
             </div>
           </div>
