@@ -19,9 +19,15 @@ a {
 }
 
 .btn-info {
-  background-color: #107484;
-  border-color: #107484;
+  background-color: #1A4480;
+  border-color: #1A4480;
+
+  &:hover {
+    background-color: #112F4E;
+    border-color: #112F4E;
+  }
 }
+
 
 .required {
   color: #ff0000;
@@ -490,6 +496,11 @@ label {
     background: url("/images/sidebar_icons/submissions.svg") no-repeat center;
     background-size: contain;
   }
+}
+
+.dashboard-card-icon {
+  color: $orange-30v;
+  font-size: 3em;;
 }
 
 .btn:focus {

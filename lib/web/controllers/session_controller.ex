@@ -60,7 +60,6 @@ defmodule Web.SessionController do
       {:ok, user} = Accounts.map_from_login(userinfo, Security.extract_remote_ip(conn))
 
       conn
-      |> put_flash(:info, "Login successful")
       |> put_session(:user_token, user.token)
       |> after_sign_in_redirect(Routes.dashboard_path(conn, :index))
     else
