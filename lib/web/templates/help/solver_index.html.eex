@@ -1,0 +1,45 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+      %{text: "Help"},
+    ])%>
+  </div>
+</div>
+
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          <span>Help</span>
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card help-card p-4 mx-auto">
+          <h3 class="text-center mb-4 font-weight-bold">Getting started</h3>
+          <div class="d-flex flex-row justify-content-around">
+            <div class="text-center help-card__section">
+              <i class="dashboard-card-icon fa fa-question-circle"></i>
+              <h4 class="m-4">FAQs</h4>
+              <p>Check out our frequently asked questions on how to use the portal to submit challenges.</p>
+            </div>
+            <span class="vr-light">&nbsp;</span>
+            <div class="text-center help-card__section">
+              <i class="dashboard-card-icon fa fa-tools"></i>
+              <h4 class="m-4">Starting a submission</h4>
+              <p>Our submission toolkit is full of useful information.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
