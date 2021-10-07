@@ -43,14 +43,14 @@ defmodule Web.SessionController do
       client_id: client_id,
       private_key_password: private_key_pass,
       private_key_path: private_key_path,
-      idp_authorize_url: idp_authorize_url
+      idp_authorize_url: idp_authorize_url,
+      token_endpoint: token_endpoint
     } = oidc_config()
 
     {:ok, well_known_config} = LoginGov.get_well_known_configuration(idp_authorize_url)
 
     private_key = LoginGov.load_private_key(private_key_pass, private_key_path)
     {:ok, public_key} = LoginGov.get_public_key(well_known_config["jwks_uri"])
-    token_endpoint = "https://idp.int.identitysandbox.gov/api/openid_connect/token"
 
     with client_assertion <-
            LoginGov.build_client_assertion(client_id, token_endpoint, private_key),

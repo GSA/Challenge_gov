@@ -48,7 +48,7 @@ defmodule ChallengeGov.LoginGov do
       client_id: client_id,
       response_type: "code",
       acr_values: acr_values,
-      scope: "openid email profile:name",
+      scope: "openid email",
       redirect_uri: uri_join(redirect_uri, "/auth/result"),
       state: random_value(),
       nonce: random_value(),

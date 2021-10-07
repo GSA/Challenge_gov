@@ -78,7 +78,8 @@ config :challenge_gov, :oidc_config, %{
   client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_gov_portal_local",
   private_key_password: nil,
   private_key_path: "local_key.pem",
-  public_key_path: "local_cert.pem"
+  public_key_path: "local_cert.pem",
+  token_endpoint: "https://idp.int.identitysandbox.gov/api/openid_connect/token"
 }
 
 # Configure your database

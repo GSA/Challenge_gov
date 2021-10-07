@@ -74,13 +74,14 @@ config :ex_aws,
   secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
 
 config :challenge_gov, :oidc_config, %{
-  idp_authorize_url: "https://idp.int.identitysandbox.gov/openid_connect/authorize",
+  idp_authorize_url: System.get_env("LOGIN_IDP_AUTHORIZE_URL"),
   acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
   redirect_uri: System.get_env("LOGIN_REDIRECT_URL"),
   client_id: System.get_env("LOGIN_CLIENT_ID"),
   private_key_path: System.get_env("LOGIN_PRIVATE_KEY_PATH"),
   private_key_password: System.get_env("LOGIN_PRIVATE_KEY_PASSWORD"),
   public_key_path: System.get_env("LOGIN_PUBLIC_KEY_PATH")
+  token_endpoint: System.get_env("LOGIN_TOKEN_ENDPOINT")
 }
 
 config :challenge_gov,
