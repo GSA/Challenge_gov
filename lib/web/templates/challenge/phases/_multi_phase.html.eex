@@ -18,7 +18,7 @@
             <div class="col">
               <%= label phase_form, :title, "Phase #{phase_form.index + 1} title" %>
               <span class="required">*</span>
-              <%= text_input phase_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, phase_form.index)}", required: true %>
+              <%= text_input phase_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, phase_form.index)}" %>
               <%= error_tag(phase_form, :title) %>
             </div>
           </div>
@@ -28,11 +28,10 @@
               <div class="<%= FormView.form_group_classes(phase_form, :start_date) %> col">
                 <%= label phase_form, :start_date, "Phase #{phase_form.index + 1} submission start date and time" %>
                 <span class="required">*</span>
-                <%= datetime_local_input(phase_form, :start_date, label: "Start date", 
-                  class: Enum.join([FormView.form_control_classes(phase_form, :start_date), "js-datetime-input"], " "), 
-                  required: true
-                )%>    
-                <%= hidden_input(phase_form, :start_date, label: "Start date") %>
+                <div>
+                  <%= date_and_time_inputs(@conn, phase_form, :start_date, "Start date", "challenge_phases_#{phase_form.index + 1}_start") %>
+                  <%= hidden_input(phase_form, :start_date, label: "Start date") %>
+                </div>
                 <%= error_tag(phase_form, :start_date) %>
               </div>
             </div>
@@ -41,11 +40,10 @@
               <div class="<%= FormView.form_group_classes(phase_form, :end_date) %> col">
                 <%= label phase_form, :start_date, "Phase #{phase_form.index + 1} submission end date and time" %>
                 <span class="required">*</span>
-                <%= datetime_local_input(phase_form, :end_date, label: "End date", 
-                  class: Enum.join([FormView.form_control_classes(phase_form, :end_date), "js-datetime-input"], " "), 
-                  required: true
-                )%>
-                <%= hidden_input(phase_form, :end_date, label: "End date") %>
+                <div>
+                  <%= date_and_time_inputs(@conn, phase_form, :end_date, "End date", "challenge_phases_#{phase_form.index + 1}_end") %>
+                  <%= hidden_input(phase_form, :end_date, label: "End date") %>
+                </div>
                 <%= error_tag(phase_form, :end_date) %>
               </div>
             </div>
@@ -69,8 +67,8 @@
             <% end %>
           </div>
         </div>
-      <% end) %>      
-    <% else %>            
+      <% end) %>
+    <% else %>
       <!-- With no phases pending or attached -->
       <div class="form-collection mb-3" data-index="0">
         <div class="form-group nested-form-group row" data-field="title">
@@ -84,16 +82,20 @@
           <div class="form-group nested-form-group" data-field="start_date">
             <div class="form-group col">
               <label for="challenge_phases_0_start_date">Phase 1 submission start date and time *</label>
-              <input class="form-control js-datetime-input" id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="datetime-local">
-              <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">            
+              <div>
+                <%= new_date_and_time_inputs(@conn, :start_date, "Start date", "challenge_phases_0_start") %>
+                <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">
+              </div>
             </div>
           </div>
 
           <div class="form-group nested-form-group" data-field="end_date">
             <div class="form-group col">
               <label for="challenge_phases_0_start_date">Phase 1 submission end date and time *</label>
-              <input class="form-control js-datetime-input" id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="datetime-local">
-              <input id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="hidden">            
+              <div>
+                <%= new_date_and_time_inputs(@conn, :end_date, "End date", "challenge_phases_0_end") %>
+                <input id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="hidden">
+              </div>
             </div>
           </div>
         </div>
@@ -127,20 +129,20 @@
         <div class="<%= FormView.nested_form_group_classes(@form, :phases, :start_date, -1) %>" data-field="start_date">
           <div class="<%= FormView.form_group_classes(@form, :start_date) %> col">
             <%= label :template, :start_date, class: "template-label" %>
-            <%= datetime_local_input(:template, :start_date, label: "Start date", 
-              class: Enum.join([FormView.form_control_classes(@form, :start_date), "js-datetime-input template-input"], " ") 
-            )%>    
-            <%= hidden_input(:template, :start_date, label: "Start date", class: "template-input") %>
+            <div>
+              <%= date_and_time_inputs(@conn, @form, :start_date, "Start date", "challenge_phases_start", required: false) %>
+              <%= hidden_input(:template, :start_date, label: "Start date", class: "template-input") %>
+            </div>
           </div>
         </div>
 
         <div class="<%= FormView.nested_form_group_classes(@form, :phases, :end_date, -1) %>" data-field="end_date">
           <div class="<%= FormView.form_group_classes(@form, :end_date) %> col">
             <%= label :template, :end_date, class: "template-label" %>
-            <%= datetime_local_input(:template, :end_date, label: "End date", 
-              class: Enum.join([FormView.form_control_classes(@form, :end_date), "js-datetime-input template-input"], " ") 
-            )%>
-            <%= hidden_input(:template, :end_date, label: "End date", class: "template-input") %>
+            <div>
+              <%= date_and_time_inputs(@conn, @form, :end_date, "End date", "challenge_phases_end", required: false) %>
+              <%= hidden_input(:template, :end_date, label: "End date", class: "template-input") %>
+            </div>
           </div>
         </div>
       </div>

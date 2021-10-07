@@ -157,7 +157,7 @@
 </label>
 <div class="col">
   <div class="<%= FormView.form_group_classes(@form, :auto_publish_date) %>">
-    <%= auto_publish_date(@conn, @form, :auto_publish_date, "Publish date") %>
+    <%= date_and_time_inputs(@conn, @form, :auto_publish_date, "Publish date", "challenge_auto_publish") %>
     <%= hidden_input(@form, :auto_publish_date, label: "Publish date") %>
     <%= error_tag(@form, :auto_publish_date) %>
     <br/>
@@ -204,7 +204,7 @@
     <br/>
 
     <%= existing_phase_data_boolean(@form) %>
-    <%= render Web.ChallengeView, "phases/_single_phase.html", form: @form %>
-    <%= render Web.ChallengeView, "phases/_multi_phase.html", form: @form %>
+    <%= render Web.ChallengeView, "phases/_single_phase.html", conn: @conn, form: @form %>
+    <%= render Web.ChallengeView, "phases/_multi_phase.html", conn: @conn, form: @form %>
   </div>
 </div>
