@@ -29,13 +29,13 @@
             <div class="text-center help-card__section">
               <i class="dashboard-card-icon fa fa-question-circle"></i>
               <h4 class="m-4">FAQs</h4>
-              <p>Check out our frequently asked questions on how to use the portal to submit challenges.</p>
+              <p>Check out our <a href="https://www.challenge.gov/toolkit/faq/" target="_blank">frequently asked questions</a> on how to use the portal to submit challenges.</p>
             </div>
             <span class="vr-light">&nbsp;</span>
             <div class="text-center help-card__section">
               <i class="dashboard-card-icon fa fa-tools"></i>
               <h4 class="m-4">Starting a submission</h4>
-              <p>Our submission toolkit is full of useful information.</p>
+              <p>Our <a href="https://www.challenge.gov/toolkit/" target="_blank">submission toolkit</a> is full of useful information.</p>
             </div>
           </div>
         </div>
@@ -44,7 +44,9 @@
           <div class="d-flex flex-row justify-content-around py-3">
             <div class="w-50 px-5 my-auto">
               <h3 class="mb-4 font-weight-bold">Question about a challenge?</h3>
-              <span>Get in touch with the Challenge Point of Contact from the contact tab on the challenge details page. Search Active Challenges</span>
+              <span>Get in touch with the Challenge <em>Point of Contact</em> from the contact tab on the challenge details page.</span>
+              <br />
+              <span><a href="https://www.challenge.gov/" target="_blank">Search Active Challenges</a></span>
             </div>
             <div class="text-center w-50">
               <img src="/images/contact_indication.svg" alt="contact button indication on challenge details page" title="Contact indication" />
@@ -59,7 +61,7 @@
             </div>
             <div class="w-50 mx-5 my-auto">
               <h3 class="mb-4 font-weight-bold">For technical issues with the platform</h3>
-              <span>Contact support@challenge.gov for help with submissions.</span>
+              <span>Contact <a href="mailto: support@challenge.gov" target="_blank">support@challenge.gov</a> for help with submissions.</span>
             </div>
           </div>
         </div>
