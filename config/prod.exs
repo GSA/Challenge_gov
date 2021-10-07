@@ -80,7 +80,7 @@ config :challenge_gov, :oidc_config, %{
   client_id: System.get_env("LOGIN_CLIENT_ID"),
   private_key_path: System.get_env("LOGIN_PRIVATE_KEY_PATH"),
   private_key_password: System.get_env("LOGIN_PRIVATE_KEY_PASSWORD"),
-  public_key_path: System.get_env("LOGIN_PUBLIC_KEY_PATH")
+  public_key_path: System.get_env("LOGIN_PUBLIC_KEY_PATH"),
   token_endpoint: System.get_env("LOGIN_TOKEN_ENDPOINT")
 }
 
