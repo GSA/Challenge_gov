@@ -85,8 +85,15 @@ defmodule Web.ChallengeView do
   end
 
   defp status_auto_publish_date(%{status: "approved", auto_publish_date: auto_publish_date})
-       when not is_nil(auto_publish_date),
-       do: " (Publishes #{SharedView.readable_datetime(auto_publish_date)})"
+       when not is_nil(auto_publish_date) do
+    [
+      " (Publishes ",
+      content_tag(:span, "#{SharedView.readable_datetime(auto_publish_date)}",
+        class: "js-local-datetime"
+      ),
+      ")"
+    ]
+  end
 
   defp status_auto_publish_date(_), do: ""
 
@@ -257,19 +264,58 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def auto_publish_date(conn, form, name, label) do
+  def new_date_and_time_inputs(conn, name, label, id_prefix, opts \\ [required: true]) do
     if Browser.firefox?(conn) do
       [
-        date_input(form, name,
-          id: "challenge_auto_publish_date_picker",
+        content_tag(:input, "",
+          type: "date",
+          id: "#{id_prefix}_date_picker",
           class: "js-date-input",
-          required: true
+          required: opts[:required]
         ),
         content_tag(:span, "", class: "mr-2"),
-        time_input(form, name,
-          id: "challenge_auto_publish_time_picker",
+        content_tag(:input, "",
+          type: "time",
+          id: "#{id_prefix}_time_picker",
           class: "js-time-input",
-          required: true
+          required: opts[:required]
+        )
+      ]
+    else
+      content_tag(:input, "",
+        class: "form-control js-datetime-input",
+        id: "#{id_prefix}_date",
+        label: label,
+        name: name,
+        type: "datetime-local",
+        required: opts[:required]
+      )
+    end
+  end
+
+  def date_and_time_inputs(conn, form, name, label, id_prefix, opts \\ [required: true]) do
+    if Browser.firefox?(conn) do
+      [
+        content_tag(:input, "",
+          type: "date",
+          id: "#{id_prefix}_date_picker",
+          class:
+            Enum.join(
+              [FormView.form_control_classes(form, name), "js-date-input"],
+              " "
+            ),
+          required: opts[:required]
+        ),
+        content_tag(:span, "", class: "mr-2"),
+        content_tag(:input, "",
+          type: "time",
+          id: "#{id_prefix}_time_picker",
+          class:
+            Enum.join(
+              [FormView.form_control_classes(form, name), "js-time-input"],
+              " "
+            ),
+          required: opts[:required]
         )
       ]
     else
@@ -279,11 +325,11 @@ defmodule Web.ChallengeView do
         label: label,
         class:
           Enum.join(
-            [FormView.form_control_classes(form, :auto_publish_date), "js-datetime-input"],
+            [FormView.form_control_classes(form, name), "js-datetime-input"],
             " "
           ),
-        id: "challenge_auto_publish_date_picker",
-        required: true
+        id: "#{id_prefix}_date_picker",
+        required: opts[:required]
       )
     end
   end
