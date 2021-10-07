@@ -61,12 +61,16 @@ jobs = [
   {"* * * * *", {ChallengeGov.Challenges, :set_sub_statuses, []}}
 ]
 
-cf_instance = System.get_env("CF_INSTANCE_INDEX") # Figure out if we are the first CF instance running
+# Figure out if we are the first CF instance running
+cf_instance = System.get_env("CF_INSTANCE_INDEX")
+
 case cf_instance do
   nil ->
     config :challenge_gov, ChallengeGov.Scheduler, jobs: jobs
+
   "0" ->
     config :challenge_gov, ChallengeGov.Scheduler, jobs: jobs
+
   _ ->
     config :challenge_gov, ChallengeGov.Scheduler, jobs: []
 end
