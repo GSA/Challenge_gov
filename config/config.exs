@@ -50,17 +50,30 @@ config :challenge_gov, Oban,
   plugins: [Oban.Plugins.Pruner],
   queues: [default: 10]
 
-config :challenge_gov, ChallengeGov.Scheduler,
-  jobs: [
-    {"0 5 * * *", {ChallengeGov.Accounts, :check_all_last_actives, []}},
-    {"0 5 * * *", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
-    {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}},
-    {"0 0 * * *", {ChallengeGov.CertificationLogs, :check_for_expired_certifications, []}},
-    {"* * * * *", {ChallengeGov.Challenges, :check_for_auto_publish, []}},
-    {"* * * * *", {ChallengeGov.GovDelivery, :check_topics, []}},
-    {"0 * * * *", {ChallengeGov.GovDelivery, :update_subscriber_counts, []}},
-    {"* * * * *", {ChallengeGov.Challenges, :set_sub_statuses, []}}
-  ]
+jobs = [
+  {"0 5 * * *", {ChallengeGov.Accounts, :check_all_last_actives, []}},
+  {"0 5 * * *", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
+  {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}},
+  {"0 0 * * *", {ChallengeGov.CertificationLogs, :check_for_expired_certifications, []}},
+  {"* * * * *", {ChallengeGov.Challenges, :check_for_auto_publish, []}},
+  {"* * * * *", {ChallengeGov.GovDelivery, :check_topics, []}},
+  {"0 * * * *", {ChallengeGov.GovDelivery, :update_subscriber_counts, []}},
+  {"* * * * *", {ChallengeGov.Challenges, :set_sub_statuses, []}}
+]
+
+# Figure out if we are the first CF instance running
+cf_instance = System.get_env("CF_INSTANCE_INDEX")
+
+case cf_instance do
+  nil ->
+    config :challenge_gov, ChallengeGov.Scheduler, jobs: jobs
+
+  "0" ->
+    config :challenge_gov, ChallengeGov.Scheduler, jobs: jobs
+
+  _ ->
+    config :challenge_gov, ChallengeGov.Scheduler, jobs: []
+end
 
 # Wallaby testing
 config :wallaby, driver: Wallaby.Chrome
