@@ -14,3 +14,11 @@
     text-align: center;
   }
 }
+
+.help-card {
+  max-width: 1200px;
+
+  &__section {
+    max-width: 350px;
+  }
+}

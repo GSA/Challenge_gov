@@ -160,6 +160,8 @@ defmodule Web.Router do
 
     get("/help", HelpController, :index)
 
+    get("/solver_help", HelpController, :solver_index)
+
     get("/exports/challenges/:id/:format", ExportController, :export_challenge)
 
     get("/reports/security_log", ReportsController, :export_security_log)

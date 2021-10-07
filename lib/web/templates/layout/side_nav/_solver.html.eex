@@ -24,7 +24,7 @@
   <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
     <%= render_message_center_icon(@conn, @user) %>
     <li class="nav-item">
-      <%= link(to: Routes.help_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "help")}") do %>
+      <%= link(to: Routes.help_path(@conn, :solver_index), class: "nav-link #{tab_selected(@conn, "help")}") do %>
         <i class="nav-icon fas fa-question-circle"></i>
         <p>Help</p>
       <% end %>
