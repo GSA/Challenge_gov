@@ -240,7 +240,7 @@ defmodule Web.DashboardView do
         ),
         render_solver_message_center_link(user),
         render("_card_link.html",
-          target: Routes.help_path(Endpoint, :index),
+          target: Routes.help_path(Endpoint, :solver_index),
           icon: content_tag(:i, "", class: "dashboard-card-icon fas fa-question-circle"),
           title: "Help",
           description: "Help Center"

@@ -9,6 +9,7 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
 
   def run(_file) do
     Mix.Task.run("app.start")
+    Logger.configure(level: :error)
 
     result = File.read!("lib/mix/tasks/sample_data/feed-closed.json")
 
@@ -19,9 +20,10 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
     case Jason.decode(result) do
       {:ok, json} ->
         json["_challenge"]
-        |> Enum.each(fn challenge ->
+        # credo:disable-for-next-line
+        |> Enum.reduce(%{}, fn challenge, mappings ->
           ImportHelper.create_import_output_file(output_file, challenge)
-          create_challenge(challenge, import_user_id)
+          create_challenge(challenge, import_user_id, mappings)
         end)
 
       {:error, error} ->
@@ -34,7 +36,10 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   @doc """
   Create a challenge based off mapped fields
   """
-  def create_challenge(json, import_user_id) do
+  def create_challenge(json, import_user_id, mappings) do
+    {scanned_types, mappings} =
+      ImportHelper.scan_types(json["challenge-id"], json["type-of-challenge"], mappings)
+
     result =
       Challenges.import_create(%{
         "id" => json["challenge-id"],
@@ -63,9 +68,9 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         "prize_description" => json["prizes"],
         "rules" => json["rules"],
         "legal_authority" => json["legal-authority"],
-        "primary_type" => Enum.at(ImportHelper.format_types(json["type-of-challenge"]), 0),
-        "types" => Enum.slice(ImportHelper.format_types(json["type-of-challenge"]), 1..3),
-        "other_type" => Enum.join(ImportHelper.format_types(json["type-of-challenge"]), ";"),
+        "primary_type" => Enum.at(scanned_types, 0),
+        "types" => Enum.slice(scanned_types, 1..3),
+        "other_type" => Enum.at(scanned_types, 4),
         "is_multi_phase" => false,
         "phases" => %{
           "0" => %{
@@ -88,5 +93,7 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
       {:error, error} ->
         error
     end
+
+    mappings
   end
 end

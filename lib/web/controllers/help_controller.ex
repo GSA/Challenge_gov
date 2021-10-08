@@ -5,4 +5,9 @@ defmodule Web.HelpController do
     conn
     |> render("index.html")
   end
+
+  def solver_index(conn, _params) do
+    conn
+    |> render("solver_index.html")
+  end
 end
