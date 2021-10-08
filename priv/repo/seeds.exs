@@ -189,13 +189,13 @@ defmodule Seeds do
     )
 
     # create_agencies("priv/repo/agencies.txt")
-    create_user_certifications()
+    # create_user_certifications()
     # create_admin("admin@example.com")
     # create_agencies("priv/repo/agencies.txt")
-    import_agencies_csv("priv/repo/agencies_updated.csv")
+    # import_agencies_csv("priv/repo/agencies_updated.csv")
 
     # import_agencies_api("https://usagov.platform.gsa.gov/usaapi/api/v1/usagov/directory_records/federal.json")
-    set_initial_challenge_uuids()
+    # set_initial_challenge_uuids()
   end
 end
 
