@@ -1,3 +1,5 @@
+require Logger
+
 defmodule Mix.Tasks.ImportHelper do
   @moduledoc """
   Helper for archived challenge importers
@@ -5,6 +7,7 @@ defmodule Mix.Tasks.ImportHelper do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.Agencies
+  alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.HTTPClient
 
   @date_formats [
@@ -187,6 +190,103 @@ defmodule Mix.Tasks.ImportHelper do
   end
 
   # Types Helper
+  def scan_types(challenge_id, types, mappings \\ %{}) do
+    types = format_types(types)
+
+    scanned_types =
+      Enum.flat_map(types, fn type ->
+        if Enum.member?(Challenge.challenge_types(), type) do
+          [type]
+        else
+          closest_match = find_closest_matching_type(type)
+          verify_type_match(challenge_id, type, closest_match, mappings)
+        end
+      end)
+
+    mappings = generate_type_mappings(mappings, types, scanned_types)
+
+    # credo:disable-for-next-line
+    IO.inspect(mappings)
+
+    {scanned_types, mappings}
+  end
+
+  defp find_closest_matching_type(type) do
+    Enum.max_by(Challenge.challenge_types(), fn challenge_type ->
+      String.jaro_distance(challenge_type, type)
+    end)
+  end
+
+  defp verify_type_match(challenge_id, type, closest_match, mappings) do
+    score = String.jaro_distance(closest_match, type)
+
+    existing_type_map = Map.get(mappings, type)
+
+    if existing_type_map do
+      [existing_type_map]
+    else
+      response =
+        Mix.shell().yes?("""
+        Does this look right?
+        ID #{challenge_id}: #{type} -> #{closest_match} (#{score})
+        """)
+
+      if response do
+        [closest_match]
+      else
+        pick_new_types()
+      end
+    end
+  end
+
+  defp pick_new_types() do
+    response =
+      """
+      How many types should this be?
+      """
+      |> Mix.shell().prompt()
+      |> String.replace("\n", "")
+      |> String.to_integer()
+
+    Enum.map(1..response, fn index ->
+      pick_new_type(index)
+    end)
+  end
+
+  defp pick_new_type(index) do
+    available_types = Enum.with_index(Challenge.challenge_types())
+
+    types_for_display =
+      Enum.map(available_types, fn {type, index} ->
+        "#{index}. #{type}\n"
+      end)
+
+    response =
+      """
+      Choose new type #{index}:
+      #{types_for_display}
+      """
+      |> Mix.shell().prompt()
+      |> String.replace("\n", "")
+      |> String.to_integer()
+
+    {result, _index} = Enum.at(available_types, response)
+
+    result
+  end
+
+  def generate_type_mappings(mappings, types, scanned_types) do
+    if length(types) == length(scanned_types) do
+      types
+      |> Enum.with_index()
+      |> Enum.reduce(mappings, fn {type, index}, mappings ->
+        Map.put_new(mappings, type, Enum.at(scanned_types, index))
+      end)
+    else
+      mappings
+    end
+  end
+
   def format_types(""), do: []
 
   def format_types(nil), do: []
