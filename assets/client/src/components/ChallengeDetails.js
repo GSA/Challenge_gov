@@ -344,7 +344,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                 </div>
               }
               {!print &&
-                <a className="follow__btn" href={apiUrl + `/public/previews/challenges/${challenge.uuid}?print=true`} target="_blank">
+                <a className="follow__btn" href={apiUrl + `/public/previews/challenges?challenge=${challenge.uuid}&print=true`} target="_blank">
                   <span className="details__btn"><i className="fas fa-print mr-2"></i>Print challenge</span>
                 </a>
               }

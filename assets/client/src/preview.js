@@ -42,7 +42,7 @@ const renderPreview = () => (
   }}>
     <BrowserRouter>
       <Route
-        path={"/public/previews/challenges/:challengeId"}
+        path={"/public/previews/challenges"}
         component={PreviewPage}
         exact={true}
       />

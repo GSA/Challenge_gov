@@ -13,15 +13,14 @@ export const PreviewPage = () => {
 
   const isMounted = useRef(false)
 
-  let { challengeId } = useParams()
   let query = useLocation().search
 
-  const { print } = queryString.parse(query)
+  const { print, challenge } = queryString.parse(query)
 
   const base_url = window.location.origin
 
   useEffect(() => {
-    let challengeApiPath = base_url + `/api/challenges/preview/${challengeId}`
+    let challengeApiPath = base_url + `/api/challenges/preview/${challenge}`
 
     setLoadingState(true)
     axios

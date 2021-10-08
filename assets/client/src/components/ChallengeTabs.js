@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useHistory, useRouteMatch, useParams } from "react-router-dom"
-import { generatePath } from 'react-router';
+import { useHistory, useLocation, useRouteMatch, useParams } from "react-router-dom"
+
+import queryString from 'query-string'
 
 export const ChallengeTabs = (props) => {
   const {children, print, tab} = props
@@ -9,9 +10,14 @@ export const ChallengeTabs = (props) => {
   const currentPath = useRouteMatch()
   const params = useParams()
 
+  let location = useLocation()
+
   const handleTabClick = (label, disabled) => { 
     if (!disabled) {
-      const path = generatePath(currentPath.path, {challengeId: params.challengeId, tab: label.toLowerCase()});
+      let queryParams = queryString.parse(location.search)
+      queryParams.tab = label.toLowerCase()
+
+      const path = "/challenges?" + queryString.stringify(queryParams)
       history.push(path)
       setActiveTab(label)
     }

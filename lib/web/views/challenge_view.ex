@@ -552,7 +552,7 @@ defmodule Web.ChallengeView do
   def preview_challenge_button(conn, challenge, section) do
     if section == Enum.at(Challenges.sections(), -1).id do
       link("Preview",
-        to: Routes.public_preview_path(conn, :index, challenge.uuid),
+        to: Routes.public_preview_path(conn, :index, challenge: challenge.uuid),
         class: "usa-button float-right",
         target: "_blank"
       )
