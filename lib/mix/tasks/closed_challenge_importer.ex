@@ -119,9 +119,9 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         Challenges.set_sub_status(result)
         result
 
-      {:error, error} ->     
+      {:error, error} ->
         # credo:disable-for-next-line
-        IO.inspect error
+        IO.inspect(error)
         Mix.shell().prompt("Error recorded")
         error
     end

@@ -14,7 +14,7 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
     result = File.read!("lib/mix/tasks/sample_data/feed-closed-imported.json")
 
     import_user_id = ImportHelper.import_user().id
-    
+
     initial_mappings = %{
       "Analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
       "Creative (design & multimedia)" => "Creative (multimedia & design)",
@@ -95,7 +95,7 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
 
       {:error, error} ->
         # credo:disable-for-next-line
-        IO.inspect error
+        IO.inspect(error)
         Mix.shell().prompt("Error recorded")
         error
     end
