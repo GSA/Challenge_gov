@@ -47,6 +47,9 @@ config :stein_storage, backend: :test
 
 config :challenge_gov, Oban, crontab: false, queues: false, plugins: false
 
+# Wallaby testing
+config :wallaby, driver: Wallaby.Chrome
+
 if File.exists?("config/test.local.exs") do
   import_config("test.local.exs")
 end
