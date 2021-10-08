@@ -13,24 +13,53 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
 
     result = File.read!("lib/mix/tasks/sample_data/feed-closed.json")
 
-    output_file = ImportHelper.prep_import_output_file("feed-closed.csv")
-
     import_user_id = ImportHelper.import_user().id
+
+    initial_mappings = %{
+      "Analytics, Visualizations and algorithms" => "Analytics, visualizations, algorithms",
+      "Analytics, visualization, algorithms" => "Analytics, visualizations, algorithms",
+      "Analytics, visualization, and algorithms" => "Analytics, visualizations, algorithms",
+      "Analytics, visualizations and algorithms" => "Analytics, visualizations, algorithms",
+      "Analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
+      "Analytics, visualizations, and algorithms" => "Analytics, visualizations, algorithms",
+      "Analytics, visulizations, algorithms" => "Analytics, visualizations, algorithms",
+      "Business Plans" => "Business plans",
+      "Business plans" => "Business plans",
+      "Creative" => "Creative (multimedia & design)",
+      "Creative (design & multimedia)" => "Creative (multimedia & design)",
+      "Creative (multimedia & design)" => "Creative (multimedia & design)",
+      "Creative (multimedia and design)" => "Creative (multimedia & design)",
+      "Ideas" => "Ideas",
+      "Nominations" => "Nominations",
+      "Scientific" => "Scientific",
+      "Software" => "Software and apps",
+      "Software and apps" => "Software and apps",
+      "Software/Apps" => "Software and apps",
+      "Tech demonstration and hardware" => "Technology demonstration and hardware",
+      "Technology" => "Technology demonstration and hardware",
+      "Technology demonstration" => "Technology demonstration and hardware",
+      "Technology demonstration / hardware" => "Technology demonstration and hardware",
+      "Technology demonstration and hardware" => "Technology demonstration and hardware",
+      "Virtual Reality" => "Analytics, visualizations, algorithms",
+      "analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
+      "creative (multimedia & design)" => "Creative (multimedia & design)",
+      "ideas" => "Ideas",
+      "software and apps" => "Software and apps",
+      "technology demonstration" => "Technology demonstration and hardware",
+      "technology demonstration and hardware" => "Technology demonstration and hardware"
+    }
 
     case Jason.decode(result) do
       {:ok, json} ->
         json["_challenge"]
         # credo:disable-for-next-line
-        |> Enum.reduce(%{}, fn challenge, mappings ->
-          ImportHelper.create_import_output_file(output_file, challenge)
+        |> Enum.reduce(initial_mappings, fn challenge, mappings ->
           create_challenge(challenge, import_user_id, mappings)
         end)
 
       {:error, error} ->
         error
     end
-
-    File.close(output_file)
   end
 
   @doc """
@@ -90,7 +119,10 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         Challenges.set_sub_status(result)
         result
 
-      {:error, error} ->
+      {:error, error} ->     
+        # credo:disable-for-next-line
+        IO.inspect error
+        Mix.shell().prompt("Error recorded")
         error
     end
 

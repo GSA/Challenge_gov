@@ -13,24 +13,29 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
 
     result = File.read!("lib/mix/tasks/sample_data/feed-closed-imported.json")
 
-    output_file = ImportHelper.prep_import_output_file("feed-closed-imported.csv")
-
     import_user_id = ImportHelper.import_user().id
+    
+    initial_mappings = %{
+      "Analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
+      "Creative (design & multimedia)" => "Creative (multimedia & design)",
+      "Ideas" => "Ideas",
+      "Nominations" => "Nominations",
+      "Scientific" => "Scientific",
+      "Software and apps" => "Software and apps",
+      "Technology demonstration and hardware" => "Technology demonstration and hardware"
+    }
 
     case Jason.decode(result) do
       {:ok, json} ->
         json["_challenge"]
         # credo:disable-for-next-line
-        |> Enum.reduce(%{}, fn challenge, mappings ->
-          ImportHelper.create_import_output_file(output_file, challenge)
+        |> Enum.reduce(initial_mappings, fn challenge, mappings ->
           create_challenge(challenge, import_user_id, mappings)
         end)
 
       {:error, error} ->
         error
     end
-
-    File.close(output_file)
   end
 
   @doc """
@@ -89,6 +94,9 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
         result
 
       {:error, error} ->
+        # credo:disable-for-next-line
+        IO.inspect error
+        Mix.shell().prompt("Error recorded")
         error
     end
 

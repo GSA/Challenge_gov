@@ -13,8 +13,6 @@ defmodule Mix.Tasks.OpenChallengeImporter do
 
     result = File.read!("lib/mix/tasks/sample_data/feed-open.json")
 
-    output_file = ImportHelper.prep_import_output_file("feed-open.csv")
-
     import_user_id = ImportHelper.import_user().id
 
     case Jason.decode(result) do
@@ -22,15 +20,12 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         json["_challenge"]
         # credo:disable-for-next-line
         |> Enum.reduce(%{}, fn challenge, mappings ->
-          ImportHelper.create_import_output_file(output_file, challenge)
           create_challenge(challenge, import_user_id, mappings)
         end)
 
       {:error, error} ->
         error
     end
-
-    File.close(output_file)
   end
 
   @doc """
@@ -91,6 +86,9 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         result
 
       {:error, error} ->
+        # credo:disable-for-next-line
+        IO.inspect error
+        Mix.shell().prompt("Error recorded")
         error
     end
 
