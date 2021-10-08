@@ -8,9 +8,6 @@
         <%= link "Print", to: Routes.public_preview_path(@conn, :index, @challenge.uuid, print: true), target: "_blank", class: "btn btn-info" %>
         <%= link "JSON", to: Routes.export_path(@conn, :export_challenge, @challenge.id, "json"), target: "_blank", class: "btn btn-info" %>
         <%= link "CSV", to: Routes.export_path(@conn, :export_challenge, @challenge.id, "csv"), target: "_blank", class: "btn btn-info" %>
-        <%= if Challenges.is_editable?(@challenge, @user) do %>
-          <%= challenge_edit_link(@conn, @challenge, class: "btn btn-primary") %>
-        <% end %>
         <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-danger") %>
       <% end %>
       

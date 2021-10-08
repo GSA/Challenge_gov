@@ -178,31 +178,6 @@ defmodule Web.ChallengeController do
     end
   end
 
-  def edit(conn, %{"id" => id}) do
-    %{current_user: user} = conn.assigns
-
-    with {:ok, challenge} <- Challenges.get(id),
-         {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
-      conn
-      |> assign(:challenge, challenge)
-      |> assign(:user, user)
-      |> assign(:supporting_documents, challenge.supporting_documents)
-      |> assign(:changeset, Challenges.edit(challenge))
-      |> assign(:action, action_name(conn))
-      |> render("edit.html")
-    else
-      {:error, :not_permitted} ->
-        conn
-        |> put_flash(:error, "You are not allowed to edit this challenge")
-        |> redirect(to: Routes.challenge_path(conn, :index))
-
-      {:error, :not_found} ->
-        conn
-        |> put_flash(:error, "Challenge not found")
-        |> redirect(to: Routes.challenge_path(conn, :index))
-    end
-  end
-
   def update(
         conn,
         params = %{"id" => id, "action" => action, "challenge" => %{"section" => section}}
