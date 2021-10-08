@@ -7,7 +7,7 @@ defmodule Seeds.SeedModules.Agencies do
   def run() do
     IO.inspect "Seeding Agencies"
 
-    import_agencies_csv("priv/repo/agencies_updated.csv")
+    import_agencies_csv("priv/repo/agencies_condensed.csv")
   end
 
   def import_agencies_csv(file) do
