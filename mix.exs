@@ -98,7 +98,7 @@ defmodule ChallengeGov.MixProject do
   defp aliases do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
-      "ecto.deploy": ["ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.deploy": ["ecto.migrate", "run priv/repo/deploy_seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       "ecto.migrate.reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"],
