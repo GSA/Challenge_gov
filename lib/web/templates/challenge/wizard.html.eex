@@ -59,16 +59,12 @@
               </div>
 
               <div class="card-footer">
-                <%= if @section != "general" do %>
-                  <%= back_button(@conn, @changeset.data, @section) %>
-                <% end %>
-                <%= save_and_return_to_review_button(@conn, @challenge) %>
+                <%= back_button(@conn, @changeset.data, @section) %>
+                <%= save_and_return_to_review_button(@section) %>
                 <%= cancel_button(@conn) %>
                 <%= submit_button(@section, @user) %>
                 <%= preview_challenge_button(@conn, @challenge, @section) %>
-                <%= if @challenge.status != "published" do %>
-                  <%= save_draft_button(@section) %>
-                <% end %>
+                <%= save_draft_button(@challenge, @section) %>
               </div>
             </div>
           <% end) %>
