@@ -514,7 +514,7 @@ defmodule Web.ChallengeView do
   end
 
   def back_button(conn, challenge, section) do
-    if section != Enum.at(Challenges.sections(), 0).id do
+    if section != Enum.at(Challenges.sections(), 0).id && !last_wizard_section?(section) do
       if challenge.id do
         submit("Back", name: "action", value: "back", class: "btn btn-link", formnovalidate: true)
       else
@@ -527,12 +527,14 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def save_and_return_to_review_button(_conn, _challenge) do
-    submit("Save and return to review",
-      name: "action",
-      value: "return_to_review",
-      class: "usa-button"
-    )
+  def save_and_return_to_review_button(section) do
+    if !last_wizard_section?(section) do
+      submit("Save and return to review",
+        name: "action",
+        value: "return_to_review",
+        class: "usa-button"
+      )
+    end
   end
 
   def cancel_button(conn) do
@@ -543,8 +545,11 @@ defmodule Web.ChallengeView do
     )
   end
 
-  def save_draft_button(section) do
-    if section != Enum.at(Challenges.sections(), -1).id do
+  def save_draft_button(challenge, section) do
+    challenge_open? =
+      !!challenge && challenge.status === "published" && challenge.sub_status === "open"
+
+    if section != Enum.at(Challenges.sections(), -1).id && !challenge_open? do
       submit("Save Draft",
         name: "action",
         value: "save_draft",
@@ -554,8 +559,12 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def last_wizard_section?(section) do
+    section == Enum.at(Challenges.sections(), -1).id
+  end
+
   def preview_challenge_button(conn, challenge, section) do
-    if section == Enum.at(Challenges.sections(), -1).id do
+    if last_wizard_section?(section) do
       link("Preview",
         to: Routes.public_preview_path(conn, :index, challenge: challenge.uuid),
         class: "usa-button float-right",
