@@ -96,8 +96,10 @@ export const ChallengeTile = ({challenge, preview}) => {
   const challengeTileUrl = (challenge, preview) => {
     if (preview) {
       return "#"
+    } else if (challenge.external_url) {
+      return challenge.external_url
     } else {
-      return `${publicUrl}/challenges/?challenge=${challenge.custom_url || challenge.id}`
+      return `${publicUrl}/?challenge=${challenge.custom_url || challenge.id}`
     }
   }
 
