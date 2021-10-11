@@ -3,6 +3,16 @@
     (Map.has_key?(@form.source.changes, :phases) and length(@form.source.changes.phases) > 0) do %>
     <!-- With phases attached or pending -->
     <%= inputs_for(@form, :phases, [skip_hidden: true], fn phase_form -> %>
+      <%= if phase_form.index > 0 do %>
+        <%= if phase_form.errors[:id] do %>
+          <div class="form-group">
+            <span class="is-invalid"></span>
+            <span class="help-block invalid-feedback">The phase <%= phase_form.data.title %> has submissions and cannot be deleted</span>
+          </div>
+        <% end %>
+      <% end %>
+    <% end) %>
+    <%= inputs_for(@form, :phases, [skip_hidden: true], fn phase_form -> %>
       <%= if phase_form.index === 0 do %>
         <%= hidden_input phase_form, :title, value: "" %>
         <%= hidden_input phase_form, :open_to_submissions, value: true %>

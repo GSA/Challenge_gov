@@ -29,6 +29,8 @@ defmodule ChallengeGov.Challenges.Phase do
     field(:how_to_enter, :string)
     field(:how_to_enter_delta, :string)
 
+    field(:delete_phase, :boolean, virtual: true)
+
     timestamps(type: :utc_datetime_usec)
   end
 
@@ -42,8 +44,10 @@ defmodule ChallengeGov.Challenges.Phase do
       :judging_criteria,
       :judging_criteria_delta,
       :how_to_enter,
-      :how_to_enter_delta
+      :how_to_enter_delta,
+      :delete_phase
     ])
+    |> mark_for_delete()
   end
 
   def save_changeset(struct, params) do
@@ -87,5 +91,14 @@ defmodule ChallengeGov.Challenges.Phase do
     ])
     |> force_change(:how_to_enter, params["how_to_enter"] || struct.how_to_enter)
     |> validate_length(:how_to_enter, max: 4000)
+  end
+
+  defp mark_for_delete(changeset) do
+    if get_change(changeset, :delete_phase) do
+      %{changeset | action: :delete}
+      |> foreign_key_constraint(:id, name: :solutions_phase_id_fkey, message: "has submissions")
+    else
+      changeset
+    end
   end
 end
