@@ -3,8 +3,8 @@ defmodule Web.AgencyController do
 
   alias ChallengeGov.Agencies
 
-  plug(Web.Plugs.EnsureRole, [:super_admin, :admin] when action in [:index, :show])
-  plug(Web.Plugs.EnsureRole, :super_admin when action not in [:index, :show])
+  plug(Web.Plugs.EnsureRole, [:super_admin, :admin] when action in [:index, :show, :delete])
+  plug(Web.Plugs.EnsureRole, :super_admin when action not in [:index, :show, :delete])
   plug(Web.Plugs.FetchPage when action in [:index])
 
   action_fallback(Web.FallbackController)

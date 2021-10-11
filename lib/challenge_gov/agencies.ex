@@ -176,7 +176,7 @@ defmodule ChallengeGov.Agencies do
     result =
       Ecto.Multi.new()
       |> Ecto.Multi.update(:agency, changeset)
-      |> Ecto.Multi.run(:archive_members, &archive_members/2)
+      # |> Ecto.Multi.run(:archive_members, &archive_members/2)
       |> Repo.transaction()
 
     case result do
