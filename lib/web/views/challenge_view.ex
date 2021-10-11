@@ -10,6 +10,7 @@ defmodule Web.ChallengeView do
   alias ChallengeGov.SupportingDocuments
   alias Stein.Storage
   alias Web.AgencyView
+  alias Web.ChallengeView
   alias Web.FormView
   alias Web.SharedView
 
@@ -21,12 +22,16 @@ defmodule Web.ChallengeView do
     link(challenge.title, to: Routes.challenge_path(conn, :show, challenge.id))
   end
 
-  def public_name_link(conn, challenge) do
-    link(challenge.title, to: Routes.public_challenge_details_path(conn, :index, challenge.id))
+  def public_name_link(_conn, challenge) do
+    link(challenge.title,
+      to: ChallengeView.public_details_url(challenge)
+    )
   end
 
-  def public_name_link_url(conn, challenge) do
-    link(challenge.title, to: Routes.public_challenge_details_url(conn, :index, challenge.id))
+  def public_name_link_url(_conn, challenge) do
+    link(challenge.title,
+      to: ChallengeView.public_details_url(challenge)
+    )
   end
 
   def challenge_managers_list(challenge) do
@@ -509,7 +514,7 @@ defmodule Web.ChallengeView do
   end
 
   def back_button(conn, challenge, section) do
-    if section != Enum.at(Challenges.sections(), 0).id do
+    if section != Enum.at(Challenges.sections(), 0).id && !last_wizard_section?(section) do
       if challenge.id do
         submit("Back", name: "action", value: "back", class: "btn btn-link", formnovalidate: true)
       else
@@ -522,12 +527,14 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def save_and_return_to_review_button(_conn, _challenge) do
-    submit("Save and return to review",
-      name: "action",
-      value: "return_to_review",
-      class: "usa-button"
-    )
+  def save_and_return_to_review_button(section) do
+    if !last_wizard_section?(section) do
+      submit("Save and return to review",
+        name: "action",
+        value: "return_to_review",
+        class: "usa-button"
+      )
+    end
   end
 
   def cancel_button(conn) do
@@ -538,8 +545,11 @@ defmodule Web.ChallengeView do
     )
   end
 
-  def save_draft_button(section) do
-    if section != Enum.at(Challenges.sections(), -1).id do
+  def save_draft_button(challenge, section) do
+    challenge_open? =
+      !!challenge && challenge.status === "published" && challenge.sub_status === "open"
+
+    if section != Enum.at(Challenges.sections(), -1).id && !challenge_open? do
       submit("Save Draft",
         name: "action",
         value: "save_draft",
@@ -549,10 +559,14 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def last_wizard_section?(section) do
+    section == Enum.at(Challenges.sections(), -1).id
+  end
+
   def preview_challenge_button(conn, challenge, section) do
-    if section == Enum.at(Challenges.sections(), -1).id do
+    if last_wizard_section?(section) do
       link("Preview",
-        to: Routes.public_preview_path(conn, :index, challenge.uuid),
+        to: Routes.public_preview_path(conn, :index, challenge: challenge.uuid),
         class: "usa-button float-right",
         target: "_blank"
       )
@@ -708,15 +722,33 @@ defmodule Web.ChallengeView do
   end
 
   def public_index_url() do
-    Routes.public_challenge_index_url(Web.Endpoint, :index)
+    Application.get_env(:challenge_gov, :public_root_url)
+    |> URI.parse()
+    |> URI.to_string()
   end
 
-  def public_details_url(challenge) do
-    Routes.public_challenge_details_url(
-      Web.Endpoint,
-      :index,
-      challenge.custom_url || challenge.id
-    )
+  def public_details_root_url() do
+    public_root_url = Application.get_env(:challenge_gov, :public_root_url)
+
+    "#{public_root_url}/challenges?challenge="
+  end
+
+  def public_details_url(challenge, opts \\ []) do
+    public_details_root_url = public_details_root_url()
+    challenge_slug = challenge.custom_url || challenge.id
+
+    url = public_details_root_url <> to_string(challenge_slug)
+
+    url =
+      if opts[:tab] do
+        url <> "&tab=#{opts[:tab]}"
+      else
+        url
+      end
+
+    url
+    |> URI.parse()
+    |> URI.to_string()
   end
 
   def disqus_domain() do

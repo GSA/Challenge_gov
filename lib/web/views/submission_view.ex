@@ -219,7 +219,7 @@ defmodule Web.SubmissionView do
           )
 
         action === :new or action === :create ->
-          Routes.public_challenge_details_path(conn, :index, challenge.id)
+          ChallengeView.public_details_url(challenge)
 
         action === :edit or action === :update or action === :submit ->
           Routes.submission_path(conn, :index)
@@ -228,7 +228,7 @@ defmodule Web.SubmissionView do
     link("Cancel", to: route, class: "btn btn-link")
   end
 
-  def accept_terms(conn, form, user, challenge) do
+  def accept_terms(_conn, form, user, challenge) do
     # show for solvers even on editing
     if Accounts.is_solver?(user) do
       content_tag(:div, class: "form-group") do
@@ -241,13 +241,7 @@ defmodule Web.SubmissionView do
                 ),
                 " I have read the ",
                 link("rules, terms and conditions ",
-                  to:
-                    Routes.public_challenge_details_path(
-                      conn,
-                      :index,
-                      challenge.custom_url || challenge.id,
-                      "rules"
-                    ),
+                  to: ChallengeView.public_details_url(challenge, tab: "rules"),
                   target: "_blank"
                 ),
                 " of this challenge",

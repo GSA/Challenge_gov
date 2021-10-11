@@ -172,7 +172,7 @@
 													<p style="margin: 0; font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin-top: 0; margin-bottom: 0;"><span style="font-size: 14px;">View your challenge tile on the challenge listings page:</span></p>
 													<p style="margin: 0; font-size: 12px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 14px; margin-top: 0; margin-bottom: 0;">&nbsp;</p>
                           <p style="margin: 0; font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin-top: 0; margin-bottom: 0;">
-                            <%= link(Routes.public_challenge_index_url(Endpoint, :index), to: Routes.public_challenge_index_url(Endpoint, :index), target: "_blank", style: "text-decoration: underline; color: #005ea2;", rel: "noopener") %>
+                            <%= link(ChallengeView.public_index_url(), to: ChallengeView.public_index_url(), target: "_blank", style: "text-decoration: underline; color: #005ea2;", rel: "noopener") %>
                           </p>
 												</div>
 											</div>
@@ -182,7 +182,7 @@
 													<p style="margin: 0; font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin-top: 0; margin-bottom: 0;"><span style="font-size: 14px;">View your published challenge details:</span></p>
 													<p style="margin: 0; font-size: 12px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 14px; margin-top: 0; margin-bottom: 0;">&nbsp;</p>
                           <p style="margin: 0; font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin-top: 0; margin-bottom: 0;">
-                            <%= link(Routes.public_challenge_details_url(Endpoint, :index, @challenge.id), to: Routes.public_challenge_details_url(Endpoint, :index, @challenge.id), target: "_blank", style: "text-decoration: underline; color: #005ea2;", rel: "noopener") %>
+                            <%= link(ChallengeView.public_details_url(@challenge), to: ChallengeView.public_details_url(@challenge), target: "_blank", style: "text-decoration: underline; color: #005ea2;", rel: "noopener") %>
                           </p>
 												</div>
 											</div>

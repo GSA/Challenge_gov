@@ -4,6 +4,7 @@ defmodule Web.SavedChallengeControllerTest do
   alias ChallengeGov.SavedChallenges
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
+  alias Web.ChallengeView
 
   describe "index for saved challenges" do
     test "successfully retrieve all saved challenges for current user", %{conn: conn} do
@@ -156,7 +157,7 @@ defmodule Web.SavedChallengeControllerTest do
                       "href",
                       61,
                       34,
-                      "http://localhost:4002/public/challenges#/challenge/#{challenge.id}",
+                      ChallengeView.public_details_url(challenge),
                       34
                     ]
                   ],

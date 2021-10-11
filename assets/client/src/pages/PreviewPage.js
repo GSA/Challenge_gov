@@ -13,15 +13,14 @@ export const PreviewPage = () => {
 
   const isMounted = useRef(false)
 
-  let { challengeId } = useParams()
   let query = useLocation().search
 
-  const { print } = queryString.parse(query)
+  const { print, challenge, tab } = queryString.parse(query)
 
   const base_url = window.location.origin
 
   useEffect(() => {
-    let challengeApiPath = base_url + `/api/challenges/preview/${challengeId}`
+    let challengeApiPath = base_url + `/api/challenges/preview/${challenge}`
 
     setLoadingState(true)
     axios
@@ -71,7 +70,7 @@ export const PreviewPage = () => {
       {renderPreviewItems()}
       <div className="row">
         <div className="col">
-          <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} challengePhases={challengePhases} preview={true} loading={loadingState} print={print} />
+          <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} challengePhases={challengePhases} preview={true} loading={loadingState} print={print} tab={tab} />
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ defmodule Web.SubmissionController do
   alias ChallengeGov.Phases
   alias ChallengeGov.Submissions
   alias ChallengeGov.Security
+  alias Web.ChallengeView
 
   plug(
     Web.Plugs.EnsureRole,
@@ -199,13 +200,15 @@ defmodule Web.SubmissionController do
       |> render("new.html")
     else
       {:error, :no_current_phase} ->
+        {:ok, challenge} = Challenges.get(challenge_id)
+
         conn
-        |> redirect(to: Routes.public_challenge_details_path(conn, :index, challenge_id))
+        |> redirect(external: ChallengeView.public_details_url(challenge))
 
       {:error, :not_found} ->
         conn
         |> put_flash(:error, "Challenge not found")
-        |> redirect(to: Routes.public_challenge_index_path(conn, :index))
+        |> redirect(external: ChallengeView.public_index_url())
     end
   end
 

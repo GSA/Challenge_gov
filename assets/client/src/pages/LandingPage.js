@@ -4,10 +4,9 @@ import axios from 'axios'
 import { ApiUrlContext } from '../ApiUrlContext'
 import moment from "moment"
 
-export const LandingPage = () => {
+export const LandingPage = ({isArchived}) => {
   const [currentChallenges, setCurrentChallenges] = useState([])
   const [loadingState, setLoadingState] = useState(false)
-  const [isArchived] = useState(window.location.hash === "#/challenges/archived")
   const [selectedYear, setSelectedYear] = useState(moment().year())
 
   const { apiUrl } = useContext(ApiUrlContext)

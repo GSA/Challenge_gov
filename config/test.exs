@@ -47,7 +47,8 @@ config :stein_storage, backend: :test
 
 config :challenge_gov, Oban, crontab: false, queues: false, plugins: false
 
-# Wallaby testing
+config :challenge_gov, :public_root_url, "http://localhost:4001"
+
 config :wallaby, driver: Wallaby.Chrome
 
 if File.exists?("config/test.local.exs") do

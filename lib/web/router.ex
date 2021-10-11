@@ -240,12 +240,9 @@ defmodule Web.Router do
     pipe_through([:browser, :public])
     get("/rss.xml", SitemapController, :rss)
 
-    get("/previews/challenges/:challenge_uuid", PreviewController, :index)
+    get("/previews/challenges", PreviewController, :index)
 
     get("/", PageController, :index)
-    get("/challenges", PageController, :index, as: :challenge_index)
-    get("/challenges#/challenge/:id", PageController, :index, as: :challenge_details)
-    get("/challenges#/challenge/:id/:tab", PageController, :index, as: :challenge_details)
   end
 
   if Mix.env() == :dev || Mix.env() == :test do

@@ -35,11 +35,11 @@ $(".multi-phase-toggle input[type=radio]").on("click", function() {
     $(".single-phase-section").collapse("hide")
   $(".single-phase-section").find("input").prop("disabled", true)
   } else {
-    if (window.confirm(phaseDeletionWarning)) {
-      $(".phase-fields").collapse("hide")
-      $(".phase-fields .nested-items").find("input").prop("disabled", true)
-      $(".single-phase-section").collapse("show")
-      $(".single-phase-section").find("input").prop("disabled", false)
+    if (!$("#challenge_phases_0_start_date").val()) {
+      showSinglePhaseFields()
+      return true
+    } else if (!!$("#challenge_phases_0_start_date").val() && window.confirm(phaseDeletionWarning)) {
+      showSinglePhaseFields()
       return true
     } else {
       return false
@@ -76,6 +76,13 @@ $(".js-prize-detail-toggle input[type=radio]").on("click", function() {
       break;
   }
 })
+
+function showSinglePhaseFields() {
+  $(".phase-fields").collapse("hide")
+  $(".phase-fields .nested-items").find("input").prop("disabled", true)
+  $(".single-phase-section").collapse("show")
+  $(".single-phase-section").find("input").prop("disabled", false)
+}
 
 function showMonetaryPrize() {
   prizeTotalSection.collapse("show")
