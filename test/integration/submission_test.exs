@@ -4,6 +4,7 @@ defmodule ChallengeGov.SubmissionIntegrationTest do
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
 
+  @tag :skip
   feature "create a submission as a solver", %{session: session} do
     challenge = create_challenge()
     create_and_sign_in_solver(session)
