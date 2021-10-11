@@ -96,15 +96,17 @@ export const ChallengeTile = ({challenge, preview}) => {
   const challengeTileUrl = (challenge, preview) => {
     if (preview) {
       return "#"
+    } else if (challenge.external_url) {
+      return challenge.external_url
     } else {
-      return `${publicUrl}/challenges/?challenge=${challenge.custom_url || challenge.id}`
+      return `${publicUrl}/?challenge=${challenge.custom_url || challenge.id}`
     }
   }
 
   return (
     challenge ? (
       <div key={challenge.id} className="challenge-tile card">
-        <a href={challengeTileUrl(challenge, preview)} aria-label="View challenge details">
+        <a href={challengeTileUrl(challenge, preview)} target={challenge.external_url ? "_blank" : ""} aria-label="View challenge details">
           <div className="image_wrapper">
             { challenge.logo
               ? <img src={imageBase + challenge.logo} alt={challenge.logo_alt_text} title="Challenge logo" className="w-100"/>

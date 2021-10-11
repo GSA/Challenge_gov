@@ -730,7 +730,7 @@ defmodule Web.ChallengeView do
   def public_details_root_url() do
     public_root_url = Application.get_env(:challenge_gov, :public_root_url)
 
-    "#{public_root_url}/challenges/?challenge="
+    "#{public_root_url}/?challenge="
   end
 
   def public_details_url(challenge, opts \\ []) do
