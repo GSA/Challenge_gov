@@ -6,7 +6,7 @@ import {truncateString} from '../helpers/stringHelpers'
 import { ApiUrlContext } from '../ApiUrlContext'
 
 export const ChallengeTile = ({challenge, preview}) => {
-  const { imageBase } = useContext(ApiUrlContext)
+  const { publicUrl, imageBase } = useContext(ApiUrlContext)
 
   const renderTags = ({is_archived, start_date, end_date, announcement_datetime}) => {
     const startDateDiff = moment().diff(start_date, 'minutes')
@@ -93,10 +93,18 @@ export const ChallengeTile = ({challenge, preview}) => {
     }
   }
 
+  const challengeTileUrl = (challenge, preview) => {
+    if (preview) {
+      return "#"
+    } else {
+      return `${publicUrl}/challenges/?challenge=${challenge.custom_url || challenge.id}`
+    }
+  }
+
   return (
     challenge ? (
       <div key={challenge.id} className="challenge-tile card">
-        <Link to={preview ? "#" : `/challenges/?challenge=${challenge.custom_url || challenge.id}`} aria-label="View challenge details">
+        <a href={challengeTileUrl(challenge, preview)} aria-label="View challenge details">
           <div className="image_wrapper">
             { challenge.logo
               ? <img src={imageBase + challenge.logo} alt={challenge.logo_alt_text} title="Challenge logo" className="w-100"/>
@@ -115,7 +123,7 @@ export const ChallengeTile = ({challenge, preview}) => {
             <p className="challenge-tile__date">{renderDate(challenge)}</p>
             {renderTags(challenge)}
           </div>
-        </Link>
+        </a>
       </div>
     ) : (
       <div className="challenge-tile__loader--image"></div>
