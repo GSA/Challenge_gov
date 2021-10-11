@@ -1,16 +1,20 @@
 import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios'
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { ChallengeDetails } from '../components/ChallengeDetails';
 import { ApiUrlContext } from '../ApiUrlContext'
 
-export const DetailsPage = (props) => {
+import queryString from 'query-string'
+
+export const DetailsPage = ({challengeId}) => {
   const [currentChallenge, setCurrentChallenge] = useState()
   const [challengePhases, setChallengePhases] = useState([])
   const [loadingState, setLoadingState] = useState(true)
 
-  let { challengeId, tab } = useParams();
+  let query = useLocation().search
+  const { print, tab } = queryString.parse(query)
+
   const { apiUrl } = useContext(ApiUrlContext)
 
   useEffect(() => {
@@ -39,7 +43,7 @@ export const DetailsPage = (props) => {
   return (
     <div>
       {currentChallenge &&
-        <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab}/>
+        <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab} print={print} />
       }
     </div>
   )

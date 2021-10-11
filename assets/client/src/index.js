@@ -1,10 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter, Redirect, Switch, Route } from "react-router-dom";
+import queryString from 'query-string'
+import { BrowserRouter, Redirect, Route, useLocation } from "react-router-dom";
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
 import { ApiUrlContext } from "./ApiUrlContext"
+
+import { LandingPage } from './pages/LandingPage'
+import { DetailsPage } from './pages/DetailsPage'
 
 import '../../css/public/index.scss'
 
@@ -29,9 +33,17 @@ const getRoutes = () => {
 const Application = () => {
   useTracking()
 
-  return (
-    <Switch>{getRoutes()}</Switch>
-  )
+  let query = useLocation().search
+
+  const { challenge, state } = queryString.parse(query)
+
+  if (challenge) {
+    return <DetailsPage challengeId={challenge} />
+  } else if (state == "archived") {
+    return <LandingPage isArchived={true} />
+  } else {
+    return <LandingPage />
+  }
 }
 
 const renderRouter = () => (
@@ -39,9 +51,9 @@ const renderRouter = () => (
     apiUrl: apiUrl || window.location.origin,
     imageBase: imageBase || ""
   }}>
-    <HashRouter>
+    <BrowserRouter>
       <Application />
-    </HashRouter>
+    </BrowserRouter>
   </ApiUrlContext.Provider>
 )
 

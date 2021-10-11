@@ -95,6 +95,8 @@ config :challenge_gov,
   log_retention_in_days: System.get_env("LOG_RETENTION_IN_DAYS") || 180,
   challenge_manager_assumed_tlds: System.get_env("CHALLENGE_OWNER_ASSUMED_TLDS") || [".mil"]
 
+config :challenge_gov, :public_root_url, System.get_env("PUBLIC_ROOT_URL")
+
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
 end

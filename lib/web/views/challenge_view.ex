@@ -10,6 +10,7 @@ defmodule Web.ChallengeView do
   alias ChallengeGov.SupportingDocuments
   alias Stein.Storage
   alias Web.AgencyView
+  alias Web.ChallengeView
   alias Web.FormView
   alias Web.SharedView
 
@@ -21,12 +22,16 @@ defmodule Web.ChallengeView do
     link(challenge.title, to: Routes.challenge_path(conn, :show, challenge.id))
   end
 
-  def public_name_link(conn, challenge) do
-    link(challenge.title, to: Routes.public_challenge_details_path(conn, :index, challenge.id))
+  def public_name_link(_conn, challenge) do
+    link(challenge.title,
+      to: ChallengeView.public_details_url(challenge)
+    )
   end
 
-  def public_name_link_url(conn, challenge) do
-    link(challenge.title, to: Routes.public_challenge_details_url(conn, :index, challenge.id))
+  def public_name_link_url(_conn, challenge) do
+    link(challenge.title,
+      to: ChallengeView.public_details_url(challenge)
+    )
   end
 
   def challenge_managers_list(challenge) do
@@ -552,7 +557,7 @@ defmodule Web.ChallengeView do
   def preview_challenge_button(conn, challenge, section) do
     if section == Enum.at(Challenges.sections(), -1).id do
       link("Preview",
-        to: Routes.public_preview_path(conn, :index, challenge.uuid),
+        to: Routes.public_preview_path(conn, :index, challenge: challenge.uuid),
         class: "usa-button float-right",
         target: "_blank"
       )
@@ -708,15 +713,33 @@ defmodule Web.ChallengeView do
   end
 
   def public_index_url() do
-    Routes.public_challenge_index_url(Web.Endpoint, :index)
+    Application.get_env(:challenge_gov, :public_root_url)
+    |> URI.parse()
+    |> URI.to_string()
   end
 
-  def public_details_url(challenge) do
-    Routes.public_challenge_details_url(
-      Web.Endpoint,
-      :index,
-      challenge.custom_url || challenge.id
-    )
+  def public_details_root_url() do
+    public_root_url = Application.get_env(:challenge_gov, :public_root_url)
+
+    "#{public_root_url}/challenges?challenge="
+  end
+
+  def public_details_url(challenge, opts \\ []) do
+    public_details_root_url = public_details_root_url()
+    challenge_slug = challenge.custom_url || challenge.id
+
+    url = public_details_root_url <> to_string(challenge_slug)
+
+    url =
+      if opts[:tab] do
+        url <> "&tab=#{opts[:tab]}"
+      else
+        url
+      end
+
+    url
+    |> URI.parse()
+    |> URI.to_string()
   end
 
   def disqus_domain() do
