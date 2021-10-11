@@ -24,13 +24,13 @@ defmodule Web.ChallengeView do
 
   def public_name_link(_conn, challenge) do
     link(challenge.title,
-      to: ChallengeView.public_details_url(challenge)
+      to: public_details_url(challenge)
     )
   end
 
   def public_name_link_url(_conn, challenge) do
     link(challenge.title,
-      to: ChallengeView.public_details_url(challenge)
+      to: public_details_url(challenge)
     )
   end
 
@@ -721,7 +721,7 @@ defmodule Web.ChallengeView do
   def public_details_root_url() do
     public_root_url = Application.get_env(:challenge_gov, :public_root_url)
 
-    "#{public_root_url}/challenges?challenge="
+    "#{public_root_url}/challenges/?challenge="
   end
 
   def public_details_url(challenge, opts \\ []) do
