@@ -49,6 +49,7 @@ const Application = () => {
 const renderRouter = () => (
   <ApiUrlContext.Provider value={{
     apiUrl: apiUrl || window.location.origin,
+    publicUrl: publicUrl || "",
     imageBase: imageBase || ""
   }}>
     <BrowserRouter>
@@ -59,6 +60,7 @@ const renderRouter = () => (
 
 const rootElement = document.getElementById('challenge-gov-react-app')
 const apiUrl = rootElement.getAttribute('data-api-url')
+const publicUrl = rootElement.getAttribute('data-public-url')
 const imageBase = rootElement.getAttribute('data-image-base')
 
 ReactDOM.render(renderRouter(), rootElement);
