@@ -52,7 +52,7 @@ defmodule Web.ChallengeViewTest do
         ChallengeHelpers.create_challenge(%{user_id: user.id, agency_id: lead_agency.id}, user)
 
       assert ChallengeView.public_details_url(challenge) ==
-               "#{@public_root_url}/challenges?challenge=#{challenge.id}"
+               "#{@public_root_url}/?challenge=#{challenge.id}"
     end
 
     test "success: with custom_url" do
@@ -67,7 +67,7 @@ defmodule Web.ChallengeViewTest do
         )
 
       assert ChallengeView.public_details_url(challenge) ==
-               "#{@public_root_url}/challenges?challenge=test_custom_url"
+               "#{@public_root_url}/?challenge=test_custom_url"
     end
 
     test "success: with custom url and tab" do
@@ -82,7 +82,7 @@ defmodule Web.ChallengeViewTest do
         )
 
       assert ChallengeView.public_details_url(challenge, tab: "rules") ==
-               "#{@public_root_url}/challenges?challenge=test_custom_url&tab=rules"
+               "#{@public_root_url}/?challenge=test_custom_url&tab=rules"
     end
   end
 end
