@@ -98,6 +98,8 @@ config :challenge_gov, ChallengeGov.Mailer,
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
 config :challenge_gov, :gov_delivery, module: ChallengeGov.GovDelivery.Mock
 
+config :challenge_gov, :public_root_url, "http://localhost:4001"
+
 if File.exists?("config/dev.local.exs") do
   import_config("dev.local.exs")
 end

@@ -4,14 +4,13 @@ import axios from 'axios'
 import { Button, Modal, ModalBody, ModalFooter } from 'reactstrap';
 import { ApiUrlContext } from '../../ApiUrlContext'
 
-export const ContactForm = ({preview}) => {
+export const ContactForm = ({challenge, preview}) => {
   const [email, setEmail] = useState("")
   const [body, setBody] = useState("")
   const [recaptchaToken, setRecaptchaToken] = useState("")
   const [errors, setErrors] = useState({})
   const [modalIsOpen, setIsOpen] = useState(false);
 
-  let { challengeId } = useParams();
   const { apiUrl } = useContext(ApiUrlContext)
 
   useEffect(() => {
@@ -30,7 +29,7 @@ export const ContactForm = ({preview}) => {
     e.preventDefault()
 
     axios
-      .post(apiUrl + `/api/challenges/${challengeId}/contact_form`, { email, body, recaptchaToken })
+      .post(apiUrl + `/api/challenges/${challenge.id}/contact_form`, { email, body, recaptchaToken })
       .then(res => {
         setIsOpen(true);
         setEmail("")

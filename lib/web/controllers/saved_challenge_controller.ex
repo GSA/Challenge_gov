@@ -3,6 +3,7 @@ defmodule Web.SavedChallengeController do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.SavedChallenges
+  alias Web.ChallengeView
 
   plug Web.Plugs.FetchPage when action in [:index]
 
@@ -90,7 +91,7 @@ defmodule Web.SavedChallengeController do
       |> put_flash(:info, [
         "Challenge saved. Click ",
         Phoenix.HTML.Link.link("here",
-          to: Routes.public_challenge_details_url(conn, :index, challenge.id)
+          to: ChallengeView.public_details_url(challenge)
         ),
         " to be taken back to the challenge details"
       ])

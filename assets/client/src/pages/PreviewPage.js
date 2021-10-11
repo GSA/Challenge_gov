@@ -15,7 +15,7 @@ export const PreviewPage = () => {
 
   let query = useLocation().search
 
-  const { print, challenge } = queryString.parse(query)
+  const { print, challenge, tab } = queryString.parse(query)
 
   const base_url = window.location.origin
 
@@ -70,7 +70,7 @@ export const PreviewPage = () => {
       {renderPreviewItems()}
       <div className="row">
         <div className="col">
-          <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} challengePhases={challengePhases} preview={true} loading={loadingState} print={print} />
+          <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} challengePhases={challengePhases} preview={true} loading={loadingState} print={print} tab={tab} />
         </div>
       </div>
     </div>

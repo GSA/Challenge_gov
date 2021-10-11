@@ -13,7 +13,7 @@ export const DetailsPage = ({challengeId}) => {
   const [loadingState, setLoadingState] = useState(true)
 
   let query = useLocation().search
-  const { tab } = queryString.parse(query)
+  const { print, tab } = queryString.parse(query)
 
   const { apiUrl } = useContext(ApiUrlContext)
 
@@ -43,7 +43,7 @@ export const DetailsPage = ({challengeId}) => {
   return (
     <div>
       {currentChallenge &&
-        <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab}/>
+        <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab} print={print} />
       }
     </div>
   )

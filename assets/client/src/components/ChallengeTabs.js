@@ -4,7 +4,7 @@ import { useHistory, useLocation, useRouteMatch, useParams } from "react-router-
 import queryString from 'query-string'
 
 export const ChallengeTabs = (props) => {
-  const {children, print, tab} = props
+  const {children, print, preview, tab} = props
   const [activeTab, setActiveTab] = useState(tab ?? "overview")
   const history = useHistory()
   const currentPath = useRouteMatch()
@@ -17,7 +17,9 @@ export const ChallengeTabs = (props) => {
       let queryParams = queryString.parse(location.search)
       queryParams.tab = label.toLowerCase()
 
-      const path = "/challenges?" + queryString.stringify(queryParams)
+      let pathRoot = preview ? "/public/previews/challenges?" : "/challenges?"
+
+      const path = pathRoot + queryString.stringify(queryParams)
       history.push(path)
       setActiveTab(label)
     }

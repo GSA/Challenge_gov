@@ -351,7 +351,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
             </div>
           </section>
         </section>
-        <ChallengeTabs print={print} tab={tab}>
+        <ChallengeTabs print={print} preview={preview} tab={tab}>
           <div label="overview">
             <Overview challenge={challenge} print={print} />
           </div>
@@ -383,7 +383,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
             </div>
           }
           <div label="contact">
-            <ContactForm preview={preview} />
+            <ContactForm challenge={challenge} preview={preview} />
           </div>
           <div label="winners" disabled={disableWinners()}>
             <Winners challenge={challenge} challengePhases={challengePhases} print={print} />

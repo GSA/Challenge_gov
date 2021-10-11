@@ -22,7 +22,7 @@
 <br/>
 <div>
   <div class="text-bold">Custom url:</div>
-  <div>https://www.challenge.gov/#/challenge/<%= @challenge.custom_url %></div>
+  <div><%= ChallengeView.public_details_url(@challenge) %></div>
 </div>
 <br/>
 <div>

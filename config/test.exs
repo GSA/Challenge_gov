@@ -47,6 +47,8 @@ config :stein_storage, backend: :test
 
 config :challenge_gov, Oban, crontab: false, queues: false, plugins: false
 
+config :challenge_gov, :public_root_url, "http://localhost:4001"
+
 if File.exists?("config/test.local.exs") do
   import_config("test.local.exs")
 end

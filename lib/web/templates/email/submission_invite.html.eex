@@ -173,7 +173,7 @@
 												<div class="txtTinyMce-wrapper" style="font-size: 12px; line-height: 1.5; color: #000000; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt: 18px;">
 													<p style="margin: 0; font-size: 14px; line-height: 1.5; word-break: break-word; mso-line-height-alt: 21px; margin-top: 0; margin-bottom: 0;">
                             <span style="font-size: 14px;">
-                             <%= link("Challenge details", to: Routes.public_challenge_details_url(Endpoint, :index, @challenge.id), target: "_blank", title: "link to challenge", style: "text-decoration: underline; color: #005ea2;", rel: "noopener") %> | <%= link("Your submissions", to: Routes.submission_url(Endpoint, :index), target: "_blank", title: "link to submissions", style: "text-decoration: underline; color: #005ea2;", rel: "noopener") %>
+                             <%= link("Challenge details", to: ChallengeView.public_details_url(@challenge), target: "_blank", title: "link to challenge", style: "text-decoration: underline; color: #005ea2;", rel: "noopener") %> | <%= link("Your submissions", to: Routes.submission_url(Endpoint, :index), target: "_blank", title: "link to submissions", style: "text-decoration: underline; color: #005ea2;", rel: "noopener") %>
                             </span>
                           </p>
 												</div>

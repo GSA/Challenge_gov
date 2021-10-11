@@ -5,7 +5,7 @@
       <h3><i><%= @phase.title %></i></h3>
     <% end %>
     <br/>
-    <%= link to: Routes.public_challenge_details_path(@conn, :index, @challenge.id), target: "_blank" do %>
+    <%= link to: ChallengeView.public_details_url(@challenge), target: "_blank" do %>
       View challenge details <i class="fa fa-external-link-alt"></i>
     <% end %>
   </div>
