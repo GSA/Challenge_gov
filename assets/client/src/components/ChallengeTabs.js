@@ -17,7 +17,7 @@ export const ChallengeTabs = (props) => {
       let queryParams = queryString.parse(location.search)
       queryParams.tab = label.toLowerCase()
 
-      let pathRoot = preview ? "/public/previews/challenges?" : "/challenges?"
+      let pathRoot = preview ? "/public/previews/challenges?" : `${location.pathname}/?`
 
       const path = pathRoot + queryString.stringify(queryParams)
       history.push(path)
