@@ -9,8 +9,8 @@
     <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       More options
     </button>
-    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-      <%= submission_delete_link(@conn, @submission, @user, label: "Delete", class: "btn btn-default btn-xs") %>
+    <div class="dropdown-menu text-center" aria-labelledby="btnGroupDrop1">
+      <%= submission_delete_link(@conn, @submission, @user, label: "Delete", class: "btn btn-default") %>
     </div>
   </div>
 </div>
