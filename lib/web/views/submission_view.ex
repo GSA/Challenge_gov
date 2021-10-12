@@ -49,7 +49,7 @@ defmodule Web.SubmissionView do
           fn phase -> phase.id === submission.phase.id end
         )
 
-      content_tag :p, class: "challenge-tile__submission-info", aria_label: "Challenge title" do
+      content_tag :p, class: "challenge-tile__info", aria_label: "Challenge title" do
         content_tag :span do
           "Phase #{phase_num + 1} of #{total_num_phases}"
         end

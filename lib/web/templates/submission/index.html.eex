@@ -6,68 +6,69 @@
       %{text: "Submissions"},
     ])%>
     <%= if length(@unreviewed_submissions) > 0 && Accounts.is_solver?(@user) do %>
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1 class="m-0 text-dark">
-            <span>Submissions to review</span>
-          </h1>
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">
+                <span>Submissions to review</span>
+              </h1>
+            </div>
+          </div>
         </div>
       </div>
+      <%= render Web.SubmissionView, "_unreviewed_submissions.html", conn: @conn, user: @user, submissions: @unreviewed_submissions, pagination: @unreviewed_pagination %>
     <% end %>
-  </div>
-</div>
 
-<%= if length(@unreviewed_submissions) > 0 && Accounts.is_solver?(@user) do %>
-  <%= render Web.SubmissionView, "_unreviewed_submissions.html", conn: @conn, user: @user, submissions: @unreviewed_submissions, pagination: @unreviewed_pagination %>
-<% end %>
-
-<div class="content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-dark">
-          <span>Submissions</span>
-        </h1>
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">
+              <span>Submissions</span>
+            </h1>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<section class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="cards">
-          <%= Enum.map @submissions, fn (submission) -> %>
-            <div class="challenge-tile card">
-              <%= link to: Routes.submission_path(@conn, :edit, submission.id) do %>
-                <div class="image_wrapper">
-                  <%= img_tag(
-                    ChallengeView.logo_url(submission.challenge),
-                    alt: submission.challenge.logo_alt_text,
-                    title: "Challenge logo",
-                    class: "w-100"
-                  ) %>
-                </div>
-                <div class="challenge-tile__text-wrapper submission-wrapper">
-                  <p class="challenge-tile__submission-info" aria-label="Challenge title">
-                    <span class="title"><%= submission.challenge.title %></span>
-                  </p>
-                  <%= phase_number(submission) %>
-                  <p class="challenge-tile__submission-info" aria-label="Submission close">
-                    <%= close_header(submission.phase.end_date) %>
-                    <span class="js-local-datetime"><%= submission.phase.end_date %></span>
-                  </p>
-                  <p class="challenge-tile__submission-info" aria-label="Submission status">
-                    <span><%= submission.status %></span>
-                  </p>
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="cards">
+              <%= Enum.map @submissions, fn (submission) -> %>
+                <div class="challenge-tile card mr-4">
+                  <%= link to: Routes.submission_path(@conn, :edit, submission.id) do %>
+                    <div class="image_wrapper">
+                      <%= img_tag(
+                        ChallengeView.logo_url(submission.challenge),
+                        alt: submission.challenge.logo_alt_text,
+                        title: "Challenge logo",
+                        class: "w-100"
+                      ) %>
+                    </div>
+                    <div class="challenge-tile__text-wrapper submission-wrapper">
+                      <p class="challenge-tile__info" aria-label="Challenge title">
+                        <span class="title"><%= submission.challenge.title %></span>
+                      </p>
+                      <%= phase_number(submission) %>
+                      <p class="challenge-tile__info" aria-label="Submission close">
+                        <%= close_header(submission.phase.end_date) %>
+                        <span class="js-local-datetime"><%= submission.phase.end_date %></span>
+                      </p>
+                      <p class="challenge-tile__info" aria-label="Submission status">
+                        <span><%= submission.status %></span>
+                      </p>
+                    </div>
+                  <% end %>
                 </div>
               <% end %>
             </div>
-          <% end %>
+          </div>
         </div>
+        <%= SharedView.pagination(path: Routes.submission_path(@conn, :index), pagination: @pagination) %>
       </div>
-    </div>
-    <%= SharedView.pagination(path: Routes.submission_path(@conn, :index), pagination: @pagination) %>
+    </section>
   </div>
-</section>
+</div>
