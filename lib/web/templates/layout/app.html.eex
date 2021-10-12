@@ -30,7 +30,7 @@
               <i class="fas fa-sign-out-alt mr-2"></i> Logout
               <% end %>
             </div>
-          </li>          
+          </li>
           <% end %>
         </ul>
       </nav>

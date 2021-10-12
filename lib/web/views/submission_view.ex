@@ -171,7 +171,7 @@ defmodule Web.SubmissionView do
         link(opts[:label] || "Delete",
           to: Routes.submission_path(conn, :delete, submission.id),
           method: :delete,
-          class: "btn btn-link float-right text-danger",
+          class: "btn btn-link text-danger",
           data: [confirm: "Are you sure you want to delete this submission?"]
         )
 
