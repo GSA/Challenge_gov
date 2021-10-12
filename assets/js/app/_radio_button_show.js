@@ -82,6 +82,9 @@ function showSinglePhaseFields() {
   $(".phase-fields .nested-items").find("input").prop("disabled", true)
   $(".single-phase-section").collapse("show")
   $(".single-phase-section").find("input").prop("disabled", false)
+  $(".phase-fields .id").prop("disabled", false)
+  $(".delete-phase").prop("disabled", false)
+  $(".delete-phase").val(true)
 }
 
 function showMonetaryPrize() {

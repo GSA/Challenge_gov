@@ -38,7 +38,7 @@ const Application = () => {
 const renderPreview = () => (
   <ApiUrlContext.Provider value={{
     apiUrl: window.location.origin,
-    imageBase: window.location.origin
+    imageBase: imageBase || ""
   }}>
     <BrowserRouter>
       <Route
@@ -50,7 +50,9 @@ const renderPreview = () => (
   </ApiUrlContext.Provider>
 )
 
-ReactDOM.render(renderPreview(), document.getElementById('preview'));
+const rootElement = document.getElementById('preview');
+const imageBase = rootElement.getAttribute('data-image-base');
+ReactDOM.render(renderPreview(), rootElement);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

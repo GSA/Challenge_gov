@@ -251,6 +251,7 @@ defmodule ChallengeGov.ChallengePhasesTest do
               "is_multi_phase" => "true",
               "phases" => %{
                 "0" => %{
+                  "id" => phase.id,
                   "title" => "New title",
                   "start_date" => iso_timestamp(hours: 1),
                   "end_date" => iso_timestamp(hours: 2),

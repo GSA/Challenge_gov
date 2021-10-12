@@ -103,6 +103,7 @@ defmodule ChallengeGov.ChallengeDetailsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
       {:ok, challenge} = Challenges.update(challenge, %{"sub_status" => "archived"}, user, "")
+      phase = Enum.at(challenge.phases, 0)
 
       assert challenge.sub_status === "archived"
 
@@ -115,6 +116,7 @@ defmodule ChallengeGov.ChallengeDetailsTest do
               "section" => "details",
               "phases" => %{
                 "0" => %{
+                  "id" => phase.id,
                   "end_date" => "2020-10-01 03:59:00Z",
                   "how_to_enter" => "<p>ASDFASDF</p>",
                   "how_to_enter_delta" => "{\"ops\":[{\"insert\":\"ASDFASDF\\n\"}]}",

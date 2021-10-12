@@ -402,7 +402,8 @@ defmodule Mix.Tasks.ImportHelper do
       Enum.find_value(@date_formats, fn format ->
         case Timex.parse(formatted_date, format) do
           {:ok, parsed_time} ->
-            {:ok, utc_datetime} = DateTime.from_naive(parsed_time, "Etc/UTC")
+            {:ok, eastern_datetime} = DateTime.from_naive(parsed_time, "America/New_York")
+            {:ok, utc_datetime} = DateTime.shift_zone(eastern_datetime, "Etc/UTC")
             utc_datetime
 
           {:error, _} ->

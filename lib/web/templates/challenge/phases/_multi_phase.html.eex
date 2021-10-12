@@ -9,6 +9,7 @@
           <%= Enum.map(phase_form.hidden, fn {k, v} -> %>
             <%= hidden_input(phase_form, k, value: v) %>
           <% end) %>
+          <%= hidden_input(phase_form, :id, class: "id") %>
           <%= hidden_input(phase_form, :judging_criteria) %>
           <%= hidden_input(phase_form, :judging_criteria_delta) %>
           <%= hidden_input(phase_form, :how_to_enter) %>
@@ -18,10 +19,14 @@
             <div class="col">
               <%= label phase_form, :title, "Phase #{phase_form.index + 1} title" %>
               <span class="required">*</span>
-              <%= text_input phase_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, phase_form.index)}" %>
+              <%= text_input phase_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, phase_form.index)} #{FormView.nested_form_control_classes(@form, :phases, :id, phase_form.index)}" %>
               <%= error_tag(phase_form, :title) %>
+              <%= if phase_form.errors[:id] do %>
+                <span class="help-block invalid-feedback">This phase has submissions and cannot be deleted</span>
+              <% end %>
             </div>
           </div>
+
 
           <div class="row">
             <div class="<%= FormView.nested_form_group_classes(@form, :phases, :start_date, 1) %>">
@@ -63,6 +68,7 @@
           
           <div class="row">
             <%= if phase_form.index != 0 do %>
+              <%= hidden_input phase_form, :delete_phase, value: false, class: "delete-phase" %>
               <a class="remove-nested-section btn btn-link text-danger">Remove phase <%= phase_form.index + 1 %></a>
             <% end %>
           </div>
