@@ -16,7 +16,7 @@ defmodule Web.SavedChallengeController do
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
 
-    # {saved_challenges, pagination} = 
+    # {saved_challenges, pagination} =
     #   if !is_nil(page) and !is_nil(per) do
     #     %{page: saved_challenges, pagination: pagination} =
     #       SavedChallenges.all(user, filter: filter, sort: sort, page: page, per: per)
@@ -29,12 +29,12 @@ defmodule Web.SavedChallengeController do
 
     open_saved_challenges =
       Enum.filter(saved_challenges, fn saved_challenge ->
-        Challenges.is_published?(saved_challenge.challenge)
+        Challenges.is_open?(saved_challenge.challenge)
       end)
 
     closed_saved_challenges =
       Enum.filter(saved_challenges, fn saved_challenge ->
-        Challenges.is_archived?(saved_challenge.challenge)
+        Challenges.is_closed?(saved_challenge.challenge)
       end)
 
     conn

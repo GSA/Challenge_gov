@@ -1,5 +1,24 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
+      %{text: "Saved Challenges"},
+    ])%>
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">
+              <span>Saved challenges</span>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <section class="container-fluid p-5">
-  <h2 class="mb-5">Saved challenges</h2>
   <%= if !Enum.empty?(@open_saved_challenges) do %>
     <h5>Open for submissions</h5>
     <hr/>
