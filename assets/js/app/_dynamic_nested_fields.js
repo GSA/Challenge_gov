@@ -85,7 +85,8 @@ $(".phase-fields").on("click", ".remove-nested-section", (e) => {
   e.preventDefault()
   if (window.confirm(phaseDeletionWarning)) {
     parent = $(e.target).closest(".form-collection")
-    parent.remove()
+    parent.hide()
+    parent.find(".delete-phase").val(true)
   }
 })
 
