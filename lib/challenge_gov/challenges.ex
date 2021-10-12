@@ -437,12 +437,12 @@ defmodule ChallengeGov.Challenges do
 
       true ->
         Challenge
-        |> where([c], c.id == ^id)
+        |> where([c], c.id == ^id_or_slug)
         |> get_query()
 
       :error ->
         Challenge
-        |> where([c], c.custom_url == ^id)
+        |> where([c], c.custom_url == ^id_or_slug)
         |> get_query()
     end
     |> case do
