@@ -1,1 +1,5 @@
-<div id="preview"></div>
+<%= if Mix.env() == :dev do %>
+  <div id="preview" data-image-base="http://localhost:4000"></div>
+<% else %>
+  <div id="preview"></div>
+<% end %>
