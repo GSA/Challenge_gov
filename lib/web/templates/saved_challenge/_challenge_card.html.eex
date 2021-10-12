@@ -1,5 +1,5 @@
 <div class="challenge-tile card mr-4">
-  <%= link to: Routes.public_challenge_details_path(@conn, :index, @saved_challenge.challenge.custom_url || @saved_challenge.challenge.id, target: "_blank") do %>
+  <%= link to: ChallengeView.public_details_url(@saved_challenge.challenge), target: "_blank") do %>
     <div class="image_wrapper">
       <%= img_tag(
         ChallengeView.logo_url(@saved_challenge.challenge),
