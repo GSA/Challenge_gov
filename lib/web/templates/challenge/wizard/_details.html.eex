@@ -113,7 +113,7 @@
     <div class="col upload-logo">
       <div class="row">
         <%= label class: "control-label" do %>
-          <%= radio_button(@form, :upload_logo, true, class: "mr-2", required: true) %>
+          <%= radio_button(@form, :upload_logo, true, class: "mr-2", required: !!@data.logo_key) %>
           Upload my own logo
         <% end %>
       </div>
@@ -129,7 +129,7 @@
       </div>
       <div class="row">
         <%= label class: "control-label" do %>
-          <%= radio_button(@form, :upload_logo, false, class: "mr-2", required: true) %>
+          <%= radio_button(@form, :upload_logo, false, class: "mr-2", required: !!@data.logo_key) %>
           Use default challenge.gov logo
         <% end %>
       </div>
@@ -147,7 +147,7 @@
 
 <h4>Publish date</h4>
 <p class="ml-2 text-muted">
-  Once your challenge is approved, your challenge will be listed on Challenge.gov based on the date you specify. 
+  Once your challenge is approved, your challenge will be listed on Challenge.gov based on the date you specify.
   Please allow up to <b>one to two business days</b> for approval and publishing of your content. Use this format: MM/DD/YYYY TIME OF DAY (Example: 06/19/2020 05:00 PM).
 </p>
 
