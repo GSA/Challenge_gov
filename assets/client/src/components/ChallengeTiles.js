@@ -35,7 +35,7 @@ export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleY
           return (
             <div className="cards">
               <p className="cards__none">
-                There are no current challenges. Please check back again soon!
+                Please check back again soon!
               </p>
             </div>
           )
