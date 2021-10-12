@@ -188,15 +188,6 @@ defmodule ChallengeGov.Agencies do
     end
   end
 
-  defp archive_members(repo, %{agency: agency}) do
-    result =
-      Member
-      |> where([m], m.agency_id == ^agency.id)
-      |> repo.update_all(set: [status: "archived"])
-
-    {:ok, result}
-  end
-
   @doc """
   Check if a user is a full member of the agency
   """

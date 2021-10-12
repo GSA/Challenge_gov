@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 
 import { ChallengeDetails } from '../components/ChallengeDetails';
 import { ApiUrlContext } from '../ApiUrlContext'
+import NotFound from '../components/NotFound'
 
 import queryString from 'query-string'
 
@@ -40,11 +41,17 @@ export const DetailsPage = ({challengeId}) => {
       })
   }, [])
 
+  const renderContent = () => {
+    if (currentChallenge) {
+      return <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab} print={print} />
+    } else if (!currentChallenge && !loadingState) {
+      return <NotFound />
+    }
+  }
+
   return (
     <div>
-      {currentChallenge &&
-        <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab} print={print} />
-      }
+      {renderContent()}
     </div>
   )
 }
