@@ -171,8 +171,8 @@ defmodule Mix.Tasks.ImportHelper do
         :error ->
           {0, 0}
 
-        result ->
-          result
+        {dollars, float} ->
+          {dollars * 100, float}
       end
 
     number
