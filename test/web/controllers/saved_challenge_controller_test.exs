@@ -186,7 +186,7 @@ defmodule Web.SavedChallengeControllerTest do
                       "href",
                       61,
                       34,
-                      ChallengeView.public_details_url(challenge),
+                      "http://localhost:4001/?challenge=#{challenge.id}",
                       34
                     ]
                   ],
