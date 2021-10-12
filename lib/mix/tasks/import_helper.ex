@@ -403,7 +403,7 @@ defmodule Mix.Tasks.ImportHelper do
         case Timex.parse(formatted_date, format) do
           {:ok, parsed_time} ->
             {:ok, eastern_datetime} = DateTime.from_naive(parsed_time, "America/New_York")
-            {:ok, utc_datetime} = DateTime.from_naive(eastern_datetime, "Etc/UTC")
+            {:ok, utc_datetime} = DateTime.shift_zone(eastern_datetime, "Etc/UTC")
             utc_datetime
 
           {:error, _} ->
