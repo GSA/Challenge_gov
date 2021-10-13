@@ -111,7 +111,7 @@ defmodule ChallengeGov.ChallengeHowToEnterTest do
 
       phase_ids = Enum.map(challenge.phases, & &1.id)
 
-      length = 4001
+      length = 15_001
       how_to_enter = TestHelpers.generate_random_string(length)
 
       {:error, changeset} =
@@ -280,7 +280,7 @@ defmodule ChallengeGov.ChallengeHowToEnterTest do
 
       phase_ids = Enum.map(challenge.phases, & &1.id)
 
-      length = 4001
+      length = 15_001
       how_to_enter = TestHelpers.generate_random_string(length)
 
       {:error, changeset} =

@@ -22,7 +22,7 @@ defmodule Web.Api.ChallengeControllerTest do
         status: "published"
       })
 
-      ChallengeHelpers.create_single_phase_challenge(user, %{
+      ChallengeHelpers.create_closed_single_phase_challenge(user, %{
         user_id: user.id,
         agency_id: agency.id,
         title: "Test Title 2",
@@ -43,8 +43,10 @@ defmodule Web.Api.ChallengeControllerTest do
         status: "draft"
       })
 
+      Challenges.set_sub_statuses()
+
       conn = get(conn, Routes.api_challenge_path(conn, :index))
-      assert length(json_response(conn, 200)["collection"]) === 2
+      assert length(json_response(conn, 200)["collection"]) === 1
     end
 
     test "no results", %{conn: conn} do

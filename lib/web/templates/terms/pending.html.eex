@@ -3,7 +3,9 @@
     <h4>
       Your account is pending approval
     </h4>
-    <%= link "Review Agency Toolkit", to: "https://en.wiktionary.org/wiki/toolkit", target: "_blank" %>
+    <p>
+      You will receive an email notifying you when your account has been activated. If you have not received this email within two business days,  please contact the Challenge.Gov Support Team at team@challenge.gov.
+    </p>
   </div>
   <%= challenge_manager_assumed_content(@current_user) %>
 </section>

@@ -296,7 +296,11 @@ defmodule ChallengeGov.Challenges do
 
   def all_public(opts \\ []) do
     base_query()
-    |> where([c], c.status == "published" or c.sub_status == "open")
+    |> where(
+      [c],
+      (c.status == "published" and c.sub_status == "open") or
+        (c.status == "published" and is_nil(c.sub_status))
+    )
     |> where([c], c.end_date >= ^DateTime.utc_now())
     |> order_by([c], asc: c.end_date, asc: c.id)
     |> Filter.filter(opts[:filter], __MODULE__)
@@ -423,21 +427,26 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Get a challenge
   """
-  def get(id) do
-    with false <- is_integer(id),
-         {id, _} <- Integer.parse(id) do
+  def get(id_or_slug) do
+    with false <- is_integer(id_or_slug),
+         {id, ""} <- Integer.parse(id_or_slug) do
       Challenge
       |> where([c], c.id == ^id)
       |> get_query()
     else
+      {_number, _remainder} ->
+        Challenge
+        |> where([c], c.custom_url == ^id_or_slug)
+        |> get_query()
+
       true ->
         Challenge
-        |> where([c], c.id == ^id)
+        |> where([c], c.id == ^id_or_slug)
         |> get_query()
 
       :error ->
         Challenge
-        |> where([c], c.custom_url == ^id)
+        |> where([c], c.custom_url == ^id_or_slug)
         |> get_query()
     end
     |> case do

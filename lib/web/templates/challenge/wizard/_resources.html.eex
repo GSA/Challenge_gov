@@ -4,8 +4,8 @@
 <br/>
 
 <div class="col">
-  <label for="challenge_prize_description">Frequently asked questions (optional)</label>
-  <%= FormView.rt_textarea_field(@form, :faq) %>
+  <label for="challenge_prize_description">Frequently asked questions (optional, character limit 15000)</label>
+  <%= FormView.rt_textarea_field(@form, :faq, limit: 15000) %>
 </div>
 <p class="ml-2 mb-4 text-muted">Provide a general summary of any information you want your solvers to know about the challenge.</p>
 <hr/>

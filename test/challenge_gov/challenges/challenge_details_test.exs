@@ -20,7 +20,7 @@ defmodule ChallengeGov.ChallengeDetailsTest do
             "challenge" => %{
               "section" => "details",
               "title" => TestHelpers.generate_random_string(91),
-              "tagline" => TestHelpers.generate_random_string(91)
+              "tagline" => TestHelpers.generate_random_string(401)
             }
           },
           user,

@@ -104,6 +104,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:legal_authority, :string)
     field(:faq, :string)
     field(:faq_delta, :string)
+    field(:faq_length, :integer, virtual: true)
     field(:winner_information, :string)
     field(:captured_on, :date)
     field(:auto_publish_date, :utc_datetime)
@@ -451,16 +452,15 @@ defmodule ChallengeGov.Challenges.Challenge do
       :title,
       :tagline,
       :primary_type,
-      :brief_description,
       :description,
       :auto_publish_date,
       :upload_logo,
       :is_multi_phase
     ])
     |> validate_length(:title, max: 90)
-    |> validate_length(:tagline, max: 90)
+    |> validate_length(:tagline, max: 400)
     |> validate_rich_text_length(:brief_description, 200)
-    |> validate_length(:description, max: 4000)
+    |> validate_rich_text_length(:description, 15_000)
     |> validate_length(:other_type, max: 45)
     |> validate_inclusion(:primary_type, @challenge_types)
     |> maybe_validate_types(params)
@@ -542,7 +542,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   def resources_changeset(struct, _params) do
     struct
     |> force_change(:faq, fetch_field!(struct, :faq))
-    |> validate_length(:faq, max: 4000)
+    |> validate_length(:faq, max: 15_000)
   end
 
   def review_changeset(struct, params) do

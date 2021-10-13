@@ -1,5 +1,5 @@
 <div class="col single-phase-section collapse">
-  <%= if (Map.has_key?(@form, :data) and length(@form.data.phases) > 0) or 
+  <%= if (Map.has_key?(@form, :data) and length(@form.data.phases) > 0) or
     (Map.has_key?(@form.source.changes, :phases) and length(@form.source.changes.phases) > 0) do %>
     <!-- With phases attached or pending -->
     <%= inputs_for(@form, :phases, [skip_hidden: true], fn phase_form -> %>
@@ -14,6 +14,7 @@
     <% end) %>
     <%= inputs_for(@form, :phases, [skip_hidden: true], fn phase_form -> %>
       <%= if phase_form.index === 0 do %>
+        <%= hidden_input phase_form, :id, class: "id"  %>
         <%= hidden_input phase_form, :title, value: "" %>
         <%= hidden_input phase_form, :open_to_submissions, value: true %>
         <%= hidden_input phase_form, :judging_criteria %>
@@ -58,7 +59,7 @@
         <div class="form-group">
           <label for="challenge_phases_0_start_date">Phase 1 submission start date and time</label><span class="required">*</span>
           <%= date_and_time_inputs(@conn, @form, :start_date, "Phase 1 submission end date and time *", "challenge_phases_0_start") %>
-          <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">              
+          <input id="challenge_phases_0_start_date" label="Start date" name="challenge[phases][0][start_date]" type="hidden">
         </div>
       </div>
 
@@ -66,7 +67,7 @@
         <div class="form-group">
           <label for="challenge_phases_0_start_date">Phase 1 submission end date and time *</label>
           <%= date_and_time_inputs(@conn, @form, :end_date, "Phase 1 submission end date and time *", "challenge_phases_0_end") %>
-          <input id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="hidden">              
+          <input id="challenge_phases_0_end_date" label="End date" name="challenge[phases][0][end_date]" type="hidden">
         </div>
       </div>
     </div>
