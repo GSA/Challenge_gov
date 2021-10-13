@@ -104,6 +104,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:legal_authority, :string)
     field(:faq, :string)
     field(:faq_delta, :string)
+    field(:faq_length, :integer, virtual: true)
     field(:winner_information, :string)
     field(:captured_on, :date)
     field(:auto_publish_date, :utc_datetime)
