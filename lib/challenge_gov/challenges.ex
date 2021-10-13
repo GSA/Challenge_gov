@@ -296,7 +296,11 @@ defmodule ChallengeGov.Challenges do
 
   def all_public(opts \\ []) do
     base_query()
-    |> where([c], c.status == "published" and c.sub_status == "open")
+    |> where(
+      [c],
+      (c.status == "published" and c.sub_status == "open") or
+        (c.status == "published" and is_nil(c.sub_status))
+    )
     |> where([c], c.end_date >= ^DateTime.utc_now())
     |> order_by([c], asc: c.end_date, asc: c.id)
     |> Filter.filter(opts[:filter], __MODULE__)
