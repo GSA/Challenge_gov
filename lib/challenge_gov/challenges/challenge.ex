@@ -451,16 +451,15 @@ defmodule ChallengeGov.Challenges.Challenge do
       :title,
       :tagline,
       :primary_type,
-      :brief_description,
       :description,
       :auto_publish_date,
       :upload_logo,
       :is_multi_phase
     ])
     |> validate_length(:title, max: 90)
-    |> validate_length(:tagline, max: 90)
+    |> validate_length(:tagline, max: 400)
     |> validate_rich_text_length(:brief_description, 200)
-    |> validate_length(:description, max: 4000)
+    |> validate_rich_text_length(:description, 15_000)
     |> validate_length(:other_type, max: 45)
     |> validate_inclusion(:primary_type, @challenge_types)
     |> maybe_validate_types(params)
