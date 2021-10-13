@@ -22,10 +22,13 @@
 <section class="content">
   <div class="container-fluid">
     <div>
-      <%= link("Toolkit", to: "https://www.challenge.gov/toolkit/", target: "_blank") %>
+      <%= link("FAQ", to: Routes.static_path(@conn, "/pdfs/challenge_manager_faq.pdf"), target: "_blank") %>
     </div>
     <div>
-      <%= link("FAQ", to: "https://www.challenge.gov/toolkit/faq/", target: "_blank") %>
+      <%= link("User guide", to: Routes.static_path(@conn, "/pdfs/challenge_manager_user_guide.pdf"), target: "_blank") %>
+    </div>
+    <div>
+      <%= link("Toolkit", to: Routes.static_path(@conn, "/pdfs/prize_and_challenge_toolkit.pdf"), target: "_blank") %>
     </div>
   </div>
 </section>
