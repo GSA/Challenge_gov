@@ -95,6 +95,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:non_monetary_prizes, :string)
     field(:prize_description, :string)
     field(:prize_description_delta, :string)
+    field(:prize_description_length, :integer, virtual: true)
     field(:eligibility_requirements, :string)
     field(:eligibility_requirements_delta, :string)
     field(:rules, :string)
@@ -499,7 +500,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     ])
     |> validate_prizes(params)
     |> force_change(:prize_description, fetch_field!(struct, :prize_description))
-    |> validate_length(:prize_description, max: 1500)
+    |> validate_length(:prize_description, max: 15_000)
   end
 
   def parse_currency(struct, %{"prize_total" => prize_total}) do

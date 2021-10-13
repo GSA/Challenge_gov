@@ -92,7 +92,7 @@ defmodule ChallengeGov.ChallengePrizesTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_challenge(%{user_id: user.id})
 
-      length = 1501
+      length = 15_001
       prize_description = TestHelpers.generate_random_string(length)
 
       {:error, changeset} =
