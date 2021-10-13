@@ -7,7 +7,7 @@
 
 <%= inputs_for(@form, :phases, fn ff -> %>
   <div class="col">
-    <label><%= "Judging criteria details - phase #{ff.index + 1}: #{ff.data.title}" %> <span class="required">*</span></label>
+    <label><%= "Judging criteria details - phase #{ff.index + 1}: #{ff.data.title} (15000 character limit)" %> <span class="required">*</span></label>
     <%= FormView.rt_textarea_field(ff, :judging_criteria) %>
   </div>
   <br/>
