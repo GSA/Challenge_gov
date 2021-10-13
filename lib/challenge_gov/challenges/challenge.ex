@@ -541,7 +541,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   def resources_changeset(struct, _params) do
     struct
     |> force_change(:faq, fetch_field!(struct, :faq))
-    |> validate_length(:faq, max: 4000)
+    |> validate_length(:faq, max: 15_000)
   end
 
   def review_changeset(struct, params) do

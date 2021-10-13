@@ -34,7 +34,7 @@ defmodule ChallengeGov.ChallengeResourcesTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
-      length = 4001
+      length = 15_001
       faq_text = TestHelpers.generate_random_string(length)
 
       {:error, changeset} =

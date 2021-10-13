@@ -80,7 +80,7 @@ defmodule ChallengeGov.Challenges.Phase do
       :judging_criteria
     ])
     |> force_change(:judging_criteria, params["judging_criteria"] || struct.judging_criteria)
-    |> validate_length(:judging_criteria, max: 4000)
+    |> validate_length(:judging_criteria, max: 15_000)
   end
 
   def how_to_enter_changeset(struct, params) do
@@ -90,7 +90,7 @@ defmodule ChallengeGov.Challenges.Phase do
       :how_to_enter
     ])
     |> force_change(:how_to_enter, params["how_to_enter"] || struct.how_to_enter)
-    |> validate_length(:how_to_enter, max: 4000)
+    |> validate_length(:how_to_enter, max: 15_000)
   end
 
   defp mark_for_delete(changeset) do
