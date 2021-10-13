@@ -26,8 +26,10 @@ defmodule ChallengeGov.Challenges.Phase do
     field(:open_to_submissions, :boolean)
     field(:judging_criteria, :string)
     field(:judging_criteria_delta, :string)
+    field(:judging_criteria_length, :integer, virtual: true)
     field(:how_to_enter, :string)
     field(:how_to_enter_delta, :string)
+    field(:how_to_enter_length, :integer, virtual: true)
 
     field(:delete_phase, :boolean, virtual: true)
 
