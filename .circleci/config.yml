@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  cloudfoundry: circleci/cloudfoundry@0.1.73
+  cloudfoundry: circleci/cloudfoundry@1.0
   browser-tools: circleci/browser-tools@1.1.3
 
 jobs:
@@ -153,11 +153,21 @@ jobs:
       - run: echo -e $DEV_PUBLIC_CERT > dev_cert.pem
       - run: echo 'export CF_PASSWORD=$CF_PASSWORD_DEV' >> $BASH_ENV
       - run: echo 'export CF_USERNAME=$CF_USERNAME_DEV' >> $BASH_ENV
-      - cloudfoundry/install:
+      - run:
+          name: Install Cloud Foundry CLI
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y ca-certificates jq
+            sudo touch /etc/apt/sources.list.d/cloudfoundry-cli.list
+            echo "deb [trusted=yes] https://packages.cloudfoundry.org/debian stable main" | sudo tee -a /etc/apt/sources.list.d/cloudfoundry-cli.list
+            sudo apt-get update
+            sudo apt-get install dpkg
+            sudo apt-get install cf7-cli
+      - cloudfoundry/auth:
           endpoint: 'https://api.fr.cloud.gov'
           org: gsa-tts-innovation-challenge
           space: dev
-      - run: cf push challenge-portal-dev
+      - run: cf push challenge-portal-dev --strategy rolling
 
   staging-deploy:
     parallelism: 1
@@ -171,11 +181,21 @@ jobs:
       - run: echo -e $STAGING_PUBLIC_CERT > staging_cert.pem
       - run: echo 'export CF_PASSWORD=$CF_PASSWORD_STAGING' >> $BASH_ENV
       - run: echo 'export CF_USERNAME=$CF_USERNAME_STAGING' >> $BASH_ENV
-      - cloudfoundry/install:
+      - run:
+          name: Install Cloud Foundry CLI
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y ca-certificates jq
+            sudo touch /etc/apt/sources.list.d/cloudfoundry-cli.list
+            echo "deb [trusted=yes] https://packages.cloudfoundry.org/debian stable main" | sudo tee -a /etc/apt/sources.list.d/cloudfoundry-cli.list
+            sudo apt-get update
+            sudo apt-get install dpkg
+            sudo apt-get install cf7-cli
+      - cloudfoundry/auth:
           endpoint: 'https://api.fr.cloud.gov'
           org: gsa-tts-innovation-challenge
           space: staging
-      - run: cf push challenge-portal-staging
+      - run: cf push challenge-portal-staging --strategy rolling
 
   prod-deploy:
     parallelism: 1
@@ -189,11 +209,21 @@ jobs:
       - run: echo -e $PRODUCTION_PUBLIC_CERT > production_cert.pem
       - run: echo 'export CF_PASSWORD=$CF_PASSWORD_PRODUCTION' >> $BASH_ENV
       - run: echo 'export CF_USERNAME=$CF_USERNAME_PRODUCTION' >> $BASH_ENV
-      - cloudfoundry/install:
+      - run:
+          name: Install Cloud Foundry CLI
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y ca-certificates jq
+            sudo touch /etc/apt/sources.list.d/cloudfoundry-cli.list
+            echo "deb [trusted=yes] https://packages.cloudfoundry.org/debian stable main" | sudo tee -a /etc/apt/sources.list.d/cloudfoundry-cli.list
+            sudo apt-get update
+            sudo apt-get install dpkg
+            sudo apt-get install cf7-cli
+      - cloudfoundry/auth:
           endpoint: 'https://api.fr.cloud.gov'
           org: gsa-tts-innovation-challenge
           space: prod
-      - run: cf push challenge-portal-production
+      - run: cf push challenge-portal-production --strategy rolling
 
 workflows:
   test-and-deploy:
