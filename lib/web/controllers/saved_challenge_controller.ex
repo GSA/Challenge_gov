@@ -25,7 +25,7 @@ defmodule Web.SavedChallengeController do
     #     {SavedChallenges.all(user, filter: filter, sort: sort), nil}
     #   end
 
-    {saved_challenges, pagination} = {SavedChallenges.all(user, filter: filter, sort: sort), nil}
+    {saved_challenges, _pagination} = {SavedChallenges.all(user, filter: filter, sort: sort), nil}
 
     open_saved_challenges =
       Enum.filter(saved_challenges, fn saved_challenge ->
@@ -41,7 +41,6 @@ defmodule Web.SavedChallengeController do
     |> assign(:user, user)
     |> assign(:open_saved_challenges, open_saved_challenges)
     |> assign(:closed_saved_challenges, closed_saved_challenges)
-    |> assign(:pagination, pagination)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> render("index.html")
@@ -117,7 +116,7 @@ defmodule Web.SavedChallengeController do
   def delete(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
 
-    with {:ok, saved_challenge} <- SavedChallenges.get(id),
+    with {:ok, saved_challenge} <- SavedChallenges.get_saved_challenge(id),
          {:ok, _saved_challenge} <- SavedChallenges.delete(user, saved_challenge) do
       conn
       |> put_flash(:info, "Challenge unsaved")

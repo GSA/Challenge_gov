@@ -13,7 +13,7 @@
         <span class="title"><%= @saved_challenge.challenge.title %></span>
       </p>
       <p class="challenge-tile__info mt-4" aria-label="Remove from saved challenges button">
-        <%= link("Remove", to: Routes.saved_challenge_path(@conn, :delete, @saved_challenge.challenge.id), method: "delete", data: [confirm: "Are you sure you want to unsave this challenge?"], class: "text-danger float-right") %>
+        <%= link("Remove", to: Routes.saved_challenge_path(@conn, :delete, @saved_challenge.id), method: "delete", data: [confirm: "Are you sure you want to unsave this challenge?"], class: "text-danger float-right") %>
       </p>
     </div>
   <% end %>
