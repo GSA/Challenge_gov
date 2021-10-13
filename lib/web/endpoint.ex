@@ -28,7 +28,7 @@ defmodule Web.Endpoint do
     at: "/",
     from: :challenge_gov,
     gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: ~w(css fonts images js favicon.ico robots.txt pdfs)
 
   if Mix.env() == :dev do
     plug(Plug.Static, at: "/uploads", from: "uploads/files")
