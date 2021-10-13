@@ -357,7 +357,7 @@ defmodule Web.Api.ChallengeControllerTest do
       "rules" => "Test rules",
       "types" => [],
       "agency_logo" => Routes.static_url(Web.Endpoint, "/images/agency-logo-placeholder.svg"),
-      "logo" => Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.png"),
+      "logo" => Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.svg"),
       "logo_alt_text" => nil,
       "terms_and_conditions" => "Test terms",
       "non_monetary_prizes" => nil,
