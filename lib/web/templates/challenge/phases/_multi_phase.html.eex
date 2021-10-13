@@ -1,14 +1,11 @@
 <div class="col phase-fields collapse">
   <!-- Phase Form -->
   <div class="nested-items col">
-    <%= if (Map.has_key?(@form, :data) and length(@form.data.phases) > 0) or 
+    <%= if (Map.has_key?(@form, :data) and length(@form.data.phases) > 0) or
       (Map.has_key?(@form.source.changes, :phases) and length(@form.source.changes.phases) > 0) do %>
       <!-- With phases attached or pending -->
       <%= inputs_for(@form, :phases, [skip_hidden: true], fn phase_form -> %>
         <div class="form-collection mb-3" data-index="<%= phase_form.index %>">
-          <%= Enum.map(phase_form.hidden, fn {k, v} -> %>
-            <%= hidden_input(phase_form, k, value: v) %>
-          <% end) %>
           <%= hidden_input(phase_form, :id, class: "id") %>
           <%= hidden_input(phase_form, :judging_criteria) %>
           <%= hidden_input(phase_form, :judging_criteria_delta) %>
@@ -65,7 +62,7 @@
               <% end %>
             </div>
           </div>
-          
+
           <div class="row">
             <%= if phase_form.index != 0 do %>
               <%= hidden_input phase_form, :delete_phase, value: false, class: "delete-phase" %>
@@ -109,7 +106,7 @@
         <div class="form-group nested-form-group row" data-field="open_to_submissions">
           <div class="col">
             <input name="challenge[phases][0][open_to_submissions]" type="hidden" value="true">
-            <label class="template-label" for="challenge_phases_0_open_to_submissions">Challenge is open to submissions during this period</label>          
+            <label class="template-label" for="challenge_phases_0_open_to_submissions">Challenge is open to submissions during this period</label>
           </div>
         </div>
       </div>
