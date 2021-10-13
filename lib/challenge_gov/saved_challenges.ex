@@ -34,6 +34,19 @@ defmodule ChallengeGov.SavedChallenges do
     end
   end
 
+  def get_saved_challenge(id) do
+    SavedChallenge
+    |> where([sc], sc.id == ^id)
+    |> Repo.one()
+    |> case do
+      nil ->
+        {:error, :not_found}
+
+      saved_challenge ->
+        {:ok, saved_challenge}
+    end
+  end
+
   def create(user, challenge) do
     if is_nil(challenge.deleted_at) and Challenges.is_public?(challenge) do
       result =
