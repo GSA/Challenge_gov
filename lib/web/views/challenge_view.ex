@@ -93,9 +93,7 @@ defmodule Web.ChallengeView do
        when not is_nil(auto_publish_date) do
     [
       " (Publishes ",
-      content_tag(:span, "#{SharedView.readable_datetime(auto_publish_date)}",
-        class: "js-local-datetime"
-      ),
+      content_tag(:span, auto_publish_date, class: "js-local-datetime"),
       ")"
     ]
   end

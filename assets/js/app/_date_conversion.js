@@ -11,7 +11,7 @@ $(".js-local-date").each(function() {
 $(".js-local-datetime").each(function() {
   let timeZone = moment.tz.guess(true)
   let utc_time = $(this).text()
-  let local_time = moment(utc_time, "MM/DD/YY hh:mm A z").tz(timeZone).format("MM/DD/YY hh:mm A z")
+  let local_time = moment(utc_time).tz(timeZone).format("MM/DD/YY hh:mm A z")
 
   if (local_time != "Invalid date") { $(this).text(local_time) }
 })

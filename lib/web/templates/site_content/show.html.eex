@@ -45,7 +45,7 @@
               </dd>
             <% end %>
 
-            <%= if @content.end_date do %>
+            <%= if @content.section === "site_wide_banner" and @content.end_date do %>
               <dt>
                 <span class="text-bold">End date: </span>
               </dt>
