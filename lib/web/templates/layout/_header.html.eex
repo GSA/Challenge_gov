@@ -1,7 +1,7 @@
 <nav class="header navbar navbar-expand-lg navbar-light">
-  <%= link(to: Routes.public_page_path(@conn, :index), class: "navbar-brand", href: "#") do %>
+  <a href="#" class="navbar-brand">
     <img src='<%= Routes.static_path(@conn, "/images/challenge-logo.svg") %>' alt="Challenge Gov Logo" title="Challenge Gov" class="header__challenge-logo">
-  <% end %>
+  </a>
 
   <%= if Mix.env() == :dev do %>
     <%= button("Dev Accounts", to: Routes.dev_accounts_page_path(@conn, :dev_accounts), method: :get, class: "btn btn-primary") %>

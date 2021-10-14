@@ -40,10 +40,10 @@
       <% u -> %>
       <%= if view_module(@conn) != Web.TermsController and view_module(@conn) != Web.TermsView and view_module(@conn) != Web.AccessView do %>
         <aside class="main-sidebar sidebar-light-primary challenge_sidebar">
-          <%= link(to: Routes.public_page_path(@conn, :index), class: "brand-link") do %>
+          <a href="https://www.challenge.gov" class="brand-link">
             <i class="ml-3 nav-icon fas fa-home"></i>
             <span class="ml-1 brand-text font-weight-light">Challenge.gov</span>
-          <% end %>
+          </a>
           <div class="sidebar">
             <%= if Accounts.role_at_or_below(u, "solver") do %>
               <%= render Web.LayoutView, "side_nav/_solver.html", conn: @conn, user: u %>
@@ -113,4 +113,4 @@
           <% end%>
         </div>
       </aside>
-    </div>      
+    </div>

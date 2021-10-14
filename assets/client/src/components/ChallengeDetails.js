@@ -194,7 +194,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
       if (phaseInFuture(phases[0])) {
         submissionPeriodText += `Coming soon / Open on ${formatDateTime(phase.start_date)}`
       } else if (phaseIsCurrent(phase)) {
-        submissionPeriodText += `Opens until ${formatDateTime(phase.end_date)}`
+        submissionPeriodText += `Open until ${formatDateTime(phase.end_date)}`
       } else if (phaseInPast(phase)) {
         submissionPeriodText += `Closed on ${formatDateTime(phase.end_date)}`
       }
