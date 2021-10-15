@@ -46,8 +46,10 @@ defmodule ChallengeGov.Phases do
   def is_current?(_phase), do: false
 
   def is_past?(%{end_date: end_date}) do
-    now = DateTime.utc_now()
-    DateTime.compare(now, end_date) === :gt
+    if end_date do
+      now = DateTime.utc_now()
+      DateTime.compare(now, end_date) === :gt
+    end
   end
 
   def is_past?(_phase), do: false

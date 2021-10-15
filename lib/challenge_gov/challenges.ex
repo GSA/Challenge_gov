@@ -232,6 +232,11 @@ defmodule ChallengeGov.Challenges do
       a when a == "save_draft" ->
         Challenge.draft_changeset(struct, params, action)
 
+      a when a == "back" ->
+        if struct.status === "draft",
+          do: Challenge.draft_changeset(struct, params, action),
+          else: Challenge.section_changeset(struct, params, action)
+
       _ ->
         Challenge.section_changeset(struct, params, action)
     end
