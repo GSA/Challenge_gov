@@ -229,8 +229,13 @@ defmodule ChallengeGov.Challenges do
     struct = challenge_form_preload(struct)
 
     case action do
-      a when a == "back" or a == "save_draft" ->
+      a when a == "save_draft" ->
         Challenge.draft_changeset(struct, params, action)
+
+      a when a == "back" ->
+        if struct.status === "draft",
+          do: Challenge.draft_changeset(struct, params, action),
+          else: Challenge.section_changeset(struct, params, action)
 
       _ ->
         Challenge.section_changeset(struct, params, action)
