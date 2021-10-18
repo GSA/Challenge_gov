@@ -21,17 +21,61 @@
 
 <section class="content">
   <div class="container-fluid">
-    <div>
-      <%= link("FAQ", to: Routes.static_path(@conn, "/pdfs/challenge_manager_faq.pdf"), target: "_blank") %>
-    </div>
-    <div>
-      <%= link("User guide", to: Routes.static_path(@conn, "/pdfs/challenge_manager_user_guide.pdf"), target: "_blank") %>
-    </div>
-    <div>
-      <%= link("Toolkit", to: Routes.static_path(@conn, "/pdfs/prize_and_challenge_toolkit.pdf"), target: "_blank") %>
-    </div>
-    <div>
-      <%= link("Creating a new challenge", to: Routes.static_path(@conn, "/pdfs/creating_new_challenge.pdf"), target: "_blank") %>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card help-card p-4 my-5 mx-auto">
+          <h3 class="text-center mb-4 font-weight-bold">Getting started</h3>
+          <div class="d-flex flex-row justify-content-around mt-4">
+            <div class="text-center help-card__section">
+              <i class="dashboard-card-icon fa fa-question-circle"></i>
+              <h4 class="m-4">FAQs</h4>
+              <p>Check out our <%= link("frequently asked questions", to: Routes.static_path(@conn, "/pdfs/challenge_manager_faq.pdf"), target: "_blank") %> on challenge and submission management.</p>
+            </div>
+            <span class="vr-light">&nbsp;</span>
+            <div class="text-center help-card__section">
+              <i class="dashboard-card-icon fas fa-book-open"></i>
+              <h4 class="m-4">User Guide</h4>
+              <p>Our <%= link("User guide", to: Routes.static_path(@conn, "/pdfs/challenge_manager_user_guide.pdf"), target: "_blank") %> is full of useful information on how to get started.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card help-card p-4 my-5 mx-auto">
+          <div class="d-flex flex-row justify-content-around py-3">
+            <div class="w-50 px-5 my-auto">
+              <h3 class="mb-4 font-weight-bold">Question about creating a challenge?</h3>
+              <span>View detailed information in the <%= link("Creating a new challenge", to: Routes.static_path(@conn, "/pdfs/creating_new_challenge.pdf"), target: "_blank") %> document.</span>
+            </div>
+            <div class="text-center w-50">
+              <img src="/images/challenge_details_page.svg" alt="example challenge details page" title="Challenge details page" class="help-card-image"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="card help-card p-4 my-5 mx-auto">
+          <div class="d-flex flex-row py-4">
+            <div class="help-card-icon text-center w-25">
+              <i class="align-self-center fa fa-tools"></i>
+            </div>
+            <div class="w-50 mx-5 my-auto">
+              <h3 class="mb-4 font-weight-bold">Federal employee toolkit</h3>
+              <span>For more information see the <%= link("Prize and Challenge Toolkit", to: Routes.static_path(@conn, "/pdfs/prize_and_challenge_toolkit.pdf"), target: "_blank") %>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card help-card p-4 my-5 mx-auto">
+          <div class="d-flex flex-row py-4">
+            <div class="text-center w-25">
+              <img src="/images/click.svg" alt="hand " title="Contact indication" />
+            </div>
+            <div class="w-50 mx-5 my-auto">
+              <h3 class="mb-4 font-weight-bold">For technical issues with the platform</h3>
+              <span>Contact <a href="mailto: team@challenge.gov" target="_blank">team@challenge.gov</a> for help.</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
