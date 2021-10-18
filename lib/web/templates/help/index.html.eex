@@ -30,5 +30,8 @@
     <div>
       <%= link("Toolkit", to: Routes.static_path(@conn, "/pdfs/prize_and_challenge_toolkit.pdf"), target: "_blank") %>
     </div>
+    <div>
+      <%= link("Creating a new challenge", to: Routes.static_path(@conn, "/pdfs/creating_new_challenge.pdf"), target: "_blank") %>
+    </div>
   </div>
 </section>
