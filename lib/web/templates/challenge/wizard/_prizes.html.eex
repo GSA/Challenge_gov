@@ -24,9 +24,14 @@
   <%= FormView.currency_field(@form, :prize_total, label: "Total cash prizes offered", required: true) %>
 </div>
 <p class="ml-2 text-muted">Provide the total cash prize pool.</p>
+
+<br/>
+
 <div class="js-non-monetary-prize collapse">
   <%= FormView.text_field(@form, :non_monetary_prizes, label: "Non-monetary prize award", required: true) %>
 </div>
+
+<br/>
 
 <div class="col">
   <label for="challenge_prize_description">Prize description / breakdown (optional)</label>
