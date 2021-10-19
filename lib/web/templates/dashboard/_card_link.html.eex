@@ -1,5 +1,5 @@
 <div class="dashboard-card col-md-6">
-  <a class="card m-3 text-dark" href="<%= @target %>">
+  <a class="card m-3 text-dark" href="<%= @to %>" target="<%= @target %>">
     <div class="card-body d-flex align-items-center">
       <div class="dashboard-card__icon-container">
         <%= @icon %>
