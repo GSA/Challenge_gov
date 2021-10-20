@@ -101,12 +101,13 @@ mix compile
 
 This sets up your basic elixir environment. Next setup the database. The following commands will create and migrate locally, as well as migrate seeds.
 
-### Super-Admin (optional)
-If you would like to seed the database with a default super-admin user, please set the following environment variables:
+Super-Admin (optional) -- If you would like to seed the database with a default super-admin user, please set the following environment variables:
 
 - FIRST_USER_EMAIL
 - FIRST_USER_FN
 - FIRST_USER_LN
+
+Setup and seed the database
 
 ```bash
 mix ecto.create
