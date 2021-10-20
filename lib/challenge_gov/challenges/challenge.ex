@@ -116,6 +116,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:announcement_datetime, :utc_datetime)
     field(:gov_delivery_topic, :string)
     field(:gov_delivery_subscribers, :integer, default: 0)
+    field(:short_url, :string)
 
     field(:upload_logo, :boolean)
     field(:is_multi_phase, :boolean)
@@ -324,7 +325,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :prize_type,
       :how_to_enter_link,
       :announcement,
-      :announcement_datetime
+      :announcement_datetime,
+      :short_url
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)

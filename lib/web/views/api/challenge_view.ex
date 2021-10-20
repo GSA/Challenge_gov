@@ -157,7 +157,8 @@ defmodule Web.Api.ChallengeView do
       winner_information: challenge.winner_information,
       winner_image: ChallengeView.winner_img_url(challenge),
       gov_delivery_topic_subscribe_link: GovDelivery.public_subscribe_link(challenge),
-      subscriber_count: Challenges.subscriber_count(challenge)
+      subscriber_count: Challenges.subscriber_count(challenge),
+      short_url: challenge.short_url
     }
   end
 end

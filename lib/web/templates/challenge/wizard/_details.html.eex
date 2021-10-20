@@ -73,6 +73,17 @@
   <%= FormView.text_field(@form, :custom_url, label: nil, placeholder: "my-custom-challenge-name") %>
 </div>
 
+<br/>
+
+<%= if Accounts.has_admin_access?(@user) do %>
+  <div class="form-group">
+    <%= FormView.text_field(@form, :short_url, label: "Short url (optional)", placeholder: "https://go.usa.gov/lmnop") %>
+    <p class="text-muted">The short url will be used for social media and posting purposes.</p>
+  </div>
+  <br/>
+<% end %>
+
+
 <%= FormView.text_field(@form, :external_url, label: "Existing external challenge link (optional)") %>
 <p class="ml-2 text-muted">If the challenge is hosted outside of the Challenge.gov platform, enter the link for users to visit that website.</p>
 
