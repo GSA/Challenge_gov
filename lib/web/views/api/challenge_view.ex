@@ -71,8 +71,7 @@ defmodule Web.Api.ChallengeView do
     %{
       id: event.id,
       title: event.title,
-      body: event.body,
-      occurs_on: event.occurs_on
+      occurs_on: event.date
     }
   end
 
@@ -91,7 +90,7 @@ defmodule Web.Api.ChallengeView do
       upload_logo: challenge.upload_logo,
       events:
         render_many(
-          challenge.events,
+          challenge.timeline_events,
           __MODULE__,
           "event.json",
           as: :event
