@@ -506,7 +506,16 @@ label {
 
 .dashboard-card-icon {
   color: $orange-30v;
-  font-size: 3em;;
+  font-size: 3em;
+}
+
+.help-card-icon {
+  color: $orange-30v;
+  font-size: 4em;
+}
+
+.help-card-image {
+  max-width: 178px;
 }
 
 .btn:focus {

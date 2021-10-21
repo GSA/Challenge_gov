@@ -27,7 +27,7 @@ defmodule Seeds.SeedModules.Submissions do
         "title" => "Seeded Title",
         "brief_description" => "Seeded brief description",
         "description" => "Seeded long description",
-        "terms_accepted" => true,
+        "terms_accepted" => "true",
         "external_url" => "https://www.example.com",
       }, solver, challenge, phase)
 
