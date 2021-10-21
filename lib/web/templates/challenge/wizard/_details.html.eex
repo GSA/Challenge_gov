@@ -3,14 +3,18 @@
 <h4>Add challenge details</h4>
 <br/>
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
-<br/>
 
 <%= FormView.text_field(@form, :title, label: "Challenge title (90 character limit)", limit: 90, required: true) %>
 <p class="ml-2 text-muted">Provide the official title of your challenge. Your challenge title will appear in your challenge’s listing tile on the Challenge.gov homepage.</p>
+
+<br/>
+
 <%= FormView.text_field(@form, :tagline, label: "Tagline (400 character limit)", limit: 400, required: true) %>
 <p class="ml-2 text-muted">Provide a clear one-sentence call to action for solvers - essentially your challenge’s headline. It is required that taglines be limited to 90 characters or less. The tagline will also appear at the top of your individual challenge page, and on the challenge preview tile.</p>
 
+<br/>
 <hr/>
+<br/>
 
 <%= FormView.select_field(@form, :primary_type, collection: Challenges.challenge_types(), class: "js-challenge-type", label: "Primary challenge type (select from list)", prompt: "", required: true) %>
 <p class="ml-2 text-muted">Select a category that best describes your challenge.</p>
@@ -24,6 +28,9 @@
     <%= error_tag(@form, :types) %>
   </div>
 </div>
+
+<br/>
+
 <div class="<%= FormView.form_group_classes(@form, :types) %>">
   <label for="challenge_types" class="col">Additional challenge type <em>(optional)</em></label>
   <div class="col">
@@ -34,6 +41,9 @@
     <%= error_tag(@form, :types) %>
   </div>
 </div>
+
+<br/>
+
 <div class="<%= FormView.form_group_classes(@form, :types) %>">
   <label for="challenge_types" class="col">Additional challenge type <em>(optional)</em></label>
   <div class="col">
@@ -44,10 +54,15 @@
     <%= error_tag(@form, :types) %>
   </div>
 </div>
+
+<br/>
+
 <%= FormView.text_field(@form, :other_type, label: "Other challenge type (optional) (45 character limit)", limit: 45) %>
 <p class="ml-2 text-muted">Free type a category that best describe your challenge</p>
 
+<br/>
 <hr/>
+<br/>
 
 <div class="form-group">
   <%= label @form, :custom_url, "Custom url (optional)", class: "col-md-4" %>
@@ -58,9 +73,23 @@
   <%= FormView.text_field(@form, :custom_url, label: nil, placeholder: "my-custom-challenge-name") %>
 </div>
 
+<br/>
+
+<%= if Accounts.has_admin_access?(@user) do %>
+  <div class="form-group">
+    <%= FormView.text_field(@form, :short_url, label: "Short url (optional)", placeholder: "https://go.usa.gov/lmnop") %>
+    <p class="text-muted">The short url will be used for social media and posting purposes.</p>
+  </div>
+  <br/>
+<% end %>
+
+
 <%= FormView.text_field(@form, :external_url, label: "Existing external challenge link (optional)") %>
 <p class="ml-2 text-muted">If the challenge is hosted outside of the Challenge.gov platform, enter the link for users to visit that website.</p>
+
+<br/>
 <hr/>
+<br/>
 
 <div class="col">
   <label for="brief_description">Short description (200 character limit)</label>
@@ -68,13 +97,17 @@
   <p class="ml-2 text-muted">Provide a general overview of your challenge, including any background on the problem you’re trying to solve.</p>
 </div>
 
+<br/>
+
 <div class="col">
   <label><%= "Long description (15000 character limit)" %> <span class="required">*</span></label>
   <%= FormView.rt_textarea_field(@form, :description, limit: 15000) %>
   <p class="ml-2 text-muted">Provide a detailed overview of your challenge, including any background on the problem you’re trying to solve, and any key dates you want to highlight.</p>
 </div>
 
+<br/>
 <hr/>
+<br/>
 
 <div class="challenge-file-upload col" data-section=<%= @section %>>
   <label class="control-label">Upload additional description materials (optional)</label>
@@ -102,7 +135,9 @@
   </div>
 </div>
 
+<br/>
 <hr/>
+<br/>
 
 <div class="col">
   <label class="control-label"><%= FormView.label_field @form, :upload_logo, label: "Upload challenge logo", required: true %></label>
@@ -142,6 +177,7 @@
   </div>
 </div>
 
+<br/>
 <hr/>
 <br/>
 
