@@ -101,12 +101,13 @@ mix compile
 
 This sets up your basic elixir environment. Next setup the database. The following commands will create and migrate locally, as well as migrate seeds.
 
-### Super-Admin (optional)
-If you would like to seed the database with a default super-admin user, please set the following environment variables:
+Super-Admin (optional) -- If you would like to seed the database with a default super-admin user, please set the following environment variables:
 
 - FIRST_USER_EMAIL
 - FIRST_USER_FN
 - FIRST_USER_LN
+
+Setup and seed the database
 
 ```bash
 mix ecto.create
@@ -128,11 +129,9 @@ Now you can run the server.
 mix phx.server
 ```
 
-## Private Keys
+## Development
 
-In order to spin up challenge.gov on your local machine it may be necessary to obtain private keys manually.
-
-Contact [team@challenge.gov](team@challenge.gov) with subject heading 'Open-Source Development Access' to take part.
+Gain access to the portal by going to http://localhost:4000/ and clicking on 'Dev Accounts' to select and sign in under different user roles.
 
 ## Testing
 
