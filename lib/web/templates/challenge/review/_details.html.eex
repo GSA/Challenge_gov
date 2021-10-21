@@ -25,6 +25,13 @@
   <div><%= ChallengeView.public_details_url(@challenge) %></div>
 </div>
 <br/>
+<%= if Accounts.has_admin_access?(@user) and @challenge.short_url do %>
+  <div>
+    <div class="text-bold">Short url:</div>
+    <div><%= @challenge.short_url %></div>
+  </div>
+  <br/>
+<% end %>
 <div>
   <div class="text-bold">External url:</div>
   <div><%= @challenge.external_url %></div>
