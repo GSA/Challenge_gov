@@ -572,8 +572,17 @@ form {
 
   /* (submission show) */
 
-  .editor-text-reset {
+  .editor-text-submissions {
     padding: 0 7.5px;
+
+    p {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  .editor-text-reset {
+    padding: 0;
 
     p {
       padding: 0;

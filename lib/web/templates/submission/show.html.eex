@@ -39,11 +39,11 @@
             </div>
             <div class="form-group">
               <label class="col"><strong>Brief description:</strong></label>
-              <div class="col ql-editor editor-text-reset"><%= SharedView.render_safe_html(@submission.brief_description) %></div>
+              <div class="col ql-editor editor-text-submissions"><%= SharedView.render_safe_html(@submission.brief_description) %></div>
             </div>
             <div class="form-group">
               <label class="col"><strong>Description:</strong></label>
-              <div class="col ql-editor editor-text-reset"><%= SharedView.render_safe_html(@submission.description) %></div>
+              <div class="col ql-editor editor-text-submissions"><%= SharedView.render_safe_html(@submission.description) %></div>
             </div>
             <%= if @submission.external_url do %>
               <div class="form-group">

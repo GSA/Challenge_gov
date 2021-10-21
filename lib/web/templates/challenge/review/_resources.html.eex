@@ -26,5 +26,5 @@
 <br/>
 <div>
   <div class="text-bold">Frequently asked questions:</div>
-  <div><%= SharedView.render_safe_html(@challenge.faq) %></div>
+  <div class="editor-text-reset"><%= SharedView.render_safe_html(@challenge.faq) %></div>
 </div>
