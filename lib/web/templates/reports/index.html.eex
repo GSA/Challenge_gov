@@ -62,3 +62,32 @@
     </div>
   </div>
 </section>
+
+<hr class="ch-report-hr"/>
+
+<section class="content">
+  <div class="row">
+    <div class="dap-file-upload content-sub-1">
+      <h4 class="box-title mb-5">Upload DAP reports</h4>
+      <label for="dap_file_name" class="control-label">File name (optional)</label>
+      <input class="dap_file_name form-control" type="text">
+      <br/>
+      <input class="dap_report_file form-file-control" type="file">
+      <div class="dap_report_upload btn btn-primary">Upload file</div>
+      <div class="dap_report_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+      <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
+
+      <div class="dap_uploaded_report">
+        <i class="fa fa-paperclip mr-1"></i>
+        <%= link(Web.DocumentView.name(@report), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
+        <%= link to: "", data: [document_id: document.id], class: "dap_uploaded_report_delete" do %>
+          <i class="fa fa-trash"></i>
+        <% end %>
+      </div>
+
+      <div class="challenge_uploaded_documents my-5">
+        link to uploaded docs
+      </div>
+    </div>
+  </div>
+</section>
