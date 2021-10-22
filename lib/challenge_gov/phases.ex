@@ -38,12 +38,21 @@ defmodule ChallengeGov.Phases do
     |> preload([:submissions, challenge: [:challenge_managers]])
   end
 
+  def is_current?(%{start_date: nil, end_date: _}), do: false
+
+  def is_current?(%{start_date: start_date, end_date: nil}) do
+    now = DateTime.utc_now()
+    DateTime.compare(now, start_date) === :gt
+  end
+
   def is_current?(%{start_date: start_date, end_date: end_date}) do
     now = DateTime.utc_now()
     DateTime.compare(now, start_date) === :gt && DateTime.compare(now, end_date) === :lt
   end
 
   def is_current?(_phase), do: false
+
+  def is_past?(%{end_date: nil}), do: false
 
   def is_past?(%{end_date: end_date}) do
     if end_date do
@@ -53,6 +62,8 @@ defmodule ChallengeGov.Phases do
   end
 
   def is_past?(_phase), do: false
+
+  def is_future?(%{start_date: nil}), do: false
 
   def is_future?(%{start_date: start_date}) do
     now = DateTime.utc_now()
