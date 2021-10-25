@@ -24,7 +24,6 @@ config :challenge_gov, ChallengeGov.Mailer,
 config :wallaby,
   otp_app: :challenge_gov,
   js_logger: nil,
-  js_errors: false,
   screenshot_on_failure: true
 
 config :challenge_gov, :sql_sandbox, true
