@@ -283,14 +283,14 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
             "phases" => %{
               "0" => %{
                 "title" => "Test",
-                "start_date" => TestHelpers.iso_timestamp(hours: -4),
-                "end_date" => TestHelpers.iso_timestamp(hours: -3),
+                "start_date" => TestHelpers.iso_timestamp(months: -5),
+                "end_date" => TestHelpers.iso_timestamp(months: -4),
                 "open_to_submissions" => "true"
               },
               "1" => %{
                 "title" => "Test 2",
-                "start_date" => TestHelpers.iso_timestamp(hours: -2),
-                "end_date" => TestHelpers.iso_timestamp(hours: -1),
+                "start_date" => TestHelpers.iso_timestamp(months: -3, hours: -2),
+                "end_date" => TestHelpers.iso_timestamp(months: -3, hours: -1),
                 "open_to_submissions" => "false"
               }
             }

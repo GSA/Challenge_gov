@@ -360,7 +360,7 @@ defmodule ChallengeGov.Challenges do
     )
     |> where(
       [c],
-      c.archive_date < ^Timex.shift(DateTime.utc_now(), months: -3)
+      c.archive_date < ^DateTime.utc_now()
     )
     |> where([c], not is_nil(c.gov_delivery_topic))
     |> Repo.all()
