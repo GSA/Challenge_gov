@@ -56,8 +56,7 @@ $(".dap_uploaded_report").on("click", ".dap_uploaded_report_delete", function(e)
 
   document_id = $(this).data("document-id")
 
-  parentComponent = $(this).parents(".dap-file-upload")
-  uploadedReport = parentComponent.find(".dap_uploaded_report")
+  parent_element = $(this).parent()
 
   $.ajax({
     url: `/api/dap_reports/${document_id}`,
@@ -65,7 +64,7 @@ $(".dap_uploaded_report").on("click", ".dap_uploaded_report_delete", function(e)
     processData: false,
     contentType: false,
     success: function(res) {
-      uploadedReport.remove()
+      parent_element.remove()
     },
     error: function(err) {
       console.log("Something went wrong")
