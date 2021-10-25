@@ -21,7 +21,11 @@ config :challenge_gov, ChallengeGov.Mailer,
   from: "challenge_gov@example.com",
   adapter: Bamboo.TestAdapter
 
-config :wallaby, otp_app: :challenge_gov, js_logger: nil, screenshot_on_failure: true
+config :wallaby,
+  otp_app: :challenge_gov,
+  js_logger: nil,
+  js_errors: false,
+  screenshot_on_failure: true
 
 config :challenge_gov, :sql_sandbox, true
 
