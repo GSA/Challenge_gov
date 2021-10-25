@@ -12,7 +12,7 @@
       <% end %>
       
       <%= if Challenges.allowed_to_edit(@user, @challenge) do %>
-        <%= if length(Challenges.get_closed_phases(@challenge)) > 0 do %>
+        <%= if length(Challenges.get_closed_phases(@challenge)) > 0 and @challenge.status != "draft" do %>
           <%= link("Add winners", to: Routes.phase_winner_path(@conn, :index, @challenge.id), class: "btn btn-primary") %>
         <% else %>
           <%= link("Add winners", to: "#", class: "btn btn-primary disabled", disabled: true) %>
