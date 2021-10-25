@@ -6,6 +6,7 @@ defmodule Web.MessageContextView do
   alias ChallengeGov.Submissions
 
   alias Web.AccountView
+  alias Web.ChallengeView
   alias Web.FormView
   alias Web.SharedView
 
@@ -44,22 +45,29 @@ defmodule Web.MessageContextView do
     |> Enum.join(", ")
   end
 
-  def display_challenge_title_link(message_context = %{context: "challenge"}) do
+  def display_challenge_title_link(message_context, user \\ nil)
+
+  def display_challenge_title_link(message_context = %{context: "challenge"}, user) do
     challenge = MessageContexts.get_context_record(message_context) || %{title: ""}
 
     link(challenge.title,
-      to: Routes.challenge_path(Web.Endpoint, :show, message_context.context_id)
+      to: challenge_url(user, challenge)
     )
   end
 
-  def display_challenge_title_link(message_context = %{context: "solver"}) do
+  def display_challenge_title_link(message_context = %{context: "solver"}, user) do
     message_context = Repo.preload(message_context, [:parent])
     challenge = MessageContexts.get_context_record(message_context.parent) || %{title: ""}
 
     link(challenge.title,
-      to: Routes.challenge_path(Web.Endpoint, :show, message_context.parent.context_id)
+      to: challenge_url(user, challenge)
     )
   end
+
+  def challenge_url(%{role: "solver"}, challenge), do: ChallengeView.public_details_url(challenge)
+
+  def challenge_url(_user, challenge),
+    do: Routes.challenge_path(Web.Endpoint, :show, challenge.id)
 
   def display_last_author_name(message_context) do
     last_author = get_last_author(message_context)
