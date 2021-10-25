@@ -13,6 +13,14 @@ defmodule Web.DocumentView do
     end
   end
 
+  def name(document, name) do
+    if !is_nil(name) and name != "" do
+      "#{name}#{document.extension}"
+    else
+      "#{document.filename}"
+    end
+  end
+
   def filename(document) do
     if !is_nil(document.name) and document.name != "" do
       document.name

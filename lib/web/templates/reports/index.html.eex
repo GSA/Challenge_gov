@@ -77,15 +77,7 @@
       <div class="dap_report_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
       <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
 
-      <div class="dap_uploaded_report">
-        <i class="fa fa-paperclip mr-1"></i>
-        <%= link(Web.DocumentView.name(@report), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
-        <%= link to: "", data: [document_id: document.id], class: "dap_uploaded_report_delete" do %>
-          <i class="fa fa-trash"></i>
-        <% end %>
-      </div>
-
-      <div class="challenge_uploaded_documents my-5">
+      <div class="dap_uploaded_report my-5">
         link to uploaded docs
       </div>
     </div>

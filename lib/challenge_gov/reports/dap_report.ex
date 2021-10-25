@@ -1,4 +1,4 @@
-defmodule ChallengeGov.Reports.DAPReport do
+defmodule ChallengeGov.Reports.DapReport do
   @moduledoc """
   DAP Report schema
   """
@@ -13,16 +13,12 @@ defmodule ChallengeGov.Reports.DAPReport do
     field(:filename, :string)
     field(:key, Ecto.UUID)
     field(:extension, :string)
-    field(:deleted_at, :utc_datetime)
 
     timestamps(type: :utc_datetime_usec)
   end
 
   def create_changeset(struct, file, key, custom_name \\ "") do
-    name =
-      if is_nil(custom_name) or String.trim(custom_name) === "",
-        do: file.filename,
-        else: custom_name
+    name = Web.DocumentView.name(file, custom_name)
 
     struct
     |> change()

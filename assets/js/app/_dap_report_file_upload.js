@@ -4,17 +4,9 @@ $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
   jqXHR.setRequestHeader('X-CSRF-Token', csrf_token);
 });
 
-// Q: what's ".dap_report_file"
-// A: choose file button
-
-// Q: what's ".dap_file_upload"
-// A: upload button
-
 $(".dap-file-upload").on("change", ".dap_report_file", function() {
   $(this).removeClass("is-invalid")
 })
-
-// function(e)?
 
 $(".dap-file-upload").on("click", ".dap_report_upload", function() {
   parentComponent = $(this).parents(".dap-file-upload")
@@ -23,8 +15,8 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
   name = nameInput.val()
 
   fileInput = $(this).siblings(".dap_report_file")
-  // ?
   file = fileInput.prop("files")[0]
+  uploadedReport = parentComponent.find(".dap_uploaded_report")
 
   fd = new FormData()
   fd.append("document[file]", file)
@@ -41,11 +33,11 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
         $(nameInput).val("")
         $(fileInput).val("")
 
-        challengeDocuments.append(`
+        uploadedReport.append(`
           <div>
             <i class="fa fa-paperclip mr-1"></i>
-            <a href=${document.url} target="_blank">${document.display_name}</a>
-            <a href="" data-document-id=${document.id} class="challenge_uploaded_document_delete">
+            <a href=${document.url} target="_blank">${document.filename}</a>
+            <a href="" data-document-id=${document.id} class="dap_uploaded_report_delete">
               <i class="fa fa-trash"></i>
             </a>
           </div>
@@ -61,17 +53,20 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
 
 $(".dap_uploaded_report").on("click", ".dap_uploaded_report_delete", function(e) {
   e.preventDefault()
+  console.log("In here?")
 
   document_id = $(this).data("document-id")
-  parent_element = $(this).parent()
+
+  parentComponent = $(this).parents(".dap-file-upload")
+  uploadedReport = parentComponent.find(".dap_uploaded_report")
 
   $.ajax({
-    url: `/api/documents/${document_id}`,
+    url: `/api/dap_reports/${document_id}`,
     type: "delete",
     processData: false,
     contentType: false,
     success: function(res) {
-      parent_element.remove()
+      uploadedReport.remove()
     },
     error: function(err) {
       console.log("Something went wrong")
