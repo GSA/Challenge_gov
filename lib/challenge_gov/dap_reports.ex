@@ -3,6 +3,8 @@ defmodule ChallengeGov.Reports.DapReports do
   Context for creating a report
   """
 
+  import Ecto.Query
+
   alias ChallengeGov.Repo
   alias ChallengeGov.Reports.DapReport
   alias Stein.Storage
@@ -18,6 +20,15 @@ defmodule ChallengeGov.Reports.DapReports do
       document ->
         {:ok, document}
     end
+  end
+
+  def all_last_six_months() do
+    last_six_months = Timex.shift(DateTime.utc_now(), months: -6)
+
+    DapReport
+    |> where([r], r.inserted_at > ^last_six_months)
+    |> order_by([r], desc: r.inserted_at, desc: r.id)
+    |> Repo.all()
   end
 
   @doc """

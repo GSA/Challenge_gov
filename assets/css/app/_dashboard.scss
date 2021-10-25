@@ -22,3 +22,12 @@
     max-width: 350px;
   }
 }
+
+// Analytics
+
+.dap-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  row-gap: .5rem;
+  grid-gap: 1rem;
+}

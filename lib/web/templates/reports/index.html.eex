@@ -78,7 +78,7 @@
       <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
 
       <div class="dap_uploaded_report my-5">
-        link to uploaded docs
+        View all reports currently on display <%= link("here", to: Routes.analytics_path(@conn, :index))%>
       </div>
     </div>
   </div>
