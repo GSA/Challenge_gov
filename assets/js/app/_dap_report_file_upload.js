@@ -53,7 +53,6 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
 
 $(".dap_uploaded_report").on("click", ".dap_uploaded_report_delete", function(e) {
   e.preventDefault()
-  console.log("In here?")
 
   document_id = $(this).data("document-id")
 

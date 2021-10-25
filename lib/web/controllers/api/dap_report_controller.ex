@@ -5,6 +5,7 @@ defmodule Web.Api.DapReportController do
   alias Web.ErrorView
 
   action_fallback(Web.FallbackController)
+  plug(Web.Plugs.EnsureRole, [:admin, :super_admin])
 
   def create(conn, %{"document" => params}) do
     %{current_user: user} = conn.assigns
