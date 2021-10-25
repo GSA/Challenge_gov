@@ -203,6 +203,7 @@ defmodule Web.Router do
 
     resources("/documents", DocumentController, only: [:create, :delete])
     resources("/submission_documents", SubmissionDocumentController, only: [:create, :delete])
+    resources("/dap_reports", DapReportController, only: [:create, :delete])
 
     put("/submissions/:id/:judging_status", SubmissionController, :update_judging_status)
 

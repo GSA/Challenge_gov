@@ -1,36 +1,63 @@
 <div class="p-3">
   <div class="content-header">
     <h1>Challenge.gov analytics</h1>
-    <p>Snapshot of all Challenges across the Challenge.gov platform</p>
+    <p class="pl-0">Snapshot of all Challenges across the Challenge.gov platform</p>
+  </div>
 
-    <div class="row" style="font-size: 1.5rem;">
-      <div class="col">
-        <p>Total active</p>
+  <%= if length(@dap_reports) > 0 do %>
+    <div class="content">
+      <div class="container" style="max-width: unset">
+        <h3>DAP Reports</h3>
+        <p class="pl-0">Reports for the last 6 months</p>
         <div class="card">
-          <div class="card-body" style="text-align: center; font-size: 3rem;">
-            <%= @active_challenges_count %>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <p>Total archived</p>
-        <div class="card">
-          <div class="card-body" style="text-align: center; font-size: 3rem;">
-            <%= @archived_challenges_count %>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <p>Total in draft</p>
-        <div class="card">
-          <div class="card-body" style="text-align: center; font-size: 3rem;">
-            <%= @draft_challenges_count %>
+          <div class="card-body dap-grid">
+            <%= Enum.map(@dap_reports, fn report -> %>
+              <div class="row">
+                <div class="col text-center">
+                  <a href="<%= DapReports.download_report_url(report) %>" target="_blank"><%= report.filename %></a>
+                </div>
+              </div>
+            <% end) %>
           </div>
         </div>
       </div>
     </div>
+
+    <br/>
     <hr/>
+    <br/>
+  <% end %>
+
+  <div class="row" style="font-size: 1.5rem;">
+    <div class="col">
+      <p>Total active</p>
+      <div class="card">
+        <div class="card-body" style="text-align: center; font-size: 3rem;">
+          <%= @active_challenges_count %>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <p>Total archived</p>
+      <div class="card">
+        <div class="card-body" style="text-align: center; font-size: 3rem;">
+          <%= @archived_challenges_count %>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <p>Total in draft</p>
+      <div class="card">
+        <div class="card-body" style="text-align: center; font-size: 3rem;">
+          <%= @draft_challenges_count %>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <br/>
+  <hr/>
+  <br/>
 
   <div class="content">
     <div class="container" style="max-width: unset">

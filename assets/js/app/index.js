@@ -23,6 +23,7 @@ import "./_sub_agency_select.js";
 import "./_table.js";
 import "./_timezone.js";
 import "./_expand_breadcrumbs.js";
+import "./_dap_report_file_upload.js";
 
 // Wizard specific JS (Dependent on some above JS)
 import "./_challenge_wizard_details.js"; 

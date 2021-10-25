@@ -3,6 +3,7 @@ defmodule Web.AnalyticsController do
 
   alias ChallengeGov.Agencies
   alias ChallengeGov.Analytics
+  alias ChallengeGov.Reports.DapReports
 
   plug(Web.Plugs.EnsureRole, [:super_admin, :admin, :challenge_manager])
 
@@ -51,6 +52,8 @@ defmodule Web.AnalyticsController do
     participating_lead_agencies =
       Analytics.participating_lead_agencies(challenges, filter_year_range)
 
+    dap_reports = DapReports.all_last_six_months()
+
     conn
     |> assign(:user, user)
     |> assign(:agencies, agencies)
@@ -64,6 +67,7 @@ defmodule Web.AnalyticsController do
     |> assign(:total_cash_prizes, total_cash_prizes)
     |> assign(:challenges_by_legal_authority, challenges_by_legal_authority)
     |> assign(:participating_lead_agencies, participating_lead_agencies)
+    |> assign(:dap_reports, dap_reports)
     |> assign(:filter, filter)
     |> render("index.html")
   end
