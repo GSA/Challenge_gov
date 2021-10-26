@@ -57,8 +57,16 @@ defmodule ChallengeGov.ChallengeGovDeliveryTopicsTest do
       Challenges.set_sub_statuses()
 
       challenges = ChallengeGov.Challenges.all_for_removal_from_govdelivery()
-      assert length(challenges) == 1
-      assert List.first(challenges).id == old_closed_multi_phase_challenge.id
+      assert length(challenges) == 2
+
+      challenge_ids = Enum.map(challenges, fn challenge -> challenge.id end)
+
+      challenge_ids_to_check_against = [
+        old_closed_multi_phase_challenge.id,
+        recently_closed_multi_phase_challenge.id
+      ]
+
+      assert Enum.sort(challenge_ids) == Enum.sort(challenge_ids_to_check_against)
     end
   end
 end

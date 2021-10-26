@@ -867,7 +867,9 @@ defmodule ChallengeGov.Challenges.Challenge do
         |> Map.fetch!("end_date")
         |> Timex.parse("{ISO:Extended}")
 
-      put_change(struct, :archive_date, DateTime.truncate(end_date, :second))
+      archive_date = Timex.shift(end_date, months: 3)
+
+      put_change(struct, :archive_date, DateTime.truncate(archive_date, :second))
     else
       struct
     end
