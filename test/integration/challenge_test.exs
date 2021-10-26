@@ -53,9 +53,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> execute_script("document.getElementById('challenge_upload_logo_false').click()")
     |> execute_script("document.getElementById('challenge_auto_publish_date_picker').focus()")
     |> execute_script(
-      "document.getElementById('challenge_auto_publish_date_picker').value = '#{
-        publish_date_picker()
-      }'"
+      "document.getElementById('challenge_auto_publish_date_picker').value = '#{publish_date_picker()}'"
     )
     |> execute_script(
       "document.getElementById('challenge_auto_publish_date').value = '#{publish_date()}'"
@@ -72,9 +70,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     session
     |> execute_script("document.getElementById('challenge_phases_0_start_date_picker').focus()")
     |> execute_script(
-      "document.getElementById('challenge_phases_0_start_date_picker').value = '#{
-        start_date_picker()
-      }'"
+      "document.getElementById('challenge_phases_0_start_date_picker').value = '#{start_date_picker()}'"
     )
     |> execute_script(
       "document.getElementById('challenge_phases_0_start_date').value = '#{start_date()}'"
@@ -98,9 +94,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
       "document.getElementById('challenge_timeline_events_0_date_picker').focus()"
     )
     |> execute_script(
-      "document.getElementById('challenge_timeline_events_0_date_picker').value = '#{
-        end_date_picker()
-      }'"
+      "document.getElementById('challenge_timeline_events_0_date_picker').value = '#{end_date_picker()}'"
     )
     |> execute_script(
       "document.getElementById('challenge_timeline_events_0_date').value = '#{end_date()}'"

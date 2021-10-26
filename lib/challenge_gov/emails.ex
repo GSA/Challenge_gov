@@ -123,9 +123,7 @@ defmodule ChallengeGov.Emails do
     base_email()
     |> to(submission_invite.submission.submitter.email)
     |> subject(
-      "Challenge.gov - You have been invited to the next phase of #{
-        submission_invite.submission.challenge.title
-      }"
+      "Challenge.gov - You have been invited to the next phase of #{submission_invite.submission.challenge.title}"
     )
     |> assign(:submission_invite, submission_invite)
     |> assign(:challenge, submission_invite.submission.challenge)
