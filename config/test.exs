@@ -24,6 +24,7 @@ config :challenge_gov, ChallengeGov.Mailer,
 config :wallaby,
   otp_app: :challenge_gov,
   js_logger: nil,
+  max_wait_time: 8_000,
   screenshot_on_failure: true
 
 config :challenge_gov, :sql_sandbox, true
