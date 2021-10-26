@@ -45,6 +45,8 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         "custom_url" => ImportHelper.parse_custom_url(json["permalink"]),
         "external_url" => json["external-url"],
         "logo" => ImportHelper.prep_logo(json["card-image"]),
+        "upload_logo" => ImportHelper.upload_logo_boolean(json["card-image"]),
+        "auto_publish_date" => ImportHelper.auto_publish_date(),
         "agency_id" =>
           ImportHelper.match_agency(json["agency"], json["agency-logo"])["agency_id"],
         "sub_agency_id" =>
@@ -55,6 +57,7 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         "primary_type" => Enum.at(scanned_types, 0),
         "types" => Enum.slice(scanned_types, 1..3),
         "other_type" => Enum.at(scanned_types, 4),
+        "prize_type" => ImportHelper.prize_type_boolean(json["total-prize-offered-cash"], ""),
         "prize_total" => ImportHelper.sanitize_prize_amount(json["total-prize-offered-cash"]),
         "federal_partners" =>
           ImportHelper.match_federal_partners(json["partner-agencies-federal"]),
@@ -67,6 +70,7 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         "prize_description" => json["prizes"],
         "rules" => json["rules"],
         "is_multi_phase" => false,
+        "terms_equal_rules" => ImportHelper.terms_equal_rules_boolean(),
         "phases" => %{
           "0" => %{
             "open_to_submissions" => true,

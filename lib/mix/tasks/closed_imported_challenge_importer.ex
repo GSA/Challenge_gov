@@ -54,10 +54,17 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
         "custom_url" => ImportHelper.parse_custom_url(json["permalink"]),
         "external_url" => json["external-url"],
         "tagline" => json["tagline"],
+        "upload_logo" => ImportHelper.upload_logo_boolean(""),
+        "auto_publish_date" => ImportHelper.auto_publish_date(),
         "legal_authority" => json["legal-authority"],
         "primary_type" => Enum.at(scanned_types, 0),
         "types" => Enum.slice(scanned_types, 1..3),
         "other_type" => Enum.at(scanned_types, 4),
+        "prize_type" =>
+          ImportHelper.prize_type_boolean(
+            json["total-prize-offered-cash"],
+            json["non-monetary-incentives-awarded"]
+          ),
         "prize_total" => ImportHelper.sanitize_prize_amount(json["total-prize-offered-cash"]),
         "non_monetary_prizes" => json["non-monetary-incentives-awarded"],
         "prize_description" => format_prize_description(json),
@@ -75,6 +82,7 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
         "rules" => json["rules"],
         "winner_information" => format_winner_information(json),
         "is_multi_phase" => false,
+        "terms_equal_rules" => ImportHelper.terms_equal_rules_boolean(),
         "phases" => %{
           "0" => %{
             "open_to_submissions" => true,

@@ -178,6 +178,14 @@ defmodule Mix.Tasks.ImportHelper do
     number
   end
 
+  def prize_type_boolean(prize, non_monetary_prize) do
+    case {prize, non_monetary_prize} do
+      {"", non_monetary_prize} when non_monetary_prize != "" -> "non_monetary"
+      {prize, ""} when prize != "" -> "monetary"
+      {_, _} -> "both"
+    end
+  end
+
   # Custom URL Helper
   def parse_custom_url(permalink) do
     case Regex.named_captures(~r/\/challenge\/(?<link>.*)\//, permalink) do
@@ -329,6 +337,13 @@ defmodule Mix.Tasks.ImportHelper do
         ""
     end
   end
+
+  def upload_logo_boolean(""), do: false
+  def upload_logo_boolean(_logo_url), do: true
+
+  def auto_publish_date(), do: DateTime.utc_now()
+
+  def terms_equal_rules_boolean(), do: true
 
   # Date Helpers
   def format_date(date, fiscal_year, id) do
