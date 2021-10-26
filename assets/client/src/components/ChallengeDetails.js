@@ -214,34 +214,6 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     return submissionPeriodText
   }
 
-  const renderWhoCanApply = (challenge) => {
-    let phases = challenge.phases
-    let previousPhase = getPreviousPhase(phases)
-    let previousPhaseNumber = phaseNumber(phases, previousPhase)
-    let currentPhase = getCurrentPhase(phases)
-    let nextPhase = getNextPhase(phases)
-
-    if (!currentPhase && !nextPhase) {
-      return null
-    } else if (currentPhase) {
-      if (currentPhase.open_to_submissions) {
-        return (
-          <div className="item">
-            <p className="info-title">Who can apply: </p>
-            <span>Open to all eligible</span>
-          </div>
-        )
-      } else {
-        return (
-          <div className="item">
-            <p className="info-title">Who can apply: </p>
-            <span>Phase {previousPhaseNumber} winners</span>
-          </div>
-        )
-      }
-    }
-  }
-
   const renderInteractiveItems = () => {
     if (print != "true") {
       return (
@@ -328,7 +300,6 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                 <p className="info-title">Submission period:</p>
                 {submissionPeriod(challenge.phases)}
               </div>
-              {renderWhoCanApply(challenge)}
               <div className="item">
                 { (challenge.types.length > 1 && challenge.types.every(v => v != "")) || challenge.other_type
                   ? <><span className="info-title">Challenge types:</span><span>{`${challenge.primary_type}; `}</span></>
