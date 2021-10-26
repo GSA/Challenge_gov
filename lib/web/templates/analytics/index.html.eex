@@ -7,7 +7,7 @@
   <%= if length(@dap_reports) > 0 do %>
     <div class="content">
       <div class="container" style="max-width: unset">
-        <h3>DAP Reports</h3>
+        <h3>Site Analytics Reports</h3>
         <p class="pl-0">Reports for the last 6 months</p>
         <div class="card">
           <div class="card-body dap-grid">

@@ -68,7 +68,7 @@
 <section class="content">
   <div class="row">
     <div class="dap-file-upload content-sub-1">
-      <h4 class="box-title mb-5">Upload DAP reports</h4>
+      <h4 class="box-title mb-5">Upload site analytics reports</h4>
       <label for="dap_file_name" class="control-label">File name (optional)</label>
       <input class="dap_file_name form-control" type="text">
       <br/>
