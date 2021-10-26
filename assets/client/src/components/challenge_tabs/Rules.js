@@ -6,6 +6,11 @@ export const Rules = ({challenge, print}) => {
     <ChallengeTab label="Rules" downloadsLabel="Additional rule documents" section="rules" challenge={challenge} print={print}>
       <div className="card">
         <div className="card-body">
+          <div className="ql-editor" dangerouslySetInnerHTML={{ __html: challenge.eligibility_requirementst }}></div>
+        </div>
+      </div>
+      <div className="card">
+        <div className="card-body">
           <div className="ql-editor" dangerouslySetInnerHTML={{ __html: challenge.rules }}></div>
         </div>
       </div>
