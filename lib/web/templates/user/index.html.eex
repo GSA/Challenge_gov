@@ -18,6 +18,11 @@
   </div>
 </div>
 
+<%= if length(@pending_users) > 0 do %>
+  <%= render Web.UserView, "_pending_users.html", conn: @conn, current_user: @current_user, pending_users: @pending_users %>
+  <br/>
+<% end%>
+
 <section class="content">
   <div class="container-fluid">
     <div class="row">

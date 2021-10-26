@@ -23,10 +23,13 @@ defmodule Web.UserController do
     sort = Map.get(params, "sort", %{})
     %{page: users, pagination: pagination} = Accounts.all(filter: filter, page: page, per: per)
 
+    pending_users = Accounts.all_pending()
+
     conn
     |> assign(:user, current_user)
     |> assign(:current_user, current_user)
     |> assign(:users, users)
+    |> assign(:pending_users, pending_users)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> assign(:pagination, pagination)
