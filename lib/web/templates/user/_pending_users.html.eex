@@ -1,0 +1,39 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <%= Enum.map @pending_users, fn (user) -> %>
+                  <tr>
+                    <td><%= user.id %></td>
+                    <td><%= link(AccountView.full_name(user), to: Routes.user_path(@conn, :show, user.id)) %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.role %></td>
+                    <td><%= user.status %></td>
+                    <td>
+                      <%= link("View", to: Routes.user_path(@conn, :show, user.id), class: "btn btn-default btn-xs") %>
+                      <%= user_edit_link(@conn, user, @current_user) %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -49,6 +49,13 @@ defmodule ChallengeGov.Accounts do
     |> Repo.paginate(opts[:page], opts[:per])
   end
 
+  def all_pending() do
+    User
+    |> where([u], u.status == "pending")
+    |> order_by([u], [{:asc, u.inserted_at}])
+    |> Repo.all()
+  end
+
   @doc """
   Get all accounts
   """
