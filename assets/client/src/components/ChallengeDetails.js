@@ -372,12 +372,12 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
           <div label="how to enter">
             <HowToEnter challenge={challenge} print={print} />
           </div>
-          { challenge.supporting_documents.length > 0 &&
+          { documentsForSection(challenge, "resources").length > 0 &&
             <div label="resources">
               <Resources challenge={challenge} />
             </div>
           }
-          { (challenge.faq || documentsForSection(challenge, "faq") > 0) &&
+          { (challenge.faq || documentsForSection(challenge, "faq").length > 0) &&
             <div label="faq">
               <FAQ challenge={challenge} print={print} />
             </div>
