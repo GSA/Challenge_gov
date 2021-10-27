@@ -3,11 +3,11 @@ defmodule Web.Api.DapReportView do
 
   alias ChallengeGov.Reports.DapReports
 
-  def render("show.json", %{document: document}) do
+  def render("show.json", %{report: report}) do
     %{
-      id: document.id,
-      filename: document.filename,
-      url: DapReports.download_report_url(document)
+      id: report.id,
+      filename: report.filename,
+      url: DapReports.download_report_url(report)
     }
   end
 

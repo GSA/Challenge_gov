@@ -52,6 +52,7 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
       },
       error: function(err) {
         console.log("Something went wrong")
+
         setTimeout(() => {
           $(".loading-feedback").remove()
           $(fileInput).addClass("is-invalid")
