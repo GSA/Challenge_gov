@@ -14,11 +14,13 @@ defmodule Web.AgencyController do
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
-    %{page: agencies, pagination: pagination} = Agencies.all(filter: filter, page: page, per: per)
+
+    %{page: parent_agencies, pagination: pagination} =
+      Agencies.all_highest_level(filter: filter, page: page, per: per)
 
     conn
     |> assign(:user, user)
-    |> assign(:agencies, agencies)
+    |> assign(:agencies, parent_agencies)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> assign(:pagination, pagination)

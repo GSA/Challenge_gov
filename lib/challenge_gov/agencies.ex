@@ -36,6 +36,20 @@ defmodule ChallengeGov.Agencies do
     |> Repo.paginate(opts[:page], opts[:per])
   end
 
+  @doc """
+  Get all parent agencies
+  """
+  def all_highest_level(opts \\ []) do
+    opts = Enum.into(opts, %{})
+
+    Agency
+    |> where([t], is_nil(t.deleted_at))
+    |> where([t], is_nil(t.parent_id))
+    |> Filter.filter(opts[:filter], __MODULE__)
+    |> preload([:parent, :sub_agencies, members: ^member_query()])
+    |> Repo.paginate(opts[:page], opts[:per])
+  end
+
   def all_for_select() do
     Agency
     |> where([a], is_nil(a.deleted_at))
