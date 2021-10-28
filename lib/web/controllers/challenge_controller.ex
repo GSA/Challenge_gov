@@ -182,6 +182,8 @@ defmodule Web.ChallengeController do
         conn,
         params = %{"id" => id, "action" => action, "challenge" => %{"section" => section}}
       ) do
+        IO.puts "RIGHT HERE - in UPDATE"
+        IO.inspect(params, label: "RIGHT HERE - params")
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(id)
     to_section = Challenges.to_section(section, action)
@@ -222,6 +224,7 @@ defmodule Web.ChallengeController do
           |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
 
         _ ->
+          IO.puts "RIGHT HERE - in underscore"
           if to_section do
             redirect(conn, to: Routes.challenge_path(conn, :edit, challenge.id, to_section.id))
           else
@@ -230,6 +233,7 @@ defmodule Web.ChallengeController do
       end
     else
       {:error, changeset} ->
+        IO.inspect(changeset, label: "RIGHT HERE - changeset")
         conn
         |> assign(:user, user)
         |> assign(:challenge, challenge)
