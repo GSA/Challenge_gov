@@ -10,10 +10,10 @@ defmodule Web.Api.DapReportController do
   def create(conn, %{"document" => params}) do
     %{current_user: user} = conn.assigns
 
-    case DapReports.upload_dap_report(user, params) do
-      {:ok, document} ->
+    case DapReports.upload_dap_report(conn, user, params) do
+      {:ok, report} ->
         conn
-        |> assign(:document, document)
+        |> assign(:report, report)
         |> put_status(:created)
         |> render("show.json")
 

@@ -23,6 +23,8 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
   fd.append("document[name]", name)
 
   if (file) {
+    $(".dap_report_loading").append(`<img src="/images/loading-buffering.gif" class="loading-feedback w-25"/>`)
+
     $.ajax({
       url: "/api/dap_reports",
       type: "post",
@@ -33,19 +35,28 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
         $(nameInput).val("")
         $(fileInput).val("")
 
-        uploadedReport.append(`
-          <div>
-            <i class="fa fa-paperclip mr-1"></i>
-            <a href=${document.url} target="_blank">${document.filename}</a>
-            <a href="" data-document-id=${document.id} class="dap_uploaded_report_delete">
-              <i class="fa fa-trash"></i>
-            </a>
-          </div>
-        `)
+        setTimeout(() => {
+          $(".loading-feedback").remove()
+
+          uploadedReport.append(`
+            <div>
+              <i class="fa fa-paperclip mr-1"></i>
+              <a href=${document.url} target="_blank">${document.filename}</a>
+              <a href="" data-document-id=${document.id} class="dap_uploaded_report_delete">
+                <i class="fa fa-trash"></i>
+              </a>
+            </div>
+          `)
+        }, 1000);
+
       },
       error: function(err) {
         console.log("Something went wrong")
-        $(fileInput).addClass("is-invalid")
+
+        setTimeout(() => {
+          $(".loading-feedback").remove()
+          $(fileInput).addClass("is-invalid")
+        }, 1000);
       }
     })
   }

@@ -7,6 +7,8 @@ defmodule ChallengeGov.Reports.DapReports do
 
   alias ChallengeGov.Repo
   alias ChallengeGov.Reports.DapReport
+  alias ChallengeGov.Security
+  alias ChallengeGov.SecurityLogs
   alias Stein.Storage
 
   @doc """
@@ -34,7 +36,7 @@ defmodule ChallengeGov.Reports.DapReports do
   @doc """
   Upload a new DAP report
   """
-  def upload_dap_report(user, %{"file" => file, "name" => name}) do
+  def upload_dap_report(conn, user, %{"file" => file, "name" => name}) do
     file = Storage.prep_file(file)
     key = UUID.uuid4()
     path = dap_report_path(key, file.extension)
@@ -47,15 +49,44 @@ defmodule ChallengeGov.Reports.DapReports do
 
     case Storage.upload(file, path, meta: meta, extensions: allowed_extensions) do
       :ok ->
-        %DapReport{}
-        |> DapReport.create_changeset(file, key, name)
-        |> Repo.insert()
+        upload(conn, user, file, key, name)
 
       {:error, _reason} ->
         user
         |> Ecto.Changeset.change()
         |> Ecto.Changeset.add_error(:file, "had an issue uploading")
         |> Ecto.Changeset.apply_action(:insert)
+    end
+  end
+
+  def upload(conn, user, file, key, name) do
+    changeset =
+      %DapReport{}
+      |> DapReport.create_changeset(file, key, name)
+
+    remote_ip = Security.extract_remote_ip(conn)
+
+    result =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(:report, changeset)
+      |> Ecto.Multi.run(:security_log, fn _repo, _changes ->
+        SecurityLogs.track(%{
+          originator_id: user.id,
+          originator_role: user.role,
+          originator_identifier: user.email,
+          originator_remote_ip: remote_ip,
+          action: "create",
+          details: %{upload: "site analytics report (DAP)"}
+        })
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{report: report, security_log: _security_log}} ->
+        {:ok, report}
+
+      {:error, _type, changeset, _changes} ->
+        {:error, changeset}
     end
   end
 
