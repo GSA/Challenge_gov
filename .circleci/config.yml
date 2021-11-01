@@ -134,8 +134,8 @@ jobs:
           key: v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
       - restore_cache:
           key: v3-build-cache-{{ .Branch }}
-      - run: cd assets && yarn run build && cd ..
       - run: mix deps.get
+      - run: cd assets && yarn run deploy && cd ..
       - run: mix phx.digest
       - persist_to_workspace:
           root: ~/project
