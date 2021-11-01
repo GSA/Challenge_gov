@@ -17,9 +17,7 @@ defmodule Web.DashboardView do
             content_tag(
               :span,
               "Your account certification will expire on
-                #{certification.expires_at.month}/#{certification.expires_at.day}/#{
-                certification.expires_at.year
-              }",
+                #{certification.expires_at.month}/#{certification.expires_at.day}/#{certification.expires_at.year}",
               class: "mx-2"
             ),
             recertification_action(conn, user)

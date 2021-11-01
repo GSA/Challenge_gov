@@ -117,9 +117,7 @@ defmodule Web.ReportsView do
       |> Timex.Duration.from_seconds()
       |> Timex.Duration.to_clock()
 
-    "#{ensure_double_digits(hours)}:#{ensure_double_digits(minutes)}:#{
-      ensure_double_digits(seconds)
-    }"
+    "#{ensure_double_digits(hours)}:#{ensure_double_digits(minutes)}:#{ensure_double_digits(seconds)}"
   end
 
   def ensure_double_digits(elem) do
