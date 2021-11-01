@@ -22,7 +22,7 @@ import { ChallengeAnnouncement } from './ChallengeAnnouncement'
 import { ApiUrlContext } from '../ApiUrlContext'
 
 export const ChallengeDetails = ({challenge, challengePhases, preview, print, tab}) => {
-  const { apiUrl, imageBase } = useContext(ApiUrlContext)
+  const { apiUrl, imageBase, bridgeApplyBlocked } = useContext(ApiUrlContext)
   const [followTooltipOpen, setFollowTooltipOpen] = useState(false)
   const [shareTooltipOpen, setShareTooltipOpen] = useState(false)
 
@@ -141,7 +141,10 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
       applyButtonText = ["View on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
       applyButtonAttr.target = "_blank"
     } else {
-      if (!currentPhase && nextPhase) {
+      if (bridgeApplyBlocked && challenge.id <= 1288 && challenge.id != 1287) {
+        // Hide apply button for challenges from the old platform
+        applyButtonShow = "hide"
+      } else if (!currentPhase && nextPhase) {
         applyButtonText = `Apply starting ${formatDate(nextPhase.start_date)}`
         applyButtonAttr.href = null
         applyButtonAttr.disabled = true
@@ -157,7 +160,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     }
 
     switch (applyButtonShow) {
-      case "show": 
+      case "show":
         return (
           <div className="detail-section__apply">
             <a {...applyButtonAttr}>
@@ -329,7 +332,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
           { challenge.events.length > 0 &&
             <div label="timeline">
               <Timeline challenge={challenge} print={print} />
-            </div> 
+            </div>
           }
           <div label="prizes">
             <Prizes challenge={challenge} print={print} />

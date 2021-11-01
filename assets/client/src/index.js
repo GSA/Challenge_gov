@@ -50,7 +50,8 @@ const renderRouter = () => (
   <ApiUrlContext.Provider value={{
     apiUrl: apiUrl || window.location.origin,
     publicUrl: publicUrl || "",
-    imageBase: imageBase || ""
+    imageBase: imageBase || "",
+    bridgeApplyBlocked: bridgeApplyBlocked
   }}>
     <BrowserRouter>
       <Application />
@@ -62,6 +63,7 @@ const rootElement = document.getElementById('challenge-gov-react-app')
 const apiUrl = rootElement.getAttribute('data-api-url')
 const publicUrl = rootElement.getAttribute('data-public-url')
 const imageBase = rootElement.getAttribute('data-image-base')
+const bridgeApplyBlocked = rootElement.getAttribute('data-bridge-apply-blocked') != 'false'
 
 ReactDOM.render(renderRouter(), rootElement);
 
