@@ -169,6 +169,7 @@ defmodule Web.Router do
     get("/reports", ReportsController, :new)
 
     resources("/agencies", AgencyController)
+    get("/agencies/new/:id", AgencyController, :new)
     post("/agencies/:id/remove_logo", AgencyController, :remove_logo, as: :agency)
 
     post("/users/:id/toggle", UserController, :toggle, as: :user)

@@ -9,7 +9,7 @@ defmodule ChallengeGov.TestHelpers.AgencyHelpers do
     Map.merge(
       %{
         name: "Test Agency",
-        description: "Test desription for an agency"
+        acronym: "TA"
       },
       attributes
     )

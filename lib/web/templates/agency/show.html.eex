@@ -2,7 +2,8 @@
   <div class="container-fluid">
     <%= SharedView.render_breadcrumbs([
       %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
-      %{text: "Challenges", route: Routes.agency_path(@conn, :index)},
+      %{text: "Site Management", route: Routes.site_content_path(@conn, :index)},
+      %{text: "Agencies", route: Routes.agency_path(@conn, :index)},
       %{text: @agency.name}
     ])%>
     <div class="row mb-2">
@@ -20,8 +21,8 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Information</h3>
+          <div class="card-header clear-after d-flex justify-content-between">
+            <h3 class="card-title font-weight-bold align-self-center">Agency Details</h3>
             <div class="card-tools">
               <%= link("Edit", to: Routes.agency_path(@conn, :edit, @agency.id), class: "btn btn-default mr-2") %>
               <%= link("Delete", to: Routes.agency_path(@conn, :delete, @agency.id), class: "btn btn-danger", method: :delete, data: [confirm: "Are you sure?"]) %>
@@ -39,8 +40,8 @@
                 <br/>
               <% end %>
 
-              <dt>Description</dd>
-              <dd><%= @agency.description %></dd>
+              <dt>Acronym</dd>
+              <dd><%= @agency.acronym %></dd>
               <br/>
 
               <dt>Logo</dd>
@@ -56,22 +57,29 @@
       </div>  
     </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Members</h3>
-          </div>
-          <div class="card-body">
-            <ul>            
-              <%= Enum.map(@members, fn member -> %>
-                <li><%= link(member.user.email, to: Routes.user_path(@conn, :show, member.user_id)) %></li>
+    <%= if !@agency.parent do %>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header clear-after d-flex justify-content-between">
+              <h3 class="card-title align-self-center">Agency Component</h3>
+              <span><%= link("Add", to: Routes.agency_path(@conn, :new, @agency.id), class: "btn btn-info") %></span>
+            </div>
+            <div class="card-body">
+              <%= Enum.map(active_component_agencies(@agency.sub_agencies), fn sub_agency -> %>
+                <div class="d-flex justify-content-between">
+                  <%= link(sub_agency.name, to: Routes.agency_path(@conn, :show, sub_agency.id)) %>
+                  <div>
+                    <%= link("Edit", to: Routes.agency_path(@conn, :edit, sub_agency.id), class: "btn btn-default btn-xs mx-1") %>
+                    <%= link("Delete", to: Routes.agency_path(@conn, :delete, sub_agency.id), class: "btn btn-danger btn-xs mx-1", method: :delete, data: [confirm: "Are you sure?"]) %>
+                  </div>
+                </div>
               <% end) %>
-            </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+  <% end %>
 
     <div class="row">
       <div class="col-md-12">

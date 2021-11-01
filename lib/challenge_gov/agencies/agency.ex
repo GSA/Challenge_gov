@@ -46,7 +46,7 @@ defmodule ChallengeGov.Agencies.Agency do
       :name,
       :parent_id
     ])
-    |> validate_required([:name])
+    |> validate_required([:name, :acronym])
   end
 
   def update_changeset(struct, params) do
@@ -57,7 +57,7 @@ defmodule ChallengeGov.Agencies.Agency do
       :name,
       :parent_id
     ])
-    |> validate_required([:name])
+    |> validate_required([:name, :acronym])
   end
 
   def avatar_changeset(struct, key, extension) do

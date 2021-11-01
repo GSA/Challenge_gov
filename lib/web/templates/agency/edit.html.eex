@@ -9,7 +9,7 @@
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">
-          Edit Agency: <%= @agency.name %>
+          <%= edit_title(@agency) %> <%= @agency.name %>
         </h1>
       </div>
     </div>
@@ -20,8 +20,8 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <div class="card">        
-          <%= render Web.AgencyView, "_form.html", changeset: @changeset, data: @changeset.data, path: Routes.agency_path(@conn, :update, @agency.id) %>
+        <div class="card">
+          <%= render Web.AgencyView, "_form.html", changeset: @changeset, data: @changeset.data, parent_id: @agency.parent_id, path: Routes.agency_path(@conn, :update, @agency.id) %>
         </div>
       </div>
     </div>

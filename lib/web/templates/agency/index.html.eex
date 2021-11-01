@@ -8,7 +8,7 @@
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">
-          <span>Agencies</span>          
+          <span>Agencies</span>
           <%= link "New", to: Routes.agency_path(@conn, :new), class: "btn btn-primary" %>
           <a class="btn btn-info" data-widget="control-sidebar" href="#">Filter</a>
           <%= if is_map(@filter) && map_size(@filter) > 0 do %>
