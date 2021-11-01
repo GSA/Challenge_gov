@@ -14,6 +14,23 @@ defmodule Web.AgencyView do
     end
   end
 
+  def edit_title(agency) do
+    if agency.parent do
+      "Edit Component:"
+    else
+      "Edit Agency:"
+    end
+  end
+
+  def new_title(parent_id) do
+    if parent_id do
+      {:ok, parent} = Agencies.get(parent_id)
+      "Add Component: #{parent.name}"
+    else
+      "New Agency"
+    end
+  end
+
   def avatar_img(agency, opts \\ []) do
     case is_nil(agency) or is_nil(agency.avatar_key) do
       true ->
@@ -36,6 +53,11 @@ defmodule Web.AgencyView do
       false ->
         Storage.url(Avatar.avatar_path(agency, "original"), signed: [expires_in: 3600])
     end
+  end
+
+  def active_component_agencies(component_agencies) do
+    component_agencies
+    |> Enum.filter(fn ca -> is_nil(ca.deleted_at) end)
   end
 
   def team_description(%{description: nil}), do: ""

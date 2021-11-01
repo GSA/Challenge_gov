@@ -3,8 +3,7 @@ defmodule Web.AgencyController do
 
   alias ChallengeGov.Agencies
 
-  plug(Web.Plugs.EnsureRole, [:super_admin, :admin] when action in [:index, :show, :delete])
-  plug(Web.Plugs.EnsureRole, :super_admin when action not in [:index, :show, :delete])
+  plug(Web.Plugs.EnsureRole, [:super_admin, :admin])
   plug(Web.Plugs.FetchPage when action in [:index])
 
   action_fallback(Web.FallbackController)
@@ -36,9 +35,12 @@ defmodule Web.AgencyController do
     end
   end
 
-  def new(conn, _params) do
+  def new(conn, params) do
+    parent_id = Map.get(params, "id", nil)
+
     conn
     |> assign(:changeset, Agencies.new())
+    |> assign(:parent_id, parent_id)
     |> render("new.html")
   end
 

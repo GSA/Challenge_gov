@@ -35,4 +35,11 @@
 .dap_report_loading {
   height: 2em;
   width: 5em;
+  
+// Agencies
+
+.clear-after::after {
+  display: inherit;
+  clear: inherit;
+  content: inherit;
 }
