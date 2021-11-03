@@ -69,7 +69,6 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> populate_start_date("challenge_phases_0_start_date")
     |> populate_end_date("challenge_phases_0_end_date")
     |> click(button("Next"))
-
   end
 
   defp complete_timeline_section(session) do
@@ -87,7 +86,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     verify_previous_section(:timeline_events, :title, "Event 1")
 
     session
-    |> click(radio_button(("Non-monetary prize")))
+    |> click(radio_button("Non-monetary prize"))
     |> fill_in(text_field("Non-monetary prize award"), with: "Prizes other than cash")
     |> click(button("Next"))
   end
@@ -141,9 +140,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   defp populate_auto_publish_date(session) do
     session
     |> execute_script(
-      "document.getElementById('challenge_auto_publish_date_picker').value = '#{
-        set_date_picker(days: 1)
-      }'"
+      "document.getElementById('challenge_auto_publish_date_picker').value = '#{set_date_picker(days: 1)}'"
     )
     |> execute_script(
       "document.getElementById('challenge_auto_publish_date').value = '#{set_date(days: 1)}'"
@@ -153,25 +150,17 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   defp populate_start_date(session, id) do
     session
     |> execute_script(
-      "document.getElementById('#{id}_picker').value = '#{
-        set_date_picker(days: 2)
-      }'"
+      "document.getElementById('#{id}_picker').value = '#{set_date_picker(days: 2)}'"
     )
-    |> execute_script(
-      "document.getElementById('#{id}').value = '#{set_date(days: 2)}'"
-    )
+    |> execute_script("document.getElementById('#{id}').value = '#{set_date(days: 2)}'")
   end
 
   defp populate_end_date(session, id) do
     session
     |> execute_script(
-      "document.getElementById('#{id}_picker').value = '#{
-        set_date_picker(days: 3)
-      }'"
+      "document.getElementById('#{id}_picker').value = '#{set_date_picker(days: 3)}'"
     )
-    |> execute_script(
-      "document.getElementById('#{id}').value = '#{set_date(days: 3)}'"
-    )
+    |> execute_script("document.getElementById('#{id}').value = '#{set_date(days: 3)}'")
   end
 
   defp populate_markdown_field(session, value, index \\ 0) do
@@ -188,16 +177,12 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   end
 
   defp verify_previous_section(field, nested_field, value) do
-    challenge =
+    {:ok, [parent_key]} =
       Challenges.admin_all()
       |> List.first()
-      |> Map.from_struct()
+      |> Map.fetch(field)
 
-    key =
-      challenge
-      |> Map.get(field)
-      |> List.first()
-      |> Map.get(nested_field)
+    key = Map.get(parent_key, nested_field)
 
     assert(key =~ value)
   end
