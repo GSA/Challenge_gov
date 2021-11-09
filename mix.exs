@@ -61,6 +61,7 @@ defmodule ChallengeGov.MixProject do
       {:jason, "~> 1.0"},
       {:joken, "~> 2.0"},
       {:logger_json, "~> 4.0"},
+      {:mint, "~> 1.4"},
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
       {:money, "~> 1.8.0"},
       {:mojito, "~> 0.7.3"},
