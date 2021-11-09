@@ -76,6 +76,7 @@ defmodule Mix.Tasks.ImportHelper do
       agency_name
       |> String.split("-")
       |> Enum.map(fn name -> String.trim(name) end)
+      |> Enum.reject(fn name -> name == "" end)
 
     parent_agency = Enum.at(split_agencies, 0)
     component_agency = Enum.at(split_agencies, 1)
