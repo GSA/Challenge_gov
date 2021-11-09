@@ -17,7 +17,7 @@ export const HowToEnter = ({challenge, print}) => {
           {
             phases.map((phase, index) => {
               return (
-                <AccordionSection key={phase.id} phase={phase} index={index} print={print}>
+                <AccordionSection key={phase.id} phase={phase} index={index} section="how to enter" print={print}>
                   <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phase.how_to_enter }}></div>
                 </AccordionSection>
               )

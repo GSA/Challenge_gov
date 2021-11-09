@@ -204,6 +204,11 @@
 
   @media screen
   and (max-device-width: 425px) {
+
+    h1 {
+      font-size: 1.5em;
+    }
+
     .hero {
       &__wrapper {
         background-color: #2B608A;

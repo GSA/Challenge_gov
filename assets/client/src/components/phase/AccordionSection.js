@@ -3,7 +3,7 @@ import moment from 'moment'
 
 import {phaseInPast, phaseIsCurrent, phaseInFuture} from "../../helpers/phaseHelpers"
 
-export const AccordionSection = ({phase, index, children, print}) => {
+export const AccordionSection = ({phase, index, section, children, print}) => {
   const renderPhaseText = (phase) => {
     let phaseText = ""
     let phaseClass = "phase__text phase__text"
@@ -26,12 +26,12 @@ export const AccordionSection = ({phase, index, children, print}) => {
       <h2 className="usa-accordion__heading">
         <button className="usa-accordion__button"
           aria-expanded={phaseIsCurrent(phase)}
-          aria-controls={`a${index}`}>
+          aria-controls={`${section}-a${index}`}>
           <span>{`Phase ${index + 1}${phase.title ? ": " + phase.title : ""}`}</span>
           {renderPhaseText(phase)}
         </button>
       </h2>
-      <div id={`a${index}`} className="usa-accordion__content" hidden={!phaseIsCurrent(phase) && !print}>
+      <div id={`${section}-a${index}`} className="usa-accordion__content" hidden={!phaseIsCurrent(phase) && !print}>
         {children}
       </div>
     </div>

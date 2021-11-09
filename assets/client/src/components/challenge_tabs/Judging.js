@@ -17,7 +17,7 @@ export const Judging = ({challenge, print}) => {
           {
             phases.map((phase, index) => {
               return (
-                <AccordionSection key={phase.id} phase={phase} index={index} print={print}>
+                <AccordionSection key={phase.id} phase={phase} index={index} section="judging" print={print}>
                   <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phase.judging_criteria }}></div>
                 </AccordionSection>
               )
