@@ -60,14 +60,14 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
     session
     |> focus_frame(css(".multi-phase-section"))
-    |> accept_confirm(fn session ->
-      click(session, radio_button("No"))
-    end)
+    |> click(radio_button("No"))
 
     # single phase date range
     session
     |> populate_start_date("challenge_phases_0_start_date")
     |> populate_end_date("challenge_phases_0_end_date")
+    |> assert_text("Next")
+    |> focus_frame(button("Next"))
     |> click(button("Next"))
   end
 
@@ -75,6 +75,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     verify_previous_section(:title, "Test Title")
 
     session
+    |> assert_has(css(".timeline-event-fields"))
     |> focus_frame(css(".timeline-event-fields"))
     |> click(css(".add-nested-section"))
     |> fill_in(text_field("Timeline event title"), with: "Event 1")
@@ -177,12 +178,12 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   end
 
   defp verify_previous_section(field, nested_field, value) do
-    {:ok, [parent_key]} =
+    {:ok, [parent_field]} =
       Challenges.admin_all()
       |> List.first()
       |> Map.fetch(field)
 
-    key = Map.get(parent_key, nested_field)
+    key = Map.get(parent_field, nested_field)
 
     assert(key =~ value)
   end
