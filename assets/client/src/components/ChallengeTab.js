@@ -24,12 +24,13 @@ export const ChallengeTab = ({label, downloadsLabel, section, challenge, print, 
     setCopyTooltipOpen(true)
   }
 
-  return (    
+  const copyShareCSS = print ? "float-right d-none" : "float-right"
+
+  return (
     <section className="challenge-tab container">
       <div className="challenge-tab__header">
         <span>{label}</span>
-        {!print &&
-          <div className="float-right">
+          <div className={copyShareCSS} id="challenge-link">
             <input id="challenge-link-text" className="opacity-0" defaultValue={window.location.href}/>
             <button id="challenge-link-btn" className="usa-button usa-button--unstyled text-decoration-none" onClick={handleCopyLink}>
               <i className="far fa-copy mr-1"></i>
@@ -37,7 +38,6 @@ export const ChallengeTab = ({label, downloadsLabel, section, challenge, print, 
             </button>
             <Tooltip isOpen={copyTooltipOpen} fade={true} target="challenge-link-btn">Link copied</Tooltip>
           </div>
-        }
       </div>
       <hr/>
       <section className="challenge-tab__content">

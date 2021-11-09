@@ -83,7 +83,9 @@ export const ChallengeTabs = (props) => {
             if (child) {
               const { label, children } = child.props;
 
-              if (label !== activeTab && (!print || label === "Contact")) return null;
+              if (label !== activeTab && (!print || label === "Contact")) {
+                return <div className="inactive-tabs">{children}</div>;
+              }
               return children;
             }
           })

@@ -8,11 +8,10 @@
   }
 
   &__content {
-    margin: 30px;
+    margin-top: 20px;
     min-width: 75%;
     max-width: 1440px;
     height: 80%;
-    border-radius: 10px;
   }
 }
 
@@ -21,7 +20,6 @@
     width: auto;
     padding: 15px;
     background-color: #fff;
-    border-radius: 10px 10px 0px 0px;
 
     p {
       margin: 0;
@@ -49,6 +47,7 @@
       }
 
       .title {
+        margin-top: 10px;
         margin-bottom: 10px;
       }
 
@@ -88,12 +87,9 @@
   }
 
   .detail-section {
-    // padding: 15px 15px 5px 15px;
     padding: 1rem;
     background-color: #F2F2F2;
     border-radius: 0 0 10px 10px;
-    display: grid;
-    row-gap: .5rem;
 
     p {
       margin: 0;
@@ -109,7 +105,6 @@
     }
 
     &__apply {
-      // margin-bottom: 1.5rem;
 
       .apply-btn {
         height: 100%;
@@ -146,23 +141,15 @@
      }
 
     &__split-btns {
-      height: 100%;
-      width: 80%;
-      grid-row: 3 / span 2;
-      grid-column: span 2;
-      display: flex;
-      justify-content: space-between;
 
       .follow-btn {
-        margin-bottom: 1.5rem;
         height: 100%;
-        width: 49%;
         display: flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
         border-radius: 7px;
-        border: 1px solid #2d618a;
+        border: 2px solid #2d618a;
       }
 
       .social-share-btn {
@@ -174,7 +161,7 @@
         align-items: center;
         cursor: pointer;
         border-radius: 7px;
-        border: 1px solid #2d618a;
+        border: 2px solid #2d618a;
       }
     }
 
@@ -217,27 +204,56 @@
 
   @media screen
   and (max-device-width: 425px) {
+    .hero {
+      &__wrapper {
+        background-color: #2B608A;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    
+      &__content {
+        min-width: 75%;
+        max-width: 1440px;
+        height: 80%;
+      }
+    }
 
     .main-section {
+      display: flex;
+      flex-direction: column-reverse;
 
-      h1 {
-        // font-size: .8em;
-      }
-
-      h3 {
-        // font-size: .5em;
+      .logo-container {
+        margin-bottom: 1em;
       }
     }
 
     .detail-section {
+      background-color: #fff;
+      border-radius: 0;
+
+      &__apply {
 
       .apply-btn {
-        // font-size: 1rem;
-      }      
-      
-      .follow-btn {
-        // font-size: 1rem;
+        height: 3.5em;
+        margin-bottom: 1em;
       }
+    }
+
+    &__split-btns {
+
+      .follow-btn {
+        height: 3em;
+        width: 100%;
+        margin-bottom: 1em;
+      }
+
+      .social-share-btn {
+        height: 3em;
+        width: 100%;
+      }
+    }
 
       &__text-block {
         .info-title {
@@ -255,18 +271,74 @@
         }
       }
     }
-  }
 
+    .challenge-tabs {
+      margin-right: .25em;
+      margin-left: .25em;
+
+      &__list {
+        display: none;
+      }
+
+      &__content {
+        padding: 0;
+
+        .card {
+          margin-right: .25em;
+          margin-left: .25em;
+        }
+      }
+
+      .contact-form {
+        &__wrapper {
+          margin-left: .5em;
+        }
+
+        &__bottom {
+          margin-bottom: 3em;
+        }
+      }
+    }
+
+    .challenge-tab {
+      &__header {
+        font-size: 1.25em;
+      }
+    }
+
+    #challenge-link {
+      display: none;
+    }
+  }
 
   // DESKTOP
 
   @media screen
   and (min-device-width: 768px) {
 
+    .hero {
+      &__wrapper {
+        background-color: #2B608A;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      &__content {
+        margin: 30px;
+        min-width: 75%;
+        max-width: 1440px;
+        height: 80%;
+        border-radius: 10px;
+      }
+    }
+
     .main-section {
       min-height: 12em;
       padding: 20px;
       display: flex;
+      border-radius: 10px 10px 0px 0px;
 
       &__text {
         width: 50%;
@@ -293,6 +365,8 @@
     }
 
     .detail-section {
+      display: grid;
+      row-gap: .5rem;
       grid-template-columns: repeat(4, 25%);
       grid-template-rows: repeat(4, 1fr);
       row-gap: .5rem;
@@ -308,11 +382,11 @@
           background-color: #FA9441;
           border-radius: 7px;
           border: 1px solid #FA9441;
-        }        
+        }
         p {
           width: 80%;
         }
-      }      
+      }
 
       &__split-btns {
         height: 100%;
@@ -324,25 +398,13 @@
 
         .follow-btn {
           margin-bottom: 1.5rem;
-          height: 100%;
           width: 49%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
-          border-radius: 7px;
           border: 1px solid #2d618a;
         }
 
-        .social-share {
+        .social-share-btn{
           margin-bottom: 1.5rem;
-          height: 100%;
           width: 49%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
-          border-radius: 7px;
           border: 1px solid #2d618a;
         }
       }
@@ -357,6 +419,10 @@
       grid-template-columns: repeat(2, 1fr);
       row-gap: .5rem;
 
+    }
+
+    .inactive-tabs {
+      display: none;
     }
   }
 
