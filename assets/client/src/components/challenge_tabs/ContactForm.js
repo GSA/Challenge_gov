@@ -50,8 +50,8 @@ export const ContactForm = ({challenge, preview}) => {
     <>
       <section className="challenge-tab container">
         <div className="challenge-tab__header">Contact</div>
-        <hr/>    
-        <div>
+        <hr/>
+        <div className="contact-form__wrapper">
           <div className="mb-5">Have a question or comment about this challenge? Reach out by completing the form below.</div>
           <form className="usa-form w-100" onSubmit={handleSubmit}>
             <div className="form-group">

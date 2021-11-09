@@ -26,7 +26,7 @@ export const ChallengeTab = ({label, downloadsLabel, section, challenge, print, 
 
   const copyShareCSS = print ? "float-right d-none" : "float-right"
 
-  return (    
+  return (
     <section className="challenge-tab container">
       <div className="challenge-tab__header">
         <span>{label}</span>
