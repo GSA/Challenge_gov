@@ -8,8 +8,8 @@ export const Timeline = ({challenge, print}) => {
       events.map((event, index) => {
         return (
           <div key={event.id}>
-            <div><span class="text-bold">{formatDateTime(event.occurs_on)}</span>: {event.title}</div>
-            { (events.length - 1 != index) && <hr class="my-3"/> }
+            <div><span className="text-bold">{formatDateTime(event.occurs_on)}</span>: {event.title}</div>
+            { (events.length - 1 != index) && <hr className="my-3"/> }
           </div>
         )
       })
