@@ -15,11 +15,16 @@ defmodule Mix.Tasks.OpenChallengeImporter do
 
     import_user_id = ImportHelper.import_user().id
 
+    initial_mappings = %{
+      "agencies" => %{},
+      "types" => %{}
+    }
+
     case Jason.decode(result) do
       {:ok, json} ->
         json["_challenge"]
         # credo:disable-for-next-line
-        |> Enum.reduce(%{}, fn challenge, mappings ->
+        |> Enum.reduce(initial_mappings, fn challenge, mappings ->
           create_challenge(challenge, import_user_id, mappings)
         end)
 
@@ -32,8 +37,41 @@ defmodule Mix.Tasks.OpenChallengeImporter do
   Create a challenge based off mapped fields
   """
   def create_challenge(json, import_user_id, mappings) do
-    {scanned_types, mappings} =
-      ImportHelper.scan_types(json["challenge-id"], json["type-of-challenge"], mappings)
+    # credo:disable-for-next-line
+    IO.inspect("Agency matching")
+
+    {matched_agencies, agency_mappings} =
+      ImportHelper.match_agency(
+        json["agency"],
+        json["agency-logo"],
+        json["challenge-id"],
+        mappings["agencies"]
+      )
+
+    mappings = Map.put(mappings, "agencies", agency_mappings)
+
+    # credo:disable-for-next-line
+    IO.inspect("Federal partner matching")
+
+    {matched_partner_agencies, agency_mappings} =
+      ImportHelper.match_federal_partners(
+        json["partner-agencies-federal"],
+        json["challenge-id"],
+        mappings["agencies"]
+      )
+
+    mappings = Map.put(mappings, "agencies", agency_mappings)
+
+    # credo:disable-for-next-line
+    IO.inspect("Type matching")
+
+    {scanned_types, type_mappings} =
+      ImportHelper.scan_types(json["challenge-id"], json["type-of-challenge"], mappings["types"])
+
+    mappings = Map.put(mappings, "types", type_mappings)
+
+    # credo:disable-for-next-line
+    IO.inspect(mappings, label: "All Mappings")
 
     result =
       Challenges.import_create(%{
@@ -47,10 +85,8 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         "logo" => ImportHelper.prep_logo(json["card-image"]),
         "upload_logo" => ImportHelper.upload_logo_boolean(json["card-image"]),
         "auto_publish_date" => ImportHelper.auto_publish_date(),
-        "agency_id" =>
-          ImportHelper.match_agency(json["agency"], json["agency-logo"])["agency_id"],
-        "sub_agency_id" =>
-          ImportHelper.match_agency(json["agency"], json["agency-logo"])["sub_agency_id"],
+        "agency_id" => matched_agencies["agency_id"],
+        "sub_agency_id" => matched_agencies["sub_agency_id"],
         "tagline" => json["tagline"],
         "legal_authority" => json["legal-authority"],
         "fiscal_year" => json["fiscal-year"],
@@ -59,8 +95,7 @@ defmodule Mix.Tasks.OpenChallengeImporter do
         "other_type" => Enum.at(scanned_types, 4),
         "prize_type" => ImportHelper.prize_type_boolean(json["total-prize-offered-cash"], ""),
         "prize_total" => ImportHelper.sanitize_prize_amount(json["total-prize-offered-cash"]),
-        "federal_partners" =>
-          ImportHelper.match_federal_partners(json["partner-agencies-federal"]),
+        "federal_partners" => matched_partner_agencies,
         "non_federal_partners" =>
           ImportHelper.match_non_federal_partners(json["partners-non-federal"]),
         "challenge_manager" => json["challenge-manager"],

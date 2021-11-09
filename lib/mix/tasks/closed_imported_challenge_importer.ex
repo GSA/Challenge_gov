@@ -16,13 +16,16 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
     import_user_id = ImportHelper.import_user().id
 
     initial_mappings = %{
-      "Analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
-      "Creative (design & multimedia)" => "Creative (multimedia & design)",
-      "Ideas" => "Ideas",
-      "Nominations" => "Nominations",
-      "Scientific" => "Scientific",
-      "Software and apps" => "Software and apps",
-      "Technology demonstration and hardware" => "Technology demonstration and hardware"
+      "agencies" => %{},
+      "types" => %{
+        "Analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
+        "Creative (design & multimedia)" => "Creative (multimedia & design)",
+        "Ideas" => "Ideas",
+        "Nominations" => "Nominations",
+        "Scientific" => "Scientific",
+        "Software and apps" => "Software and apps",
+        "Technology demonstration and hardware" => "Technology demonstration and hardware"
+      }
     }
 
     case Jason.decode(result) do
@@ -42,8 +45,41 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
   Create a challenge based off mapped fields
   """
   def create_challenge(json, import_user_id, mappings) do
-    {scanned_types, mappings} =
-      ImportHelper.scan_types(json["challenge-id"], json["type-of-challenge"], mappings)
+    # credo:disable-for-next-line
+    IO.inspect("Agency matching")
+
+    {matched_agencies, agency_mappings} =
+      ImportHelper.match_agency(
+        json["agency"],
+        json["agency-logo"],
+        json["challenge-id"],
+        mappings["agencies"]
+      )
+
+    mappings = Map.put(mappings, "agencies", agency_mappings)
+
+    # credo:disable-for-next-line
+    IO.inspect("Federal partner matching")
+
+    {matched_partner_agencies, agency_mappings} =
+      ImportHelper.match_federal_partners(
+        json["partner-agencies-federal"],
+        json["challenge-id"],
+        mappings["agencies"]
+      )
+
+    mappings = Map.put(mappings, "agencies", agency_mappings)
+
+    # credo:disable-for-next-line
+    IO.inspect("Type matching")
+
+    {scanned_types, type_mappings} =
+      ImportHelper.scan_types(json["challenge-id"], json["type-of-challenge"], mappings["types"])
+
+    mappings = Map.put(mappings, "types", type_mappings)
+
+    # credo:disable-for-next-line
+    IO.inspect(mappings, label: "All Mappings")
 
     result =
       Challenges.import_create(%{
@@ -69,10 +105,9 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
         "non_monetary_prizes" => json["non-monetary-incentives-awarded"],
         "prize_description" => format_prize_description(json),
         "status" => "published",
-        "agency_id" => ImportHelper.match_agency(json["agency"])["agency_id"],
-        "sub_agency_id" => ImportHelper.match_agency(json["agency"])["sub_agency_id"],
-        "federal_partners" =>
-          ImportHelper.match_federal_partners(json["partner-agencies-federal"]),
+        "agency_id" => matched_agencies["agency_id"],
+        "sub_agency_id" => matched_agencies["sub_agency_id"],
+        "federal_partners" => matched_partner_agencies,
         "non_federal_partners" =>
           ImportHelper.match_non_federal_partners(json["partners-non-federal"]),
         "challenge_manager_email" => find_manager_email(json),

@@ -85,7 +85,11 @@ defmodule ChallengeGov.Agencies do
   end
 
   def get_by_name(name) do
-    case Repo.get_by(Agency, name: name) do
+    Agency
+    |> where([a], a.name == ^name)
+    |> where([a], is_nil(a.deleted_at))
+    |> Repo.one()
+    |> case do
       nil ->
         {:error, :not_found}
 

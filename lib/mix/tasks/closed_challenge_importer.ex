@@ -16,37 +16,40 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
     import_user_id = ImportHelper.import_user().id
 
     initial_mappings = %{
-      "Analytics, Visualizations and algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visualization, algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visualization, and algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visualizations and algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visualizations, and algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visulizations, algorithms" => "Analytics, visualizations, algorithms",
-      "Business Plans" => "Business plans",
-      "Business plans" => "Business plans",
-      "Creative" => "Creative (multimedia & design)",
-      "Creative (design & multimedia)" => "Creative (multimedia & design)",
-      "Creative (multimedia & design)" => "Creative (multimedia & design)",
-      "Creative (multimedia and design)" => "Creative (multimedia & design)",
-      "Ideas" => "Ideas",
-      "Nominations" => "Nominations",
-      "Scientific" => "Scientific",
-      "Software" => "Software and apps",
-      "Software and apps" => "Software and apps",
-      "Software/Apps" => "Software and apps",
-      "Tech demonstration and hardware" => "Technology demonstration and hardware",
-      "Technology" => "Technology demonstration and hardware",
-      "Technology demonstration" => "Technology demonstration and hardware",
-      "Technology demonstration / hardware" => "Technology demonstration and hardware",
-      "Technology demonstration and hardware" => "Technology demonstration and hardware",
-      "Virtual Reality" => "Analytics, visualizations, algorithms",
-      "analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
-      "creative (multimedia & design)" => "Creative (multimedia & design)",
-      "ideas" => "Ideas",
-      "software and apps" => "Software and apps",
-      "technology demonstration" => "Technology demonstration and hardware",
-      "technology demonstration and hardware" => "Technology demonstration and hardware"
+      "agencies" => %{},
+      "types" => %{
+        "Analytics, Visualizations and algorithms" => "Analytics, visualizations, algorithms",
+        "Analytics, visualization, algorithms" => "Analytics, visualizations, algorithms",
+        "Analytics, visualization, and algorithms" => "Analytics, visualizations, algorithms",
+        "Analytics, visualizations and algorithms" => "Analytics, visualizations, algorithms",
+        "Analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
+        "Analytics, visualizations, and algorithms" => "Analytics, visualizations, algorithms",
+        "Analytics, visulizations, algorithms" => "Analytics, visualizations, algorithms",
+        "Business Plans" => "Business plans",
+        "Business plans" => "Business plans",
+        "Creative" => "Creative (multimedia & design)",
+        "Creative (design & multimedia)" => "Creative (multimedia & design)",
+        "Creative (multimedia & design)" => "Creative (multimedia & design)",
+        "Creative (multimedia and design)" => "Creative (multimedia & design)",
+        "Ideas" => "Ideas",
+        "Nominations" => "Nominations",
+        "Scientific" => "Scientific",
+        "Software" => "Software and apps",
+        "Software and apps" => "Software and apps",
+        "Software/Apps" => "Software and apps",
+        "Tech demonstration and hardware" => "Technology demonstration and hardware",
+        "Technology" => "Technology demonstration and hardware",
+        "Technology demonstration" => "Technology demonstration and hardware",
+        "Technology demonstration / hardware" => "Technology demonstration and hardware",
+        "Technology demonstration and hardware" => "Technology demonstration and hardware",
+        "Virtual Reality" => "Analytics, visualizations, algorithms",
+        "analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
+        "creative (multimedia & design)" => "Creative (multimedia & design)",
+        "ideas" => "Ideas",
+        "software and apps" => "Software and apps",
+        "technology demonstration" => "Technology demonstration and hardware",
+        "technology demonstration and hardware" => "Technology demonstration and hardware"
+      }
     }
 
     case Jason.decode(result) do
@@ -66,8 +69,41 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
   Create a challenge based off mapped fields
   """
   def create_challenge(json, import_user_id, mappings) do
-    {scanned_types, mappings} =
-      ImportHelper.scan_types(json["challenge-id"], json["type-of-challenge"], mappings)
+    # credo:disable-for-next-line
+    IO.inspect("Agency matching")
+
+    {matched_agencies, agency_mappings} =
+      ImportHelper.match_agency(
+        json["agency"],
+        json["agency-logo"],
+        json["challenge-id"],
+        mappings["agencies"]
+      )
+
+    mappings = Map.put(mappings, "agencies", agency_mappings)
+
+    # credo:disable-for-next-line
+    IO.inspect("Federal partner matching")
+
+    {matched_partner_agencies, agency_mappings} =
+      ImportHelper.match_federal_partners(
+        json["partner-agencies-federal"],
+        json["challenge-id"],
+        mappings["agencies"]
+      )
+
+    mappings = Map.put(mappings, "agencies", agency_mappings)
+
+    # credo:disable-for-next-line
+    IO.inspect("Type matching")
+
+    {scanned_types, type_mappings} =
+      ImportHelper.scan_types(json["challenge-id"], json["type-of-challenge"], mappings["types"])
+
+    mappings = Map.put(mappings, "types", type_mappings)
+
+    # credo:disable-for-next-line
+    IO.inspect(mappings, label: "All Mappings")
 
     result =
       Challenges.import_create(%{
@@ -78,15 +114,12 @@ defmodule Mix.Tasks.ClosedChallengeImporter do
         "challenge_manager" => json["challenge-manager"],
         "challenge_manager_email" => json["challenge-manager-email"],
         "poc_email" => json["point-of-contact"],
-        "agency_id" =>
-          ImportHelper.match_agency(json["agency"], json["agency-logo"])["agency_id"],
-        "sub_agency_id" =>
-          ImportHelper.match_agency(json["agency"], json["agency-logo"])["sub_agency_id"],
+        "agency_id" => matched_agencies["agency_id"],
+        "sub_agency_id" => matched_agencies["sub_agency_id"],
         "logo" => ImportHelper.prep_logo(json["card-image"]),
         "upload_logo" => ImportHelper.upload_logo_boolean(json["card-image"]),
         "auto_publish_date" => ImportHelper.auto_publish_date(),
-        "federal_partners" =>
-          ImportHelper.match_federal_partners(json["partner-agencies-federal"]),
+        "federal_partners" => matched_partner_agencies,
         "non_federal_partners" =>
           ImportHelper.match_non_federal_partners(json["partners-non-federal"]),
         "title" => json["challenge-title"],
