@@ -139,7 +139,7 @@
 <hr/>
 <br/>
 
-<div class="col">
+<div class="col logo-section">
   <label class="control-label"><%= FormView.label_field @form, :upload_logo, label: "Upload challenge logo", required: true %></label>
   <div class="ml-3">
     <p class="ml-2 text-muted">
@@ -181,7 +181,7 @@
 <hr/>
 <br/>
 
-<h4>Publish date</h4>
+<h4 class="publish-date-section">Publish date</h4>
 <p class="ml-2 text-muted">
   Once your challenge is approved, your challenge will be listed on Challenge.gov based on the date you specify. 
   Please allow up to <b>one to two business days</b> for approval and publishing of your content. Use this format: MM/DD/YYYY TIME OF DAY (Example: 06/19/2020 05:00 PM).
@@ -205,7 +205,7 @@
 <hr/>
 <br/>
 
-<h4>Is this a multi-phase challenge?</h4>
+<h4 class="multi-phase-section">Is this a multi-phase challenge?</h4>
 <p class="ml-2 text-muted">
   A multiphase challenge has a series of separate phases each consisting of, for example, submission intake, judging, and participant selection.
 <br/>
