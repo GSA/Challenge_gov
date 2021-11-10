@@ -604,3 +604,31 @@ form {
   .flash-icon {
     margin-right: .5em;
   }
+
+  /* save challenge */
+
+  @media screen
+  and (min-device-width: 768px) {
+    .follow-challenge {
+      padding: 3em;
+
+      .card {
+        max-width: 50%;
+        padding: 3em;
+      }
+    }
+  }
+
+    // MOBILE
+
+  @media screen
+  and (max-device-width: 425px) {
+
+    .follow-challenge {
+      padding: 1em;
+
+      .card {
+        padding: 0;
+      }
+    }
+  }
