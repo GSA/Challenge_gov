@@ -50,6 +50,7 @@ defmodule ChallengeGov.Submissions.Submission do
     field(:title, :string)
     field(:brief_description, :string)
     field(:brief_description_delta, :string)
+    field(:brief_description_length, :integer, virtual: true)
     field(:description, :string)
     field(:description_delta, :string)
     field(:external_url, :string)
@@ -71,6 +72,7 @@ defmodule ChallengeGov.Submissions.Submission do
         :title,
         :brief_description,
         :brief_description_delta,
+        :brief_description_length,
         :description,
         :description_delta,
         :external_url,
@@ -95,7 +97,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
-    |> validate_rich_text_length(:brief_description, max: 500)
+    |> validate_rich_text_length(:brief_description, 500)
   end
 
   def review_changeset(struct, params, user, challenge, phase) do
@@ -118,7 +120,7 @@ defmodule ChallengeGov.Submissions.Submission do
       :brief_description,
       :description
     ])
-    |> validate_rich_text_length(:brief_description, max: 500)
+    |> validate_rich_text_length(:brief_description, 500)
   end
 
   def update_draft_changeset(struct, params) do
@@ -130,7 +132,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
-    |> validate_rich_text_length(:brief_description, max: 500)
+    |> validate_rich_text_length(:brief_description, 500)
   end
 
   def update_review_changeset(struct, params) do
@@ -149,7 +151,7 @@ defmodule ChallengeGov.Submissions.Submission do
       :brief_description,
       :description
     ])
-    |> validate_rich_text_length(:brief_description, max: 500)
+    |> validate_rich_text_length(:brief_description, 500)
   end
 
   def submit_changeset(struct) do
