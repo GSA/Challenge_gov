@@ -86,7 +86,7 @@ defmodule ChallengeGov.Agencies do
 
   def get_by_name(name) do
     Agency
-    |> where([a], a.name == ^name)
+    |> where([a], fragment("trim(?) = ?", a.name, ^name))
     |> where([a], is_nil(a.deleted_at))
     |> Repo.one()
     |> case do

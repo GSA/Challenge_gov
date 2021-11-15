@@ -6,6 +6,7 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
 
   alias ChallengeGov.Challenges
   alias Mix.Tasks.ImportHelper
+  alias Mix.Tasks.Mappings
 
   def run(_file) do
     Mix.Task.run("app.start")
@@ -16,16 +17,8 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
     import_user_id = ImportHelper.import_user().id
 
     initial_mappings = %{
-      "agencies" => %{},
-      "types" => %{
-        "Analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
-        "Creative (design & multimedia)" => "Creative (multimedia & design)",
-        "Ideas" => "Ideas",
-        "Nominations" => "Nominations",
-        "Scientific" => "Scientific",
-        "Software and apps" => "Software and apps",
-        "Technology demonstration and hardware" => "Technology demonstration and hardware"
-      }
+      "agencies" => Mappings.agency_map(),
+      "types" => Mappings.type_map()
     }
 
     case Jason.decode(result) do

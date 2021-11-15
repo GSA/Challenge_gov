@@ -10,6 +10,7 @@ defmodule Mix.Tasks.ImportHelper do
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.HTTPClient
   alias ChallengeGov.Repo
+  alias Mix.Tasks.Mappings
 
   @date_formats [
     "{0M}/{0D}/{YYYY} {h12}:{m} {AM}",
@@ -46,28 +47,74 @@ defmodule Mix.Tasks.ImportHelper do
 
   # Agency Helpers
   def match_agency(name, _logo \\ nil, challenge_id \\ nil, mappings \\ %{}) do
-    if name == "" do
-      {nil, mappings}
-    else
-      # credo:disable-for-next-line
-      IO.inspect("Matching agency for challenge #{challenge_id}")
-      # credo:disable-for-next-line
-      IO.inspect(name, label: "Original agency name")
-      {parent_agency_name, component_agency_name} = check_for_component_agencies(name)
+    name = String.trim(name)
 
-      {matched_parent_agency, matched_component_agency, mappings} =
-        find_agency_matches(parent_agency_name, component_agency_name, mappings)
+    cond do
+      name == "" ->
+        {nil, mappings}
 
-      matched_component_agency_id =
-        if matched_component_agency, do: matched_component_agency.id, else: nil
+      Map.get(Mappings.challenge_id_agency_map(), challenge_id) ->
+        mapped_agency = Map.get(Mappings.challenge_id_agency_map(), challenge_id)
+        # credo:disable-for-next-line
+        IO.inspect(mapped_agency, label: "CHALLENGE ID MAP")
 
-      {
-        %{
-          "agency_id" => matched_parent_agency.id,
-          "sub_agency_id" => matched_component_agency_id
-        },
-        mappings
-      }
+        # {matched_agency, mappings} = find_or_create_agency_match(agency_name, agencies, mappings, parent_agency \\ nil)
+
+        {matched_parent_agency, matched_component_agency, mappings} =
+          find_agency_matches(mapped_agency["parent"], mapped_agency["component"], mappings)
+
+        matched_component_agency_id =
+          if matched_component_agency, do: matched_component_agency.id, else: nil
+
+        {
+          %{
+            "agency_id" => matched_parent_agency.id,
+            "sub_agency_id" => matched_component_agency_id
+          },
+          mappings
+        }
+
+      is_map(Map.get(mappings, name)) ->
+        mapped_agency = Map.get(mappings, name)
+        # credo:disable-for-next-line
+        IO.inspect(mapped_agency, label: "IMMEDIATE MATCH")
+
+        # {matched_agency, mappings} = find_or_create_agency_match(agency_name, agencies, mappings, parent_agency \\ nil)
+
+        {matched_parent_agency, matched_component_agency, mappings} =
+          find_agency_matches(mapped_agency["parent"], mapped_agency["component"], mappings)
+
+        matched_component_agency_id =
+          if matched_component_agency, do: matched_component_agency.id, else: nil
+
+        {
+          %{
+            "agency_id" => matched_parent_agency.id,
+            "sub_agency_id" => matched_component_agency_id
+          },
+          mappings
+        }
+
+      true ->
+        # credo:disable-for-next-line
+        IO.inspect("Matching agency for challenge #{challenge_id}")
+        # credo:disable-for-next-line
+        IO.inspect(name, label: "Original agency name")
+        {parent_agency_name, component_agency_name} = check_for_component_agencies(name)
+
+        {matched_parent_agency, matched_component_agency, mappings} =
+          find_agency_matches(parent_agency_name, component_agency_name, mappings)
+
+        matched_component_agency_id =
+          if matched_component_agency, do: matched_component_agency.id, else: nil
+
+        {
+          %{
+            "agency_id" => matched_parent_agency.id,
+            "sub_agency_id" => matched_component_agency_id
+          },
+          mappings
+        }
     end
   end
 
@@ -112,6 +159,8 @@ defmodule Mix.Tasks.ImportHelper do
     if Enum.empty?(agencies) do
       create_agency_match(agency_name, mappings, parent_agency)
     else
+      agency_name = String.trim(agency_name)
+
       matched_agency =
         Enum.max_by(agencies, fn agency ->
           String.jaro_distance(agency.name, agency_name)
@@ -131,10 +180,7 @@ defmodule Mix.Tasks.ImportHelper do
           IO.inspect("Mapping match: #{agency_name} -> #{map_match}")
           get_agency_map_match(map_match, mappings, parent_agency)
 
-        Mix.shell().yes?("""
-        Does this agency match?
-        #{agency_name} -> #{matched_agency.name} (#{score})
-        """) ->
+        false ->
           mappings = Map.put(mappings, agency_name, matched_agency.name)
           {matched_agency, mappings}
 
@@ -309,6 +355,7 @@ defmodule Mix.Tasks.ImportHelper do
       end)
 
     mappings = Map.get(matched_partner_acc, "mappings")
+    # TODO: Make this return unique partners to prevent duplicate federal partners for a challenge
     partners = Map.get(matched_partner_acc, "partners")
 
     {partners, mappings}

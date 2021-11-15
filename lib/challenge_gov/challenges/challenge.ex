@@ -343,6 +343,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :id,
       :user_id,
       :agency_id,
+      :sub_agency_id,
       :status,
       :sub_status,
       :challenge_manager,
