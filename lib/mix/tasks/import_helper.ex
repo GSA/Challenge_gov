@@ -331,7 +331,12 @@ defmodule Mix.Tasks.ImportHelper do
   def match_federal_partners("", _challenge_id, mappings), do: {"", mappings}
 
   def match_federal_partners(partners, challenge_id, mappings) do
-    partner_list = String.split(partners, ",")
+    partner_list =
+      if Map.get(Mappings.challenge_id_federal_partner_map(), challenge_id) do
+        Map.get(Mappings.challenge_id_federal_partner_map(), challenge_id)
+      else
+        String.split(partners, ",")
+      end
 
     initial_acc = %{
       "mappings" => mappings,

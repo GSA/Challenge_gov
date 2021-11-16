@@ -37,7 +37,78 @@ defmodule Mix.Tasks.Mappings do
   end
 
   def challenge_id_federal_partner_map do
-    %{}
+    %{
+      "1076" => [
+        "Program Manager Air (PMA 263)",
+        "Navy and Marine Corps Small Tactical Unmanned Aircraft Systems (STUAS)"
+      ],
+      "1100" => ["National Heart, Lung, and Blood Institute"],
+      "1105" => [
+        "NIH Office of the Director",
+        "National Institute of Allergy and Infectious Disease",
+        "National Heart, Lung and Blood Institute",
+        "National Institute of Diabetes and Digestive and Kidney Diseases",
+        "Fogarty International Center"
+      ],
+      "1154" => [
+        "U.S. Department of Defense",
+        "Strategic Environmental Research and Development Program",
+        "Environmental Security Technology Certification Program"
+      ],
+      "1163" => ["Naval STEM Coordination Office, managed by the Office of Naval Research"],
+      "1165" => [
+        "Members of the National Science and Technology Council Lab to Market Subcommittee: White House Office of Science and Technology Policy (OSTP)",
+        "US Department of Agriculture (USDA)",
+        "Department of Commerce (NIST, NOAA)",
+        "Department of Defense (DoD)",
+        "Department of Education (ED)",
+        "Department of Energy (DOE)",
+        "Department of Health and Human Services (HHS)",
+        "Department of Homeland Security (DHS)",
+        "Department of Interior (DOI)",
+        "Department of State (State)",
+        "Department of Transportation (DOT)",
+        "Department of Veterans Affairs (VA)",
+        "Environmental Protection Agency (EPA)",
+        "National Aeronautics and Aerospace Agency (NASA)",
+        "National Science Foundation (NSF)"
+      ],
+      "1179" => [
+        "Office of the Navy",
+        "Chief of Information (CHINFO)",
+        "Commander, U.S. Fleet Forces (USFF)",
+        "Naval Accelerator (NavalX)"
+      ],
+      "1207" => [
+        "CDC National Center for Environmental Health",
+        "CDC National Institute of Occupational Safety and Health",
+        "Department of State - Office of Occupational Health and Wellness",
+        "National Institute of Standards and Technology"
+      ],
+      "1215" => [
+        "Western Area Power Administration",
+        "Bonneville Power Administration",
+        "Oak Ridge National Laboratory",
+        "U.S. Army Corps of Engineers",
+        "Department of Energy",
+        "Water Power Technologies Office",
+        "NASA Tournament Lab"
+      ],
+      "1219" => [
+        "Army Futures Command (AFC)",
+        "The Office of the United States Assistant Secretary of the Army for Acquisition, Logistics, and Technology (ASA(ALT))",
+        "The U.S. Army Combat Capabilities Development Command (DEVCOM)",
+        "AFWERX",
+        "The U.S. Office of Naval Research Global (ONR Global)",
+        "AFC Artificial Intelligence (AI)"
+      ],
+      "1271" => [
+        "Program Executive Office for Intelligence Electronic Warfare & Sensors (PEO IEW&S)",
+        "Project Manager Positioning Navigation & Timing (PM PNT)",
+        "U.S. Army Combat Capabilities Development Command (DEVCOM)",
+        "The C5ISR (Command, Control, Computers, Communications, Cyber, Intelligence, Surveillance and Reconnaissance) Center"
+      ]
+    }
   end
 
   def agency_map do
@@ -137,6 +208,11 @@ defmodule Mix.Tasks.Mappings do
       "Department of Defense - Department of Army, HQ, M&RA, Army Enterprise Marketing Office" =>
         %{"parent" => "Department of Defense", "component" => "Army"},
       "US Army" => %{"parent" => "Department of Defense", "component" => "Army"},
+      "Army Futures Command (AFC)" => %{
+        "parent" => "Department of Defense",
+        "component" => "Army"
+      },
+      "Army Corps of Engineers" => %{"parent" => "Department of Defense", "component" => "Army"},
       "The U.S. Army Combat Capabilities Development Command (DEVCOM)" => %{
         "parent" => "Department of Defense",
         "component" => "Army"
@@ -451,7 +527,7 @@ defmodule Mix.Tasks.Mappings do
         "parent" => "Department of Health and Human Services",
         "component" => "Centers for Disease Control and Prevention"
       },
-      "National Center for Environmental Health; CDC" => %{
+      "National Center for Environmental Health" => %{
         "parent" => "Department of Health and Human Services",
         "component" => "Centers for Disease Control and Prevention"
       },
@@ -913,9 +989,10 @@ defmodule Mix.Tasks.Mappings do
       # U.S. Postal Service
       "United States Postal Inspection Service" => "U.S. Postal Service",
       # TODO: FIX
-      "CDC - National Center for Environmental Health; CDC-National Institute of Occupational Safety and Health; Department of State - Office of Occupational Health and Wellness; National Institute of Standards and Technology" =>
-        %{"parent" => "FIX"},
+      # "CDC - National Center for Environmental Health; CDC-National Institute of Occupational Safety and Health; Department of State - Office of Occupational Health and Wellness; National Institute of Standards and Technology" =>
+      # %{"parent" => "FIX"},
       "International Assistance Programs - Department of State - Other" => %{"parent" => "FIX"}
+      # "Program Manager Air (PMA-263)" => %{"parent" => "Program Manager Air (PMA-263)"},
     }
   end
 
