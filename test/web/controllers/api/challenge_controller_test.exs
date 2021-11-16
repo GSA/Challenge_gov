@@ -362,6 +362,7 @@ defmodule Web.Api.ChallengeControllerTest do
       "terms_and_conditions" => "Test terms",
       "non_monetary_prizes" => nil,
       "how_to_enter" => "",
+      "how_to_enter_link" => nil,
       "events" => [],
       "start_date" => nil,
       "non_federal_partners" => [],

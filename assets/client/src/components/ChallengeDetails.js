@@ -129,6 +129,8 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     let applyButtonUrl = null
     if (challenge.external_url) {
       applyButtonUrl = challenge.external_url
+    } else if (challenge.how_to_enter_link) {
+      applyButtonUrl = challenge.how_to_enter_link
     } else if (!preview) {
       applyButtonUrl = apiUrl + `/challenges/${challenge.id}/submissions/new`
     }
@@ -139,6 +141,9 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
     if (challenge.external_url) {
       applyButtonText = ["View on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
+      applyButtonAttr.target = "_blank"
+    } else if (challenge.how_to_enter_link) {
+      applyButtonText = ["Apply on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
       applyButtonAttr.target = "_blank"
     } else {
       if (bridgeApplyBlocked && challenge.id <= 1288 && challenge.id != 1287) {
