@@ -106,6 +106,7 @@ defmodule Web.Api.ChallengeView do
       fiscal_year: challenge.fiscal_year,
       faq: challenge.faq,
       how_to_enter: HtmlSanitizeEx.basic_html(challenge.how_to_enter),
+      how_to_enter_link: challenge.how_to_enter_link,
       id: challenge.id,
       is_archived: Challenges.is_archived_new?(challenge),
       is_closed: Challenges.is_closed?(challenge),
