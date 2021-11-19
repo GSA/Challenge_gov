@@ -51,6 +51,7 @@ defmodule Web.SubmissionController do
     conn
     |> assign(:user, user)
     |> assign(:submissions, submissions)
+    |> assign(:unreviewed_submissions, [])
     |> assign(:pagination, pagination)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
