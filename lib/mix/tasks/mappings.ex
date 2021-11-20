@@ -506,6 +506,10 @@ defmodule Mix.Tasks.Mappings do
         "component" => "Agency for Healthcare Research and Quality"
       },
       # Department of Health and Human Services - Centers for Disease Control and Prevention
+      "Department of State - Office of Occupational Health and Wellness" => %{
+        "parent" => "Department of Health and Human Services",
+        "component" => "Centers for Disease Control and Prevention"
+      },
       "Centers for Disease Control and Prevention - National Institute for Occupational Safety and Health (NIOSH)" =>
         %{
           "parent" => "Department of Health and Human Services",
@@ -991,8 +995,116 @@ defmodule Mix.Tasks.Mappings do
       # TODO: FIX
       # "CDC - National Center for Environmental Health; CDC-National Institute of Occupational Safety and Health; Department of State - Office of Occupational Health and Wellness; National Institute of Standards and Technology" =>
       # %{"parent" => "FIX"},
-      "International Assistance Programs - Department of State - Other" => %{"parent" => "FIX"}
+      "International Assistance Programs - Department of State - Other" => %{"parent" => "FIX"},
       # "Program Manager Air (PMA-263)" => %{"parent" => "Program Manager Air (PMA-263)"},
+      "Program Manager Air (PMA 263)" => %{
+        "parent" => "Department of Defense",
+        "component" => "Navy"
+      },
+      "National Heart, Lung, and Blood Institute" => %{
+        "parent" => "Department of Health and Human Services",
+        "component" => "National Institutes of Health"
+      },
+      "National Heart, Lung and Blood Institute" => %{
+        "parent" => "Department of Health and Human Services",
+        "component" => "National Institutes of Health"
+      },
+      "Fogarty International Center" => %{
+        "parent" => "Department of Health and Human Services",
+        "component" => "National Institutes of Health"
+      },
+      "Environmental Security Technology Certification Program" => %{
+        "parent" => "Department of Defense",
+        "component" => "Under Secretary of Defense for Research and Engineering"
+      },
+      "Naval STEM Coordination Office, managed by the Office of Naval Research" => %{
+        "parent" => "Department of Defense",
+        "component" => "Navy"
+      },
+      "Members of the National Science and Technology Council Lab to Market Subcommittee: White House Office of Science and Technology Policy (OSTP)" =>
+        %{
+          "parent" => "The Executive Office of the President",
+          "component" => "Office of Science and Technology Policy"
+        },
+      "Department of Commerce (NIST, NOAA)" => %{
+        "parent" => "Department of Commerce",
+        "component" => "National Institute of Standards and Technology"
+      },
+      "Commander, U.S. Fleet Forces (USFF)" => %{
+        "parent" => "Department of Defense",
+        "component" => "Navy"
+      },
+      "CDC National Center for Environmental Health" => %{
+        "parent" => "Department of Health and Human Services",
+        "component" => "Centers for Disease Control and Prevention"
+      },
+      "CDC National Institute of Occupational Safety and Health" => %{
+        "parent" => "Department of Health and Human Services",
+        "component" => "Centers for Disease Control and Prevention"
+      },
+      "Western Area Power Administration" => %{"parent" => "Department of Energy"},
+      "Bonneville Power Administration" => %{"parent" => "Department of Energy"},
+      "Oak Ridge National Laboratory" => %{
+        "parent" => "Department of Energy",
+        "component" => "Under Secretary of Science"
+      },
+      "The Office of the United States Assistant Secretary of the Army for Acquisition, Logistics, and Technology (ASA(ALT))" =>
+        %{"parent" => "Department of Defense", "component" => "Army"},
+      "The U.S. Office of Naval Research Global (ONR Global)" => %{
+        "parent" => "Department of Defense",
+        "component" => "Navy"
+      },
+      "The U.S. Army Rapid Capabilities and Critical Technologies Office (RCCTO)" => %{
+        "parent" => "Department of Defense",
+        "component" => "Army"
+      },
+      "U.S. Fish and Wildlife Service" => %{
+        "parent" => "Department of the Interior",
+        "component" => "United States Fish and Wildlife Service"
+      },
+      "Program Executive Office for Intelligence Electronic Warfare & Sensors (PEO IEW&S)" => %{
+        "parent" => "Department of Defense",
+        "component" => "Army"
+      },
+      "Project Manager Positioning Navigation & Timing (PM PNT)" => %{
+        "parent" => "Department of Defense",
+        "component" => "Army"
+      },
+      "U.S. Army Combat Capabilities Development Command (DEVCOM)" => %{
+        "parent" => "Department of Defense",
+        "component" => "Army"
+      },
+      "The C5ISR (Command, Control, Computers, Communications, Cyber, Intelligence, Surveillance and Reconnaissance) Center" =>
+        %{"parent" => "Department of Defense", "component" => "Army"},
+      "National Institute of Science and Technology" => %{
+        "parent" => "Department of Commerce",
+        "component" => "National Institute of Standards and Technology"
+      },
+      "Substance Abuse and Mental Health Services Administration" => %{
+        "parent" => "Department of Health and Human Services",
+        "component" => "Substance Abuse and Mental Health Services Administration"
+      },
+      "Office of National Drug Control Policy" => %{
+        "parent" => "The Executive Office of the President",
+        "component" => "Office of National Drug Control Policy"
+      },
+      "Office of Occupational Health and Wellness" => %{
+        "parent" => "Department of Health and Human Services",
+        "component" => "Centers for Disease Control and Prevention"
+      },
+      "Science and Technology Directorate (DHS S&T)" => %{
+        "parent" => "Department of Homeland Security",
+        "component" => "Science and Technology Directorate"
+      },
+      "Federal Emergency Management Administration" => %{
+        "parent" => "Department of Homeland Security",
+        "component" => "Federal Emergency Management Agency"
+      },
+      # Not agencies
+      # "Consumer Technology Association Foundation" => nil,
+      # "Carnegie Mellon University’s Software Engineering Institute (FFRDC)" => nil,
+      "Consumer Technology Association Foundation" => %{"parent" => nil},
+      "Carnegie Mellon University’s Software Engineering Institute (FFRDC)" => %{"parent" => nil}
     }
   end
 

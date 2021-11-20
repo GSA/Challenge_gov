@@ -79,21 +79,31 @@ defmodule Mix.Tasks.ImportHelper do
         # credo:disable-for-next-line
         IO.inspect(mapped_agency, label: "IMMEDIATE MATCH")
 
-        # {matched_agency, mappings} = find_or_create_agency_match(agency_name, agencies, mappings, parent_agency \\ nil)
+        if mapped_agency["parent"] do
+          # {matched_agency, mappings} = find_or_create_agency_match(agency_name, agencies, mappings, parent_agency \\ nil)
 
-        {matched_parent_agency, matched_component_agency, mappings} =
-          find_agency_matches(mapped_agency["parent"], mapped_agency["component"], mappings)
+          {matched_parent_agency, matched_component_agency, mappings} =
+            find_agency_matches(mapped_agency["parent"], mapped_agency["component"], mappings)
 
-        matched_component_agency_id =
-          if matched_component_agency, do: matched_component_agency.id, else: nil
+          matched_component_agency_id =
+            if matched_component_agency, do: matched_component_agency.id, else: nil
 
-        {
-          %{
-            "agency_id" => matched_parent_agency.id,
-            "sub_agency_id" => matched_component_agency_id
-          },
-          mappings
-        }
+          {
+            %{
+              "agency_id" => matched_parent_agency.id,
+              "sub_agency_id" => matched_component_agency_id
+            },
+            mappings
+          }
+        else
+          {
+            %{
+              "agency_id" => nil,
+              "sub_agency_id" => nil
+            },
+            mappings
+          }
+        end
 
       true ->
         # credo:disable-for-next-line
@@ -174,6 +184,15 @@ defmodule Mix.Tasks.ImportHelper do
           # credo:disable-for-next-line
           IO.inspect("Exact match: #{agency_name} -> #{matched_agency.name}")
           {matched_agency, mappings}
+
+        is_map(map_match) ->
+          # credo:disable-for-next-line
+          agency_map_match =
+            if parent_agency, do: map_match["component"], else: map_match["parent"]
+
+          # credo:disable-for-next-line
+          IO.inspect("Mapping match: #{agency_name} -> #{agency_map_match}")
+          get_agency_map_match(agency_map_match, mappings, parent_agency)
 
         map_match ->
           # credo:disable-for-next-line
@@ -360,8 +379,19 @@ defmodule Mix.Tasks.ImportHelper do
       end)
 
     mappings = Map.get(matched_partner_acc, "mappings")
-    # TODO: Make this return unique partners to prevent duplicate federal partners for a challenge
-    partners = Map.get(matched_partner_acc, "partners")
+
+    partners =
+      matched_partner_acc
+      |> Map.get("partners")
+      |> Map.values()
+      |> Enum.uniq()
+      |> Enum.with_index()
+      |> Map.new(fn {partner, index} ->
+        {index, partner}
+      end)
+
+    # credo:disable-for-next-line
+    IO.inspect(partners, label: "PARTNERS LIST")
 
     {partners, mappings}
   end
