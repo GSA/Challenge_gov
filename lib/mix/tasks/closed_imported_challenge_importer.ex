@@ -132,7 +132,7 @@ defmodule Mix.Tasks.ClosedImportedChallengeImporter do
       {:error, error} ->
         # credo:disable-for-next-line
         IO.inspect(error)
-        Mix.shell().prompt("Error recorded")
+        # Mix.shell().prompt("Error recorded")
         error
     end
 

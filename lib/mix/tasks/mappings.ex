@@ -1108,39 +1108,76 @@ defmodule Mix.Tasks.Mappings do
     }
   end
 
+  @challenge_types %{
+    analytics: "Analytics, visualizations, algorithms",
+    business: "Business plans",
+    creative: "Creative (multimedia & design)",
+    ideas: "Ideas",
+    nominations: "Nominations",
+    scientific: "Scientific",
+    software: "Software and apps",
+    technology: "Technology demonstration and hardware"
+  }
+
   def type_map do
     %{
-      "Analytics, Visualizations and algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visualization, algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visualization, and algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visualizations and algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visualizations, and algorithms" => "Analytics, visualizations, algorithms",
-      "Analytics, visulizations, algorithms" => "Analytics, visualizations, algorithms",
-      "Business Plans" => "Business plans",
-      "Business plans" => "Business plans",
-      "Creative" => "Creative (multimedia & design)",
-      "Creative (design & multimedia)" => "Creative (multimedia & design)",
-      "Creative (multimedia & design)" => "Creative (multimedia & design)",
-      "Creative (multimedia and design)" => "Creative (multimedia & design)",
-      "Ideas" => "Ideas",
-      "Nominations" => "Nominations",
-      "Scientific" => "Scientific",
-      "Software" => "Software and apps",
-      "Software and apps" => "Software and apps",
-      "Software/Apps" => "Software and apps",
-      "Tech demonstration and hardware" => "Technology demonstration and hardware",
-      "Technology" => "Technology demonstration and hardware",
-      "Technology demonstration" => "Technology demonstration and hardware",
-      "Technology demonstration / hardware" => "Technology demonstration and hardware",
-      "Technology demonstration and hardware" => "Technology demonstration and hardware",
-      "Virtual Reality" => "Analytics, visualizations, algorithms",
-      "analytics, visualizations, algorithms" => "Analytics, visualizations, algorithms",
-      "creative (multimedia & design)" => "Creative (multimedia & design)",
-      "ideas" => "Ideas",
-      "software and apps" => "Software and apps",
-      "technology demonstration" => "Technology demonstration and hardware",
-      "technology demonstration and hardware" => "Technology demonstration and hardware"
+      "Analytics, Visualizations and algorithms" => @challenge_types.analytics,
+      "Analytics, visualization, algorithms" => @challenge_types.analytics,
+      "Analytics, visualization, and algorithms" => @challenge_types.analytics,
+      "Analytics, visualizations and algorithms" => @challenge_types.analytics,
+      "Analytics, visualizations, algorithms" => @challenge_types.analytics,
+      "Analytics, visualizations, and algorithms" => @challenge_types.analytics,
+      "Analytics, visulizations, algorithms" => @challenge_types.analytics,
+      "Business Plans" => @challenge_types.business,
+      "Business plans" => @challenge_types.business,
+      "Creative" => @challenge_types.creative,
+      "Creative (design & multimedia)" => @challenge_types.creative,
+      "Creative (multimedia & design)" => @challenge_types.creative,
+      "Creative (multimedia and design)" => @challenge_types.creative,
+      "Ideas" => @challenge_types.ideas,
+      "Nominations" => @challenge_types.nominations,
+      "Scientific" => @challenge_types.scientific,
+      "Software" => @challenge_types.software,
+      "Software and apps" => @challenge_types.software,
+      "Software/Apps" => @challenge_types.software,
+      "Tech demonstration and hardware" => @challenge_types.technology,
+      "Technology" => @challenge_types.technology,
+      "Technology demonstration" => @challenge_types.technology,
+      "Technology demonstration / hardware" => @challenge_types.technology,
+      "Technology demonstration and hardware" => @challenge_types.technology,
+      "Virtual Reality" => @challenge_types.analytics,
+      "analytics, visualizations, algorithms" => @challenge_types.analytics,
+      "creative (multimedia & design)" => @challenge_types.creative,
+      "ideas" => @challenge_types.ideas,
+      "software and apps" => @challenge_types.software,
+      "technology demonstration" => @challenge_types.technology,
+      "technology demonstration and hardware" => @challenge_types.technology,
+      "Creative (multimedia and design), scientific" => [
+        @challenge_types.creative,
+        @challenge_types.scientific
+      ],
+      "Software and apps, creative (multimedia & design)" => [
+        @challenge_types.software,
+        @challenge_types.creative
+      ],
+      "Ideas, Technology demonstration and hardware" => [
+        @challenge_types.ideas,
+        @challenge_types.technology
+      ],
+      "Ideation, Technology demonstration/hardware" => [
+        @challenge_types.ideas,
+        @challenge_types.technology
+      ],
+      "Technology demonstration and hardware, Scientific, Software and apps" => [
+        @challenge_types.technology,
+        @challenge_types.scientific,
+        @challenge_types.software
+      ],
+      "Ideation, Technology Demonstration/Hardware" => [
+        @challenge_types.ideas,
+        @challenge_types.technology
+      ],
+      "Ideas, scientific" => [@challenge_types.ideas, @challenge_types.scientific]
     }
   end
 end

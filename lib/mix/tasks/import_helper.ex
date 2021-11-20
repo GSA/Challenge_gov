@@ -478,20 +478,25 @@ defmodule Mix.Tasks.ImportHelper do
 
     existing_type_map = Map.get(mappings, type)
 
-    if existing_type_map do
-      [existing_type_map]
-    else
-      response =
-        Mix.shell().yes?("""
-        Does this look right?
-        ID #{challenge_id}: #{type} -> #{closest_match} (#{score})
-        """)
+    cond do
+      is_list(existing_type_map) ->
+        existing_type_map
 
-      if response do
-        [closest_match]
-      else
-        pick_new_types()
-      end
+      existing_type_map ->
+        [existing_type_map]
+
+      true ->
+        response =
+          Mix.shell().yes?("""
+          Does this look right?
+          ID #{challenge_id}: #{type} -> #{closest_match} (#{score})
+          """)
+
+        if response do
+          [closest_match]
+        else
+          pick_new_types()
+        end
     end
   end
 
