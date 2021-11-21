@@ -282,5 +282,9 @@ workflows:
               only: main
     jobs:
       - setup
-      - assets
-      - dev-deploy
+      - assets:
+          requires:
+            - setup
+      - dev-deploy:
+          requires:
+            - assets
