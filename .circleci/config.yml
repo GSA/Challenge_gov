@@ -272,3 +272,15 @@ workflows:
           filters:
             branches:
               only: production
+
+  nightly-dev:
+    triggers:
+      - schedule:
+          cron: "0 23 * * *"
+          filters:
+            branches:
+              only: main
+    jobs:
+      - setup
+      - assets
+      - dev-deploy
