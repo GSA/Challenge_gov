@@ -276,7 +276,7 @@ workflows:
   nightly-dev:
     triggers:
       - schedule:
-          cron: "0 23 * * *"
+          cron: "0 4 * * *"
           filters:
             branches:
               only: main
