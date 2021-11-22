@@ -131,7 +131,9 @@ defmodule Web.SessionController do
     timeout_at = get_session(conn, :session_timeout_at)
 
     if timeout_at && now() > timeout_at do
-      logout_user(conn)
+      conn
+      |> logout_user()
+      |> halt()
     else
       put_session(conn, :session_timeout_at, new_session_timeout_at(opts[:timeout_after_minutes]))
     end
