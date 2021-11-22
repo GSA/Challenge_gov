@@ -54,6 +54,12 @@ defmodule Web.SubmissionExportView do
           to: Routes.submission_export_path(conn, :delete, submission_export.id),
           method: "delete"
         )
+
+      "error" ->
+        link("Restart",
+          to: Routes.submission_export_path(conn, :restart, submission_export.id),
+          method: "post"
+        )
     end
   end
 

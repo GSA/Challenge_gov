@@ -76,19 +76,18 @@ defmodule ChallengeGov.Submissions.SubmissionExportWorker do
     File.write!(tmp_file_directory <> "submissions.csv", to_string(csv))
 
     # Write submission downloads to tmp directory
-    _zip_files =
-      Enum.flat_map(submissions, fn submission ->
-        Enum.map(submission.documents, fn document ->
-          {:ok, document_download} = Storage.download(SubmissionDocuments.document_path(document))
+    Enum.each(submissions, fn submission ->
+      Enum.map(submission.documents, fn document ->
+        {:ok, document_download} = Storage.download(SubmissionDocuments.document_path(document))
 
-          document_path = tmp_file_directory <> "submissions/#{submission.id}/"
-          File.mkdir_p(document_path)
-          document_filename = "#{DocumentView.filename(document)}#{document.extension}"
+        document_path = tmp_file_directory <> "submissions/#{submission.id}/"
+        File.mkdir_p(document_path)
+        document_filename = "#{DocumentView.filename(document)}#{document.extension}"
 
-          File.cp!(document_download, document_path <> document_filename)
-          File.rm(document_download)
-        end)
+        File.cp!(document_download, document_path <> document_filename)
+        File.rm(document_download)
       end)
+    end)
 
     # Attempt to zip tmp file directory
     case Porcelain.exec("zip", ["-r", "#{submission_export.id}.zip", "#{submission_export.id}/"],
@@ -120,7 +119,9 @@ defmodule ChallengeGov.Submissions.SubmissionExportWorker do
         File.rm(zip_file_path)
         File.rm_rf(tmp_file_directory)
 
-        {:error, :zip}
+        submission_export
+        |> Ecto.Changeset.change(%{status: "error"})
+        |> Repo.update()
     end
   end
 end
