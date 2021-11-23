@@ -24,6 +24,7 @@ defmodule ChallengeGov.Submissions.SubmissionExportWorker do
         submissions =
           Submissions.all(
             filter: %{
+              "status" => "submitted",
               "phase_ids" => submission_export.phase_ids,
               "judging_status" => submission_export.judging_status
             }
