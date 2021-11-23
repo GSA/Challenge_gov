@@ -24,6 +24,7 @@ defmodule ChallengeGov.Submissions.SubmissionExportWorker do
         submissions =
           Submissions.all(
             filter: %{
+              "status" => "submitted",
               "phase_ids" => submission_export.phase_ids,
               "judging_status" => submission_export.judging_status
             }
@@ -60,12 +61,12 @@ defmodule ChallengeGov.Submissions.SubmissionExportWorker do
     # Setup initial directories and files and clear old ones
     submission_exports_directory = "tmp/submission_exports/"
 
-    zip_file_name = "#{submission_export.id}.zip"
-    zip_file_path = submission_exports_directory <> zip_file_name
     tmp_submission_export_directory = "#{submission_export.id}/"
     tmp_file_directory = submission_exports_directory <> tmp_submission_export_directory
 
-    File.rm(zip_file_path)
+    zip_file_name = "#{submission_export.id}.zip"
+    zip_file_path = tmp_file_directory <> zip_file_name
+
     File.rm_rf(tmp_file_directory)
 
     File.mkdir_p(tmp_file_directory)
@@ -89,10 +90,7 @@ defmodule ChallengeGov.Submissions.SubmissionExportWorker do
       end)
     end)
 
-    # Attempt to zip tmp file directory
-    case Porcelain.exec("zip", ["-r", "#{submission_export.id}.zip", "#{submission_export.id}/"],
-           dir: submission_exports_directory
-         ) do
+    case Porcelain.exec("zip", ["-r", "#{submission_export.id}.zip", "."], dir: tmp_file_directory) do
       %{status: 0} ->
         file = Storage.prep_file(%{path: zip_file_path})
 
@@ -106,7 +104,6 @@ defmodule ChallengeGov.Submissions.SubmissionExportWorker do
         case Storage.upload(file, path, meta: meta) do
           :ok ->
             # Remove tmp files
-            File.rm(zip_file_path)
             File.rm_rf(tmp_file_directory)
 
             submission_export
@@ -116,7 +113,6 @@ defmodule ChallengeGov.Submissions.SubmissionExportWorker do
 
       _error ->
         # Remove tmp files
-        File.rm(zip_file_path)
         File.rm_rf(tmp_file_directory)
 
         submission_export
