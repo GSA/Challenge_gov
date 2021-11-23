@@ -4,7 +4,7 @@ defaults: &defaults
     - https://github.com/cloudfoundry/apt-buildpack
     - https://github.com/HashNuke/heroku-buildpack-elixir
   memory: 512M
-  disk_quota: 3GB
+  disk_quota: 2816MB
   command: ./cloud_start.sh
 
 applications:
