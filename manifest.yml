@@ -22,9 +22,9 @@ applications:
     LOGIN_TOKEN_ENDPOINT: https://idp.int.identitysandbox.gov/api/openid_connect/token
     LOGIN_CLIENT_ID: urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_gov_portal_dev
 
-- name: challenge-portal-staging
+- name: challenge-portal-stg
   <<: *defaults
-  instances: 1
+  instances: 2
   env:
     MIX_ENV: prod
     HOST: challenge-portal-staging.app.cloud.gov

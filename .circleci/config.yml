@@ -195,7 +195,7 @@ jobs:
           endpoint: 'https://api.fr.cloud.gov'
           org: gsa-tts-innovation-challenge
           space: staging
-      - run: cf push challenge-portal-staging --strategy rolling
+      - run: cf push challenge-portal-stg --strategy rolling
 
   prod-deploy:
     parallelism: 1
