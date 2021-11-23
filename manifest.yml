@@ -5,6 +5,7 @@ defaults: &defaults
     - https://github.com/HashNuke/heroku-buildpack-elixir
   memory: 512M
   disk_quota: 2816MB
+  health-check-type: process
   command: ./cloud_start.sh
 
 applications:
