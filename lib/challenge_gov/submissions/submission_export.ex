@@ -16,7 +16,8 @@ defmodule ChallengeGov.Submissions.SubmissionExport do
     %{id: "pending", label: "Draft"},
     %{id: "cancelled", label: "Cancelled"},
     %{id: "completed", label: "Submitted"},
-    %{id: "outdated", label: "Outdated"}
+    %{id: "outdated", label: "Outdated"},
+    %{id: "error", label: "Error"}
   ]
 
   @judging_statuses [

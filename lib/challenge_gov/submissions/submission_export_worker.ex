@@ -57,40 +57,70 @@ defmodule ChallengeGov.Submissions.SubmissionExportWorker do
   end
 
   defp export_submissions(submission_export, ".zip", submissions) do
+    # Setup initial directories and files and clear old ones
+    submission_exports_directory = "tmp/submission_exports/"
+
+    zip_file_name = "#{submission_export.id}.zip"
+    zip_file_path = submission_exports_directory <> zip_file_name
+    tmp_submission_export_directory = "#{submission_export.id}/"
+    tmp_file_directory = submission_exports_directory <> tmp_submission_export_directory
+
+    File.rm(zip_file_path)
+    File.rm_rf(tmp_file_directory)
+
+    File.mkdir_p(tmp_file_directory)
+
+    # Write CSV file to tmp directory
     csv = SubmissionExportView.submission_csv(submissions)
 
-    zip_files =
-      Enum.flat_map(submissions, fn submission ->
-        Enum.map(submission.documents, fn document ->
-          {:ok, document_download} = Storage.download(SubmissionDocuments.document_path(document))
+    File.write!(tmp_file_directory <> "submissions.csv", to_string(csv))
 
-          document_path =
-            "/submissions/#{submission.id}/#{DocumentView.filename(document)}#{document.extension}"
+    # Write submission downloads to tmp directory
+    Enum.each(submissions, fn submission ->
+      Enum.map(submission.documents, fn document ->
+        {:ok, document_download} = Storage.download(SubmissionDocuments.document_path(document))
 
-          data = File.read!(document_download)
-          File.rm(document_download)
+        document_path = tmp_file_directory <> "submissions/#{submission.id}/"
+        File.mkdir_p(document_path)
+        document_filename = "#{DocumentView.filename(document)}#{document.extension}"
 
-          {String.to_charlist(document_path), data}
-        end)
+        File.cp!(document_download, document_path <> document_filename)
+        File.rm(document_download)
       end)
+    end)
 
-    zip_files = [{'submissions.csv', to_string(csv)} | zip_files]
+    # Attempt to zip tmp file directory
+    case Porcelain.exec("zip", ["-r", "#{submission_export.id}.zip", "#{submission_export.id}/"],
+           dir: submission_exports_directory
+         ) do
+      %{status: 0} ->
+        file = Storage.prep_file(%{path: zip_file_path})
 
-    {:ok, zip_file_path} = Temp.create(extname: ".zip")
-    {:ok, _zip} = :zip.create(String.to_charlist(zip_file_path), zip_files)
+        path = SubmissionExports.document_path(submission_export.key, ".zip")
 
-    file = Storage.prep_file(%{path: zip_file_path})
+        meta = [
+          {:content_disposition, ~s{attachment; filename="submission-export.zip"}}
+        ]
 
-    path = SubmissionExports.document_path(submission_export.key, ".zip")
+        # Attempt to upload zip file
+        case Storage.upload(file, path, meta: meta) do
+          :ok ->
+            # Remove tmp files
+            File.rm(zip_file_path)
+            File.rm_rf(tmp_file_directory)
 
-    meta = [
-      {:content_disposition, ~s{attachment; filename="submission-export.zip"}}
-    ]
+            submission_export
+            |> Ecto.Changeset.change(%{status: "completed"})
+            |> Repo.update()
+        end
 
-    case Storage.upload(file, path, meta: meta) do
-      :ok ->
+      _error ->
+        # Remove tmp files
+        File.rm(zip_file_path)
+        File.rm_rf(tmp_file_directory)
+
         submission_export
-        |> Ecto.Changeset.change(%{status: "completed"})
+        |> Ecto.Changeset.change(%{status: "error"})
         |> Repo.update()
     end
   end
