@@ -57,8 +57,23 @@ defmodule ChallengeGov.ObanReporter do
 
   def events() do
     [
-      [:oban, :job, :exception]
+      [:oban, :supervisor, :init],
+      [:oban, :job, :exception],
+      [:oban, :job, :start],
+      [:oban, :job, :stop]
     ]
+  end
+
+  def handle_event([:oban, :supervisor, :init], _measure, _meta, _) do
+    cf_instance = System.get_env("CF_INSTANCE_INDEX")
+
+    IO.puts("""
+    \e[33m
+    =================================
+    Oban starting on instance #{cf_instance}
+    =================================
+    \e[0m
+    """)
   end
 
   def handle_event([:oban, :job, :exception], _measure, meta, _) do
@@ -66,6 +81,30 @@ defmodule ChallengeGov.ObanReporter do
     \e[33m
     =================================
     #{inspect(Exception.format(:error, meta.error, meta.stacktrace))}
+    =================================
+    \e[0m
+    """)
+  end
+
+  def handle_event([:oban, :job, :start], _measure, _meta, _) do
+    cf_instance = System.get_env("CF_INSTANCE_INDEX")
+
+    IO.puts("""
+    \e[33m
+    =================================
+    Oban JOB starting on instance #{cf_instance}
+    =================================
+    \e[0m
+    """)
+  end
+
+  def handle_event([:oban, :job, :stop], _measure, _meta, _) do
+    cf_instance = System.get_env("CF_INSTANCE_INDEX")
+
+    IO.puts("""
+    \e[33m
+    =================================
+    Oban JOB finished on instance #{cf_instance}
     =================================
     \e[0m
     """)

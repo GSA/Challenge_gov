@@ -4,14 +4,14 @@ defaults: &defaults
     - https://github.com/cloudfoundry/apt-buildpack
     - https://github.com/HashNuke/heroku-buildpack-elixir
   memory: 512M
-  disk_quota: 1G
+  disk_quota: 2.5G
   health-check-type: process
   command: ./cloud_start.sh
 
 applications:
 - name: challenge-portal-dev
   <<: *defaults
-  instances: 1
+  instances: 2
   env:
     MIX_ENV: prod
     HOST: challenge-portal-dev.app.cloud.gov
