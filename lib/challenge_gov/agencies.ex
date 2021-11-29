@@ -84,9 +84,26 @@ defmodule ChallengeGov.Agencies do
     end
   end
 
-  def get_by_name(name) do
+  def get_by_name(name, parent_agency \\ nil)
+
+  def get_by_name(name, nil) do
     Agency
     |> where([a], fragment("trim(?) = ?", a.name, ^name))
+    |> where([a], is_nil(a.deleted_at))
+    |> Repo.one()
+    |> case do
+      nil ->
+        {:error, :not_found}
+
+      agency ->
+        {:ok, agency}
+    end
+  end
+
+  def get_by_name(name, parent_agency) do
+    Agency
+    |> where([a], fragment("trim(?) = ?", a.name, ^name))
+    |> where([a], a.parent_id == ^parent_agency.id)
     |> where([a], is_nil(a.deleted_at))
     |> Repo.one()
     |> case do

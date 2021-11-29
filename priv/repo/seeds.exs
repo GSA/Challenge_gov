@@ -148,7 +148,7 @@ defmodule Helpers do
 
   defp maybe_import_agency(name, acronym, parent_agency)
        when name !== "" and not is_nil(parent_agency) do
-    case Agencies.get_by_name(name) do
+    case Agencies.get_by_name(name, parent_agency) do
       {:error, :not_found} ->
         IO.puts("Imported #{name}")
 
@@ -192,7 +192,7 @@ defmodule Seeds do
     create_user_certifications()
     # create_admin("admin@example.com")
     # create_agencies("priv/repo/agencies.txt")
-    # import_agencies_csv("priv/repo/agencies_updated.csv")
+    import_agencies_csv("priv/repo/agencies_updated.csv")
 
     # import_agencies_api("https://usagov.platform.gsa.gov/usaapi/api/v1/usagov/directory_records/federal.json")
     set_initial_challenge_uuids()
