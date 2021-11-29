@@ -9,6 +9,8 @@ defmodule Mix.Tasks.ImportHelper do
   alias ChallengeGov.Agencies
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.HTTPClient
+  alias ChallengeGov.Repo
+  alias Mix.Tasks.Mappings
 
   @date_formats [
     "{0M}/{0D}/{YYYY} {h12}:{m} {AM}",
@@ -44,105 +46,354 @@ defmodule Mix.Tasks.ImportHelper do
   end
 
   # Agency Helpers
-  def match_agency(name, logo \\ nil) do
-    if name == "" do
-      nil
-    else
-      case Agencies.get_by_name(name) do
-        {:ok, agency} ->
-          generate_agency_id_map(agency)
+  def match_agency(name, _logo \\ nil, challenge_id \\ nil, mappings \\ %{}) do
+    name = String.trim(name)
 
-        {:error, :not_found} ->
-          fuzzy_match_agency(name, logo)
+    cond do
+      name == "" ->
+        {nil, mappings}
+
+      Map.get(Mappings.challenge_id_agency_map(), challenge_id) ->
+        mapped_agency = Map.get(Mappings.challenge_id_agency_map(), challenge_id)
+        # credo:disable-for-next-line
+        IO.inspect(mapped_agency, label: "CHALLENGE ID MAP")
+
+        # {matched_agency, mappings} = find_or_create_agency_match(agency_name, agencies, mappings, parent_agency \\ nil)
+
+        {matched_parent_agency, matched_component_agency, mappings} =
+          find_agency_matches(mapped_agency["parent"], mapped_agency["component"], mappings)
+
+        matched_component_agency_id =
+          if matched_component_agency, do: matched_component_agency.id, else: nil
+
+        {
+          %{
+            "agency_id" => matched_parent_agency.id,
+            "sub_agency_id" => matched_component_agency_id
+          },
+          mappings
+        }
+
+      is_map(Map.get(mappings, name)) ->
+        mapped_agency = Map.get(mappings, name)
+        # credo:disable-for-next-line
+        IO.inspect(mapped_agency, label: "IMMEDIATE MATCH")
+
+        if mapped_agency["parent"] do
+          # {matched_agency, mappings} = find_or_create_agency_match(agency_name, agencies, mappings, parent_agency \\ nil)
+
+          {matched_parent_agency, matched_component_agency, mappings} =
+            find_agency_matches(mapped_agency["parent"], mapped_agency["component"], mappings)
+
+          matched_component_agency_id =
+            if matched_component_agency, do: matched_component_agency.id, else: nil
+
+          {
+            %{
+              "agency_id" => matched_parent_agency.id,
+              "sub_agency_id" => matched_component_agency_id
+            },
+            mappings
+          }
+        else
+          {
+            %{
+              "agency_id" => nil,
+              "sub_agency_id" => nil
+            },
+            mappings
+          }
+        end
+
+      true ->
+        # credo:disable-for-next-line
+        IO.inspect("Matching agency for challenge #{challenge_id}")
+        # credo:disable-for-next-line
+        IO.inspect(name, label: "Original agency name")
+        {parent_agency_name, component_agency_name} = check_for_component_agencies(name)
+
+        {matched_parent_agency, matched_component_agency, mappings} =
+          find_agency_matches(parent_agency_name, component_agency_name, mappings)
+
+        matched_component_agency_id =
+          if matched_component_agency, do: matched_component_agency.id, else: nil
+
+        {
+          %{
+            "agency_id" => matched_parent_agency.id,
+            "sub_agency_id" => matched_component_agency_id
+          },
+          mappings
+        }
+    end
+  end
+
+  defp check_for_component_agencies(agency_name) do
+    split_agencies =
+      agency_name
+      |> String.split("-")
+      |> Enum.map(fn name -> String.trim(name) end)
+      |> Enum.reject(fn name -> name == "" end)
+
+    parent_agency = Enum.at(split_agencies, 0)
+    component_agency = Enum.at(split_agencies, 1)
+
+    {parent_agency, component_agency}
+  end
+
+  defp find_agency_matches(parent_agency_name, component_agency_name, mappings) do
+    agencies = Agencies.all_for_select()
+
+    {matched_parent_agency, mappings} =
+      find_or_create_agency_match(parent_agency_name, agencies, mappings)
+
+    {matched_component_agency, mappings} =
+      if component_agency_name do
+        matched_parent_agency = Repo.preload(matched_parent_agency, [:sub_agencies])
+        component_agencies = matched_parent_agency.sub_agencies
+
+        find_or_create_agency_match(
+          component_agency_name,
+          component_agencies,
+          mappings,
+          matched_parent_agency
+        )
+      else
+        {nil, mappings}
+      end
+
+    {matched_parent_agency, matched_component_agency, mappings}
+  end
+
+  defp find_or_create_agency_match(agency_name, agencies, mappings, parent_agency \\ nil) do
+    if Enum.empty?(agencies) do
+      create_agency_match(agency_name, mappings, parent_agency)
+    else
+      agency_name = String.trim(agency_name)
+
+      matched_agency =
+        Enum.max_by(agencies, fn agency ->
+          String.jaro_distance(agency.name, agency_name)
+        end)
+
+      score = String.jaro_distance(agency_name, String.trim(matched_agency.name))
+      map_match = Map.get(mappings, agency_name)
+
+      cond do
+        score == 1 ->
+          # credo:disable-for-next-line
+          IO.inspect("Exact match: #{agency_name} -> #{matched_agency.name}")
+          {matched_agency, mappings}
+
+        is_map(map_match) ->
+          # credo:disable-for-next-line
+          agency_map_match =
+            if parent_agency, do: map_match["component"], else: map_match["parent"]
+
+          # credo:disable-for-next-line
+          IO.inspect("Mapping match: #{agency_name} -> #{agency_map_match}")
+          get_agency_map_match(agency_map_match, mappings, parent_agency)
+
+        map_match ->
+          # credo:disable-for-next-line
+          IO.inspect("Mapping match: #{agency_name} -> #{map_match}")
+          get_agency_map_match(map_match, mappings, parent_agency)
+
+        false ->
+          mappings = Map.put(mappings, agency_name, matched_agency.name)
+          {matched_agency, mappings}
+
+        true ->
+          create_agency_match(agency_name, mappings, parent_agency)
       end
     end
   end
 
-  defp fuzzy_match_agency(name, logo) do
-    agencies = Agencies.all_for_select()
+  defp get_agency_map_match(agency_name, mappings, parent_agency) do
+    if parent_agency do
+      matched_agency =
+        Enum.find(parent_agency.sub_agencies, fn sub_agency -> sub_agency.name == agency_name end)
 
-    match =
-      Enum.find(agencies, fn x ->
-        String.jaro_distance(x.name, name) >= 0.9
-      end)
-
-    if match != nil do
-      generate_agency_id_map(match)
+      if matched_agency do
+        {matched_agency, mappings}
+      else
+        create_agency_match(agency_name, mappings, parent_agency)
+      end
     else
-      create_new_agency(name, logo)
+      {:ok, matched_agency} = Agencies.get_by_name(agency_name)
+      {matched_agency, mappings}
     end
   end
 
-  defp create_new_agency(name, logo) when is_nil(logo) do
-    {:ok, agency} =
-      Agencies.create(:saved_to_file, %{
-        name: "#{name}",
-        created_on_import: true
-      })
+  defp create_agency_match(agency_name, mappings, parent_agency) do
+    acronym = generate_agency_acronym(agency_name)
 
-    generate_agency_id_map(agency)
-  end
-
-  defp create_new_agency(name, logo_url) do
-    filename = Path.basename(logo_url)
-    extension = Path.extname(filename)
-
-    {:ok, tmp_file} = Stein.Storage.Temp.create(extname: extension)
-
-    request = Finch.build(:get, "https://www.challenge.gov/assets/netlify-uploads/#{filename}")
-    response = Finch.request(request, HTTPClient)
-
-    # response =
-    #   Finch.request(
-    #     HTTPClient,
-    #     :get,
-    #     "https://www.challenge.gov/assets/netlify-uploads/#{filename}"
-    #   )
-
-    case response do
-      {:ok, %{status: 200, body: body}} ->
-        File.write!(tmp_file, body, [:binary])
-
-        {:ok, agency} =
-          Agencies.create(:saved_to_file, %{
-            avatar: %{path: tmp_file},
-            name: name,
-            created_on_import: true
-          })
-
-        generate_agency_id_map(agency)
-
-      _ ->
-        {:ok, agency} = Agencies.create(:saved_to_file, %{name: name, created_on_import: true})
-        generate_agency_id_map(agency)
-    end
-  end
-
-  defp generate_agency_id_map(agency = %{parent_id: nil}) do
-    %{
-      "agency_id" => agency.id,
-      "sub_agency_id" => nil
+    agency_params = %{
+      name: agency_name,
+      acronym: acronym,
+      created_on_import: true
     }
+
+    agency_params =
+      if parent_agency do
+        Map.merge(agency_params, %{parent_id: parent_agency.id})
+      else
+        agency_params
+      end
+
+    {:ok, created_agency} = Agencies.create(:saved_to_file, agency_params)
+
+    # credo:disable-for-next-line
+    IO.inspect("No match. Creating agency: #{created_agency.name} (#{created_agency.acronym})")
+    # TODO: Log agency to file
+
+    mappings = Map.put(mappings, agency_name, created_agency.name)
+    {created_agency, mappings}
   end
 
-  defp generate_agency_id_map(agency = %{parent_id: parent_id}) do
-    %{
-      "agency_id" => parent_id,
-      "sub_agency_id" => agency.id
-    }
+  # defp fuzzy_match_agency(name, logo) do
+  #   agencies = Agencies.all_for_select()
+
+  #   match =
+  #     Enum.find(agencies, fn x ->
+  #       String.jaro_distance(x.name, name) >= 0.9
+  #     end)
+
+  #   if match != nil do
+  #     generate_agency_id_map(match)
+  #   else
+  #     create_new_agency(name, logo)
+  #   end
+  # end
+
+  # defp create_new_agency(name, logo) when is_nil(logo) do
+  #   acronym = generate_agency_acronym(name)
+
+  #   {:ok, agency} =
+  #     Agencies.create(:saved_to_file, %{
+  #       name: "#{name}",
+  #       acronym: acronym,
+  #       created_on_import: true
+  #     })
+
+  #   generate_agency_id_map(agency)
+  # end
+
+  # defp create_new_agency(name, logo_url) do
+  #   filename = Path.basename(logo_url)
+  #   extension = Path.extname(filename)
+
+  #   {:ok, tmp_file} = Stein.Storage.Temp.create(extname: extension)
+
+  #   request = Finch.build(:get, "https://www.challenge.gov/assets/netlify-uploads/#{filename}")
+  #   response = Finch.request(request, HTTPClient)
+
+  #   # response =
+  #   #   Finch.request(
+  #   #     HTTPClient,
+  #   #     :get,
+  #   #     "https://www.challenge.gov/assets/netlify-uploads/#{filename}"
+  #   #   )
+
+  #   acronym = generate_agency_acronym(name)
+
+  #   case response do
+  #     {:ok, %{status: 200, body: body}} ->
+  #       File.write!(tmp_file, body, [:binary])
+
+  #       {:ok, agency} =
+  #         Agencies.create(:saved_to_file, %{
+  #           avatar: %{path: tmp_file},
+  #           name: name,
+  #           acronym: acronym,
+  #           created_on_import: true
+  #         })
+
+  #       generate_agency_id_map(agency)
+
+  #     _ ->
+  #       {:ok, agency} =
+  #         Agencies.create(:saved_to_file, %{name: name, acronym: acronym, created_on_import: true})
+
+  #       generate_agency_id_map(agency)
+  #   end
+  # end
+
+  defp generate_agency_acronym(name) do
+    name
+    |> String.split(" ")
+    |> Enum.map(fn word ->
+      word
+      |> String.upcase()
+      |> String.first()
+    end)
+    |> Enum.join()
   end
+
+  # defp generate_agency_id_map(agency = %{parent_id: nil}) do
+  #   %{
+  #     "agency_id" => agency.id,
+  #     "sub_agency_id" => nil
+  #   }
+  # end
+
+  # defp generate_agency_id_map(agency = %{parent_id: parent_id}) do
+  #   %{
+  #     "agency_id" => parent_id,
+  #     "sub_agency_id" => agency.id
+  #   }
+  # end
 
   # Federal Partner Helpers
-  def match_federal_partners(""), do: ""
+  def match_federal_partners(_partners, challenge_id \\ nil, mappings \\ %{})
 
-  def match_federal_partners(partners) do
-    partner_list = String.split(partners, ",")
+  def match_federal_partners("", _challenge_id, mappings), do: {"", mappings}
 
-    partner_list
-    |> Enum.with_index()
-    |> Enum.reduce(%{}, fn {x, id}, partners ->
-      Map.put(partners, id, match_agency(String.trim(x)))
-    end)
+  def match_federal_partners(partners, challenge_id, mappings) do
+    partner_list =
+      if Map.get(Mappings.challenge_id_federal_partner_map(), challenge_id) do
+        Map.get(Mappings.challenge_id_federal_partner_map(), challenge_id)
+      else
+        String.split(partners, ",")
+      end
+
+    initial_acc = %{
+      "mappings" => mappings,
+      "partners" => %{}
+    }
+
+    matched_partner_acc =
+      partner_list
+      |> Enum.with_index()
+      |> Enum.reduce(initial_acc, fn {x, id}, acc ->
+        mappings = Map.get(acc, "mappings")
+        partners = Map.get(acc, "partners")
+
+        {matched_agencies, mappings} = match_agency(String.trim(x), nil, challenge_id, mappings)
+
+        partners = Map.put(partners, id, matched_agencies)
+
+        acc
+        |> Map.replace("mappings", mappings)
+        |> Map.replace("partners", partners)
+      end)
+
+    mappings = Map.get(matched_partner_acc, "mappings")
+
+    partners =
+      matched_partner_acc
+      |> Map.get("partners")
+      |> Map.values()
+      |> Enum.uniq()
+      |> Enum.with_index()
+      |> Map.new(fn {partner, index} ->
+        {index, partner}
+      end)
+
+    # credo:disable-for-next-line
+    IO.inspect(partners, label: "PARTNERS LIST")
+
+    {partners, mappings}
   end
 
   # Non Federal Partner Helpers
@@ -178,6 +429,14 @@ defmodule Mix.Tasks.ImportHelper do
     number
   end
 
+  def prize_type_boolean(prize, non_monetary_prize) do
+    case {prize, non_monetary_prize} do
+      {"", non_monetary_prize} when non_monetary_prize != "" -> "non_monetary"
+      {prize, ""} when prize != "" -> "monetary"
+      {_, _} -> "both"
+    end
+  end
+
   # Custom URL Helper
   def parse_custom_url(permalink) do
     case Regex.named_captures(~r/\/challenge\/(?<link>.*)\//, permalink) do
@@ -205,9 +464,6 @@ defmodule Mix.Tasks.ImportHelper do
 
     mappings = generate_type_mappings(mappings, types, scanned_types)
 
-    # credo:disable-for-next-line
-    IO.inspect(mappings)
-
     {scanned_types, mappings}
   end
 
@@ -222,20 +478,25 @@ defmodule Mix.Tasks.ImportHelper do
 
     existing_type_map = Map.get(mappings, type)
 
-    if existing_type_map do
-      [existing_type_map]
-    else
-      response =
-        Mix.shell().yes?("""
-        Does this look right?
-        ID #{challenge_id}: #{type} -> #{closest_match} (#{score})
-        """)
+    cond do
+      is_list(existing_type_map) ->
+        existing_type_map
 
-      if response do
-        [closest_match]
-      else
-        pick_new_types()
-      end
+      existing_type_map ->
+        [existing_type_map]
+
+      true ->
+        response =
+          Mix.shell().yes?("""
+          Does this look right?
+          ID #{challenge_id}: #{type} -> #{closest_match} (#{score})
+          """)
+
+        if response do
+          [closest_match]
+        else
+          pick_new_types()
+        end
     end
   end
 
@@ -329,6 +590,13 @@ defmodule Mix.Tasks.ImportHelper do
         ""
     end
   end
+
+  def upload_logo_boolean(""), do: false
+  def upload_logo_boolean(_logo_url), do: true
+
+  def auto_publish_date(), do: DateTime.utc_now()
+
+  def terms_equal_rules_boolean(), do: true
 
   # Date Helpers
   def format_date(date, fiscal_year, id) do

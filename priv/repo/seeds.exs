@@ -148,7 +148,7 @@ defmodule Helpers do
 
   defp maybe_import_agency(name, acronym, parent_agency)
        when name !== "" and not is_nil(parent_agency) do
-    case Agencies.get_by_name(name) do
+    case Agencies.get_by_name(name, parent_agency) do
       {:error, :not_found} ->
         IO.puts("Imported #{name}")
 

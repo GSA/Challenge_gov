@@ -3359,7 +3359,7 @@
             "judging": "<h4 id=\"judging-panel\">Judging Panel</h4>\n\n<p>The judging panel may be composed of federal and/or non-federal scientists, engineers, and other technical experts, including subject matter experts from the listed partners for this Challenge. All persons or entities that submit a proposal will receive a high-level evaluation and be notified as to the status of their submission. Decisions by EPA cannot be contested.</p>\n\n<h4 id=\"judging-criteria\">Judging Criteria</h4>\n\n<p>Submissions will be judged by how they address the criteria listed below.</p>\n\n<h4 id=\"this-challenge-is-intended-to-encourage-the-development-of-new-approaches-technologies-or-technology-combinations-that-meet-the-following-objectives\">This challenge is intended to encourage the development of new approaches, technologies, or technology combinations that meet the following objectives:</h4>\n\n<ol>\n  <li>Must be applicable for use on unspent aqueous film forming foam (AFFF) from unused AFFF concentrates containing 3 percent and/or 6 percent PFAS;</li>\n  <li>Must destroy at least 99 percent of the PFAS in unused AFFF concentrates, including PFAS byproducts that may form by volatilization, particulates, and leaching from effluents;</li>\n  <li>Must demonstrate scalability and cost effectiveness for a defined quantity over thermal methods used to treat AFFF.</li>\n</ol>\n\n<p>Solvers are not required to give up any of their intellectual property rights to EPA and its partners to be eligible to receive an award.</p>\n\n<p><strong>Additional features that are desired (but not required) of submitted PFAS destruction technologies/approaches:</strong></p>\n\n<ul>\n  <li>Demonstrates compatibility with current production and destruction practices;</li>\n  <li>Avoids creating other toxic residues after destruction of PFAS, including hazardous chemicals identified in EPA’s ToxCast database, <a href=\"https://comptox.epa.gov/dashboard/chemical_lists/EPAPFASINV\">https://comptox.epa.gov/dashboard/chemical_lists/EPAPFASINV</a>;</li>\n  <li>Is currently accessible in the marketplace or near market ready.</li>\n</ul>\n\n<p><strong>The ideal technology would:</strong></p>\n\n<ul>\n  <li>Perform onsite destruction of at least 99 percent of PFAS in AFFF formulations;</li>\n  <li>Be currently on the market or near market;</li>\n  <li>Destroy parent PFAS compounds;</li>\n  <li>Destroy short-chain PFAS byproducts (e.g., CF4) if volatilization occurs;</li>\n  <li>Destroy or neutralize any unwanted byproducts (e.g., HF) that would need to be incinerated or landfilled in a hazardous waste facility;</li>\n  <li>Be more cost effective than thermal destruction;</li>\n  <li>Have good environmental and public health outcomes (e.g., does not transfer PFAS or any unwanted byproducts into other media);</li>\n  <li>Be potentially applicable to other PFAS waste streams (e.g., biosolids, contaminated ground water, etc).</li>\n</ul>\n",
             "how-to-enter": "<p>To submit a solution to the Innovative Ways to Destroy PFAS Challenge please follow the link here to InnoCentive and follow the instructions.</p>\n\n<p>Submission URL:\n<a href=\"https://innocentive.wazoku.com/#/challenge/675bf47600ba483baf6c25ca96ce634d\">https://innocentive.wazoku.com/#/challenge/675bf47600ba483baf6c25ca96ce634d</a></p>\n"                
         },{
-            "challenge-id": "1155",
+            "challenge-id": "1134",
             "challenge-title": "Enhancing Computer Vision for Public Safety Challenge",
             "permalink": "https://www.challenge.gov/challenge/enhancing-computer-vision-for-public-safety-challenge/",
             "external-url": "",
@@ -3385,7 +3385,7 @@
             "judging": "<h4 id=\"judging-panel\">Judging Panel</h4>\n\n<p>The submissions will be judged by a qualified panel of expert(s) selected by the U.S. Department of Commerce, National Institute of Standards and Technology (NIST) at its sole discretion. The panel consists of U.S. Department of Commerce, NIST and non-Department of Commerce, NIST experts and will judge the submissions according to the judging criteria to select winners. The decisions of the panel for the contest will be announced in accordance with the dates noted in the “Summary of Important Dates.”</p>\n\n<h4 id=\"judging-criteria\">Judging Criteria</h4>\n\n<p><strong>Phase 1: Concept Paper</strong>\nCriterion #1: Knowledge and Relevance (20%)\nThis criterion involves consideration of the following factors:</p>\n\n<ul>\n  <li>Team skill set and past experience (e.g., computer vision, video analytics, image analytics, image quality, subjective testing, NR metric development)</li>\n  <li>Demonstrated focus on first responder needs in the proposed solution</li>\n</ul>\n\n<p>Criterion #2: Technical Approach (40%)\nThe extent to which the objective methods to assess the quality of images for computer vision applications meets the goals of the challenge:</p>\n\n<ul>\n  <li>Demonstrated knowledge of computer vision and its current limitations</li>\n  <li>Plausible and appropriate approach for assessing the failure rate of computer vision algorithms</li>\n  <li>Speed, flexibility, and repeatability of the assessment method for future research</li>\n</ul>\n\n<p>Criterion #3: Subject Matter (40%)\nThe extent to which the image dataset design meets the objectives listed in the goals of the challenge:</p>\n\n<ul>\n  <li>Diversity of scenes, locations, objects, lighting, and/or environments to be depicted</li>\n  <li>Type and variety of cameras</li>\n  <li>Plausible approach for creating a wide range of image or video quality</li>\n  <li>Suitable strategy for obtaining image or videos release, when required by privacy concerns</li>\n</ul>\n\n<p>*See <a href=\"{{site.baseurl}}/assets/netlify-uploads/official-rules_computer-vision-challenge_08252020.pdf\">Official Rules</a> for judging criteria associated with Phase 2 of the contest.</p>\n",
             "how-to-enter": "<p>Submit a concept paper by email to <a href=\"mailto:psprizes@nist.gov\">psprizes@nist.gov</a> by <strong>5:00 p.m. Mountain Daylight Time</strong> on October 20, 2020. The concept paper must be a PDF file with a <strong>maximum of 9 pages</strong> and a file size of <strong>less than 25MB</strong>.</p>\n\n<p>*Note: Contestants may submit a concept paper for the Specific Camera Impairment category or the Single Computer Vision Application category, but not both. Review the two PSCR-provided dataset categories included in the <a href=\"{{site.baseurl}}/assets/netlify-uploads/official-rules_computer-vision-challenge_08252020.pdf\">Official Rules</a>.</p>\n\n<p><strong>Submission Email:</strong> <a href=\"mailto:psprizes@nist.gov\">psprizes@nist.gov</a></p>\n"                
         },{
-            "challenge-id": "1134",
+            "challenge-id": "1155",
             "challenge-title": "Mobilizing and Empowering the Nation and Technology to Address Loneliness & social isolation (MENTAL) Health Innovation Challenge",
             "permalink": "https://www.challenge.gov/challenge/MENTAL-health-social-isolation-challenge/",
             "external-url": "",
@@ -3551,7 +3551,7 @@
             "legal-authority": "America COMPETES Act",
             "fiscal-year": "FY21",
             "type-of-challenge": ["Software and apps","Ideas","Technology demonstration and hardware"],
-            "total-prize-offered-cash": "Up to $1,000,000",
+            "total-prize-offered-cash": "$1,000,000",
             "challenge_status": "closed",
             "agency": "Department of Health and Human Services - Health Resources and Services Administration, Maternal and Child Health Bureau",
             "partner-agencies-federal": "",
@@ -3577,7 +3577,7 @@
             "legal-authority": "America COMPETES Act",
             "fiscal-year": "FY20,FY21",
             "type-of-challenge": ["Ideas","Analytics, visualizations, algorithms"],
-            "total-prize-offered-cash": "Up to $276,000",
+            "total-prize-offered-cash": "$276,000",
             "challenge_status": "closed",
             "agency": "Department of Commerce - National Institute of Standards and Technology, Public Safety Communications Research (PSCR) Division",
             "partner-agencies-federal": "",
@@ -5267,7 +5267,7 @@
             "legal-authority": "Agency specific prize authority",
             "fiscal-year": "FY21",
             "type-of-challenge": ["Software and apps","Ideas","Technology demonstration and hardware","Business plans","Analytics, visualizations, algorithms","Scientific"],
-            "total-prize-offered-cash": "$5,000 for each Phase 2 participant ",
+            "total-prize-offered-cash": "$5,000",
             "challenge_status": "closed",
             "agency": "Department of Defense - U.S. Army",
             "partner-agencies-federal": "The U.S. Army Rapid Capabilities and Critical Technologies Office (RCCTO)",
@@ -5475,7 +5475,7 @@
             "legal-authority": "Agency specific prize authority",
             "fiscal-year": "FY20",
             "type-of-challenge": ["Technology demonstration and hardware"],
-            "total-prize-offered-cash": "Up to $1,000,000",
+            "total-prize-offered-cash": "$1,000,000",
             "challenge_status": "closed",
             "agency": "U.S. Department of Energy",
             "partner-agencies-federal": "",

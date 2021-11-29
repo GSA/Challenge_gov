@@ -94,3 +94,5 @@ defmodule Seeds.SeedModules.Accounts do
     |> DateTime.add(-60 * 60 * 24 * 366, :second)
   end
 end
+
+Seeds.SeedModules.Accounts.run()
