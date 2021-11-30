@@ -346,6 +346,10 @@ defmodule ChallengeGov.Challenges do
     base_query()
     |> where([c], c.status == "published" and c.sub_status != "archived")
     |> where([c], is_nil(c.gov_delivery_topic))
+    |> where(
+      [c],
+      c.archive_date > ^DateTime.utc_now()
+    )
     |> Repo.all()
   end
 
