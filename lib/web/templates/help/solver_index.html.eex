@@ -29,13 +29,13 @@
             <div class="text-center help-card__section">
               <i class="dashboard-card-icon fa fa-question-circle"></i>
               <h4 class="m-4">FAQs</h4>
-              <p>Check out our <a href="https://www.challenge.gov/toolkit/faq/" target="_blank">frequently asked questions</a> on how to use the portal to submit challenges.</p>
+              <p>Check out our <%= link("frequently asked questions", to: Routes.static_path(@conn, "/pdfs/solver_faq.pdf"), target: "_blank") %> on prize competitions and crowdsourcing, and use of the Challenge.Gov platform.</p>
             </div>
             <span class="vr-light">&nbsp;</span>
             <div class="text-center help-card__section">
               <i class="dashboard-card-icon fa fa-tools"></i>
-              <h4 class="m-4">Starting a submission</h4>
-              <p>Our <a href="https://www.challenge.gov/toolkit/" target="_blank">submission toolkit</a> is full of useful information.</p>
+              <h4 class="m-4">User Guide</h4>
+              <p>Our <%= link("user guide", to: Routes.static_path(@conn, "/pdfs/solver_user_guide.pdf"), target: "_blank") %> is full of useful information to help you get started.</p>
             </div>
           </div>
         </div>
