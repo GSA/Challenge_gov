@@ -47,12 +47,29 @@ export const PreviewPage = () => {
   const renderPreviewItems = () => {
     if (print) {
       return (
+        <>
+          <div className="floating-tile">
+            <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
+          </div>
+          <div className="row">
+            <div className="col">
+              <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} challengePhases={challengePhases} preview={true} loading={loadingState} print={print} tab={tab} />
+            </div>
+          </div>
+        </>
+      )
+    }
+
+    if (currentChallenge && currentChallenge.external_url) {
+      return (
         <div className="floating-tile">
           <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
         </div>
       )
-    } else {
-      return (
+    }
+
+    return (
+      <>
         <div className="challenge-preview__top row mb-5">
           <div className="col-md-4">
             <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
@@ -61,18 +78,18 @@ export const PreviewPage = () => {
             <PreviewBanner challenge={currentChallenge} />
           </div>
         </div>
-      )
-    }
+        <div className="row">
+          <div className="col">
+            <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} challengePhases={challengePhases} preview={true} loading={loadingState} print={print} tab={tab} />
+          </div>
+        </div>
+      </>
+    )
   }
 
   return (
     <div className="challenge-preview py-5">
       {renderPreviewItems()}
-      <div className="row">
-        <div className="col">
-          <ChallengeDetails ref={print && launchPrintDialogue()} challenge={currentChallenge} challengePhases={challengePhases} preview={true} loading={loadingState} print={print} tab={tab} />
-        </div>
-      </div>
     </div>
   )
 }
