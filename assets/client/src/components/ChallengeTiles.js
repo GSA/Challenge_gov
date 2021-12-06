@@ -63,7 +63,7 @@ export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleY
   }
 
   const renderYearFilter = () => {
-    const startYear = 2009
+    const startYear = 2010
     const currentYear = moment().year()
     const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
 
