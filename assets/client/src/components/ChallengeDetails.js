@@ -228,10 +228,12 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         <>
           {renderApplyButton(challenge)}
           <div className="detail-section__split-btns">
-            <div className="follow-btn" id="followChallengeButton">
-              {renderFollowButton(challenge)}
-              {renderFollowTooltip()}
-            </div>
+            {!challenge.is_archived &&
+              <div className="follow-btn" id="followChallengeButton">
+                {renderFollowButton(challenge)}
+                {renderFollowTooltip()}
+              </div>
+            }
             <div className="social-share-btn" id="shareChallengeButton">
               <span className="details__btn">
                 <i className="fas fa-share-alt mr-2"></i>
