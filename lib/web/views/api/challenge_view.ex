@@ -50,12 +50,22 @@ defmodule Web.Api.ChallengeView do
     to_json(challenge)
   end
 
-  def render("federal_partner_agencies.json", %{agency: agency}) do
+  def render("federal_partner_agencies.json", %{agency: %{agency: agency, sub_agency: nil}}) do
     logo = if agency.avatar_key, do: Web.AgencyView.avatar_url(agency), else: nil
 
     %{
       id: agency.id,
       name: agency.name,
+      logo: logo
+    }
+  end
+
+  def render("federal_partner_agencies.json", %{agency: %{sub_agency: sub_agency}}) do
+    logo = if sub_agency.avatar_key, do: Web.AgencyView.avatar_url(sub_agency), else: nil
+
+    %{
+      id: sub_agency.id,
+      name: sub_agency.name,
       logo: logo
     }
   end
@@ -98,7 +108,7 @@ defmodule Web.Api.ChallengeView do
       external_url: challenge.external_url,
       federal_partners:
         render_many(
-          challenge.federal_partner_agencies,
+          challenge.federal_partners,
           __MODULE__,
           "federal_partner_agencies.json",
           as: :agency
