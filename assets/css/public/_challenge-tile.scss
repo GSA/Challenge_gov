@@ -40,6 +40,10 @@ p {
     margin-bottom: 1rem;
     text-align: center;
   }
+
+  .card {
+    margin: 1em;
+  }
 }
 
 .nav_card {
@@ -138,6 +142,21 @@ p {
   }
 }
 
+.saved-challenge-tile {
+  height: 30em;
+
+  .challenge-tile__info {
+    height: 15em;
+    overflow: hidden;
+  }
+
+  .challenge-tile__remove {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}
+
 .image_wrapper {
   position: relative;
   width: 100%;
@@ -170,5 +189,21 @@ p {
   &--important-update {
     background-color: #fa9441;
     color: black;
+  }
+}
+
+.saved-challenges-grid {
+  h5 {
+    padding-left: 2rem;
+  }
+}
+
+@media screen and (min-device-width: 768px) {
+  .saved-challenges-grid {
+    padding: 3rem;
+
+    h5 {
+      padding: 0;
+    }
   }
 }
