@@ -32,27 +32,33 @@
 
             <dt>Content</dd>
             <dd>
-              <%= SharedView.render_safe_html(@content.content) %>
+              <div class="editor-text-reset"><%= SharedView.render_safe_html(@content.content) %></div>
             </dd>
             <br/>
 
-            <%= if @content.section === "site_wide_banner" and @content.start_date do %>
-              <dt>
-                <span class="text-bold">Start date: </span>
-              </dt>
-              <dd>
-                <span class="js-local-datetime"><%= @content.start_date %></span>
-              </dd>
-            <% end %>
+            <div class="d-flex">
+              <%= if @content.section === "site_wide_banner" and @content.start_date do %>
+                <div class="mr-4">
+                  <dt>
+                    <span class="text-bold">Start date: </span>
+                  </dt>
+                  <dd>
+                    <span class="js-local-datetime"><%= @content.start_date %></span>
+                  </dd>
+                </div>
+              <% end %>
 
-            <%= if @content.section === "site_wide_banner" and @content.end_date do %>
-              <dt>
-                <span class="text-bold">End date: </span>
-              </dt>
-              <dd>
-                <span class="js-local-datetime"><%= @content.end_date %></span>
-              </dd>
-            <% end %>
+              <%= if @content.section === "site_wide_banner" and @content.end_date do %>
+                <div>
+                  <dt>
+                    <span class="text-bold">End date: </span>
+                  </dt>
+                  <dd>
+                    <span class="js-local-datetime"><%= @content.end_date %></span>
+                  </dd>
+                </div>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
