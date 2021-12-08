@@ -262,6 +262,35 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     })
   }
 
+  const renderChallengeLogo = () => {
+    if (challenge.imported && challenge.sub_status === "archived" && challenge.logo.includes("challenge-logo-2_1.svg")) {
+      return (
+        <img
+          className="agency-logo"
+          src={challenge.agency_logo}
+          alt={`${challenge.agency_name} logo`}
+          title="Challenge agency logo" />
+      )
+    }
+
+    if (challenge.logo) {
+      return (
+        <img
+        className={challenge.upload_logo ? "custom-logo" : "challenge-logo"}
+        src={challenge.logo} alt={challenge.logo_alt_text}
+        title="challenge logo"/>
+      )
+    }
+
+    return (
+      <img
+        className="agency-logo"
+        src={challenge.agency_logo}
+        alt={`${challenge.agency_name} logo`}
+        title="Challenge agency logo" />
+    )
+  }
+
   return (
     (challenge && !!challengePhases) ? (
       <div className="w-100">
@@ -291,17 +320,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                 <div dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
               </div>
               <div className="logo-container">
-                { challenge.logo
-                  ? <img
-                      className={challenge.upload_logo ? "custom-logo" : "challenge-logo"}
-                      src={challenge.logo} alt={challenge.logo_alt_text}
-                      title="challenge logo"/>
-                  : <img
-                      className="agency-logo"
-                      src={challenge.agency_logo}
-                      alt={`${challenge.agency_name} logo`}
-                      title="Challenge agency logo" />
-                }
+                {renderChallengeLogo()}
               </div>
             </div>
             <div className="detail-section">

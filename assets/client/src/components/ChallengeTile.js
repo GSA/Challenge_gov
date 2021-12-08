@@ -103,21 +103,44 @@ export const ChallengeTile = ({challenge, preview}) => {
     }
   }
 
+  const renderTileLogo = () => {
+    if (challenge.imported && challenge.sub_status === "archived" && challenge.logo.includes("challenge-logo-2_1.svg")) {
+      return (
+        <div className="agency_image_wrapper">
+          <img
+            className="agency-logo"
+            src={imageBase + challenge.agency_logo}
+            alt={`${challenge.agency_name} logo`}
+            title="Challenge agency logo" />
+        </div>
+      )
+    }
+
+    if (challenge.logo) {
+      return (
+        <div className="image_wrapper">
+          <img src={challenge.logo} alt={challenge.logo_alt_text} title="Challenge logo" className="w-100"/>
+        </div>
+      )
+    }
+
+    return (
+      <div className="image_wrapper">
+        <img
+          src={imageBase + challenge.agency_logo}
+          alt="Challenge agency logo"
+          title="Challenge agency logo"
+          className="w-100"
+        />
+      </div>
+    )
+  }
+
   return (
     challenge ? (
       <div key={challenge.id} className="challenge-tile card">
         <a href={challengeTileUrl(challenge, preview)} target={challenge.external_url ? "_blank" : ""} aria-label="View challenge details">
-          <div className="image_wrapper">
-            { challenge.logo
-              ? <img src={imageBase + challenge.logo} alt={challenge.logo_alt_text} title="Challenge logo" className="w-100"/>
-              : <img
-                  src={challenge.agency_logo}
-                  alt="Challenge agency logo"
-                  title="Challenge agency logo"
-                  className="w-100"
-                />
-            }
-          </div>
+          {renderTileLogo()}
           <div className="challenge-tile__text-wrapper">
             <p className="challenge-tile__title test" aria-label="Challenge title">{truncateString(challenge.title, 90)}</p>
             <p className="challenge-tile__agency-name" aria-label="Agency name">{truncateString(challenge.agency_name, 90)}</p>
