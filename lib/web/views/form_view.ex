@@ -397,10 +397,15 @@ defmodule Web.FormView do
     classes = form_control_file_classes(form, field)
 
     label =
-      if opts[:label] === false do
-        ""
-      else
-        label(form, field, class: "col-md-4")
+      cond do
+        opts[:label] ->
+          label(form, field, opts[:label], class: "col-md-4")
+
+        opts[:label] === false ->
+          ""
+
+        true ->
+          label(form, field, class: "col-md-4")
       end
 
     class =

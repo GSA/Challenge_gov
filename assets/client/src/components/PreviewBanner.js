@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import moment from 'moment'
+import { ApiUrlContext } from '../ApiUrlContext'
 
 export const PreviewBanner = ({challenge}) => {
   const location = window.location.href.split('?')[0]
+  const { apiUrl } = useContext(ApiUrlContext)
 
   return (
     challenge ? (
@@ -20,7 +22,9 @@ export const PreviewBanner = ({challenge}) => {
             <div>
               <span className="mr-3">Preview generated on {moment().format("llll")}</span>
               <a className="mr-3" href={window.location.href}>Refresh page</a>
-              <a href={location + "?print=true"}>Print</a>
+              {!challenge.external_url &&
+                <a href={apiUrl + `/public/previews/challenges?challenge=${challenge.uuid}&print=true`} target="_blank">Print</a>
+              }
             </div> 
             <br/>
             <div>Link to share for internal agency review:</div>

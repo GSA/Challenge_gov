@@ -18,7 +18,7 @@
                 <div class="callout callout-warning">
                   <i class="fa fa-exclamation-circle"></i>
                   <span class="ql-editor">
-                    <%= raw @conn.assigns.site_wide_banner.content %>
+                    <span><%= raw (@conn.assigns.site_wide_banner.content) %></span>
                   </span>
                 </span>
               </div>

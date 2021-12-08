@@ -62,8 +62,13 @@ export const PreviewPage = () => {
 
     if (currentChallenge && currentChallenge.external_url) {
       return (
-        <div className="floating-tile">
-          <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
+        <div className="challenge-preview__top row mb-5">
+          <div className="col-md-4">
+            <ChallengeTile challenge={currentChallenge} preview={true} loading={loadingState}/>
+          </div>
+          <div className="col-md-8">
+            <PreviewBanner challenge={currentChallenge} />
+          </div>
         </div>
       )
     }

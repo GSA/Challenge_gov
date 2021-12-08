@@ -237,7 +237,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
             <div className="social-share-btn" id="shareChallengeButton">
               <span className="details__btn">
                 <i className="fas fa-share-alt mr-2"></i>
-                share
+                Share
               </span>
               <SocialSharingTooltip shareTooltipOpen={shareTooltipOpen} toggleShareTooltip={toggleShareTooltip} challenge={challenge}/>
             </div>

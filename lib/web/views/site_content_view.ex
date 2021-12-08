@@ -3,4 +3,5 @@ defmodule Web.SiteContentView do
 
   alias Web.FormView
   alias Web.SharedView
+  alias Web.ChallengeView
 end
