@@ -263,7 +263,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
   }
 
   const renderChallengeLogo = () => {
-    if (challenge.imported && challenge.sub_status === "archived" && challenge.logo.includes("challenge-logo-2_1.svg")) {
+    if (challenge.imported && challenge.sub_status === "archived" && challenge.logo.includes("challenge-logo-2_1")) {
       return (
         <img
           className="agency-logo"

@@ -104,7 +104,7 @@ export const ChallengeTile = ({challenge, preview}) => {
   }
 
   const renderTileLogo = () => {
-    if (challenge.imported && challenge.sub_status === "archived" && challenge.logo.includes("challenge-logo-2_1.svg")) {
+    if (challenge.imported && challenge.sub_status === "archived" && challenge.logo.includes("challenge-logo-2_1")) {
       return (
         <div className="agency_image_wrapper">
           <img
