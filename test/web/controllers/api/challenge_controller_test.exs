@@ -381,7 +381,9 @@ defmodule Web.Api.ChallengeControllerTest do
       "subscriber_count" => 0,
       "is_archived" => Challenges.is_archived_new?(challenge),
       "is_closed" => Challenges.is_closed?(challenge),
-      "short_url" => nil
+      "short_url" => nil,
+      "imported" => false,
+      "sub_status" => nil
     }
   end
 end

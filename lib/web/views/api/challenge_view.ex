@@ -37,6 +37,8 @@ defmodule Web.Api.ChallengeView do
       announcement_datetime: challenge.announcement_datetime,
       is_archived: Challenges.is_archived_new?(challenge),
       is_closed: Challenges.is_closed?(challenge),
+      imported: challenge.imported,
+      sub_status: challenge.sub_status,
       phases:
         render_many(
           challenge.phases,
@@ -124,6 +126,7 @@ defmodule Web.Api.ChallengeView do
       legal_authority: challenge.legal_authority,
       logo: ChallengeView.logo_url(challenge),
       logo_alt_text: challenge.logo_alt_text,
+      imported: challenge.imported,
       multi_phase: challenge.multi_phase,
       non_federal_partners:
         render_many(
@@ -150,6 +153,7 @@ defmodule Web.Api.ChallengeView do
       rules: challenge.rules,
       start_date: challenge.start_date,
       status: challenge.status,
+      sub_status: challenge.sub_status,
       supporting_documents:
         render_many(
           challenge.supporting_documents,
