@@ -223,7 +223,10 @@ defmodule Web.ChallengeView do
             select(
               form,
               :user_id,
-              Enum.map(Accounts.all_for_select(), &{"#{&1.first_name} #{&1.last_name}", &1.id}),
+              Enum.map(
+                Accounts.all_managers_for_select(),
+                &{"#{&1.first_name} #{&1.last_name}", &1.id}
+              ),
               class: "form-control js-select"
             )
           end
@@ -251,7 +254,7 @@ defmodule Web.ChallengeView do
                 form,
                 :challenge_managers,
                 Enum.map(
-                  Accounts.all_for_select(),
+                  Accounts.all_managers_for_select(),
                   &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}
                 ),
                 selected: Enum.map(changeset.data.challenge_manager_users, & &1.id),
@@ -345,7 +348,7 @@ defmodule Web.ChallengeView do
       form,
       :challenge_managers,
       Enum.map(
-        Accounts.all_for_select(),
+        Accounts.all_managers_for_select(),
         &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}
       ),
       selected: Enum.map(changeset.data.challenge_manager_users, & &1.id),
@@ -368,7 +371,7 @@ defmodule Web.ChallengeView do
               form,
               :challenge_managers,
               Enum.map(
-                Accounts.all_for_select(),
+                Accounts.all_managers_for_select(),
                 &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}
               ),
               selected: initial_challenge_managers(form, user, changeset),
