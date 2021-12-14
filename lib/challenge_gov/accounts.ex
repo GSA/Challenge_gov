@@ -65,6 +65,17 @@ defmodule ChallengeGov.Accounts do
   end
 
   @doc """
+  Get all manager accounts
+  """
+  @spec all_managers_for_select() :: [User.t()]
+  def all_managers_for_select() do
+    User
+    |> where([u], u.role == "challenge_manager")
+    |> order_by([u], [{:asc, u.last_name}])
+    |> Repo.all()
+  end
+
+  @doc """
   Get all solver accounts
   """
   def all_solvers_for_select() do
