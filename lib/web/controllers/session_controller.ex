@@ -128,15 +128,16 @@ defmodule Web.SessionController do
   @doc """
   session timeout and reset
   """
-  def check_session_timeout(conn, opts) do
+  def check_session_timeout(conn, _opts_or_params) do
     timeout_at = get_session(conn, :session_timeout_at)
+    timeout_after_minutes = Security.timeout_interval()
 
     if timeout_at do
       if now() < timeout_at do
         put_session(
           conn,
           :session_timeout_at,
-          new_session_timeout_at(opts[:timeout_after_minutes])
+          new_session_timeout_at(timeout_after_minutes)
         )
       else
         conn
