@@ -487,7 +487,7 @@ defmodule Web.MessageContextControllerTest do
           "message_context" => message_context_attributes
         })
 
-      assert {:ok, context} = MessageContexts.get("challenge", challenge.id, "all")
+      assert {:ok, _context} = MessageContexts.get("challenge", challenge.id, "all")
 
       assert get_flash(conn, :error) == "You can not start a message thread"
       assert html_response(conn, 302)

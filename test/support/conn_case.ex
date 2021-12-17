@@ -35,6 +35,15 @@ defmodule Web.ConnCase do
       Ecto.Adapters.SQL.Sandbox.mode(ChallengeGov.Repo, {:shared, self()})
     end
 
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    # TODO: Fix test failures due to changes in session_timeout code by adding one globally
+    # Possibly refactor this later to be used in more specific tests or a test helper
+    conn =
+      Phoenix.ConnTest.build_conn()
+      |> Plug.Test.init_test_session(
+        session_timeout_at:
+          Web.SessionController.new_session_timeout_at(ChallengeGov.Security.timeout_interval())
+      )
+
+    {:ok, conn: conn}
   end
 end

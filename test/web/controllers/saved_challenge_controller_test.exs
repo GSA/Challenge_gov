@@ -4,7 +4,6 @@ defmodule Web.SavedChallengeControllerTest do
   alias ChallengeGov.SavedChallenges
   alias ChallengeGov.TestHelpers.AccountHelpers
   alias ChallengeGov.TestHelpers.ChallengeHelpers
-  alias Web.ChallengeView
 
   describe "index for saved challenges" do
     test "successfully retrieve all saved challenges for current user", %{conn: conn} do
