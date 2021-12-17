@@ -5,7 +5,7 @@ defmodule Web.SharedView do
   alias Web.SharedView
 
   def session_timeout(conn) do
-    Map.get(conn.private.plug_session, "session_timeout_at")
+    Plug.Conn.get_session(conn, "session_timeout_at")
   end
 
   def public_page_path(path, page, pagination_param \\ nil) do

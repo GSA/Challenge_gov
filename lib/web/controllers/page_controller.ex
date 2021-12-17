@@ -20,6 +20,10 @@ defmodule Web.PageController do
         conn
         |> put_flash(:info, "Login successful")
         |> put_session(:user_token, user.token)
+        |> put_session(
+          :session_timeout_at,
+          Web.SessionController.new_session_timeout_at(ChallengeGov.Security.timeout_interval())
+        )
         |> redirect(to: Routes.dashboard_path(conn, :index))
 
       {:error, _err} ->

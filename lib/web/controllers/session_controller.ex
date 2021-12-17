@@ -61,6 +61,7 @@ defmodule Web.SessionController do
 
       conn
       |> put_session(:user_token, user.token)
+      |> put_session(:session_timeout_at, new_session_timeout_at(Security.timeout_interval()))
       |> after_sign_in_redirect(Routes.dashboard_path(conn, :index))
     else
       {:error, _err} ->
@@ -127,15 +128,26 @@ defmodule Web.SessionController do
   @doc """
   session timeout and reset
   """
-  def check_session_timeout(conn, opts) do
+  def check_session_timeout(conn, _opts_or_params) do
     timeout_at = get_session(conn, :session_timeout_at)
+    timeout_after_minutes = Security.timeout_interval()
 
-    if timeout_at && now() > timeout_at do
+    if timeout_at do
+      if now() < timeout_at do
+        put_session(
+          conn,
+          :session_timeout_at,
+          new_session_timeout_at(timeout_after_minutes)
+        )
+      else
+        conn
+        |> logout_user()
+        |> halt()
+      end
+    else
       conn
       |> logout_user()
       |> halt()
-    else
-      put_session(conn, :session_timeout_at, new_session_timeout_at(opts[:timeout_after_minutes]))
     end
   end
 
@@ -160,7 +172,7 @@ defmodule Web.SessionController do
     DateTime.utc_now() |> DateTime.to_unix()
   end
 
-  defp new_session_timeout_at(timeout_after_minutes) do
+  def new_session_timeout_at(timeout_after_minutes) do
     now() + timeout_after_minutes * 60
   end
 end
