@@ -1,0 +1,13 @@
+.analytics-graph-container {
+  position: relative;
+  height: 600px;
+}
+
+@media screen and (max-device-width: 425px) {
+  .analytics-counts {
+    flex-direction: column;
+  }
+  .analytics-graph-container {
+    height: 400px;
+  }
+}
