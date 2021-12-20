@@ -632,3 +632,14 @@ form {
       }
     }
   }
+
+
+.control-sidebar {
+  border-left: 1px solid black;
+  border-bottom: 1px solid black;
+}
+@media screen and (max-device-width: 425px) {
+  .control-sidebar {
+    width: 90%;
+  }
+}
