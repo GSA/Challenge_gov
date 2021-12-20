@@ -13,7 +13,6 @@ defmodule Web.AnalyticsView do
     content_tag(:div, class: "analytics-graph-container") do
       content_tag(:canvas, "",
         class: "js-analytics-graph",
-        # style: "height: 300px",
         data: [
           graph_type: type,
           graph_data: data,

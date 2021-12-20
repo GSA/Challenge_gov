@@ -19,7 +19,7 @@
   </div>
 </div>
 
-<section class="content solver-help">
+<section class="content help-page">
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
@@ -40,7 +40,7 @@
           </div>
         </div>
 
-        <div class="card help-card p-4 my-5 mx-auto solver-help__question-section">
+        <div class="card help-card p-4 my-5 mx-auto help-page__question-section">
           <div class="d-flex flex-row justify-content-around py-3">
             <div class="w-50 px-5 my-auto left-section">
               <h3 class="mb-4 font-weight-bold">Question about a challenge?</h3>
@@ -54,7 +54,7 @@
           </div>
         </div>
 
-        <div class="card help-card p-4 my-5 mx-auto solver-help__technical-issues">
+        <div class="card help-card p-4 my-5 mx-auto help-page__technical-issues">
           <div class="d-flex flex-row py-4">
             <div class="text-center mx-5 left-section">
               <img src="/images/click.svg" alt="hand " title="Contact indication" />

@@ -1,5 +1,5 @@
 @media screen and (max-device-width: 425px) {
-  .solver-help {
+  .help-page {
     &__question-section {
       div {
         flex-direction: column !important;
@@ -8,6 +8,21 @@
       .left-section {
         width: auto !important;
         padding: 0 0 1em 0 !important;
+      }
+
+      .right-section {
+        width: auto !important;
+      }
+    }
+
+    &__toolkit-section {
+      div {
+        flex-direction: column !important;
+      }
+
+      .left-section {
+        width: auto !important;
+        padding: 0 0 .25em 0 !important;
       }
 
       .right-section {
