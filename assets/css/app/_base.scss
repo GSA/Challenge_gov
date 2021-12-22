@@ -639,6 +639,10 @@ form {
   border-bottom: 1px solid black;
 }
 @media screen and (max-device-width: 425px) {
+  #sidebar-overlay {
+    z-index: 1020;
+  }
+
   .control-sidebar {
     width: 90%;
   }
