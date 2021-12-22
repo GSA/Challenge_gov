@@ -71,7 +71,7 @@ defmodule ChallengeGov.Accounts do
   def all_managers_for_select() do
     User
     |> where([u], u.role == "challenge_manager")
-    |> order_by([u], [{:asc, u.last_name}])
+    |> order_by([u], asc: u.last_name, asc: u.email)
     |> Repo.all()
   end
 
