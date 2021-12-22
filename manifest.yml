@@ -11,8 +11,8 @@ defaults: &defaults
 applications:
 - name: challenge-portal-dev
   <<: *defaults
-  instances: 2
-  disk_quota: 2500MB
+  instances: 1
+  disk_quota: 6GB
   env:
     MIX_ENV: prod
     HOST: challenge-portal-dev.app.cloud.gov
