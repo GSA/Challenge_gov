@@ -5,10 +5,10 @@
         %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
         %{text: "Analytics"},
       ])%>
-    </div>
 
-    <h1>Challenge.gov analytics</h1>
-    <p class="pl-0">Snapshot of all Challenges across the Challenge.gov platform</p>
+      <h1>Challenge.gov analytics</h1>
+      <p class="pl-0">Snapshot of all Challenges across the Challenge.gov platform</p>
+    </div>
   </div>
 
   <%= if length(@dap_reports) > 0 do %>
