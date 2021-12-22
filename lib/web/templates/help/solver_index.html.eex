@@ -25,7 +25,7 @@
       <div class="col-md-12">
         <div class="card help-card p-4 my-5 mx-auto">
           <h3 class="text-center mb-4 font-weight-bold">Getting started</h3>
-          <div class="d-flex flex-row justify-content-around mt-4">
+          <div class="d-flex flex-row justify-content-around mt-4 help-page__getting-started-content">
             <div class="text-center help-card__section">
               <i class="dashboard-card-icon fa fa-question-circle"></i>
               <h4 class="m-4">FAQs</h4>
