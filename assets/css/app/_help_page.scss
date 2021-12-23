@@ -1,5 +1,15 @@
 @media screen and (max-device-width: 425px) {
   .help-page {
+    &__getting-started-content {
+      flex-direction: column !important;
+
+      .vr-light {
+        background: none;
+        border-top: 1px solid #D8D8D8;
+        width: 100% !important;
+      }
+    }
+
     &__question-section {
       div {
         flex-direction: column !important;
@@ -27,6 +37,7 @@
 
       .right-section {
         width: auto !important;
+        margin: 0px !important;
       }
     }
 
@@ -42,6 +53,7 @@
 
       .right-section {
         width: auto !important;
+        margin: 0px !important;
       }
     }
   }

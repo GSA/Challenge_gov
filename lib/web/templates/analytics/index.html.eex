@@ -1,7 +1,14 @@
 <div class="p-3">
   <div class="content-header">
-    <h1>Challenge.gov analytics</h1>
-    <p class="pl-0">Snapshot of all Challenges across the Challenge.gov platform</p>
+    <div class="container-fluid">
+      <%= SharedView.render_breadcrumbs([
+        %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
+        %{text: "Analytics"},
+      ])%>
+
+      <h1>Challenge.gov analytics</h1>
+      <p class="pl-0">Snapshot of all Challenges across the Challenge.gov platform</p>
+    </div>
   </div>
 
   <%= if length(@dap_reports) > 0 do %>

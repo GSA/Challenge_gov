@@ -2,6 +2,7 @@ defmodule Web.AnalyticsView do
   use Web, :view
 
   alias ChallengeGov.Reports.DapReports
+  alias Web.SharedView
 
   def render_graph(data, opts \\ []) do
     type = Keyword.get(opts, :type, "bar")
