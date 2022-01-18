@@ -24,7 +24,7 @@ export const ChallengeAnnouncement = ({challenge}) => {
     if (is_archived) {
       return renderAnnouncement({body: "This challenge is closed to submissions."})
     } else if (is_closed) {
-      return renderAnnouncement({body: "This is an ongoing competition open to select winners only."})
+      return renderAnnouncement({body: "This is an ongoing competition open to select participants only."})
     }
   }
 
