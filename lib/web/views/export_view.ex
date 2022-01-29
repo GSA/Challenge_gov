@@ -20,8 +20,21 @@ defmodule Web.ExportView do
   end
 
   def challenge_csv(challenge) do
-    CSV.dump_to_iodata([csv_headers(challenge), csv_content(challenge)])
+    scrubbed_challenge =
+      challenge
+      |> csv_content()
+      |> remove_html_markup([])
+
+    CSV.dump_to_iodata([csv_headers(challenge), scrubbed_challenge])
   end
+
+  def remove_html_markup([head | rest], acc) when is_binary(head),
+    do: remove_html_markup(rest, acc ++ [scrub(head)])
+
+  def remove_html_markup([head | rest], acc), do: remove_html_markup(rest, acc ++ [head])
+  def remove_html_markup([], acc), do: acc
+
+  defp scrub(data), do: String.replace(data, ~r/<[^>]*>/, "")
 
   defp csv_headers(challenge) do
     [
