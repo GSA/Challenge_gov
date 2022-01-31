@@ -17,14 +17,28 @@ Learn more generally about [cloud.gov](https://cloud.gov/), and specifically und
 1. Bind a PostgreSQL database of the right size for the environment
 1. Bind a S3 bucket for file storage
 1. Setup the [Variables](./configuration_variables.md)
-1. Create a service account for deployment
+1. Create a service account for deployment:
+    ````
     $ cf create-service cloud-gov-service-account space-deployer challenge-gov-service-account
     $ cf create-service-key challenge-gov-service-account challenge-gov-service-key
     $ cf service-key challenge-gov-service-account challenge-gov-service-key
+    ````
 1. Put the service account and key as the CF username and password for the CirlceCI project configuration
   1. Set `CF_PASSWORD_DEV` and `CF_USERNAME_DEV` for dev
   1. Set `CF_PASSWORD_STAGING` and `CF_USERNAME_STAGING` for staging
-1. [CircleCI](../.cirlceci/config.yml) will deploy the main branch to dev and the staging branch after approval to staging
+
+## Deployment
+
+1. [CircleCI](../.cirlceci/config.yml) manages the deployment.
+1. There are 3 branches that cover all environments for automatic deployment
+    - `main` deploys to the development cloud.gov space
+    - `staging` deploys to the staging cloud.gov space
+    - `production` deploys to the production cloud.gov space
+1. For Staging and Production, there is an approval step in CircleCI.
+    1. Follow the links from the build status in GitHub to CircleCI
+    1. Trigger the final deployment step of the build for Staging and Production.
+
+    This is to allow for specific release timing for a staging and production deployments. These are designed for same-day merge and approval. Do not merge to staging and production unless expecting to deploy that day.
 
 ## Running
 
@@ -65,4 +79,3 @@ psql -h localhost -p 5433 -U RDS_USERNAME RDS_DB
 It will prompt for the RDS user password and then you'll have a connected psql session to the database.
 
 Be sure to close the SSH connection when you are finished.
-
