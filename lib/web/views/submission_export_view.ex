@@ -67,10 +67,23 @@ defmodule Web.SubmissionExportView do
     [
       CSV.dump_to_iodata([csv_headers()]),
       Enum.map(submissions, fn submission ->
-        CSV.dump_to_iodata([csv_content(submission)])
+        scrubbed_content =
+          submission
+          |> csv_content()
+          |> remove_html_markup([])
+
+        CSV.dump_to_iodata([scrubbed_content])
       end)
     ]
   end
+
+  def remove_html_markup([head | rest], acc) when is_binary(head),
+    do: remove_html_markup(rest, acc ++ [scrub(head)])
+
+  def remove_html_markup([head | rest], acc), do: remove_html_markup(rest, acc ++ [head])
+  def remove_html_markup([], acc), do: acc
+
+  defp scrub(data), do: String.replace(data, ~r/<[^>]*>/, " ")
 
   defp csv_headers() do
     [
