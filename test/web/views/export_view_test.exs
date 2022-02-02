@@ -46,34 +46,5 @@ defmodule Web.ExportViewTest do
 
       assert ExportView.format_content(challenge, "invalid") === {:error, :invalid_format}
     end
-
-    test "given brief_description has html, we strip the html" do
-      user = AccountHelpers.create_user()
-
-      challenge =
-        ChallengeHelpers.create_challenge(
-          %{
-            user_id: user.id,
-            brief_description: "<p>Test <b>brief</b> description from test</p>",
-            description: "<h1>Test <i>description</i> for a challenge from test</h1>"
-          },
-          user
-        )
-
-      {:ok, challenge} = Challenges.get(challenge.id)
-
-      {:ok, content} = ExportView.format_content(challenge, "csv")
-
-      flattened_content = List.flatten(content)
-
-      assert Enum.member?(flattened_content, "Test brief description from test")
-      refute Enum.member?(flattened_content, "<p>Test <b>brief</b> description from test</p>")
-      assert Enum.member?(flattened_content, "Test description for a challenge from test")
-
-      refute Enum.member?(
-               flattened_content,
-               "<h1>Test <i>description</i> for a challenge from test</h1>"
-             )
-    end
   end
 end
