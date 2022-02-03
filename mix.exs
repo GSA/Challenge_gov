@@ -44,6 +44,7 @@ defmodule ChallengeGov.MixProject do
       {:browser, "~> 0.4.4"},
       {:cors_plug, "~> 2.0"},
       {:excoveralls, "~> 0.10", only: :test},
+      {:ex_machina, "~> 2.7.0"},
       {:color_stream, "~> 0.0.1"},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:credo_contrib, "~> 0.2", only: [:dev, :test], runtime: false},
