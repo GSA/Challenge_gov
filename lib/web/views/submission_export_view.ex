@@ -88,15 +88,15 @@ defmodule Web.SubmissionExportView do
   def remove_improperly_encoded_characters([head | rest], acc) when is_binary(head) do
     result =
       head
-      |> String.replace(~r/(?:^|\W)&quote;(?:$|\W)/, " \"")
-      |> String.replace(~r/(?:^|\W)â€œ(?:$|\W)/, " \"")
-      |> String.replace(~r/(?:^|\W)&#x27;(?:$|\W)/, " '")
-      |> String.replace(~r/(?:^|\W)â€™(?:$|\W)/, " '")
-      |> String.replace(~r/(?:^|\W)â€“(?:$|\W)/, "-")
-      |> String.replace(~r/(?:^|\W)â€(?:$|\W)/, " \"")
-      |> String.replace(~r/(?:^|\W)&#x2F;(?:$|\W)/, "/")
-      |> String.replace(~r/(?:^|\W)&amp;(?:$|\W)/, "&")
-      |> String.replace(~r/(?:^|\W)Â(?:$|\W)/, "  ")
+      |> String.replace("&quote;", "\"")
+      |> String.replace("â€œ", "\"")
+      |> String.replace("&#x27;", "'")
+      |> String.replace("â€™", "'")
+      |> String.replace("â€“", "-")
+      |> String.replace("â€", "\"")
+      |> String.replace("&#x2F;", "/")
+      |> String.replace("&amp;", "&")
+      |> String.replace("Â", " ")
 
     remove_improperly_encoded_characters(rest, acc ++ [result])
   end

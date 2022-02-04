@@ -9,7 +9,18 @@ defmodule Web.SubmissionExportViewTest do
       result =
         SubmissionExportView.remove_improperly_encoded_characters(improperly_encoded_list, [])
 
-      assert result == ["    - \"//&   "]
+      assert result == ["\" \" ' ' -  \"  /  /  &     "]
+    end
+
+    test "returns appropriate characters when given improperly encoded characters within other strings" do
+      improperly_encoded_list = [
+        "Hello&quote; Thereâ€œ I&#x27; think youâ€™re greatâ€“  â€  &#x2F;  &#x2F;  &amp;  Â  "
+      ]
+
+      result =
+        SubmissionExportView.remove_improperly_encoded_characters(improperly_encoded_list, [])
+
+      assert result == ["Hello\" There\" I' think you're great-  \"  /  /  &     "]
     end
   end
 end
