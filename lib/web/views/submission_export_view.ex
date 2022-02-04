@@ -71,6 +71,7 @@ defmodule Web.SubmissionExportView do
           submission
           |> csv_content()
           |> remove_html_markup([])
+          |> remove_improperly_encoded_characters([])
 
         CSV.dump_to_iodata([scrubbed_content])
       end)
@@ -82,8 +83,28 @@ defmodule Web.SubmissionExportView do
 
   def remove_html_markup([head | rest], acc), do: remove_html_markup(rest, acc ++ [head])
   def remove_html_markup([], acc), do: acc
-
   defp scrub(data), do: String.replace(data, ~r/<[^>]*>/, " ")
+
+  def remove_improperly_encoded_characters([head | rest], acc) when is_binary(head) do
+    result =
+      head
+      |> String.replace(~r/(?:^|\W)&quote;(?:$|\W)/, " \"")
+      |> String.replace(~r/(?:^|\W)â€œ(?:$|\W)/, " \"")
+      |> String.replace(~r/(?:^|\W)&#x27;(?:$|\W)/, " '")
+      |> String.replace(~r/(?:^|\W)â€™(?:$|\W)/, " '")
+      |> String.replace(~r/(?:^|\W)â€“(?:$|\W)/, "-")
+      |> String.replace(~r/(?:^|\W)â€(?:$|\W)/, " \"")
+      |> String.replace(~r/(?:^|\W)&#x2F;(?:$|\W)/, "/")
+      |> String.replace(~r/(?:^|\W)&amp;(?:$|\W)/, "&")
+      |> String.replace(~r/(?:^|\W)Â(?:$|\W)/, "  ")
+
+    remove_improperly_encoded_characters(rest, acc ++ [result])
+  end
+
+  def remove_improperly_encoded_characters([head | rest], acc),
+    do: remove_improperly_encoded_characters(rest, acc ++ [head])
+
+  def remove_improperly_encoded_characters([], acc), do: acc
 
   defp csv_headers() do
     [
