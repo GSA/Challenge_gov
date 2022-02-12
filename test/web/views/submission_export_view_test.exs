@@ -41,4 +41,22 @@ defmodule Web.SubmissionExportViewTest do
              ]
     end
   end
+
+  describe "remove_html_markup/2" do
+    test "removes all but the <a> tag" do
+      data_to_scrub = [
+        "<p>Hello</p>",
+        "<a href='#'> My name is Carl</a>",
+        "I <div>live</div> 'alone' <h1>with</h1>",
+        "<b>27</b> <h6>Cats</h6>"
+      ]
+
+      assert SubmissionExportView.remove_html_markup(data_to_scrub, []) == [
+               " Hello ",
+               "<a href='#'> My name is Carl</a>",
+               "I  live  'alone'  with ",
+               " 27   Cats "
+             ]
+    end
+  end
 end

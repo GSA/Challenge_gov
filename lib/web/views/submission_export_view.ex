@@ -83,7 +83,7 @@ defmodule Web.SubmissionExportView do
 
   def remove_html_markup([head | rest], acc), do: remove_html_markup(rest, acc ++ [head])
   def remove_html_markup([], acc), do: acc
-  defp scrub(data), do: String.replace(data, ~r/<[^>]*>/, " ")
+  defp scrub(data), do: String.replace(data, ~r/<(?!\/?a(?=>|\s.*>))\/?.*?>/, " ")
 
   def remove_improperly_encoded_characters([head | rest], acc) when is_binary(head) do
     result =
