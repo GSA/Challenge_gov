@@ -77,7 +77,14 @@ defmodule ChallengeGov.Emails do
     |> render("submission-confirmation.html")
   end
 
-  def days_deactivation_warning(user, days) do
+  def days_deactivation_warning(%{role: "solver"} = user, days) when days == 10 do
+    base_email()
+    |> to(user.email)
+    |> subject("Keep your Challenge.Gov account active - Log in today")
+    |> assign(:days, days)
+    |> render("solver_ten_day_deactivation_warning.html")
+  end
+
   def days_deactivation_warning(user, days) when days == 10 do
     base_email()
     |> to(user.email)
