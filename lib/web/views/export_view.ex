@@ -19,9 +19,8 @@ defmodule Web.ExportView do
     end
   end
 
-  def challenge_csv(challenge) do
-    CSV.dump_to_iodata([csv_headers(challenge), csv_content(challenge)])
-  end
+  def challenge_csv(challenge),
+    do: CSV.dump_to_iodata([csv_headers(challenge), csv_content(challenge)])
 
   defp csv_headers(challenge) do
     [

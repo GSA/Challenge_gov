@@ -67,10 +67,44 @@ defmodule Web.SubmissionExportView do
     [
       CSV.dump_to_iodata([csv_headers()]),
       Enum.map(submissions, fn submission ->
-        CSV.dump_to_iodata([csv_content(submission)])
+        scrubbed_content =
+          submission
+          |> csv_content()
+          |> remove_html_markup([])
+          |> remove_improperly_encoded_characters([])
+
+        CSV.dump_to_iodata([scrubbed_content])
       end)
     ]
   end
+
+  def remove_html_markup([head | rest], acc) when is_binary(head),
+    do: remove_html_markup(rest, acc ++ [scrub(head)])
+
+  def remove_html_markup([head | rest], acc), do: remove_html_markup(rest, acc ++ [head])
+  def remove_html_markup([], acc), do: acc
+  defp scrub(data), do: String.replace(data, ~r/<(?!\/?a(?=>|\s.*>))\/?.*?>/, " ")
+
+  def remove_improperly_encoded_characters([head | rest], acc) when is_binary(head) do
+    result =
+      head
+      |> String.replace("&quote;", "\"")
+      |> String.replace("â€œ", "\"")
+      |> String.replace("&#x27;", "'")
+      |> String.replace("â€™", "'")
+      |> String.replace("â€“", "-")
+      |> String.replace("â€", "\"")
+      |> String.replace("&#x2F;", "/")
+      |> String.replace("&amp;", "&")
+      |> String.replace("Â", " ")
+
+    remove_improperly_encoded_characters(rest, acc ++ [result])
+  end
+
+  def remove_improperly_encoded_characters([head | rest], acc),
+    do: remove_improperly_encoded_characters(rest, acc ++ [head])
+
+  def remove_improperly_encoded_characters([], acc), do: acc
 
   defp csv_headers() do
     [
