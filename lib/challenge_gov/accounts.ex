@@ -64,6 +64,12 @@ defmodule ChallengeGov.Accounts do
     Repo.all(User)
   end
 
+  def active() do
+    User
+    |> where([u], u.status == "active")
+    |> Repo.all()
+  end
+
   @doc """
   Get all manager accounts
   """
@@ -948,7 +954,8 @@ defmodule ChallengeGov.Accounts do
   check for activity in last 90 days
   """
   def check_all_last_actives() do
-    Enum.map(all_for_select(), fn user ->
+    active()
+    |> Enum.map(fn user ->
       user
       |> maybe_send_deactivation_notice(
         Security.deactivate_days(),
