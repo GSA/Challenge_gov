@@ -39,5 +39,23 @@
     </div>
   </div>
 </div>
-
-<%= render Web.ChallengeView, "table/_table.html", conn: @conn, user: @user, challenges: @challenges, pagination: @pagination, sort: @sort, filter: @filter, sortable: true %>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-12">
+        <section id="active-challenges" style="margin-bottom: 20px;">
+          <h4 style="margin-bottom: 15px; padding-left: 12px;"><strong>Active</strong></h4>
+          <%= render Web.ChallengeView, "_challenge_table.html", conn: @conn, user: @user, challenges: @challenges.published, sort: @sort, filter: @filter, sortable: true %>
+        </section>
+        <section id="draft-challenges" style="margin-bottom: 20px;">
+          <h4 style="margin-bottom: 15px; padding-left: 12px;"><strong>Drafts</strong></h4>
+          <%= render Web.ChallengeView, "_challenge_table.html", conn: @conn, user: @user, challenges: @challenges.draft, sort: @sort, filter: @filter, sortable: true %>
+        </section>
+        <section id="archived-challenges" style="margin-bottom: 20px;">
+          <h4 style="margin-bottom: 15px; padding-left: 12px;"><strong>Archived</strong></h4>
+          <%= render Web.ChallengeView, "_challenge_table.html", conn: @conn, user: @user, challenges: @challenges.archived, sort: @sort, filter: @filter, sortable: true %>
+        </section>
+      <%# </div> %>
+    </div>
+  </div>
+</div>

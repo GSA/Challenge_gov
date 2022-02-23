@@ -6,7 +6,7 @@ defmodule Web.ChallengeController do
   alias ChallengeGov.Security
   alias ChallengeGov.SiteContent
 
-  plug Web.Plugs.FetchPage when action in [:index]
+  plug(Web.Plugs.FetchPage when action in [:index])
 
   plug(
     Web.Plugs.EnsureRole,
@@ -17,7 +17,6 @@ defmodule Web.ChallengeController do
 
   def index(conn, params) do
     %{current_user: user} = conn.assigns
-    %{page: page, per: per} = conn.assigns
 
     pending_page = String.to_integer(params["pending"]["page"] || "1")
 
@@ -27,14 +26,24 @@ defmodule Web.ChallengeController do
     pending_challenges =
       Challenges.all_pending_for_user(user, filter: %{}, sort: %{}, page: pending_page, per: 5)
 
-    challenges = Challenges.all_for_user(user, filter: filter, sort: sort, page: page, per: per)
+    challenges = Challenges.all_for_user(user, filter: filter, sort: sort)
+    accumulator = %{published: [], draft: [], archived: []}
+
+    challenges =
+      Enum.reduce(challenges, accumulator, fn challenge, acc ->
+        case challenge.status do
+          "published" -> Map.put(acc, :published, [challenge | acc.published])
+          "draft" -> Map.put(acc, :draft, [challenge | acc.draft])
+          "archived" -> Map.put(acc, :archived, [challenge | acc.archived])
+          _ -> acc
+        end
+      end)
 
     conn
     |> assign(:user, user)
     |> assign(:pending_challenges, pending_challenges.page)
     |> assign(:pending_pagination, pending_challenges.pagination)
-    |> assign(:challenges, challenges.page)
-    |> assign(:pagination, challenges.pagination)
+    |> assign(:challenges, challenges)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> render("index.html")

@@ -52,6 +52,38 @@ defmodule Web.ChallengeControllerTest do
       assert html_response(conn, 200) =~ "Challenges"
     end
 
+    test "given challenges in published status, puts challenge in the proper section", %{
+      conn: conn
+    } do
+      conn = prep_conn(conn)
+
+      user =
+        AccountHelpers.create_user(%{
+          email: "challenge_manager_user@example.com",
+          role: "challenge_manager"
+        })
+
+      challenge_1 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
+      challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
+      _challenge_3 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "archived"})
+      _challenge_4 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "draft"})
+      _challenge_5 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "gsa_review"})
+      conn = get(conn, Routes.challenge_path(conn, :index))
+
+      html = html_response(conn, 200)
+
+      result =
+        html
+        |> Floki.parse_document!()
+        |> Floki.find("#active-challenges")
+        |> Floki.find("table tbody tr")
+        |> Enum.map(fn row -> Floki.text(row) end)
+
+      assert Enum.count(result) == 2
+      assert Enum.at(result, 1) =~ to_string(challenge_1.id)
+      assert Enum.at(result, 0) =~ to_string(challenge_2.id)
+    end
+
     test "redirect to sign in when signed out", %{conn: conn} do
       conn = get(conn, Routes.challenge_path(conn, :index))
 
@@ -74,6 +106,8 @@ defmodule Web.ChallengeControllerTest do
   end
 
   describe "show for challenges" do
+    setup [:create_challenges]
+
     test "successfully retrieve a challenge", %{conn: conn} do
       conn = prep_conn(conn)
       %{current_user: user} = conn.assigns
@@ -107,6 +141,113 @@ defmodule Web.ChallengeControllerTest do
       assert conn.status === 302
       assert conn.halted
       assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
+
+    test "given challenges in published, puts challenge in the published section", %{
+      conn: conn,
+      published_challenge_1: published_challenge_1,
+      published_challenge_2: published_challenge_2
+    } do
+      conn =
+        conn
+        |> prep_conn()
+        |> get(Routes.challenge_path(conn, :index))
+
+      html = html_response(conn, 200)
+
+      result =
+        html
+        |> Floki.parse_document!()
+        |> Floki.find("#active-challenges")
+        |> Floki.find("table tbody tr")
+        |> Enum.map(fn row -> Floki.text(row) end)
+
+      assert Enum.count(result) == 2
+      assert Enum.at(result, 1) =~ to_string(published_challenge_1.id)
+      assert Enum.at(result, 0) =~ to_string(published_challenge_2.id)
+    end
+
+    test "given challenges in draft, puts challenge in the draft section", %{
+      conn: conn,
+      draft_challenge_1: draft_challenge_1,
+      draft_challenge_2: draft_challenge_2
+    } do
+      conn =
+        conn
+        |> prep_conn()
+        |> get(Routes.challenge_path(conn, :index))
+
+      html = html_response(conn, 200)
+
+      result =
+        html
+        |> Floki.parse_document!()
+        |> Floki.find("#draft-challenges")
+        |> Floki.find("table tbody tr")
+        |> Enum.map(fn row -> Floki.text(row) end)
+
+      assert Enum.count(result) == 2
+      assert Enum.at(result, 1) =~ to_string(draft_challenge_1.id)
+      assert Enum.at(result, 0) =~ to_string(draft_challenge_2.id)
+    end
+
+    test "given challenges in archived, puts challenge in the archived section", %{
+      conn: conn,
+      archived_challenge_1: archived_challenge_1,
+      archived_challenge_2: archived_challenge_2
+    } do
+      conn =
+        conn
+        |> prep_conn()
+        |> get(Routes.challenge_path(conn, :index))
+
+      html = html_response(conn, 200)
+
+      result =
+        html
+        |> Floki.parse_document!()
+        |> Floki.find("#archived-challenges")
+        |> Floki.find("table tbody tr")
+        |> Enum.map(fn row -> Floki.text(row) end)
+
+      assert Enum.count(result) == 2
+      assert Enum.at(result, 1) =~ to_string(archived_challenge_1.id)
+      assert Enum.at(result, 0) =~ to_string(archived_challenge_2.id)
+    end
+
+    def create_challenges(_ctx) do
+      user =
+        AccountHelpers.create_user(%{
+          email: "challenge_manager_user@example.com",
+          role: "challenge_manager"
+        })
+
+      published_challenge_1 =
+        ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
+
+      published_challenge_2 =
+        ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
+
+      archived_challenge_1 =
+        ChallengeHelpers.create_challenge(%{user_id: user.id, status: "archived"})
+
+      archived_challenge_2 =
+        ChallengeHelpers.create_challenge(%{user_id: user.id, status: "archived"})
+
+      draft_challenge_1 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "draft"})
+      draft_challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "draft"})
+
+      _gsa_review_challenge =
+        ChallengeHelpers.create_challenge(%{user_id: user.id, status: "gsa_review"})
+
+      [
+        published_challenge_1: published_challenge_1,
+        published_challenge_2: published_challenge_2,
+        archived_challenge_1: archived_challenge_1,
+        archived_challenge_2: archived_challenge_2,
+        draft_challenge_1: draft_challenge_1,
+        draft_challenge_2: draft_challenge_2
+      ]
     end
   end
 
