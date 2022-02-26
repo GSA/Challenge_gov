@@ -1,0 +1,3 @@
+<%= if Accounts.has_admin_access?(@user) or !Challenges.is_archived_new?(@challenge) do %>
+    <%= link("Edit", to: @route,  class: "btn btn-primary") %>
+<% end %>
