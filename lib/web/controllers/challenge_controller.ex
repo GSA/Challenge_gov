@@ -26,18 +26,9 @@ defmodule Web.ChallengeController do
     pending_challenges =
       Challenges.all_pending_for_user(user, filter: %{}, sort: %{}, page: pending_page, per: 5)
 
-    challenges = Challenges.all_for_user(user, filter: filter, sort: sort)
-    accumulator = %{published: [], draft: [], archived: []}
-
     challenges =
-      Enum.reduce(challenges, accumulator, fn challenge, acc ->
-        case challenge.status do
-          "published" -> Map.put(acc, :published, [challenge | acc.published])
-          "draft" -> Map.put(acc, :draft, [challenge | acc.draft])
-          "archived" -> Map.put(acc, :archived, [challenge | acc.archived])
-          _ -> acc
-        end
-      end)
+      Challenges.all_for_user(user, filter: filter, sort: sort)
+      |> aggregate_challenges_by_type()
 
     conn
     |> assign(:user, user)
@@ -47,6 +38,26 @@ defmodule Web.ChallengeController do
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> render("index.html")
+  end
+
+  defp aggregate_challenges_by_type(challenges) do
+    accumulator = %{published: [], draft: [], archived: []}
+
+    Enum.reduce(challenges, accumulator, fn challenge, acc ->
+      cond do
+        challenge.status in ["approved", "published"] ->
+          Map.put(acc, :published, [challenge | acc.published])
+
+        challenge.status in ["draft", "gsa_review", "edits_requested", "unpublished"] ->
+          Map.put(acc, :draft, [challenge | acc.draft])
+
+        challenge.status == "archived" ->
+          Map.put(acc, :archived, [challenge | acc.archived])
+
+        true ->
+          acc
+      end
+    end)
   end
 
   def show(conn, %{"id" => id}) do
