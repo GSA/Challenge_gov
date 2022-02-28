@@ -29,11 +29,12 @@ defmodule Web.ChallengeControllerTest do
       assert redirected_to(conn) == Routes.dashboard_path(conn, :index)
     end
 
-    test "given challenges in [approved, published], puts challenge in the published section", %{
-      conn: conn,
-      approved_challenge: approved_challenge,
-      published_challenge: published_challenge
-    } do
+    test "given challenges in [approved, published] and substatus in [open, nil], puts challenge in the published section",
+         %{
+           conn: conn,
+           approved_challenge: approved_challenge,
+           published_challenge_open: published_challenge_open
+         } do
       conn =
         conn
         |> prep_conn()
@@ -50,7 +51,7 @@ defmodule Web.ChallengeControllerTest do
 
       assert Enum.count(result) == 2
       assert Enum.at(result, 0) =~ to_string(approved_challenge.id)
-      assert Enum.at(result, 1) =~ to_string(published_challenge.id)
+      assert Enum.at(result, 1) =~ to_string(published_challenge_open.id)
     end
 
     test "given challenges in draft, puts challenge in the draft section", %{
@@ -81,10 +82,13 @@ defmodule Web.ChallengeControllerTest do
       assert Enum.at(result, 3) =~ to_string(draft_challenge.id)
     end
 
-    test "given challenges in archived, puts challenge in the archived section", %{
-      conn: conn,
-      archived_challenge: archived_challenge
-    } do
+    test "given challenges in [published] and sub_status in [closed, archived], puts challenge in the archived section",
+         %{
+           conn: conn,
+           published_challenge_closed: published_challenge_closed,
+           published_challenge_archived: published_challenge_archived,
+           archived_challenge: archived_challenge
+         } do
       conn =
         conn
         |> prep_conn()
@@ -99,8 +103,10 @@ defmodule Web.ChallengeControllerTest do
         |> Floki.find("table tbody tr")
         |> Enum.map(fn row -> Floki.text(row) end)
 
-      assert Enum.count(result) == 1
+      assert Enum.count(result) == 3
       assert Enum.at(result, 0) =~ to_string(archived_challenge.id)
+      assert Enum.at(result, 1) =~ to_string(published_challenge_archived.id)
+      assert Enum.at(result, 2) =~ to_string(published_challenge_closed.id)
     end
 
     defp create_challenges(_ctx) do
@@ -110,8 +116,26 @@ defmodule Web.ChallengeControllerTest do
           role: "challenge_manager"
         })
 
-      published_challenge =
-        ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
+      published_challenge_open =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          status: "published",
+          sub_status: "open"
+        })
+
+      published_challenge_closed =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          status: "published",
+          sub_status: "closed"
+        })
+
+      published_challenge_archived =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          status: "published",
+          sub_status: "archived"
+        })
 
       approved_challenge =
         ChallengeHelpers.create_challenge(%{user_id: user.id, status: "approved"})
@@ -131,7 +155,9 @@ defmodule Web.ChallengeControllerTest do
         ChallengeHelpers.create_challenge(%{user_id: user.id, status: "archived"})
 
       [
-        published_challenge: published_challenge,
+        published_challenge_open: published_challenge_open,
+        published_challenge_closed: published_challenge_closed,
+        published_challenge_archived: published_challenge_archived,
         approved_challenge: approved_challenge,
         draft_challenge: draft_challenge,
         gsa_review_challenge: gsa_review_challenge,

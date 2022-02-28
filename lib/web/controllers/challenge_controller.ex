@@ -45,11 +45,14 @@ defmodule Web.ChallengeController do
 
     Enum.reduce(challenges, accumulator, fn challenge, acc ->
       cond do
-        challenge.status in ["approved", "published"] ->
+        challenge.status in ["approved", "published"] and challenge.sub_status in ["open", nil] ->
           Map.put(acc, :published, [challenge | acc.published])
 
         challenge.status in ["draft", "gsa_review", "edits_requested", "unpublished"] ->
           Map.put(acc, :draft, [challenge | acc.draft])
+
+        challenge.status == "published" and challenge.sub_status in ["closed", "archived"] ->
+          Map.put(acc, :archived, [challenge | acc.archived])
 
         challenge.status == "archived" ->
           Map.put(acc, :archived, [challenge | acc.archived])
