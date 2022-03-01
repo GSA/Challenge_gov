@@ -416,6 +416,14 @@ defmodule ChallengeGov.Challenges do
     |> base_all_for_user_query()
     |> order_on_attribute(opts[:sort])
     |> Filter.filter(opts[:filter], __MODULE__)
+    |> Repo.all()
+  end
+
+  def all_for_user_paginated(user, opts \\ []) do
+    user
+    |> base_all_for_user_query()
+    |> order_on_attribute(opts[:sort])
+    |> Filter.filter(opts[:filter], __MODULE__)
     |> Repo.paginate(opts[:page], opts[:per])
   end
 

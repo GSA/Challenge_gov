@@ -6,7 +6,7 @@ defmodule Web.ChallengeController do
   alias ChallengeGov.Security
   alias ChallengeGov.SiteContent
 
-  plug Web.Plugs.FetchPage when action in [:index]
+  plug(Web.Plugs.FetchPage when action in [:index])
 
   plug(
     Web.Plugs.EnsureRole,
@@ -17,7 +17,6 @@ defmodule Web.ChallengeController do
 
   def index(conn, params) do
     %{current_user: user} = conn.assigns
-    %{page: page, per: per} = conn.assigns
 
     pending_page = String.to_integer(params["pending"]["page"] || "1")
 
@@ -27,17 +26,41 @@ defmodule Web.ChallengeController do
     pending_challenges =
       Challenges.all_pending_for_user(user, filter: %{}, sort: %{}, page: pending_page, per: 5)
 
-    challenges = Challenges.all_for_user(user, filter: filter, sort: sort, page: page, per: per)
+    challenges =
+      Challenges.all_for_user(user, filter: filter, sort: sort)
+      |> aggregate_challenges_by_type()
 
     conn
     |> assign(:user, user)
     |> assign(:pending_challenges, pending_challenges.page)
     |> assign(:pending_pagination, pending_challenges.pagination)
-    |> assign(:challenges, challenges.page)
-    |> assign(:pagination, challenges.pagination)
+    |> assign(:challenges, challenges)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> render("index.html")
+  end
+
+  defp aggregate_challenges_by_type(challenges) do
+    accumulator = %{published: [], draft: [], archived: []}
+
+    Enum.reduce(challenges, accumulator, fn challenge, acc ->
+      cond do
+        challenge.status in ["approved", "published"] and challenge.sub_status in ["open", nil] ->
+          Map.put(acc, :published, [challenge | acc.published])
+
+        challenge.status in ["draft", "gsa_review", "edits_requested", "unpublished"] ->
+          Map.put(acc, :draft, [challenge | acc.draft])
+
+        challenge.status == "published" and challenge.sub_status in ["closed", "archived"] ->
+          Map.put(acc, :archived, [challenge | acc.archived])
+
+        challenge.status == "archived" ->
+          Map.put(acc, :archived, [challenge | acc.archived])
+
+        true ->
+          acc
+      end
+    end)
   end
 
   def show(conn, %{"id" => id}) do
