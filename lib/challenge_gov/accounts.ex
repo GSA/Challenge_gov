@@ -56,6 +56,13 @@ defmodule ChallengeGov.Accounts do
     |> Repo.all()
   end
 
+  def all_reactivation() do
+    User
+    |> where([u], u.renewal_request == "activation")
+    |> order_by([u], [{:asc, u.inserted_at}])
+    |> Repo.all()
+  end
+
   @doc """
   Get all accounts
   """
