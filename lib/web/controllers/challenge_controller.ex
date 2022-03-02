@@ -27,7 +27,8 @@ defmodule Web.ChallengeController do
       Challenges.all_pending_for_user(user, filter: %{}, sort: %{}, page: pending_page, per: 5)
 
     challenges =
-      Challenges.all_for_user(user, filter: filter, sort: sort)
+      user
+      |> Challenges.all_for_user(filter: filter, sort: sort)
       |> aggregate_challenges_by_type()
 
     conn
