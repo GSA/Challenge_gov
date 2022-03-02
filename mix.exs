@@ -54,7 +54,6 @@ defmodule ChallengeGov.MixProject do
       {:elixir_uuid, "~> 1.2"},
       {:ex_check, "~> 0.12", only: [:dev, :test], runtime: true},
       {:finch, "~> 0.2"},
-      {:floki, "~> 0.32.0"},
       {:gettext, "~> 0.11"},
       {:hackney, "~> 1.16.0"},
       {:httpoison, "~> 1.7"},
