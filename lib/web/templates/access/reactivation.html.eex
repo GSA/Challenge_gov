@@ -1,11 +1,11 @@
 <section class="content-header text-center">
   
  <h5 class="mt-5">Welcome back!</h5>
+<br>
+<p>Since it’s been more than 90 days since you last logged-in, we will need to <b>reactivate your account</b>.</p>
 
-<p style="max-width: 80%">Since it’s been more than 90 days since you last logged-in, we will need to <b>reactivate your account</b>.</p>
-
-  <p style="max-width: 80%">Luckily, it’s easy for you to get that ball rolling!</p>
-  <p style="max-width: 80%"><b>Simply click the blue “Request reactivation” button</b> below, and the Challenge.Gov Support Team will do the rest.</p>
+  <p>Luckily, it’s easy for you to get that ball rolling!</p>
+  <p><b>Simply click the blue “Request reactivation” button</b> below, and the Challenge.Gov Support Team will do the rest.</p>
   <div class="mt-5">
     <%= form_for(@changeset, Routes.access_path(@conn, :request_reactivation), [method: :post], fn _f -> %>
       <%= submit("Request reactivation", class: "btn btn-primary") %>
