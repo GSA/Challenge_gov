@@ -18,8 +18,8 @@
   </div>
 </div>
 
-<%= if length(@pending_users) > 0 do %>
-  <%= render Web.UserView, "_pending_users.html", conn: @conn, current_user: @current_user, pending_users: @pending_users %>
+<%= if length(@users_requiring_action) > 0 do %>
+  <%= render Web.UserView, "_users_table.html", conn: @conn, current_user: @current_user, users: @users_requiring_action %>
   <br/>
 <% end%>
 
@@ -60,7 +60,7 @@
 
           <%= SharedView.pagination(path: Routes.user_path(@conn, :index), pagination: @pagination) %>
         </div>
-      </div> 
+      </div>
 
       <div class="col-md-3">
         <div class="card">

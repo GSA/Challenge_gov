@@ -16,7 +16,7 @@
                 </tr>
               </thead>
               <tbody>
-                <%= Enum.map @pending_users, fn (user) -> %>
+                <%= Enum.map @users, fn (user) -> %>
                   <tr>
                     <td><%= user.id %></td>
                     <td><%= link(AccountView.full_name(user), to: Routes.user_path(@conn, :show, user.id)) %></td>
