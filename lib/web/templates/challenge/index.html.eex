@@ -52,7 +52,7 @@
           <%= render Web.ChallengeView, "_challenge_table.html", conn: @conn, user: @user, challenges: @challenges.draft, sort: @sort, filter: @filter, sortable: true %>
         </section>
         <section id="archived-challenges" style="margin-bottom: 20px;">
-          <h4 style="margin-bottom: 15px; padding-left: 12px;"><strong>Archived</strong></h4>
+          <h4 style="margin-bottom: 15px; padding-left: 12px;"><strong>Closed and Archived</strong></h4>
           <%= render Web.ChallengeView, "_challenge_table.html", conn: @conn, user: @user, challenges: @challenges.archived, sort: @sort, filter: @filter, sortable: true %>
         </section>
       </div>
