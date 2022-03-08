@@ -1,0 +1,1 @@
+<%= render Web.ChallengeView, "table/_table.html", conn: @conn, user: @user, challenges: @challenges, sort: @sort, filter: @filter, sortable: true %>

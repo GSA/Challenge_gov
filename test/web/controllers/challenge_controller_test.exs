@@ -7,50 +7,7 @@ defmodule Web.ChallengeControllerTest do
   alias ChallengeGov.TestHelpers.ChallengeHelpers
 
   describe "index for challenges" do
-    test "successfully retrieve all challenges", %{conn: conn} do
-      conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
-
-      user_2 =
-        AccountHelpers.create_user(%{email: "user_2@example.com", role: "challenge_manager"})
-
-      _challenge = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
-      _challenge_2 = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "published"})
-      _challenge_3 = ChallengeHelpers.create_challenge(%{user_id: user_2.id, status: "archived"})
-      _challenge_4 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "published"})
-      _challenge_5 = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "gsa_review"})
-
-      conn = get(conn, Routes.challenge_path(conn, :index))
-
-      %{
-        user: user_in_assigns,
-        pending_challenges: pending_challenges,
-        pending_pagination: pending_pagination,
-        challenges: challenges,
-        pagination: pagination,
-        filter: filter,
-        sort: sort
-      } = conn.assigns
-
-      assert user === user_in_assigns
-
-      assert length(challenges) === 5
-      assert pagination.empty? === false
-      assert pagination.current === 1
-      assert pagination.total === 1
-      assert pagination.total_count === 5
-
-      assert length(pending_challenges) === 1
-      assert pending_pagination.empty? === false
-      assert pending_pagination.current === 1
-      assert pending_pagination.total === 1
-      assert pending_pagination.total_count === 1
-
-      assert filter === %{}
-      assert sort === %{}
-
-      assert html_response(conn, 200) =~ "Challenges"
-    end
+    setup([:create_challenges])
 
     test "redirect to sign in when signed out", %{conn: conn} do
       conn = get(conn, Routes.challenge_path(conn, :index))
@@ -70,6 +27,144 @@ defmodule Web.ChallengeControllerTest do
       assert get_flash(conn, :error) === "You are not authorized"
       assert conn.halted
       assert redirected_to(conn) == Routes.dashboard_path(conn, :index)
+    end
+
+    # test "given challenges in [approved, published] and substatus in [open, nil], puts challenge in the published section",
+    #      %{
+    #        conn: conn,
+    #        approved_challenge: approved_challenge,
+    #        published_challenge_open: published_challenge_open
+    #      } do
+    #   conn =
+    #     conn
+    #     |> prep_conn()
+    #     |> get(Routes.challenge_path(conn, :index))
+
+    #   html = html_response(conn, 200)
+
+    #   result =
+    #     html
+    #     |> Floki.parse_document!()
+    #     |> Floki.find("#active-challenges")
+    #     |> Floki.find("table tbody tr")
+    #     |> Enum.map(fn row -> Floki.text(row) end)
+
+    #   assert Enum.count(result) == 2
+    #   assert Enum.at(result, 0) =~ to_string(approved_challenge.id)
+    #   assert Enum.at(result, 1) =~ to_string(published_challenge_open.id)
+    # end
+
+    # test "given challenges in draft, puts challenge in the draft section", %{
+    #   conn: conn,
+    #   draft_challenge: draft_challenge,
+    #   gsa_review_challenge: gsa_review_challenge,
+    #   edits_requested_challenge: edits_requested_challenge,
+    #   unpublished_challenge: unpublished_challenge
+    # } do
+    #   conn =
+    #     conn
+    #     |> prep_conn()
+    #     |> get(Routes.challenge_path(conn, :index))
+
+    #   html = html_response(conn, 200)
+
+    #   result =
+    #     html
+    #     |> Floki.parse_document!()
+    #     |> Floki.find("#draft-challenges")
+    #     |> Floki.find("table tbody tr")
+    #     |> Enum.map(fn row -> Floki.text(row) end)
+
+    #   assert Enum.count(result) == 4
+    #   assert Enum.at(result, 0) =~ to_string(unpublished_challenge.id)
+    #   assert Enum.at(result, 1) =~ to_string(edits_requested_challenge.id)
+    #   assert Enum.at(result, 2) =~ to_string(gsa_review_challenge.id)
+    #   assert Enum.at(result, 3) =~ to_string(draft_challenge.id)
+    # end
+
+    # test "given challenges in [published] and sub_status in [closed, archived], puts challenge in the archived section",
+    #      %{
+    #        conn: conn,
+    #        published_challenge_closed: published_challenge_closed,
+    #        published_challenge_archived: published_challenge_archived,
+    #        archived_challenge: archived_challenge
+    #      } do
+    #   conn =
+    #     conn
+    #     |> prep_conn()
+    #     |> get(Routes.challenge_path(conn, :index))
+
+    #   html = html_response(conn, 200)
+
+    #   result =
+    #     html
+    #     |> Floki.parse_document!()
+    #     |> Floki.find("#archived-challenges")
+    #     |> Floki.find("table tbody tr")
+    #     |> Enum.map(fn row -> Floki.text(row) end)
+
+    #   assert Enum.count(result) == 3
+    #   assert Enum.at(result, 0) =~ to_string(archived_challenge.id)
+    #   assert Enum.at(result, 1) =~ to_string(published_challenge_archived.id)
+    #   assert Enum.at(result, 2) =~ to_string(published_challenge_closed.id)
+    # end
+
+    defp create_challenges(_ctx) do
+      user =
+        AccountHelpers.create_user(%{
+          email: "challenge_manager_user@example.com",
+          role: "challenge_manager"
+        })
+
+      published_challenge_open =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          status: "published",
+          sub_status: "open"
+        })
+
+      published_challenge_closed =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          status: "published",
+          sub_status: "closed"
+        })
+
+      published_challenge_archived =
+        ChallengeHelpers.create_challenge(%{
+          user_id: user.id,
+          status: "published",
+          sub_status: "archived"
+        })
+
+      approved_challenge =
+        ChallengeHelpers.create_challenge(%{user_id: user.id, status: "approved"})
+
+      draft_challenge = ChallengeHelpers.create_challenge(%{user_id: user.id, status: "draft"})
+
+      gsa_review_challenge =
+        ChallengeHelpers.create_challenge(%{user_id: user.id, status: "gsa_review"})
+
+      edits_requested_challenge =
+        ChallengeHelpers.create_challenge(%{user_id: user.id, status: "edits_requested"})
+
+      unpublished_challenge =
+        ChallengeHelpers.create_challenge(%{user_id: user.id, status: "unpublished"})
+
+      archived_challenge =
+        ChallengeHelpers.create_challenge(%{user_id: user.id, status: "archived"})
+
+      [
+        published_challenge_open: published_challenge_open,
+        published_challenge_closed: published_challenge_closed,
+        published_challenge_archived: published_challenge_archived,
+        approved_challenge: approved_challenge,
+        draft_challenge: draft_challenge,
+        gsa_review_challenge: gsa_review_challenge,
+        edits_requested_challenge: edits_requested_challenge,
+        unpublished_challenge: unpublished_challenge,
+        archived_challenge: archived_challenge
+      ]
     end
   end
 

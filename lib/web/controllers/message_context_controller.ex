@@ -105,7 +105,7 @@ defmodule Web.MessageContextController do
     %{current_user: user} = conn.assigns
 
     changeset = MessageContexts.new(context)
-    challenges = Challenges.all_for_user(user, sort: %{})
+    challenges = Challenges.all_for_user_paginated(user, sort: %{})
 
     case MessageContexts.user_can_create?(user) do
       true ->
