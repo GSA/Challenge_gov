@@ -24,12 +24,13 @@ defmodule Web.UserController do
     %{page: users, pagination: pagination} = Accounts.all(filter: filter, page: page, per: per)
 
     pending_users = Accounts.all_pending()
+    reactivation_users = Accounts.all_reactivation()
 
     conn
     |> assign(:user, current_user)
     |> assign(:current_user, current_user)
     |> assign(:users, users)
-    |> assign(:pending_users, pending_users)
+    |> assign(:users_requiring_action, pending_users ++ reactivation_users)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> assign(:pagination, pagination)
@@ -102,6 +103,13 @@ defmodule Web.UserController do
     previous_role = user.role
     previous_status = user.status
     remote_ip = Security.extract_remote_ip(conn)
+
+    params =
+      if Map.get(params, "status") == "active" do
+        Map.put(params, "renewal_request", nil)
+      else
+        params
+      end
 
     case Accounts.update(user, params) do
       {:ok, user} ->
