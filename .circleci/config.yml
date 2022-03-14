@@ -96,6 +96,8 @@ jobs:
           POSTGRES_PASSWORD: postgres
     steps:
       - checkout
+      - ruby/install:
+          version: "2.7.5"
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - run: mix local.hex --force
