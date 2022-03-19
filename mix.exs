@@ -53,6 +53,7 @@ defmodule ChallengeGov.MixProject do
       {:ecto_sql, "~> 3.4"},
       {:elixir_uuid, "~> 1.2"},
       {:ex_check, "~> 0.12", only: [:dev, :test], runtime: true},
+      {:export, "~> 0.1.1"},
       {:finch, "~> 0.2"},
       {:gettext, "~> 0.11"},
       {:hackney, "~> 1.16.0"},
@@ -85,6 +86,8 @@ defmodule ChallengeGov.MixProject do
       {:sweet_xml, "~> 0.6.6"},
       {:text_delta, "~> 1.1.0"},
       {:timex, "~> 3.5"},
+      {:waffle, "~> 1.1.5"},
+      {:waffle_ecto, "~> 0.0.11"},
       {:wallaby, "~> 0.28.0", runtime: false, only: :test},
       {:xml_builder, "~> 2.1.1", override: true}
     ]
