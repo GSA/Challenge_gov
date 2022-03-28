@@ -90,7 +90,7 @@ export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleY
       return <p className="card__section--sort"><i>Challenges sorted by those most recently closed to open submissions.</i></p>
     } else {
       if (data.collection && data.collection.length >= 1) {
-        return <p className="card__section--sort"><i>Challenges sorted by those closing soonest</i></p>
+        return <p className="card__section--sort"><i>Challenges are sorted by those closing soonest.</i></p>
       }
     }
   }
