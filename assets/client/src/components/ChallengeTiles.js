@@ -56,7 +56,7 @@ export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleY
     return isArchived ?
       (
         <p>
-          Challenges on this page are either closed to submissions (completed) or only open to select winners of a previous competition phase.
+          Challenges on this page are completed (closed to submissions) or only open to select winners of a previous competition phase.
         </p>
       )
       : null
