@@ -106,4 +106,41 @@ export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleY
   )
 }
   
-<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+() => {
+  return (
+    <>
+      <div className="usa-grid usa-grid-full">
+        <div className="usa-width-three-fourths">
+          <h1>The top</h1>
+          {[...Array(10)].map(i => (
+            <div
+              key={i}
+              style={{
+                height: '300px',
+                background: 'whitesmoke',
+                margin: '2em 0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              Scroll down
+            </div>
+          ))}
+          <va-back-to-top />
+        </div>
+      </div>
+      <footer
+        style={{
+          height: '500px',
+          display: 'flex',
+          justifyContent: 'center',
+          background: '#112E51',
+          color: 'white',
+        }}
+      >
+        The footer
+      </footer>
+    </>
+  );
+}
