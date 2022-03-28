@@ -105,5 +105,3 @@ export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleY
     </section>
   )
 }
-  
-<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
