@@ -5,5 +5,10 @@ defmodule ChallengeGov.Factory do
   use ExMachina.Ecto, repo: ChallengeGov.Repo
 
   use ChallengeGov.UserFactory
+  use ChallengeGov.PhaseFactory
   use ChallengeGov.AgencyFactory
+  use ChallengeGov.MemberFactory
+  use ChallengeGov.ChallengeFactory
+  use ChallengeGov.SubmissionFactory
+  use ChallengeGov.SubmissionInviteFactory
 end

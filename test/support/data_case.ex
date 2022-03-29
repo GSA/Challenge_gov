@@ -21,6 +21,7 @@ defmodule ChallengeGov.DataCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
+      import ChallengeGov.Factory
       import ChallengeGov.DataCase
 
       alias ChallengeGov.TestHelpers
