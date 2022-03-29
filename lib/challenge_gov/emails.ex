@@ -143,11 +143,25 @@ defmodule ChallengeGov.Emails do
     |> render("contact_confirmation.html")
   end
 
-  def account_activation(user) do
+  def account_activation(user = %{role: "challenge_manager"}) do
     base_email()
     |> to(user.email)
-    |> subject("Challenge.gov - your account has been activated")
-    |> render("account_activation.html")
+    |> subject("Getting started with Challenge.gov")
+    |> render("account_activation_challenge_manager.html")
+  end
+
+  def account_activation(user = %{role: "solver"}) do
+    base_email()
+    |> to(user.email)
+    |> subject("Getting started with Challenge.gov")
+    |> render("account_activation_solver.html")
+  end
+
+  def account_reactivation(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Your Challenge.Gov account has been reactivated")
+    |> render("account_reactivation.html")
   end
 
   def submission_invite(submission_invite) do
