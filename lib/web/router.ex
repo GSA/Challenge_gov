@@ -2,7 +2,7 @@ defmodule Web.Router do
   use Web, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
+    plug :accepts, ["html", "pdf"]
     plug :fetch_session
     plug :fetch_flash
     plug :fetch_live_flash
