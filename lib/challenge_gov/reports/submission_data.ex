@@ -1,4 +1,7 @@
 defmodule ChallengeGov.Reports.SubmissionData do
+  @moduledoc """
+  Gathers, filters and structures the data for a `ChallengeGov.Submissions.Submission` pdf
+  """
   defstruct [
     :title,
     :description,
@@ -29,19 +32,19 @@ defmodule ChallengeGov.Reports.SubmissionData do
   end
 
   defp maybe_transform_value(nil), do: ""
-  defp maybe_transform_value(item), do: scrub(item) |> remove_improperly_encoded_characters()
+  defp maybe_transform_value(item), do: item |> scrub() |> remove_improperly_encoded_characters()
   defp scrub(data), do: String.replace(data, ~r/<(?!\/?a(?=>|\s.*>))\/?.*?>/, " ")
 
   def remove_improperly_encoded_characters(item) when is_binary(item) do
-      item
-      |> String.replace("&quote;", "\"")
-      |> String.replace("â€œ", "\"")
-      |> String.replace("&#x27;", "'")
-      |> String.replace("â€™", "'")
-      |> String.replace("â€“", "-")
-      |> String.replace("â€", "\"")
-      |> String.replace("&#x2F;", "/")
-      |> String.replace("&amp;", "&")
-      |> String.replace("Â", " ")
+    item
+    |> String.replace("&quote;", "\"")
+    |> String.replace("â€œ", "\"")
+    |> String.replace("&#x27;", "'")
+    |> String.replace("â€™", "'")
+    |> String.replace("â€“", "-")
+    |> String.replace("â€", "\"")
+    |> String.replace("&#x2F;", "/")
+    |> String.replace("&amp;", "&")
+    |> String.replace("Â", " ")
   end
 end

@@ -1,4 +1,7 @@
 defmodule ChallengeGov.Reports.GenerateReport do
+  @moduledoc """
+  generates file, file name, path and updates the `ChallengeGov.Submissions.Submission` pdf.
+  """
   alias ChallengeGov.Reports.SubmissionData
   alias ChallengeGov.Submissions
   alias Ruby.Interface, as: Ruby
@@ -7,18 +10,20 @@ defmodule ChallengeGov.Reports.GenerateReport do
   def execute(submission) do
     Logger.info("Generating Submission for submission: #{submission.id}")
     pdf = generate_pdf(submission)
+    file_name = build_submission_filename(submission.title)
 
-    with {:ok, _detail_report} <-
-           Submissions.update_pdf(submission, %{
-             type: :submission_pdf,
-             pdf_reference: %{
-               filename: build_submission_filename(submission.title),
-               binary: pdf
-             },
-           }) do
-      :ok
-    else
-      _ -> :error
+    case Submissions.update_pdf(submission, %{
+           type: :submission_pdf,
+           pdf_reference: %{
+             filename: file_name,
+             binary: pdf
+           }
+         }) do
+      {:ok, _detail_report} ->
+        :ok
+
+      _ ->
+        :error
     end
   end
 

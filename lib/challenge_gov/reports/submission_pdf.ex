@@ -1,4 +1,7 @@
 defmodule ChallengeGov.Submissions.SubmissionPdf do
+  @moduledoc """
+  Creates storage directory for `ChallengeGov.Submissions.Submission`
+  """
   use Waffle.Definition
   use Waffle.Ecto.Definition
 

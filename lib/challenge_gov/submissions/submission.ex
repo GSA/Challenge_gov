@@ -87,7 +87,7 @@ defmodule ChallengeGov.Submissions.Submission do
     )
   end
 
-  def pdf_changeset(%__MODULE__{} = submission, params) do
+  def pdf_changeset(submission = %__MODULE__{}, params) do
     cast_attachments(submission, params, [:pdf_reference])
   end
 
