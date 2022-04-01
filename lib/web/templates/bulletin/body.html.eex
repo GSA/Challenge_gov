@@ -52,7 +52,7 @@
 	<table>
 		<tbody>
 			<tr>
-				<td style="padding: 20px">
+				<td style="padding: 20px;">
 														<span>
 															<%= SharedView.render_safe_html(@body) %>
 														</span>
