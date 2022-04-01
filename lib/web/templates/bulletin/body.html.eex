@@ -97,11 +97,11 @@
 	</style>
 </head>
 
-<body class="clean-body" style="margin: 0; padding: 0; -webkit-text-size-adjust: 100%; background-color: #dd0000;">
+<body class="clean-body" style="margin: 0; padding: 0; -webkit-text-size-adjust: 100%; background-color: #eeeeee;">
 	<!--[if IE]><div class="ie-browser"><![endif]-->
-	<table class="nl-container" style="table-layout: fixed; vertical-align: top; min-width: 520px; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #FFFFFF; width: 100%;" cellpadding="0" cellspacing="0" role="presentation" width="100%" bgcolor="#FFFFFF" valign="top">
+	<table ">
 		<tbody>
-			<tr style="vertical-align: top;" valign="top">
+			<tr>
 				<td>
 														<span style="padding: 0px">THIS IS A TEST!!!!!!!!!!!!!!!!!!!!!!
 															<%= SharedView.render_safe_html(@body) %>
