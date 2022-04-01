@@ -393,26 +393,17 @@ defmodule ChallengeGov.Accounts do
             %{"email" => email} = userinfo
             {role, status} = default_role_and_status_for_email(email)
 
-            {:ok, user} =
-              create(remote_ip, %{
-                email: email,
-                role: role,
-                token: userinfo["sub"],
-                terms_of_use: nil,
-                privacy_guidelines: nil,
-                status: status
-              })
+            create(remote_ip, %{
+              email: email,
+              role: role,
+              token: userinfo["sub"],
+              terms_of_use: nil,
+              privacy_guidelines: nil,
+              status: status
+            })
 
-            if user.status == "active" and user.role == "solver" do
-              ChallengeGov.Emails.account_activation(user)
-            end
-
-            # TODO - this function requires a user that isn't even in scope.
-            #      - therefore we don't think it even does anything.
-            #      - may have been used for the user creation feature in the admin portal.
-            #      - login.gov made this not usable.
-            # {:ok, user} ->
-            #   update_admin_added_user(user, userinfo, remote_ip)
+          {:ok, user} ->
+            update_admin_added_user(user, userinfo, remote_ip)
         end
 
       {:ok, account_user} ->
