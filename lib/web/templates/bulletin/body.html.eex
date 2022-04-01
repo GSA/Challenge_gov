@@ -97,13 +97,13 @@
 	</style>
 </head>
 
-<body class="clean-body" style="margin: 0; padding: 0; -webkit-text-size-adjust: 100%; background-color: #eeeeee;">
+<body class="clean-body" style="margin: 0; padding: 0; -webkit-text-size-adjust: 100%; background-color: #ffffff;">
 	<!--[if IE]><div class="ie-browser"><![endif]-->
-	<table ">
+	<table>
 		<tbody>
 			<tr>
 				<td>
-														<span style="padding: 0px">THIS IS A TEST!!!!!!!!!!!!!!!!!!!!!!
+														<span style="padding: 20px">
 															<%= SharedView.render_safe_html(@body) %>
 														</span>
 												
