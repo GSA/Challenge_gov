@@ -103,7 +103,7 @@
 		<tbody>
 			<tr>
 				<td>
-														<span style="padding: 0px">THIS IS A TEST!!!!!!!!!!!!!!!!!!!!!!
+														<span style="padding: 40px">
 															<%= SharedView.render_safe_html(@body) %>
 														</span>
 												
