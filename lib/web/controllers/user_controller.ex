@@ -219,10 +219,14 @@ defmodule Web.UserController do
   end
 
   def toggle(conn, %{"id" => id, "action" => "activate"}) do
+    # TODO - this sends two emails, but I only want one.
+    # IO.inspect("I hit a toggle???")
     %{current_user: originator} = conn.assigns
 
     with {:ok, user} <- Accounts.get(id),
          {:ok, user} <- Accounts.activate(user, originator, Security.extract_remote_ip(conn)) do
+      Emails.account_reactivation(user)
+
       conn
       |> put_flash(:info, "User activated")
       |> redirect(to: Routes.user_path(conn, :show, user.id))
