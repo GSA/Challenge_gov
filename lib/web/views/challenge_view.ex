@@ -615,9 +615,9 @@ defmodule Web.ChallengeView do
   def remove_update_button(_conn, _challenge), do: nil
 
   def logo_img(challenge, opts \\ []) do
-    case is_nil(challenge.logo_key) do
+    case nil_logo?(challenge.logo_key) do
       true ->
-        AgencyView.avatar_img(challenge.agency, opts)
+        determine_logo(challenge, nil)
 
       false ->
         url = Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
@@ -629,12 +629,30 @@ defmodule Web.ChallengeView do
   def logo_url(challenge) do
     case is_nil(challenge.logo_key) do
       true ->
-        Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.svg")
+        determine_logo(
+          challenge,
+          Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.svg")
+        )
 
       false ->
         Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
     end
   end
+
+  defp determine_logo(challenge, default_case) do
+    cond do
+      challenge.sub_agency && challenge.sub_agency.avatar_key ->
+        AgencyView.avatar_img(challenge.sub_agency)
+
+      challenge.agency && challenge.agency.avatar_key ->
+        AgencyView.avatar_img(challenge.agency)
+
+      true ->
+        default_case
+    end
+  end
+
+  defp nil_logo?(logo_key), do: is_nil(logo_key)
 
   def resource_banner_img(challenge, opts \\ []) do
     case is_nil(challenge.resource_banner_key) do
