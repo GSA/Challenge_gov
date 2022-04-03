@@ -200,7 +200,10 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, %{user: %{role: "solver", status: "active"}} = user} ->
-        ChallengeGov.Emails.account_activation(user)
+        user
+        |> ChallengeGov.Emails.account_activation()
+        |> Mailer.deliver_later()
+
         {:ok, user}
 
       {:ok, %{user: user}} ->
