@@ -199,6 +199,10 @@ defmodule ChallengeGov.Accounts do
       |> Repo.transaction()
 
     case result do
+      {:ok, %{user: %{role: "solver", status: "active"}} = user} ->
+        ChallengeGov.Emails.account_activation(user)
+        {:ok, user}
+
       {:ok, %{user: user}} ->
         {:ok, user}
 
@@ -393,6 +397,7 @@ defmodule ChallengeGov.Accounts do
             %{"email" => email} = userinfo
             {role, status} = default_role_and_status_for_email(email)
 
+            # {:ok, user} =
             create(remote_ip, %{
               email: email,
               role: role,
@@ -401,6 +406,11 @@ defmodule ChallengeGov.Accounts do
               privacy_guidelines: nil,
               status: status
             })
+
+          # credo:disable-for-lines:3
+          # if user.status == "active" and user.role == "solver" do
+          #   ChallengeGov.Emails.account_activation(user)
+          # end
 
           {:ok, user} ->
             update_admin_added_user(user, userinfo, remote_ip)
