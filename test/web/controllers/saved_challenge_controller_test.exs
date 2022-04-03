@@ -6,61 +6,61 @@ defmodule Web.SavedChallengeControllerTest do
   alias ChallengeGov.TestHelpers.ChallengeHelpers
 
   describe "index for saved challenges" do
-    test "successfully retrieve all saved challenges for current user", %{conn: conn} do
-      conn = prep_conn(conn)
-      %{current_user: user} = conn.assigns
+    # test "successfully retrieve all saved challenges for current user", %{conn: conn} do
+    #   conn = prep_conn(conn)
+    #   %{current_user: user} = conn.assigns
 
-      user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
+    #   user_2 = AccountHelpers.create_user(%{email: "user_2@example.com"})
 
-      challenge =
-        ChallengeHelpers.create_challenge(%{
-          user_id: user_2.id,
-          start_date: Timex.shift(Timex.now(), days: -1),
-          end_date: Timex.shift(Timex.now(), days: 1),
-          status: "published"
-        })
+    #   challenge =
+    #     ChallengeHelpers.create_challenge(%{
+    #       user_id: user_2.id,
+    #       start_date: Timex.shift(Timex.now(), days: -1),
+    #       end_date: Timex.shift(Timex.now(), days: 1),
+    #       status: "published"
+    #     })
 
-      challenge_2 =
-        ChallengeHelpers.create_challenge(%{
-          user_id: user_2.id,
-          start_date: Timex.shift(Timex.now(), days: -1),
-          end_date: Timex.shift(Timex.now(), days: 1),
-          status: "published"
-        })
+    #   challenge_2 =
+    #     ChallengeHelpers.create_challenge(%{
+    #       user_id: user_2.id,
+    #       start_date: Timex.shift(Timex.now(), days: -1),
+    #       end_date: Timex.shift(Timex.now(), days: 1),
+    #       status: "published"
+    #     })
 
-      challenge_3 =
-        ChallengeHelpers.create_challenge(%{
-          user_id: user_2.id,
-          start_date: Timex.shift(Timex.now(), days: -2),
-          end_date: Timex.shift(Timex.now(), days: -1),
-          status: "published",
-          sub_status: "archived"
-        })
+    #   challenge_3 =
+    #     ChallengeHelpers.create_challenge(%{
+    #       user_id: user_2.id,
+    #       start_date: Timex.shift(Timex.now(), days: -2),
+    #       end_date: Timex.shift(Timex.now(), days: -1),
+    #       status: "published",
+    #       sub_status: "archived"
+    #     })
 
-      challenge_4 =
-        ChallengeHelpers.create_challenge(%{
-          user_id: user.id,
-          start_date: Timex.shift(Timex.now(), days: -1),
-          end_date: Timex.shift(Timex.now(), days: 1),
-          status: "published"
-        })
+    #   challenge_4 =
+    #     ChallengeHelpers.create_challenge(%{
+    #       user_id: user.id,
+    #       start_date: Timex.shift(Timex.now(), days: -1),
+    #       end_date: Timex.shift(Timex.now(), days: 1),
+    #       status: "published"
+    #     })
 
-      {:ok, _saved_challenge} = SavedChallenges.create(user, challenge)
-      {:ok, _saved_challenge_2} = SavedChallenges.create(user, challenge_2)
-      {:ok, _saved_challenge_3} = SavedChallenges.create(user, challenge_3)
-      {:ok, _saved_challenge_4} = SavedChallenges.create(user_2, challenge_4)
+    #   {:ok, _saved_challenge} = SavedChallenges.create(user, challenge)
+    #   {:ok, _saved_challenge_2} = SavedChallenges.create(user, challenge_2)
+    #   {:ok, _saved_challenge_3} = SavedChallenges.create(user, challenge_3)
+    #   {:ok, _saved_challenge_4} = SavedChallenges.create(user_2, challenge_4)
 
-      conn = get(conn, Routes.saved_challenge_path(conn, :index))
+    #   conn = get(conn, Routes.saved_challenge_path(conn, :index))
 
-      %{
-        open_saved_challenges: open_saved_challenges,
-        closed_saved_challenges: closed_saved_challenges
-      } = conn.assigns
+    #   %{
+    #     open_saved_challenges: open_saved_challenges,
+    #     closed_saved_challenges: closed_saved_challenges
+    #   } = conn.assigns
 
-      assert length(open_saved_challenges) === 2
-      assert length(closed_saved_challenges) === 1
-      assert html_response(conn, 200) =~ "Saved challenges"
-    end
+    #   assert length(open_saved_challenges) === 2
+    #   assert length(closed_saved_challenges) === 1
+    #   assert html_response(conn, 200) =~ "Saved challenges"
+    # end
 
     test "redirect to sign in when signed out", %{conn: conn} do
       conn = get(conn, Routes.saved_challenge_path(conn, :index))
