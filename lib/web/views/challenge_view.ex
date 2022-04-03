@@ -629,10 +629,13 @@ defmodule Web.ChallengeView do
   def logo_url(challenge) do
     case is_nil(challenge.logo_key) do
       true ->
-        determine_logo(
-          challenge,
-          Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.svg")
-        )
+        {:safe, logo} =
+          determine_logo(
+            challenge,
+            Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.svg")
+          )
+
+        logo
 
       false ->
         Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
