@@ -3,6 +3,7 @@ defmodule Web.ChallengeView do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.Agencies
+  alias ChallengeGov.Agencies.Avatar
   alias ChallengeGov.Challenges
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
@@ -615,9 +616,18 @@ defmodule Web.ChallengeView do
   def remove_update_button(_conn, _challenge), do: nil
 
   def logo_img(challenge, opts \\ []) do
-    case nil_logo?(challenge.logo_key) do
+    case is_nil(challenge.logo_key) do
       true ->
-        determine_logo(challenge, nil)
+        cond do
+          challenge.sub_agency && challenge.sub_agency.avatar_key ->
+            AgencyView.avatar_img(challenge.sub_agency)
+
+          challenge.agency && challenge.agency.avatar_key ->
+            AgencyView.avatar_img(challenge.agency)
+
+          true ->
+            nil
+        end
 
       false ->
         url = Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
@@ -629,33 +639,25 @@ defmodule Web.ChallengeView do
   def logo_url(challenge) do
     case is_nil(challenge.logo_key) do
       true ->
-        {:safe, logo} =
-          determine_logo(
-            challenge,
-            Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.svg")
-          )
+        cond do
+          challenge.sub_agency && challenge.sub_agency.avatar_key ->
+            Storage.url(Avatar.avatar_path(challenge.sub_agency, "original"),
+              signed: [expires_in: 3600]
+            )
 
-        logo
+          challenge.agency && challenge.agency.avatar_key ->
+            Storage.url(Avatar.avatar_path(challenge.agency, "original"),
+              signed: [expires_in: 3600]
+            )
+
+          true ->
+            Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.svg")
+        end
 
       false ->
         Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
     end
   end
-
-  defp determine_logo(challenge, default_case) do
-    cond do
-      challenge.sub_agency && challenge.sub_agency.avatar_key ->
-        AgencyView.avatar_img(challenge.sub_agency)
-
-      challenge.agency && challenge.agency.avatar_key ->
-        AgencyView.avatar_img(challenge.agency)
-
-      true ->
-        default_case
-    end
-  end
-
-  defp nil_logo?(logo_key), do: is_nil(logo_key)
 
   def resource_banner_img(challenge, opts \\ []) do
     case is_nil(challenge.resource_banner_key) do
