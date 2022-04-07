@@ -319,7 +319,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                 <h5 className="tagline">{challenge.tagline}</h5>
                 <div dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
               </div>
-              <div className="logo-container">
+              <div className="logo-container" style="object-fit: contain;">
                 {renderChallengeLogo()}
               </div>
             </div>
