@@ -24,7 +24,7 @@
     </div>
         <hr>
     <div class="form-group">
-      <label class="col">Upload files (optional)</label>
+      <label class="col"><strong>Upload files</strong> (optional)</label>
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
