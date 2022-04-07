@@ -1,5 +1,5 @@
 <section>
-  <small class="d-block pl-2 mb-2"><span class="required">*</span> Indicates required fields</small>
+  <small class="d-block pl-2 mb-2"><span class="required">*</span> Required fields</small>
   <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
     <%= if Accounts.has_admin_access?(@user) and @data.status != "submitted" do %>
       <%= solver_field(f, @user, @data) %>
@@ -22,8 +22,9 @@
       <label><%= "Description" %> <span class="required">*</span></label>
       <%= FormView.rt_textarea_field(f, :description) %>
     </div>
+        <hr>
     <div class="form-group">
-      <label class="col">Upload Files (optional)<br> Follow the steps below to attach files to your submission. Multiple file attachments are allowed.</label>
+      <label class="col">Upload Files (optional)<br> Follow the steps below to attach files to your submission. You can add addtional files after each time yo press 'Attach'.</label>
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
