@@ -22,6 +22,7 @@
       <label><%= "Description" %> <span class="required">*</span></label>
       <%= FormView.rt_textarea_field(f, :description) %>
     </div>
+        <hr>
     <div class="form-group">
       <label class="col">Upload files (optional)</label>
       <div class="col">
@@ -30,10 +31,12 @@
             <%= hidden_input f, :document_id, name: "submission[document_ids][]", value: document_id %>
           <% end) %>
         </div>
-        <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "File name (optional)", class: "my-3") %>
+        <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "Step 1: File name (optional)", class: "my-3") %>
         <div class="col">
           <%= file_input f, :document, name: "submission[document][file]", class: "my-3" %>
           <span data-user="<%= @user.email %>", id="current_user"></span>
+            <div>
+              <div>Step 2:
           <div id="submission_document_upload" class="btn btn-primary">Upload file</div>
           <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
           <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
@@ -61,7 +64,7 @@
         <% end) %>
       </div>
     </div>
-
+<hr>
     <%= FormView.text_field(f, :external_url, label: "External URL (optional)") %>
     <br/>
 
