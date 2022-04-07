@@ -1,5 +1,5 @@
 <section>
-  <small class="d-block pl-2 mb-2">Required<span class="required">*</span></small>
+  <small class="d-block pl-2 mb-2"><strong>Required fields are indicated with a</strong> <span class="required">*</span></small>
   <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
     <%= if Accounts.has_admin_access?(@user) and @data.status != "submitted" do %>
       <%= solver_field(f, @user, @data) %>
@@ -24,7 +24,7 @@
     </div>
         <hr>
     <div class="form-group">
-      <label class="col">Upload file(s) (optional)<br>
+      <label class="col">Upload file(s)<br>
       Follow the steps below to attach files to your submission. Multiple file attachments are allowed after each upload.<br></label>
       <div class="col">
         <div class="submission-document-ids">
@@ -66,7 +66,7 @@
       </div>
     </div>
 <hr>
-    <%= FormView.text_field(f, :external_url, label: "External URL (optional)") %>
+    <%= FormView.text_field(f, :external_url, label: "External URL (format example: http://yourwebsite.com) ") %>
 <hr>
 
     <%= accept_terms(@conn, f, @user, @challenge) %>
