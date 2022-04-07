@@ -15,7 +15,7 @@
   
       <strong> <%= FormView.text_field(f, :title, label: "Title", required: true) %></strong>
     <div class="col">
-      <label for="brief_description"><strong>Brief description</strong> <span class="required">*</span></label>
+      <label for="brief_description">Brief description <span class="required">*</span></label>
       <%= FormView.rt_textarea_field(f, :brief_description, limit: 500) %>
     </div>
     <div class="col">
@@ -24,7 +24,7 @@
     </div>
         <hr>
     <div class="form-group">
-      <label class="col"><strong>Upload files</strong> <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small> <br>  You can upload more than one file after each upload. You may rename your file(s) as you see fit. </label>
+      <label class="col"><strong>Upload files</strong> <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small> <br>  You can upload more than one file after each upload. You may rename your file(s) as you see fit. <br><br></label>
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
