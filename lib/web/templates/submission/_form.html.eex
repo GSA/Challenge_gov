@@ -14,17 +14,19 @@
     <% end %>
   
     <%= FormView.text_field(f, :title, label: "Title", required: true) %>
+      <hr>
     <div class="col">
-      <label for="brief_description">Brief description <span class="required">*</span></label>
+      <label for="brief_description">Brief Description <span class="required">*</span></label>
       <%= FormView.rt_textarea_field(f, :brief_description, limit: 500) %>
     </div>
+      <hr>
     <div class="col">
       <label><%= "Description" %> <span class="required">*</span></label>
       <%= FormView.rt_textarea_field(f, :description) %>
     </div>
         <hr>
     <div class="form-group">
-      <label class="col">Upload Files (optional)<br> Follow the steps below to attach files to your submission. Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff. To add addtional files, repeat steps 1-3.</label>
+      <label class="col">Upload Files (optional)<br> Follow the steps below to attach files to your submission. Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff. To add addtional files, repeat steps 1-3.<br></label>
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
