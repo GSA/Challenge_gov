@@ -24,7 +24,7 @@
     </div>
         <hr>
     <div class="form-group">
-      <label class="col">Upload Files (optional)<br> Follow the steps below to attach files to your submission. You can add addtional files after each time yo press 'Attach'.</label>
+      <label class="col">Upload Files (optional)<br> Follow the steps below to attach files to your submission. Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff. To add addtional files, repeat steps 1-3.</label>
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
@@ -37,7 +37,7 @@
           <span data-user="<%= @user.email %>", id="current_user"></span><br>
           Step 3: <div id="submission_document_upload" class="btn btn-primary">Attach</div>
           <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
-          <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
+          <!--<small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>-->
         </div>
         <span id="submission_document_upload__error-no-email" class="js-error-tag text-danger"></span>
       </div>
