@@ -26,7 +26,7 @@
     </div>
         <hr>
     <div class="form-group">
-      <label class="col">Upload Files (optional)<br> Follow the steps below to attach files to your submission. Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff. To add addtional files, repeat steps 1-3.<br></label>
+      <label class="col">Upload Files (optional)<br> <small style="padding-bottom: 12px;">Follow the steps below to attach files to your submission. (Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff) To add addtional files, repeat steps 1-3.</small></label>
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
@@ -58,7 +58,7 @@
             <i class="fa fa-paperclip mr-1"></i>
             <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
             <%= link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
-              <i class="fa fa-trash"></i>
+             &nbsp; <i class="fa fa-trash"></i>
             <% end %>
           </div>
         <% end) %>
