@@ -1,5 +1,5 @@
 <section>
-  <small class="d-block pl-2 mb-2"><span class="required">*</span></small> <strong>These fields are required.</strong> 
+  <small class="d-block pl-2 mb-2">Required<span class="required">*</span></small>
   <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
     <%= if Accounts.has_admin_access?(@user) and @data.status != "submitted" do %>
       <%= solver_field(f, @user, @data) %>
@@ -22,25 +22,21 @@
       <label><%= "Description" %> <span class="required">*</span></label>
       <%= FormView.rt_textarea_field(f, :description) %>
     </div>
-        <hr>
     <div class="form-group">
-      <label class="col">Upload file(s)<br>
-      Follow the steps below to attach files to your submission. Multiple file attachments are allowed after each upload.<br></label>
+      <label class="col">Upload files (optional)</label>
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
             <%= hidden_input f, :document_id, name: "submission[document_ids][]", value: document_id %>
           <% end) %>
         </div>
-        <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "Step 1: File name", class: "my-3") %>
+        <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "File name (optional)", class: "my-3") %>
         <div class="col">
-          <%= file_input f, :document, name: "submission[document][file]", class: "my-3" %><small class="text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small><br>
+          <%= file_input f, :document, name: "submission[document][file]", class: "my-3" %>
           <span data-user="<%= @user.email %>", id="current_user"></span>
-            <div>
-              <div>
-          <div id="submission_document_upload" class="btn btn-primary">Upload</div>
+          <div id="submission_document_upload" class="btn btn-primary">Upload file</div>
           <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
-          
+          <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
         </div>
         <span id="submission_document_upload__error-no-email" class="js-error-tag text-danger"></span>
       </div>
@@ -65,9 +61,9 @@
         <% end) %>
       </div>
     </div>
-<hr>
-    <%= FormView.text_field(f, :external_url, label: "External URL (Format example: http://yourwebsite.com) ") %>
-<hr>
+
+    <%= FormView.text_field(f, :external_url, label: "External URL (optional)") %>
+    <br/>
 
     <%= accept_terms(@conn, f, @user, @challenge) %>
     <%= verify_review(f, @user.id, @data) %>
