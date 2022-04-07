@@ -276,7 +276,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     if (challenge.logo) {
       return (
         <img
-        className={challenge.upload_logo ? "custom-logo" : "challenge-logo"}
+        className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
         src={challenge.logo} alt={challenge.logo_alt_text}
         title="challenge logo"/>
       )
@@ -319,7 +319,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                 <h5 className="tagline">{challenge.tagline}</h5>
                 <div dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
               </div>
-              <div className="logo-container" style="object-fit: contain;">
+              <div className="logo-container">
                 {renderChallengeLogo()}
               </div>
             </div>
