@@ -26,7 +26,7 @@
     </div>
         <hr>
     <div class="form-group">
-      <label class="col">Upload Files (optional)<br> <small style="padding-bottom: 12px;">Follow the steps below to attach files to your submission. (Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff) To add addtional files, repeat steps 1-3.</small></label>
+      <label class="col">Upload Files (optional)<br> <small style="padding-bottom: 10px;">Follow the steps below to attach files to your submission. (Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff) To add addtional files, repeat steps 1-3.</small></label>
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
@@ -35,12 +35,13 @@
         </div>
        
         <div class="col">
-       
-         
           <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
           Step 1: <%= file_input f, :document, name: "submission[document][file]", class: "my-3" %>
           <span data-user="<%= @user.email %>", id="current_user"></span><br>
-           Step 2:<%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "Reame file (optional)", class: "my-3") %>
+
+          Step 2: Rename file (optional)
+           <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "", class: "my-3" %>
+
               Step 3: <div id="submission_document_upload" class="btn btn-primary">Attach</div>
         </div>
         <span id="submission_document_upload__error-no-email" class="js-error-tag text-danger"></span>
