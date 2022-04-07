@@ -24,14 +24,14 @@
     </div>
         <hr>
     <div class="form-group">
-      <label class="col">Upload files (optional)</label>
+      <label class="col">Upload files<br>This is optional. You can upload more that one file. Each file can be renamed if you choose.</label>
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
             <%= hidden_input f, :document_id, name: "submission[document_ids][]", value: document_id %>
           <% end) %>
         </div>
-        <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "Step 1: File name (optional)", class: "my-3") %>
+        <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "Step 1: File name", class: "my-3") %>
         <div class="col">
           <%= file_input f, :document, name: "submission[document][file]", class: "my-3" %>
           <span data-user="<%= @user.email %>", id="current_user"></span>
