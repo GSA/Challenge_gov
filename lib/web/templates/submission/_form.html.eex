@@ -1,5 +1,5 @@
 <section>
-  <small class="d-block pl-2 mb-2"><strong>Required fields are indicated with a</strong> <span class="required">*</span></small>
+  <small class="d-block pl-2 mb-2"><span class="required">*</span></small> <strong>These fields are required.</strong> 
   <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
     <%= if Accounts.has_admin_access?(@user) and @data.status != "submitted" do %>
       <%= solver_field(f, @user, @data) %>
@@ -33,11 +33,11 @@
           <% end) %>
         </div>
         <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "Step 1: File name", class: "my-3") %>
-        <div class="col">Step 2:
+        <div class="col">
           <%= file_input f, :document, name: "submission[document][file]", class: "my-3" %><small class="text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small><br>
           <span data-user="<%= @user.email %>", id="current_user"></span>
             <div>
-              <div>Step 3:
+              <div>
           <div id="submission_document_upload" class="btn btn-primary">Upload</div>
           <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
           
@@ -66,7 +66,7 @@
       </div>
     </div>
 <hr>
-    <%= FormView.text_field(f, :external_url, label: "External URL (format example: http://yourwebsite.com) ") %>
+    <%= FormView.text_field(f, :external_url, label: "External URL (Format example: http://yourwebsite.com) ") %>
 <hr>
 
     <%= accept_terms(@conn, f, @user, @challenge) %>
