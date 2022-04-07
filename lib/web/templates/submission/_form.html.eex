@@ -24,7 +24,7 @@
     </div>
         <hr>
     <div class="form-group">
-      <label class="col"><strong>Upload files</strong><br>  <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small> You can upload more than one file after each upload. You may rename your file(s) as you see fit. </label>
+      <label class="col"><strong>Upload files</strong> <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small> You can upload more than one file after each upload. You may rename your file(s) as you see fit. </label><br>
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
@@ -65,7 +65,7 @@
       </div>
     </div>
 <hr>
-              <%= FormView.text_field(f, :external_url, label: "<strong>External URL</strong> (optional)") %>
+              <%= FormView.text_field(f, :external_url, label: "External URL (optional)") %>
     <hr/>
 
     <%= accept_terms(@conn, f, @user, @challenge) %>
