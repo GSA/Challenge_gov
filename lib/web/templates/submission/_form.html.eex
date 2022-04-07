@@ -40,7 +40,7 @@
           <span data-user="<%= @user.email %>", id="current_user"></span><br><br>
 
           Step 2: Rename file (optional)
-           <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "", class: "my-3" %>
+           <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "test", class: "my-3" %>
 
               Step 3: <div id="submission_document_upload" class="btn btn-primary">Attach</div>
         </div>
