@@ -13,7 +13,7 @@
       <% end %>
     <% end %>
   
-    <%= FormView.text_field(f, :title, label: "Title", required: true) %>
+      <strong> <%= FormView.text_field(f, :title, label: "Title", required: true) %></strong>
     <div class="col">
       <label for="brief_description"><strong>Brief description</strong> <span class="required">*</span></label>
       <%= FormView.rt_textarea_field(f, :brief_description, limit: 500) %>
