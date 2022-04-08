@@ -36,7 +36,7 @@
 
         <div class="col">
           <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
-          Step 1: <%= file_input f, :document, name: "submission[document][file]", class: "my-3" %>
+          Step 1: <%= file_input f, :document, name: "submission[document][file]", class: "my-3") %>
           <span data-user="<%= @user.email %>", id="current_user"></span><br><br>
 
           Step 2: Rename file (optional)
