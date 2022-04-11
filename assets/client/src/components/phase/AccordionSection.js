@@ -24,14 +24,12 @@ export const AccordionSection = ({phase, index, section, children, print}) => {
   return (
     <div>
       <h2 className="usa-accordion__heading">
-        <button className="usa-accordion__button"
-          aria-expanded={phaseIsCurrent(phase)}
-          aria-controls={`${section}-a${index}`}>
+        <div className="usa-accordion__button" aria-expanded="true" >
           <span>{`Phase ${index + 1}${phase.title ? ": " + phase.title : ""}`}</span>
           {renderPhaseText(phase)}
-        </button>
+        </div>
       </h2>
-      <div id={`${section}-a${index}`} className="usa-accordion__content" hidden={!phaseIsCurrent(phase) && !print}>
+      <div id={`a${index}`} className="usa-accordion__content" >
         {children}
       </div>
     </div>
