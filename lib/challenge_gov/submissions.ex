@@ -84,7 +84,7 @@ defmodule ChallengeGov.Submissions do
   end
 
   def base_preload(submission) do
-    preload(submission, [:submitter, :invite, :documents, challenge: [:agency]])
+    preload(submission, [:submitter, :invite, :documents, challenge: [:agency, :sub_agency]])
   end
 
   def new do
