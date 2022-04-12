@@ -276,7 +276,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     if (challenge.logo) {
       return (
         <img
-        className={challenge.upload_logo ? "custom-logo" : "challenge-logo"}
+        className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
         src={challenge.logo} alt={challenge.logo_alt_text}
         title="challenge logo"/>
       )
