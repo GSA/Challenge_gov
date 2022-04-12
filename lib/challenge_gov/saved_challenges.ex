@@ -80,7 +80,7 @@ defmodule ChallengeGov.SavedChallenges do
   end
 
   defp base_preload(saved_challenge) do
-    preload(saved_challenge, [:user, challenge: [:agency]])
+    preload(saved_challenge, [:user, challenge: [:agency, :sub_agency]])
   end
 
   def count_for_challenge(challenge) do
