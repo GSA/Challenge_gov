@@ -56,7 +56,7 @@ export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleY
     return isArchived ?
       (
         <p>
-          Challenges on this page are either closed to submissions (completed) or only open to select winners of a previous competition phase.
+          Challenges on this page are completed (closed to submissions) or only open to select winners of a previous competition phase.
         </p>
       )
       : null
@@ -90,7 +90,7 @@ export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleY
       return <p className="card__section--sort"><i>Challenges sorted by those most recently closed to open submissions.</i></p>
     } else {
       if (data.collection && data.collection.length >= 1) {
-        return <p className="card__section--sort"><i>Challenges sorted by those closing soonest</i></p>
+        return <p className="card__section--sort"><i>Challenges are sorted by those closing soonest.</i></p>
       }
     }
   }
