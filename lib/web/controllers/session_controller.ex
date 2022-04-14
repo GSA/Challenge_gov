@@ -95,6 +95,12 @@ defmodule Web.SessionController do
 
   def delete(conn, _params) do
     %{current_user: user} = conn.assigns
+    user_token = get_session(conn, :user_token)
+    # logout_path needs to be in configs
+    logout_path = "https://idp.int.identitysandbox.gov/openid_connect/logout"
+    challenge_gov_path = "https://www.challenge.gov"
+
+    logout_url = LoginGov.build_logout_uri(user_token, logout_path, challenge_gov_path)
     Accounts.update_active_session(user, false)
 
     SecurityLogs.log_session_duration(
@@ -105,7 +111,7 @@ defmodule Web.SessionController do
 
     conn
     |> clear_session()
-    |> redirect(to: Routes.session_path(conn, :new))
+    |> redirect(external: logout_url)
   end
 
   @doc """
