@@ -93,25 +93,15 @@ defmodule Web.SessionController do
     Application.get_env(:challenge_gov, :oidc_config)
   end
 
-  def delete(conn, _params) do
-    %{current_user: user} = conn.assigns
+  def delete(conn = %{assigns: %{current_user: user}}, _params) do
     user_token = get_session(conn, :user_token)
-    # logout_path needs to be in configs
-    logout_path = "https://idp.int.identitysandbox.gov/openid_connect/logout"
-    challenge_gov_path = "https://www.challenge.gov"
 
-    logout_url = LoginGov.build_logout_uri(user_token, logout_path, challenge_gov_path)
     Accounts.update_active_session(user, false)
-
-    SecurityLogs.log_session_duration(
-      user,
-      Timex.to_unix(Timex.now()),
-      Security.extract_remote_ip(conn)
-    )
+    log_session_duration(conn, user)
 
     conn
     |> clear_session()
-    |> redirect(external: logout_url)
+    |> redirect(external: LoginGov.logout_uri(user_token))
   end
 
   @doc """
@@ -157,15 +147,10 @@ defmodule Web.SessionController do
     end
   end
 
-  def logout_user(conn) do
-    %{current_user: user} = conn.assigns
+  def logout_user(conn = %{assigns: %{current_user: user}}) do
     Accounts.update_active_session(user, false)
 
-    SecurityLogs.log_session_duration(
-      user,
-      Timex.to_unix(Timex.now()),
-      Security.extract_remote_ip(conn)
-    )
+    log_session_duration(conn, user)
 
     conn
     |> clear_session()
@@ -180,5 +165,13 @@ defmodule Web.SessionController do
 
   def new_session_timeout_at(timeout_after_minutes) do
     now() + timeout_after_minutes * 60
+  end
+
+  defp log_session_duration(conn, user) do
+    SecurityLogs.log_session_duration(
+      user,
+      Timex.to_unix(Timex.now()),
+      Security.extract_remote_ip(conn)
+    )
   end
 end
