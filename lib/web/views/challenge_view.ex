@@ -3,6 +3,7 @@ defmodule Web.ChallengeView do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.Agencies
+  alias ChallengeGov.Agencies.Avatar
   alias ChallengeGov.Challenges
   alias ChallengeGov.Challenges.Logo
   alias ChallengeGov.Challenges.WinnerImage
@@ -617,7 +618,16 @@ defmodule Web.ChallengeView do
   def logo_img(challenge, opts \\ []) do
     case is_nil(challenge.logo_key) do
       true ->
-        AgencyView.avatar_img(challenge.agency, opts)
+        cond do
+          challenge.sub_agency && challenge.sub_agency.avatar_key ->
+            AgencyView.avatar_img(challenge.sub_agency)
+
+          challenge.agency && challenge.agency.avatar_key ->
+            AgencyView.avatar_img(challenge.agency)
+
+          true ->
+            nil
+        end
 
       false ->
         url = Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
@@ -629,7 +639,20 @@ defmodule Web.ChallengeView do
   def logo_url(challenge) do
     case is_nil(challenge.logo_key) do
       true ->
-        Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.svg")
+        cond do
+          challenge.sub_agency && challenge.sub_agency.avatar_key ->
+            Storage.url(Avatar.avatar_path(challenge.sub_agency, "original"),
+              signed: [expires_in: 3600]
+            )
+
+          challenge.agency && challenge.agency.avatar_key ->
+            Storage.url(Avatar.avatar_path(challenge.agency, "original"),
+              signed: [expires_in: 3600]
+            )
+
+          true ->
+            Routes.static_url(Web.Endpoint, "/images/challenge-logo-2_1.svg")
+        end
 
       false ->
         Storage.url(Logo.logo_path(challenge, "original"), signed: [expires_in: 3600])
