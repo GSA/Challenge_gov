@@ -70,10 +70,11 @@ defmodule ChallengeGov.SubmissionIntegrationTest do
 
     # Admin created submission is found in Solver submissions
     session
-    |> click(link("admin_active@example.com"))
-    |> click(link("Logout"))
-    |> visit("/dev_accounts")
-    |> click(button("Solver Active"))
+    |> Wallaby.end_session()
+
+    {:ok, session} = Wallaby.start_session()
+
+    create_and_sign_in_solver(session)
     |> assert_text("New submission to review")
   end
 
