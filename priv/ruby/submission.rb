@@ -9,15 +9,14 @@ end
 
 class ReportPdf < Prawn::Document
   # Layout
-  MARGIN = 72.pt
+  MARGIN = 10.pt
   BOTTOM_MARGIN = 40.pt
   FOOTER_HEIGHT = 25.pt
   # Colors
   BLACK = "000000"
   WHITE = "FFFFFF"
-  OFFWHITE = "A0A0A0"
-  GREY = "888888"
-  BRAND_BLUE = "2F5496"
+  ORANGE = "FA9441"
+  GREY = "CCCCCC"
 
   def initialize(params)
     Prawn::Fonts::AFM.hide_m17n_warning = true
@@ -37,17 +36,49 @@ class ReportPdf < Prawn::Document
   end
 
   def title_page
-    canvas do
-      fill_color WHITE
-      fill_rectangle [bounds.left, bounds.top], bounds.right, bounds.top
+    pad_top(10) { text "#{@params[:challenge_title]}",  align: :left, size: 13.pt, leading: 4.pt, color: BLACK }
+
+    pad_bottom(5) { text "#{@params[:agency_name]}",  align: :left, size: 13.pt, leading: 4.pt, color: BLACK }
+
+    # image "#{@params[:challenge_logo]}", height: 40, position: :right 
+    
+    stroke do
+      line [0, 650], [1000, 650]
+      line_width 2
+      stroke_color ORANGE
     end
-    move_down 90.pt
-    text "Title: #{@params[:title]}", align: :center, size: 18.pt, leading: 4.pt, color: BLACK
-    text "Brief Description: #{@params[:brief_description]}", align: :center, size: 18.pt, leading: 4.pt, color: BLACK
-    text "Description: #{@params[:description]}", align: :center, size: 18.pt, leading: 4.pt, color: BLACK
-    text "ID: #{@params[:id]}", align: :center, size: 18.pt, leading: 4.pt, color: BLACK
-    text "Status: #{@params[:status]}", align: :center, size: 18.pt, leading: 4.pt, color: BLACK
-    text "Last Update: #{@params[:last_updated]}", align: :center, size: 18.pt, leading: 4.pt, color: BLACK
+
+    bounding_box([0, 649], width: 400, height: 150) do
+      pad_top(5) { text "Submission Title: ", align: :left, size: 13.pt, leading: 4.pt, color: BLACK }
+      text "#{@params[:title]}", align: :left, size: 10.pt, leading: 4.pt, color: BLACK
+      pad_top(5) { text "Brief Description: ", align: :left, size: 13.pt, leading: 4.pt, color: BLACK }
+      text "#{@params[:brief_description]}", align: :left, size: 10.pt, leading: 4.pt, color: BLACK
+    end
+
+    bounding_box([350, 649], width: 150, height: 150) do
+      fill_color 'CCCCCC'
+      fill { rectangle [1, 150], 400, 151 }
+      indent(10) do
+        pad_top(10) { text "ID: #{@params[:id]}", align: :left, size: 10.pt, leading: 4.pt, color: BLACK }
+        text "Status: #{@params[:status]}", align: :left, size: 10.pt, leading: 4.pt, color: BLACK
+        text "Phase: #{@params[:phase]}", align: :left, size: 10.pt, leading: 4.pt, color: BLACK
+        text "Submitted On: ", align: :left, size: 10.pt, leading: 4.pt, color: BLACK
+        text "#{@params[:submitted_on]}", align: :left, size: 10.pt, leading: 4.pt, color: BLACK
+      end
+    end
+
+    stroke do
+      line [0, 800], [1000, 800]
+      stroke_color ORANGE
+      horizontal_rule
+    end
+
+    pad_top(10) { text "Description: #{@params[:description]}", align: :left, size: 13.pt, leading: 4.pt, color: BLACK }
+    text "Uploaded Files: #{@params[:uploaded_file]}", align: :left, size: 13.pt, leading: 4.pt, color: BLACK
+    @params[:uploaded_files].each do |file|
+      text "#{file}", align: :left, size: 10.pt, leading: 4.pt, color: BLACK 
+    end
+    text "External URL: #{@params[:external_url]}", align: :left, size: 13.pt, leading: 4.pt, color: BLACK
   end
 
   #######  PRIVATE!!!
