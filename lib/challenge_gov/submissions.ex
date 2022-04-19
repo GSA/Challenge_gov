@@ -623,4 +623,11 @@ defmodule ChallengeGov.Submissions do
   end
 
   def order_on_attribute(query, _), do: order_by(query, [c], desc_nulls_last: :id)
+
+  @spec update_pdf(Submission.t(), map()) :: {:ok, Submission.t()} | {:error, any()}
+  def update_pdf(submission = %Submission{}, attrs) do
+    submission
+    |> Submission.pdf_changeset(attrs)
+    |> Repo.update()
+  end
 end

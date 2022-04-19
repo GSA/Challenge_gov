@@ -6,12 +6,14 @@ defmodule ChallengeGov.Submissions.Submission do
   use Ecto.Schema
 
   import Ecto.Changeset
+  import Waffle.Ecto.Schema
 
   alias ChallengeGov.Accounts.User
   alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Challenges.Phase
   alias ChallengeGov.Submissions.Document
   alias ChallengeGov.Submissions.SubmissionInvite
+  alias ChallengeGov.Submissions.SubmissionPdf, as: PdfUploader
 
   @type t :: %__MODULE__{}
 
@@ -47,6 +49,7 @@ defmodule ChallengeGov.Submissions.Submission do
     field(:document_objects, :map, virtual: true)
 
     # Fields
+    field :pdf_reference, PdfUploader.Type
     field(:title, :string)
     field(:brief_description, :string)
     field(:brief_description_delta, :string)
@@ -82,6 +85,10 @@ defmodule ChallengeGov.Submissions.Submission do
         :manager_id
       ]
     )
+  end
+
+  def pdf_changeset(submission = %__MODULE__{}, params) do
+    cast_attachments(submission, params, [:pdf_reference])
   end
 
   def draft_changeset(struct, params, user, challenge, phase) do
