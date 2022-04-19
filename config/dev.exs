@@ -82,7 +82,6 @@ config :challenge_gov, :oidc_config, %{
   token_endpoint: "https://idp.int.identitysandbox.gov/api/openid_connect/token"
 }
 
-# Login.Gov user logout config
 config :challenge_gov, :login_gov_logout, %{
   logout_uri: "https://idp.int.identitysandbox.gov/openid_connect/logout",
   logout_redirect_uri: "https://www.challenge.gov/"
