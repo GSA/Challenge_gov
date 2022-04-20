@@ -70,7 +70,7 @@ config :phoenix, :plug_init_mode, :runtime
 # cache
 config :challenge_gov, :cache, preload: true
 
-# authorize config
+# Login.Gov user authorize config
 config :challenge_gov, :oidc_config, %{
   idp_authorize_url: "https://idp.int.identitysandbox.gov/openid_connect/authorize",
   acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
@@ -80,6 +80,12 @@ config :challenge_gov, :oidc_config, %{
   private_key_path: "local_key.pem",
   public_key_path: "local_cert.pem",
   token_endpoint: "https://idp.int.identitysandbox.gov/api/openid_connect/token"
+}
+
+# Login.Gov user logout config
+config :challenge_gov, :login_gov_logout, %{
+  logout_uri: "https://idp.int.identitysandbox.gov/openid_connect/logout",
+  logout_redirect_uri: "https://www.challenge.gov/"
 }
 
 # Configure your database
