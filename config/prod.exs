@@ -84,6 +84,11 @@ config :challenge_gov, :oidc_config, %{
   token_endpoint: System.get_env("LOGIN_TOKEN_ENDPOINT")
 }
 
+config :challenge_gov, :login_gov_logout, %{
+  logout_uri: System.get_env("LOGOUT_URI"),
+  logout_redirect_uri: System.get_env("LOGOUT_REDIRECT_URI")
+}
+
 config :challenge_gov,
   session_timeout_in_minutes: System.get_env("SESSION_TIMEOUT_IN_MINUTES") || 15,
   account_deactivation_in_days: System.get_env("ACCOUNT_DEACTIVATION_IN_DAYS") || 90,
