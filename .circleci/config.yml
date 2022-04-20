@@ -16,6 +16,7 @@ jobs:
       - checkout
       - ruby/install:
           version: "2.7.5"
+      - run: bundle install --path vendor/bundle
       - run: mix local.hex --force
       - run: mix local.rebar --force
       - run: cp config/test.circleci.exs config/test.local.exs
@@ -98,6 +99,7 @@ jobs:
       - checkout
       - ruby/install:
           version: "2.7.5"
+      - run: bundle install --path vendor/bundle
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
       - run: mix local.hex --force
