@@ -40,6 +40,9 @@ yarn.lock
 # this depending on your deployment strategy.
 /priv/static/
 
+# Locally generated pdfs
+/priv/waffle/*
+
 /tmp/import_output/
 
 # Files matching config/*.secret.exs pattern contain sensitive
