@@ -9,7 +9,7 @@
 
 <br/>
 
-<%= FormView.text_field(@form, :tagline, label: "Tagline (400 character limit)", limit: 400, required: true) %>
+<%= FormView.text_field(@form, :tagline, label: "Tagline (90 character limit)", limit: 90, required: true) %>
 <p class="ml-2 text-muted">Provide a clear one-sentence call to action for solvers - essentially your challenge’s headline. It is required that taglines be limited to 90 characters or less. The tagline will also appear at the top of your individual challenge page, and on the challenge preview tile.</p>
 
 <br/>
