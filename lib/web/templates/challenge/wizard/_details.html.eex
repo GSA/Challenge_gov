@@ -143,13 +143,13 @@
   <label class="control-label"><%= FormView.label_field @form, :upload_logo, label: "Upload challenge logo", required: true %></label>
   <div class="ml-3">
     <p class="ml-2 text-muted">
-      Optimal size for display on Challenge.gov is an aspect ratio of 2:1. If you don’t have a logo, your challenge will display with your agency seal.
+      Optimal size for display on Challenge.gov is an aspect ratio of 341 x 160 px. If you don’t have a logo, your challenge will display with your agency seal.
     </p>
     <div class="col upload-logo">
       <div class="row">
         <%= label class: "control-label" do %>
           <%= radio_button(@form, :upload_logo, true, class: "mr-2", required: true) %>
-          Upload my own logo
+          Upload my own logo (341 x 160 px)
         <% end %>
       </div>
       <div class="row logo-file-field collapse">
@@ -165,7 +165,7 @@
       <div class="row">
         <%= label class: "control-label" do %>
           <%= radio_button(@form, :upload_logo, false, class: "mr-2", required: true) %>
-          Use default challenge.gov logo
+          Use agency seal
         <% end %>
       </div>
     </div>
