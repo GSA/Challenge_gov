@@ -10,7 +10,7 @@ defmodule ChallengeGov.Reports.GenerateReport do
   def execute(submission) do
     Logger.info("Generating Submission for submission: #{submission.id}")
     pdf = generate_pdf(submission)
-    file_name = build_submission_filename(submission.title)
+    file_name = build_submission_filename(submission.id)
 
     case Submissions.update_pdf(submission, %{
            type: :submission_pdf,
@@ -28,7 +28,7 @@ defmodule ChallengeGov.Reports.GenerateReport do
   end
 
   defp build_submission_filename(title),
-    do: title <> ".pdf"
+    do: to_string(title) <> ".pdf"
 
   defp generate_pdf(submission) do
     report_data = SubmissionData.for(submission)
