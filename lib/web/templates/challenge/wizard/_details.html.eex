@@ -84,8 +84,8 @@
 <% end %>
 
 
-<%= FormView.text_field(@form, :external_url, label: "Existing external challenge link (optional)") %>
-<p class="ml-2 text-muted">If the challenge is hosted outside of the Challenge.gov platform, enter the link for users to visit that website.</p>
+<%= FormView.text_field(@form, :external_url, label: "“Tile Only” listing – Enter external website link (not recommended") %>
+<p class="ml-2 text-muted"><strong>NOTE</strong>: Entering an external website link here will create a “tile only” listing and will automatically redirect potential solversfrom your challenge tile on Challenge.Gov to this link.</p>
 
 <br/>
 <hr/>
@@ -183,7 +183,7 @@
 
 <h4 class="publish-date-section">Publish date</h4>
 <p class="ml-2 text-muted">
-  Once your challenge is approved, your challenge will be listed on Challenge.gov based on the date you specify. 
+  Once your challenge is approved, your challenge will be listed on Challenge.gov based on the date you specify.
   Please allow up to <b>one to two business days</b> for approval and publishing of your content. Use this format: MM/DD/YYYY TIME OF DAY (Example: 06/19/2020 05:00 PM).
 </p>
 
