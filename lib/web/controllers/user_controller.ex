@@ -220,6 +220,9 @@ defmodule Web.UserController do
   defp send_email(%{status: "deactivated"} = user),
     do: ChallengeGov.Emails.account_reactivation(user)
 
+  defp send_email(%{status: "pending"} = user),
+    do: ChallengeGov.Emails.account_activation(user)
+
   def restore_challenge_access(conn, %{"user_id" => user_id, "challenge_id" => challenge_id}) do
     with {:ok, user} <- Accounts.get(user_id),
          {:ok, challenge} <- Challenges.get(challenge_id),
