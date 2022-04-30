@@ -97,6 +97,7 @@ defmodule Web.UserController do
 
   def update(conn, %{"id" => id, "user" => params}) do
     {:ok, user} = Accounts.get(id)
+    IO.inspect(user.id, label: "UserController.update")
     %{current_user: current_user} = conn.assigns
     %{"role" => role} = params
     %{"status" => status} = params
@@ -173,7 +174,10 @@ defmodule Web.UserController do
     %{current_user: originator} = conn.assigns
 
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.activate(user, originator, Security.extract_remote_ip(conn)) do
+         {:ok, _updated_user} <-
+           Accounts.activate(user, originator, Security.extract_remote_ip(conn)) do
+      send_email(user)
+
       conn
       |> put_flash(:info, "User activated")
       |> redirect(to: Routes.user_path(conn, :show, user.id))
@@ -212,6 +216,9 @@ defmodule Web.UserController do
       |> redirect(to: Routes.user_path(conn, :show, user.id))
     end
   end
+
+  defp send_email(%{status: "deactivated"} = user),
+    do: ChallengeGov.Emails.account_reactivation(user)
 
   def restore_challenge_access(conn, %{"user_id" => user_id, "challenge_id" => challenge_id}) do
     with {:ok, user} <- Accounts.get(user_id),

@@ -150,6 +150,13 @@ defmodule ChallengeGov.Emails do
     |> render("account_activation.html")
   end
 
+  def account_reactivation(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Your Challenge.Gov account has been reactivated")
+    |> render("account_reactivation.html")
+  end
+
   def submission_invite(submission_invite) do
     base_email()
     |> to(submission_invite.submission.submitter.email)
