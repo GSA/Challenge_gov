@@ -4,6 +4,7 @@ defmodule Web.UserController do
   alias ChallengeGov.Accounts
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
 
@@ -218,10 +219,10 @@ defmodule Web.UserController do
   end
 
   defp send_email(%{status: "deactivated"} = user),
-    do: ChallengeGov.Emails.account_reactivation(user)
+    do: ChallengeGov.Emails.account_reactivation(user) |> Mailer.deliver_later()
 
   defp send_email(%{status: "pending"} = user),
-    do: ChallengeGov.Emails.account_activation(user)
+    do: ChallengeGov.Emails.account_activation(user) |> Mailer.deliver_later()
 
   def restore_challenge_access(conn, %{"user_id" => user_id, "challenge_id" => challenge_id}) do
     with {:ok, user} <- Accounts.get(user_id),
