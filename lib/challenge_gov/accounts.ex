@@ -742,18 +742,11 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, %{user: user}} ->
-        send_activation_email(user)
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
         {:error, changeset}
     end
-  end
-
-  defp send_activation_email(user) do
-    user
-    |> Emails.account_activation()
-    |> Mailer.deliver_later()
   end
 
   defp maybe_update_request_renewal(struct, user) do
