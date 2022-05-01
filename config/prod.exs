@@ -68,6 +68,8 @@ config :stein_storage,
   backend: :s3,
   bucket: {:system, "BUCKET_NAME"}
 
+config :waffle,  bucket: {:system, "BUCKET_NAME"}
+
 config :ex_aws,
   region: "us-gov-west-1",
   access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
