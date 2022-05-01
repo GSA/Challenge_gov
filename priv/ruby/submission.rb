@@ -36,11 +36,11 @@ class ReportPdf < Prawn::Document
   end
 
   def title_page
-    pad_top(10) { text "#{@params[:challenge_title]}",  align: :left, size: 13.pt, leading: 4.pt, color: BLACK }
+    pad_top(10) { text "#{@params[:challenge_title]}",  align: :left, size: 18.pt, leading: 4.pt, color: BLACK }
 
     pad_bottom(5) { text "#{@params[:agency_name]}",  align: :left, size: 13.pt, leading: 4.pt, color: BLACK }
 
-    # image "#{@params[:challenge_logo]}", height: 40, position: :right 
+    image "#{@params[:challenge_logo]}", height: 40, position: :right
     
     stroke do
       line [0, 650], [1000, 650]
