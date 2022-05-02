@@ -98,7 +98,6 @@ defmodule Web.UserController do
 
   def update(conn, %{"id" => id, "user" => params}) do
     {:ok, user} = Accounts.get(id)
-    IO.inspect(user.id, label: "UserController.update")
     %{current_user: current_user} = conn.assigns
     %{"role" => role} = params
     %{"status" => status} = params
@@ -218,11 +217,11 @@ defmodule Web.UserController do
     end
   end
 
-  defp send_email(%{status: "deactivated"} = user),
-    do: ChallengeGov.Emails.account_reactivation(user) |> Mailer.deliver_later()
+  defp send_email(user = %{status: "deactivated"}),
+    do: user |> ChallengeGov.Emails.account_reactivation() |> Mailer.deliver_later()
 
-  defp send_email(%{status: "pending"} = user),
-    do: ChallengeGov.Emails.account_activation(user) |> Mailer.deliver_later()
+  defp send_email(user = %{status: "pending"}),
+    do: user |> ChallengeGov.Emails.account_activation() |> Mailer.deliver_later()
 
   def restore_challenge_access(conn, %{"user_id" => user_id, "challenge_id" => challenge_id}) do
     with {:ok, user} <- Accounts.get(user_id),
