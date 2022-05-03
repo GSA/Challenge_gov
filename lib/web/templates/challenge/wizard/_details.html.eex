@@ -5,11 +5,11 @@
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 
 <%= FormView.text_field(@form, :title, label: "Challenge title (90 character limit)", limit: 90, required: true) %>
-<p class="ml-2 text-muted">Provide the official title of your challenge. Your challenge title will appear in your challenge’s listing tile on the Challenge.gov homepage.</p>
+<p class="ml-2 text-muted">Provide the official title of your challenge. Youe challenge title will appear in your challenge’s listing tile on the Challenge.gov homepage.</p>
 
 <br/>
 
-<%= FormView.text_field(@form, :tagline, label: "Tagline (400 character limit)", limit: 400, required: true) %>
+<%= FormView.text_field(@form, :tagline, label: "Tagline (90 character limit)", limit: 90, required: true) %>
 <p class="ml-2 text-muted">Provide a clear one-sentence call to action for solvers - essentially your challenge’s headline. It is required that taglines be limited to 90 characters or less. The tagline will also appear at the top of your individual challenge page, and on the challenge preview tile.</p>
 
 <br/>
@@ -84,8 +84,8 @@
 <% end %>
 
 
-<%= FormView.text_field(@form, :external_url, label: "Existing external challenge link (optional)") %>
-<p class="ml-2 text-muted">If the challenge is hosted outside of the Challenge.gov platform, enter the link for users to visit that website.</p>
+<%= FormView.text_field(@form, :external_url, label: "“Tile Only” listing – Enter external website link (not recommended)") %>
+<p class="ml-2 text-muted"><strong>NOTE</strong>: Entering an external website link here will create a “tile only” listing and will automatically redirect potential solvers from your challenge tile on Challenge.Gov to this link.</p>
 
 <br/>
 <hr/>
@@ -143,13 +143,13 @@
   <label class="control-label"><%= FormView.label_field @form, :upload_logo, label: "Upload challenge logo", required: true %></label>
   <div class="ml-3">
     <p class="ml-2 text-muted">
-      Optimal size for display on Challenge.gov is an aspect ratio of 2:1. If you don’t have a logo, your challenge will display with your agency seal.
+      Optimal size for display on Challenge.Gov is 341x160 px. If you don’t have a logo, your challenge will display with your agency seal.
     </p>
     <div class="col upload-logo">
       <div class="row">
         <%= label class: "control-label" do %>
           <%= radio_button(@form, :upload_logo, true, class: "mr-2", required: true) %>
-          Upload my own logo
+          Upload my own logo (341 x 160 px)
         <% end %>
       </div>
       <div class="row logo-file-field collapse">
@@ -165,7 +165,7 @@
       <div class="row">
         <%= label class: "control-label" do %>
           <%= radio_button(@form, :upload_logo, false, class: "mr-2", required: true) %>
-          Use default challenge.gov logo
+          Use agency seal
         <% end %>
       </div>
     </div>
@@ -183,7 +183,7 @@
 
 <h4 class="publish-date-section">Publish date</h4>
 <p class="ml-2 text-muted">
-  Once your challenge is approved, your challenge will be listed on Challenge.gov based on the date you specify. 
+  Once your challenge is approved, your challenge will be listed on Challenge.gov based on the date you specify.
   Please allow up to <b>one to two business days</b> for approval and publishing of your content. Use this format: MM/DD/YYYY TIME OF DAY (Example: 06/19/2020 05:00 PM).
 </p>
 

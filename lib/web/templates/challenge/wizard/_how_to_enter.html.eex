@@ -12,7 +12,6 @@
 <% end) %>
 
 <div class="col">
-  <%= FormView.text_field(@form, :how_to_enter_link, label: "External website how-to-enter link (optional)") %>
+  <%= FormView.text_field(@form, :how_to_enter_link, label: "External Submission Site - Enter external website link (optional)") %>
 </div>
-<p class="ml-2 text-muted"><b>How to Enter:</b> Provide the website URL that is specific to any entry guidelines.</p>
-<p class="ml-2 text-muted">Solvers will be redirected to this url when applying if filled in</p>
+<p class="ml-2 text-muted"><b>Note:</b> Only enter a website link here if you’re collecting submissions via an external website. If collecting submissions via the Challenge.Gov platform, leave this field blank.</p>
