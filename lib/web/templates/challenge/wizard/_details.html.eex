@@ -5,7 +5,7 @@
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 
 <%= FormView.text_field(@form, :title, label: "Challenge title (90 character limit)", limit: 90, required: true) %>
-<p class="ml-2 text-muted">Provide the official title of your challenge. Your challenge title will appear in your challenge’s listing tile on the Challenge.gov homepage.</p>
+<p class="ml-2 text-muted">Provide the official title of your challenge. Youe challenge title will appear in your challenge’s listing tile on the Challenge.gov homepage.</p>
 
 <br/>
 
@@ -84,8 +84,8 @@
 <% end %>
 
 
-<%= FormView.text_field(@form, :external_url, label: "“Tile Only” listing – Enter external website link (not recommended") %>
-<p class="ml-2 text-muted"><strong>NOTE</strong>: Entering an external website link here will create a “tile only” listing and will automatically redirect potential solversfrom your challenge tile on Challenge.Gov to this link.</p>
+<%= FormView.text_field(@form, :external_url, label: "“Tile Only” listing – Enter external website link (not recommended)") %>
+<p class="ml-2 text-muted"><strong>NOTE</strong>: Entering an external website link here will create a “tile only” listing and will automatically redirect potential solvers from your challenge tile on Challenge.Gov to this link.</p>
 
 <br/>
 <hr/>
@@ -143,7 +143,7 @@
   <label class="control-label"><%= FormView.label_field @form, :upload_logo, label: "Upload challenge logo", required: true %></label>
   <div class="ml-3">
     <p class="ml-2 text-muted">
-      Optimal size for display on Challenge.gov is an aspect ratio of 341 x 160 px. If you don’t have a logo, your challenge will display with your agency seal.
+      Optimal size for display on Challenge.Gov is 341x160 px. If you don’t have a logo, your challenge will display with your agency seal.
     </p>
     <div class="col upload-logo">
       <div class="row">
