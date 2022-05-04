@@ -2,28 +2,45 @@ defmodule ChallengeGov.Reports.GenerateReport do
   @moduledoc """
   generates file, file name, path and updates the `ChallengeGov.Submissions.Submission` pdf.
   """
+  alias ChallengeGov.Repo
   alias ChallengeGov.Reports.SubmissionData
-  alias ChallengeGov.Submissions
+  alias ChallengeGov.Submissions.Document
+  alias Stein.Storage
   alias Ruby.Interface, as: Ruby
   require Logger
 
-  def execute(submission) do
+  @tmp_dir "/tmp/submission_synopsis/"
+
+  def execute(user, submission) do
     Logger.info("Generating Submission for submission: #{submission.id}")
+    key = UUID.uuid4()
     pdf = generate_pdf(submission)
     file_name = build_submission_filename(submission.id)
+    path = @tmp_dir <> file_name
+    extension = Path.extname(file_name)
+    File.mkdir_p(path)
+    {:ok, tmp_file} = Stein.Storage.Temp.create(extname: extension)
 
-    case Submissions.update_pdf(submission, %{
-           type: :submission_pdf,
-           pdf_reference: %{
-             filename: file_name,
-             binary: pdf
-           }
-         }) do
-      {:ok, _detail_report} ->
-        :ok
+    File.write!(tmp_file, pdf, [:binary])
+    file = Storage.prep_file(%{path: path})
 
-      _ ->
-        :error
+    meta = [
+      {:content_disposition, ~s{attachment; filename="#{file.filename}"}}
+    ]
+
+    case Storage.upload(file, path, meta: meta, extensions: [".pdf"]) do
+      :ok ->
+        user
+        |> Ecto.build_assoc(:submission_documents)
+        |> Document.create_changeset(file, key, "synopsis")
+        |> Repo.insert()
+
+      {:error, _reason} ->
+        user
+        |> Ecto.build_assoc(:submission_documents)
+        |> Ecto.Changeset.change()
+        |> Ecto.Changeset.add_error(:file, "had an issue uploading")
+        |> Ecto.Changeset.apply_action(:insert)
     end
   end
 
