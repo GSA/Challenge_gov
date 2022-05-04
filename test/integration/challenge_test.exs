@@ -52,7 +52,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
     session
     |> focus_frame(css(".logo-section"))
-    |> click(radio_button("Use default challenge.gov logo"))
+    |> click(radio_button("Use agency seal"))
     |> focus_frame(css(".publish-date-section"))
     |> populate_auto_publish_date()
 

@@ -4,6 +4,7 @@ defmodule Web.UserController do
   alias ChallengeGov.Accounts
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Challenges
+  alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
 
@@ -173,7 +174,10 @@ defmodule Web.UserController do
     %{current_user: originator} = conn.assigns
 
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- Accounts.activate(user, originator, Security.extract_remote_ip(conn)) do
+         {:ok, _updated_user} <-
+           Accounts.activate(user, originator, Security.extract_remote_ip(conn)) do
+      send_email(user)
+
       conn
       |> put_flash(:info, "User activated")
       |> redirect(to: Routes.user_path(conn, :show, user.id))
@@ -212,6 +216,12 @@ defmodule Web.UserController do
       |> redirect(to: Routes.user_path(conn, :show, user.id))
     end
   end
+
+  defp send_email(user = %{status: "deactivated"}),
+    do: user |> ChallengeGov.Emails.account_reactivation() |> Mailer.deliver_later()
+
+  defp send_email(user = %{status: "pending"}),
+    do: user |> ChallengeGov.Emails.account_activation() |> Mailer.deliver_later()
 
   def restore_challenge_access(conn, %{"user_id" => user_id, "challenge_id" => challenge_id}) do
     with {:ok, user} <- Accounts.get(user_id),
