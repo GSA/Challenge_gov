@@ -12,7 +12,7 @@ defmodule ChallengeGov.Submissions do
   alias ChallengeGov.GovDelivery
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
-  # alias ChallengeGov.Reports.GenerateReport
+  alias ChallengeGov.Reports.GenerateReport
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.SubmissionDocuments
   alias ChallengeGov.Submissions.Submission
@@ -110,7 +110,7 @@ defmodule ChallengeGov.Submissions do
       {:ok, %{submission: submission}} ->
         GovDelivery.subscribe_user_general(user)
         GovDelivery.subscribe_user_challenge(user, challenge)
-        # GenerateReport.execute(submission)
+        GenerateReport.execute(user, submission)
 
         {:ok, submission}
 
@@ -136,9 +136,8 @@ defmodule ChallengeGov.Submissions do
     |> Repo.transaction()
     |> case do
       {:ok, %{submission: submission}} ->
-        submission = new_form_preload(submission)
         if submission.manager_id, do: send_submission_review_email(user, phase, submission)
-        # GenerateReport.execute(submission)
+        GenerateReport.execute(user, submission)
 
         {:ok, submission}
 
@@ -168,7 +167,8 @@ defmodule ChallengeGov.Submissions do
     |> Repo.transaction()
     |> case do
       {:ok, %{submission: submission}} ->
-        # GenerateReport.execute(submission)
+        submission = Repo.preload(submission, :submitter)
+        GenerateReport.execute(submission.submitter, submission)
 
         {:ok, submission}
 
@@ -188,7 +188,8 @@ defmodule ChallengeGov.Submissions do
     |> Repo.transaction()
     |> case do
       {:ok, %{submission: submission}} ->
-        # GenerateReport.execute(submission)
+        submission = Repo.preload(submission, :submitter)
+        GenerateReport.execute(submission.submitter, submission)
 
         {:ok, submission}
 
@@ -204,7 +205,7 @@ defmodule ChallengeGov.Submissions do
 
   def submit(submission, remote_ip \\ nil) do
     submission
-    |> Repo.preload(challenge: [:challenge_manager_users])
+    |> Repo.preload([:submitter, challenge: [:challenge_manager_users]])
     |> Submission.submit_changeset()
     |> Repo.update()
     |> case do
@@ -214,7 +215,7 @@ defmodule ChallengeGov.Submissions do
         challenge_manager_new_submission_email(submission)
         add_to_security_log(submission.submitter, submission, "submit", remote_ip)
         SubmissionExports.check_for_outdated(submission.phase_id)
-        # GenerateReport.execute(submission)
+        GenerateReport.execute(submission.submitter, submission)
 
         {:ok, submission}
 
@@ -634,11 +635,4 @@ defmodule ChallengeGov.Submissions do
   end
 
   def order_on_attribute(query, _), do: order_by(query, [c], desc_nulls_last: :id)
-
-  @spec update_pdf(Submission.t(), map()) :: {:ok, Submission.t()} | {:error, any()}
-  def update_pdf(submission = %Submission{}, attrs) do
-    submission
-    |> Submission.pdf_changeset(attrs)
-    |> Repo.update()
-  end
 end
