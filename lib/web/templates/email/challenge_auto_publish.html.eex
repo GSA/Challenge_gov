@@ -148,7 +148,7 @@
 										<div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;">
 											<!--<![endif]-->
 											<div class="img-container center autowidth big" align="center" style="padding-right: 0px;padding-left: 0px;">
-												<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr style="line-height:0px"><td style="padding-right: 0px;padding-left: 0px;" align="center"><![endif]--><img class="center autowidth" align="center" border="0" src="https://d15k2d11r6t6rl.cloudfront.net/public/users/Integrators/BeeProAgency/595054_576772/email-header.png" alt="Challenge.Gov logo" title="Challenge.Gov logo" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 700px; max-width: 100%; display: block;" width="700">
+												<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr style="line-height:0px"><td style="padding-right: 0px;padding-left: 0px;" align="center"><![endif]--><img class="center autowidth" align="center" border="0" src="https://raw.githubusercontent.com/GSA/Challenge_gov/main/assets/static/images/email-header.png" alt="Challenge.Gov logo" title="Challenge.Gov logo" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 700px; max-width: 100%; display: block;" width="700">
 												<div style="font-size:1px;line-height:15px">&nbsp;</div>
 												<!--[if mso]></td></tr></table><![endif]-->
 											</div>
