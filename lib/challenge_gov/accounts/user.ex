@@ -65,6 +65,7 @@ defmodule ChallengeGov.Accounts.User do
     field(:password, :string, virtual: true)
     field(:password_confirmation, :string, virtual: true)
     field(:token, Ecto.UUID)
+    field(:jwt_token, :string)
 
     field(:email_verification_token, :string)
     field(:email_verified_at, :utc_datetime)
