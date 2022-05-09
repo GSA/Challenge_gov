@@ -44,6 +44,9 @@ defmodule ChallengeGov.LoginGov do
   end
 
   def build_authorization_url(client_id, acr_values, redirect_uri, idp_authorize_url) do
+    # credo:disable-for-next-line
+    IO.inspect("Build authorization url called")
+
     query = [
       client_id: client_id,
       response_type: "code",
@@ -87,13 +90,23 @@ defmodule ChallengeGov.LoginGov do
     %{logout_uri: logout_uri, logout_redirect_uri: logout_redirect_uri} =
       Application.get_env(:challenge_gov, :login_gov_logout)
 
-    logout_uri <>
-      "?" <>
-      URI.encode_query(
-        id_token_hint: id_token,
-        post_logout_redirect_uri: logout_redirect_uri,
-        state: random_value()
-      )
+    # credo:disable-for-next-line
+    IO.inspect(logout_uri, label: "Logout URI")
+    # credo:disable-for-next-line
+    IO.inspect(logout_redirect_uri, label: "Logout Redirect URI")
+
+    logout =
+      logout_uri <>
+        "?" <>
+        URI.encode_query(
+          id_token_hint: id_token,
+          post_logout_redirect_uri: logout_redirect_uri,
+          state: random_value()
+        )
+
+    # credo:disable-for-next-line
+    IO.inspect(logout, label: "Logout")
+    logout
   end
 
   defp handle_response(response, msg) do
