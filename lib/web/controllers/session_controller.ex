@@ -39,6 +39,9 @@ defmodule Web.SessionController do
   end
 
   def result(conn, %{"code" => code, "state" => _state}) do
+    # credo:disable-for-next-line
+    IO.inspect("Session Controller RESULT called")
+
     %{
       client_id: client_id,
       private_key_password: private_key_pass,
@@ -48,6 +51,8 @@ defmodule Web.SessionController do
     } = oidc_config()
 
     {:ok, well_known_config} = LoginGov.get_well_known_configuration(idp_authorize_url)
+    # credo:disable-for-next-line
+    IO.inspect(well_known_config, label: "well_known_config")
 
     private_key = LoginGov.load_private_key(private_key_pass, private_key_path)
     {:ok, public_key} = LoginGov.get_public_key(well_known_config["jwks_uri"])
@@ -58,6 +63,12 @@ defmodule Web.SessionController do
            LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
       {:ok, user} = Accounts.map_from_login(userinfo, Security.extract_remote_ip(conn))
+      # credo:disable-for-next-line
+      IO.inspect(id_token, label: "id_token")
+      # credo:disable-for-next-line
+      IO.inspect(userinfo, label: "user_info")
+      # credo:disable-for-next-line
+      IO.inspect(user, label: "user")
 
       conn
       |> put_session(:user_token, user.token)
