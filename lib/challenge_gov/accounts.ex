@@ -407,6 +407,8 @@ defmodule ChallengeGov.Accounts do
         end
 
       {:ok, account_user} ->
+        # credo:disable-for-next-line
+        IO.inspect(account_user, label: "account_user, Accounts.map_from_login")
         update_active_session(account_user, true)
 
         SecurityLogs.track(%{
