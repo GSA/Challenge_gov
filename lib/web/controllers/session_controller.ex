@@ -62,7 +62,7 @@ defmodule Web.SessionController do
          {:ok, %{"id_token" => id_token}} <-
            LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
-      {:ok, user} = Accounts.map_from_login(userinfo, Security.extract_remote_ip(conn))
+      {:ok, user} = Accounts.map_from_login(userinfo, id_token, Security.extract_remote_ip(conn))
       # credo:disable-for-next-line
       IO.inspect(id_token, label: "id_token")
       # credo:disable-for-next-line
@@ -104,15 +104,14 @@ defmodule Web.SessionController do
     Application.get_env(:challenge_gov, :oidc_config)
   end
 
+  @empty_jwt_token ""
   def delete(conn = %{assigns: %{current_user: user}}, _params) do
-    user_token = get_session(conn, :user_token)
-
-    Accounts.update_active_session(user, false)
+    Accounts.update_active_session(user, false, @empty_jwt_token)
     log_session_duration(conn, user)
 
     conn
     |> clear_session()
-    |> redirect(external: LoginGov.logout_uri(user_token))
+    |> redirect(external: LoginGov.logout_uri(user.jwt_token))
   end
 
   @doc """
@@ -159,7 +158,7 @@ defmodule Web.SessionController do
   end
 
   def logout_user(conn = %{assigns: %{current_user: user}}) do
-    Accounts.update_active_session(user, false)
+    Accounts.update_active_session(user, false, @empty_jwt_token)
 
     log_session_duration(conn, user)
 

@@ -22,9 +22,10 @@ defmodule Web.Api.SessionController do
     end
   end
 
+  @empty_jwt_token ""
   def logout_user(conn, _opts) do
     %{current_user: user} = conn.assigns
-    Accounts.update_active_session(user, false)
+    Accounts.update_active_session(user, false, @empty_jwt_token)
 
     SecurityLogs.log_session_duration(
       user,
