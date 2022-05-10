@@ -36,6 +36,7 @@ defmodule ChallengeGov.SecurityLogs do
     |> Repo.delete_all()
   end
 
+  @empty_jwt_token ""
   def log_session_duration(user, session_end, remote_ip) do
     last_accessed_site =
       SecurityLog
@@ -48,7 +49,7 @@ defmodule ChallengeGov.SecurityLogs do
       user_accessed_site = Timex.to_unix(last_accessed_site.logged_at)
       duration = session_end - user_accessed_site
 
-      Accounts.update_active_session(user, false)
+      Accounts.update_active_session(user, false, @empty_jwt_token)
 
       track(%{
         action: "session_duration",
