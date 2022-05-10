@@ -321,10 +321,11 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Update active session
   """
-  @spec update_active_session(User.t(), map()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
-  def update_active_session(user, param) do
+  @spec update_active_session(User.t(), boolean(), String.t()) ::
+          {:ok, User.t()} | {:error, Ecto.Changeset.t()}
+  def update_active_session(user, session_status, jwt_token) do
     user
-    |> User.active_session_changeset(param)
+    |> User.active_session_changeset(session_status, jwt_token)
     |> Repo.update()
   end
 
@@ -383,7 +384,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Parse login.gov data into our system
   """
-  def map_from_login(userinfo, remote_ip) do
+  def map_from_login(userinfo, jwt_token, remote_ip) do
     # look for user based on token
     case get_by_token(userinfo["sub"]) do
       {:error, :not_found} ->
@@ -409,7 +410,7 @@ defmodule ChallengeGov.Accounts do
       {:ok, account_user} ->
         # credo:disable-for-next-line
         IO.inspect(account_user, label: "account_user, Accounts.map_from_login")
-        update_active_session(account_user, true)
+        update_active_session(account_user, true, jwt_token)
 
         SecurityLogs.track(%{
           originator_id: account_user.id,
