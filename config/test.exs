@@ -27,10 +27,6 @@ config :wallaby,
   max_wait_time: 8_000,
   screenshot_on_failure: true
 
-config :waffle,
-  storage: Waffle.Storage.Local,
-  storage_dir_prefix: Path.expand("../priv/waffle/uploads", __DIR__)
-
 config :challenge_gov, :sql_sandbox, true
 
 config :challenge_gov, Web.Endpoint, server: true
