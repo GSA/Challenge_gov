@@ -42,6 +42,3 @@ DEPENDENCIES
   prawn
   prawn-table
   standard
-
-BUNDLED WITH
-   2.3.9
