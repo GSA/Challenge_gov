@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    ruby (2.7.5)
     ast (2.4.2)
     parallel (1.22.1)
     parser (3.1.2.0)
