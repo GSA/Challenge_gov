@@ -3,6 +3,7 @@ defaults: &defaults
   buildpacks:
     - https://github.com/cloudfoundry/apt-buildpack
     - https://github.com/HashNuke/heroku-buildpack-elixir
+    - https://github.com/cloudfoundry/ruby-buildpack.git
   memory: 512M
   disk_quota: 2G
   health-check-type: process
