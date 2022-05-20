@@ -202,6 +202,7 @@ jobs:
           endpoint: "https://api.fr.cloud.gov"
           org: gsa-tts-innovation-challenge
           space: staging
+      - run: cd ~/project && bundle install
       - run: cf push challenge-portal-stg --strategy rolling
 
   prod-deploy:
