@@ -1,8 +1,3 @@
-require "bundler/setup"
-require "prawn"
-require "prawn/measurement_extensions" # for using .in and .pt
-require "prawn/table"
-
 def generate_pdf(params)
   ReportPdf.new(params).render
 end
