@@ -57,7 +57,7 @@ defmodule Web.SessionController do
          {:ok, %{"id_token" => id_token}} <-
            LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
-      {:ok, user} = Accounts.map_from_login(userinfo, Security.extract_remote_ip(conn))
+      {:ok, user} = Accounts.map_from_login(userinfo, id_token, Security.extract_remote_ip(conn))
 
       conn
       |> put_session(:user_token, user.token)
@@ -93,19 +93,14 @@ defmodule Web.SessionController do
     Application.get_env(:challenge_gov, :oidc_config)
   end
 
-  def delete(conn, _params) do
-    %{current_user: user} = conn.assigns
-    Accounts.update_active_session(user, false)
-
-    SecurityLogs.log_session_duration(
-      user,
-      Timex.to_unix(Timex.now()),
-      Security.extract_remote_ip(conn)
-    )
+  @empty_jwt_token ""
+  def delete(conn = %{assigns: %{current_user: user}}, _params) do
+    Accounts.update_active_session(user, false, @empty_jwt_token)
+    log_session_duration(conn, user)
 
     conn
     |> clear_session()
-    |> redirect(to: Routes.session_path(conn, :new))
+    |> redirect(external: LoginGov.logout_uri(user.jwt_token))
   end
 
   @doc """
@@ -151,15 +146,10 @@ defmodule Web.SessionController do
     end
   end
 
-  def logout_user(conn) do
-    %{current_user: user} = conn.assigns
-    Accounts.update_active_session(user, false)
+  def logout_user(conn = %{assigns: %{current_user: user}}) do
+    Accounts.update_active_session(user, false, @empty_jwt_token)
 
-    SecurityLogs.log_session_duration(
-      user,
-      Timex.to_unix(Timex.now()),
-      Security.extract_remote_ip(conn)
-    )
+    log_session_duration(conn, user)
 
     conn
     |> clear_session()
@@ -174,5 +164,13 @@ defmodule Web.SessionController do
 
   def new_session_timeout_at(timeout_after_minutes) do
     now() + timeout_after_minutes * 60
+  end
+
+  defp log_session_duration(conn, user) do
+    SecurityLogs.log_session_duration(
+      user,
+      Timex.to_unix(Timex.now()),
+      Security.extract_remote_ip(conn)
+    )
   end
 end

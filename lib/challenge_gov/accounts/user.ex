@@ -65,6 +65,7 @@ defmodule ChallengeGov.Accounts.User do
     field(:password, :string, virtual: true)
     field(:password_confirmation, :string, virtual: true)
     field(:token, Ecto.UUID)
+    field(:jwt_token, :string)
 
     field(:email_verification_token, :string)
     field(:email_verified_at, :utc_datetime)
@@ -193,10 +194,11 @@ defmodule ChallengeGov.Accounts.User do
     |> timestamp(:last_active)
   end
 
-  def active_session_changeset(struct, param) do
+  def active_session_changeset(struct, status, jwt_token) do
     struct
     |> change()
-    |> put_change(:active_session, param)
+    |> put_change(:active_session, status)
+    |> put_change(:jwt_token, jwt_token)
   end
 
   def avatar_changeset(struct, key, extension) do
