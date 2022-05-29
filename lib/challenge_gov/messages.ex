@@ -8,6 +8,8 @@ defmodule ChallengeGov.Messages do
   alias Ecto.Multi
   alias ChallengeGov.Repo
 
+  alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
   alias ChallengeGov.MessageContexts
   alias ChallengeGov.Messages.Message
   alias ChallengeGov.Messages.MessageContextStatus
@@ -171,4 +173,16 @@ defmodule ChallengeGov.Messages do
       |> where([m, mc], mc.context == "challenge" and mc.context_id == ^value)
     end
   end
+
+  def maybe_send_email(message = %{author_id: author_id, context: %{context: "solver", context_id: original_recipient_id}}) when author_id != original_recipient_id do
+    recipient = ChallengeGov.Repo.get!(ChallengeGov.Accounts.User, original_recipient_id)
+    content = scrub(message.content)
+    recipient
+    |> Emails.message_center_new_message(content)
+    |> Mailer.deliver_later()
+  end
+
+  def maybe_send_email(_), do: nil
+
+  defp scrub(data), do: String.replace(data, ~r/<(?!\/?a(?=>|\s.*>))\/?.*?>/, " ")
 end
