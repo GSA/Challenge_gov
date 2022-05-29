@@ -174,9 +174,16 @@ defmodule ChallengeGov.Messages do
     end
   end
 
-  def maybe_send_email(message = %{author_id: author_id, context: %{context: "solver", context_id: original_recipient_id}}) when author_id != original_recipient_id do
+  def maybe_send_email(
+        message = %{
+          author_id: author_id,
+          context: %{context: "solver", context_id: original_recipient_id}
+        }
+      )
+      when author_id != original_recipient_id do
     recipient = ChallengeGov.Repo.get!(ChallengeGov.Accounts.User, original_recipient_id)
     content = scrub(message.content)
+
     recipient
     |> Emails.message_center_new_message(content)
     |> Mailer.deliver_later()
