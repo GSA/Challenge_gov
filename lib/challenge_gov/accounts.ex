@@ -233,6 +233,12 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, %{user: user}} ->
+        if user.role == "solver" do
+          user
+          |> Emails.account_activation()
+          |> Mailer.deliver_later()
+        end
+
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->
