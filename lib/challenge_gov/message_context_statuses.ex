@@ -254,6 +254,17 @@ defmodule ChallengeGov.MessageContextStatuses do
     end
   end
 
+  def has_unread_messages?(user) do
+    MessageContextStatus
+    |> where([mcs], mcs.user_id == ^user.id)
+    |> where([mcs], mcs.read == false)
+    |> Repo.aggregate(:count, :id)
+    |> case do
+      0 -> false
+      _ -> true
+    end
+  end
+
   @impl Stein.Filter
   def filter_on_attribute({"starred", value}, query) do
     query
