@@ -175,6 +175,14 @@ defmodule ChallengeGov.Emails do
     |> render("submission_invite.html")
   end
 
+  def message_center_new_message(recipient_user, message) do
+    base_email()
+    |> to(recipient_user.email)
+    |> subject("Challenge.Gov: You have a new message in your message center")
+    |> assign(:message, message)
+    |> render("message_center_new_message.html")
+  end
+
   defp base_email() do
     new_email()
     |> from(Mailer.from())
