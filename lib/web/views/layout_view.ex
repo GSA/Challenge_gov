@@ -78,9 +78,11 @@ defmodule Web.LayoutView do
   def render_message_center_icon(conn, user) do
     nav_item_classes = "nav-item"
     link_classes = "nav-link #{tab_selected(conn, "messages")}"
+    has_messages? = MessageContextStatuses.has_messages?(user)
+    has_unread_messages? = MessageContextStatuses.has_unread_messages?(user)
 
     [route, nav_item_classes] =
-      if !MessageContextStatuses.has_messages?(user) and Accounts.is_solver?(user) do
+      if !has_messages? and Accounts.is_solver?(user) do
         [
           "#",
           nav_item_classes <> " disabled"
@@ -95,12 +97,17 @@ defmodule Web.LayoutView do
     content_tag :li, class: nav_item_classes do
       link to: route, class: link_classes do
         [
-          content_tag(:i, "", class: "nav-icon fas fa-envelope"),
+          with_message(has_unread_messages?),
           content_tag(:p, "Message Center")
         ]
       end
     end
   end
+
+  defp with_message(true),
+    do: content_tag(:i, "", class: "nav-icon fas fa-envelope", style: "color: #C64A22;")
+
+  defp with_message(false), do: content_tag(:i, "", class: "nav-icon fas fa-envelope-open")
 
   def load_filter_panel(conn, view_module) do
     # credo:disable-for-previous-line
