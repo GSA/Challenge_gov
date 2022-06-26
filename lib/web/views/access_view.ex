@@ -21,6 +21,9 @@ defmodule Web.AccessView do
       "decertified" ->
         "recertification"
 
+      "active" ->
+        "recertification"
+
       "deactivated" ->
         "reactivation"
     end
