@@ -188,9 +188,13 @@ defmodule Web.MessageContextController do
     }
 
     MessageContexts.multi_submission_message(user, challenge_id, solver_ids, message_content)
+    send_email(solver_ids, message_content["content"])
 
     conn
     |> put_flash(:info, "Message sent to selected submissions")
     |> redirect(to: Routes.message_context_path(conn, :index))
   end
+
+  defp send_email(solver_ids, message_content),
+    do: Messages.maybe_send_email(solver_ids, message_content)
 end
