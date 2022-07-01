@@ -489,7 +489,12 @@ defmodule ChallengeGov.Challenges do
         {:error, :not_found}
 
       challenge ->
-        challenge = Repo.preload(challenge, events: from(e in Event, order_by: e.occurs_on))
+        challenge =
+          Repo.preload(challenge, events: from(e in Event, order_by: e.date))
+          |> Map.put(
+            :timeline_events,
+            Enum.sort_by(challenge.timeline_events, fn event -> event.date end)
+          )
 
         {:ok, challenge}
     end
