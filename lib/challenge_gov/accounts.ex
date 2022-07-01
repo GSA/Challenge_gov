@@ -19,7 +19,7 @@ defmodule ChallengeGov.Accounts do
   alias Stein.Filter
 
   @doc false
-  @spec roles(User.t()) :: String.t()
+  @spec roles(User.t()) :: String.t() | list()
   def roles(user) do
     case user.role do
       "super_admin" ->
