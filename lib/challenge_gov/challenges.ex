@@ -490,7 +490,8 @@ defmodule ChallengeGov.Challenges do
 
       challenge ->
         challenge =
-          Repo.preload(challenge, events: from(e in Event, order_by: e.date))
+          challenge
+          |> Repo.preload(events: from(e in Event, order_by: e.date))
           |> Map.put(
             :timeline_events,
             Enum.sort_by(challenge.timeline_events, fn event -> event.date end)
