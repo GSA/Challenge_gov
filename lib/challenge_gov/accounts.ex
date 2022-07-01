@@ -19,7 +19,7 @@ defmodule ChallengeGov.Accounts do
   alias Stein.Filter
 
   @doc false
-  @spec roles(User.t()) :: String.t()
+  @spec roles(User.t()) :: String.t() | list()
   def roles(user) do
     case user.role do
       "super_admin" ->
@@ -233,6 +233,12 @@ defmodule ChallengeGov.Accounts do
 
     case result do
       {:ok, %{user: user}} ->
+        if user.role == "solver" do
+          user
+          |> Emails.account_activation()
+          |> Mailer.deliver_later()
+        end
+
         {:ok, user}
 
       {:error, _type, changeset, _changes} ->

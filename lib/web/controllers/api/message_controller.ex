@@ -17,6 +17,8 @@ defmodule Web.Api.MessageController do
     case MessageContexts.user_can_message?(user, message_context) do
       true ->
         {:ok, message} = Messages.create(user, message_context, message_params)
+        message = ChallengeGov.Repo.preload(message, :context)
+        Messages.maybe_send_email(message)
 
         conn
         |> put_status(:ok)
