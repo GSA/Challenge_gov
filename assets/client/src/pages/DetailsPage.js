@@ -26,6 +26,10 @@ export const DetailsPage = ({challengeId}) => {
     $(".section-divider").hide()
     $(".footer").hide()
     $(".usa-hero").hide()
+    $(".video").hide()
+    $(".challenges-header").hide()
+    $(".newsletter").hide()
+    
 
     let challengeApiPath = apiUrl + `/api/challenges/${challengeId}`
     axios
