@@ -16,9 +16,13 @@ export const LandingPage = ({isArchived}) => {
   if (isArchived) {
     $(".top-banner").hide()
     $(".usa-hero").hide()
+    $(".video").hide()
+    $(".newsletter").hide()
+    $(".help-section").hide()
+    $(".challenges-header").hide()
   } else {
     $(".top-banner").show()
-    $(".usa-hero").show()
+    
   }
   $(".help-section").show()
   $(".section-divider").show()
