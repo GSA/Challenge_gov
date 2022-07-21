@@ -33,7 +33,7 @@ defmodule ChallengeGov.LoginGov do
     }
 
     token_endpoint
-    |> post(body, [{"Content-Type", "application/json"}])
+    |> post(Poison.encode!(body), [{"Content-Type", "application/json"}])
     |> handle_response("Sorry, could not exchange code")
   end
 
@@ -121,10 +121,6 @@ defmodule ChallengeGov.LoginGov do
     uri
     |> URI.merge(path)
     |> URI.to_string()
-  end
-
-  def process_request_body(body) do
-    Poison.encode!(body)
   end
 
   def process_response_body(body) do
