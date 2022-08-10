@@ -7,7 +7,7 @@
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">
-          <span>Users</span>
+          <span style="color:#C5221F">Admin Action Required</span>
           <a class="btn btn-info" data-widget="control-sidebar" href="#">Search</a>
           <%= if is_map(@filter) && map_size(@filter) > 0 do %>
             <%= link "Clear search", to: Routes.user_path(@conn, :index), class: "btn btn-link" %>
@@ -24,6 +24,13 @@
 <% end%>
 
 <section class="content">
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1 class="m-0 text-dark">
+        <span>User List</span>
+      </h1>
+    </div>
+  </div>
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-9">
@@ -47,7 +54,7 @@
                     <td><%= link(AccountView.full_name(user), to: Routes.user_path(@conn, :show, user.id)) %></td>
                     <td><%= user.email %></td>
                     <td><%= user.role %></td>
-                    <td><%= user.status %></td>
+                    <td><%= status(user.status) %></td>
                     <td>
                       <%= link("View", to: Routes.user_path(@conn, :show, user.id), class: "btn btn-default btn-xs") %>
                       <%= user_edit_link(@conn, user, @current_user) %>
@@ -59,27 +66,6 @@
           </div>
 
           <%= SharedView.pagination(path: Routes.user_path(@conn, :index), pagination: @pagination) %>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Add a User</h3>
-          </div>
-          <%= form_for(@changeset, Routes.user_path(@conn, :create), [method: :post], fn f -> %>
-            <div class="card-body">
-              <%= FormView.text_field(f, :first_name, required: true) %>
-              <%= FormView.text_field(f, :last_name, required: true) %>
-              <%= FormView.email_field(f, :email, required: true) %>
-              <%= FormView.email_field(f, :email_confirmation, required: true) %>
-              <%= FormView.select_field(f, :role, collection: Enum.map(Accounts.roles(@current_user), &{&1.label, &1.id}), required: true) %>
-
-              <div class="btn-wrapper">
-                <%= submit("Submit", class: "btn btn-primary") %>
-              </div>
-            </div>
-          <% end) %>
         </div>
       </div>
     </div>
