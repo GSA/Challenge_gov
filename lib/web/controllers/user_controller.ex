@@ -32,7 +32,10 @@ defmodule Web.UserController do
     |> assign(:user, current_user)
     |> assign(:current_user, current_user)
     |> assign(:users, users)
-    |> assign(:users_requiring_action, pending_users ++ reactivation_users ++ requesting_recertification)
+    |> assign(
+      :users_requiring_action,
+      pending_users ++ reactivation_users ++ requesting_recertification
+    )
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> assign(:pagination, pagination)
