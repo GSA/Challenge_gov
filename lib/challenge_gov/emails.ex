@@ -157,6 +157,13 @@ defmodule ChallengeGov.Emails do
     |> render("account_activation_solver.html")
   end
 
+  def account_activation(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Getting started with Challenge.Gov")
+    |> render("account_activation_challenge_manager.html")
+  end
+
   def account_reactivation(user) do
     base_email()
     |> to(user.email)
