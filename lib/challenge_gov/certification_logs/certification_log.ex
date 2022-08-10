@@ -11,10 +11,11 @@ defmodule ChallengeGov.CertificationLogs.CertificationLog do
 
   schema "certification_log" do
     belongs_to(:approver, User)
+    belongs_to(:user, User)
+
     field(:approver_role, :string)
     field(:approver_identifier, :string)
     field(:approver_remote_ip, :string)
-    belongs_to(:user, User)
     field(:user_role, :string)
     field(:user_identifier, :string)
     field(:user_remote_ip, :string)
