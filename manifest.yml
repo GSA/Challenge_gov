@@ -39,6 +39,7 @@ applications:
 - name: challenge-portal-production
   <<: *defaults
   instances: 2
+  memory: 1G
   env:
     MIX_ENV: prod
     HOST: portal.challenge.gov
