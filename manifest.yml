@@ -26,6 +26,7 @@ applications:
 - name: challenge-portal-stg
   <<: *defaults
   instances: 2
+  memory: 1G
   env:
     MIX_ENV: prod
     HOST: challenge-portal-staging.app.cloud.gov
