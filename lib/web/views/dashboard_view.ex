@@ -10,9 +10,9 @@ defmodule Web.DashboardView do
     case CertificationLogs.get_current_certification(user) do
       {:ok, certification} ->
         expiration = Timex.to_unix(certification.expires_at)
-        two_weeks_from_now = Timex.to_unix(Timex.shift(Timex.now(), days: 14))
+        thirty_days_from_now = Timex.to_unix(Timex.shift(Timex.now(), days: 30))
 
-        if expiration < two_weeks_from_now do
+        if expiration < thirty_days_from_now do
           [
             content_tag(
               :span,
