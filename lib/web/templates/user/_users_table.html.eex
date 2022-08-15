@@ -22,7 +22,7 @@
                     <td><%= link(AccountView.full_name(user), to: Routes.user_path(@conn, :show, user.id)) %></td>
                     <td><%= user.email %></td>
                     <td><%= user.role %></td>
-                    <td><%= user.status %></td>
+                    <td><%= status(user.status) %></td>
                     <td>
                       <%= link("View", to: Routes.user_path(@conn, :show, user.id), class: "btn btn-default btn-xs") %>
                       <%= user_edit_link(@conn, user, @current_user) %>

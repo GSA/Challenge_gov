@@ -26,12 +26,16 @@ defmodule Web.UserController do
 
     pending_users = Accounts.all_pending()
     reactivation_users = Accounts.all_reactivation()
+    requesting_recertification = Accounts.requesting_recertification()
 
     conn
     |> assign(:user, current_user)
     |> assign(:current_user, current_user)
     |> assign(:users, users)
-    |> assign(:users_requiring_action, pending_users ++ reactivation_users)
+    |> assign(
+      :users_requiring_action,
+      pending_users ++ reactivation_users ++ requesting_recertification
+    )
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> assign(:pagination, pagination)
@@ -220,7 +224,16 @@ defmodule Web.UserController do
   defp send_email(user = %{status: "deactivated"}),
     do: user |> ChallengeGov.Emails.account_reactivation() |> Mailer.deliver_later()
 
+  defp send_email(user = %{status: "suspended"}),
+    do: user |> ChallengeGov.Emails.account_reactivation() |> Mailer.deliver_later()
+
+  defp send_email(user = %{status: "revoked"}),
+    do: user |> ChallengeGov.Emails.account_reactivation() |> Mailer.deliver_later()
+
   defp send_email(user = %{status: "pending"}),
+    do: user |> ChallengeGov.Emails.account_activation() |> Mailer.deliver_later()
+
+  defp send_email(user = %{status: "active"}),
     do: user |> ChallengeGov.Emails.account_activation() |> Mailer.deliver_later()
 
   def restore_challenge_access(conn, %{"user_id" => user_id, "challenge_id" => challenge_id}) do
