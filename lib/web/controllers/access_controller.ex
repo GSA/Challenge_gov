@@ -96,7 +96,7 @@ defmodule Web.AccessController do
   defp update_reactivation_request(user),
     do: Accounts.update(user, %{renewal_request: "activation"})
 
-  defp route_user(conn, %{role: "solver"} = user) do
+  defp route_user(conn, user = %{role: "solver"}) do
     conn
     |> assign(:user, user)
     |> render(Web.DashboardView, "index.html")
