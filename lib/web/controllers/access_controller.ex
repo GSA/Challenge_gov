@@ -74,7 +74,7 @@ defmodule Web.AccessController do
   def request_reactivation(conn, _params) do
     %{current_user: current_user} = conn.assigns
 
-    with {:ok, user} <- Accounts.update(current_user, %{renewal_request: "activation"}) do
+    with {:ok, user} <- update_reactivation_request(current_user) do
       SecurityLogs.track(%{
         action: "renewal_request",
         details: %{renewal_requested: "reactivation"},
@@ -86,7 +86,21 @@ defmodule Web.AccessController do
 
       conn
       |> put_flash(:info, "Success")
-      |> redirect(to: Routes.access_path(conn, :index))
+      |> route_user(user)
     end
   end
+
+  defp update_reactivation_request(user = %{role: "solver"}),
+    do: Accounts.update(user, %{status: "active"})
+
+  defp update_reactivation_request(user),
+    do: Accounts.update(user, %{renewal_request: "activation"})
+
+  defp route_user(conn, user = %{role: "solver"}) do
+    conn
+    |> assign(:user, user)
+    |> render(Web.DashboardView, "index.html")
+  end
+
+  defp route_user(conn, _user), do: redirect(conn, to: Routes.access_path(conn, :index))
 end
