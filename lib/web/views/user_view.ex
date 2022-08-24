@@ -94,12 +94,12 @@ defmodule Web.UserView do
 
   def recertification_requested(%{renewal_request: "certification"}),
     do: ~E"""
-      <span>Recertification Request Submitted: <span style="color:#4D8055">Yes</span></span>
+      <span>Request Submitted: <span style="color:#4D8055">Yes</span></span>
     """
 
   def recertification_requested(_),
     do: ~E"""
-      <span>Recertification Request Submitted: <span style="color:#B50808">No</span></span>
+      <span>Request Submitted: <span style="color:#B50808">No</span></span>
     """
 
   def status("active"),
