@@ -74,7 +74,7 @@ defmodule Web.AccessController do
   def request_reactivation(conn, _params) do
     %{current_user: current_user} = conn.assigns
 
-    with {:ok, user} <- Accounts.update(current_user, %{renewal_request: "activation"}) do
+    with {:ok, user} <- update_reactivation_request(current_user) do
       SecurityLogs.track(%{
         action: "renewal_request",
         details: %{renewal_requested: "reactivation"},
@@ -84,9 +84,39 @@ defmodule Web.AccessController do
         originator_remote_ip: Security.extract_remote_ip(conn)
       })
 
+      maybe_send_activation_security_log(user)
+
       conn
       |> put_flash(:info, "Success")
-      |> redirect(to: Routes.access_path(conn, :index))
+      |> route_user(user)
     end
   end
+
+  defp update_reactivation_request(user = %{role: "solver"}),
+    do: Accounts.update(user, %{status: "active"})
+
+  defp update_reactivation_request(user),
+    do: Accounts.update(user, %{renewal_request: "activation"})
+
+  defp maybe_send_activation_security_log(user = %{role: "solver"}) do
+    SecurityLogs.track(%{
+      originator_id: nil,
+      originator_role: nil,
+      originator_identifier: nil,
+      originator_remote_ip: nil,
+      target_id: user.id,
+      target_type: user.role,
+      target_identifier: user.email,
+      action: "status_change",
+      details: %{previous_status: "deactivated", new_status: "active"}
+    })
+  end
+
+  defp route_user(conn, user = %{role: "solver"}) do
+    conn
+    |> assign(:user, user)
+    |> render(Web.DashboardView, "index.html")
+  end
+
+  defp route_user(conn, _user), do: redirect(conn, to: Routes.access_path(conn, :index))
 end
