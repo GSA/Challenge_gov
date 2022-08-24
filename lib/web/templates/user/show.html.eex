@@ -46,8 +46,8 @@
       <div class="col">
         <div class="card">
           <div class="card-header row">
-            <h3 class="card-title col-10">User Status</h3>
-            <div class="col-2 pull-right"><%= status(@user.status) %></div>
+            <h3 class="card-title col-9">User Status</h3>
+            <div class="col-3 pull-right"><%= status(@user.status) %></div>
           </div>
           <div class="card-body text-center">
             <%= if !Accounts.is_active?(@user) and !Accounts.is_decertified?(@user) do %>

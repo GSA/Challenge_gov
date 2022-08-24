@@ -56,13 +56,6 @@ defmodule ChallengeGov.Accounts do
     |> Repo.all()
   end
 
-  def all_decertified() do
-    User
-    |> where([u], u.status == "decertified")
-    |> order_by([u], [{:asc, u.inserted_at}])
-    |> Repo.all()
-  end
-
   def requesting_recertification() do
     User
     |> where([u], u.status == "decertified" or u.status == "active")
