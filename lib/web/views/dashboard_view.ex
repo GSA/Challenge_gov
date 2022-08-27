@@ -10,23 +10,24 @@ defmodule Web.DashboardView do
     case CertificationLogs.get_current_certification(user) do
       {:ok, certification} ->
         expiration = Timex.to_unix(certification.expires_at)
-        two_weeks_from_now = Timex.to_unix(Timex.shift(Timex.now(), days: 14))
+        thirty_days_from_now = Timex.to_unix(Timex.shift(Timex.now(), days: 30))
 
-        if expiration < two_weeks_from_now do
-          [
-            content_tag(
-              :span,
-              "Your account certification will expire on
-                #{certification.expires_at.month}/#{certification.expires_at.day}/#{certification.expires_at.year}",
-              class: "mx-2"
-            ),
-            recertification_action(conn, user)
-          ]
+        if expiration < thirty_days_from_now do
+          account_decertification_warning(conn, certification, user)
         end
 
       {:error, :no_log_found} ->
         nil
     end
+  end
+
+  defp account_decertification_warning(conn, certification, user) do
+    ~E"""
+      <div class="ml-4" style="padding:10px; background-color:#F3F2F3">
+        <h2>Your account certification will expire on <%= certification.expires_at.month %>/<%= certification.expires_at.day %>/<%= certification.expires_at.year %></h1>
+        <%= recertification_action(conn, user) %>
+      </div>
+    """
   end
 
   def recertification_action(conn, user) do
@@ -36,7 +37,7 @@ defmodule Web.DashboardView do
       ]
     else
       [
-        link("Request recertification",
+        link("Request Recertification",
           to: Routes.access_path(conn, :recertification),
           target: "",
           class: "btn btn-primary"

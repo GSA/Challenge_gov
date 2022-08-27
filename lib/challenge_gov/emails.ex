@@ -12,7 +12,7 @@ defmodule ChallengeGov.Emails do
     |> to("team@challenge.gov")
     |> subject("Challenge.gov - Challenge Review Needed")
     |> assign(:challenge, challenge)
-    |> render("pending-challenge-email.html")
+    |> render("pending_challenge_email.html")
   end
 
   def challenge_rejection_email(user, challenge) do
@@ -21,7 +21,7 @@ defmodule ChallengeGov.Emails do
     |> subject("Challenge.gov - Edits Requested: #{challenge.title}")
     |> assign(:challenge, challenge)
     |> assign(:message, challenge.rejection_message)
-    |> render("challenge-rejection-email.html")
+    |> render("challenge_rejection_email.html")
   end
 
   def challenge_submission(user, challenge) do
@@ -56,7 +56,7 @@ defmodule ChallengeGov.Emails do
     |> subject("Challenge.gov - Submission created for #{submission.challenge.title}")
     |> assign(:submission, submission)
     |> assign(:challenge, submission.challenge)
-    |> render("submission-submission.html")
+    |> render("submission_submission.html")
   end
 
   def submission_review(user, phase, submission) do
@@ -65,7 +65,7 @@ defmodule ChallengeGov.Emails do
     |> subject("Challenge.gov - Action needed. New submission notification")
     |> assign(:submission, submission)
     |> assign(:phase, phase)
-    |> render("managed-submission-created.html")
+    |> render("managed_submission_created.html")
   end
 
   def submission_confirmation(submission) do
@@ -74,7 +74,7 @@ defmodule ChallengeGov.Emails do
     |> subject("Challenge.gov - Submission created for #{submission.challenge.title}")
     |> assign(:submission, submission)
     |> assign(:challenge, submission.challenge)
-    |> render("submission-confirmation.html")
+    |> render("submission_confirmation.html")
   end
 
   def days_deactivation_warning(user = %{role: "solver"}, days) when days == 10 do
@@ -157,6 +157,13 @@ defmodule ChallengeGov.Emails do
     |> render("account_activation_solver.html")
   end
 
+  def account_activation(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Getting started with Challenge.Gov")
+    |> render("account_activation_challenge_manager.html")
+  end
+
   def account_reactivation(user) do
     base_email()
     |> to(user.email)
@@ -173,6 +180,43 @@ defmodule ChallengeGov.Emails do
     |> assign(:submission_invite, submission_invite)
     |> assign(:challenge, submission_invite.submission.challenge)
     |> render("submission_invite.html")
+  end
+
+  def recertification_email(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Your Challenge.Gov account has been recertified")
+    |> render("account_recertification.html")
+  end
+
+  def one_day_recertification_email(user) do
+    base_email()
+    |> to(user.email)
+    |> subject(
+      "Your Challenge.Gov account will be deactivated in 1 day - Log in today to keep it active"
+    )
+    |> render("one_day_recertification.html")
+  end
+
+  def five_day_recertification_email(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Action Needed - Log in to Challenge.Gov to recertify your account")
+    |> render("five_day_recertification.html")
+  end
+
+  def fifteen_day_recertification_email(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("Recertify your Challenge.Gov account today")
+    |> render("fifteen_day_recertification.html")
+  end
+
+  def thirty_day_recertification_email(user) do
+    base_email()
+    |> to(user.email)
+    |> subject("It’s time for your annual Challenge.Gov account recertification")
+    |> render("thirty_day_recertification.html")
   end
 
   def message_center_new_message(recipient_user, message) do

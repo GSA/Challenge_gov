@@ -58,28 +58,77 @@ defmodule Web.UserView do
     end
   end
 
-  def certification_info(certification) do
-    now = Timex.to_unix(Timex.now())
-    expiration_date = certification.expires_at
+  def certification_status(certification, %{status: status}) do
+    one_year_from_certification =
+      Timex.add(certification.certified_at, Timex.Duration.from_days(365))
 
-    if Timex.to_unix(expiration_date) <= now do
-      [
-        content_tag(:span, "Certification status: decertified", class: "d-block"),
-        content_tag(
-          :span,
-          "Decertified on #{expiration_date.month}/#{expiration_date.day}/#{expiration_date.year}",
-          class: "d-block"
-        )
-      ]
+    after? = Timex.after?(certification.certified_at, one_year_from_certification)
+
+    if after? || status == "decertified" do
+      ~E"""
+        <span style="color:#B50808">Decertified</span>
+      """
     else
-      [
-        content_tag(:span, "Certification status: certified", class: "d-block"),
-        content_tag(
-          :span,
-          "Expires on #{expiration_date.month}/#{expiration_date.day}/#{expiration_date.year}",
-          class: "d-block"
-        )
-      ]
+      ~E"""
+        <span style="color:#4D8055">Certified</span>
+      """
     end
   end
+
+  def certification_info(certification, %{status: status}) do
+    one_year_from_certification =
+      Timex.add(certification.certified_at, Timex.Duration.from_days(365))
+
+    after? = Timex.after?(certification.certified_at, one_year_from_certification)
+
+    if after? || status == "deactivated" do
+      ~E"""
+        <span>Decertified on <%= one_year_from_certification.month %>/<%= one_year_from_certification.day %>/<%= one_year_from_certification.year %></span>
+      """
+    else
+      ~E"""
+        <span>Due On: <%= certification.expires_at.month %>/<%= certification.expires_at.day %>/<%= certification.expires_at.year %></span>
+      """
+    end
+  end
+
+  def recertification_requested(%{renewal_request: "certification"}),
+    do: ~E"""
+      <span>Request Submitted: <span style="color:#4D8055">Yes</span></span>
+    """
+
+  def recertification_requested(_),
+    do: ~E"""
+      <span>Request Submitted: <span style="color:#B50808">No</span></span>
+    """
+
+  def status("active"),
+    do: ~E"""
+     <span style="color:#4D8055">Active</span>
+    """
+
+  def status("pending"),
+    do: ~E"""
+     <span style="color:#E5A002">Pending</span>
+    """
+
+  def status("deactivated"),
+    do: ~E"""
+     <span style="color:#B50808">Deactivated</span>
+    """
+
+  def status("decertified"),
+    do: ~E"""
+     <span style="color:#B50808">Decertified</span>
+    """
+
+  def status("suspended"),
+    do: ~E"""
+     <span style="color:#B50808">Suspended</span>
+    """
+
+  def status("revoked"),
+    do: ~E"""
+     <span style="color:#B50808">Revoked</span>
+    """
 end

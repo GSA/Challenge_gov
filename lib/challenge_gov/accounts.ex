@@ -56,6 +56,14 @@ defmodule ChallengeGov.Accounts do
     |> Repo.all()
   end
 
+  def requesting_recertification() do
+    User
+    |> where([u], u.status == "decertified" or u.status == "active")
+    |> where([u], u.renewal_request == "certification")
+    |> order_by([u], [{:asc, u.inserted_at}])
+    |> Repo.all()
+  end
+
   def all_reactivation() do
     User
     |> where([u], u.renewal_request == "activation")
@@ -166,7 +174,7 @@ defmodule ChallengeGov.Accounts do
   @doc """
   Changeset for sign in and registration
   """
-  @spec new() :: User.t()
+  @spec new() :: Ecto.Changeset.t()
   def new() do
     User.create_changeset(%User{}, %{})
   end

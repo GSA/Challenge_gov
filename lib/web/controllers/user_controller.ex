@@ -4,9 +4,8 @@ defmodule Web.UserController do
   alias ChallengeGov.Accounts
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Challenges
-  alias ChallengeGov.Mailer
-  alias ChallengeGov.Repo
   alias ChallengeGov.Security
+  alias ChallengeGov.Users
 
   plug(
     Web.Plugs.EnsureRole,
@@ -18,7 +17,6 @@ defmodule Web.UserController do
 
   def index(conn, params) do
     %{current_user: current_user} = conn.assigns
-
     %{page: page, per: per} = conn.assigns
     filter = Map.get(params, "user", %{})
     sort = Map.get(params, "sort", %{})
@@ -26,12 +24,16 @@ defmodule Web.UserController do
 
     pending_users = Accounts.all_pending()
     reactivation_users = Accounts.all_reactivation()
+    requesting_recertification = Accounts.requesting_recertification()
 
     conn
     |> assign(:user, current_user)
     |> assign(:current_user, current_user)
     |> assign(:users, users)
-    |> assign(:users_requiring_action, pending_users ++ reactivation_users)
+    |> assign(
+      :users_requiring_action,
+      pending_users ++ reactivation_users ++ requesting_recertification
+    )
     |> assign(:filter, filter)
     |> assign(:sort, sort)
     |> assign(:pagination, pagination)
@@ -114,23 +116,17 @@ defmodule Web.UserController do
 
     case Accounts.update(user, params) do
       {:ok, user} ->
-        Security.track_role_change_in_security_log(
+        execute_security_log(
           remote_ip,
           current_user,
           user,
           role,
-          previous_role
-        )
-
-        Security.track_status_update_in_security_log(
-          remote_ip,
-          current_user,
-          user,
+          previous_role,
           status,
           previous_status
         )
 
-        maybe_decertify_user_manually(user, status, previous_status)
+        Users.maybe_decertify_user_manually(user, status, previous_status)
 
         {:ok, certification} =
           case CertificationLogs.get_current_certification(user) do
@@ -155,28 +151,13 @@ defmodule Web.UserController do
     end
   end
 
-  def maybe_decertify_user_manually(_user, status, status) do
-    # NO OP status not changed
-  end
-
-  def maybe_decertify_user_manually(user, "decertified", _previous_status) do
-    with {:ok, user} <-
-           Accounts.update(user, %{terms_of_use: nil, privacy_guidelines: nil}) do
-      Accounts.revoke_challenge_managership(user)
-    end
-  end
-
-  def maybe_decertify_user_manually(_user, _status, _previous_status) do
-    # NO OP status not changed to decertified
-  end
-
   def toggle(conn, %{"id" => id, "action" => "activate"}) do
     %{current_user: originator} = conn.assigns
 
     with {:ok, user} <- Accounts.get(id),
          {:ok, _updated_user} <-
            Accounts.activate(user, originator, Security.extract_remote_ip(conn)) do
-      send_email(user)
+      Users.send_email(user)
 
       conn
       |> put_flash(:info, "User activated")
@@ -188,7 +169,8 @@ defmodule Web.UserController do
     %{current_user: originator} = conn.assigns
 
     with {:ok, user} <- Accounts.get(id),
-         {:ok, user} <- admin_recertify_user(user, originator, Security.extract_remote_ip(conn)) do
+         {:ok, user} <-
+           Users.admin_recertify_user(user, originator, Security.extract_remote_ip(conn)) do
       conn
       |> put_flash(:info, "User recertified")
       |> redirect(to: Routes.user_path(conn, :show, user.id))
@@ -217,12 +199,6 @@ defmodule Web.UserController do
     end
   end
 
-  defp send_email(user = %{status: "deactivated"}),
-    do: user |> ChallengeGov.Emails.account_reactivation() |> Mailer.deliver_later()
-
-  defp send_email(user = %{status: "pending"}),
-    do: user |> ChallengeGov.Emails.account_activation() |> Mailer.deliver_later()
-
   def restore_challenge_access(conn, %{"user_id" => user_id, "challenge_id" => challenge_id}) do
     with {:ok, user} <- Accounts.get(user_id),
          {:ok, challenge} <- Challenges.get(challenge_id),
@@ -233,40 +209,29 @@ defmodule Web.UserController do
     end
   end
 
-  def admin_recertify_user(user, approver, approver_remote_ip) do
-    result =
-      Ecto.Multi.new()
-      |> Ecto.Multi.run(:user, fn _repo, _changes ->
-        Accounts.activate(user, approver, approver_remote_ip)
-      end)
-      |> Ecto.Multi.run(:renew_terms, fn _repo, _changes ->
-        Accounts.update(user, get_recertify_update_params(user))
-      end)
-      |> Ecto.Multi.run(:certification_record, fn _repo, _changes ->
-        CertificationLogs.certify_user_with_approver(user, approver, approver_remote_ip)
-      end)
-      |> Repo.transaction()
+  defp execute_security_log(
+         remote_ip,
+         current_user,
+         user,
+         role,
+         previous_role,
+         status,
+         previous_status
+       ) do
+    Security.track_role_change_in_security_log(
+      remote_ip,
+      current_user,
+      user,
+      role,
+      previous_role
+    )
 
-    case result do
-      {:ok, %{user: user}} ->
-        {:ok, user}
-
-      :error ->
-        {:error, :not_recertified}
-    end
-  end
-
-  defp get_recertify_update_params(user) do
-    case user.renewal_request == "certification" do
-      true ->
-        %{
-          "terms_of_use" => nil,
-          "privacy_guidelines" => nil,
-          "renewal_request" => nil
-        }
-
-      false ->
-        %{"terms_of_use" => nil, "privacy_guidelines" => nil}
-    end
+    Security.track_status_update_in_security_log(
+      remote_ip,
+      current_user,
+      user,
+      status,
+      previous_status
+    )
   end
 end
