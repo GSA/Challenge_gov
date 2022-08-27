@@ -7,13 +7,13 @@
         <div class="checkbox-input">
           <%= Phoenix.HTML.Form.checkbox(f, :accept_terms_of_use, required: true) %>
           <%= label(f, :accept_terms_of_use, class: "label-text") do %>
-            I accept the <%= link "terms of use", to: "https://www.challenge.gov/terms/", target: "_blank" %>
+            I accept the <%= link "Terms of Use", to: "https://www.challenge.gov/terms/", target: "_blank" %><span style="color:red"> *</span>
           <% end %>
         </div>
         <div class="checkbox-input">
           <%= Phoenix.HTML.Form.checkbox(f, :accept_privacy_guidelines, required: true) %>
           <%= label(f, :accept_privacy_guidelines, class: "label-text") do %>
-            I accept the <%= link "privacy guidelines", to: "https://www.fastcompany.com/privacy-policy", target: "_blank" %>
+            I accept the <%= link "Privacy Guidelines", to: "https://www.challenge.gov/privacy-policy", target: "_blank" %><span style="color:red"> *</span>
           <% end %>
         </div>
         <div class="btn-wrapper">

@@ -1,13 +1,42 @@
 <section class="content-header text-center">
-  <div class="page-center">
-    <h5>
-      Your <%= request_type_by_status(@user)%> request has been sent.
-    </h5>
-      <br>
-    <p>
-      Please <b>allow up to 2 business days for your request to be processed</b> by the Challenge.Gov Support Team.</p>
-      <p>Once processed you will receive an email from <a href="mailto:team@challenge.gov">team@challenge.gov</a> letting you know your account is reactivated.</p>
+  <%= if @user.status in ["decertified", "active"] && @user.renewal_request == "certification" do %>
+    <h4 class="mt-5">Account Recertification Requested</h4>
+    <div>
+        <div  class="mb-3">Your annual account recertification is pending approval.</div>
+        <div class="row">
+          <div class="col-4"></div>
+          <div class="col-4 mb-3">
+            Thank you! Your annual account recertification request has been submitted.
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4"></div>
+          <div class="col-4 mb-3">
+            Please allow up to two business days for a Challenge.Gov Administrator to process your request.
+            Once processed you will receive an email from <a href="team@challenge.gov">team@challenge.gov</a> letting you know your account has been recertified.
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4"></div>
+          <div class="col-4 mb-3">
+            If you have any questions, please email us at <a href="team@challenge.gov">team@challenge.gov</a>
+          </div>
+        </div>
+        <%= if @user.status == "active" do %>
+          <%= link "Return to Dashboard", to: Routes.dashboard_path(@conn, :index), class: "btn btn-primary" %>
+        <% end %>
+    </div>
+  <% else %>
+    <div class="page-center">
+      <h5>
+        Your <%= request_type_by_status(@user)%> request has been sent.
+      </h5>
+        <br>
+      <p>
+        Please <b>allow up to 2 business days for your request to be processed</b> by the Challenge.Gov Support Team.</p>
+        <p>Once processed you will receive an email from <a href="mailto:team@challenge.gov">team@challenge.gov</a> letting you know your account is reactivated.</p>
 
-      <p>In the meantime, set a <b>reminder for yourself to log in at least every 90 days</b> to keep your account active and stay-up-to-date on the latest challenges on Challenge.Gov.</p>
-  </div>
+        <p>In the meantime, set a <b>reminder for yourself to log in at least every 90 days</b> to keep your account active and stay-up-to-date on the latest challenges on Challenge.Gov.</p>
+    </div>
+  <% end %>
 </section>

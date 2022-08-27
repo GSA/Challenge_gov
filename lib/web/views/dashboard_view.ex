@@ -13,7 +13,7 @@ defmodule Web.DashboardView do
         thirty_days_from_now = Timex.to_unix(Timex.shift(Timex.now(), days: 30))
 
         if expiration < thirty_days_from_now do
-          account_decertification_warning(conn, certification, user)
+          account_decertification_warning(conn, user)
         end
 
       {:error, :no_log_found} ->
@@ -21,29 +21,22 @@ defmodule Web.DashboardView do
     end
   end
 
-  defp account_decertification_warning(conn, certification, user) do
+  defp account_decertification_warning(conn, user) do
     ~E"""
       <div class="ml-4" style="padding:10px; background-color:#F3F2F3">
-        <h2>Your account certification will expire on <%= certification.expires_at.month %>/<%= certification.expires_at.day %>/<%= certification.expires_at.year %></h1>
+        <h4>It's time for your annual account recertification. </h4>
+        <p>Your annual account certification will expire on </p>
         <%= recertification_action(conn, user) %>
       </div>
     """
   end
 
-  def recertification_action(conn, user) do
-    if user.renewal_request == "certification" do
-      [
-        content_tag(:span, "Recertification requested", class: "text-primary")
-      ]
-    else
-      [
-        link("Request Recertification",
-          to: Routes.access_path(conn, :recertification),
-          target: "",
-          class: "btn btn-primary"
-        )
-      ]
-    end
+  def recertification_action(conn, _user) do
+    link("Request Recertification",
+      to: Routes.access_path(conn, :recertification),
+      target: "",
+      class: "btn btn-primary"
+    )
   end
 
   def dashboard_header(user) do
@@ -76,7 +69,7 @@ defmodule Web.DashboardView do
   defp challenge_manager_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
-        content_tag(:h3, "Welcome to the Challenge.gov portal."),
+        content_tag(:h3, "Welcome to the Challenge.Gov portal."),
         content_tag(:p, "Engage with the features below to manage your workflows.")
       ]
     end
@@ -85,7 +78,7 @@ defmodule Web.DashboardView do
   defp solver_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
-        content_tag(:h3, "Welcome to the Challenge.gov submission portal."),
+        content_tag(:h3, "Welcome to the Challenge.Gov submission portal."),
         content_tag(
           :p,
           "Use the features below to engage with challenges and manage your submissions."
