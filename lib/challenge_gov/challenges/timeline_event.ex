@@ -11,7 +11,7 @@ defmodule ChallengeGov.Challenges.TimelineEvent do
 
   embedded_schema do
     field(:title, :string)
-    field(:date, :utc_datetime)
+    field(:date, :utc_datetime, null: false)
 
     timestamps(type: :utc_datetime_usec)
   end
