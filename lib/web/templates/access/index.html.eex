@@ -22,13 +22,13 @@
         <div class="col-4"></div>
         <div class="col-4 mb-3">
           Please allow up to two business days for a Challenge.Gov Administrator to process your request.
-          Once processed you will receive an email from <a href="team@challenge.gov">team@challenge.gov</a> letting you know your account has been recertified.
+          Once processed you will receive an email from <a href="mailto:team@challenge.gov">team@challenge.gov</a> letting you know your account has been recertified.
         </div>
       </div>
       <div class="row">
         <div class="col-4"></div>
         <div class="col-4 mb-3">
-          If you have any questions, please email us at <a href="team@challenge.gov">team@challenge.gov</a>
+          If you have any questions, please email us at <a href="mailto:team@challenge.gov">team@challenge.gov</a>
         </div>
       </div>
       <%= if @user.status == "active" do %>
