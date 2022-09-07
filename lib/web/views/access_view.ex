@@ -4,13 +4,12 @@ defmodule Web.AccessView do
 
   def recertification_heading_by_status(user) do
     {:ok, log} = CertificationLogs.check_user_certification_history(user)
-
     case user.status do
       "decertified" ->
         ~E"""
           <h4 class="mt-5">User Account Recertification Needed</h4>
           <div>
-            <div  class="mb-3">Your account was decertified on <%= log.expires_at["month"] %>/<%= log.expires_at["day"] %>/<%= log.expires_at["year"] %></div>
+            <div  class="mb-3">Your account was decertified on <%= log["expires_at"]["month"] %>/<%= log["expires_at"]["day"] %>/<%= log["expires_at"]["year"] %></div>
             <h4 class="mb-3">Welcome Back!</h4>
             <div class="row">
               <div class="col-4"></div>
@@ -37,7 +36,7 @@ defmodule Web.AccessView do
         ~E"""
           <h4 class="mt-5">Account Expiration Notice</h4>
           <div>
-            <div  class="mb-3">Your annual account certification will expire on <%= log.expires_at["month"] %>/<%= log.expires_at["day"] %>/<%= log.expires_at["year"] %></div>
+            <div  class="mb-3">Your annual account certification will expire on <%= log["expires_at"]["month"] %>/<%= log["expires_at"]["day"] %>/<%= log["expires_at"]["year"] %></div>
             <div class="row">
               <div class="col-4"></div>
               <div class="col-4 mb-3">
