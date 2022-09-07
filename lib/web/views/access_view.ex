@@ -3,14 +3,23 @@ defmodule Web.AccessView do
   alias ChallengeGov.CertificationLogs
 
   def recertification_heading_by_status(user) do
-    {:ok, log} = CertificationLogs.check_user_certification_history(user)
+    {:ok, log} = certification_log(user)
 
     case user.status do
       "decertified" ->
         ~E"""
-          <h4 class="mt-5">User Account Recertification Needed</h4>
+          <div class="content-header">
+            <div class="container-fluid">
+              <div class="callout callout-warning d-flex align-items-center">
+                <i class="fa fa-check-circle h4 mb-0 flash-icon"></i>
+                <span>
+                    <p class="h4">User Account Recertification Needed</p>
+                    <p class="pl-0">Your account was decertified on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
+                </span>
+              </div>
+            </div>
+          </div>
           <div>
-            <div  class="mb-3">Your account was decertified on <%= log.expires_at["month"] %>/<%= log.expires_at["day"] %>/<%= log.expires_at["year"] %></div>
             <h4 class="mb-3">Welcome Back!</h4>
             <div class="row">
               <div class="col-4"></div>
@@ -37,7 +46,7 @@ defmodule Web.AccessView do
         ~E"""
           <h4 class="mt-5">Account Expiration Notice</h4>
           <div>
-            <div  class="mb-3">Your annual account certification will expire on <%= log.expires_at["month"] %>/<%= log.expires_at["day"] %>/<%= log.expires_at["year"] %></div>
+            <div  class="mb-3">Your annual account certification will expire on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></div>
             <div class="row">
               <div class="col-4"></div>
               <div class="col-4 mb-3">
@@ -54,6 +63,16 @@ defmodule Web.AccessView do
         [
           content_tag(:p, "Request recertification by submitting the following:", class: "mt-5")
         ]
+    end
+  end
+
+  defp certification_log(user) do
+    case CertificationLogs.check_user_certification_history(user) do
+      {:ok, log} ->
+        {:ok, log}
+
+      _ ->
+        {:ok, %{expires_at: %{month: nil, day: nil, year: nil}}}
     end
   end
 

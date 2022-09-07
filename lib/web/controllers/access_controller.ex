@@ -112,6 +112,8 @@ defmodule Web.AccessController do
     })
   end
 
+  defp maybe_send_activation_security_log(_), do: :noop
+
   defp route_user(conn, user = %{role: "solver"}) do
     conn
     |> assign(:user, user)

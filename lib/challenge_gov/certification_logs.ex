@@ -64,15 +64,37 @@ defmodule ChallengeGov.CertificationLogs do
     # filter to most recent result per user
     unique_results_by_user = Enum.uniq_by(results, fn x -> x.user_id end)
 
+    # decertify found users
+    Enum.map(unique_results_by_user, fn r ->
+      if Timex.to_unix(r.expires_at) < Timex.to_unix(Timex.now()) do
+        with {:ok, user} <- Accounts.get(r.user_id) do
+          Accounts.decertify(user)
+        end
+      end
+    end)
+  end
+
+  def email_upcoming_expired_certifications do
+    results =
+      CertificationLog
+      |> join(:left, [r], user in assoc(r, :user))
+      |> where(
+        [r, user],
+        r.user_id == user.id and
+          user.status not in ["decertified", "suspended", "revoked"] and
+          user.role != "solver"
+      )
+      |> order_by([r], desc: r.updated_at)
+      |> Repo.all()
+
+    # filter to most recent result per user
+    unique_results_by_user = Enum.uniq_by(results, fn x -> x.user_id end)
+
     # decertify found users or email upcomming
     Enum.map(unique_results_by_user, fn r ->
       {:ok, user} = Accounts.get(r.user_id)
 
       cond do
-        Timex.to_unix(r.expires_at) < Timex.to_unix(Timex.now()) ->
-          Logger.warn("Decertify [user_id: #{user.id}]")
-          Accounts.decertify(user)
-
         Timex.diff(r.expires_at, Timex.now(), :days) == 29 ->
           maybe_send_email(user, 30)
 

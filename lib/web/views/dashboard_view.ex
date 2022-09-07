@@ -22,11 +22,25 @@ defmodule Web.DashboardView do
   end
 
   defp account_decertification_warning(conn, user) do
+    {:ok, log} = CertificationLogs.check_user_certification_history(user)
+
     ~E"""
-      <div class="ml-4" style="padding:10px; background-color:#F3F2F3">
-        <h4>It's time for your annual account recertification. </h4>
-        <p>Your annual account certification will expire on </p>
-        <%= recertification_action(conn, user) %>
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="callout callout-warning d-flex align-items-center">
+            <i class="fa fa-check-circle h4 mb-0 flash-icon"></i>
+            <span>
+              <%= if user.renewal_request == "certification" do %>
+                <p class="h4 mb-0">Recertification Pending</p>
+                <p>Your annual account certification is now pending approval.</p>
+              <% else %>
+                <p class="h4 mb-0">It's time for your annual account recertification.</p>
+                <p>Your annual account certification will expire on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
+                <p><%= recertification_action(conn, user) %></p>
+              <% end %>
+            </span>
+          </div>
+        </div>
       </div>
     """
   end
@@ -35,7 +49,8 @@ defmodule Web.DashboardView do
     link("Request Recertification",
       to: Routes.access_path(conn, :recertification),
       target: "",
-      class: "btn btn-primary"
+      class: "btn btn-primary",
+      style: "color:white;text-decoration:none;"
     )
   end
 

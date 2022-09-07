@@ -14,28 +14,28 @@ defmodule ChallengeGov.CertificationLogsTest do
     @tag expires_at: DateTime.add(DateTime.utc_now(), 2_592_000)
     test "send message at 30 days", %{user: user} do
       assert capture_log(fn ->
-               CertificationLogs.check_for_expired_certifications()
+               CertificationLogs.email_upcoming_expired_certifications()
              end) =~ "Decertify 30 day notice [user_id: #{user.id}]"
     end
 
     @tag expires_at: DateTime.add(DateTime.utc_now(), 1_296_000)
     test "send message at 15 days", %{user: user} do
       assert capture_log(fn ->
-               CertificationLogs.check_for_expired_certifications()
+               CertificationLogs.email_upcoming_expired_certifications()
              end) =~ "Decertify 15 day notice [user_id: #{user.id}]"
     end
 
     @tag expires_at: DateTime.add(DateTime.utc_now(), 432_000)
     test "send message at 5 days", %{user: user} do
       assert capture_log(fn ->
-               CertificationLogs.check_for_expired_certifications()
+               CertificationLogs.email_upcoming_expired_certifications()
              end) =~ "Decertify 5 day notice [user_id: #{user.id}]"
     end
 
     @tag expires_at: DateTime.add(DateTime.utc_now(), 86_400)
     test "send message at 1 days", %{user: user} do
       assert capture_log(fn ->
-               CertificationLogs.check_for_expired_certifications()
+               CertificationLogs.email_upcoming_expired_certifications()
              end) =~ "Decertify 1 day notice [user_id: #{user.id}]"
     end
   end
