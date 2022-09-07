@@ -56,7 +56,6 @@ defmodule Web.AccessView do
             </div>
           </div>
           <div>
-            <div  class="mb-3">Your annual account certification will expire on <%= log.expires_at["month"] %>/<%= log.expires_at["day"] %>/<%= log.expires_at["year"] %></div>
             <div class="row">
               <div class="col-4"></div>
               <div class="col-4 mb-3">
