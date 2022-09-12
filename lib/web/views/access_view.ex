@@ -13,8 +13,8 @@ defmodule Web.AccessView do
               <div class="callout callout-warning d-flex align-items-center">
                 <i class="fa fa-check-circle h4 mb-0 flash-icon"></i>
                 <span>
-                    <p class="h4">User Account Recertification Needed</p>
-                    <p class="pl-0">Your account was decertified on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
+                  <p class="h4">User Account Recertification Needed</p>
+                  <p class="pl-0">Your account was decertified on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
                 </span>
               </div>
             </div>
@@ -44,9 +44,19 @@ defmodule Web.AccessView do
 
       "active" ->
         ~E"""
-          <h4 class="mt-5">Account Expiration Notice</h4>
+          <div class="content-header">
+            <div class="container-fluid">
+              <div class="callout callout-warning d-flex align-items-center">
+                <i class="fa fa-check-circle h4 mb-0 flash-icon"></i>
+                <span>
+                  <p class="h4">Account Expiration Notice</p>
+                  <p class="pl-0">Your annual account certification will expire on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
+                </span>
+              </div>
+            </div>
+          </div>
           <div>
-            <div  class="mb-3">Your annual account certification will expire on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></div>
+            <div  class="mb-3">Your annual account certification will expire on <%= log.expires_at["month"] %>/<%= log.expires_at["day"] %>/<%= log.expires_at["year"] %></div>
             <div class="row">
               <div class="col-4"></div>
               <div class="col-4 mb-3">

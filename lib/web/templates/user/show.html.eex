@@ -46,8 +46,8 @@
       <div class="col">
         <div class="card">
           <div class="card-header row">
-            <h3 class="card-title col-10" style="font-size: 24px; font-weight: 900;">User Status</h3>
-            <div class="col-2"><%= status(@user.status) %></div>
+            <h3 class="card-title col-9" style="font-size: 24px; font-weight: 900;">User Status</h3>
+            <div class="col-3"><%= status(@user.status) %></div>
           </div>
           <div class="card-body text-center">
             <%= if !Accounts.is_active?(@user) and !Accounts.is_decertified?(@user) do %>
@@ -63,8 +63,8 @@
         <%= if !Accounts.is_solver?(@user) and !Accounts.is_pending?(@user) do %>
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title col-10" style="font-size: 24px; font-weight: 900;">Recertification Status</h3>
-              <span class="col-2 pull-right"><%= certification_status(@certification, @user) %></span>
+              <h3 class="card-title col-9" style="font-size: 24px; font-weight: 900;">Recertification Status</h3>
+              <span class="col-3 pull-right"><%= certification_status(@certification, @user) %></span>
             </div>
             <div class="card-body text-center">
               <div style="padding:10px; background-color:#F3F2F3">

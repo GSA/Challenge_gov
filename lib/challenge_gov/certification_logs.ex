@@ -8,6 +8,7 @@ defmodule ChallengeGov.CertificationLogs do
   alias ChallengeGov.Accounts
   alias ChallengeGov.CertificationLogs.CertificationLog
   alias ChallengeGov.Emails
+  alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
 
@@ -122,13 +123,17 @@ defmodule ChallengeGov.CertificationLogs do
 
   defp send_email(_user = %{renewal_request: "certification"}, _days), do: nil
 
-  defp send_email(user, 30), do: Emails.thirty_day_recertification_email(user)
+  defp send_email(user, 30),
+    do: user |> Emails.thirty_day_recertification_email() |> Mailer.deliver_later()
 
-  defp send_email(user, 15), do: Emails.fifteen_day_recertification_email(user)
+  defp send_email(user, 15),
+    do: user |> Emails.fifteen_day_recertification_email() |> Mailer.deliver_later()
 
-  defp send_email(user, 5), do: Emails.five_day_recertification_email(user)
+  defp send_email(user, 5),
+    do: user |> Emails.five_day_recertification_email() |> Mailer.deliver_later()
 
-  defp send_email(user, 1), do: Emails.one_day_recertification_email(user)
+  defp send_email(user, 1),
+    do: user |> Emails.one_day_recertification_email() |> Mailer.deliver_later()
 
   @doc """
   Get most current certification record by user id
