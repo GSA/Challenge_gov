@@ -7,6 +7,7 @@ defmodule ChallengeGov.CertificationLogs do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.CertificationLogs.CertificationLog
+  alias ChallengeGov.Emails
   alias ChallengeGov.Repo
   alias ChallengeGov.Security
 
@@ -52,7 +53,7 @@ defmodule ChallengeGov.CertificationLogs do
       |> where(
         [r, user],
         r.user_id == user.id and
-          user.status != "decertified" and
+          user.status not in ["decertified", "suspended", "revoked"] and
           user.role != "solver"
       )
       |> where([r], is_nil(r.requested_at))
@@ -72,6 +73,62 @@ defmodule ChallengeGov.CertificationLogs do
       end
     end)
   end
+
+  def email_upcoming_expired_certifications do
+    results =
+      CertificationLog
+      |> join(:left, [r], user in assoc(r, :user))
+      |> where(
+        [r, user],
+        r.user_id == user.id and
+          user.status not in ["decertified", "suspended", "revoked"] and
+          user.role != "solver"
+      )
+      |> order_by([r], desc: r.updated_at)
+      |> Repo.all()
+
+    # filter to most recent result per user
+    unique_results_by_user = Enum.uniq_by(results, fn x -> x.user_id end)
+
+    # decertify found users or email upcomming
+    Enum.map(unique_results_by_user, fn r ->
+      {:ok, user} = Accounts.get(r.user_id)
+
+      cond do
+        Timex.diff(r.expires_at, Timex.now(), :days) == 29 ->
+          maybe_send_email(user, 30)
+
+        Timex.diff(r.expires_at, Timex.now(), :days) == 14 ->
+          maybe_send_email(user, 15)
+
+        Timex.diff(r.expires_at, Timex.now(), :days) == 4 ->
+          maybe_send_email(user, 5)
+
+        Timex.diff(r.expires_at, Timex.now(), :days) == 0 ->
+          maybe_send_email(user, 1)
+
+        true ->
+          nil
+      end
+    end)
+  end
+
+  defp maybe_send_email(%{renewal_request: "certification"}, _days), do: :noop
+
+  defp maybe_send_email(user, days) do
+    Logger.warn("Decertify #{days} day notice [user_id: #{user.id}]")
+    send_email(user, days)
+  end
+
+  defp send_email(_user = %{renewal_request: "certification"}, _days), do: nil
+
+  defp send_email(user, 30), do: Emails.thirty_day_recertification_email(user)
+
+  defp send_email(user, 15), do: Emails.fifteen_day_recertification_email(user)
+
+  defp send_email(user, 5), do: Emails.five_day_recertification_email(user)
+
+  defp send_email(user, 1), do: Emails.one_day_recertification_email(user)
 
   @doc """
   Get most current certification record by user id

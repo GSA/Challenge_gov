@@ -10,18 +10,10 @@ defmodule Web.DashboardView do
     case CertificationLogs.get_current_certification(user) do
       {:ok, certification} ->
         expiration = Timex.to_unix(certification.expires_at)
-        two_weeks_from_now = Timex.to_unix(Timex.shift(Timex.now(), days: 14))
+        thirty_days_from_now = Timex.to_unix(Timex.shift(Timex.now(), days: 30))
 
-        if expiration < two_weeks_from_now do
-          [
-            content_tag(
-              :span,
-              "Your account certification will expire on
-                #{certification.expires_at.month}/#{certification.expires_at.day}/#{certification.expires_at.year}",
-              class: "mx-2"
-            ),
-            recertification_action(conn, user)
-          ]
+        if expiration < thirty_days_from_now do
+          account_decertification_warning(conn, user)
         end
 
       {:error, :no_log_found} ->
@@ -29,20 +21,37 @@ defmodule Web.DashboardView do
     end
   end
 
-  def recertification_action(conn, user) do
-    if user.renewal_request == "certification" do
-      [
-        content_tag(:span, "Recertification requested", class: "text-primary")
-      ]
-    else
-      [
-        link("Request recertification",
-          to: Routes.access_path(conn, :recertification),
-          target: "",
-          class: "btn btn-primary"
-        )
-      ]
-    end
+  defp account_decertification_warning(conn, user) do
+    {:ok, log} = CertificationLogs.check_user_certification_history(user)
+
+    ~E"""
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="callout callout-warning d-flex align-items-center">
+            <i class="fa fa-check-circle h4 mb-0 flash-icon"></i>
+            <span>
+              <%= if user.renewal_request == "certification" do %>
+                <p class="h4 mb-0">Recertification Pending</p>
+                <p>Your annual account certification is now pending approval.</p>
+              <% else %>
+                <p class="h4 mb-0">It's time for your annual account recertification.</p>
+                <p>Your annual account certification will expire on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
+                <p><%= recertification_action(conn, user) %></p>
+              <% end %>
+            </span>
+          </div>
+        </div>
+      </div>
+    """
+  end
+
+  def recertification_action(conn, _user) do
+    link("Request Recertification",
+      to: Routes.access_path(conn, :recertification),
+      target: "",
+      class: "btn btn-primary",
+      style: "color:white;text-decoration:none;"
+    )
   end
 
   def dashboard_header(user) do
@@ -75,7 +84,7 @@ defmodule Web.DashboardView do
   defp challenge_manager_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
-        content_tag(:h3, "Welcome to the Challenge.gov portal."),
+        content_tag(:h3, "Welcome to the Challenge.Gov portal."),
         content_tag(:p, "Engage with the features below to manage your workflows.")
       ]
     end
@@ -84,7 +93,7 @@ defmodule Web.DashboardView do
   defp solver_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
-        content_tag(:h3, "Welcome to the Challenge.gov submission portal."),
+        content_tag(:h3, "Welcome to the Challenge.Gov submission portal."),
         content_tag(
           :p,
           "Use the features below to engage with challenges and manage your submissions."

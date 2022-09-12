@@ -55,6 +55,7 @@ jobs = [
   {"0 5 * * *", {ChallengeGov.SecurityLogs, :check_expired_records, []}},
   {"* * * * *", {ChallengeGov.SecurityLogs, :check_for_timed_out_sessions, []}},
   {"0 0 * * *", {ChallengeGov.CertificationLogs, :check_for_expired_certifications, []}},
+  {"0 0 * * *", {ChallengeGov.CertificationLogs, :email_upcoming_expired_certifications, []}},
   {"* * * * *", {ChallengeGov.Challenges, :check_for_auto_publish, []}},
   {"* * * * *", {ChallengeGov.GovDelivery, :check_topics, []}},
   {"0 * * * *", {ChallengeGov.GovDelivery, :update_subscriber_counts, []}},
