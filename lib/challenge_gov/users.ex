@@ -67,8 +67,11 @@ defmodule ChallengeGov.Users do
   def send_email(user = %{status: "pending"}),
     do: user |> Emails.account_activation() |> Mailer.deliver_later()
 
+  def send_email(user = %{status: "decertified"}),
+    do: user |> Emails.account_activation() |> Mailer.deliver_later()
+
   def send_email(user = %{status: "active", renewal_request: renewal_request})
-      when renewal_request != "certification",
+      when renewal_request == "certification",
       do: user |> Emails.recertification_email() |> Mailer.deliver_later()
 
   def send_email(_user), do: nil
