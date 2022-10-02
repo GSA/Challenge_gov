@@ -538,8 +538,7 @@ defmodule ChallengeGov.MessageContexts do
   def get_context_record(message_context) do
     case message_context.context do
       "challenge" ->
-        {:ok, challenge} = Challenges.get(message_context.context_id)
-        challenge
+        get_challenge(Challenges.get(message_context.context_id))
 
       "challenge_manager" ->
         {:ok, challenge_manager} = Accounts.get(message_context.context_id)
@@ -557,6 +556,10 @@ defmodule ChallengeGov.MessageContexts do
         nil
     end
   end
+
+  defp get_challenge({:ok, challenge}), do: challenge
+
+  defp get_challenge(_), do: nil
 
   def get_last_author(message_context) do
     last_message =
