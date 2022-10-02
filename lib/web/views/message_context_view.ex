@@ -66,8 +66,10 @@ defmodule Web.MessageContextView do
 
   def challenge_url(%{role: "solver"}, challenge), do: ChallengeView.public_details_url(challenge)
 
-  def challenge_url(_user, challenge),
-    do: Routes.challenge_path(Web.Endpoint, :show, challenge.id)
+  def challenge_url(_user, %{id: id}),
+    do: Routes.challenge_path(Web.Endpoint, :show, id)
+
+  def challenge_url(_user, _), do: nil
 
   def display_last_author_name(message_context) do
     last_author = get_last_author(message_context)
