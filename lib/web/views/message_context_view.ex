@@ -59,10 +59,17 @@ defmodule Web.MessageContextView do
     message_context = Repo.preload(message_context, [:parent])
     challenge = MessageContexts.get_context_record(message_context.parent) || %{title: ""}
 
-    link(challenge.title,
-      to: challenge_url(user, challenge)
-    )
+    build_link(user, challenge)
   end
+
+  defp build_link(user, challenge = %{title: title, id: _id}),
+    do:
+      link(title,
+        to: challenge_url(user, challenge)
+      )
+
+  defp build_link(_user, _),
+    do: nil
 
   def challenge_url(%{role: "solver"}, challenge), do: ChallengeView.public_details_url(challenge)
 
