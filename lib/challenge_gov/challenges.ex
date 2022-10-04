@@ -771,6 +771,8 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Checks if a user is in the list of managers for a challenge and not revoked
   """
+  def is_challenge_manager?(_user, nil), do: true
+
   def is_challenge_manager?(user, challenge) do
     challenge.challenge_managers
     |> Enum.reject(fn co ->
