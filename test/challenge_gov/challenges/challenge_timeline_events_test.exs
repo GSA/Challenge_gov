@@ -52,7 +52,8 @@ defmodule ChallengeGov.ChallengeTimelineEventsTest do
               "section" => "timeline",
               "timeline_events" => %{
                 "0" => %{
-                  "title" => "Test"
+                  "title" => "Test",
+                  "date" => DateTime.utc_now()
                 }
               }
             }

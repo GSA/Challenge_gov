@@ -477,12 +477,16 @@ defmodule ChallengeGov.Challenges do
           |> Map.put(
             :timeline_events,
             challenge.timeline_events
+            |> remove_nil_dates()
             |> Enum.sort(&(DateTime.compare(&1.date, &2.date) != :gt))
           )
 
         {:ok, challenge}
     end
   end
+
+  def remove_nil_dates(events) when is_list(events),
+    do: Enum.reject(events, fn e -> is_nil(e.date) end)
 
   @doc """
   Get a challenge by uuid
