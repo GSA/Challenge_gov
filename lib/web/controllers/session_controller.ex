@@ -95,12 +95,16 @@ defmodule Web.SessionController do
 
   @empty_jwt_token ""
   def delete(conn = %{assigns: %{current_user: user}}, _params) do
+    %{
+      client_id: client_id
+    } = oidc_config()
+
     Accounts.update_active_session(user, false, @empty_jwt_token)
     log_session_duration(conn, user)
 
     conn
     |> clear_session()
-    |> redirect(external: LoginGov.logout_uri(user.jwt_token))
+    |> redirect(external: LoginGov.logout_uri(client_id))
   end
 
   @doc """
