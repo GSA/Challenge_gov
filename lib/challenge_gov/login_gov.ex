@@ -94,8 +94,7 @@ defmodule ChallengeGov.LoginGov do
       "?" <>
       URI.encode_query(
         client_id: id_token,
-        post_logout_redirect_uri: logout_redirect_uri,
-        state: random_value()
+        post_logout_redirect_uri: logout_redirect_uri
       )
   end
 
