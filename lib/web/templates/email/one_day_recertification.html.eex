@@ -25,19 +25,14 @@
 												<div style="font-size:1px;line-height:15px">&nbsp;</div>
 												<!--[if mso]></td></tr></table><![endif]-->
 											</div>
-											<table cellpadding="0" cellspacing="0" role="presentation" width="100%" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;" valign="top">
-												<tr style="vertical-align: top;" valign="top">
-													<td style="word-break: break-word; vertical-align: top; padding-bottom: 15px; padding-left: 60px; padding-right: 60px; padding-top: 15px; text-align: center; width: 100%;" width="100%" align="center" valign="top">
-														<h1 style="color:#000000;direction:ltr;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:23px;font-weight:normal;letter-spacing:normal;line-height:120%;text-align:left;margin-top:0;margin-bottom:0;">Happy Challenge.Gov User Anniversary!</h1>
-													</td>
-												</tr>
-											</table>
 											<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 60px; padding-left: 60px; padding-top: 15px; padding-bottom: 15px; font-family: Arial, sans-serif"><![endif]-->
 											<div style="color:#000000;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;line-height:1.8;padding-top:15px;padding-right:60px;padding-bottom:15px;padding-left:60px;">
 												<div class="txtTinyMce-wrapper" style="font-size: 14px; line-height: 1.8; color: #000000; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt: 25px;">
 													<p style="margin: 0; font-size: 14px; line-height: 1.8; word-break: break-word; mso-line-height-alt: 25px; margin-top: 0; margin-bottom: 0;">
                                                         Log in today to recertify your Challenge.Gov account and keep it active.
-                                                        It only takes a few minutes! So, log in now while you are still thinking about it.
+                                                    </p>
+													<p>
+													    It only takes a few minutes! So, log in now while you are still thinking about it.
                                                         Once logged in, simply click the “request recertification” button at the top of the page, and follow the onscreen prompts.
                                                     </p>
 												</div>
@@ -51,7 +46,9 @@
                                                         With that task out of the way, you’re now free to go back to your regularly scheduled day - confident that you’ll be able to access Challenge.Gov when you need it.
                                                         Annual recertification of Challenge.Gov user accounts allows us to confirm individual users still need access to the portal, and is an important part of ensuring system security.
                                                         If you do not take action, your account will be deactivated tomorrow.
-                                                        If you need help logging in, contact us at team@challenge.gov.
+                                                    </p>
+													<p>
+													    If you need help logging in, contact us at team@challenge.gov.
                                                     </p>
 												</div>
 											</div>
@@ -59,9 +56,13 @@
 										</div>
 										<!--<![endif]-->
 										<div style="color:#000000;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;line-height:1.8;padding-top:15px;padding-right:60px;padding-bottom:15px;padding-left:60px;">
-											Thank you.
-											<div>
-												The Challenge.Gov Team
+											<div style="font-size: 14px; line-height: 1.8; color: #000000; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; mso-line-height-alt: 25px;">
+												<p style="margin: 0; font-size: 14px; line-height: 1.8; word-break: break-word; mso-line-height-alt: 25px; margin-top: 0; margin-bottom: 0;">
+													Thank you.
+												</p>
+												<p style="margin: 0; font-size: 14px; line-height: 1.8; word-break: break-word; mso-line-height-alt: 25px; margin-top: 0; margin-bottom: 0;">
+													The Challenge.Gov Team
+												</p>
 											</div>
 										</div>
 									</div>
