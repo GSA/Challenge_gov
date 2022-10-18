@@ -104,7 +104,6 @@ defmodule Web.SessionController do
 
     conn
     |> clear_session()
-    |> redirect(external: LoginGov.logout_uri(user.jwt_token))
     |> redirect(external: LoginGov.logout_uri(client_id))
   end
 
