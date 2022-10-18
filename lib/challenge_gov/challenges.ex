@@ -477,12 +477,16 @@ defmodule ChallengeGov.Challenges do
           |> Map.put(
             :timeline_events,
             challenge.timeline_events
+            |> remove_nil_dates()
             |> Enum.sort(&(DateTime.compare(&1.date, &2.date) != :gt))
           )
 
         {:ok, challenge}
     end
   end
+
+  def remove_nil_dates(events) when is_list(events),
+    do: Enum.reject(events, fn e -> is_nil(e.date) end)
 
   @doc """
   Get a challenge by uuid
@@ -771,6 +775,8 @@ defmodule ChallengeGov.Challenges do
   @doc """
   Checks if a user is in the list of managers for a challenge and not revoked
   """
+  def is_challenge_manager?(_user, nil), do: true
+
   def is_challenge_manager?(user, challenge) do
     challenge.challenge_managers
     |> Enum.reject(fn co ->
