@@ -182,6 +182,8 @@ defmodule ChallengeGov.Accounts.User do
   end
 
   def update_changeset(struct, params) do
+    name_cannot_be_nil(params)
+
     struct
     |> changeset(params)
     |> validate_required([:email, :first_name, :last_name])
@@ -223,4 +225,8 @@ defmodule ChallengeGov.Accounts.User do
   def roles, do: @roles
 
   def statuses, do: @statuses
+
+  defp name_cannot_be_nil(params = %{"first_name" => nil}), do: Map.put(params, "first_name", " ")
+  defp name_cannot_be_nil(params = %{"last_name" => nil}), do: Map.put(params, "last_name", " ")
+  defp name_cannot_be_nil(params), do: params
 end
