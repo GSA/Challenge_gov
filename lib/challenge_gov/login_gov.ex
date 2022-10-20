@@ -90,11 +90,13 @@ defmodule ChallengeGov.LoginGov do
     %{logout_uri: logout_uri, logout_redirect_uri: logout_redirect_uri} =
       Application.get_env(:challenge_gov, :login_gov_logout)
 
-    logout_uri <>
+      logout_uri <>
       "?" <>
       URI.encode_query(
+        id_token_hint: id_token,
         client_id: id_token,
-        post_logout_redirect_uri: logout_redirect_uri
+        post_logout_redirect_uri: logout_redirect_uri,
+        state: random_value()
       )
   end
 
