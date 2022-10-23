@@ -10,7 +10,7 @@
         <%= link "CSV", to: Routes.export_path(@conn, :export_challenge, @challenge.id, "csv"), target: "_blank", class: "btn btn-info" %>
         <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-danger") %>
       <% end %>
-      
+
       <%= if Challenges.allowed_to_edit(@user, @challenge) do %>
         <%= if length(Challenges.get_closed_phases(@challenge)) > 0 and @challenge.status != "draft" do %>
           <%= link("Add winners", to: Routes.phase_winner_path(@conn, :index, @challenge.id), class: "btn btn-primary") %>
@@ -20,7 +20,7 @@
       <% end %>
 
       <%= if Challenges.is_published?(@challenge) do %>
-        <%= link("Add/Edit announcement", to: "#", class: "btn btn-primary", data: [toggle: "modal", target: "#announcement-modal"] ) %>
+      <%= link("Add/Edit announcement", to: "#", class: "btn btn-primary", "data-bs-toggle": "modal", "data-bs-target": "#announcement-modal") %>
       <% end %>
     </div>
   </div>

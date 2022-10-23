@@ -10,16 +10,29 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
     </ul>
-    <form class="form-inline my-2 my-lg-0 mr-5">
-      <div class="input-group">
-        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-        <div class="input-group-append">
-          <button class="btn btn-primary" type="submit">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </div>
-    </form>
-    <%= link("My account", to: Routes.session_path(@conn, :new), class: "header__login") %>
+    <!-- form class="form-inline my-2 my-lg-0 mr-5" -->
+
+
+  <form class="row gy-2 gx-3">
+
+   <div class="col-auto">
+
+    <div class="input-group">
+      <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-primary input-group-text" type="submit">
+       <i class="fas fa-search"></i>
+      </button>
+    </div>
+   </div>
+   <div class="col-auto">
+    <div class="input-group">
+      <%= link("My account", to: Routes.session_path(@conn, :new), class: "header__login") %>
+    </div>
+   </div>
+  </form>
+
+
+
+
   </div>
 </nav>

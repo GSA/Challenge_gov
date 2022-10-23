@@ -28,6 +28,15 @@ a {
   }
 }
 
+a.mx-3  {
+  width: fit-content;
+  background-color:  #FA9441;
+}
+
+a.mx-3:hover {
+  width: fit-content;
+  background-color:  #FA9441;
+}
 
 .required {
   color: #ff0000;
