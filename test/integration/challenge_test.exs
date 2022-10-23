@@ -37,9 +37,11 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> click(option("Agricultural Research Service"))
     |> fill_in(text_field("Fiscal year"), with: "FY#{year}")
     |> click(button("Next"))
+
   end
 
   defp complete_details_section(session) do
+
     verify_previous_section(:agency_id, 24)
 
     session

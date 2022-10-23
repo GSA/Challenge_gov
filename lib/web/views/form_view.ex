@@ -22,12 +22,12 @@ defmodule Web.FormView do
 
     case Keyword.get(opts, :required, false) do
       true ->
-        label(form, field, class: "col") do
+        label(form, field, class: "form-label col") do
           [text, content_tag(:span, " *", class: "required")]
         end
 
       false ->
-        label(form, field, text, class: "col")
+        label(form, field, text, class: "form-label col")
     end
   end
 
@@ -375,7 +375,7 @@ defmodule Web.FormView do
   def checkbox_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
 
-    content_tag(:div, class: "checkbox form-group") do
+    content_tag(:div, class: "checkbox mb-3") do
       content_tag(:div, class: "col-md-8 col-md-offset-4") do
         [
           label(form, field, class: "col-md-4") do
@@ -432,10 +432,10 @@ defmodule Web.FormView do
   def form_group_classes(form, field) do
     case Keyword.has_key?(form.errors, field) do
       true ->
-        "form-group is-invalid"
+        "mb-3 is-invalid"
 
       false ->
-        "form-group"
+        "mb-3"
     end
   end
 

@@ -64,7 +64,7 @@
 <hr/>
 <br/>
 
-<div class="form-group">
+<div class="mb-3">
   <%= label @form, :custom_url, "Custom url (optional)", class: "col-md-4" %>
   <div class="ml-2">
     <p class="ml-2 text-muted">If no custom URL is provided, the challenge URL will default to the challenge title.</p>
@@ -76,7 +76,7 @@
 <br/>
 
 <%= if Accounts.has_admin_access?(@user) do %>
-  <div class="form-group">
+  <div class="mb-3">
     <%= FormView.text_field(@form, :short_url, label: "Short url (optional)", placeholder: "https://go.usa.gov/lmnop") %>
     <p class="text-muted">The short url will be used for social media and posting purposes.</p>
   </div>
@@ -217,7 +217,7 @@
   Example: Phase One -- Ideas, Phase Two -- Prototyping, Phase Three -- Demonstration of Final Product
 </p>
 
-<div class="form-group">
+<div class="mb-3">
   <label class="control-label col-md-4"><%= FormView.label_field(@form, :multi_phase, label: "This challenge contains multiple phases", required: true) %></label>
   <div class="col ml-2">
     <div class="multi-phase-toggle">

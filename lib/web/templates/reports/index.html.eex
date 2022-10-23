@@ -67,6 +67,7 @@
 
 <section class="content">
   <div class="row">
+  <div class="col-md-5">
     <div class="dap-file-upload content-sub-1">
       <h4 class="box-title mb-5">Upload site analytics reports</h4>
       <label for="dap_file_name" class="control-label">File name (optional)</label>
@@ -83,5 +84,6 @@
         View all reports currently on display <%= link("here", to: Routes.analytics_path(@conn, :index))%>
       </div>
     </div>
+   </div>
   </div>
 </section>
