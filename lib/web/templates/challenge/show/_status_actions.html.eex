@@ -3,7 +3,7 @@
     <h4>Status</h4>
     <p><%= status_display_name(@challenge) %></p>
     <%= if !Challenges.is_published?(@challenge) or !(Challenges.is_closed?(@challenge) or Challenges.is_archived_new?(@challenge) or Challenges.is_archived?(@challenge)) do %>
-      <div class="btn-toolbar">  
+      <div class="btn-toolbar">
         <%= if Challenges.is_approvable?(@challenge, @user) do  %>
           <%= link("Approve", to: Routes.challenge_path(@conn, :approve, @challenge.id), method: :post, class: "btn btn-primary") %>
         <% end %>
@@ -17,7 +17,7 @@
           <%= link("Submit", to: Routes.challenge_path(@conn, :submit, @challenge.id), method: :post, class: "btn btn-primary", data: [confirm: "Are you sure you want to submit this challenge for approval?"]) %>
         <% end %>
         <%= if Challenges.can_request_edits?(@challenge, @user) do  %>
-          <%= link("Request Edits", to: "#", class: "btn btn-danger", data: [toggle: "modal", target: "#rejection-modal"] ) %>
+          <%= link("Request Edits", to: "#", class: "btn btn-danger",  "data-bs-toggle": "modal", "data-bs-target": "#rejection-modal" ) %>
         <% end %>
       </div>
     <% end %>

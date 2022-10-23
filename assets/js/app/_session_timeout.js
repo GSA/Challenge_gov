@@ -35,7 +35,8 @@ if ($("#session_timeout").length > 0) {
       contentType: false,
       success: function(res) {
         $("#session_timeout").data("session_expiration", res.new_timeout)
-        renewModal.modal("hide")
+        //renewModal.modal("hide")
+        renewModal.hide()
         doRenewSession = false
       },
       error: function(err) {
@@ -79,7 +80,8 @@ if ($("#session_timeout").length > 0) {
         if (seconds <= 0) clearInterval(countdown);
       }, 1000);
 
-      renewModal.modal("show")
+      //renewModal.modal("show")
+      renewModal.show()
     }
 
     // If session expiration gets renewed then clear the countdown interval

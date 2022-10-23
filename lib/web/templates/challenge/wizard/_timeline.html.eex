@@ -16,7 +16,7 @@
 
         <div class="<%= FormView.nested_form_group_classes(@form, :phases, :title, 0) %> row">
           <div class="col">
-            <div class="form-group">
+            <div class="mb-3">
               <%= label timeline_event_form, :title, "Timeline event title" %>
               <span class="required">*</span>
               <%= text_input timeline_event_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, timeline_event_form.index)}", required: true %>
@@ -38,11 +38,11 @@
             </div>
           </div>
         </div>
-        
+
         <div class="row">
           <div class="remove-nested-section btn btn-link text-danger">Remove event</div>
         </div>
-        
+
         <hr/>
 
       </div>
@@ -75,7 +75,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="row">
         <div class="remove-nested-section btn btn-link text-danger">Remove event</div>
       </div>

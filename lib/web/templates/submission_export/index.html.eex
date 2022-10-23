@@ -4,7 +4,7 @@
 
     <h1 class="mb-3">Recent downloads for <%= @challenge.title %></h1>
 
-    <button class="btn btn-primary" data-toggle="modal" data-target="#submission-download-modal">Create new download</button>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#submission-download-modal">Create new download</button>
   </div>
 </div>
 

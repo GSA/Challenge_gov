@@ -24,7 +24,7 @@
 
 <br/>
 
-<%= FormView.email_field(@form, :poc_email, label: "Point of contact email", placeholder: "point_of_contact@example.com", required: true) %>
+<%= FormView.email_field(@form, :poc_email, class: "form-label", label: "Point of contact email", placeholder: "point_of_contact@example.com", required: true) %>
 <p class="ml-2 text-muted">Provide an email address for participants and members of the public to use for questions about your challenge. This will not appear publicly, instead it will be the receiving email to the form on the contact page of the challenge.</p>
 
 <br/>
@@ -40,7 +40,7 @@
 <hr/>
 <br/>
 
-<div class="form-group">
+<div class="mb-3">
   <label class="col-md-4">Federal partners (optional) select from list</label>
   <p class="ml-2 text-muted">Select the name of any additional agencies sponsoring the challenge.</p>
   <%= render Web.ChallengeView, "dynamic_fields/_federal_partners.html", form: @form %>
@@ -50,7 +50,7 @@
 <hr/>
 <br/>
 
-<div class="form-group">
+<div class="mb-3">
   <label class="col-md-4">Non federal partners (optional)</label>
   <p class="ml-2 text-muted">Fill in any non-federal partners you have for the challenge.</p>
   <%= FormView.dynamic_nested_fields(@form, :non_federal_partners, [:name]) %>
