@@ -8,4 +8,3 @@ if [ "$CF_INSTANCE_INDEX" == "0" ]; then
 fi
 echo "------ Booting Web Process ------ Instance $CF_INSTANCE_INDEX -----"
 mix phx.server
-
