@@ -348,6 +348,7 @@ defmodule ChallengeGov.Accounts do
   """
   @spec update(User.t(), map()) :: {:ok, User.t()} | {:error, Ecto.Changeset.t()}
   def update(user, params) do
+    params = name_cannot_be_nil(params)
     changeset = User.update_changeset(user, params)
 
     result =
@@ -366,6 +367,13 @@ defmodule ChallengeGov.Accounts do
         {:error, changeset}
     end
   end
+
+  defp name_cannot_be_nil(params = %{"first_name" => nil}), do: Map.put(params, "first_name", " ")
+  defp name_cannot_be_nil(params = %{"last_name" => nil}), do: Map.put(params, "last_name", " ")
+  defp name_cannot_be_nil(params = %{"first_name" => ""}), do: Map.put(params, "first_name", " ")
+  defp name_cannot_be_nil(params = %{"last_name" => ""}), do: Map.put(params, "last_name", " ")
+
+  defp name_cannot_be_nil(params), do: params
 
   @doc """
   Update an account's password
