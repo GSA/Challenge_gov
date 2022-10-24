@@ -46,7 +46,6 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   end
 
   defp complete_details_section(session) do
-
     verify_previous_section(:agency_id, 24)
 
     session
