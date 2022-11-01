@@ -34,9 +34,11 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     )
     |> fill_in(text_field("Challenge manager email"), with: "email@example.com")
     |> fill_in(text_field("Point of contact email"), with: "email@example.com")
-    |> click(select("Lead agency name"))
+    |> click(select("Lead agency name"))  #challenge_agency_id
+    #|> click(css("#challenge_agency_id"))
     |> click(option("Department of Agriculture"))
-    |> click(select("Sub-agency name"))
+    #|> click(css("#challenge_sub_agency_id"))
+    |> click(select("Sub-agency name"))  #challenge_sub_agency_id
     |> click(option("Agricultural Research Service"))
     |> fill_in(text_field("Fiscal year"), with: "FY#{year}")
     |> touch_scroll(button("Next"), 0, 1)
