@@ -1,5 +1,5 @@
 <nav class="header navbar navbar-expand-lg navbar-light">
-  <a href="#" class="navbar-brand">
+  <a href="https://www.challenge.gov/" class="navbar-brand">
     <img src='<%= Routes.static_path(@conn, "/images/challenge-logo.svg") %>' alt="Challenge Gov Logo" title="Challenge Gov" class="header__challenge-logo">
   </a>
 
