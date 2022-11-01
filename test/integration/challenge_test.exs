@@ -31,12 +31,21 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> fill_in(text_field("Challenge manager of record"), with: "email@example.com")
     |> fill_in(text_field("Challenge manager email"), with: "email@example.com")
     |> fill_in(text_field("Point of contact email"), with: "email@example.com")
-    |> click(select("Lead agency name"))
+    |> click(select("Lead agency name"))  #challenge_agency_id
+    #|> click(css("#challenge_agency_id"))
     |> click(option("Department of Agriculture"))
-    |> click(select("Sub-agency name"))
+    #|> click(css("#challenge_sub_agency_id"))
+    |> click(select("Sub-agency name"))  #challenge_sub_agency_id
     |> click(option("Agricultural Research Service"))
-    |> fill_in(text_field("Fiscal year"), with: "FY#{year}")
+    |> fill_in(text_field("Fiscal year"), with: "FY#{year}") #"FY#{year}"
+    #|> click(button("Save Draft"))
+    |> focus_frame(css(".form-horizontal"))
     |> click(button("Next"))
+    #|> find(css(".card-footer" , count: 1), fn b ->
+    #  b
+    #   |> click(button("Next"))
+    #end)
+    #|> click(button("Next"))
   end
 
   defp complete_details_section(session) do
