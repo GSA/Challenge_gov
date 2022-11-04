@@ -43,16 +43,16 @@
               <%= hidden_input f, :local_timezone, id: "local-timezone-input" %>
 
               <div class="card-body">
-                <%= render Web.ChallengeView, "wizard/_#{@section}.html", 
-                  form: f, 
+                <%= render Web.ChallengeView, "wizard/_#{@section}.html",
+                  form: f,
                   action: @action,
-                  changeset: @changeset, 
-                  data: @changeset.data, 
+                  changeset: @changeset,
+                  data: @changeset.data,
                   user: @user,
                   challenge: @challenge,
                   section: @section,
-                  documents: documents_for_section(@changeset.data.supporting_documents, @section), 
-                  path: @path, 
+                  documents: documents_for_section(@changeset.data.supporting_documents, @section),
+                  path: @path,
                   conn: @conn,
                   title: "Review and submit"
                 %>
@@ -65,6 +65,7 @@
                 <%= submit_button(@section, @user) %>
                 <%= preview_challenge_button(@conn, @challenge, @section) %>
                 <%= save_draft_button(@challenge, @section) %>
+
               </div>
             </div>
           <% end) %>

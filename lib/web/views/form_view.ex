@@ -65,7 +65,7 @@ defmodule Web.FormView do
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
-        content_tag(:div, class: "col") do
+        content_tag(:div) do #remove  class: "col"
           [
             text_input(form, field, Keyword.merge([class: classes], text_opts)),
             char_limit_label,
