@@ -62,6 +62,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> click(radio_button("Use agency seal"))
     |> focus_frame(css(".publish-date-section"))
     |> populate_auto_publish_date()
+
     # multi-phase false and accept confirm alert
 
     session
