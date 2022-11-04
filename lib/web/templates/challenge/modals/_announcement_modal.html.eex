@@ -1,4 +1,4 @@
-<div class="modal fade" id="announcement-modal" tabindex="-1" role="dialog" aria-labelledby="announcement-modal-label" aria-hidden="true">
+<div class="modal fade" id="announcement-modal" tabindex="-1"  aria-labelledby="announcement-modal-label" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
     <%= form_for(@conn, Routes.challenge_path(@conn, :create_announcement, @challenge.id), fn f -> %>
       <div class="modal-content">

@@ -10,10 +10,10 @@
     <%= link("Unpublish", to: Routes.challenge_path(@conn, :unpublish, @challenge.id), method: :post, class: "btn btn-danger", data: [confirm: "Are you sure you want to unpublish this challenge?"]) %>
   <% end %>
   <%= if Challenges.can_request_edits?(@challenge, @user) do  %>
-    <%= link("Request Edits", to: "#", class: "btn btn-danger", data: [toggle: "modal", target: "#rejection-modal"] ) %>
+    <%= link("Request Edits", to: "#", class: "btn btn-danger", "data-bs-toggle": "modal", "data-bs-target": "#announcement-modal") %>
   <% end %>
   <%#= if Challenges.can_post_announcement?(@challenge, @user) do  %>
-    <%= link("Add/Edit Update", to: "#", class: "btn btn-primary", data: [toggle: "modal", target: "#announcement-modal"] ) %>
+    <%= link("Add/Edit Update", to: "#", class: "btn btn-primary",  ) %>
   <%# end %>
   <%= if Challenges.is_submittable?(@challenge, @user) do  %>
     <%= link("Submit", to: Routes.challenge_path(@conn, :submit, @challenge.id), method: :post, class: "btn btn-primary", data: [confirm: "Are you sure you want to submit this challenge for approval?"]) %>

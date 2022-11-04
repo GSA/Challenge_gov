@@ -1,14 +1,14 @@
 let phaseDeletionWarning = "Removing a phase will delete all content for this phase in other sections of the form (i.e. Judging, Resources, How to Enter). Are you sure you want to remove this phase?"
 
 if ($(".upload-logo input[type=radio][value=true]:checked").length > 0) {
-  $(".logo-file-field").collapse("show")
+  $(".logo-file-field").toggle(true)
 }
 
 $(".upload-logo input[type=radio]").on("click", function() {
   if ($(this).val() == "true") {
-    $(".logo-file-field").collapse("show")
+    $(".logo-file-field").toggle(true)
   } else {
-    $(".logo-file-field").collapse("hide")
+    $(".logo-file-field").toggle(false)
     $(".logo-file-field input").val("")
   }
 })
@@ -16,23 +16,23 @@ $(".upload-logo input[type=radio]").on("click", function() {
 // Adding phases show/hide section
 if ($(".multi-phase-toggle input[type=radio][value=true]:checked").length > 0) {
   $(".phase-fields .nested-items").find("input").prop("disabled", false)
-  $(".phase-fields").collapse("show")
-  $(".single-phase-section").collapse("hide")
+  $(".phase-fields").toggle(true)
+  $(".single-phase-section").toggle(false)
   $(".single-phase-section").find("input").prop("disabled", true)
 }
 
 if ($(".multi-phase-toggle input[type=radio][value=false]:checked").length > 0) {
   $(".phase-fields .nested-items").find("input").prop("disabled", true)
-  $(".phase-fields").collapse("hide")
-  $(".single-phase-section").collapse("show")
+  $(".phase-fields").toggle(false)
+  $(".single-phase-section").toggle(true)
   $(".single-phase-section").find("input").prop("disabled", false)
 }
 
 $(".multi-phase-toggle input[type=radio]").on("click", function() {
   if ($(this).val() == "true") {
-    $(".phase-fields").collapse("show")
+    $(".phase-fields").toggle(true)
     $(".phase-fields .nested-items").find("input").prop("disabled", false)
-    $(".single-phase-section").collapse("hide")
+    $(".single-phase-section").toggle(true)
   $(".single-phase-section").find("input").prop("disabled", true)
   } else {
     if (!$("#challenge_phases_0_start_date").val()) {
@@ -78,9 +78,9 @@ $(".js-prize-detail-toggle input[type=radio]").on("click", function() {
 })
 
 function showSinglePhaseFields() {
-  $(".phase-fields").collapse("hide")
+  $(".phase-fields").toggle(false)
   $(".phase-fields .nested-items").find("input").prop("disabled", true)
-  $(".single-phase-section").collapse("show")
+  $(".single-phase-section").toggle(true)
   $(".single-phase-section").find("input").prop("disabled", false)
   $(".phase-fields .id").prop("disabled", false)
   $(".delete-phase").prop("disabled", false)
@@ -88,22 +88,22 @@ function showSinglePhaseFields() {
 }
 
 function showMonetaryPrize() {
-  prizeTotalSection.collapse("show")
+  prizeTotalSection.toggle(true)
   prizeTotalSection.find("input").prop("disabled", false)
-  nonMonetaryPrizeSection.collapse("hide")
+  nonMonetaryPrizeSection.toggle(false)
   nonMonetaryPrizeSection.find("input").prop("disabled", true)
 }
 
 function showNonMonetaryPrize() {
-  nonMonetaryPrizeSection.collapse("show")
+  nonMonetaryPrizeSection.toggle(true)
   nonMonetaryPrizeSection.find("input").prop("disabled", false)
-  prizeTotalSection.collapse("hide")
+  prizeTotalSection.toggle(false)
   // prizeTotalSection.find("input").prop("disabled", true)
 }
 
 function showBothPrizes() {
-  prizeTotalSection.collapse("show")
+  prizeTotalSection.toggle(true)
   prizeTotalSection.find("input").prop("disabled", false)
-  nonMonetaryPrizeSection.collapse("show")
+  nonMonetaryPrizeSection.toggle(true)
   nonMonetaryPrizeSection.find("input").prop("disabled", false)
 }
