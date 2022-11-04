@@ -912,7 +912,7 @@ defmodule ChallengeGov.Accounts do
         SecurityLogs.track(%{
           target_id: user.id,
           target_type: user.role,
-          target_identifier: user.role,
+          target_identifier: user.email,
           action: "status_change",
           details: %{previous_status: previous_status, new_status: "decertified"}
         })
