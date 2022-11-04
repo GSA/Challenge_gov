@@ -583,12 +583,16 @@ defmodule Web.ChallengeView do
         submit("Submit", name: "action", value: "submit", class: "usa-button float-right ")
 
       !last_section ->
+<<<<<<< HEAD
         submit("Next",
           name: "action",
           value: "next",
           style: "overflow: visible !important; user-select:all;",
           class: "usa-button btn-testing float-right"
         )
+=======
+        submit("Next", name: "action", value: "next", style: "overflow: visible !important; user-select:all;", class: "usa-button btn-testing float-right")
+>>>>>>> Update unit test scripts due to bootstrap update
 
       true ->
         nil

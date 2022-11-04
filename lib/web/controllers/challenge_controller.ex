@@ -66,7 +66,6 @@ defmodule Web.ChallengeController do
 
   def show(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
-
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       Challenges.add_to_security_log(user, challenge, "read", Security.extract_remote_ip(conn))
@@ -92,7 +91,6 @@ defmodule Web.ChallengeController do
 
   def new(conn, %{"non_wizard" => "true"}) do
     %{current_user: user} = conn.assigns
-
     conn
     |> assign(:user, user)
     |> assign(:action, action_name(conn))
@@ -120,7 +118,6 @@ defmodule Web.ChallengeController do
 
   def create(conn, params = %{"action" => action, "challenge" => %{"section" => section}}) do
     %{current_user: user} = conn.assigns
-
     case Challenges.create(params, user, Security.extract_remote_ip(conn)) do
       {:ok, challenge} ->
         if action == "save_draft" do
@@ -156,7 +153,6 @@ defmodule Web.ChallengeController do
 
   def create(conn, %{"challenge" => params}) do
     %{current_user: user} = conn.assigns
-
     case Challenges.old_create(user, params, Security.extract_remote_ip(conn)) do
       {:ok, challenge} ->
         conn
@@ -203,16 +199,15 @@ defmodule Web.ChallengeController do
   end
 
   def update(
-        conn,
-        params = %{"id" => id, "action" => action, "challenge" => %{"section" => section}}
-      ) do
+    conn,
+    params = %{"id" => id, "action" => action, "challenge" => %{"section" => section}}
+    ) do
     %{current_user: user} = conn.assigns
     {:ok, challenge} = Challenges.get(id)
     to_section = Challenges.to_section(section, action)
-
     with {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
-         {:ok, challenge} <-
-           Challenges.update(challenge, params, user, Security.extract_remote_ip(conn)) do
+    {:ok, challenge} <-
+      Challenges.update(challenge, params, user, Security.extract_remote_ip(conn)) do
       case action do
         "save_draft" ->
           conn
@@ -365,7 +360,7 @@ defmodule Web.ChallengeController do
 
   def submit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
-
+    IO.inspect "check submit --------------------------------------------------"
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.submit(challenge, user, Security.extract_remote_ip(conn)) do
       conn
