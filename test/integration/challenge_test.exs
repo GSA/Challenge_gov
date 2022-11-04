@@ -28,7 +28,10 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     year = String.slice("#{Timex.today().year}", -2..-1)
 
     session
-    |> fill_in(text_field("Challenge manager of record"), with: "email@example.com")
+    |> maximize_window()
+    |> fill_in(text_field("Challenge manager of record"),
+      with: "challenge_manager_active@example.com"
+    )
     |> fill_in(text_field("Challenge manager email"), with: "email@example.com")
     |> fill_in(text_field("Point of contact email"), with: "email@example.com")
     |> click(select("Lead agency name"))
@@ -36,7 +39,10 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> click(select("Sub-agency name"))
     |> click(option("Agricultural Research Service"))
     |> fill_in(text_field("Fiscal year"), with: "FY#{year}")
+    |> touch_scroll(button("Next"), 0, 1)
     |> click(button("Next"))
+
+    # |> focus_frame(css(".form-horizontal", count: 1))
   end
 
   defp complete_details_section(session) do
@@ -51,6 +57,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> populate_markdown_field("Full description here.", 1)
 
     session
+    |> touch_scroll(css(".logo-section"), 0, 1)
     |> focus_frame(css(".logo-section"))
     |> click(radio_button("Use agency seal"))
     |> focus_frame(css(".publish-date-section"))
@@ -60,26 +67,28 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
     session
     |> focus_frame(css(".multi-phase-section"))
+    |> touch_scroll(radio_button("No"), 0, 1)
     |> click(radio_button("No"))
 
     # single phase date range
     session
     |> populate_start_date("challenge_phases_0_start_date")
     |> populate_end_date("challenge_phases_0_end_date")
-    |> assert_text("Next")
-    |> focus_frame(button("Next"))
-    |> click(button("Next"))
+    # |> assert_text("Next")
+    |> touch_scroll(button("Next"), 0, 1)
+    |> click(css(".btn-testing"))
   end
 
   defp complete_timeline_section(session) do
     verify_previous_section(:title, "Test Title")
 
     session
-    |> assert_has(css(".timeline-event-fields"))
     |> focus_frame(css(".timeline-event-fields"))
+    |> assert_has(css(".timeline-event-fields"))
     |> click(css(".add-nested-section"))
     |> fill_in(text_field("Timeline event title"), with: "Event 1")
     |> populate_end_date("challenge_timeline_events_0_date")
+    |> touch_scroll(button("Next"), 0, 1)
     |> click(button("Next"))
   end
 
@@ -89,6 +98,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     session
     |> click(radio_button("Non-monetary prize"))
     |> fill_in(text_field("Non-monetary prize award"), with: "Prizes other than cash")
+    |> touch_scroll(button("Next"), 0, 1)
     |> click(button("Next"))
   end
 
@@ -101,6 +111,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> populate_markdown_field("Terms and conditions described here.", 2)
     |> click(select("Legal authority"))
     |> click(option("Direct Prize Authority"))
+    |> touch_scroll(button("Next"), 0, 1)
     |> click(button("Next"))
   end
 
@@ -109,6 +120,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
     session
     |> populate_markdown_field("Judging criteria described here.")
+    |> touch_scroll(button("Next"), 0, 1)
     |> click(button("Next"))
   end
 
@@ -117,6 +129,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
     session
     |> populate_markdown_field("How to enter described here.")
+    |> touch_scroll(button("Next"), 0, 1)
     |> click(button("Next"))
   end
 
@@ -124,6 +137,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     verify_previous_section(:phases, :how_to_enter, "How to enter described here.")
 
     session
+    |> touch_scroll(button("Next"), 0, 1)
     |> click(button("Next"))
   end
 
