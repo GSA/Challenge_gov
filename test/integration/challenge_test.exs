@@ -29,7 +29,9 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
     session
     |> maximize_window()
-    |> fill_in(text_field("Challenge manager of record"), with: "challenge_manager_active@example.com")
+    |> fill_in(text_field("Challenge manager of record"),
+      with: "challenge_manager_active@example.com"
+    )
     |> fill_in(text_field("Challenge manager email"), with: "email@example.com")
     |> fill_in(text_field("Point of contact email"), with: "email@example.com")
     |> click(select("Lead agency name"))
@@ -39,8 +41,8 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> fill_in(text_field("Fiscal year"), with: "FY#{year}")
     |> touch_scroll(button("Next"), 0, 1)
     |> click(button("Next"))
-    #|> focus_frame(css(".form-horizontal", count: 1))
 
+    # |> focus_frame(css(".form-horizontal", count: 1))
   end
 
   defp complete_details_section(session) do
@@ -60,6 +62,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> click(radio_button("Use agency seal"))
     |> focus_frame(css(".publish-date-section"))
     |> populate_auto_publish_date()
+
     # multi-phase false and accept confirm alert
 
     session
@@ -71,8 +74,8 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     session
     |> populate_start_date("challenge_phases_0_start_date")
     |> populate_end_date("challenge_phases_0_end_date")
-    #|> assert_text("Next")
-    |> touch_scroll(button("Next"),0,1)
+    # |> assert_text("Next")
+    |> touch_scroll(button("Next"), 0, 1)
     |> click(css(".btn-testing"))
   end
 
