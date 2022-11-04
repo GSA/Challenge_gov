@@ -365,7 +365,6 @@ defmodule Web.ChallengeController do
 
   def submit(conn, %{"id" => id}) do
     %{current_user: user} = conn.assigns
-    IO.inspect("check submit --------------------------------------------------")
 
     with {:ok, challenge} <- Challenges.get(id),
          {:ok, challenge} <- Challenges.submit(challenge, user, Security.extract_remote_ip(conn)) do
