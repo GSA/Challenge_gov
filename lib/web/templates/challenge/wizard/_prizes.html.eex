@@ -4,17 +4,17 @@
 
 <div class="col pl-2 js-prize-detail-toggle">
   <label for="prize_type">Select prize award <em>(select from list)</em><span class="required">*</span></label>
-  <p class="ml-2 text-muted">Select between offering a cash prize, a non-monetary prize, or both a cash prize and non-monetary prize.</p>
+  <p class="ms-2 text-muted">Select between offering a cash prize, a non-monetary prize, or both a cash prize and non-monetary prize.</p>
   <div>
-    <%= radio_button(@form, :prize_type, "monetary", class: "mr-2", required: true) %>
+    <%= radio_button(@form, :prize_type, "monetary", class: "me-2", required: true) %>
     <label for="challenge_prize_type_monetary">Cash prize</label>
   </div>
   <div>
-    <%= radio_button(@form, :prize_type, "non_monetary", class: "mr-2", required: true) %>
+    <%= radio_button(@form, :prize_type, "non_monetary", class: "me-2", required: true) %>
     <label for="challenge_prize_type_non_monetary">Non-monetary prize</label>
   </div>
   <div>
-    <%= radio_button(@form, :prize_type, "both", class: "mr-2", required: true) %>
+    <%= radio_button(@form, :prize_type, "both", class: "me-2", required: true) %>
     <label for="challenge_prize_type_both">Both a cash prize and non-monetary prize</label>
   </div>
 </div>
@@ -23,7 +23,7 @@
 <div class="js-prize-total collapse">
   <%= FormView.currency_field(@form, :prize_total, label: "Total cash prizes offered", required: true) %>
 </div>
-<p class="ml-2 text-muted">Provide the total cash prize pool.</p>
+<p class="ms-2 text-muted">Provide the total cash prize pool.</p>
 
 <br/>
 
@@ -37,4 +37,4 @@
   <label for="challenge_prize_description">Prize description / breakdown (optional)</label>
   <%= FormView.rt_textarea_field(@form, :prize_description, limit: 15000) %>
 </div>
-<p class="ml-2 text-muted">Provide the total cash prize pool, and the amounts and descriptions of individual cash prizes for your challenge.  If applicable, also provide a summary of any non-monetary incentives your challenge offers to participants. </p>
+<p class="ms-2 text-muted">Provide the total cash prize pool, and the amounts and descriptions of individual cash prizes for your challenge.  If applicable, also provide a summary of any non-monetary incentives your challenge offers to participants. </p>

@@ -27,7 +27,7 @@
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
               <%= link to: Routes.session_path(@conn, :delete), method: :delete, class: "dropdown-item" do %>
-              <i class="fas fa-sign-out-alt mr-2"></i> Logout
+              <i class="fas fa-sign-out-alt me-2"></i> Logout
               <% end %>
             </div>
           </li>
@@ -41,8 +41,8 @@
       <%= if view_module(@conn) != Web.TermsController and view_module(@conn) != Web.TermsView and view_module(@conn) != Web.AccessView do %>
         <aside class="main-sidebar sidebar-light-primary challenge_sidebar">
           <a href="https://www.challenge.gov" class="brand-link">
-            <i class="ml-3 nav-icon fas fa-home"></i>
-            <span class="ml-1 brand-text font-weight-light">Challenge.gov</span>
+            <i class="ms-3 nav-icon fas fa-home"></i>
+            <span class="ms-1 brand-text font-weight-light">Challenge.gov</span>
           </a>
           <div class="sidebar">
             <%= if Accounts.role_at_or_below(u, "solver") do %>

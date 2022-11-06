@@ -50,7 +50,7 @@ export const ChallengeTabs = (props) => {
 
   const renderWinnersIcon = (label, disabled) => {
     if (label === "winners" && !disabled) {
-      return <i className="fas fa-award mr-2"></i>
+      return <i className="fas fa-award me-2"></i>
     }
   }
 

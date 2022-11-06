@@ -49,7 +49,7 @@
       <div class="submission-documents-list">
         <%= Enum.map(@data.documents, fn document -> %>
           <div class="row submission-document-row">
-            <i class="fa fa-paperclip mr-1"></i>
+            <i class="fa fa-paperclip me-1"></i>
             <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
             <%= link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
               <i class="fa fa-trash"></i>
@@ -58,7 +58,7 @@
         <% end) %>
         <%= Enum.map(@changeset.changes[:document_objects] || [], fn document -> %>
           <div class="row submission-document-row">
-            <i class="fa fa-paperclip mr-1"></i>
+            <i class="fa fa-paperclip me-1"></i>
             <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
             <%= link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
              &nbsp; <i class="fa fa-trash"></i>

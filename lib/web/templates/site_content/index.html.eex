@@ -22,7 +22,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12 d-flex">
-        <div class="card nav_card mr-5">
+        <div class="card nav_card me-5">
           <div class="card-body d-flex flex-column justify-content-center">
             <dl class="h-75">
               <dt>Reporting & Analytics</dt>

@@ -51,10 +51,10 @@
           </div>
           <div class="card-body text-center">
             <%= if !Accounts.is_active?(@user) and !Accounts.is_decertified?(@user) do %>
-              <%= link("Activate", to: Routes.user_path(@conn, :toggle, @user.id, action: "activate"), method: :post, class: "btn btn-default mr-4") %>
+              <%= link("Activate", to: Routes.user_path(@conn, :toggle, @user.id, action: "activate"), method: :post, class: "btn btn-default me-4") %>
             <% end %>
             <%= if Accounts.is_active?(@user) do %>
-              <%= link("Suspend", to: Routes.user_path(@conn, :toggle, @user.id, action: "suspend"), method: :post, class: "btn btn-warning mr-4") %>
+              <%= link("Suspend", to: Routes.user_path(@conn, :toggle, @user.id, action: "suspend"), method: :post, class: "btn btn-warning me-4") %>
               <%= link("Revoke", to: Routes.user_path(@conn, :toggle, @user.id, action: "revoke"), method: :post, class: "btn btn-danger") %>
             <% end %>
           </div>
@@ -68,7 +68,7 @@
             </div>
             <div class="card-body text-center">
               <div style="padding:10px; background-color:#F3F2F3">
-                <span class="mr-5">
+                <span class="me-5">
                   <%= certification_info(@certification, @user) %>
                 </span>
                 <span class="ml-5">
@@ -91,7 +91,7 @@
           <div class="card-body">
               <%= Enum.map(Accounts.revoked_challenges(@user), fn challenge ->  %>
                 <div class="mb-2">
-                  <%= link("Restore access", to: Routes.restore_challenge_access_path(@conn, :restore_challenge_access, @user.id, challenge.id), method: :post, class: "btn btn-xs btn-primary mr-2") %>
+                  <%= link("Restore access", to: Routes.restore_challenge_access_path(@conn, :restore_challenge_access, @user.id, challenge.id), method: :post, class: "btn btn-xs btn-primary me-2") %>
                   <span><%= Web.ChallengeView.name_link(@conn, challenge) %></span>
                 </div>
               <% end) %>

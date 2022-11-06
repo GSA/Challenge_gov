@@ -1,11 +1,11 @@
 <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
-  <%= link("View", to: Routes.submission_path(@conn, :show, @submission.id), class: "btn btn-default btn-xs mr-2") %>
+  <%= link("View", to: Routes.submission_path(@conn, :show, @submission.id), class: "btn btn-default btn-xs me-2") %>
   <%= if Submissions.is_editable?(@user, @submission) do %>
-    <%= link("Edit", to: Routes.submission_path(@conn, :edit, @submission.id), class: "btn btn-default btn-xs mr-2") %>
+    <%= link("Edit", to: Routes.submission_path(@conn, :edit, @submission.id), class: "btn btn-default btn-xs me-2") %>
   <% else %>
     <span class="row-text">closed</span>
   <% end %>
-  <div class="btn-group btn-group-sm ml-2" role="group">
+  <div class="btn-group btn-group-sm ms-2" role="group">
     <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       More options
     </button>

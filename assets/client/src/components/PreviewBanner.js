@@ -20,8 +20,8 @@ export const PreviewBanner = ({challenge}) => {
             </div>
             <br/>
             <div>
-              <span className="mr-3">Preview generated on {moment().format("llll")}</span>
-              <a className="mr-3" href={window.location.href}>Refresh page</a>
+              <span className="me-3">Preview generated on {moment().format("llll")}</span>
+              <a className="me-3" href={window.location.href}>Refresh page</a>
               {!challenge.external_url &&
                 <a href={apiUrl + `/public/previews/challenges?challenge=${challenge.uuid}&print=true`} target="_blank">Print</a>
               }

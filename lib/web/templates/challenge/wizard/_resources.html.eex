@@ -7,7 +7,7 @@
   <label for="challenge_prize_description">Frequently asked questions (optional, character limit 15000)</label>
   <%= FormView.rt_textarea_field(@form, :faq, limit: 15000) %>
 </div>
-<p class="ml-2 mb-4 text-muted">Provide a general summary of any information you want your solvers to know about the challenge.</p>
+<p class="ms-2 mb-4 text-muted">Provide a general summary of any information you want your solvers to know about the challenge.</p>
 
 <hr/>
 <br/>
@@ -15,8 +15,8 @@
 <div class="col">
   <label class="control-label">Upload image (optional)</label>
   <br/>
-  <p class="ml-2 mb-0 text-muted">Provide any image you wish to display at the top of the resources section for the public solvers.</p>
-  <p class="ml-2 text-muted"><em>This image will display at the top of the resources section</em></p>
+  <p class="ms-2 mb-0 text-muted">Provide any image you wish to display at the top of the resources section for the public solvers.</p>
+  <p class="ms-2 text-muted"><em>This image will display at the top of the resources section</em></p>
   <%= FormView.file_field(@form, :resource_banner, label: false) do %>
     <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
     <br/>
@@ -34,7 +34,7 @@
 
 <div class="challenge-file-upload col" data-section=<%= @section %>>
   <label class="control-label">Upload supporting documents (optional)</label>
-  <p class="ml-2 text-muted">If you are unable to host challenge related documents on an agency or challenge specific site you can provide additional documentation within the resources tab. All files must be 508 compliant.</p>
+  <p class="ms-2 text-muted">If you are unable to host challenge related documents on an agency or challenge specific site you can provide additional documentation within the resources tab. All files must be 508 compliant.</p>
   <div class="col">
     <label for="challenge_document_name" class="control-label">File name (optional)</label>
     <input class="challenge_document_name form-control" type="text">
@@ -50,7 +50,7 @@
   <div class="challenge_uploaded_documents">
     <%= Enum.map(@documents, fn document -> %>
       <div class="challenge_uploaded_document">
-        <i class="fa fa-paperclip mr-1"></i>
+        <i class="fa fa-paperclip me-1"></i>
         <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
         <%= link to: "", data: [document_id: document.id], class: "challenge_uploaded_document_delete" do %>
           <i class="fa fa-trash"></i>
@@ -73,14 +73,14 @@
     <div class="challenge_document_upload btn btn-primary">Upload file</div>
     <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
     <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
-  </div>              
+  </div>
 
   <br/>
 
   <div class="challenge_uploaded_documents">
     <%= Enum.map(documents_for_section(@changeset.data.supporting_documents, "faq"), fn document -> %>
       <div class="challenge_uploaded_document">
-        <i class="fa fa-paperclip mr-1"></i>
+        <i class="fa fa-paperclip me-1"></i>
         <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
         <%= link to: "", data: [document_id: document.id], class: "challenge_uploaded_document_delete" do %>
           <i class="fa fa-trash"></i>
