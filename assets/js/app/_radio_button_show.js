@@ -15,6 +15,7 @@ $(".upload-logo input[type=radio]").on("click", function() {
 
 // Adding phases show/hide section
 if ($(".multi-phase-toggle input[type=radio][value=true]:checked").length > 0) {
+
   $(".phase-fields .nested-items").find("input").prop("disabled", false)
   $(".phase-fields").toggle(true)
   $(".single-phase-section").toggle(false)
@@ -22,6 +23,7 @@ if ($(".multi-phase-toggle input[type=radio][value=true]:checked").length > 0) {
 }
 
 if ($(".multi-phase-toggle input[type=radio][value=false]:checked").length > 0) {
+
   $(".phase-fields .nested-items").find("input").prop("disabled", true)
   $(".phase-fields").toggle(false)
   $(".single-phase-section").toggle(true)
@@ -32,7 +34,7 @@ $(".multi-phase-toggle input[type=radio]").on("click", function() {
   if ($(this).val() == "true") {
     $(".phase-fields").toggle(true)
     $(".phase-fields .nested-items").find("input").prop("disabled", false)
-    $(".single-phase-section").toggle(true)
+    $(".single-phase-section").toggle(false)
   $(".single-phase-section").find("input").prop("disabled", true)
   } else {
     if (!$("#challenge_phases_0_start_date").val()) {
