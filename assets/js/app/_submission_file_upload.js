@@ -37,7 +37,7 @@ $("#submission_document_upload").on("click", function(e) {
         $(file_input).val("")
 
         $(".submission-documents-list").append(`
-          <div class="row submission-document-row">
+          <div class="submission-document-row">
             <input type="hidden" name="submission[document_ids][]" value="${document.id}">
             <i class="fa fa-paperclip me-1"></i>
             <a href=${document.url} target="_blank">${document.display_name}</a>
