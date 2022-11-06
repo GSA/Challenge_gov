@@ -1,4 +1,4 @@
-<div class="col single-phase-section collapse">
+<div id="single-phase-section" class="col single-phase-section collapse">
   <%= if (Map.has_key?(@form, :data) and length(@form.data.phases) > 0) or
     (Map.has_key?(@form.source.changes, :phases) and length(@form.source.changes.phases) > 0) do %>
     <!-- With phases attached or pending -->
