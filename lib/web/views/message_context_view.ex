@@ -135,7 +135,7 @@ defmodule Web.MessageContextView do
   def render_new_message_button(conn, _user) do
     link("New Message",
       to: Routes.message_context_path(conn, :new, context: "challenge"),
-      class: "btn btn-primary mr-3"
+      class: "btn btn-primary me-3"
     )
   end
 

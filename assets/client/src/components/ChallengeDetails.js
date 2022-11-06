@@ -65,9 +65,9 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
   const renderFollowButton = (challenge) => {
     if (challenge.subscriber_count > 0) {
-      return <span className="details__btn"><i className="far fa-bookmark mr-2"></i>Follow challenge ({ challenge.subscriber_count })</span>
+      return <span className="details__btn"><i className="far fa-bookmark me-2"></i>Follow challenge ({ challenge.subscriber_count })</span>
     } else {
-      return <span className="details__btn"><i className="far fa-bookmark mr-2"></i>Follow challenge</span>
+      return <span className="details__btn"><i className="far fa-bookmark me-2"></i>Follow challenge</span>
     }
   }
 
@@ -140,10 +140,10 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     let applyButtonShow = "show"
 
     if (challenge.external_url) {
-      applyButtonText = ["View on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
+      applyButtonText = ["View on external website", <i key={1} className="fa fa-external-link-alt ms-3"></i>]
       applyButtonAttr.target = "_blank"
     } else if (challenge.how_to_enter_link) {
-      applyButtonText = ["Apply on external website", <i key={1} className="fa fa-external-link-alt ml-3"></i>]
+      applyButtonText = ["Apply on external website", <i key={1} className="fa fa-external-link-alt ms-3"></i>]
       applyButtonAttr.target = "_blank"
     } else {
       if (bridgeApplyBlocked && challenge.id <= 1288 && challenge.id != 1287) {
@@ -236,7 +236,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
             }
             <div className="social-share-btn" id="shareChallengeButton">
               <span className="details__btn">
-                <i className="fas fa-share-alt mr-2"></i>
+                <i className="fas fa-share-alt me-2"></i>
                 Share
               </span>
               <SocialSharingTooltip shareTooltipOpen={shareTooltipOpen} toggleShareTooltip={toggleShareTooltip} challenge={challenge}/>
@@ -345,7 +345,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
               }
               {!print &&
                 <a className="follow__btn" href={apiUrl + `/public/previews/challenges?challenge=${challenge.uuid}&print=true`} target="_blank">
-                  <span className="details__btn"><i className="fas fa-print mr-2"></i>Print challenge</span>
+                  <span className="details__btn"><i className="fas fa-print me-2"></i>Print challenge</span>
                 </a>
               }
             </div>

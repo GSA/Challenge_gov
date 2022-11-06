@@ -3,7 +3,7 @@
     <%= FormView.rt_textarea_field(f, :content) %>
     <%= if @section === "site_wide_banner" do %>
       <div class="w-25 d-flex">
-        <div class="mr-4">
+        <div class="me-4">
           <label class="control-label">Start date</label>
           <%= ChallengeView.date_and_time_inputs(@conn, f, :start_date, "Start date", "site_banner_start") %>
           <%= hidden_input(f, :start_date, label: "Start date") %>

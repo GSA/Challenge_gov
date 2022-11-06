@@ -40,7 +40,7 @@ $(".challenge-file-upload").on("click", ".challenge_document_upload", function()
 
         challengeDocuments.append(`
           <div>
-            <i class="fa fa-paperclip mr-1"></i>
+            <i class="fa fa-paperclip me-1"></i>
             <a href=${document.url} target="_blank">${document.display_name}</a>
             <a href="" data-document-id=${document.id} class="challenge_uploaded_document_delete">
               <i class="fa fa-trash"></i>

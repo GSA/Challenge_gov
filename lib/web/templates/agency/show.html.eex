@@ -24,7 +24,7 @@
           <div class="card-header clear-after d-flex justify-content-between">
             <h3 class="card-title font-weight-bold align-self-center">Agency Details</h3>
             <div class="card-tools">
-              <%= link("Edit", to: Routes.agency_path(@conn, :edit, @agency.id), class: "btn btn-default mr-2") %>
+              <%= link("Edit", to: Routes.agency_path(@conn, :edit, @agency.id), class: "btn btn-default me-2") %>
               <%= link("Delete", to: Routes.agency_path(@conn, :delete, @agency.id), class: "btn btn-danger", method: :delete, data: [confirm: "Are you sure?"]) %>
             </div>
           </div>
@@ -54,7 +54,7 @@
             </dl>
           </div>
         </div>
-      </div>  
+      </div>
     </div>
 
     <%= if !@agency.parent do %>
