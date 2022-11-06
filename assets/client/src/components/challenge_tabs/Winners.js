@@ -23,7 +23,7 @@ export const Winners = ({challenge, challengePhases, print}) => {
       const {id, image_path, name, place_title} = winner
       return (
         <div key={id} className="d-flex flex-row align-items-center my-3">
-          {image_path && <img src={imageBase + winner.image_path} alt="winner image" title="winner image" className="phase-winner-image mr-3" />}
+          {image_path && <img src={imageBase + winner.image_path} alt="winner image" title="winner image" className="phase-winner-image me-3" />}
           {name && <p>{name}</p>}
           {place_title && <p>{` - ${place_title}`}</p>}
         </div>

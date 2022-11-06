@@ -285,7 +285,7 @@ defmodule Web.SubmissionView do
       submit("Save draft",
         name: "action",
         value: "draft",
-        class: "btn btn-outline-secondary mr-2 float-right",
+        class: "btn btn-outline-secondary me-2 float-right",
         formnovalidate: true
       )
     end

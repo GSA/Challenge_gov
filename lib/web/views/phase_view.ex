@@ -367,20 +367,20 @@ defmodule Web.PhaseView do
   end
 
   def filter_tab_text(_challenge, _phase, "all"),
-    do: content_tag(:span, "All submissions", class: "submission-filter__text mr-1")
+    do: content_tag(:span, "All submissions", class: "submission-filter__text me-1")
 
   def filter_tab_text(_challenge, _phase, "selected"),
-    do: content_tag(:span, "Selected for judging", class: "submission-filter__text mr-1")
+    do: content_tag(:span, "Selected for judging", class: "submission-filter__text me-1")
 
   def filter_tab_text(challenge, phase, "winner") do
     text =
       if next_phase_closed?(challenge, phase), do: "Selected for next phase", else: "Awardees"
 
-    content_tag(:span, text, class: "submission-filter__text mr-1")
+    content_tag(:span, text, class: "submission-filter__text me-1")
   end
 
   def filter_tab_text(_challenge, _phase, _filter_key),
-    do: content_tag(:span, "Undefined", class: "submission-filter__text mr-1")
+    do: content_tag(:span, "Undefined", class: "submission-filter__text me-1")
 
   def filter_tab_count(phase, filter) do
     [

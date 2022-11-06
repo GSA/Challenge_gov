@@ -1,6 +1,6 @@
 <h4>Judging criteria details</h4>
-<p class="ml-2 mb-0 text-muted form__note"><em>listed per phase</em></p>
-<p class="ml-2 text-muted">Provide any information you want your solvers to know about the judging panel who will be evaluating their submissions per phase (if applicable). Provide a heading, description and weight (if applicable) for each criteria submissions will be evaluated by. You can provide a general summary of how submissions will be evaluated if you don’t have individual weighted criteria.</p>
+<p class="ms-2 mb-0 text-muted form__note"><em>listed per phase</em></p>
+<p class="ms-2 text-muted">Provide any information you want your solvers to know about the judging panel who will be evaluating their submissions per phase (if applicable). Provide a heading, description and weight (if applicable) for each criteria submissions will be evaluated by. You can provide a general summary of how submissions will be evaluated if you don’t have individual weighted criteria.</p>
 <br/>
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
 <br/>
@@ -17,7 +17,7 @@
 
 <div class="challenge-file-upload col" data-section=<%= @section %>>
   <label class="control-label">Upload judging documents (optional)</label>
-  <p class="ml-2 text-muted">Provide any tables, PDFs you wish to provide as judging documentation. All files must be 508 compliant.</p>
+  <p class="ms-2 text-muted">Provide any tables, PDFs you wish to provide as judging documentation. All files must be 508 compliant.</p>
   <div class="col">
     <label for="challenge_document_name" class="control-label">File name (optional)</label>
     <input class="challenge_document_name form-control" type="text">
@@ -26,14 +26,14 @@
     <div class="challenge_document_upload btn btn-primary">Upload file</div>
     <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
     <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
-  </div>              
+  </div>
 
   <br/>
 
   <div class="challenge_uploaded_documents">
     <%= Enum.map(@documents, fn document -> %>
       <div class="challenge_uploaded_document">
-        <i class="fa fa-paperclip mr-1"></i>
+        <i class="fa fa-paperclip me-1"></i>
         <%= link(Web.DocumentView.name(document), to: SupportingDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
         <%= link to: "", data: [document_id: document.id], class: "challenge_uploaded_document_delete" do %>
           <i class="fa fa-trash"></i>

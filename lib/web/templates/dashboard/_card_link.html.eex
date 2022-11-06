@@ -4,7 +4,7 @@
       <div class="dashboard-card__icon-container">
         <%= @icon %>
       </div>
-      <div class="ml-3 d-flex flex-column justify-content-center">
+      <div class="ms-3 d-flex flex-column justify-content-center">
         <h3 class="dashboard-card__title"><%= @title %></h3>
         <%= if @description do %>
           <span class="mb-0"><%= @description %></span>

@@ -280,7 +280,7 @@ defmodule Web.ChallengeView do
           class: "js-date-input",
           required: opts[:required]
         ),
-        content_tag(:span, "", class: "mr-2"),
+        content_tag(:span, "", class: "me-2"),
         content_tag(:input, "",
           type: "time",
           id: "#{id_prefix}_time_picker",
@@ -313,7 +313,7 @@ defmodule Web.ChallengeView do
             ),
           required: opts[:required]
         ),
-        content_tag(:span, "", class: "mr-2"),
+        content_tag(:span, "", class: "me-2"),
         content_tag(:input, "",
           type: "time",
           id: "#{id_prefix}_time_picker",

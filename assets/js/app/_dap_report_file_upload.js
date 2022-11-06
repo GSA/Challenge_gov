@@ -40,7 +40,7 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
 
           uploadedReport.append(`
             <div>
-              <i class="fa fa-paperclip mr-1"></i>
+              <i class="fa fa-paperclip me-1"></i>
               <a href=${document.url} target="_blank">${document.filename}</a>
               <a href="" data-document-id=${document.id} class="dap_uploaded_report_delete">
                 <i class="fa fa-trash"></i>

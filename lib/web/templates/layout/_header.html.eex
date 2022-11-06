@@ -10,7 +10,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
     </ul>
-    <!-- form class="form-inline my-2 my-lg-0 mr-5" -->
+    <!-- form class="form-inline my-2 my-lg-0 me-5" -->
 
 
   <form class="row gy-2 gx-3">

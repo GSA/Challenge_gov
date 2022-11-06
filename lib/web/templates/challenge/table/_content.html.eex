@@ -20,7 +20,7 @@
       <% end %>
       <td>
         <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
-          <%= link("View", to: Routes.challenge_path(@conn, :show, challenge.id), class: "btn btn-default mr-2") %>
+          <%= link("View", to: Routes.challenge_path(@conn, :show, challenge.id), class: "btn btn-default me-2") %>
           <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
             More options
           </button>
