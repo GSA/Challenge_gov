@@ -55,7 +55,7 @@
                   <%= Enum.map @message_context_statuses, fn (message_context_status) -> %>
                     <tr class="message_center__row <%= maybe_unread_class(message_context_status) %> js-clickable-table-row" data-link="<%= Routes.message_context_path(@conn, :show, message_context_status.message_context_id) %>" tabindex="0">
                       <td>
-                        <input type="checkbox" class="mr-2 js-table-row-select">
+                        <input type="checkbox" class="me-2 js-table-row-select">
                         <%= render_star(message_context_status) %>
                       </td>
                       <td><%= Web.SharedView.local_datetime_tag(message_context_status.context.updated_at) %></td>

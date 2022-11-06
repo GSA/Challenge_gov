@@ -41,7 +41,7 @@ defmodule Web.FormView do
     char_limit_label =
       if text_opts[:limit] do
         chars_remaining = text_opts[:limit] - String.length(input_value(form, field) || "")
-        base_classes = "char-limit-label ml-1"
+        base_classes = "char-limit-label ms-1"
 
         [label_content, label_classes] =
           if chars_remaining >= 0 do
@@ -266,11 +266,11 @@ defmodule Web.FormView do
         [
           content_tag(:span, "",
             id: "#{form.id}_#{Atom.to_string(field)}_chars-remaining",
-            class: "char-limit-label ml-1"
+            class: "char-limit-label ms-1"
           ),
           content_tag(:span, "",
             id: "#{form.id}_#{Atom.to_string(field)}_char-limit-text",
-            class: "char-limit-label ml-1"
+            class: "char-limit-label ms-1"
           ),
           hidden_input(form, String.to_existing_atom(Atom.to_string(field) <> "_length"))
         ]
@@ -327,7 +327,7 @@ defmodule Web.FormView do
     char_limit_label =
       if textarea_opts[:limit] do
         chars_remaining = textarea_opts[:limit] - String.length(input_value(form, field) || "")
-        base_classes = "char-limit-label ml-1"
+        base_classes = "char-limit-label ms-1"
 
         [label_content, label_classes] =
           if chars_remaining >= 0 do

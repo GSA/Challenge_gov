@@ -33,7 +33,7 @@ export const ChallengeTab = ({label, downloadsLabel, section, challenge, print, 
           <div className={copyShareCSS} id="challenge-link">
             <input id="challenge-link-text" className="opacity-0" defaultValue={window.location.href}/>
             <button id="challenge-link-btn" className="usa-button usa-button--unstyled text-decoration-none" onClick={handleCopyLink}>
-              <i className="far fa-copy mr-1"></i>
+              <i className="far fa-copy me-1"></i>
               <span>Copy share link</span>
             </button>
             <Tooltip isOpen={copyTooltipOpen} fade={true} target="challenge-link-btn">Link copied</Tooltip>

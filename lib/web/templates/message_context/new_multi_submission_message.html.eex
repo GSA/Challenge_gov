@@ -31,7 +31,7 @@
               <%= hidden_input f, "submission_ids[]", value: submission_id %>
             <% end) %>
             <%= FormView.rt_textarea_field_alt(f, :content) %>
-            <%#= submit("Save draft", class: "btn btn-primary mr-3", name: "message_status", value: "draft") %>
+            <%#= submit("Save draft", class: "btn btn-primary me-3", name: "message_status", value: "draft") %>
             <%= submit("Send message", class: "btn btn-primary", name: "message_status", value: "sent") %>
           <% end) %>
         </div>
