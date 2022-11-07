@@ -17,7 +17,7 @@ if ($("#session_timeout").length > 0) {
    $(".wrapper").prepend(
      `<button type="button" id="showModal" class="btn btn-primary d-none" tabindex="-1" data-bs-toggle="modal" data-bs-target="#renew-modal">
       </button>
-     <div class="modal fade timeout-modal" id="renew-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal fade timeout-modal" id="renew-modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
      <div class="modal-dialog">
        <div class="modal-content">
          <div class="modal-header">
