@@ -583,7 +583,6 @@ defmodule Web.ChallengeView do
         submit("Submit", name: "action", value: "submit", class: "usa-button float-right ")
 
       !last_section ->
-
         submit("Next",
           name: "action",
           value: "next",
