@@ -35,6 +35,7 @@ if ($("#session_timeout").length > 0) {
    `)
 
   let renewModal = $("#renew-modal")
+  //let renewModal =  new bootstrap.Modal($("#renew-modal"))
   let showModal = $("#showModal")
 
   // When the renew button is clicked renew session and fetch new timeout then close modal
@@ -60,8 +61,8 @@ if ($("#session_timeout").length > 0) {
       success: function(res) {
         $("#session_timeout").data("session_expiration", res.new_timeout)
         //renewModal.modal("hide")
-        //renewModal.hide()
-        $("#close-modal-session").click()
+         renewModal.hide()
+        //$("#close-modal-session").click()
         doRenewSession = false
       },
       error: function(err) {
@@ -75,7 +76,6 @@ if ($("#session_timeout").length > 0) {
   setInterval(() => {
     const session_expiration = $("#session_timeout").data("session_expiration")
     const now = Math.floor(new Date().getTime()/1000)
-
     // When current time gets within 2 minutes of session timeout show countdown modal
     if (now === (session_expiration - 120)) {
       if (doRenewSession) {
@@ -106,8 +106,8 @@ if ($("#session_timeout").length > 0) {
       }, 1000);
 
       //renewModal.modal("show")
-      //renewModal.show()
-      showModal.click()
+       renewModal.show()
+      //showModal.click()
     }
 
     // If session expiration gets renewed then clear the countdown interval
