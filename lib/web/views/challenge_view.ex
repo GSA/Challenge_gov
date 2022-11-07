@@ -280,7 +280,7 @@ defmodule Web.ChallengeView do
           class: "js-date-input",
           required: opts[:required]
         ),
-        content_tag(:span, "", class: "mr-2"),
+        content_tag(:span, "", class: "me-2"),
         content_tag(:input, "",
           type: "time",
           id: "#{id_prefix}_time_picker",
@@ -313,7 +313,7 @@ defmodule Web.ChallengeView do
             ),
           required: opts[:required]
         ),
-        content_tag(:span, "", class: "mr-2"),
+        content_tag(:span, "", class: "me-2"),
         content_tag(:input, "",
           type: "time",
           id: "#{id_prefix}_time_picker",
@@ -580,10 +580,15 @@ defmodule Web.ChallengeView do
 
     cond do
       last_section && Challenges.allowed_to_submit?(user) ->
-        submit("Submit", name: "action", value: "submit", class: "usa-button float-right")
+        submit("Submit", name: "action", value: "submit", class: "usa-button float-right ")
 
       !last_section ->
-        submit("Next", name: "action", value: "next", class: "usa-button float-right")
+        submit("Next",
+          name: "action",
+          value: "next",
+          style: "overflow: visible !important; user-select:all;",
+          class: "usa-button btn-testing float-right"
+        )
 
       true ->
         nil

@@ -22,12 +22,12 @@ defmodule Web.FormView do
 
     case Keyword.get(opts, :required, false) do
       true ->
-        label(form, field, class: "col") do
+        label(form, field, class: "form-label col") do
           [text, content_tag(:span, " *", class: "required")]
         end
 
       false ->
-        label(form, field, text, class: "col")
+        label(form, field, text, class: "form-label col")
     end
   end
 
@@ -41,7 +41,7 @@ defmodule Web.FormView do
     char_limit_label =
       if text_opts[:limit] do
         chars_remaining = text_opts[:limit] - String.length(input_value(form, field) || "")
-        base_classes = "char-limit-label ml-1"
+        base_classes = "char-limit-label ms-1"
 
         [label_content, label_classes] =
           if chars_remaining >= 0 do
@@ -65,7 +65,8 @@ defmodule Web.FormView do
     content_tag(:div, class: form_group_classes(form, field)) do
       [
         label_field(form, field, opts),
-        content_tag(:div, class: "col") do
+        # remove  class: "col"
+        content_tag(:div) do
           [
             text_input(form, field, Keyword.merge([class: classes], text_opts)),
             char_limit_label,
@@ -265,11 +266,11 @@ defmodule Web.FormView do
         [
           content_tag(:span, "",
             id: "#{form.id}_#{Atom.to_string(field)}_chars-remaining",
-            class: "char-limit-label ml-1"
+            class: "char-limit-label ms-1"
           ),
           content_tag(:span, "",
             id: "#{form.id}_#{Atom.to_string(field)}_char-limit-text",
-            class: "char-limit-label ml-1"
+            class: "char-limit-label ms-1"
           ),
           hidden_input(form, String.to_existing_atom(Atom.to_string(field) <> "_length"))
         ]
@@ -326,7 +327,7 @@ defmodule Web.FormView do
     char_limit_label =
       if textarea_opts[:limit] do
         chars_remaining = textarea_opts[:limit] - String.length(input_value(form, field) || "")
-        base_classes = "char-limit-label ml-1"
+        base_classes = "char-limit-label ms-1"
 
         [label_content, label_classes] =
           if chars_remaining >= 0 do
@@ -375,7 +376,7 @@ defmodule Web.FormView do
   def checkbox_field(form, field, opts \\ [], dopts \\ []) do
     opts = Keyword.merge(opts, dopts)
 
-    content_tag(:div, class: "checkbox form-group") do
+    content_tag(:div, class: "checkbox mb-3") do
       content_tag(:div, class: "col-md-8 col-md-offset-4") do
         [
           label(form, field, class: "col-md-4") do
@@ -432,10 +433,10 @@ defmodule Web.FormView do
   def form_group_classes(form, field) do
     case Keyword.has_key?(form.errors, field) do
       true ->
-        "form-group is-invalid"
+        "mb-3 is-invalid"
 
       false ->
-        "form-group"
+        "mb-3"
     end
   end
 

@@ -1,10 +1,10 @@
-<div class="modal fade" id="announcement-modal" tabindex="-1" role="dialog" aria-labelledby="announcement-modal-label" aria-hidden="true">
+<div class="modal fade" id="announcement-modal" tabindex="-1"  aria-labelledby="announcement-modal-label" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
     <%= form_for(@conn, Routes.challenge_path(@conn, :create_announcement, @challenge.id), fn f -> %>
       <div class="modal-content">
         <div class="modal-header">
           <h2 class="modal-title" id="announcement-modal-label">Add an update to <%= @challenge.title %></h2>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -14,7 +14,7 @@
         </div>
         <div class="modal-footer">
           <%= remove_update_button(@conn, @challenge) %>
-          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" aria-label="Close">Cancel</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
           <%= submit("Publish", class: "btn btn-primary", data: [confirm: "Are you sure you want to post this update?"] ) %>
         </div>
       </div>

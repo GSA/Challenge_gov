@@ -10,8 +10,8 @@
       <td><%= status_text(submission) %></td>
       <td>
         <%= if !is_nil(submission.invite) do %>
-          <div class="btn-group btn-group-sm ml-2" role="group">
-            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+          <div class="btn-group btn-group-sm ms-2" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
               More options
             </button>
             <div class="dropdown-menu text-center" aria-labelledby="btnGroupDrop1">
@@ -25,4 +25,3 @@
     </tr>
   <% end %>
 </tbody>
-

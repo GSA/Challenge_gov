@@ -1,3 +1,23 @@
+//  $(".wrapper").prepend(
+//    `<button type="button" id="showModal" class="btn btn-primary d-none" tabindex="-1" data-bs-toggle="modal" data-bs-target="#renew-modal">
+//     </button>
+//    <div class="modal fade timeout-modal" id="renew-modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+//    <div class="modal-dialog">
+//      <div class="modal-content">
+//        <div class="modal-header">
+//          <h1 class="modal-title fs-5" id="exampleModalLabel">Session timeout</h1>
+//          <button type="button" class="btn-close" id="close-modal-session" data-bs-dismiss="modal" aria-label="Close"></button>
+//        </div>
+//        <div class="modal-body">
+//             <p>Your session will expire in <span id="countdown"></span></p>
+//             <p>Please click below if you would like to continue.</p>
+//             <button class="btn btn-primary modal-btn" id="renew" type="button">Renew Session</button>
+//        </div>
+//      </div>
+//    </div>
+//  </div>
+//  `)
+
 if ($("#session_timeout").length > 0) {
   let doRenewSession = false
 
@@ -35,7 +55,8 @@ if ($("#session_timeout").length > 0) {
       contentType: false,
       success: function(res) {
         $("#session_timeout").data("session_expiration", res.new_timeout)
-        renewModal.modal("hide")
+        //renewModal.modal("hide")
+        renewModal.hide()
         doRenewSession = false
       },
       error: function(err) {
@@ -79,7 +100,8 @@ if ($("#session_timeout").length > 0) {
         if (seconds <= 0) clearInterval(countdown);
       }, 1000);
 
-      renewModal.modal("show")
+      //renewModal.modal("show")
+      renewModal.show()
     }
 
     // If session expiration gets renewed then clear the countdown interval

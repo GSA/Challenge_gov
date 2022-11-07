@@ -184,7 +184,7 @@ defmodule ChallengeGov.Accounts.User do
   def update_changeset(struct, params) do
     struct
     |> changeset(params)
-    |> validate_required([:email])
+    |> validate_required([:email, :first_name, :last_name])
     |> maybe_reset_verification()
   end
 

@@ -48,7 +48,9 @@ defmodule ChallengeGov.SubmissionIntegrationTest do
     |> execute_script(
       "document.getElementsByClassName('ql-editor')[1].innerHTML = 'Full description here.'"
     )
+    |> touch_scroll(button("Review and submit"), 0, 1)
     |> click(button("Review and submit"))
+    |> touch_scroll(link("Submit"), 0, 1)
     |> click(link("Submit"))
     |> assert_text("Submission saved")
 
@@ -56,6 +58,7 @@ defmodule ChallengeGov.SubmissionIntegrationTest do
     submission_id = get_submission_id(session)
 
     session
+    |> touch_scroll(link("< Back to submissions"), 0, 1)
     |> click(link("< Back to submissions"))
 
     !has_text?(session, submission_id)

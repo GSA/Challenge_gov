@@ -4,7 +4,7 @@
 
     <h1 class="mb-3">Recent downloads for <%= @challenge.title %></h1>
 
-    <button class="btn btn-primary" data-toggle="modal" data-target="#submission-download-modal">Create new download</button>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#submission-download-modal">Create new download</button>
   </div>
 </div>
 
@@ -16,7 +16,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Create new download report</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -27,7 +27,7 @@
             <%= Enum.map(@closed_phases, fn phase -> %>
               <%= label do %>
                 <%= checkbox(f, "phase_ids[]", checked_value: phase.id, hidden_input: false) %>
-                <span class="ml-1"><%= phase.title %></span>
+                <span class="ms-1"><%= phase.title %></span>
               <% end %>
               <br/>
             <% end) %>
@@ -38,34 +38,34 @@
           <p>Include:</p>
           <%= label do %>
             <%= radio_button(f, :judging_status, "all") %>
-            <span class="ml-1">All entries</span>
+            <span class="ms-1">All entries</span>
           <% end %>
           <br/>
           <%= label do %>
             <%= radio_button(f, :judging_status, "selected") %>
-            <span class="ml-1">Selected for judging</span>
+            <span class="ms-1">Selected for judging</span>
           <% end %>
           <br/>
           <%= label do %>
             <%= radio_button(f, :judging_status, "winner") %>
-            <span class="ml-1">Selected for next phase / as winner</span>
+            <span class="ms-1">Selected for next phase / as winner</span>
           <% end %>
           <br/>
           <p>File type:</p>
           <p>CSV will include only the text of each submission entry. ZIP files will include both a CSV of the entry and all uploaded files in a folder structured format.</p>
           <%= label do %>
             <%= radio_button(f, :format, ".csv") %>
-            <span class="ml-1">csv only</span>
+            <span class="ms-1">csv only</span>
           <% end %>
           <br/>
           <%= label do %>
             <%= radio_button(f, :format, ".zip") %>
-            <span class="ml-1">csv and uploaded files (zip)</span>
+            <span class="ms-1">csv and uploaded files (zip)</span>
           <% end %>
           <br/>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           <%= submit "Create download", class: "btn btn-primary" %>
         </div>
       <% end %>

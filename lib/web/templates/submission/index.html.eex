@@ -39,7 +39,7 @@
           <div class="col-md-12">
             <div class="cards">
               <%= Enum.map @submissions, fn (submission) -> %>
-                <div class="challenge-tile card mr-4">
+                <div class="challenge-tile card me-4">
                   <%= link to: Routes.submission_path(@conn, :edit, submission.id) do %>
                     <div class="image_wrapper">
                       <%= img_tag(
