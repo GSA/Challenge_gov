@@ -188,6 +188,7 @@ defmodule ChallengeGov.Accounts.User do
     |> maybe_reset_verification()
   end
 
+  # THis is my comment
   def last_active_changeset(struct) do
     struct
     |> change()
