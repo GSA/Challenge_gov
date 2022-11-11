@@ -193,7 +193,6 @@ defmodule ChallengeGov.Accounts.User do
     |> change()
     |> timestamp(:last_active)
   end
-  #work I did
 
   def active_session_changeset(struct, status, jwt_token) do
     struct
