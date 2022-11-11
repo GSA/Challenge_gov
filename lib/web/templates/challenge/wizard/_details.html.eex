@@ -93,15 +93,14 @@
 <br/>
 
 <div class="col">
-  <label for="brief_description">Short description (200 character limit)</label>
-  <%= FormView.rt_textarea_field(@form, :brief_description, limit: 200) %>
+  <%= FormView.text_field(@form, :brief_description, label: "Short description (200 character limit)", limit: 200) %>
   <p class="ms-2 text-muted">Provide a general overview of your challenge, including any background on the problem you’re trying to solve.</p>
 </div>
 
 <br/>
 
 <div class="col">
-  <label><%= "Long description (15000 character limit)" %> <span class="required">*</span></label>
+  <label>Long description (15000 character limit) <span class="required">*</span></label>
   <%= FormView.rt_textarea_field(@form, :description, limit: 15000) %>
   <p class="ms-2 text-muted">Provide a detailed overview of your challenge, including any background on the problem you’re trying to solve, and any key dates you want to highlight.</p>
 </div>
