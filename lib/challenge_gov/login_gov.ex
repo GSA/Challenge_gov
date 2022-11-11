@@ -44,9 +44,6 @@ defmodule ChallengeGov.LoginGov do
   end
 
   def build_authorization_url(client_id, acr_values, redirect_uri, idp_authorize_url) do
-    # credo:disable-for-next-line
-    IO.inspect("Build authorization url called")
-
     query = [
       client_id: client_id,
       response_type: "code",
@@ -94,8 +91,7 @@ defmodule ChallengeGov.LoginGov do
       "?" <>
       URI.encode_query(
         client_id: id_token,
-        post_logout_redirect_uri: logout_redirect_uri,
-        state: random_value()
+        post_logout_redirect_uri: logout_redirect_uri
       )
   end
 
