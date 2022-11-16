@@ -74,7 +74,6 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     session
     |> populate_start_date("challenge_phases_0_start_date")
     |> populate_end_date("challenge_phases_0_end_date")
-    # |> assert_text("Next")
     |> touch_scroll(button("Next"), 0, 1)
     |> click(css(".btn-testing"))
   end
