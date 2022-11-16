@@ -472,6 +472,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_upload_logo(params)
     |> validate_auto_publish_date(params)
     |> validate_custom_url(params)
+    |> validate_format(:custom_url, ~r/[a-zA-Z0-9_-]/)
     |> validate_phases(params)
   end
 
