@@ -65,7 +65,10 @@
 <div class="mb-3">
   <%= label @form, :custom_url, "Custom url (optional)", class: "col-md-4" %>
   <div class="ms-2">
-    <p class="ms-2 text-muted">If no custom URL is provided, the challenge URL will default to the challenge title.</p>
+    <p class="ms-2 text-muted">
+      URLs will be formatted as follows: https://www.challenge.gov/?challenge={challenge-specific-identifier}.  By default the challenge specific identifier be the challenge name.
+      You can set a custom challenge specific identifier in the box below. Do not use the following characters as they will cause the URL to be invalid:  {, }, |, \, /, ^, ~, [, ], `, &, %, :, #, ?, @, +
+    </p>
     <span><%= ChallengeView.public_details_root_url() %></span><span id="custom-url-example"></span>
   </div>
   <%= FormView.text_field(@form, :custom_url, label: nil, placeholder: "my-custom-challenge-name") %>
