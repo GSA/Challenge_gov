@@ -3,11 +3,8 @@
 <h4>Add challenge details</h4>
 <br/>
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
-
-
-    <%= FormView.text_field(@form, :title, label: "Challenge title (90 character limit)", limit: 90, required: true) %>
-    <p class="ms-2 text-muted">Provide the official title of your challenge. Your challenge title will appear in your challenge’s listing tile on the Challenge.gov homepage.</p>
-
+  <%= FormView.text_field(@form, :title, label: "Challenge title (90 character limit)", limit: 90, required: true) %>
+  <p class="ms-2 text-muted">Provide the official title of your challenge. Your challenge title will appear in your challenge’s listing tile on the Challenge.gov homepage.</p>
 <br/>
 
 <%= FormView.text_field(@form, :tagline, label: "Tagline (90 character limit)", limit: 90, required: true) %>
@@ -100,8 +97,8 @@
 <br/>
 
 <div class="col">
-  <label>Long description (15000 character limit) <span class="required">*</span></label>
-  <%= FormView.rt_textarea_field(@form, :description, limit: 15000) %>
+  <label>Long description<span class="required">*</span></label>
+  <%= FormView.rt_textarea_field(@form, :description) %>
   <p class="ms-2 text-muted">Provide a detailed overview of your challenge, including any background on the problem you’re trying to solve, and any key dates you want to highlight.</p>
 </div>
 

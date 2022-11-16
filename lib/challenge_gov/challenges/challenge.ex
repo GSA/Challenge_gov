@@ -464,7 +464,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :is_multi_phase
     ])
     |> validate_length(:title, max: 90)
-    |> validate_length(:tagline, max: 400)
+    |> validate_length(:tagline, max: 90)
+    |> validate_length(:brief_description, max: 200)
     |> validate_length(:other_type, max: 45)
     |> validate_inclusion(:primary_type, @challenge_types)
     |> maybe_validate_types(params)
@@ -486,7 +487,6 @@ defmodule ChallengeGov.Challenges.Challenge do
     ])
     |> validate_prizes(params)
     |> force_change(:prize_description, fetch_field!(struct, :prize_description))
-    |> validate_length(:prize_description, max: 15_000)
   end
 
   def parse_currency(struct, %{"prize_total" => prize_total}) do
