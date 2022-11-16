@@ -103,7 +103,7 @@ defmodule ChallengeGov.ChallengeJudgingCriteriaTest do
       end)
     end
 
-    test "error judging criteria length" do
+    test "no limit judging criteria length" do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
@@ -112,34 +112,24 @@ defmodule ChallengeGov.ChallengeJudgingCriteriaTest do
       length = 15_001
       judging_criteria = TestHelpers.generate_random_string(length)
 
-      {:error, changeset} =
-        Challenges.update(
-          challenge,
-          %{
-            "action" => "next",
-            "challenge" => %{
-              "section" => "judging",
-              "phases" => %{
-                "0" => %{
-                  "id" => Enum.at(phase_ids, 0),
-                  "judging_criteria" => judging_criteria
-                }
-              }
-            }
-          },
-          user,
-          ""
-        )
-
-      errors = Enum.map(changeset.changes.phases, & &1.errors)
-
-      assert length(errors) === 1
-
-      Enum.map(errors, fn error ->
-        assert error[:judging_criteria]
-        {_message, type} = error[:judging_criteria]
-        assert type[:validation] === :length
-      end)
+      assert {:ok, _} =
+               Challenges.update(
+                 challenge,
+                 %{
+                   "action" => "next",
+                   "challenge" => %{
+                     "section" => "judging",
+                     "phases" => %{
+                       "0" => %{
+                         "id" => Enum.at(phase_ids, 0),
+                         "judging_criteria" => judging_criteria
+                       }
+                     }
+                   }
+                 },
+                 user,
+                 ""
+               )
     end
   end
 
@@ -272,7 +262,7 @@ defmodule ChallengeGov.ChallengeJudgingCriteriaTest do
       end)
     end
 
-    test "error judging criteria length" do
+    test "No limit judging criteria length" do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_multi_phase_challenge(user, %{user_id: user.id})
 
@@ -281,48 +271,32 @@ defmodule ChallengeGov.ChallengeJudgingCriteriaTest do
       length = 15_001
       judging_criteria = TestHelpers.generate_random_string(length)
 
-      {:error, changeset} =
-        Challenges.update(
-          challenge,
-          %{
-            "action" => "next",
-            "challenge" => %{
-              "section" => "judging",
-              "phases" => %{
-                "0" => %{
-                  "id" => Enum.at(phase_ids, 0),
-                  "judging_criteria" => judging_criteria
-                },
-                "1" => %{
-                  "id" => Enum.at(phase_ids, 1),
-                  "judging_criteria" => "Test judging criteria 2"
-                },
-                "2" => %{
-                  "id" => Enum.at(phase_ids, 2),
-                  "judging_criteria" => "Test judging criteria 3"
-                }
-              }
-            }
-          },
-          user,
-          ""
-        )
-
-      errors = Enum.map(changeset.changes.phases, & &1.errors)
-
-      errors
-      |> Enum.with_index()
-      |> Enum.map(fn {error, index} ->
-        case index do
-          0 ->
-            assert error[:judging_criteria]
-            {_message, type} = error[:judging_criteria]
-            assert type[:validation] === :length
-
-          _ ->
-            assert !error[:judging_criteria]
-        end
-      end)
+      assert {:ok, _} =
+               Challenges.update(
+                 challenge,
+                 %{
+                   "action" => "next",
+                   "challenge" => %{
+                     "section" => "judging",
+                     "phases" => %{
+                       "0" => %{
+                         "id" => Enum.at(phase_ids, 0),
+                         "judging_criteria" => judging_criteria
+                       },
+                       "1" => %{
+                         "id" => Enum.at(phase_ids, 1),
+                         "judging_criteria" => "Test judging criteria 2"
+                       },
+                       "2" => %{
+                         "id" => Enum.at(phase_ids, 2),
+                         "judging_criteria" => "Test judging criteria 3"
+                       }
+                     }
+                   }
+                 },
+                 user,
+                 ""
+               )
     end
   end
 end
