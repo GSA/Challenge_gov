@@ -473,7 +473,24 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_upload_logo(params)
     |> validate_auto_publish_date(params)
     |> validate_custom_url(params)
+    |> validate_custom_url()
     |> validate_phases(params)
+  end
+
+  defp validate_custom_url(changeset) do
+    url = Ecto.Changeset.get_field(changeset, :custom_url)
+
+    maybe_add_url_error(changeset, url)
+  end
+
+  defp maybe_add_url_error(changeset, nil), do: changeset
+
+  defp maybe_add_url_error(changeset, url) do
+    if Regex.match?(~r/[^a-z0-9\-]/, url) do
+      Ecto.Changeset.add_error(changeset, :custom_url, "URL Contains Invalid Character(s).")
+    else
+      changeset
+    end
   end
 
   def validate_rich_text_length(struct, field, length) do
