@@ -5,8 +5,8 @@
 
 <%= inputs_for(@form, :phases, fn ff -> %>
   <div class="col">
-    <label><%= "Entry details - phase #{ff.index + 1}: #{ff.data.title} (15000 character limit)" %> <span class="required">*</span></label>
-    <%= FormView.rt_textarea_field(ff, :how_to_enter, limit: 15000) %>
+    <label><%= "Entry details - phase #{ff.index + 1}: #{ff.data.title}" %> <span class="required">*</span></label>
+    <%= FormView.rt_textarea_field(ff, :how_to_enter) %>
   </div>
   <br/>
 <% end) %>

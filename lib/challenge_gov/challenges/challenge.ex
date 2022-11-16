@@ -464,9 +464,8 @@ defmodule ChallengeGov.Challenges.Challenge do
       :is_multi_phase
     ])
     |> validate_length(:title, max: 90)
-    |> validate_length(:tagline, max: 400)
-    |> validate_rich_text_length(:brief_description, 200)
-    |> validate_rich_text_length(:description, 15_000)
+    |> validate_length(:tagline, max: 90)
+    |> validate_length(:brief_description, max: 200)
     |> validate_length(:other_type, max: 45)
     |> validate_inclusion(:primary_type, @challenge_types)
     |> maybe_validate_types(params)
@@ -474,23 +473,6 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_auto_publish_date(params)
     |> validate_custom_url(params)
     |> validate_phases(params)
-  end
-
-  def validate_rich_text_length(struct, field, length) do
-    field_length = String.to_existing_atom("#{field}_length")
-    value = get_field(struct, field_length)
-
-    case value do
-      nil ->
-        struct
-
-      _ ->
-        if value > length do
-          add_error(struct, field, "can't be greater than #{length} characters")
-        else
-          struct
-        end
-    end
   end
 
   def timeline_changeset(struct, params) do
@@ -505,7 +487,6 @@ defmodule ChallengeGov.Challenges.Challenge do
     ])
     |> validate_prizes(params)
     |> force_change(:prize_description, fetch_field!(struct, :prize_description))
-    |> validate_length(:prize_description, max: 15_000)
   end
 
   def parse_currency(struct, %{"prize_total" => prize_total}) do

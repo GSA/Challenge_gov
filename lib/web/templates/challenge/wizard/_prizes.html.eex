@@ -35,6 +35,6 @@
 
 <div class="col">
   <label for="challenge_prize_description">Prize description / breakdown (optional)</label>
-  <%= FormView.rt_textarea_field(@form, :prize_description, limit: 15000) %>
+  <%= FormView.rt_textarea_field(@form, :prize_description) %>
 </div>
 <p class="ms-2 text-muted">Provide the total cash prize pool, and the amounts and descriptions of individual cash prizes for your challenge.  If applicable, also provide a summary of any non-monetary incentives your challenge offers to participants. </p>
