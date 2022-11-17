@@ -104,7 +104,6 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
-    |> validate_rich_text_length(:brief_description, 500)
   end
 
   def review_changeset(struct, params, user, challenge, phase) do
@@ -127,7 +126,6 @@ defmodule ChallengeGov.Submissions.Submission do
       :brief_description,
       :description
     ])
-    |> validate_rich_text_length(:brief_description, 500)
   end
 
   def update_draft_changeset(struct, params) do
@@ -139,7 +137,6 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
-    |> validate_rich_text_length(:brief_description, 500)
   end
 
   def update_review_changeset(struct, params) do
@@ -158,7 +155,6 @@ defmodule ChallengeGov.Submissions.Submission do
       :brief_description,
       :description
     ])
-    |> validate_rich_text_length(:brief_description, 500)
   end
 
   def submit_changeset(struct) do
@@ -183,23 +179,6 @@ defmodule ChallengeGov.Submissions.Submission do
     struct
     |> change()
     |> put_change(:deleted_at, now)
-  end
-
-  def validate_rich_text_length(struct, field, length) do
-    field_length = String.to_existing_atom("#{field}_length")
-    value = get_field(struct, field_length)
-
-    case value do
-      nil ->
-        struct
-
-      _ ->
-        if value > length do
-          add_error(struct, field, "can't be greater than #{length} characters")
-        else
-          struct
-        end
-    end
   end
 
   defp validate_required_fields(struct) do
