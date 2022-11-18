@@ -472,7 +472,41 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> validate_upload_logo(params)
     |> validate_auto_publish_date(params)
     |> validate_custom_url(params)
+    |> validate_custom_url()
     |> validate_phases(params)
+  end
+
+  defp validate_custom_url(changeset) do
+    url = Ecto.Changeset.get_field(changeset, :custom_url)
+
+    maybe_add_url_error(changeset, url)
+  end
+
+  defp maybe_add_url_error(changeset, nil), do: changeset
+
+  defp maybe_add_url_error(changeset, url) do
+    if Regex.match?(~r/[^a-z0-9\-]/, url) do
+      Ecto.Changeset.add_error(changeset, :custom_url, "URL Contains Invalid Character(s).")
+    else
+      changeset
+    end
+  end
+
+  def validate_rich_text_length(struct, field, length) do
+    field_length = String.to_existing_atom("#{field}_length")
+    value = get_field(struct, field_length)
+
+    case value do
+      nil ->
+        struct
+
+      _ ->
+        if value > length do
+          add_error(struct, field, "can't be greater than #{length} characters")
+        else
+          struct
+        end
+    end
   end
 
   def timeline_changeset(struct, params) do
@@ -710,22 +744,6 @@ defmodule ChallengeGov.Challenges.Challenge do
 
   defp validate_logo(struct, _params), do: struct
 
-  # defp validate_start_and_end_dates(struct, params) do
-  #   with {:ok, start_date} <- Map.fetch(params, "start_date"),
-  #        {:ok, end_date} <- Map.fetch(params, "end_date"),
-  #        {:ok, start_date} <- Timex.parse(start_date, "{ISO:Extended}"),
-  #        {:ok, end_date} <- Timex.parse(end_date, "{ISO:Extended}"),
-  #        1 <- Timex.compare(end_date, start_date) do
-  #     struct
-  #   else
-  #     tc when tc == -1 or tc == 0 ->
-  #       add_error(struct, :end_date, "must come after start date")
-
-  #     _ ->
-  #       add_error(struct, :start_and_end_date, "start and end date are required")
-  #   end
-  # end
-
   defp validate_auto_publish_date(struct, %{"auto_publish_date" => date, "challenge_id" => id})
        when not is_nil(date) do
     {:ok, date} = Timex.parse(date, "{ISO:Extended}")
@@ -787,6 +805,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> String.trim()
     |> String.downcase()
     |> String.replace(" ", "-")
+    |> String.replace(~r/[^a-z0-9\-]/, "")
   end
 
   defp maybe_set_start_end_dates(struct, %{"phases" => phases}) do
