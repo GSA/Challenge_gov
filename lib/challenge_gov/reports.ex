@@ -36,17 +36,23 @@ defmodule ChallengeGov.Reports do
   end
 
   def published_date_range_records(params) do
-    start_date =
+    get_start_date =
       Enum.map(String.split(Map.get(params, "start_date", nil), "-"), fn num ->
         String.to_integer(num)
       end)
+
+    start_date =
+      get_start_date
       |> List.to_tuple()
       |> Timex.to_datetime()
 
-    end_date =
+    get_end_date =
       Enum.map(String.split(Map.get(params, "end_date", nil), "-"), fn num ->
         String.to_integer(num)
       end)
+
+    end_date =
+      get_end_date
       |> List.to_tuple()
       |> Timex.to_datetime()
 
