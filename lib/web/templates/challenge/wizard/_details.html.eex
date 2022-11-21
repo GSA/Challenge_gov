@@ -66,7 +66,7 @@
   <%= label @form, :custom_url, "Custom url (optional)", class: "col-md-4" %>
   <div>
     <p class="text-muted">
-      URLs will be formatted as follows: https://www.challenge.gov/?challenge={challenge-specific-identifier}. By default the challenge specific identifier WILL be the challenge name.
+      URLs will be formatted as follows: https://www.challenge.gov/?challenge={challenge-specific-identifier}. By default the challenge specific identifier will be the challenge name.
       <br/>
       You can set a custom challenge specific identifier in the box below. Only use alphanumeric characters and hyphens (-). Inclusion of other characters will cause the URL to be invalid and will be removed.
     </p>
