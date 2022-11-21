@@ -8,6 +8,8 @@ defmodule ChallengeGov.Reports do
   alias ChallengeGov.Repo
   alias ChallengeGov.Reports.Report
   alias ChallengeGov.SecurityLogs.SecurityLog
+  alias ChallengeGov.Reports.PublishActiveChallenges
+  alias ChallengeGov.Reports.NumberOfSubmissionsChallenge
 
   # @doc """
   # Stream security log records for CSV download
@@ -19,6 +21,66 @@ defmodule ChallengeGov.Reports do
       |> Repo.all()
 
     {:ok, records}
+  end
+
+  def report_stream_all_records(name) do
+  p = "published"
+  a = "approved"
+  records =
+    name
+    |> where([r], r.status == ^p or r.status==^a)
+    |> Repo.all()
+    {:ok, records}
+  end
+
+  def published_date_range_records(params) do
+
+    start_date =
+        Enum.map(String.split(Map.get(params, "start_date", nil),"-"), fn num-> String.to_integer(num) end)
+       |> List.to_tuple()
+       |> Timex.to_datetime()
+
+    end_date =
+       Enum.map(String.split(Map.get(params, "end_date", nil),"-"), fn num-> String.to_integer(num) end)
+      |> List.to_tuple()
+      |> Timex.to_datetime()
+
+    id =  Map.get(params, "id", nil)
+    records = get_recods_csv(id,start_date,end_date)
+
+    #{:ok, records}
+
+  end
+
+  def get_recods_csv("published-date-range",start_date,end_date) do
+   records =
+    PublishActiveChallenges
+    |> where([r], r.published_date >= ^start_date)
+    |> where([r], r.published_date <= ^end_date)
+    |> Repo.all()
+
+    {:ok, records}
+
+  end
+
+  def get_recods_csv("created-date-range",start_date,end_date) do
+    records =
+      PublishActiveChallenges
+      |> where([r], r.created_date >= ^start_date)
+      |> where([r], r.created_date <= ^end_date)
+      |> Repo.all()
+      {:ok, records}
+
+   end
+
+  def get_recods_csv("number-of-submissions-challenge",start_date,end_date) do
+    records =
+    NumberOfSubmissionsChallenge
+     |> where([r], r.created_date >= ^start_date)
+     |> where([r], r.created_date <= ^end_date)
+     |> Repo.all()
+
+     {:ok, records}
   end
 
   def filter_by_params(params) do
