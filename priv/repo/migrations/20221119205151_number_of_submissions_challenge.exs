@@ -17,5 +17,4 @@ defmodule ChallengeGov.Repo.Migrations.NumberOfSubmissionsChallenge do
   def down do
     execute "DROP VIEW NumberOfSubmissionsChallenge;"
   end
-
 end
