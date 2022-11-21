@@ -4,9 +4,9 @@ defmodule ChallengeGov.Reports.NumberOfSubmissionsChallenge do
   """
 
   use Ecto.Schema
-  alias ChallengeGov.Repo
+  # alias ChallengeGov.Repo
 
- # @type t :: %__MODULE__{}
+  # @type t :: %__MODULE__{}
 
   @primary_key false
   schema "numberofsubmissionschallenge" do
@@ -17,5 +17,4 @@ defmodule ChallengeGov.Reports.NumberOfSubmissionsChallenge do
     field :submissions, :integer
     field :current_timestamp, :utc_datetime
   end
-
 end

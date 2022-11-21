@@ -4,9 +4,9 @@ defmodule ChallengeGov.Reports.PublishActiveChallenges do
   """
 
   use Ecto.Schema
-  alias ChallengeGov.Repo
+  # alias ChallengeGov.Repo
 
- # @type t :: %__MODULE__{}
+  # @type t :: %__MODULE__{}
 
   @primary_key false
   schema "publishactivechallenges" do
@@ -26,5 +26,4 @@ defmodule ChallengeGov.Reports.PublishActiveChallenges do
     field :end_date, :string
     field :current_timestamp, :utc_datetime
   end
-
 end
