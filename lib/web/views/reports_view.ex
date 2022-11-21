@@ -7,6 +7,164 @@ defmodule Web.ReportsView do
   alias Web.FormView
   alias Web.SharedView
 
+  def render_query_log("recertified-accounts-range-header.csv", _assigns) do
+    headers = [
+      "user_id",
+      "account_type",
+      "action",
+      "logged_date",
+      "account_status",
+      "last_login",
+      "start_date",
+      "end_date",
+      "current_timestamp"
+    ]
+
+    CSV.dump_to_iodata([headers])
+  end
+
+  def render_query_log("decertified-accounts-range-header.csv", _assigns) do
+    headers = [
+      "user_id",
+      "account_type",
+      "action",
+      "logged_date",
+      "account_status",
+      "last_login",
+      "start_date",
+      "end_date",
+      "current_timestamp"
+    ]
+
+    CSV.dump_to_iodata([headers])
+  end
+
+  def render_query_log("reactivated-accounts-range-header.csv", _assigns) do
+    headers = [
+      "user_id",
+      "account_type",
+      "action",
+      "logged_date",
+      "account_status",
+      "last_login",
+      "start_date",
+      "end_date",
+      "current_timestamp"
+    ]
+
+    CSV.dump_to_iodata([headers])
+  end
+
+  def render_query_log("deactivated-accounts-range-header.csv", _assigns) do
+    headers = [
+      "user_id",
+      "account_type",
+      "action",
+      "logged_date",
+      "account_status",
+      "last_login",
+      "start_date",
+      "end_date",
+      "current_timestamp"
+    ]
+
+    CSV.dump_to_iodata([headers])
+  end
+
+  def render_query_log("accounts-created-date-range-header.csv", _assigns) do
+    headers = [
+      "user_id",
+      "account_type",
+      "created_date",
+      "account_status",
+      "last_login",
+      "start_date",
+      "end_date",
+      "current_timestamp"
+    ]
+
+    CSV.dump_to_iodata([headers])
+  end
+
+  def render_query_log("number-of-submissions-challenge-header.csv", _assigns) do
+    headers = [
+      "challenge_id",
+      "challenge_name",
+      "created_date",
+      "start_date",
+      "end_date",
+      "listing_type",
+      "submissions",
+      "current_timestamp"
+    ]
+
+    CSV.dump_to_iodata([headers])
+  end
+
+  def render_query_log("created-date-range-header.csv", _assigns) do
+    headers = [
+      "challenge_id",
+      "challenge_name",
+      "agency_name",
+      "agency_id",
+      "prize_amount",
+      "created_date",
+      "start_date",
+      "end_date",
+      "published_date",
+      "listing_type",
+      "challenge_type",
+      "challenge_suscribers",
+      "submissions",
+      "status",
+      "current_timestamp"
+    ]
+
+    CSV.dump_to_iodata([headers])
+  end
+
+  def render_query_log("published-date-range-header.csv", _assigns) do
+    headers = [
+      "challenge_id",
+      "challenge_name",
+      "agency_name",
+      "start_date",
+      "end_date",
+      "agency_id",
+      "prize_amount",
+      "created_date",
+      "published_date",
+      "listing_type",
+      "challenge_type",
+      "challenge_suscribers",
+      "submissions",
+      "status",
+      "current_timestamp"
+    ]
+
+    CSV.dump_to_iodata([headers])
+  end
+
+  def render_query_log("publish-active-challenge-header.csv", _assigns) do
+    headers = [
+      "challenge_id",
+      "challenge_name",
+      "agency_name",
+      "agency_id",
+      "prize_amount",
+      "created_date",
+      "published_date",
+      "listing_type",
+      "challenge_type",
+      "challenge_suscribers",
+      "submissions",
+      "status",
+      "current_timestamp"
+    ]
+
+    CSV.dump_to_iodata([headers])
+  end
+
   def render_security_log("security-log-header.csv", _assigns) do
     headers = [
       "ID",
@@ -49,12 +207,147 @@ defmodule Web.ReportsView do
 
   def render(file_name, %{record: record}) do
     csv = csv_schema_by_report(file_name, record)
-
     CSV.dump_to_iodata([csv])
+  end
+
+  defp csv_schema_by_report("decertified-accounts-range-content.csv", record) do
+    [
+      record.user_id,
+      record.account_type,
+      record.action,
+      record.logged_date,
+      record.account_status,
+      record.last_login,
+      record.start_date,
+      record.end_date,
+      record.current_timestamp
+    ]
+  end
+
+  defp csv_schema_by_report("recertified-accounts-range-content.csv", record) do
+    [
+      record.user_id,
+      record.account_type,
+      record.action,
+      record.logged_date,
+      record.account_status,
+      record.last_login,
+      record.start_date,
+      record.end_date,
+      record.current_timestamp
+    ]
+  end
+
+  defp csv_schema_by_report("reactivated-accounts-range-content.csv", record) do
+    [
+      record.user_id,
+      record.account_type,
+      record.action,
+      record.logged_date,
+      record.account_status,
+      record.last_login,
+      record.start_date,
+      record.end_date,
+      record.current_timestamp
+    ]
+  end
+
+  defp csv_schema_by_report("deactivated-accounts-range-content.csv", record) do
+    [
+      record.user_id,
+      record.account_type,
+      record.action,
+      record.logged_date,
+      record.account_status,
+      record.last_login,
+      record.start_date,
+      record.end_date,
+      record.current_timestamp
+    ]
+  end
+
+  defp csv_schema_by_report("accounts-created-date-range-content.csv", record) do
+    [
+      record.user_id,
+      record.account_type,
+      record.created_date,
+      record.account_status,
+      record.last_login,
+      record.start_date,
+      record.end_date,
+      record.current_timestamp
+    ]
   end
 
   defp csv_schema_by_report(file_name, record) do
     case file_name do
+      "number-of-submissions-challenge-content.csv" ->
+        [
+          record.challenge_id,
+          record.challenge_name,
+          record.created_date,
+          record.start_date,
+          record.end_date,
+          record.listing_type,
+          record.submissions,
+          record.current_timestamp
+        ]
+
+      "created-date-range-content.csv" ->
+        [
+          record.challenge_id,
+          record.challenge_name,
+          record.agency_name,
+          record.agency_id,
+          record.prize_amount,
+          record.created_date,
+          record.start_date,
+          record.end_date,
+          record.published_date,
+          record.listing_type,
+          record.challenge_type,
+          record.challenge_suscribers,
+          record.submissions,
+          record.status,
+          record.current_timestamp
+        ]
+
+      "published-date-range-content.csv" ->
+        [
+          record.challenge_id,
+          record.challenge_name,
+          record.agency_name,
+          record.start_date,
+          record.end_date,
+          record.agency_id,
+          record.prize_amount,
+          record.created_date,
+          record.published_date,
+          record.listing_type,
+          record.challenge_type,
+          record.challenge_suscribers,
+          record.submissions,
+          record.status,
+          record.current_timestamp
+        ]
+
+      "publish-active-challenge-content.csv" ->
+        [
+          record.challenge_id,
+          record.challenge_name,
+          record.agency_name,
+          record.agency_id,
+          record.prize_amount,
+          record.created_date,
+          record.published_date,
+          record.listing_type,
+          record.challenge_type,
+          record.challenge_suscribers,
+          record.submissions,
+          record.status,
+          record.current_timestamp
+        ]
+
       "security-log-content.csv" ->
         [
           record.id,
