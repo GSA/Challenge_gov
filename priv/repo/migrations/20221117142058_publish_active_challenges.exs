@@ -3,7 +3,7 @@ defmodule ChallengeGov.Repo.Migrations.PublishActiveChallenges do
 
   def up do
     execute """
-    CREATE VIEW PublishActiveChallenges AS
+    CREATE OR REPLACE VIEW PublishActiveChallenges AS
     select c.id challenge_id, c.title challenge_Name,
     a.name agency_name, c.agency_id,
     c.prize_total prize_amount,
@@ -29,6 +29,6 @@ defmodule ChallengeGov.Repo.Migrations.PublishActiveChallenges do
   end
 
   def down do
-    execute "DROP VIEW PublishActiveChallenges;"
+    execute "drop view if exists PublishActiveChallenges;"
   end
 end
