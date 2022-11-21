@@ -32,7 +32,7 @@
             <%= link "View Reports", to: Routes.reports_path(@conn, :new), class: "btn btn-primary" %>
           </div>
         </div>
-        <div class="card nav_card">
+        <div class="card nav_card me-5">
           <div class="card-body d-flex flex-column justify-content-center">
             <dl class="h-75">
               <dt>Agencies</dt>
@@ -40,6 +40,16 @@
               <br>
             </dl>
             <%= link "View Agencies", to: Routes.agency_path(@conn, :index), class: "btn btn-primary" %>
+          </div>
+        </div>
+        <div class="card nav_card">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <dl class="h-75">
+              <dt>PMO Reports</dt>
+              <dd>View reports</dd>
+              <br>
+            </dl>
+            <%= link "View Reports", to: Routes.reports_path(@conn, :pmo_page), class: "btn btn-primary" %>
           </div>
         </div>
       </div>
