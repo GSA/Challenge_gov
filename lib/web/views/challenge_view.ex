@@ -37,20 +37,17 @@ defmodule Web.ChallengeView do
 
   def challenge_managers_list(challenge) do
     challenge.challenge_manager_users
-    |> Enum.map(&"#{&1.first_name} #{&1.last_name} (#{&1.email})")
-    |> Enum.join(", ")
+    |> Enum.map_join(", ", &"#{&1.first_name} #{&1.last_name} (#{&1.email})")
   end
 
   def federal_partners_list(challenge) do
     challenge.federal_partners
-    |> Enum.map(&agency_name(&1))
-    |> Enum.join(", ")
+    |> Enum.map_join(", ", &agency_name(&1))
   end
 
   def non_federal_partners_list(challenge) do
     challenge.non_federal_partners
-    |> Enum.map(& &1.name)
-    |> Enum.join(", ")
+    |> Enum.map_join(", ", & &1.name)
   end
 
   def custom_url(challenge) do
@@ -819,8 +816,7 @@ defmodule Web.ChallengeView do
   def challenge_status(challenge) do
     challenge.status
     |> String.split(" ")
-    |> Enum.map(&String.capitalize/1)
-    |> Enum.join(" ")
+    |> Enum.map_join(" ", &String.capitalize/1)
   end
 
   def champion_display(challenge) do
