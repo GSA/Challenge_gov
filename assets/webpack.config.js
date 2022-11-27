@@ -83,13 +83,13 @@ module.exports = (env, options) => ({
       },
       {
         test: /\.s?css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+        use: [MiniCssExtractPlugin.loader, {loader: "css-loader", options: {url: false}}, "sass-loader"]
       }
     ]
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: '../css/[name].css' }),
-    new CopyWebpackPlugin([{ from: 'static/', to: '../' }]),
+    new CopyWebpackPlugin({patterns: [{ from: 'static/', to: '../'}]}),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery'

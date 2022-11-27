@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import moment from "moment"
 import { stripHtml } from "string-strip-html";
 import { Tooltip } from 'reactstrap'
-import NumberFormat from 'react-number-format';
+import { NumericFormat } from 'react-number-format';
 
 import { ChallengeTabs } from "../components/ChallengeTabs"
 import { Overview } from "../components/challenge_tabs/Overview"
@@ -340,7 +340,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
               { !challenge.prize_total || challenge.prize_total != 0 &&
                 <div className="item">
                   <p className="info-title">Total cash prizes:</p>
-                  <NumberFormat value={challenge.prize_total/100} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                  <NumericFormat value={challenge.prize_total/100} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 </div>
               }
               {!print &&

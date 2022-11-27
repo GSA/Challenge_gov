@@ -1,7 +1,7 @@
 import React from 'react'
 import { ChallengeTab } from "../ChallengeTab"
 import { stripHtml } from "string-strip-html";
-import NumberFormat from 'react-number-format';
+import { NumericFormat } from 'react-number-format';
 
 export const Prizes = ({challenge, print}) => {
   return (
@@ -9,7 +9,7 @@ export const Prizes = ({challenge, print}) => {
       {((challenge.prize_type === "monetary" || challenge.prize_type === "both") && challenge.prize_total > 0) &&
         <div className="card">
           <div className="card-body">
-            <NumberFormat className="ql-editor" value={challenge.prize_total/100} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+            <NumericFormat className="ql-editor" value={challenge.prize_total/100} displayType={'text'} thousandSeparator={true} prefix={'$'} />
           </div>
         </div>
       }

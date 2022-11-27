@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import queryString from 'query-string'
-import { BrowserRouter, Redirect, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, useLocation } from "react-router-dom";
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
@@ -16,7 +16,7 @@ const getRoutes = () => {
   return IndexRoutes.map((prop, i) => {
     if (prop.redirect) {
       return (
-        <Redirect from={prop.path} to={prop.pathTo} key={`route-${i}`} />
+        <Navigate from={prop.path} to={prop.pathTo} key={`route-${i}`} />
       );
     }
     return (
