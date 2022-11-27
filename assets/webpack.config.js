@@ -37,59 +37,37 @@ module.exports = (env, options) => ({
       {
         test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: '../css/[name].[ext]',
-          mimetype: 'application/font-woff',
-          fallback: 'file-loader'
-        }
+        type: 'asset/resource'
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: '../css/[name].[ext]',
-          mimetype: 'application/octet-stream',
-          fallback: 'file-loader'
-        }
+        type: 'asset/resource'
       },
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader',
-        options: {
-          name: '../css/[name].[ext]'
-        }
+        type: 'asset/resource'
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: '../css/[name].[ext]',
-          mimetype: 'application/image/svg+xml',
-          fallback: 'file-loader'
-        }
+        type: 'asset/resource'
       },      
       {
         test: /\.png(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: '../css/[name].[ext]',
-          mimetype: 'image/png',
-          fallback: 'file-loader'
-        }
+        type: 'asset/resource'
       },
       {
         test: /\.s?css$/,
-        use: [MiniCssExtractPlugin.loader, {loader: "css-loader", options: {url: false}}, "sass-loader"]
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
       }
     ]
   },
   plugins: [
-    new MiniCssExtractPlugin({ filename: '../css/[name].css' }),
     new CopyWebpackPlugin({patterns: [{ from: 'static/', to: '../'}]}),
+    new MiniCssExtractPlugin({ filename: '../css/[name].css' }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery'
