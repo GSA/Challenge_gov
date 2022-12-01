@@ -75,7 +75,7 @@ defmodule ChallengeGov.MixProject do
       {:phoenix_live_view, "~> 0.15.4", override: true},
       {:phoenix_pubsub, "~> 2.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:poison, "~> 3.0"},
+      {:poison, "~> 5.0"},
       {:porcelain, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
       {:quantum, "~> 3.0-rc"},
