@@ -8,8 +8,6 @@ defmodule ChallengeGov.Reports do
   alias ChallengeGov.Repo
   alias ChallengeGov.Reports.Report
   alias ChallengeGov.SecurityLogs.SecurityLog
-  alias ChallengeGov.Reports.PublishActiveChallenges
-  alias ChallengeGov.Reports.NumberOfSubmissionsChallenge
 
   # @doc """
   # Stream security log records for CSV download

@@ -5,21 +5,24 @@ defmodule ChallengeGov.CreatedChallengesRange do
   alias ChallengeGov.Challenges.Challenge
 
   def execute(params) do
-    %{"challenge" => %{"auto_publish_date" => auto_publish_date}, "end_date" => end_date, "id" => id, "start_date" => start_date} = params
+    %{
+      "end_date" => end_date,
+      "start_date" => start_date
+    } = params
 
-   s_date =
-    start_date
-    |> String.split("-")
-    |> Enum.map(&String.to_integer/1)
-    |> List.to_tuple()
-    |> Timex.to_datetime()
+    s_date =
+      start_date
+      |> String.split("-")
+      |> Enum.map(&String.to_integer/1)
+      |> List.to_tuple()
+      |> Timex.to_datetime()
 
-   e_date  =
-    end_date
-    |> String.split("-")
-    |> Enum.map(&String.to_integer/1)
-    |> List.to_tuple()
-    |> Timex.to_datetime()
+    e_date =
+      end_date
+      |> String.split("-")
+      |> Enum.map(&String.to_integer/1)
+      |> List.to_tuple()
+      |> Timex.to_datetime()
 
     from(c in Challenge)
     |> join(:left, [c], a in assoc(c, :agency))
@@ -27,9 +30,8 @@ defmodule ChallengeGov.CreatedChallengesRange do
     |> where(
       [c, a, s],
       fragment("? BETWEEN ? AND ?", c.inserted_at, ^s_date, ^e_date)
-      )
+    )
     |> select([c, a, s], %{
-
       challenge_id: c.id,
       challenge_name: c.title,
       start_date: ^start_date,
@@ -68,6 +70,7 @@ defmodule ChallengeGov.CreatedChallengesRange do
 
   defp build_data_structure(active_published_challenge_data) do
     now = DateTime.utc_now()
+
     Enum.map(active_published_challenge_data, fn c ->
       %{
         challenge_id: c.challenge_id,

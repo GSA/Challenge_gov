@@ -4,16 +4,17 @@ defmodule ChallengeGov.PublishedActiveChallenges do
 
   alias ChallengeGov.Challenges.Challenge
 
-  def execute(params) do
-    %{"challenge" => %{"auto_publish_date" => auto_publish_date}, "id" => id } = params
-
+  def execute() do
+    # %{
+    #   "challenge" => %{"auto_publish_date" => auto_publish_date},
+    #   "id" => id
+    #  } = params
 
     from(c in Challenge)
     |> join(:left, [c], a in assoc(c, :agency))
     |> join(:left, [c, a], s in assoc(c, :submissions))
     |> where([c], c.status == "published" and c.sub_status == "open")
     |> select([c, a, s], %{
-
       challenge_id: c.id,
       challenge_name: c.title,
       agency_id: c.agency_id,
@@ -50,6 +51,7 @@ defmodule ChallengeGov.PublishedActiveChallenges do
 
   defp build_data_structure(active_published_challenge_data) do
     now = DateTime.utc_now()
+
     Enum.map(active_published_challenge_data, fn c ->
       %{
         challenge_id: c.challenge_id,

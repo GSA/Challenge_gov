@@ -5,7 +5,7 @@ defmodule Web.ReportsController do
   alias ChallengeGov.CertificationLogs
   alias Web.ReportsView
   alias ChallengeGov.Reports.Report
-  alias ChallengeGov.Reports
+  # alias ChallengeGov.Reports
 
   plug(Web.Plugs.EnsureRole, [:super_admin, :admin])
 
@@ -47,27 +47,21 @@ defmodule Web.ReportsController do
     csv =
       case report_name do
         "publish-active-challenge" ->
-          records =
-            ChallengeGov.PublishedActiveChallenges.execute(params)
-            {:ok, records}
+          records = ChallengeGov.PublishedActiveChallenges.execute()
+          {:ok, records}
 
         "published-date-range" ->
-         records =
-          ChallengeGov.PublishedChallengesRange.execute(params)
+          records = ChallengeGov.PublishedChallengesRange.execute(params)
           {:ok, records}
-        "created-date-range" ->
 
-          records =
-            ChallengeGov.CreatedChallengesRange.execute(params)
-            {:ok, records}
+        "created-date-range" ->
+          records = ChallengeGov.CreatedChallengesRange.execute(params)
+          {:ok, records}
 
         "number-of-submissions-challenge" ->
-          records =
-            ChallengeGov.NumberOfSubmissions.execute(params)
-            {:ok, records}
+          records = ChallengeGov.NumberOfSubmissions.execute(params)
+          {:ok, records}
       end
-
-
 
     case csv do
       {:ok, records} ->
@@ -139,6 +133,7 @@ defmodule Web.ReportsController do
     _records =
       Enum.reduce_while(records, conn, fn record, conn ->
         chunk = ReportsView.render(file_name, record: record)
+
         case Plug.Conn.chunk(conn, chunk) do
           {:ok, conn} ->
             {:cont, conn}
@@ -147,7 +142,6 @@ defmodule Web.ReportsController do
             {:halt, conn}
         end
       end)
-
   end
 
   def export_certification_log(conn, params) do
