@@ -37,20 +37,17 @@ defmodule Web.ChallengeView do
 
   def challenge_managers_list(challenge) do
     challenge.challenge_manager_users
-    |> Enum.map(&"#{&1.first_name} #{&1.last_name} (#{&1.email})")
-    |> Enum.join(", ")
+    |> Enum.map_join(", ", &"#{&1.first_name} #{&1.last_name} (#{&1.email})")
   end
 
   def federal_partners_list(challenge) do
     challenge.federal_partners
-    |> Enum.map(&agency_name(&1))
-    |> Enum.join(", ")
+    |> Enum.map_join(", ", &agency_name(&1))
   end
 
   def non_federal_partners_list(challenge) do
     challenge.non_federal_partners
-    |> Enum.map(& &1.name)
-    |> Enum.join(", ")
+    |> Enum.map_join(", ", & &1.name)
   end
 
   def custom_url(challenge) do
@@ -515,79 +512,72 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def back_button(conn, challenge, section) do
-    if section != Enum.at(Challenges.sections(), 0).id && !last_wizard_section?(section) do
+  def previous_button(conn, challenge, section) do
+    if section != Enum.at(Challenges.sections(), 0).id && !is_final_section?(section) do
       if challenge.id do
-        submit("Back", name: "action", value: "back", class: "btn btn-link", formnovalidate: true)
+        submit("Previous",
+          name: "action",
+          value: "back",
+          class: "btn btn-outline-primary px-5",
+          formnovalidate: true
+        )
       else
-        link("Back",
+        link("Previous",
           to: Routes.challenge_path(conn, :index),
-          class: "btn btn-link",
+          class: "btn btn-outline-primary",
           formnovalidate: true
         )
       end
     end
   end
 
-  def save_and_return_to_review_button(section) do
-    if !last_wizard_section?(section) do
-      submit("Save and return to review",
+  def save_button(section, challenge) do
+    if !is_final_section?(section) do
+      submit("Save",
         name: "action",
-        value: "return_to_review",
-        class: "usa-button"
+        value: "save",
+        class: "btn btn-primary px-5 mr-2",
+        data: [confirm: confirmation_message(:save, challenge)]
       )
     end
   end
 
-  def cancel_button(conn) do
-    link("cancel",
+  def exit_button(conn, challenge) do
+    link("Exit",
       to: Routes.challenge_path(conn, :index),
-      class: "btn btn-link",
+      class: "btn btn-outline-primary px-5",
+      data: [confirm: confirmation_message(:exit, challenge)],
       formnovalidate: true
     )
   end
 
-  def save_draft_button(challenge, section) do
-    challenge_open? =
-      !!challenge && challenge.status === "published" && challenge.sub_status === "open"
-
-    if section != Enum.at(Challenges.sections(), -1).id && !challenge_open? do
-      submit("Save Draft",
-        name: "action",
-        value: "save_draft",
-        class: "btn btn-link float-right",
-        formnovalidate: true
-      )
-    end
-  end
-
-  def last_wizard_section?(section) do
-    section == Enum.at(Challenges.sections(), -1).id
-  end
-
   def preview_challenge_button(conn, challenge, section) do
-    if last_wizard_section?(section) do
-      link("Preview",
+    if is_final_section?(section) do
+      link("Preview Challenge in New Tab",
         to: Routes.public_preview_path(conn, :index, challenge: challenge.uuid),
-        class: "usa-button float-right",
+        class: "btn btn-outline-primary px-5 mr-2",
         target: "_blank"
       )
     end
   end
 
-  def submit_button(section, user) do
-    last_section = section == Enum.at(Challenges.sections(), -1).id
+  def next_or_submit(section, user, challenge) do
+    final_section? = is_final_section?(section)
 
     cond do
-      last_section && Challenges.allowed_to_submit?(user) ->
-        submit("Submit", name: "action", value: "submit", class: "usa-button float-right ")
+      final_section? && Challenges.allowed_to_submit?(user) && challenge.status == "draft" ->
+        submit("Submit for Approval",
+          name: "action",
+          value: "submit",
+          data: [confirm: confirmation_message(:submit_for_approval, challenge)],
+          class: "btn btn-primary px-5"
+        )
 
-      !last_section ->
+      !final_section? ->
         submit("Next",
           name: "action",
           value: "next",
-          style: "overflow: visible !important; user-select:all;",
-          class: "usa-button btn-testing float-right"
+          class: "btn btn-outline-primary px-5 btn-testing"
         )
 
       true ->
@@ -609,14 +599,14 @@ defmodule Web.ChallengeView do
   def prev_section(section), do: Challenges.prev_section(section)
 
   def remove_update_button(conn, challenge = %{announcement: announcement})
-      when not is_nil(announcement),
-      do:
-        link("Remove update",
-          to: Routes.challenge_path(conn, :remove_announcement, challenge.id),
-          method: :post,
-          class: "btn btn-outline-danger",
-          data: [confirm: "Are you sure you want to remove this update?"]
-        )
+      when not is_nil(announcement) do
+    link("Remove update",
+      to: Routes.challenge_path(conn, :remove_announcement, challenge.id),
+      method: :post,
+      class: "btn btn-outline-danger",
+      data: [confirm: "Are you sure you want to remove this update?"]
+    )
+  end
 
   def remove_update_button(_conn, _challenge), do: nil
 
@@ -819,8 +809,7 @@ defmodule Web.ChallengeView do
   def challenge_status(challenge) do
     challenge.status
     |> String.split(" ")
-    |> Enum.map(&String.capitalize/1)
-    |> Enum.join(" ")
+    |> Enum.map_join(" ", &String.capitalize/1)
   end
 
   def champion_display(challenge) do
@@ -846,4 +835,23 @@ defmodule Web.ChallengeView do
         end
     end
   end
+
+  defp confirmation_message(action, %{status: "draft"}),
+    do: "Are you sure you would like to #{action}?"
+
+  defp confirmation_message(action, nil),
+    do: "Are you sure you would like to #{action}?"
+
+  defp confirmation_message(:save, _),
+    do:
+      "Are you sure you would like to save? By doing so, your changes to this page will be published."
+
+  defp confirmation_message(:submit_for_approval, _),
+    do: "Are you certain you wish to submit this challenge for approval?"
+
+  defp confirmation_message(action, _),
+    do:
+      "Are you sure you would like to #{action}? By doing so, your recent changes to this page will not be saved."
+
+  defp is_final_section?(section), do: section == Enum.at(Challenges.sections(), -1).id
 end

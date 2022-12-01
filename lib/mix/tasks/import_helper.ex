@@ -245,104 +245,19 @@ defmodule Mix.Tasks.ImportHelper do
 
     # credo:disable-for-next-line
     IO.inspect("No match. Creating agency: #{created_agency.name} (#{created_agency.acronym})")
-    # TODO: Log agency to file
-
     mappings = Map.put(mappings, agency_name, created_agency.name)
     {created_agency, mappings}
   end
 
-  # defp fuzzy_match_agency(name, logo) do
-  #   agencies = Agencies.all_for_select()
-
-  #   match =
-  #     Enum.find(agencies, fn x ->
-  #       String.jaro_distance(x.name, name) >= 0.9
-  #     end)
-
-  #   if match != nil do
-  #     generate_agency_id_map(match)
-  #   else
-  #     create_new_agency(name, logo)
-  #   end
-  # end
-
-  # defp create_new_agency(name, logo) when is_nil(logo) do
-  #   acronym = generate_agency_acronym(name)
-
-  #   {:ok, agency} =
-  #     Agencies.create(:saved_to_file, %{
-  #       name: "#{name}",
-  #       acronym: acronym,
-  #       created_on_import: true
-  #     })
-
-  #   generate_agency_id_map(agency)
-  # end
-
-  # defp create_new_agency(name, logo_url) do
-  #   filename = Path.basename(logo_url)
-  #   extension = Path.extname(filename)
-
-  #   {:ok, tmp_file} = Stein.Storage.Temp.create(extname: extension)
-
-  #   request = Finch.build(:get, "https://www.challenge.gov/assets/netlify-uploads/#{filename}")
-  #   response = Finch.request(request, HTTPClient)
-
-  #   # response =
-  #   #   Finch.request(
-  #   #     HTTPClient,
-  #   #     :get,
-  #   #     "https://www.challenge.gov/assets/netlify-uploads/#{filename}"
-  #   #   )
-
-  #   acronym = generate_agency_acronym(name)
-
-  #   case response do
-  #     {:ok, %{status: 200, body: body}} ->
-  #       File.write!(tmp_file, body, [:binary])
-
-  #       {:ok, agency} =
-  #         Agencies.create(:saved_to_file, %{
-  #           avatar: %{path: tmp_file},
-  #           name: name,
-  #           acronym: acronym,
-  #           created_on_import: true
-  #         })
-
-  #       generate_agency_id_map(agency)
-
-  #     _ ->
-  #       {:ok, agency} =
-  #         Agencies.create(:saved_to_file, %{name: name, acronym: acronym, created_on_import: true})
-
-  #       generate_agency_id_map(agency)
-  #   end
-  # end
-
   defp generate_agency_acronym(name) do
     name
     |> String.split(" ")
-    |> Enum.map(fn word ->
+    |> Enum.map_join(fn word ->
       word
       |> String.upcase()
       |> String.first()
     end)
-    |> Enum.join()
   end
-
-  # defp generate_agency_id_map(agency = %{parent_id: nil}) do
-  #   %{
-  #     "agency_id" => agency.id,
-  #     "sub_agency_id" => nil
-  #   }
-  # end
-
-  # defp generate_agency_id_map(agency = %{parent_id: parent_id}) do
-  #   %{
-  #     "agency_id" => parent_id,
-  #     "sub_agency_id" => agency.id
-  #   }
-  # end
 
   # Federal Partner Helpers
   def match_federal_partners(_partners, challenge_id \\ nil, mappings \\ %{})
