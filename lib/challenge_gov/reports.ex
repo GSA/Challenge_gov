@@ -21,6 +21,75 @@ defmodule ChallengeGov.Reports do
     {:ok, records}
   end
 
+  # def report_stream_all_records(name) do
+  #   p = "published"
+  #   a = "approved"
+
+  #   records =
+  #     name
+  #     |> where([r], r.status == ^p or r.status == ^a)
+  #     |> Repo.all()
+
+  #   {:ok, records}
+  # end
+
+  # def published_date_range_records(params) do
+  #   get_start_date =
+  #     Enum.map(String.split(Map.get(params, "start_date", nil), "-"), fn num ->
+  #       String.to_integer(num)
+  #     end)
+
+  #   start_date =
+  #     get_start_date
+  #     |> List.to_tuple()
+  #     |> Timex.to_datetime()
+
+  #   get_end_date =
+  #     Enum.map(String.split(Map.get(params, "end_date", nil), "-"), fn num ->
+  #       String.to_integer(num)
+  #     end)
+
+  #   end_date =
+  #     get_end_date
+  #     |> List.to_tuple()
+  #     |> Timex.to_datetime()
+
+  #   id = Map.get(params, "id", nil)
+  #   records = get_recods_csv(id, start_date, end_date)
+
+  #   # {:ok, records}
+  # end
+
+  # def get_recods_csv("published-date-range", start_date, end_date) do
+  #   records =
+  #     PublishActiveChallenges
+  #     |> where([r], r.published_date >= ^start_date)
+  #     |> where([r], r.published_date <= ^end_date)
+  #     |> Repo.all()
+
+  #   {:ok, records}
+  # end
+
+  # def get_recods_csv("created-date-range", start_date, end_date) do
+  #   records =
+  #     PublishActiveChallenges
+  #     |> where([r], r.created_date >= ^start_date)
+  #     |> where([r], r.created_date <= ^end_date)
+  #     |> Repo.all()
+
+  #   {:ok, records}
+  # end
+
+  # def get_recods_csv("number-of-submissions-challenge", start_date, end_date) do
+  #   records =
+  #     NumberOfSubmissionsChallenge
+  #     |> where([r], r.created_date >= ^start_date)
+  #     |> where([r], r.created_date <= ^end_date)
+  #     |> Repo.all()
+
+  #   {:ok, records}
+  # end
+
   def filter_by_params(params) do
     %{"report" => %{"year" => year, "month" => month, "day" => day}} = params
 

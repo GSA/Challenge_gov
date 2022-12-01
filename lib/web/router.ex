@@ -166,6 +166,10 @@ defmodule Web.Router do
 
     get("/reports/security_log", ReportsController, :export_security_log)
     get("/reports/certification_log", ReportsController, :export_certification_log)
+
+    # PMO new reports by AD
+    get("/reports/pmo", ReportsController, :pmo_page)
+    get("/reports/pmo/:id", ReportsController, :pmo_report_name)
     get("/reports", ReportsController, :new)
 
     resources("/agencies", AgencyController)
