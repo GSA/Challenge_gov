@@ -4,8 +4,11 @@ defmodule ChallengeGov.Repo.Migrations.PublishActiveChallenges do
   def up do
     execute """
     CREATE OR REPLACE VIEW PublishActiveChallenges AS
-    select c.id challenge_id, c.title challenge_Name,
-    a.name agency_name, c.agency_id,
+    select
+    c.id challenge_id,
+    c.title challenge_Name,
+    a.name agency_name,
+    c.agency_id,
     c.prize_total prize_amount,
     c.inserted_at created_date,
     c.published_on published_date,

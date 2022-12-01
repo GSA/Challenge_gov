@@ -47,20 +47,27 @@ defmodule Web.ReportsController do
     csv =
       case report_name do
         "publish-active-challenge" ->
-          Reports.report_stream_all_records(ChallengeGov.Reports.PublishActiveChallenges)
+          records =
+            ChallengeGov.PublishedActiveChallenges.execute(params)
+            {:ok, records}
 
         "published-date-range" ->
-          Reports.published_date_range_records(params)
-
+         records =
+          ChallengeGov.PublishedChallengesRange.execute(params)
+          {:ok, records}
         "created-date-range" ->
-          Reports.published_date_range_records(params)
+
+          records =
+            ChallengeGov.CreatedChallengesRange.execute(params)
+            {:ok, records}
 
         "number-of-submissions-challenge" ->
-          Reports.published_date_range_records(params)
+          records =
+            ChallengeGov.NumberOfSubmissions.execute(params)
+            {:ok, records}
       end
 
-    # csv =
-    #   Reports.report_stream_all_records(ChallengeGov.Reports.PmoQuery2)
+
 
     case csv do
       {:ok, records} ->
@@ -132,7 +139,6 @@ defmodule Web.ReportsController do
     _records =
       Enum.reduce_while(records, conn, fn record, conn ->
         chunk = ReportsView.render(file_name, record: record)
-
         case Plug.Conn.chunk(conn, chunk) do
           {:ok, conn} ->
             {:cont, conn}
@@ -141,6 +147,7 @@ defmodule Web.ReportsController do
             {:halt, conn}
         end
       end)
+
   end
 
   def export_certification_log(conn, params) do
