@@ -62,7 +62,7 @@
                 <span class="mr-2">
                   <%= previous_button(@conn, @changeset.data, @section) %>
                 </span>
-                <%= exit_button(@conn, @challenge) %>
+                <%= exit_button(@conn, @challenge, @section) %>
                 <span class="float-right">
                   <%= save_button(@section, @challenge) %>
                   <%= preview_challenge_button(@conn, @challenge, @section) %>

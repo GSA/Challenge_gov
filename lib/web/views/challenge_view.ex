@@ -519,12 +519,14 @@ defmodule Web.ChallengeView do
           name: "action",
           value: "back",
           class: "btn btn-outline-primary px-5",
+          data: [confirm: confirmation_message(:previous, challenge)],
           formnovalidate: true
         )
       else
         link("Previous",
           to: Routes.challenge_path(conn, :index),
           class: "btn btn-outline-primary",
+          data: [confirm: confirmation_message(:previous, challenge)],
           formnovalidate: true
         )
       end
@@ -542,13 +544,21 @@ defmodule Web.ChallengeView do
     end
   end
 
-  def exit_button(conn, challenge) do
-    link("Exit",
-      to: Routes.challenge_path(conn, :index),
-      class: "btn btn-outline-primary px-5",
-      data: [confirm: confirmation_message(:exit, challenge)],
-      formnovalidate: true
-    )
+  def exit_button(conn, challenge, section) do
+    if is_final_section?(section) do
+      link("Exit",
+        to: Routes.challenge_path(conn, :index),
+        class: "btn btn-outline-primary px-5",
+        formnovalidate: true
+      )
+    else
+      link("Exit",
+        to: Routes.challenge_path(conn, :index),
+        class: "btn btn-outline-primary px-5",
+        data: [confirm: confirmation_message(:exit, challenge)],
+        formnovalidate: true
+      )
+    end
   end
 
   def preview_challenge_button(conn, challenge, section) do
@@ -577,6 +587,7 @@ defmodule Web.ChallengeView do
         submit("Next",
           name: "action",
           value: "next",
+          data: [confirm: confirmation_message(:next, challenge)],
           class: "btn btn-outline-primary px-5 btn-testing"
         )
 
@@ -836,22 +847,37 @@ defmodule Web.ChallengeView do
     end
   end
 
+  defp confirmation_message(:save, %{status: "draft"}),
+    do: "Are you sure you would like to save?"
+
+  defp confirmation_message(:save, _),
+    do: "Are you sure you would like to save? Recent changes will be published."
+
+  defp confirmation_message(:next, %{status: "draft"}),
+    do: "Are you sure you would like to continue? Recent changes will be saved"
+
+  defp confirmation_message(:next, _),
+    do: "Are you sure you would like to continue? Recent changes will be published."
+
+  defp confirmation_message(:previous, %{status: "draft"}),
+    do: "Are you sure you would like to go back? Recent changes will be saved."
+
+  defp confirmation_message(:previous, _),
+    do:
+      "Are you sure you would like to go back? By doing so, your changes to this page will be published."
+
+  defp confirmation_message(:exit, _),
+    do: "Are you sure you would like to exit? Unsaved changes will be lost."
+
+  defp confirmation_message(:submit_for_approval, _),
+    do:
+      "Are you sure you want to submit your challenge for GSA review? Making additional edits after submitting will revert your challenge to draft, and you will need to resubmit for review?"
+
   defp confirmation_message(action, %{status: "draft"}),
     do: "Are you sure you would like to #{action}?"
 
-  defp confirmation_message(action, nil),
-    do: "Are you sure you would like to #{action}?"
-
-  defp confirmation_message(:save, _),
-    do:
-      "Are you sure you would like to save? By doing so, your changes to this page will be published."
-
-  defp confirmation_message(:submit_for_approval, _),
-    do: "Are you certain you wish to submit this challenge for approval?"
-
   defp confirmation_message(action, _),
-    do:
-      "Are you sure you would like to #{action}? By doing so, your recent changes to this page will not be saved."
+    do: "Are you sure you would like to #{action}? Your recent changes will be published."
 
   defp is_final_section?(section), do: section == Enum.at(Challenges.sections(), -1).id
 end
