@@ -15,11 +15,8 @@ defmodule Web.ChallengeController do
 
   action_fallback(Web.FallbackController)
 
-  def index(conn, params) do
-    %{current_user: user} = conn.assigns
-
+  def index(conn = %{assigns: %{current_user: user}}, params) do
     pending_page = String.to_integer(params["pending"]["page"] || "1")
-
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
 
@@ -31,37 +28,14 @@ defmodule Web.ChallengeController do
       |> Challenges.all_for_user(filter: filter, sort: sort)
       |> aggregate_challenges_by_type()
 
-    conn
-    |> assign(:user, user)
-    |> assign(:pending_challenges, pending_challenges.page)
-    |> assign(:pending_pagination, pending_challenges.pagination)
-    |> assign(:challenges, challenges)
-    |> assign(:filter, filter)
-    |> assign(:sort, sort)
-    |> render("index.html")
-  end
-
-  defp aggregate_challenges_by_type(challenges) do
-    accumulator = %{published: [], draft: [], archived: []}
-
-    Enum.reduce(challenges, accumulator, fn challenge, acc ->
-      cond do
-        challenge.status in ["approved", "published"] and challenge.sub_status in ["open", nil] ->
-          Map.put(acc, :published, [challenge | acc.published])
-
-        challenge.status in ["draft", "gsa_review", "edits_requested", "unpublished"] ->
-          Map.put(acc, :draft, [challenge | acc.draft])
-
-        challenge.status == "published" and challenge.sub_status in ["closed", "archived"] ->
-          Map.put(acc, :archived, [challenge | acc.archived])
-
-        challenge.status == "archived" ->
-          Map.put(acc, :archived, [challenge | acc.archived])
-
-        true ->
-          acc
-      end
-    end)
+    render(conn, "index.html",
+      user: user,
+      pending_challenges: pending_challenges.page,
+      pending_pagination: pending_challenges.pagination,
+      challenges: challenges,
+      filter: filter,
+      sort: sort
+    )
   end
 
   def show(conn, %{"id" => id}) do
@@ -71,12 +45,12 @@ defmodule Web.ChallengeController do
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge) do
       Challenges.add_to_security_log(user, challenge, "read", Security.extract_remote_ip(conn))
 
-      conn
-      |> assign(:user, user)
-      |> assign(:challenge, challenge)
-      |> assign(:events, challenge.events)
-      |> assign(:supporting_documents, challenge.supporting_documents)
-      |> render("show.html")
+      render(conn, "show.html",
+        user: user,
+        challenge: challenge,
+        events: challenge.events,
+        supporting_documents: challenge.supporting_documents
+      )
     else
       {:error, :not_permitted} ->
         conn
@@ -93,11 +67,11 @@ defmodule Web.ChallengeController do
   def new(conn, %{"non_wizard" => "true"}) do
     %{current_user: user} = conn.assigns
 
-    conn
-    |> assign(:user, user)
-    |> assign(:action, action_name(conn))
-    |> assign(:changeset, Challenges.new(user))
-    |> render("new.html")
+    render(conn, "new.html",
+      user: user,
+      action: action_name(conn),
+      changeset: Challenges.new(user)
+    )
   end
 
   def new(conn, params) do
@@ -106,26 +80,27 @@ defmodule Web.ChallengeController do
     show_info = Map.get(params, "show_info", false)
     {:ok, wizard_info} = SiteContent.get("challenge_wizard_info")
 
-    conn
-    |> assign(:user, user)
-    |> assign(:changeset, Challenges.new(user))
-    |> assign(:path, Routes.challenge_path(conn, :create))
-    |> assign(:action, action_name(conn))
-    |> assign(:section, "general")
-    |> assign(:show_info, show_info)
-    |> assign(:wizard_info, wizard_info)
-    |> assign(:challenge, nil)
-    |> render("wizard.html")
+    render(conn, "wizard.html",
+      user: user,
+      changeset: Challenges.new(user),
+      path: Routes.challenge_path(conn, :create),
+      action: action_name(conn),
+      section: "general",
+      show_info: show_info,
+      wizard_info: wizard_info,
+      challenge: nil
+    )
   end
 
-  def create(conn, params = %{"action" => action, "challenge" => %{"section" => section}}) do
-    %{current_user: user} = conn.assigns
-
+  def create(
+        conn = %{assigns: %{current_user: user}},
+        params = %{"action" => action, "challenge" => %{"section" => section}}
+      ) do
     case Challenges.create(params, user, Security.extract_remote_ip(conn)) do
       {:ok, challenge} ->
-        if action == "save_draft" do
+        if action == "save" do
           conn
-          |> put_flash(:info, "Challenge saved as draft")
+          |> put_flash(:info, "Challenge saved")
           |> redirect(to: Routes.challenge_path(conn, :edit, challenge.id, section))
         else
           conn
@@ -142,15 +117,16 @@ defmodule Web.ChallengeController do
 
       {:error, changeset} ->
         conn
-        |> assign(:user, user)
-        |> assign(:path, Routes.challenge_path(conn, :create))
-        |> assign(:action, action_name(conn))
-        |> assign(:section, section)
-        |> assign(:changeset, changeset)
-        |> assign(:challenge, nil)
-        |> assign(:show_info, false)
         |> put_status(422)
-        |> render("wizard.html")
+        |> render("wizard.html",
+          user: user,
+          path: Routes.challenge_path(conn, :create),
+          action: action_name(conn),
+          section: section,
+          changeset: changeset,
+          challenge: nil,
+          show_info: false
+        )
     end
   end
 
@@ -498,5 +474,28 @@ defmodule Web.ChallengeController do
       _ ->
         conn
     end
+  end
+
+  defp aggregate_challenges_by_type(challenges) do
+    accumulator = %{published: [], draft: [], archived: []}
+
+    Enum.reduce(challenges, accumulator, fn challenge, acc ->
+      cond do
+        challenge.status in ["approved", "published"] and challenge.sub_status in ["open", nil] ->
+          Map.put(acc, :published, [challenge | acc.published])
+
+        challenge.status in ["draft", "gsa_review", "edits_requested", "unpublished"] ->
+          Map.put(acc, :draft, [challenge | acc.draft])
+
+        challenge.status == "published" and challenge.sub_status in ["closed", "archived"] ->
+          Map.put(acc, :archived, [challenge | acc.archived])
+
+        challenge.status == "archived" ->
+          Map.put(acc, :archived, [challenge | acc.archived])
+
+        true ->
+          acc
+      end
+    end)
   end
 end
