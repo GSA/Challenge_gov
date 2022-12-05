@@ -38,11 +38,13 @@ defmodule Web.MessageContextView do
 
   def display_multi_submission_titles(submission_ids) do
     submission_ids
-    |> Enum.map(fn submission_id ->
-      {:ok, submission} = Submissions.get(submission_id)
-      submission.title
-    end)
-    |> Enum.join(", ")
+    |> Enum.map_join(
+      ", ",
+      fn submission_id ->
+        {:ok, submission} = Submissions.get(submission_id)
+        submission.title
+      end
+    )
   end
 
   def display_challenge_title_link(message_context, user \\ nil)

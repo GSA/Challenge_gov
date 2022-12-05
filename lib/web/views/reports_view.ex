@@ -387,10 +387,12 @@ defmodule Web.ReportsView do
   defp parse_details(record) do
     if record do
       record
-      |> Enum.map(fn x ->
-        format_to_readable(x)
-      end)
-      |> Enum.join(", ")
+      |> Enum.map_join(
+        ", ",
+        fn x ->
+          format_to_readable(x)
+        end
+      )
     end
   end
 

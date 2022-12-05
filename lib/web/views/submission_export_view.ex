@@ -11,18 +11,20 @@ defmodule Web.SubmissionExportView do
 
   def submission_export_phases_text(submission_export) do
     submission_export.phase_ids
-    |> Enum.map(fn phase_id ->
-      phase_id
-      |> Phases.get()
-      |> case do
-        {:ok, phase} ->
-          phase.title
+    |> Enum.map_join(
+      ", ",
+      fn phase_id ->
+        phase_id
+        |> Phases.get()
+        |> case do
+          {:ok, phase} ->
+            phase.title
 
-        _ ->
-          nil
+          _ ->
+            nil
+        end
       end
-    end)
-    |> Enum.join(", ")
+    )
   end
 
   def submission_export_judging_status_text(submission_export) do

@@ -502,10 +502,12 @@ defmodule Web.FormView do
     capitalized_children_name =
       children_name
       |> String.split("_")
-      |> Enum.map(fn word ->
-        String.capitalize(word)
-      end)
-      |> Enum.join(" ")
+      |> Enum.map_join(
+        " ",
+        fn word ->
+          String.capitalize(word)
+        end
+      )
 
     content_tag(:div, class: "col dynamic-nested-form") do
       [
