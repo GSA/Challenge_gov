@@ -454,7 +454,7 @@ defmodule Web.ChallengeControllerTest do
 
       params = %{
         "id" => "#{challenge.id}",
-        "action" => "return_to_review",
+        "action" => "save",
         "challenge" => %{
           "section" => "general",
           "agency_id" => AgencyHelpers.create_agency().id,
@@ -488,7 +488,7 @@ defmodule Web.ChallengeControllerTest do
       assert get_flash(conn, :info) === "Changes saved"
 
       assert redirected_to(conn) ===
-               Routes.challenge_path(conn, :show, challenge.id) <> "#general"
+               Routes.challenge_path(conn, :edit, challenge.id, "general")
     end
 
     test "successfully update a section and go to next section", %{conn: conn} do
@@ -558,7 +558,7 @@ defmodule Web.ChallengeControllerTest do
 
       params = %{
         "id" => "#{challenge.id}",
-        "action" => "return_to_review",
+        "action" => "save",
         "challenge" => %{
           "section" => "general",
           "agency_id" => AgencyHelpers.create_agency().id,
@@ -630,7 +630,7 @@ defmodule Web.ChallengeControllerTest do
                ]
 
       assert redirected_to(conn) ===
-               Routes.challenge_path(conn, :show, challenge.id) <> "#general"
+               Routes.challenge_path(conn, :edit, challenge.id, "general")
     end
   end
 
