@@ -863,15 +863,14 @@ defmodule Web.ChallengeView do
     do: "Are you sure you would like to go back? Recent changes will be saved."
 
   defp confirmation_message(:previous, _),
-    do:
-      "Are you sure you would like to go back? By doing so, your changes to this page will be published."
+    do: "Are you sure you would like to go back? Recent changes will be published."
 
   defp confirmation_message(:exit, _),
     do: "Are you sure you would like to exit? Unsaved changes will be lost."
 
   defp confirmation_message(:submit_for_approval, _),
     do:
-      "Are you sure you want to submit your challenge for GSA review? Making additional edits after submitting will revert your challenge to draft, and you will need to resubmit for review?"
+      "Are you sure you want to submit your challenge for GSA review? Making additional edits after submitting will revert your challenge to draft, and you will need to resubmit for review."
 
   defp confirmation_message(action, %{status: "draft"}),
     do: "Are you sure you would like to #{action}?"
