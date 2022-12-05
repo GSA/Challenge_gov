@@ -544,6 +544,23 @@ defmodule Web.ChallengeView do
     end
   end
 
+  def exit_button(conn, challenge = %{id: id}, section) do
+    if is_final_section?(section) do
+      link("Exit",
+        to: Routes.challenge_path(conn, :show, id),
+        class: "btn btn-outline-primary px-5",
+        formnovalidate: true
+      )
+    else
+      link("Exit",
+        to: Routes.challenge_path(conn, :show, id),
+        class: "btn btn-outline-primary px-5",
+        data: [confirm: confirmation_message(:exit, challenge)],
+        formnovalidate: true
+      )
+    end
+  end
+
   def exit_button(conn, challenge, section) do
     if is_final_section?(section) do
       link("Exit",
