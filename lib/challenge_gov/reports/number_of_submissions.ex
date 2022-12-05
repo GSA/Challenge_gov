@@ -1,4 +1,4 @@
-defmodule ChallengeGov.CreatedChallengesRange do
+defmodule ChallengeGov.Reports.NumberOfSubmissions do
   @moduledoc false
   import Ecto.Query
 
@@ -31,36 +31,20 @@ defmodule ChallengeGov.CreatedChallengesRange do
       [c, a, s],
       fragment("? BETWEEN ? AND ?", c.inserted_at, ^s_date, ^e_date)
     )
+    |> where([c], c.status == "published")
     |> select([c, a, s], %{
       challenge_id: c.id,
       challenge_name: c.title,
+      created_date: c.inserted_at,
       start_date: ^start_date,
       end_date: ^end_date,
-      agency_id: c.agency_id,
-      agency_name: a.name,
-      prize_amount: c.prize_total,
-      created_date: c.inserted_at,
-      published_date: c.published_on,
-      how_to_enter_link: c.how_to_enter_link,
-      external_url: c.external_url,
-      status: c.status,
-      challenge_type: c.primary_type,
-      challenge_suscribers: c.gov_delivery_subscribers,
+      listing_type: 'Full',
       submissions_count: count(s)
     })
     |> group_by([c, a, s], [
       c.id,
       c.title,
-      c.agency_id,
-      a.name,
-      c.prize_total,
-      c.inserted_at,
-      c.published_on,
-      c.how_to_enter_link,
-      c.external_url,
-      c.status,
-      c.primary_type,
-      c.gov_delivery_subscribers
+      c.inserted_at
     ])
     |> ChallengeGov.Repo.all()
     |> build_data_structure()
@@ -75,28 +59,13 @@ defmodule ChallengeGov.CreatedChallengesRange do
       %{
         challenge_id: c.challenge_id,
         challenge_name: c.challenge_name,
-        agency_id: c.agency_id,
-        agency_name: c.agency_name,
         start_date: c.start_date,
         end_date: c.end_date,
-        challenge_suscribers: c.challenge_suscribers,
-        challenge_type: c.challenge_type,
         created_date: c.created_date,
-        prize_amount: c.prize_amount,
-        published_date: c.published_date,
-        status: c.status,
         submissions: c.submissions_count,
         current_timestamp: now,
-        listing_type:
-          set_listing_type(
-            c.how_to_enter_link,
-            c.external_url
-          )
+        listing_type: c.listing_type
       }
     end)
   end
-
-  def set_listing_type(nil, nil), do: "Full"
-  def set_listing_type(_, nil), do: "Hybrid"
-  def set_listing_type(_, _), do: "Title Only"
 end

@@ -1,42 +1,17 @@
-defmodule ChallengeGov.PublishedChallengesRange do
+defmodule ChallengeGov.Reports.PublishedActiveChallenges do
   @moduledoc false
   import Ecto.Query
 
   alias ChallengeGov.Challenges.Challenge
 
-  def execute(params) do
-    %{
-      "end_date" => end_date,
-      "start_date" => start_date
-    } = params
-
-    s_date =
-      start_date
-      |> String.split("-")
-      |> Enum.map(&String.to_integer/1)
-      |> List.to_tuple()
-      |> Timex.to_date()
-
-    e_date =
-      end_date
-      |> String.split("-")
-      |> Enum.map(&String.to_integer/1)
-      |> List.to_tuple()
-      |> Timex.to_date()
-
+  def execute() do
     from(c in Challenge)
     |> join(:left, [c], a in assoc(c, :agency))
     |> join(:left, [c, a], s in assoc(c, :submissions))
-    |> where(
-      [c, a, s],
-      fragment("? BETWEEN ? AND ?", c.published_on, ^s_date, ^e_date)
-    )
-    |> where([c], c.status == "published")
+    |> where([c], c.status == "published" and c.sub_status == "open")
     |> select([c, a, s], %{
       challenge_id: c.id,
       challenge_name: c.title,
-      start_date: ^start_date,
-      end_date: ^end_date,
       agency_id: c.agency_id,
       agency_name: a.name,
       prize_amount: c.prize_total,
@@ -78,8 +53,6 @@ defmodule ChallengeGov.PublishedChallengesRange do
         challenge_name: c.challenge_name,
         agency_id: c.agency_id,
         agency_name: c.agency_name,
-        start_date: c.start_date,
-        end_date: c.end_date,
         challenge_suscribers: c.challenge_suscribers,
         challenge_type: c.challenge_type,
         created_date: c.created_date,

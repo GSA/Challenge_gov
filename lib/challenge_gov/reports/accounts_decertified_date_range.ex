@@ -1,22 +1,15 @@
-defmodule ChallengeGov.AccountsStatusDateRange do
+defmodule ChallengeGov.Reports.AccountsDecertifiedDateRange do
   @moduledoc false
   import Ecto.Query
 
   alias ChallengeGov.Accounts.User
-  alias ChallengeGov.SecurityLogs.SecurityLog
+  alias ChallengeGov.CertificationLogs.CertificationLog
 
-  def execute(params, status) do
+  def execute(params) do
     %{
       "end_date" => end_date,
       "start_date" => start_date
     } = params
-
-    search_status =
-      if status == "deactivated" do
-        "(new_status: deactivated, previous_status: active)"
-      else
-        "(new_status: active, previous_status: deactivated)"
-      end
 
     s_date =
       start_date
@@ -33,17 +26,16 @@ defmodule ChallengeGov.AccountsStatusDateRange do
       |> Timex.to_datetime()
 
     from(u in User)
-    |> join(:left, [u], s in SecurityLog, on: u.email == s.originator_identifier)
+    |> join(:left, [u], s in CertificationLog, on: u.id == s.user_id)
     |> where(
       [u, s],
-      fragment("? BETWEEN ? AND ?", s.logged_at, ^s_date, ^e_date)
+      fragment("? BETWEEN ? AND ?", s.expires_at, ^s_date, ^e_date)
     )
-    |> where([u, s], fragment("? = ?", s.details, ^search_status))
     |> select([u, s], %{
       user_id: u.id,
       account_type: u.role,
-      action: ^status,
-      logged_date: s.logged_at,
+      action: "decertified",
+      logged_date: s.expires_at,
       account_status: u.status,
       last_login: u.last_active,
       start_date: ^start_date,

@@ -1,9 +1,9 @@
-defmodule ChallengeGov.AccountsRecertifiedDateRange do
+defmodule ChallengeGov.Reports.AccountsCreatedDateRange do
   @moduledoc false
   import Ecto.Query
 
+  # alias ChallengeGov.Challenges.Challenge
   alias ChallengeGov.Accounts.User
-  alias ChallengeGov.CertificationLogs.CertificationLog
 
   def execute(params) do
     %{
@@ -26,16 +26,11 @@ defmodule ChallengeGov.AccountsRecertifiedDateRange do
       |> Timex.to_datetime()
 
     from(u in User)
-    |> join(:left, [u], s in CertificationLog, on: u.id == s.user_id)
-    |> where(
-      [u, s],
-      fragment("? BETWEEN ? AND ?", s.certified_at, ^s_date, ^e_date)
-    )
-    |> select([u, s], %{
+    |> where([u], fragment("? BETWEEN ? AND ?", u.inserted_at, ^s_date, ^e_date))
+    |> select([u], %{
       user_id: u.id,
       account_type: u.role,
-      action: "recertified",
-      logged_date: s.certified_at,
+      created_date: u.inserted_at,
       account_status: u.status,
       last_login: u.last_active,
       start_date: ^start_date,
@@ -54,8 +49,7 @@ defmodule ChallengeGov.AccountsRecertifiedDateRange do
       %{
         user_id: c.user_id,
         account_type: c.account_type,
-        action: c.action,
-        logged_date: c.logged_date,
+        created_date: c.created_date,
         account_status: c.account_status,
         last_login: c.last_login,
         start_date: c.start_date,

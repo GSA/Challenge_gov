@@ -77,47 +77,47 @@ defmodule Web.ReportsController do
   end
 
   defp report_name("recertified-accounts-range", params) do
-    records = ChallengeGov.AccountsRecertifiedDateRange.execute(params)
+    records = ChallengeGov.Reports.AccountsRecertifiedDateRange.execute(params)
     {:ok, records}
   end
 
   defp report_name("decertified-accounts-range", params) do
-    records = ChallengeGov.AccountsDecertifiedDateRange.execute(params)
+    records = ChallengeGov.Reports.AccountsDecertifiedDateRange.execute(params)
     {:ok, records}
   end
 
   defp report_name("reactivated-accounts-range", params) do
-    records = ChallengeGov.AccountsStatusDateRange.execute(params, "reactivated")
+    records = ChallengeGov.Reports.AccountsStatusDateRange.execute(params, "reactivated")
     {:ok, records}
   end
 
   defp report_name("deactivated-accounts-range", params) do
-    records = ChallengeGov.AccountsStatusDateRange.execute(params, "deactivated ")
+    records = ChallengeGov.Reports.AccountsStatusDateRange.execute(params, "deactivated ")
     {:ok, records}
   end
 
   defp report_name("accounts-created-date-range", params) do
-    records = ChallengeGov.AccountsCreatedDateRange.execute(params)
+    records = ChallengeGov.Reports.AccountsCreatedDateRange.execute(params)
     {:ok, records}
   end
 
   defp report_name("number-of-submissions-challenge", params) do
-    records = ChallengeGov.NumberOfSubmissions.execute(params)
+    records = ChallengeGov.Reports.NumberOfSubmissions.execute(params)
     {:ok, records}
   end
 
   defp report_name("created-date-range", params) do
-    records = ChallengeGov.CreatedChallengesRange.execute(params)
+    records = ChallengeGov.Reports.CreatedChallengesRange.execute(params)
     {:ok, records}
   end
 
   defp report_name("published-date-range", params) do
-    records = ChallengeGov.PublishedChallengesRange.execute(params)
+    records = ChallengeGov.Reports.PublishedChallengesRange.execute(params)
     {:ok, records}
   end
 
   defp report_name("publish-active-challenge", _) do
-    records = ChallengeGov.PublishedActiveChallenges.execute()
+    records = ChallengeGov.Reports.PublishedActiveChallenges.execute()
     {:ok, records}
   end
 
