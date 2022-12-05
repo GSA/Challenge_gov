@@ -1,0 +1,74 @@
+<script>
+   function change_url(event){
+     document.getElementById("main").action = "/reports/pmo/" + event.value;
+     if(event.value == "publish-active-challenge"){
+        document.getElementById("start_date").disabled = true;
+        document.getElementById("end_date").disabled = true;
+     } else{
+        document.getElementById("start_date").disabled = false;
+        document.getElementById("end_date").disabled = false;
+      }
+     console.log(document.getElementById("main").action)
+   }
+</script>
+
+<div class="content-header">
+  <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
+      %{text: "Site Management", route: Routes.site_content_path(@conn, :index)},
+      %{text: "PMO Reports"},
+    ])%>
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">
+          PMO Reports
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="row justify-content-md-center">
+
+    <div class="col-md-5">
+    <h3>PMO Reports</h3>
+    <form id="main" action="/reports/pmo/publish-active-challenge">
+
+      <div class="mb-3">
+        <label for="" class="form-label">Report Name</label>
+        <select  class="form-select" onchange="change_url(this)">
+          <option value="publish-active-challenge">Currently published/active challenges</option>
+          <option value="published-date-range">Challenges published within a specified date range</option>
+          <option value="created-date-range">Challenges created within a specified date range</option>
+          <option value="number-of-submissions-challenge">Number of submissions by challenge within a specified date range (fully hosted challenged only)</option>
+          <option value="accounts-created-date-range">List of user accounts "created" within a specified date range</option>
+          <option value="deactivated-accounts-range">List of user accounts "deactivated" within a specified date range:</option>
+          <option value="reactivated-accounts-range">List of user accounts "reactivated" within a specified date range</option>
+          <option value="decertified-accounts-range">List of user accounts "decertified" within a specified date range</option>
+          <option value="recertified-accounts-range">List of user accounts "recertified" within a specified date range</option>
+        </select>
+
+      </div>
+      <div class="mb-3">
+          <%#= date_and_time_inputs(@conn, @form, :auto_publish_date, "Publish date", "challenge_auto_publish") %>
+          <label for="" class="form-label">Start Date</label>
+          <input class="form-control js-datetime-input" id="start_date" label="Start date" name="start_date" type="date" required="" disabled dtype="datetime-local">
+          <input id="start_date" label="Publish date" name="challenge[auto_publish_date]" type="hidden" value="">
+      </div>
+      <div class="mb-3">
+          <label for="" class="form-label">End Date</label>
+          <input class="form-control js-datetime-input" id="end_date" label="End date" name="end_date" type="date" required="" disabled>
+          <input id="challenge_auto_publish_date" label="Publish date" name="challenge[auto_publish_date]" type="hidden" value="">
+
+      </div>
+      <button type="submit" class="btn btn-primary">Export report</button>
+    </form>
+
+    </div>
+
+  </div>
+</section>
+
+<hr class="ch-report-hr"/>
