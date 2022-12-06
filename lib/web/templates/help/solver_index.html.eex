@@ -35,7 +35,7 @@
             <div class="text-center help-card__section">
               <i class="dashboard-card-icon fa fa-tools"></i>
               <h4 class="m-4">User Guide</h4>
-              <p>Our <%= link("user guide", to: Routes.static_path(@conn, "/pdfs/solver_user_guide.pdf"), target: "_blank") %> is full of useful information to help you get started.</p>
+              <p>Our <%= link("user guide", to: "https://www.challenge.gov/user-guide/", target: "_blank") %> is full of useful information to help you get started.</p>
             </div>
           </div>
         </div>
