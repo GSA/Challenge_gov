@@ -26,7 +26,10 @@
     </div>
         <hr>
     <div class="form-group">
-      <label class="col">Upload Files (optional)<br> <small style="padding-bottom: 10px;">Follow the steps below to attach files to your submission. (Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff) To add addtional files, repeat steps 1-3.</small></label>
+      <label class="col">Upload Files (optional)<br>
+      <small style="padding-bottom: 10px;">Follow the steps below to attach files to your submission. To add additional files, repeat steps 1-3. <br><br>
+       <b>Allowed file types:</b> .pdf, .txt, .csv, .jpg, .png, .tiff;  <b>Max file size:</b> 8 MB
+      </small></label>
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
