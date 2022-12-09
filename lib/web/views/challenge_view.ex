@@ -592,7 +592,8 @@ defmodule Web.ChallengeView do
     final_section? = is_final_section?(section)
 
     cond do
-      final_section? && Challenges.allowed_to_submit?(user) && challenge.status == "draft" ->
+      final_section? && Challenges.allowed_to_submit?(user) &&
+          challenge.status in ["draft", "edits_requested"] ->
         submit("Submit for Approval",
           name: "action",
           value: "submit",
@@ -864,20 +865,21 @@ defmodule Web.ChallengeView do
     end
   end
 
-  defp confirmation_message(:save, %{status: "draft"}),
+  defp confirmation_message(:save, %{status: status}) when status in ["draft", "edits_requested"],
     do: "Are you sure you would like to save?"
 
   defp confirmation_message(:save, _),
     do: "Are you sure you would like to save? Recent changes will be published."
 
-  defp confirmation_message(:next, %{status: "draft"}),
+  defp confirmation_message(:next, %{status: status}) when status in ["draft", "edits_requested"],
     do: "Are you sure you would like to continue? Recent changes will be saved"
 
   defp confirmation_message(:next, _),
     do: "Are you sure you would like to continue? Recent changes will be published."
 
-  defp confirmation_message(:previous, %{status: "draft"}),
-    do: "Are you sure you would like to go back? Recent changes will be saved."
+  defp confirmation_message(:previous, %{status: status})
+       when status in ["draft", "edits_requested"],
+       do: "Are you sure you would like to go back? Recent changes will be saved."
 
   defp confirmation_message(:previous, _),
     do: "Are you sure you would like to go back? Recent changes will be published."
@@ -889,8 +891,9 @@ defmodule Web.ChallengeView do
     do:
       "Are you sure you want to submit your challenge for GSA review? Making additional edits after submitting will revert your challenge to draft, and you will need to resubmit for review."
 
-  defp confirmation_message(action, %{status: "draft"}),
-    do: "Are you sure you would like to #{action}?"
+  defp confirmation_message(action, %{status: status})
+       when status in ["draft", "edits_requested"],
+       do: "Are you sure you would like to #{action}?"
 
   defp confirmation_message(action, _),
     do: "Are you sure you would like to #{action}? Your recent changes will be published."
