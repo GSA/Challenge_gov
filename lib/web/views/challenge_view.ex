@@ -592,7 +592,8 @@ defmodule Web.ChallengeView do
     final_section? = is_final_section?(section)
 
     cond do
-      final_section? && Challenges.allowed_to_submit?(user) && challenge.status == "draft" ->
+      final_section? && Challenges.allowed_to_submit?(user) &&
+          challenge.status in ["draft", "edits_requested"] ->
         submit("Submit for Approval",
           name: "action",
           value: "submit",
