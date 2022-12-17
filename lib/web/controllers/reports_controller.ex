@@ -92,7 +92,7 @@ defmodule Web.ReportsController do
   end
 
   defp report_name("deactivated-accounts-range", params) do
-    records = ChallengeGov.Reports.AccountsStatusDateRange.execute(params, "deactivated ")
+    records = ChallengeGov.Reports.AccountsStatusDateRange.execute(params, "deactivated")
     {:ok, records}
   end
 

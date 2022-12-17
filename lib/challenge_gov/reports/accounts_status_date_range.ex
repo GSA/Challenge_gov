@@ -13,9 +13,9 @@ defmodule ChallengeGov.Reports.AccountsStatusDateRange do
 
     search_status =
       if status == "deactivated" do
-        "(new_status: deactivated, previous_status: active)"
+        "{\"new_status\": \"deactivated\", \"previous_status\": \"active\"}"
       else
-        "(new_status: active, previous_status: deactivated)"
+        "{\"new_status\": \"active\", \"previous_status\": \"deactivated\"}"
       end
 
     s_date =
@@ -23,22 +23,22 @@ defmodule ChallengeGov.Reports.AccountsStatusDateRange do
       |> String.split("-")
       |> Enum.map(&String.to_integer/1)
       |> List.to_tuple()
-      |> Timex.to_datetime()
+      |> Timex.to_date()
 
     e_date =
       end_date
       |> String.split("-")
       |> Enum.map(&String.to_integer/1)
       |> List.to_tuple()
-      |> Timex.to_datetime()
+      |> Timex.to_date()
 
     from(u in User)
     |> join(:left, [u], s in SecurityLog, on: u.email == s.originator_identifier)
     |> where(
       [u, s],
-      fragment("? BETWEEN ? AND ?", s.logged_at, ^s_date, ^e_date)
+      fragment("? BETWEEN ? AND ?", fragment("?::date", s.logged_at), ^s_date, ^e_date)
     )
-    |> where([u, s], fragment("? = ?", s.details, ^search_status))
+    |> where([u, s], fragment("? like ?", fragment("?::Text", s.details), ^search_status))
     |> select([u, s], %{
       user_id: u.id,
       account_type: u.role,
