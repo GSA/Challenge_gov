@@ -26,20 +26,23 @@ defmodule ChallengeGov.Reports.PublishedChallengesRange do
 
     from(c in Challenge)
     |> join(:left, [c], a in assoc(c, :agency))
-    |> join(:left, [c, a], s in assoc(c, :submissions))
+    |> join(:left, [c, a], b in assoc(c, :sub_agency))
+    |> join(:left, [c, a, b], s in assoc(c, :submissions))
     |> where(
-      [c, a, s],
+      [c, a, b, s],
       fragment("? BETWEEN ? AND ?", c.published_on, ^s_date, ^e_date)
     )
     |> where([c], c.status == "published")
-    |> select([c, a, s], %{
+    |> select([c, a, b, s], %{
       challenge_id: c.id,
       challenge_name: c.title,
       start_date: ^start_date,
       end_date: ^end_date,
       agency_id: c.agency_id,
       agency_name: a.name,
-      prize_amount: c.prize_total,
+      sub_agency_id: c.sub_agency_id,
+      sub_agency_name: b.name,
+      prize_amount: c.prize_total / 100,
       created_date: c.inserted_at,
       published_date: c.published_on,
       how_to_enter_link: c.how_to_enter_link,
@@ -49,11 +52,13 @@ defmodule ChallengeGov.Reports.PublishedChallengesRange do
       challenge_suscribers: c.gov_delivery_subscribers,
       submissions_count: count(s)
     })
-    |> group_by([c, a, s], [
+    |> group_by([c, a, b, s], [
       c.id,
       c.title,
       c.agency_id,
       a.name,
+      c.sub_agency_id,
+      b.name,
       c.prize_total,
       c.inserted_at,
       c.published_on,
@@ -78,6 +83,8 @@ defmodule ChallengeGov.Reports.PublishedChallengesRange do
         challenge_name: c.challenge_name,
         agency_id: c.agency_id,
         agency_name: c.agency_name,
+        sub_agency_id: c.sub_agency_id,
+        sub_agency_name: c.sub_agency_name,
         start_date: c.start_date,
         end_date: c.end_date,
         challenge_suscribers: c.challenge_suscribers,

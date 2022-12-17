@@ -16,17 +16,20 @@ defmodule ChallengeGov.Reports.AccountsCreatedDateRange do
       |> String.split("-")
       |> Enum.map(&String.to_integer/1)
       |> List.to_tuple()
-      |> Timex.to_datetime()
+      |> Timex.to_date()
 
     e_date =
       end_date
       |> String.split("-")
       |> Enum.map(&String.to_integer/1)
       |> List.to_tuple()
-      |> Timex.to_datetime()
+      |> Timex.to_date()
 
     from(u in User)
-    |> where([u], fragment("? BETWEEN ? AND ?", u.inserted_at, ^s_date, ^e_date))
+    |> where(
+      [u],
+      fragment("? BETWEEN ? AND ?", fragment("?::date", u.inserted_at), ^s_date, ^e_date)
+    )
     |> select([u], %{
       user_id: u.id,
       account_type: u.role,
