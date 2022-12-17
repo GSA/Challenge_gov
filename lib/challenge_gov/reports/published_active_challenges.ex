@@ -11,8 +11,7 @@ defmodule ChallengeGov.Reports.PublishedActiveChallenges do
     |> join(:left, [c, a, b], s in assoc(c, :submissions))
     |> where(
       [c],
-      c.status == "published" and
-        (c.sub_status == "open" or c.sub_status == "closed" or is_nil(c.sub_status))
+      c.status == "published" and (c.sub_status == "open" or is_nil(c.sub_status))
     )
     |> select([c, a, b, s], %{
       challenge_id: c.id,
@@ -27,6 +26,7 @@ defmodule ChallengeGov.Reports.PublishedActiveChallenges do
       how_to_enter_link: c.how_to_enter_link,
       external_url: c.external_url,
       status: c.status,
+      sub_status: c.sub_status,
       challenge_type: c.primary_type,
       challenge_suscribers: c.gov_delivery_subscribers,
       submissions_count: count(s)
@@ -44,6 +44,7 @@ defmodule ChallengeGov.Reports.PublishedActiveChallenges do
       c.how_to_enter_link,
       c.external_url,
       c.status,
+      c.sub_status,
       c.primary_type,
       c.gov_delivery_subscribers
     ])
@@ -70,6 +71,7 @@ defmodule ChallengeGov.Reports.PublishedActiveChallenges do
         prize_amount: c.prize_amount,
         published_date: c.published_date,
         status: c.status,
+        sub_status: c.sub_status,
         submissions: c.submissions_count,
         current_timestamp: now,
         listing_type:
