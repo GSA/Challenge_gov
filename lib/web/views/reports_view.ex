@@ -118,6 +118,7 @@ defmodule Web.ReportsView do
       "challenge_suscribers",
       "submissions",
       "status",
+      "sub_status",
       "current_timestamp"
     ]
 
@@ -142,6 +143,7 @@ defmodule Web.ReportsView do
       "challenge_suscribers",
       "submissions",
       "status",
+      "sub_status",
       "current_timestamp"
     ]
 
@@ -164,6 +166,7 @@ defmodule Web.ReportsView do
       "challenge_suscribers",
       "submissions",
       "status",
+      "sub_status",
       "current_timestamp"
     ]
 
@@ -315,6 +318,7 @@ defmodule Web.ReportsView do
           record.challenge_suscribers,
           record.submissions,
           record.status,
+          record.sub_status,
           record.current_timestamp
         ]
 
@@ -336,6 +340,7 @@ defmodule Web.ReportsView do
           record.challenge_suscribers,
           record.submissions,
           record.status,
+          record.sub_status,
           record.current_timestamp
         ]
 
@@ -355,6 +360,7 @@ defmodule Web.ReportsView do
           record.challenge_suscribers,
           record.submissions,
           record.status,
+          record.sub_status,
           record.current_timestamp
         ]
 
