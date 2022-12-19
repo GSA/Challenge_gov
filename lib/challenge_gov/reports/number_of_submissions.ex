@@ -31,7 +31,7 @@ defmodule ChallengeGov.Reports.NumberOfSubmissions do
       [c, a, s],
       fragment("? BETWEEN ? AND ?", fragment("?::date", s.inserted_at), ^s_date, ^e_date)
     )
-    |> where([c], is_nil(c.how_to_enter_link) and is_nil(c.external_url))
+    |> where([c], is_nil(c.how_to_enter_link) and is_nil(c.external_url) and s.status == "submitted")
     |> select([c, a, s], %{
       challenge_id: c.id,
       challenge_name: c.title,
