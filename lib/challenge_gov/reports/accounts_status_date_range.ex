@@ -13,9 +13,9 @@ defmodule ChallengeGov.Reports.AccountsStatusDateRange do
 
     search_status =
       if status == "deactivated" do
-        "{\"new_status\": \"deactivated\", \"previous_status\": \"active\"}"
+        "%\"new_status\": \"deactivated\"%"
       else
-        "{\"new_status\": \"active\", \"previous_status\": \"deactivated\"}"
+        "%\"new_status\": \"active\"%"
       end
 
     s_date =
@@ -33,7 +33,7 @@ defmodule ChallengeGov.Reports.AccountsStatusDateRange do
       |> Timex.to_date()
 
     from(u in User)
-    |> join(:left, [u], s in SecurityLog, on: u.email == s.originator_identifier)
+    |> join(:left, [u], s in SecurityLog, on: u.id == s.target_id)
     |> where(
       [u, s],
       fragment("? BETWEEN ? AND ?", fragment("?::date", s.logged_at), ^s_date, ^e_date)
