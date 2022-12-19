@@ -33,6 +33,7 @@ defmodule ChallengeGov.Reports.PublishedChallengesRange do
       fragment("? BETWEEN ? AND ?", c.published_on, ^s_date, ^e_date)
     )
     |> where([c], c.status == "published")
+    |> where([s], s.status == "submitted")
     |> select([c, a, b, s], %{
       challenge_id: c.id,
       challenge_name: c.title,

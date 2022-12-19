@@ -32,6 +32,7 @@ defmodule ChallengeGov.Reports.CreatedChallengesRange do
       [c, a, b, s],
       fragment("? BETWEEN ? AND ?", fragment("?::date", c.inserted_at), ^s_date, ^e_date)
     )
+    |> where([s], s.status == "submitted")
     |> select([c, a, b, s], %{
       challenge_id: c.id,
       challenge_name: c.title,

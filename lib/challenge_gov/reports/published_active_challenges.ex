@@ -14,6 +14,7 @@ defmodule ChallengeGov.Reports.PublishedActiveChallenges do
       c.status == "published" and
         (c.sub_status == "open" or is_nil(c.sub_status))
     )
+    |> where([s], s.status == "submitted")
     |> select([c, a, b, s], %{
       challenge_id: c.id,
       challenge_name: c.title,
