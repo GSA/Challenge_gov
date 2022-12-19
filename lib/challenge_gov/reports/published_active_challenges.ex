@@ -8,13 +8,12 @@ defmodule ChallengeGov.Reports.PublishedActiveChallenges do
     from(c in Challenge)
     |> join(:left, [c], a in assoc(c, :agency))
     |> join(:left, [c, a], b in assoc(c, :sub_agency))
-    |> join(:left, [c, a, b], s in assoc(c, :submissions))
+    |> join(:left, [c, a, b], s in assoc(c, :submissions), on: s.status == "submitted")
     |> where(
       [c],
       c.status == "published" and
         (c.sub_status == "open" or is_nil(c.sub_status))
     )
-    |> where([s], s.status == "submitted")
     |> select([c, a, b, s], %{
       challenge_id: c.id,
       challenge_name: c.title,

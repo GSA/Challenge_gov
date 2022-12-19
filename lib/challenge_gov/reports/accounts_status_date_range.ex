@@ -15,7 +15,7 @@ defmodule ChallengeGov.Reports.AccountsStatusDateRange do
       if status == "deactivated" do
         "%\"new_status\": \"deactivated\"%"
       else
-        "%\"new_status\": \"active\"%"
+        "%\"new_status\": \"active\", \"previous_status\": \"deactivated\"%"
       end
 
     s_date =
