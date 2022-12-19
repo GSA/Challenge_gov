@@ -26,13 +26,12 @@ defmodule ChallengeGov.Reports.NumberOfSubmissions do
 
     from(c in Challenge)
     |> join(:left, [c], a in assoc(c, :agency))
-    |> join(:left, [c, a], s in assoc(c, :submissions))
+    |> join(:left, [c, a], s in assoc(c, :submissions), on: s.status == "submitted")
     |> where(
       [c, a, s],
       fragment("? BETWEEN ? AND ?", fragment("?::date", s.inserted_at), ^s_date, ^e_date)
     )
     |> where([c], is_nil(c.how_to_enter_link) and is_nil(c.external_url))
-    |> where([s], s.status == "submitted")
     |> select([c, a, s], %{
       challenge_id: c.id,
       challenge_name: c.title,
