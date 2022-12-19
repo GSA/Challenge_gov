@@ -33,7 +33,7 @@ defmodule ChallengeGov.Reports.AccountsStatusDateRange do
       |> Timex.to_date()
 
     from(u in User)
-    |> join(:left, [u], s in SecurityLog, on: u.email == s.originator_identifier)
+    |> join(:left, [u], s in SecurityLog, on: u.id == s.target_id)
     |> where(
       [u, s],
       fragment("? BETWEEN ? AND ?", fragment("?::date", s.logged_at), ^s_date, ^e_date)
