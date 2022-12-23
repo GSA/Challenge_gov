@@ -14,6 +14,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery
+  alias ChallengeGov.HTTPClient
   alias Web.Endpoint
   alias Web.Router.Helpers, as: Routes
 
@@ -24,13 +25,9 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       |> code()
       |> GovDelivery.remove_topic_endpoint()
 
-    response =
-      Mojito.delete(
-        endpoint,
-        [auth_headers()]
-      )
+    request = Finch.build(:delete, endpoint, auth_headers())
 
-    case response do
+    case Finch.request(request, HTTPClient) do
       {:ok, %{status_code: 200}} ->
         Challenges.clear_gov_delivery_topic(challenge)
         {:ok, :removed}
@@ -47,17 +44,17 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   def add_topic(challenge) do
     body = xml_topic_from_challenge(challenge)
 
-    response =
-      Mojito.post(
+    request =
+      Finch.build(
+        :post,
         GovDelivery.create_topic_endpoint(),
         [
-          auth_headers(),
-          {"content-type", "application/xml; charset: utf-8"}
+          auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
         ],
         body
       )
 
-    case response do
+    case Finch.request(request, HTTPClient) do
       {:ok, %{status_code: 200}} ->
         Challenges.store_gov_delivery_topic(challenge, code(challenge.id))
         set_category(challenge)
@@ -74,17 +71,17 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   def subscribe_user_general(user) do
     body = xml_subscribe_general(user)
 
-    response =
-      Mojito.post(
+    request =
+      Finch.build(
+        :post,
         GovDelivery.subscribe_endpoint(),
         [
-          auth_headers(),
-          {"content-type", "application/xml; charset: utf-8"}
+          auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
         ],
         body
       )
 
-    case response do
+    case Finch.request(request, HTTPClient) do
       {:ok, %{status_code: 200}} ->
         {:ok, :subscribed}
 
@@ -100,17 +97,17 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   def subscribe_user_challenge(user, challenge) do
     body = xml_subscribe_challenge(user, challenge)
 
-    response =
-      Mojito.post(
+    request =
+      Finch.build(
+        :post,
         GovDelivery.subscribe_endpoint(),
         [
-          auth_headers(),
-          {"content-type", "application/xml; charset: utf-8"}
+          auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
         ],
         body
       )
 
-    case response do
+    case Finch.request(request, HTTPClient) do
       {:ok, %{status_code: 200}} ->
         {:ok, :subscribed}
 
@@ -126,17 +123,17 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   def send_bulletin(challenge, subject, body) do
     body = xml_send_bulletin(challenge, subject, body)
 
-    response =
-      Mojito.post(
+    request =
+      Finch.build(
+        :post,
         GovDelivery.send_bulletin_endpoint(),
         [
-          auth_headers(),
-          {"content-type", "application/xml; charset: utf-8"}
+          auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
         ],
         body
       )
 
-    case response do
+    case Finch.request(request, HTTPClient) do
       {:ok, %{status_code: 200}} ->
         {:ok, :sent}
 
@@ -151,11 +148,11 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   @impl ChallengeGov.GovDelivery
   def get_topic_subscribe_count(challenge) do
     response =
-      Mojito.get(
+      Finch.build(
+        :get,
         GovDelivery.topic_details_endpoint(code(challenge.id)),
         [
-          auth_headers(),
-          {"content-type", "application/xml; charset: utf-8"}
+          auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
         ]
       )
 
@@ -183,11 +180,11 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       |> GovDelivery.set_topic_categories_endpoint()
 
     response =
-      Mojito.put(
+      Finch.build(
+        :put,
         endpoint,
         [
-          auth_headers(),
-          {"content-type", "application/xml; charset: utf-8"}
+          auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
         ],
         xml_categories_for_challenge()
       )
@@ -205,10 +202,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   end
 
   defp auth_headers() do
-    Mojito.Headers.auth_header(
-      GovDelivery.username(),
-      GovDelivery.password()
-    )
+    [{"username", GovDelivery.username()}, {"password", GovDelivery.password()}]
   end
 
   defp parse_count_result(nil), do: 0
