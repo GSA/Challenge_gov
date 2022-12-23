@@ -4,6 +4,7 @@ defmodule ChallengeGov.Recaptcha.Implementation do
   """
 
   @behaviour ChallengeGov.Recaptcha
+  alias ChallengeGov.HTTPClient
 
   @impl ChallengeGov.Recaptcha
   def valid_token?(token) do
@@ -25,13 +26,13 @@ defmodule ChallengeGov.Recaptcha.Implementation do
 
     body = Plug.Conn.Query.encode(%{secret: key, response: token})
 
-    response = Mojito.post("https://www.google.com/recaptcha/api/siteverify", headers, body)
+    request = Finch.build(:post, "https://www.google.com/recaptcha/api/siteverify", headers, body)
 
-    case response do
+    case Finch.request(request, HTTPClient) do
       {:ok, %{body: body, status_code: 200}} ->
         {:ok, Jason.decode!(body)}
 
-      {:error, %Mojito.Error{message: nil, reason: reason}} ->
+      {:error, %Finch.Error{reason: reason}} ->
         {:error, reason}
 
       _ ->
