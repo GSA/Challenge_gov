@@ -32,8 +32,8 @@ defmodule ChallengeGov.Recaptcha.Implementation do
       {:ok, %{body: body, status_code: 200}} ->
         {:ok, Jason.decode!(body)}
 
-      {:error, %Finch.Error{reason: reason}} ->
-        {:error, reason}
+      {:error, reason} ->
+        {:error, inspect(reason)}
 
       _ ->
         {:error, "Unknown Recaptcha Failure"}
