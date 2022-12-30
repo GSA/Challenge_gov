@@ -386,7 +386,7 @@ defmodule Web.ChallengeController do
       |> put_flash(:info, "Challenge announcement posted")
       |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
     else
-      _ ->
+      {:error, _changeset} ->
         conn
         |> put_flash(:info, "Something went wrong")
         |> redirect(to: Routes.challenge_path(conn, :show, id))
@@ -401,7 +401,7 @@ defmodule Web.ChallengeController do
       |> put_flash(:info, "Challenge announcement removed")
       |> redirect(to: Routes.challenge_path(conn, :show, challenge.id))
     else
-      _ ->
+      {:error, _changeset} ->
         conn
         |> put_flash(:info, "Something went wrong")
         |> redirect(to: Routes.challenge_path(conn, :show, id))
