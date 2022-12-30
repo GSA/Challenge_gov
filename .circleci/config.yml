@@ -21,11 +21,11 @@ jobs:
             - v4-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
             - v4-yarn-cache-{{ .Branch }}
             - v4-yarn-cache
-      - restore_cache:
-          keys:
-            - v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v3-mix-cache-{{ .Branch }}
-            - v3-mix-cache
+      # - restore_cache:
+      #     keys:
+      #       - v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+      #       - v3-mix-cache-{{ .Branch }}
+      #       - v3-mix-cache
       - restore_cache:
           keys:
             - v3-build-cache-{{ .Branch }}
@@ -41,9 +41,9 @@ jobs:
       - save_cache:
           key: v4-yarn-cache-{{ .Branch }}
           paths: "assets/node_modules"
-      - save_cache:
-          key: v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-          paths: "deps"
+      # - save_cache:
+      #     key: v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+      #     paths: "deps"
       - save_cache:
           key: v3-mix-cache-{{ .Branch }}
           paths: "deps"
@@ -70,8 +70,8 @@ jobs:
       - run: cp config/test.circleci.exs config/test.local.exs
       - restore_cache:
           key: v4-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
-      - restore_cache:
-          key: v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+      # - restore_cache:
+      #     key: v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
       - restore_cache:
           key: v3-build-cache-{{ .Branch }}
       - run: mix deps.get
@@ -101,8 +101,8 @@ jobs:
       - run: cp config/test.circleci.exs config/test.local.exs
       - restore_cache:
           key: v4-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
-      - restore_cache:
-          key: v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+      # - restore_cache:
+      #     key: v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
       - restore_cache:
           key: v3-build-cache-{{ .Branch }}
       - run:
@@ -130,8 +130,8 @@ jobs:
       - run: cp config/test.circleci.exs config/test.local.exs
       - restore_cache:
           key: v4-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
-      - restore_cache:
-          key: v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+      # - restore_cache:
+      #     key: v3-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
       - restore_cache:
           key: v3-build-cache-{{ .Branch }}
       - run: mix deps.get
