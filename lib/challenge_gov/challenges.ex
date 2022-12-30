@@ -427,16 +427,16 @@ defmodule ChallengeGov.Challenges do
     |> Repo.paginate(opts[:page], opts[:per])
   end
 
-  defp base_query() do
+  defp base_query do
     Challenge
     |> where([c], is_nil(c.deleted_at))
-    |> base_preload
+    |> base_preload()
   end
 
   defp base_all_for_user_query(%{id: id, role: "challenge_manager"}) do
     base_query()
-    |> join(:inner, [c], co in assoc(c, :challenge_managers))
-    |> where([c, co], co.user_id == ^id and is_nil(co.revoked_at))
+    |> join(:inner, [c], cm in assoc(c, :challenge_managers))
+    |> where([c, cm], cm.user_id == ^id and is_nil(cm.revoked_at))
   end
 
   defp base_all_for_user_query(_), do: base_query()
