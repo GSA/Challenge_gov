@@ -65,7 +65,6 @@ defmodule ChallengeGov.MixProject do
       {:mint, "~> 1.4"},
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
       {:money, "~> 1.8.0"},
-      {:mojito, "~> 0.7.3"},
       {:nimble_csv, "~> 0.6"},
       {:oban, "~> 2.3"},
       {:phoenix, "~> 1.5.7"},
