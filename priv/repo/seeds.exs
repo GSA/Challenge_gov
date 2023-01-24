@@ -77,11 +77,13 @@ defmodule Helpers do
   end
 
   def import_agencies_api(url) do
-    {:ok, %{body: body, status_code: 200}} = Mojito.get(url)
+    {:ok, %{body: body, status: 200}} = Finch.build(:get, url) |> Finch.request(HTTPClient)
     data = Jason.decode!(body)
     count = data["metadata"]["count"]
 
-    {:ok, %{body: body, status_code: 200}} = Mojito.get(url <> "?page_size=#{count}")
+    {:ok, %{body: body, status: 200}} =
+      Finch.build(:get, url <> "?page_size=#{count}") |> Finch.request(HTTPClient)
+
     data = Jason.decode!(body)
 
     num_inserted = 0
