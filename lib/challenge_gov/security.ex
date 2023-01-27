@@ -177,6 +177,20 @@ defmodule ChallengeGov.Security do
     })
   end
 
+  def track_recertification_update_in_security_log(user, approver, approver_remote_ip) do
+    SecurityLogs.track(%{
+      originator_id: approver.id,
+      originator_role: approver.role,
+      originator_identifier: approver.email,
+      originator_remote_ip: approver_remote_ip,
+      target_id: user.id,
+      target_type: user.role,
+      target_identifier: user.email,
+      action: "renewal_request",
+      details: %{renewal_requested: "Recertification Approved"}
+    })
+  end
+
   defp parse_integer_env(nil), do: nil
   defp parse_integer_env(""), do: nil
   defp parse_integer_env(var) when is_integer(var), do: var
