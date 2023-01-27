@@ -5,6 +5,7 @@ defmodule ChallengeGov.Users do
   alias ChallengeGov.Emails
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
+  alias ChallengeGov.Security
 
   def maybe_decertify_user_manually(_user, status, status), do: :noop
 
@@ -42,6 +43,9 @@ defmodule ChallengeGov.Users do
       end)
       |> Ecto.Multi.run(:certification_record, fn _repo, _changes ->
         CertificationLogs.certify_user_with_approver(user, approver, approver_remote_ip)
+      end)
+      |> Ecto.Multi.run(:security_record, fn _repo, _changes ->
+        Security.track_recertification_update_in_security_log(user, approver, approver_remote_ip)
       end)
       |> Repo.transaction()
 

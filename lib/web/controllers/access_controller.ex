@@ -38,6 +38,16 @@ defmodule Web.AccessController do
          {:ok, user} <- Accounts.update(user, %{renewal_request: "certification"}) do
       CertificationLogs.certification_request(conn, user)
 
+      SecurityLogs.track(%{
+        action: "renewal_request",
+        details: %{renewal_requested: "Recertification"},
+        originator_id: user.id,
+        target_id: user.id,
+        originator_role: user.role,
+        originator_identifier: user.email,
+        originator_remote_ip: Security.extract_remote_ip(conn)
+      })
+
       conn
       |> put_flash(:info, "Success")
       |> redirect(to: Routes.access_path(conn, :index))
