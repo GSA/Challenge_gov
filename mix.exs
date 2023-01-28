@@ -40,7 +40,7 @@ defmodule ChallengeGov.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:bamboo_smtp, "~> 2.1.0"},
+      {:bamboo_smtp, "~> 4.2.2"},
       {:browser, "~> 0.4.4"},
       {:cors_plug, "~> 3.0"},
       {:excoveralls, "~> 0.10", only: :test},
