@@ -325,6 +325,9 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                     <meta name="twitter:card" value={challenge.logo} />
                     <meta name="twitter:site" content="" />
                     <meta property="og:image" content={challenge.logo} />
+                    <meta property="og:url" content={`/?challenge=${challenge.custom_url}`} />
+                    <link rel='canonical' href={`/?challenge=${challenge.custom_url}`}   />
+                    <meta property="og:type" content="article" />
                 </Helmet>
                 <h1 className="title">{challenge.title}</h1>
                 <h2 className="tagline">{challenge.tagline}</h2>
