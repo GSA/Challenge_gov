@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import queryString from 'query-string'
 import { BrowserRouter, Redirect, Route, useLocation } from "react-router-dom";
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
@@ -53,9 +54,11 @@ const renderRouter = () => (
     imageBase: imageBase || "",
     bridgeApplyBlocked: bridgeApplyBlocked
   }}>
+    <HelmetProvider>
     <BrowserRouter>
       <Application />
     </BrowserRouter>
+    </HelmetProvider>
   </ApiUrlContext.Provider>
 )
 
