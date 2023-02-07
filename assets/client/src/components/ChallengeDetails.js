@@ -317,7 +317,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                     }
                   </div>
                 }
-                <Helmet>
+                <Helmet prioritizeSeoTags>
                     <title>{challenge.title}</title>
                     <meta name="description" content={challenge.brief_description}  />
                     <meta property="og:title" key="og:title" content={challenge.title} />
