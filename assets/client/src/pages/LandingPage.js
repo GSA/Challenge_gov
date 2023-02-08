@@ -25,7 +25,6 @@ export const LandingPage = ({isArchived}) => {
     $(".top-banner").show()
     
   }
-  $("title").val("testing")
   $(".help-section").show()
   $(".section-divider").show()
   $(".footer").show()
