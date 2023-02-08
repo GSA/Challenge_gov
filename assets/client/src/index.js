@@ -39,7 +39,9 @@ const Application = () => {
   const { challenge, state } = queryString.parse(query)
 
   if (challenge) {
-    return <DetailsPage challengeId={challenge} />
+    return <HelmetProvider>
+              <DetailsPage challengeId={challenge} />       
+           </HelmetProvider>
   } else if (state == "archived") {
     return <LandingPage isArchived={true} />
   } else {
@@ -54,11 +56,11 @@ const renderRouter = () => (
     imageBase: imageBase || "",
     bridgeApplyBlocked: bridgeApplyBlocked
   }}>
-    <HelmetProvider>
+  
     <BrowserRouter>
       <Application />
     </BrowserRouter>
-    </HelmetProvider>
+  
   </ApiUrlContext.Provider>
 )
 
