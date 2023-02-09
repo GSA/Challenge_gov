@@ -56,11 +56,11 @@ const renderRouter = () => (
     imageBase: imageBase || "",
     bridgeApplyBlocked: bridgeApplyBlocked
   }}>
-  
     <BrowserRouter>
+    <HelmetProvider>
       <Application />
+    </HelmetProvider>
     </BrowserRouter>
-  
   </ApiUrlContext.Provider>
 )
 

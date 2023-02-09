@@ -228,6 +228,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       {:code, nil, code(challenge.id)},
       {:name, nil, challenge.title},
       {"short-name", nil, challenge.title},
+      {:visibility, nil, "unlisted"},
       {:description, nil, challenge.tagline}
     ]
 
