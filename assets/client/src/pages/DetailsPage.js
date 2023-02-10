@@ -56,6 +56,7 @@ export const DetailsPage = ({challengeId}) => {
         document.querySelector("meta[property='og:description']").setAttribute("content", description || defaultDesc);
         document.querySelector("meta[property='og:title']").setAttribute("content", title || defaultTitle);
         document.querySelector("link[rel='canonical']").setAttribute("href", window.location.href);
+        console.log(document.querySelector("link[rel='canonical']"));
         document.querySelector("meta[property='og:url']").setAttribute("content", window.location.href);
     }, [defaultTitle, title, defaultDesc, description]);
 };

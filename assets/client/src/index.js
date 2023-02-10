@@ -39,9 +39,7 @@ const Application = () => {
   const { challenge, state } = queryString.parse(query)
 
   if (challenge) {
-    return <HelmetProvider>
-              <DetailsPage challengeId={challenge} />       
-           </HelmetProvider>
+    return <DetailsPage challengeId={challenge} />       
   } else if (state == "archived") {
     return <LandingPage isArchived={true} />
   } else {
@@ -58,6 +56,15 @@ const renderRouter = () => (
   }}>
     <BrowserRouter>
     <HelmetProvider>
+    <Helmet prioritizeSeoTags>
+                    <title>**Challenge.Gov</title>
+                    <meta name="description" content="**** Here, members of the public compete to help the U.S. government solve problems big and small. Browse through challenges and submit your ideas for a chance to win." />
+                    <meta property="og:title" key="og:title" content="**** Challenge.Gov" />
+                    <meta property="og:description" content="** Here, members of the public compete to help the U.S. government solve problems big and small. Browse through challenges and submit your ideas for a chance to win." />
+                    <meta property="og:type" content="article"></meta>
+                    <meta property="og:image" content="/assets/images/cards/challenge-gov.png" />
+                    <meta property="og:url" content="/?challenge=challenge-title-ii7" />
+      </Helmet>
       <Application />
     </HelmetProvider>
     </BrowserRouter>

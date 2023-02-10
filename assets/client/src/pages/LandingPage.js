@@ -51,7 +51,7 @@ export const LandingPage = ({isArchived}) => {
 
   return (
     <div>
-              <Helmet prioritizeSeoTags>
+              {/* <Helmet prioritizeSeoTags>
                     <title>**Challenge.Gov</title>
                     <meta name="description" content="**** Here, members of the public compete to help the U.S. government solve problems big and small. Browse through challenges and submit your ideas for a chance to win." />
                     <meta property="og:title" key="og:title" content="**** Challenge.Gov" />
@@ -59,7 +59,7 @@ export const LandingPage = ({isArchived}) => {
                     <meta property="og:type" content="article"></meta>
                     <meta property="og:image" content="/assets/images/cards/challenge-gov.png" />
                     <meta property="og:url" content="/?challenge=challenge-title-ii7" />
-                </Helmet>
+                </Helmet> */}
 
       <div>
         <ChallengeTiles data={currentChallenges} loading={loadingState} isArchived={isArchived} selectedYear={selectedYear} handleYearChange={handleYearChange} />
