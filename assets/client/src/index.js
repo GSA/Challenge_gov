@@ -39,7 +39,18 @@ const Application = () => {
   const { challenge, state } = queryString.parse(query)
 
   if (challenge) {
-    return <DetailsPage challengeId={challenge} />       
+    return  <div>
+                    <HelmetProvider>
+                  <Helmet>
+                  <title>testing</title>
+                  
+                  <meta property="og:title" key="og:title" content="testing" />
+                  
+                </Helmet>
+                </HelmetProvider> 
+              <DetailsPage challengeId={challenge} />       
+            </div>
+              
   } else if (state == "archived") {
     return <LandingPage isArchived={true} />
   } else {
