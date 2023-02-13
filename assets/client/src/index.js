@@ -54,6 +54,7 @@ const renderRouter = () => (
     imageBase: imageBase || "",
     bridgeApplyBlocked: bridgeApplyBlocked
   }}>
+
     <BrowserRouter >
       <Application />
     </BrowserRouter>
