@@ -3,7 +3,7 @@ defmodule ChallengeGov.Reports.AccountsRecertifiedDateRange do
   import Ecto.Query
 
   alias ChallengeGov.Accounts.User
-  alias ChallengeGov.CertificationLogs.CertificationLog
+  alias ChallengeGov.SecurityLogs.SecurityLog
 
   def execute(params) do
     %{
@@ -16,26 +16,34 @@ defmodule ChallengeGov.Reports.AccountsRecertifiedDateRange do
       |> String.split("-")
       |> Enum.map(&String.to_integer/1)
       |> List.to_tuple()
-      |> Timex.to_datetime()
+      |> Timex.to_date()
 
     e_date =
       end_date
       |> String.split("-")
       |> Enum.map(&String.to_integer/1)
       |> List.to_tuple()
-      |> Timex.to_datetime()
+      |> Timex.to_date()
 
     from(u in User)
-    |> join(:left, [u], s in CertificationLog, on: u.id == s.user_id)
+    |> join(:left, [u], s in SecurityLog, on: u.id == s.target_id)
     |> where(
       [u, s],
-      fragment("? BETWEEN ? AND ?", s.certified_at, ^s_date, ^e_date)
+      fragment("? BETWEEN ? AND ?", fragment("?::date", s.logged_at), ^s_date, ^e_date)
+    )
+    |> where(
+      [u, s],
+      fragment(
+        "? like ?",
+        fragment("?::Text", s.details),
+        ^"%\"renewal_requested\": \"Recertification Approved\"%"
+      )
     )
     |> select([u, s], %{
       user_id: u.id,
       account_type: u.role,
       action: "recertified",
-      logged_date: s.certified_at,
+      logged_date: s.logged_at,
       account_status: u.status,
       last_login: u.last_active,
       start_date: ^start_date,
