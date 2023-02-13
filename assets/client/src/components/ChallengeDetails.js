@@ -3,7 +3,6 @@ import moment from "moment"
 import { stripHtml } from "string-strip-html";
 import { Tooltip } from 'reactstrap'
 import NumberFormat from 'react-number-format';
-import { Helmet } from 'react-helmet-async';
 
 import { ChallengeTabs } from "../components/ChallengeTabs"
 import { Overview } from "../components/challenge_tabs/Overview"

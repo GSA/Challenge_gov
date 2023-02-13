@@ -1,5 +1,4 @@
 import App  from '../App'
-import DetailsPage  from '../pages/DetailsPage'
 
 export const IndexRoutes = [
   {
@@ -10,7 +9,6 @@ export const IndexRoutes = [
   {
     component: App,
     path: "/challenges",
-    to: "/?challenge=",
     exact: true
   }
 ];
