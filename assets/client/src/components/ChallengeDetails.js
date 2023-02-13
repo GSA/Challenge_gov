@@ -317,20 +317,9 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                     }
                   </div>
                 }
-                <Helmet>
-                    <title>{challenge.title}</title>
-                    <meta name="description" content={challenge.brief_description}  />
-                    <meta property="og:title" key="og:title" content={challenge.title} />
-                    <meta property="og:description" content={challenge.brief_description} />
-                    <meta name="twitter:card" value={challenge.logo} />
-                    <meta name="twitter:site" content="" />
-                    <meta property="og:image" content={challenge.logo} />
-                    <meta property="og:url" content={`/?challenge=${challenge.custom_url}`} />
-                    <link rel='canonical' href={`/?challenge=${challenge.custom_url}`}   />
-                    <meta property="og:type" content="article" />
-                </Helmet>
-                <h1 className="title">{challenge.title}</h1>
-                <h2 className="tagline">{challenge.tagline}</h2>
+
+                <h4 className="title">{challenge.title}</h4>
+                <h5 className="tagline">{challenge.tagline}</h5>
                 <div dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
               </div>
               <div className="logo-container">
