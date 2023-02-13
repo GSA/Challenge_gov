@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import queryString from 'query-string'
 import { BrowserRouter, Redirect, Route, useLocation } from "react-router-dom";
-
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
@@ -39,7 +38,7 @@ const Application = () => {
   const { challenge, state } = queryString.parse(query)
 
   if (challenge) {
-    return   <DetailsPage challengeId={challenge} />         
+    return <DetailsPage challengeId={challenge} />
   } else if (state == "archived") {
     return <LandingPage isArchived={true} />
   } else {
@@ -54,7 +53,7 @@ const renderRouter = () => (
     imageBase: imageBase || "",
     bridgeApplyBlocked: bridgeApplyBlocked
   }}>
-    <BrowserRouter >
+    <BrowserRouter>
       <Application />
     </BrowserRouter>
   </ApiUrlContext.Provider>
