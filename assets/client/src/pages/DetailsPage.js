@@ -7,6 +7,7 @@ import { ApiUrlContext } from '../ApiUrlContext'
 import NotFound from '../components/NotFound'
 
 import queryString from 'query-string'
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 export const DetailsPage = ({challengeId}) => {
   const [currentChallenge, setCurrentChallenge] = useState()
@@ -45,16 +46,47 @@ export const DetailsPage = ({challengeId}) => {
       })
   }, [])
 
+  const usePageMeta = (title, description) =>{
+    const defaultTitle = "app-name";
+    const defaultDesc = "meta description";
+
+    useEffect(() => {
+        document.title = title || defaultTitle;
+        document.querySelector("meta[name='description']").setAttribute("content", description || defaultDesc);
+        document.querySelector("meta[property='og:description']").setAttribute("content", description || defaultDesc);
+        document.querySelector("meta[property='og:title']").setAttribute("content", title || defaultTitle);
+        document.querySelector("link[rel='canonical']").setAttribute("href", window.location.href);
+        document.querySelector("meta[property='og:url']").setAttribute("content", window.location.href);
+    }, [defaultTitle, title, defaultDesc, description]);
+};
+
+
   const renderContent = () => {
     if (currentChallenge) {
-      return <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab} print={print} />
+      return  <div>
+      <HelmetProvider>
+        <Helmet>
+        <title>{currentChallenge.title}</title>
+        <meta data-rh='true' name="description" content={currentChallenge.brief_description}  />
+        <meta property="og:title" key="og:title" content={currentChallenge.title} />
+        <meta property="og:description" content={currentChallenge.brief_description} />
+        <meta name="twitter:card" value={currentChallenge.logo} />
+        <meta name="twitter:site" content="" />
+        <meta property="og:image" content={currentChallenge.logo} />
+        <meta property="og:url" content={`/?challenge=${currentChallenge.custom_url}`} />
+        <link rel='canonical' href={`/?challenge=${currentChallenge.custom_url}`}   />
+        <meta property="og:type" content="article" />
+      </Helmet>
+      </HelmetProvider>  
+     <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab} print={print} />
+              </div>  
     } else if (!currentChallenge && !loadingState) {
       return <NotFound />
     }
   }
-
+  
   return (
-    <div>
+    <div>    
       {renderContent()}
     </div>
   )

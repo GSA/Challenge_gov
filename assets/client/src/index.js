@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import queryString from 'query-string'
 import { BrowserRouter, Redirect, Route, useLocation } from "react-router-dom";
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { IndexRoutes } from "./routes/index";
 import * as serviceWorker from './serviceWorker';
 import { useTracking } from './useTracking'
@@ -38,7 +39,18 @@ const Application = () => {
   const { challenge, state } = queryString.parse(query)
 
   if (challenge) {
-    return <DetailsPage challengeId={challenge} />
+    return  <div>
+                    <HelmetProvider>
+                  <Helmet>
+                  <title>testing</title>
+                  
+                  <meta property="og:title" key="og:title" content="testing" />
+                  
+                </Helmet>
+                </HelmetProvider> 
+              <DetailsPage challengeId={challenge} />       
+            </div>
+              
   } else if (state == "archived") {
     return <LandingPage isArchived={true} />
   } else {
@@ -53,7 +65,16 @@ const renderRouter = () => (
     imageBase: imageBase || "",
     bridgeApplyBlocked: bridgeApplyBlocked
   }}>
-    <BrowserRouter>
+    <BrowserRouter >
+    {/* <Helmet prioritizeSeoTags>
+                    <title>**Challenge.Gov</title>
+                    <meta name="description" content="**** Here, members of the public compete to help the U.S. government solve problems big and small. Browse through challenges and submit your ideas for a chance to win." />
+                    <meta property="og:title" key="og:title" content="**** Challenge.Gov" />
+                    <meta property="og:description" content="** Here, members of the public compete to help the U.S. government solve problems big and small. Browse through challenges and submit your ideas for a chance to win." />
+                    <meta property="og:type" content="article"></meta>
+                    <meta property="og:image" content="/assets/images/cards/challenge-gov.png" />
+                    <meta property="og:url" content="/?challenge=challenge-title-ii7" />
+      </Helmet> */}
       <Application />
     </BrowserRouter>
   </ApiUrlContext.Provider>
