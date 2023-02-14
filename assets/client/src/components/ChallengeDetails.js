@@ -3,7 +3,6 @@ import moment from "moment"
 import { stripHtml } from "string-strip-html";
 import { Tooltip } from 'reactstrap'
 import NumberFormat from 'react-number-format';
-import { Helmet } from 'react-helmet-async';
 
 import { ChallengeTabs } from "../components/ChallengeTabs"
 import { Overview } from "../components/challenge_tabs/Overview"
@@ -278,9 +277,8 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
       return (
         <img
         className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
-        src={challenge.logo} alt={challenge.title}
-        title={`${challenge.title} - Challenge.Gov`} 
-        />
+        src={challenge.logo} alt={challenge.logo_alt_text}
+        title="challenge logo"/>
       )
     }
 
@@ -317,20 +315,8 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                     }
                   </div>
                 }
-                <Helmet prioritizeSeoTags>
-                    <title>{challenge.title}</title>
-                    <meta name="description" content={challenge.brief_description}  />
-                    <meta property="og:title" key="og:title" content={challenge.title} />
-                    <meta property="og:description" content={challenge.brief_description} />
-                    <meta name="twitter:card" value={challenge.logo} />
-                    <meta name="twitter:site" content="" />
-                    <meta property="og:image" content={challenge.logo} />
-                    <meta property="og:url" content={`/?challenge=${challenge.custom_url}`} />
-                    <link rel='canonical' href={`/?challenge=${challenge.custom_url}`}   />
-                    <meta property="og:type" content="article" />
-                </Helmet>
-                <h1 className="title">{challenge.title}</h1>
-                <h2 className="tagline">{challenge.tagline}</h2>
+                <h4 className="title">{challenge.title}</h4>
+                <h5 className="tagline">{challenge.tagline}</h5>
                 <div dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
               </div>
               <div className="logo-container">
