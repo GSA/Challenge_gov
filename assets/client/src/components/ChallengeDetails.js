@@ -3,7 +3,7 @@ import moment from "moment"
 import { stripHtml } from "string-strip-html";
 import { Tooltip } from 'reactstrap'
 import NumberFormat from 'react-number-format';
-
+import HeadTags from "./Head"
 import { ChallengeTabs } from "../components/ChallengeTabs"
 import { Overview } from "../components/challenge_tabs/Overview"
 import { Timeline } from "../components/challenge_tabs/Timeline"
@@ -28,6 +28,19 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
   const toggleFollowTooltip = () => setFollowTooltipOpen(!followTooltipOpen)
   const toggleShareTooltip = () => setShareTooltipOpen(!shareTooltipOpen)
+
+  const renderHeader = (challenge) => {
+    // those props will be passed to HeadTags component
+    // const {metaDescription,title}=props
+     return (
+          <HeadTags
+            title={challenge.title}
+            metaDescription={challenge.brief_description}
+            logo={challenge.logo}
+          ></HeadTags>
+      )
+   }
+
 
   const renderEndDate = (date) => {
     const fiveDaysFromNow = moment().add(5,'d').utc().format()
@@ -294,6 +307,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
   return (
     (challenge && !!challengePhases) ? (
       <div className="w-100">
+        {renderHeader(challenge)}
         <section className="hero__wrapper" aria-label="Challenge overview details">
           <section className="hero__content">
             <ChallengeAnnouncement challenge={challenge} />
