@@ -3,7 +3,7 @@ import moment from "moment"
 import { stripHtml } from "string-strip-html";
 import { Tooltip } from 'reactstrap'
 import NumberFormat from 'react-number-format';
-import { Helmet } from 'react-helmet-async';
+import HeadTags from "./Head"
 
 import { ChallengeTabs } from "../components/ChallengeTabs"
 import { Overview } from "../components/challenge_tabs/Overview"
@@ -29,6 +29,19 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
   const toggleFollowTooltip = () => setFollowTooltipOpen(!followTooltipOpen)
   const toggleShareTooltip = () => setShareTooltipOpen(!shareTooltipOpen)
+
+  const renderHeader = (challenge) => {
+    // those props will be passed to HeadTags component
+    // const {metaDescription,title}=props
+     return (
+          <HeadTags
+            title={challenge.title}
+            metaDescription={challenge.brief_description}
+            logo={challenge.logo}
+          ></HeadTags>
+      )
+   }
+
 
   const renderEndDate = (date) => {
     const fiveDaysFromNow = moment().add(5,'d').utc().format()
@@ -279,8 +292,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         <img
         className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
         src={challenge.logo} alt={challenge.title}
-        title={`${challenge.title} - Challenge.Gov`} 
-        />
+        title={`${challenge.title} - Challenge.Gov`} />
       )
     }
 
@@ -296,6 +308,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
   return (
     (challenge && !!challengePhases) ? (
       <div className="w-100">
+        {renderHeader(challenge)}
         <section className="hero__wrapper" aria-label="Challenge overview details">
           <section className="hero__content">
             <ChallengeAnnouncement challenge={challenge} />
@@ -317,9 +330,8 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                     }
                   </div>
                 }
-
-                <h4 className="title">{challenge.title}</h4>
-                <h5 className="tagline">{challenge.tagline}</h5>
+                <h1 className="title">{challenge.title}</h1>
+                <h2 className="tagline">{challenge.tagline}</h2>
                 <div dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
               </div>
               <div className="logo-container">
