@@ -1,6 +1,7 @@
+import React from 'react'
 import {Helmet, HelmetProvider} from "react-helmet-async";
 
-const HeadTags = (props) => {
+export const HeadTags = (props) => {
   
   const {
     title = "Challenge.Gov --",
@@ -28,4 +29,7 @@ const HeadTags = (props) => {
         />  
         </Helmet>
     </HelmetProvider>
-  );};
+  );
+ }
+
+  
