@@ -4,6 +4,7 @@ import { stripHtml } from "string-strip-html";
 import { Tooltip } from 'reactstrap'
 import NumberFormat from 'react-number-format';
 import HeadTags from "./Head"
+
 import { ChallengeTabs } from "../components/ChallengeTabs"
 import { Overview } from "../components/challenge_tabs/Overview"
 import { Timeline } from "../components/challenge_tabs/Timeline"
