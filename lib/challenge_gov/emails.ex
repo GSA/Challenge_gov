@@ -126,7 +126,7 @@ defmodule ChallengeGov.Emails do
   def contact(poc_email, challenge, public_email, body) do
     base_email()
     |> to(poc_email)
-    |> subject("Challenge.gov - #{challenge.title}: Message from Public Visitor")
+    |> subject("Message from Public Visitor: #{challenge.title}")
     |> put_header("Reply-To", public_email)
     |> assign(:public_email, public_email)
     |> assign(:challenge, challenge)
