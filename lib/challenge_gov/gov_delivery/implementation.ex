@@ -262,7 +262,8 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       {:code, nil, code(challenge.id)},
       {:name, nil, challenge.title},
       {"short-name", nil, challenge.title},
-      {:description, nil, challenge.tagline}
+      {:description, nil, challenge.tagline},
+      {:visibility, nil, "unlisted"}
     ]
 
     XmlBuilder.generate({:topic, nil, elements}, format: :none, encoding: "UTF-8")
