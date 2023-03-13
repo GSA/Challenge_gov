@@ -35,9 +35,6 @@ defmodule ChallengeGov.Reports.NumberOfSubmissions do
     |> select([c, a, s], %{
       challenge_id: c.id,
       challenge_name: c.title,
-      legal_authority: c.legal_authority,
-      challenge_start: c.start_date,
-      challenge_end: c.end_date,
       start_date: ^start_date,
       end_date: ^end_date,
       listing_type: 'Full',
@@ -60,9 +57,6 @@ defmodule ChallengeGov.Reports.NumberOfSubmissions do
       %{
         challenge_id: c.challenge_id,
         challenge_name: c.challenge_name,
-        legal_authority: c.legal_authority,
-        challenge_start: c.challenge_start,
-        challenge_end: c.challenge_end,
         start_date: c.start_date,
         end_date: c.end_date,
         submissions: c.submissions_count,
