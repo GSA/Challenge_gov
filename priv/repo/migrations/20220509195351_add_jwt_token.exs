@@ -7,9 +7,9 @@ defmodule ChallengeGov.Repo.Migrations.AddJwtToken do
     end
   end
 
-  def down do
-    alter table(:users) do
-      remove(:jwt_token)
-    end
-  end
+  # def down do
+  #   alter table(:users) do
+  #     remove(:jwt_token)
+  #   end
+  # end
 end
