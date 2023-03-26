@@ -97,8 +97,8 @@
         <% end %>
 
         <div class="form-group">
-          <%= datetime_local_input(f, :auto_publish_date, label: "Publish date", 
-            class: Enum.join([FormView.form_control_classes(f, :auto_publish_date), "js-datetime-input"], " "), 
+          <%= datetime_local_input(f, :auto_publish_date, label: "Publish date",
+            class: Enum.join([FormView.form_control_classes(f, :auto_publish_date), "js-datetime-input"], " "),
             required: true
           )%>
           <%= hidden_input(f, :auto_publish_date, label: "Publish date") %>
@@ -156,7 +156,7 @@
     <div>
       <div>
         <%= FormView.textarea_field(f, :eligibility_requirements, label: "Eligibility Requirements", rows: 5, required: true) %>
-        <%= FormView.textarea_field(f, :rules, label: "Rules", rows: 5, required: true) %>
+        <%= FormView.textarea_field(f, :rules, label: "Official Rules", rows: 5, required: true) %>
         <!-- Upload Additional Rules Documents -->
         <%= FormView.textarea_field(f, :terms_and_conditions, label: "Terms and Conditions", rows: 5) %>
         <!-- make this select: -->

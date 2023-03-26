@@ -14,7 +14,7 @@
 </div>
 <br/>
 <div>
-  <div class="text-bold">Rules:</div>
+  <div class="text-bold">Official Rules:</div>
   <div class="editor-text-reset"><%= SharedView.render_safe_html(@challenge.rules) %></div>
 </div>
 <br/>
