@@ -32,11 +32,6 @@ defmodule Web.SavedChallengeController do
         Challenges.is_open?(saved_challenge.challenge)
       end)
 
-    opening_soon_challenges =
-      Enum.filter(saved_challenges, fn saved_challenge ->
-        Challenges.is_opening_soon?(saved_challenge.challenge)
-      end)
-
     closed_saved_challenges =
       Enum.filter(saved_challenges, fn saved_challenge ->
         Challenges.is_closed?(saved_challenge.challenge)
@@ -45,7 +40,6 @@ defmodule Web.SavedChallengeController do
     conn
     |> assign(:user, user)
     |> assign(:open_saved_challenges, open_saved_challenges)
-    |> assign(:opening_soon_challenges, opening_soon_challenges)
     |> assign(:closed_saved_challenges, closed_saved_challenges)
     |> assign(:filter, filter)
     |> assign(:sort, sort)
