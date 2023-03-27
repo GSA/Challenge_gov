@@ -17,6 +17,7 @@ export const Rules = ({challenge, print}) => {
       <span>
         <h5 class="m-3"><b>Rules</b></h5>
         <div className="card">
+          <h5 class="p-4 card-title">Terms And Conditions</h5>
           <div className="card-body">
             <div className="ql-editor" dangerouslySetInnerHTML={{ __html: challenge.rules }}></div>
           </div>

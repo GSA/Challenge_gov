@@ -21,6 +21,7 @@ export const Prizes = ({challenge, print}) => {
         <span>
         <h5 class="m-3"><b>Non-monetary prizes</b></h5>
         <div className="card">
+          <h5 class="p-4 card-title">Non-monetary Prizes</h5>
           <div className="card-body">
             <div className="ql-editor" dangerouslySetInnerHTML={{ __html: challenge.non_monetary_prizes }}></div>
           </div>
@@ -31,6 +32,7 @@ export const Prizes = ({challenge, print}) => {
         <span>
         <h5 class="m-3"><b>Prize description</b></h5>
         <div className="card">
+          <h5 class="p-4 card-title">Prize Description</h5>
           <div className="card-body">
             <div className="ql-editor" dangerouslySetInnerHTML={{ __html: challenge.prize_description }}></div>
           </div>
