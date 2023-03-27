@@ -5,23 +5,32 @@ export const Rules = ({challenge, print}) => {
   return (
     <ChallengeTab label="Rules" downloadsLabel="Additional rule documents" section="rules" challenge={challenge} print={print}>
       {challenge.eligibility_requirements &&
-        <div className="card">
-          <div className="card-body">
-            <div className="ql-editor" dangerouslySetInnerHTML={{ __html: challenge.eligibility_requirements }}></div>
+        <span>
+          <h5 class="m-3"><b>Eligibility requirements</b></h5>
+          <div className="card">
+            <div className="card-body">
+              <div className="ql-editor" dangerouslySetInnerHTML={{ __html: challenge.eligibility_requirements }}></div>
+            </div>
           </div>
-        </div>
+        </span>
       }
-      <div className="card">
-        <div className="card-body">
-          <div className="ql-editor" dangerouslySetInnerHTML={{ __html: challenge.rules }}></div>
-        </div>
-      </div>
-      {!challenge.terms_equal_rules &&
+      <span>
+        <h5 class="m-3"><b>Rules</b></h5>
         <div className="card">
           <div className="card-body">
-            <div className="ql-editor" dangerouslySetInnerHTML={{ __html: challenge.terms_and_conditions }}></div>
+            <div className="ql-editor" dangerouslySetInnerHTML={{ __html: challenge.rules }}></div>
           </div>
         </div>
+      </span>
+      {!challenge.terms_equal_rules &&
+        <span>
+          <h5 class="m-3"><b>Terms and conditions</b></h5>
+          <div className="card">
+            <div className="card-body">
+              <div className="ql-editor" dangerouslySetInnerHTML={{ __html: challenge.terms_and_conditions }}></div>
+            </div>
+          </div>
+        </span>
       }
     </ChallengeTab>
   )
