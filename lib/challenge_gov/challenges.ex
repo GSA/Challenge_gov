@@ -905,10 +905,6 @@ defmodule ChallengeGov.Challenges do
   def is_unpublished?(%{status: "unpublished"}), do: true
   def is_unpublished?(_user), do: false
 
-  def is_opening_soon?(%{status: "published", sub_status: nil}), do: true
-
-  def is_opening_soon?(_challenge), do: false
-
   def is_open?(%{sub_status: "open"}), do: true
 
   def is_open?(challenge = %{start_date: start_date, end_date: end_date})
