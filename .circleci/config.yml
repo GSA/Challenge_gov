@@ -144,7 +144,7 @@ jobs:
   dev-deploy:
     parallelism: 1
     docker:
-      - image: cimg/node:10
+      - image: cimg/node:10.24.1
     steps:
       - checkout
       - attach_workspace:
@@ -173,9 +173,6 @@ jobs:
     parallelism: 1
     docker:
       - image: cimg/node:10.24.1
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD 
     steps:
       - checkout
       - attach_workspace:
