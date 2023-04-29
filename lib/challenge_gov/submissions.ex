@@ -12,6 +12,7 @@ defmodule ChallengeGov.Submissions do
   alias ChallengeGov.GovDelivery
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
+  # alias ChallengeGov.Reports.GenerateReport
   alias ChallengeGov.SecurityLogs
   alias ChallengeGov.SubmissionDocuments
   alias ChallengeGov.Submissions.Submission
@@ -109,6 +110,7 @@ defmodule ChallengeGov.Submissions do
       {:ok, %{submission: submission}} ->
         GovDelivery.subscribe_user_general(user)
         GovDelivery.subscribe_user_challenge(user, challenge)
+        # GenerateReport.execute(submission)
 
         {:ok, submission}
 
@@ -136,6 +138,7 @@ defmodule ChallengeGov.Submissions do
       {:ok, %{submission: submission}} ->
         submission = new_form_preload(submission)
         if submission.manager_id, do: send_submission_review_email(user, phase, submission)
+        # GenerateReport.execute(submission)
 
         {:ok, submission}
 
@@ -165,6 +168,8 @@ defmodule ChallengeGov.Submissions do
     |> Repo.transaction()
     |> case do
       {:ok, %{submission: submission}} ->
+        # GenerateReport.execute(submission)
+
         {:ok, submission}
 
       {:error, _type, changeset, _changes} ->
@@ -183,6 +188,8 @@ defmodule ChallengeGov.Submissions do
     |> Repo.transaction()
     |> case do
       {:ok, %{submission: submission}} ->
+        # GenerateReport.execute(submission)
+
         {:ok, submission}
 
       {:error, _type, changeset, _changes} ->
@@ -207,6 +214,7 @@ defmodule ChallengeGov.Submissions do
         challenge_manager_new_submission_email(submission)
         add_to_security_log(submission.submitter, submission, "submit", remote_ip)
         SubmissionExports.check_for_outdated(submission.phase_id)
+        # GenerateReport.execute(submission)
 
         {:ok, submission}
 
