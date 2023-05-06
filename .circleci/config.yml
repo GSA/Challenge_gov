@@ -144,7 +144,7 @@ jobs:
   dev-deploy:
     parallelism: 1
     docker:
-      - image: circleci/node:10
+      - image: cimg/node:10.24.1
     steps:
       - checkout
       - attach_workspace:
@@ -172,7 +172,7 @@ jobs:
   staging-deploy:
     parallelism: 1
     docker:
-      - image: circleci/node:10
+      - image: cimg/node:10.24.1
     steps:
       - checkout
       - attach_workspace:
@@ -200,7 +200,7 @@ jobs:
   prod-deploy:
     parallelism: 1
     docker:
-      - image: circleci/node:10
+      - image: cimg/node:10.24.1
     steps:
       - checkout
       - attach_workspace:
