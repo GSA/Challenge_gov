@@ -268,25 +268,27 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         <img
           className="agency-logo"
           src={challenge.agency_logo}
-          alt={`${challenge.agency_name} logo`}
-          title="Challenge agency logo" />
+          alt={`${challenge.agency_name} logo 001`}
+          title="Challenge agency logo 11" />
       )
     }
 
     if (challenge.logo) {
       return (
         <img
-        className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
-        src={challenge.logo} alt={challenge.title}
-        title={`${challenge.title} - Challenge.Gov`} />
-      )
+          className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
+          src={challenge.logo}
+          alt={`Challenge Image: ${challenge.title}`}
+          title={`Challenge Image: ${challenge.title}`}
+        />
+      );
     }
 
     return (
       <img
         className="agency-logo"
         src={challenge.agency_logo}
-        alt={`${challenge.agency_name} logo`}
+        alt={`${challenge.agency_name} logo 33`}
         title="Challenge agency logo" />
     )
   }

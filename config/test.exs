@@ -4,6 +4,7 @@ use Mix.Config
 # you can enable the server option below.
 config :challenge_gov, Web.Endpoint,
   http: [port: 4002],
+  secret_key_base: "h5tf+3+7fGXHxj5zuK6jPjHu6RXu0uglJEjUEixL08fai2VADaR6hWkQiZXuKiz8",
   server: false
 
 # Print only warnings and errors during test
