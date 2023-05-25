@@ -279,9 +279,8 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
           className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
           src={challenge.logo}
           alt={`Challenge Image: ${challenge.title}`}
-          title={`Challenge Image: ${challenge.title}`}
-        />
-      );
+          title={`Innovation Prize Competition - ${challenge.title}`} />
+        );
     }
 
     return (
