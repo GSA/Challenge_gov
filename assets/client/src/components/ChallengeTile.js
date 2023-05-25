@@ -111,7 +111,7 @@ export const ChallengeTile = ({challenge, preview}) => {
             className="agency-logo"
             src={imageBase + challenge.agency_logo}
             alt={`Tile Image: ${challenge.title}`}
-            title={`Prize Competition for ${challenge.title}`} />
+            title={`Open Innovation Prize Competition for ${challenge.title}`} />
         </div>
       )
     }
@@ -122,7 +122,7 @@ export const ChallengeTile = ({challenge, preview}) => {
           <img 
             src={challenge.logo} 
             alt={`Tile Image: ${challenge.title}`}
-            title={`Prize Competition for ${challenge.title}`}
+            title={`Open Innovation Prize Competition for ${challenge.title}`}
             className="w-100"/>
         </div>
       )
@@ -133,7 +133,7 @@ export const ChallengeTile = ({challenge, preview}) => {
         <img
           src={imageBase + challenge.agency_logo}
           alt={`Tile Image: ${challenge.title}`}
-          title={`Prize Competition for ${challenge.title}`}
+          title={`Open Innovation Prize Competition for ${challenge.title}`}
           className="w-100" />
       </div>
     )

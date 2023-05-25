@@ -268,8 +268,8 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         <img
           className="agency-logo"
           src={challenge.agency_logo}
-          alt={`${challenge.agency_name} logo 001`}
-          title="Challenge agency logo 11" />
+          alt={`${challenge.agency_name} logo`}
+          title="Challenge agency logo" />
       )
     }
 
@@ -279,15 +279,17 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
           className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
           src={challenge.logo}
           alt={`Challenge Image: ${challenge.title}`}
-          title={`Innovation Prize Competition - ${challenge.title}`} />
-        );
+          title={`Open Innovation Prize Competition for ${challenge.title}`}
+
+        />
+      );
     }
 
     return (
       <img
         className="agency-logo"
         src={challenge.agency_logo}
-        alt={`${challenge.agency_name} logo 33`}
+        alt={`${challenge.agency_name} logo`}
         title="Challenge agency logo" />
     )
   }
@@ -306,6 +308,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                       className="agency-logo"
                       src={imageBase + challenge.agency_logo}
                       alt={`${challenge.agency_name} logo`}
+                      /*CHAL-1491*/
                       title="Challenge agency logo" />
                     { (challenge.federal_partners.length > 0 && challenge.federal_partners[0].logo) &&
                       <img
