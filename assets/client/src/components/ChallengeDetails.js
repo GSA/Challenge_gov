@@ -307,7 +307,6 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                     <img
                       className="agency-logo"
                       src={imageBase + challenge.agency_logo}
-                      /*CHAL-1491*/
                       alt={`Agency Logo: ${challenge.agency_name}`}
                       title={`Agency Logo: ${challenge.agency_name}`} />
                     { (challenge.federal_partners.length > 0 && challenge.federal_partners[0].logo) &&

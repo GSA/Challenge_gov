@@ -497,5 +497,5 @@ defmodule Web.ChallengeController do
           acc
       end
     end)
-  end  
+  end
 end
