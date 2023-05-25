@@ -276,10 +276,13 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     if (challenge.logo) {
       return (
         <img
-        className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
-        src={challenge.logo} alt={challenge.title}
-        title={`${challenge.title} - Challenge.Gov`} />
-      )
+          className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
+          src={challenge.logo}
+          alt={`Challenge Image: ${challenge.title}`}
+          title={`Open Innovation Prize Competition for ${challenge.title}`}
+
+        />
+      );
     }
 
     return (
@@ -305,6 +308,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                       className="agency-logo"
                       src={imageBase + challenge.agency_logo}
                       alt={`${challenge.agency_name} logo`}
+                      /*CHAL-1491*/
                       title="Challenge agency logo" />
                     { (challenge.federal_partners.length > 0 && challenge.federal_partners[0].logo) &&
                       <img
