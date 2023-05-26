@@ -309,13 +309,26 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                       src={imageBase + challenge.agency_logo}
                       alt={`Agency Logo: ${challenge.agency_name}`}
                       title={`Agency Logo: ${challenge.agency_name}`} />
-                    { (challenge.federal_partners.length > 0 && challenge.federal_partners[0].logo) &&
-                      <img
-                        className="agency-logo"
-                        src={challenge.federal_partners[0].logo}
-                        alt={`${challenge.federal_partners[0].name} logo`}
-                        title="Federal partner agency logo"/>
-                    }
+
+                    {challenge.federal_partners.length > 0 && (
+                    <React.Fragment>
+                      {challenge.federal_partners.map((partner, index) => {
+                        if (partner.logo) {
+                          return (
+                            <img
+                              key={index}
+                              className="agency-logo"
+                              src={partner.logo}
+                              alt={`Agency Logo: ${partner.name}`}
+                              title={`Agency Logo: ${partner.name}`}
+                            />
+                          );
+                        } else {
+                          return null;
+                        }
+                      })}
+                    </React.Fragment>
+                  )}
                   </div>
                 }
                 <h1 className="title">{challenge.title}</h1>
