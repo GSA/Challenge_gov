@@ -86,6 +86,7 @@ defmodule Web.Router do
     get("/analytics", AnalyticsController, :index)
 
     resources("/challenges", ChallengeController) do
+
       resources("/documents", DocumentController, only: [:create])
       resources("/events", EventController, only: [:new, :create])
       resources("/bulletin", BulletinController, only: [:new, :create])
@@ -239,6 +240,9 @@ defmodule Web.Router do
     post("/message_context_status/:id/star", MessageContextStatusController, :toggle_starred)
 
     get("/phase/:phase_id/winners", WinnerController, :phase_winners)
+
+    get("/challenges/filter", ChallengeController, :filter)
+
   end
 
   # Public Routes

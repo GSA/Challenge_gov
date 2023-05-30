@@ -128,7 +128,24 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
 
   // Fetch and display the challenges based on the selected filter options
   const handleSearch = () => {
-    // Make an API call or update the data fetching function using the filters
+    // Construct the query string with the selected filter values
+    const queryParams = new URLSearchParams();
+    queryParams.append('primaryAgency', primaryAgency);
+    queryParams.append('dateAdded', dateAdded);
+    queryParams.append('lastDay', lastDay);
+    queryParams.append('primaryChallengeType', primaryChallengeType);
+    queryParams.append('keyword', keyword);
+    
+    // Make the API request with the constructed query string
+    // to-do: Need to see about using Axios rather than fetch for the API request
+    fetch(`/api/challenges?${queryParams.toString()}`)
+      .then(response => response.json())
+      .then(data => {
+        // Handle the API response data
+      })
+      .catch(error => {
+        // Handle any errors
+      });
   };
 
   const renderHeader = () => {
