@@ -71,7 +71,7 @@ export const ChallengeTile = ({challenge, preview}) => {
     }
   }
 
-  // TODO: This is potentially temporary until the importer handles adding phases to imported challenges
+  /*TODO: This is potentially temporary until the importer handles adding phases to imported challenges*/
   const handlePhaselessChallengeDate = ({start_date, end_date}) => {
     const startDateDiff = moment().diff(start_date, 'minutes')
     const endDateDiff = moment().diff(end_date, 'minutes')
@@ -110,8 +110,8 @@ export const ChallengeTile = ({challenge, preview}) => {
           <img
             className="agency-logo"
             src={imageBase + challenge.agency_logo}
-            alt={`${challenge.agency_name} logo`}
-            title="Challenge agency logo" />
+            alt={`Tile Image: ${challenge.title}`}
+            title={`Open Innovation Prize Competition for ${challenge.title}`} />
         </div>
       )
     }
@@ -119,7 +119,11 @@ export const ChallengeTile = ({challenge, preview}) => {
     if (challenge.logo) {
       return (
         <div className="image_wrapper">
-          <img src={challenge.logo} alt={challenge.logo_alt_text} title="Challenge logo" className="w-100"/>
+          <img 
+            src={challenge.logo} 
+            alt={`Tile Image: ${challenge.title}`}
+            title={`Open Innovation Prize Competition for ${challenge.title}`}
+            className="w-100"/>
         </div>
       )
     }
@@ -128,10 +132,9 @@ export const ChallengeTile = ({challenge, preview}) => {
       <div className="image_wrapper">
         <img
           src={imageBase + challenge.agency_logo}
-          alt="Challenge agency logo"
-          title="Challenge agency logo"
-          className="w-100"
-        />
+          alt={`Tile Image: ${challenge.title}`}
+          title={`Open Innovation Prize Competition for ${challenge.title}`}
+          className="w-100" />
       </div>
     )
   }
