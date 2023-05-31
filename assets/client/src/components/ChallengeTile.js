@@ -146,6 +146,7 @@ export const ChallengeTile = ({challenge, preview}) => {
           {renderTileLogo()}
           <div className="challenge-tile__text-wrapper">
             <h2 className="challenge-tile__title test" aria-label="Challenge title" style={{ textAlign: 'left', paddingLeft: '20px', paddingTop: '20px', lineHeight: '30px' }}>{truncateString(challenge.title, 90)}</h2>
+            <p className="challenge-tile__agency-name" aria-label="Agency name">{truncateString(challenge.agency_name, 90)}</p>
             <p className="challenge-tile__tagline" aria-label="Challenge tagline">{truncateString(challenge.tagline, 90)}</p>
             <p className="challenge-tile__date">{renderDate(challenge)}</p>
             {renderTags(challenge)}
