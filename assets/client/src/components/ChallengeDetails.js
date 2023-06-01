@@ -276,6 +276,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     if (challenge.logo) {
       return (
         <img
+<<<<<<< HEAD
           className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
           src={challenge.logo}
           alt={`Challenge Image: ${challenge.title}`}
@@ -283,6 +284,12 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
         />
       );
+=======
+        className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
+        src={challenge.logo} alt={challenge.logo_alt_text}
+        title="challenge logo"/>
+      )
+>>>>>>> ea20b958 (Staging <- Jdonis/chal 1365   (#886))
     }
 
     return (
@@ -318,8 +325,9 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                     }
                   </div>
                 }
-                <h1 className="title">{challenge.title}</h1>
-                <h2 className="tagline">{challenge.tagline}</h2>
+                <h4 className="title">{challenge.title}</h4>
+                <h5 className="tagline">{challenge.tagline}</h5>
+
                 <div dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
               </div>
               <div className="logo-container">
