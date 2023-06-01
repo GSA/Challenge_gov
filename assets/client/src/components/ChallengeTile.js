@@ -111,7 +111,7 @@ export const ChallengeTile = ({challenge, preview}) => {
             className="agency-logo"
             src={imageBase + challenge.agency_logo}
             alt={truncateString(`Agency Logo: ${challenge.agency_name}`, 90)}
-            title={`Agency Logo: ${challenge.agency_name}`} />
+          />
         </div>
       )
     }
@@ -119,8 +119,8 @@ export const ChallengeTile = ({challenge, preview}) => {
     if (challenge.logo) {
       return (
         <div className="image_wrapper">
-          <img src={challenge.logo} alt={truncateString(challenge.logo_alt_text, 90)} title="Challenge logo" className="w-100" />
-          <img src={challenge.logo} alt={truncateString(challenge.agency_name, 90)} title={`Agency Logo 2: ${challenge.agency_name}`} className="w-100" />
+          <img src={challenge.logo} alt={truncateString(challenge.logo_alt_text, 90)} className="w-100" />
+          <img src={challenge.logo} alt={truncateString(challenge.agency_name, 90)} className="w-100" />
         </div>
       )
     }
@@ -128,10 +128,9 @@ export const ChallengeTile = ({challenge, preview}) => {
     return (
       <div className="image_wrapper">
         <img
-          src={imageBase + challenge.agency_logo}
-          alt={truncateString("Challenge agency logo", 90)}
-          title="Challenge agency logo"
-          className="w-100"
+            className="agency-logo"
+            src={imageBase + challenge.agency_logo}
+            alt={truncateString(`Agency Logo: ${challenge.agency_name}`, 90)}
         />
       </div>
     )
