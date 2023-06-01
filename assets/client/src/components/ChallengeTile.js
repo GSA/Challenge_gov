@@ -71,7 +71,7 @@ export const ChallengeTile = ({challenge, preview}) => {
     }
   }
 
-  /*TODO: This is potentially temporary until the importer handles adding phases to imported challenges*/
+  // TODO: This is potentially temporary until the importer handles adding phases to imported challenges
   const handlePhaselessChallengeDate = ({start_date, end_date}) => {
     const startDateDiff = moment().diff(start_date, 'minutes')
     const endDateDiff = moment().diff(end_date, 'minutes')
@@ -110,8 +110,8 @@ export const ChallengeTile = ({challenge, preview}) => {
           <img
             className="agency-logo"
             src={imageBase + challenge.agency_logo}
-            alt={`Tile Image: ${challenge.title}`}
-            title={`Open Innovation Prize Competition for ${challenge.title}`} />
+            alt={truncateString(`Agency Logo: ${challenge.agency_name}`, 90)}
+            title={`Agency Logo: ${challenge.agency_name}`} />
         </div>
       )
     }
@@ -119,11 +119,8 @@ export const ChallengeTile = ({challenge, preview}) => {
     if (challenge.logo) {
       return (
         <div className="image_wrapper">
-          <img 
-            src={challenge.logo} 
-            alt={`Tile Image: ${challenge.title}`}
-            title={`Open Innovation Prize Competition for ${challenge.title}`}
-            className="w-100"/>
+          <img src={challenge.logo} alt={truncateString(challenge.logo_alt_text, 90)} title="Challenge logo" className="w-100" />
+          <img src={challenge.logo} alt={truncateString(challenge.agency_name, 90)} title={`Agency Logo 2: ${challenge.agency_name}`} className="w-100" />
         </div>
       )
     }
@@ -132,9 +129,10 @@ export const ChallengeTile = ({challenge, preview}) => {
       <div className="image_wrapper">
         <img
           src={imageBase + challenge.agency_logo}
-          alt={`Tile Image: ${challenge.title}`}
-          title={`Open Innovation Prize Competition for ${challenge.title}`}
-          className="w-100" />
+          alt={truncateString("Challenge agency logo", 90)}
+          title="Challenge agency logo"
+          className="w-100"
+        />
       </div>
     )
   }
@@ -142,12 +140,12 @@ export const ChallengeTile = ({challenge, preview}) => {
   return (
     challenge ? (
       <div key={challenge.id} className="challenge-tile card">
-        <a href={challengeTileUrl(challenge, preview)} target={challenge.external_url ? "_blank" : ""} aria-label="View challenge details">
+        <a href={challengeTileUrl(challenge, preview)} target={challenge.external_url ? "_blank" : ""} aria-label="">
           {renderTileLogo()}
           <div className="challenge-tile__text-wrapper">
-            <p className="challenge-tile__title test" aria-label="Challenge title">{truncateString(challenge.title, 90)}</p>
-            <p className="challenge-tile__agency-name" aria-label="Agency name">{truncateString(challenge.agency_name, 90)}</p>
-            <p className="challenge-tile__tagline" aria-label="Challenge tagline">{truncateString(challenge.tagline, 90)}</p>
+            <h2 className="challenge-tile__title test" aria-label="" style={{ textAlign: 'left', paddingLeft: '20px', paddingTop: '20px', lineHeight: '30px' }}>{truncateString(challenge.title, 90)}</h2>
+            <p className="challenge-tile__agency-name" aria-label="">{truncateString(challenge.agency_name, 90)}</p>
+            <p className="challenge-tile__tagline" aria-label="">{truncateString(challenge.tagline, 90)}</p>
             <p className="challenge-tile__date">{renderDate(challenge)}</p>
             {renderTags(challenge)}
           </div>
