@@ -103,38 +103,38 @@ export const ChallengeTile = ({challenge, preview}) => {
     }
   }
 
-  const renderTileLogo = () => {
-    if (challenge.imported && challenge.sub_status === "archived" && challenge.logo.includes("challenge-logo-2_1")) {
-      return (
-        <div className="agency_image_wrapper">
-          <img
-            className="agency-logo"
-            src={imageBase + challenge.agency_logo}
-            alt={`Agency Logo: ${challenge.agency_name}`}
-            title={`Agency Logo: ${challenge.agency_name}`}
-        </div>
-      )
-    }
-
-    if (challenge.logo) {
-      return (
-        <div className="image_wrapper">
-          <img src={challenge.logo} alt={challenge.logo_alt_text} title="Challenge logo" className="w-100"/>
-          <img src={challenge.logo} alt=${challenge.agency_name} title={`Agency Logo 2: ${challenge.agency_name}`} className="w-100"/>
-        </div>
-      )
-    }
-
+ const renderTileLogo = () => {
+  if (challenge.imported && challenge.sub_status === "archived" && challenge.logo.includes("challenge-logo-2_1")) {
     return (
-      <div className="image_wrapper">
+      <div className="agency_image_wrapper">
         <img
+          className="agency-logo"
           src={imageBase + challenge.agency_logo}
-          alt="Challenge agency logo"
-          title="Challenge agency logo"
-          className="w-100"
-        />
+          alt={`Agency Logo: ${challenge.agency_name}`}
+          title={`Agency Logo: ${challenge.agency_name}`} />
       </div>
     )
+  }
+
+  if (challenge.logo) {
+    return (
+      <div className="image_wrapper">
+        <img src={challenge.logo} alt={challenge.logo_alt_text} title="Challenge logo" className="w-100" />
+        <img src={challenge.logo} alt={challenge.agency_name} title={`Agency Logo 2: ${challenge.agency_name}`} className="w-100" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="image_wrapper">
+      <img
+        src={imageBase + challenge.agency_logo}
+        alt="Challenge agency logo"
+        title="Challenge agency logo"
+        className="w-100"
+      />
+    </div>
+  )
   }
 
   return (
@@ -143,7 +143,7 @@ export const ChallengeTile = ({challenge, preview}) => {
         <a href={challengeTileUrl(challenge, preview)} target={challenge.external_url ? "_blank" : ""} aria-label="View challenge details">
           {renderTileLogo()}
           <div className="challenge-tile__text-wrapper">
-            <h2 className="challenge-tile__title test" aria-label="Challenge title" style={{ textAlign: 'left', paddingLeft: 20, paddingTop: 20, lineHeight: 30 }}>{truncateString(challenge.title, 90)}</h2>
+            <p className="challenge-tile__title test" aria-label="Challenge title">{truncateString(challenge.title, 90)}</p>
             <p className="challenge-tile__agency-name" aria-label="Agency name">{truncateString(challenge.agency_name, 90)}</p>
             <p className="challenge-tile__tagline" aria-label="Challenge tagline">{truncateString(challenge.tagline, 90)}</p>
             <p className="challenge-tile__date">{renderDate(challenge)}</p>
