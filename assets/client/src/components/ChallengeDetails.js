@@ -276,6 +276,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     if (challenge.logo) {
       return (
         <img
+<<<<<<< HEAD
           className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
           src={challenge.logo}
           alt={`Challenge Image: ${challenge.title}`}
@@ -283,6 +284,12 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
         />
       );
+=======
+        className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
+        src={challenge.logo} alt={challenge.logo_alt_text}
+        title="challenge logo"/>
+      )
+>>>>>>> ea20b958 (Staging <- Jdonis/chal 1365   (#886))
     }
 
     return (
@@ -309,7 +316,6 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                       src={imageBase + challenge.agency_logo}
                       alt={`Agency Logo: ${challenge.agency_name}`}
                       title={`Agency Logo: ${challenge.agency_name}`} />
-
                     { (challenge.federal_partners.length > 0 && challenge.federal_partners[0].logo) &&
                       <img
                         className="agency-logo"
@@ -317,32 +323,11 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                         alt={`${challenge.federal_partners[0].name} logo`}
                         title="Federal partner agency logo"/>
                     }
-
-
-                    {challenge.federal_partners.length > 0 && (
-                    <React.Fragment>
-                      {challenge.federal_partners.map((partner, index) => {
-                        if (partner.logo) {
-                          return (
-                            <img
-                              key={index}
-                              className="agency-logo"
-                              src={partner.logo}
-                              alt={`Agency Logo: ${partner.name}`}
-                              title={`Agency Logo: ${partner.name}`}
-                            />
-                          );
-                        } else {
-                          return null;
-                        }
-                      })}
-                    </React.Fragment>
-                  )}
-
                   </div>
                 }
-                <h1 className="title">{challenge.title}</h1>
-                <h2 className="tagline">{challenge.tagline}</h2>
+                <h4 className="title">{challenge.title}</h4>
+                <h5 className="tagline">{challenge.tagline}</h5>
+
                 <div dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
               </div>
               <div className="logo-container">
