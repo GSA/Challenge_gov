@@ -119,7 +119,6 @@ export const ChallengeTile = ({challenge, preview}) => {
     if (challenge.logo) {
       return (
         <div className="image_wrapper">
-          <img src={challenge.logo} alt={truncateString(challenge.logo_alt_text, 90)} className="w-100" />
           <img src={challenge.logo} alt={truncateString(challenge.agency_name, 90)} className="w-100" />
         </div>
       )
