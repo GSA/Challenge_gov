@@ -1,60 +1,61 @@
-import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react'
+import axios from 'axios'
+import { useLocation } from "react-router-dom";
 
 import { ChallengeDetails } from '../components/ChallengeDetails';
-import { ApiUrlContext } from '../ApiUrlContext';
-import NotFound from '../components/NotFound';
+import { ApiUrlContext } from '../ApiUrlContext'
+import NotFound from '../components/NotFound'
 
-import queryString from 'query-string';
+import queryString from 'query-string'
 
-export const DetailsPage = ({ challengeId }) => {
-  const [currentChallenge, setCurrentChallenge] = useState();
-  const [challengePhases, setChallengePhases] = useState([]);
-  const [loadingState, setLoadingState] = useState(true);
+export const DetailsPage = ({challengeId}) => {
+  const [currentChallenge, setCurrentChallenge] = useState()
+  const [challengePhases, setChallengePhases] = useState([])
+  const [loadingState, setLoadingState] = useState(true)
 
-  let query = useLocation().search;
-  const { print, tab } = queryString.parse(query);
+  let query = useLocation().search
+  const { print, tab } = queryString.parse(query)
 
-  const { apiUrl } = useContext(ApiUrlContext);
+  const { apiUrl } = useContext(ApiUrlContext)
 
   useEffect(() => {
-    setLoadingState(true);
+    setLoadingState(true)
+    // TODO: Temporary hiding of layout on chal details until the layout is moved
+    $(".top-banner").hide()
+    $(".help-section").hide()
+    $(".section-divider").hide()
+    $(".footer").hide()
+    $(".usa-hero").hide()
+    $(".video").hide()
+    $(".challenges-header").hide()
+    $(".newsletter").hide()
+    
 
-    let challengeApiPath = apiUrl + `/api/challenges/${challengeId}`;
+    let challengeApiPath = apiUrl + `/api/challenges/${challengeId}`
     axios
       .get(challengeApiPath)
       .then(res => {
-        setCurrentChallenge(res.data);
-        setChallengePhases(res.data.phases);
-        setLoadingState(false);
+        setCurrentChallenge(res.data)
+        setChallengePhases(res.data.phases)
+        setLoadingState(false)
       })
       .catch(e => {
-        setLoadingState(false);
-      });
-  }, []);
+        setLoadingState(false)
+        console.log({e})
+      })
+  }, [])
 
   const renderContent = () => {
     if (currentChallenge) {
-      return (
-        <>
-          <h2 className="a11y-hidden">Challenge Details</h2>
-          <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab} print={print} />
-        </>
-      );
+      return <ChallengeDetails challenge={currentChallenge} challengePhases={challengePhases} tab={tab} print={print} />
     } else if (!currentChallenge && !loadingState) {
-      return (
-        <>
-          <h2 className="a11y-hidden">Challenge Not Found</h2>
-          <NotFound />
-        </>
-      );
+      return <NotFound />
     }
-  };
+  }
 
   return (
-    <div role="main" aria-labelledby="main-heading">
+    <div>
       {renderContent()}
     </div>
-  );
-};
+  )
+}
