@@ -36,7 +36,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     if (date >  moment().utc().format()) {
       return (
         <div className="item">
-          <p className="info-title">Open until:</p>
+          <p className="info-title" id="endDateTitle">Open until:</p>
           <p>{moment(date).local().format('L LT')}</p>
           { withinFiveDays && <p className="date-qualifier">Closing soon</p> }
         </div>
@@ -44,7 +44,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
     } else {
       return (
         <div className="item">
-          <p className="info-title">Closed on:</p>
+          <p className="info-title" id="endDateTitle">Closed on:</p>
           <p>{moment(date).local().format('L LT')}</p>
         </div>
       )
@@ -102,7 +102,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
   const renderFollowTooltip = () => {
     return (
-      <Tooltip placement="bottom" trigger="click" isOpen={followTooltipOpen} target="followChallengeButton" toggle={toggleFollowTooltip} autohide={false} className="follow-tooltip" innerClassName="follow-tooltip__inner" arrowClassName="follow-tooltip__arrow">
+      <Tooltip placement="bottom" trigger="click" isOpen={followTooltipOpen} target="followChallengeButton" toggle={toggleFollowTooltip} autohide={false} className="follow-tooltip" innerClassName="follow-tooltip__inner" arrowClassName="follow-tooltip__arrow" aria-labelledby="followChallengeButton">
         {renderSubscribeButton()}
         {renderSaveButton()}
       </Tooltip>
@@ -169,14 +169,14 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         return (
           <div className="detail-section__apply">
             <a {...applyButtonAttr}>
-              <button className="apply-btn">{applyButtonText}</button>
+              <button className="apply-btn" aria-label="Apply for this challenge">{applyButtonText}</button>
             </a>
           </div>
         )
       case "login":
         return (
           <div className="detail-section__apply">
-            <p><span>Winners of a previous phase <a {...applyButtonAttr}>login</a> to continue.</span></p>
+            <p><span>Winners of a previous phase <a {...applyButtonAttr} aria-label="Login to continue">login</a> to continue.</span></p>
           </div>
         )
       case "hide":
@@ -236,7 +236,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
             }
             <div className="social-share-btn" id="shareChallengeButton">
               <span className="details__btn">
-                <i className="fas fa-share-alt me-2"></i>
+                <i className="fas fa-share-alt me-2" aria-hidden="true"></i>
                 Share
               </span>
               <SocialSharingTooltip shareTooltipOpen={shareTooltipOpen} toggleShareTooltip={toggleShareTooltip} challenge={challenge}/>
@@ -341,9 +341,9 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
                   </div>
                 }
-                <h1 className="title">{challenge.title}</h1>
-                <h2 className="tagline">{challenge.tagline}</h2>
-                <div dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
+                <h1 className="title" tabIndex="0">{challenge.title}</h1>
+                <h2 className="tagline" tabIndex="0">{challenge.tagline}</h2>
+                <div tabIndex="0" dangerouslySetInnerHTML={{ __html: stripHtml(challenge.brief_description).result }}></div>
               </div>
               <div className="logo-container">
                 {renderChallengeLogo()}
@@ -352,21 +352,21 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
             <div className="detail-section">
               {renderInteractiveItems()}
               <div className="item">
-                <p className="info-title">Submission period:</p>
-                {submissionPeriod(challenge.phases)}
+                <p id="submissionPeriodTitle" className="info-title">Submission period:</p>
+                <p tabIndex="0" aria-labelledby="submissionPeriodTitle">{submissionPeriod(challenge.phases)}</p>
               </div>
               <div className="item">
                 { (challenge.types.length > 1 && challenge.types.every(v => v != "")) || challenge.other_type
-                  ? <><span className="info-title">Challenge types:</span><span>{`${challenge.primary_type}; `}</span></>
-                  : <><span className="info-title">Challenge type:</span><span>{`${challenge.primary_type}`}</span></>
+                  ? <><span className="info-title">Challenge types:</span><span tabIndex="0">{`${challenge.primary_type}; `}</span></>
+                  : <><span className="info-title">Challenge type:</span><span tabIndex="0">{`${challenge.primary_type}`}</span></>
                 }
                 {renderChallengeTypes(challenge.types, challenge.other_type)}
                 {challenge.other_type}
               </div>
               { !challenge.prize_total || challenge.prize_total != 0 &&
                 <div className="item">
-                  <p className="info-title">Total cash prizes:</p>
-                  <NumberFormat value={challenge.prize_total/100} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                  <p className="info-title" id="totalCashPrizesTitle">Total cash prizes:</p>
+                  <NumberFormat tabIndex="0" aria-labelledby="totalCashPrizesTitle" value={challenge.prize_total/100} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 </div>
               }
               {!print &&
@@ -417,7 +417,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         </ChallengeTabs>
       </div>
     ) : (
-      <div className="card__loader--image"></div>
+      <div className="card__loader--image" role="img" aria-label="Loading challenge details"></div>
     )
   )
 }
