@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
 import moment from "moment";
 import { ChallengeTile } from "./ChallengeTile";
 
@@ -51,58 +50,88 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         }
 
         if (dateAdded) {
-            const now = moment();
-            let fromDate;
-            switch(dateAdded) {
-                case 'Past Week':
-                    fromDate = now.clone().subtract(7, 'days');
-                    break;
-                case 'Past Month':
-                    fromDate = now.clone().subtract(1, 'months');
-                    break;
-                case 'Past 90 Days':
-                    fromDate = now.clone().subtract(90, 'days');
-                    break;
-                case 'Past Year':
-                    fromDate = now.clone().subtract(1, 'years');
-                    break;
-                default:
-                    fromDate = now;
-            }
+          const now = moment();
+          let fromDate;
+          switch (dateAdded) {
+            case "Past Week":
+              fromDate = now.clone().subtract(7, "days");
+              break;
+            case "Past Month":
+              fromDate = now.clone().subtract(1, "months");
+              break;
+            case "Past 90 Days":
+              fromDate = now.clone().subtract(90, "days");
+              break;
+            case "Past Year":
+              fromDate = now.clone().subtract(1, "years");
+              break;
+            default:
+              fromDate = now;
+          }
 
-            filtered = filtered.filter(challenge => {
-                const challengeDate = moment(challenge.start_date);
-                return challengeDate.isBetween(fromDate, now, null, '[)');
-            });
+          filtered = filtered.filter((challenge) => {
+            const challengeDate = moment(challenge.start_date); // Use start_date instead of date_added
+            return challengeDate.isBetween(fromDate, now, null, "[)");
+          });
+        }
+
+        // Add filtering by primary challenge type
+        if (primaryChallengeType) {
+            filtered = filtered.filter(challenge => challenge.primary_type === primaryChallengeType);
         }
 
         if (lastDay) {
-            const now = moment();
-            let toDate;
-            switch(lastDay) {
-                case 'Next Week':
-                    toDate = now.clone().add(7, 'days');
-                    break;
-                case 'Next Month':
-                    toDate = now.clone().add(1, 'months');
-                    break;
-                case 'Next 90 days':
-                    toDate = now.clone().add(90, 'days');
-                    break;
-                case 'Within Year':
-                    toDate = now.clone().add(1, 'years');
-                    break;
-                default:
-                    toDate = now;
-            }
+          const now = moment();
+          let toDate;
+          switch (lastDay) {
+            case "Next Week":
+              toDate = now.clone().add(7, "days");
+              break;
+            case "Next Month":
+              toDate = now.clone().add(1, "months");
+              break;
+            case "Next 90 days":
+              toDate = now.clone().add(90, "days");
+              break;
+            case "Within Year":
+              toDate = now.clone().add(1, "years");
+              break;
+            default:
+              toDate = now;
+          }
 
-            filtered = filtered.filter(challenge => {
-                const challengeEndDate = moment(challenge.end_date);
-                return challengeEndDate.isBetween(now, toDate, null, '[)');
-            });
+          filtered = filtered.filter((challenge) => {
+            const challengeEnd = moment(challenge.end_date);
+            return challengeEnd.isBetween(now, toDate, null, "[)");
+          });
         }
 
-        // Implement other filters here
+        if (keyword) {
+          const searchFields = ["agency_name", "title", "tagline"];
+
+          filtered = filtered.filter((challenge) => {
+            // Search in agency_name, title, and tagline fields
+            for (const field of searchFields) {
+              if (challenge[field] && challenge[field].toLowerCase().includes(keyword.toLowerCase())) {
+                return true;
+              }
+            }
+
+            // Search in how_to_enter and judging_criteria fields inside phases
+            for (const phase of challenge.phases) {
+              if (phase.how_to_enter && phase.how_to_enter.toLowerCase().includes(keyword.toLowerCase())) {
+                return true;
+              }
+              if (phase.judging_criteria && phase.judging_criteria.toLowerCase().includes(keyword.toLowerCase())) {
+                return true;
+              }
+            }
+
+            return false;
+          });
+        }
+
+        // implement other filters here
 
         setFilteredChallenges(filtered);
       }
@@ -141,7 +170,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     fetch(`/api/challenges?${queryParams.toString()}`)
       .then(response => response.json())
       .then(data => {
-        // Handle the API response data
+        setFilteredChallenges(data.collection);
       })
       .catch(error => {
         // Handle any errors
