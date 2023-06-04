@@ -38,12 +38,12 @@ defmodule Web.Api.ChallengeController do
   # end
 
   def index(conn, _params) do
-   challenges = Challenges.all_public()
+    challenges = Challenges.all_public()
 
-   conn
-   |> assign(:challenges, challenges)
-   |> assign(:base_url, Routes.api_challenge_url(conn, :index))
-   |> render("index.json")
+    conn
+    |> assign(:challenges, challenges)
+    |> assign(:base_url, Routes.api_challenge_url(conn, :index))
+    |> render("index.json")
   end
 
   def show(conn, %{"id" => id}) do
