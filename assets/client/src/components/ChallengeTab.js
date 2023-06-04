@@ -31,7 +31,7 @@ export const ChallengeTab = ({label, downloadsLabel, section, challenge, print, 
       <div className="challenge-tab__header">
         <span>{label}</span>
           <div className={copyShareCSS} id="challenge-link">
-            <input aria-hidden="true" id="challenge-link-text" className="opacity-0" defaultValue={window.location.href}/>
+            <input disabled aria-hidden="true" id="challenge-link-text" className="opacity-0" defaultValue={window.location.href}/>
             <button aria-label="Copy share link" id="challenge-link-btn" className="usa-button usa-button--unstyled text-decoration-none" onClick={handleCopyLink}>
               <i className="far fa-copy me-1"></i>
               <span>Copy share link</span>
