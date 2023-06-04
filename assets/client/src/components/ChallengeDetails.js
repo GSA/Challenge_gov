@@ -310,6 +310,15 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                       alt={`Agency Logo: ${challenge.agency_name}`}
                       title={`Agency Logo: ${challenge.agency_name}`} />
 
+                    { (challenge.federal_partners.length > 0 && challenge.federal_partners[0].logo) &&
+                      <img
+                        className="agency-logo"
+                        src={challenge.federal_partners[0].logo}
+                        alt={`${challenge.federal_partners[0].name} logo`}
+                        title="Federal partner agency logo"/>
+                    }
+
+
                     {challenge.federal_partners.length > 0 && (
                     <React.Fragment>
                       {challenge.federal_partners.map((partner, index) => {
@@ -329,6 +338,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                       })}
                     </React.Fragment>
                   )}
+
                   </div>
                 }
                 <h1 className="title">{challenge.title}</h1>
