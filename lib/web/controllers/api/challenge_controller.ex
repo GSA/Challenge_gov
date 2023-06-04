@@ -6,50 +6,19 @@ defmodule Web.Api.ChallengeController do
 
   plug Web.Plugs.FetchPage when action in [:index]
 
-  def index(conn, %{"archived" => "true"} = params) do
+  def index(conn, params = %{"archived" => "true"}) do
     filter = Map.get(params, "filter", %{})
-    
-    # Extract the filter values from the query parameters
-    primaryAgency = Map.get(filter, "primaryAgency", "")
-    dateAdded = Map.get(filter, "dateAdded", "")
-    lastDay = Map.get(filter, "lastDay", "")
-    primaryChallengeType = Map.get(filter, "primaryChallengeType", "")
-    keyword = Map.get(filter, "keyword", "")
-    
+
     challenges = Challenges.all_archived(filter: filter)
-    
+
     conn
     |> assign(:challenges, challenges)
     |> assign(:base_url, Routes.api_challenge_url(conn, :index, archived: true))
     |> render("index.json")
   end
 
-  # def index(conn, _params) do
-  #   challenges = Challenges.all_public()
-  #   # IO.inspect(challenges, label: "Challenges")
-  #   IO.puts("Debugging: Challenges fetched successfully")
-  #   conn
-  #   |> assign(:challenges, challenges)
-  #   |> assign(:base_url, Routes.api_challenge_url(conn, :index))
-  #   |> render("index.json")
-  # end
-
-  def index(conn, params) do
-    filter = Map.get(params, "filter", %{})
-
-    # Extract the filter values from the query parameters
-    primaryAgency = Map.get(filter, "primaryAgency", "")
-    dateAdded = Map.get(filter, "dateAdded", "")
-    lastDay = Map.get(filter, "lastDay", "")
-    primaryChallengeType = Map.get(filter, "primaryChallengeType", "")
-    keyword = Map.get(filter, "keyword", "")
-
-    challenges =
-      if Map.keys(filter) == [] do
-        Challenges.all_public()
-      else
-        Challenges.filter_archived(primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword)
-      end
+  def index(conn, _params) do
+    challenges = Challenges.all_public()
 
     conn
     |> assign(:challenges, challenges)
