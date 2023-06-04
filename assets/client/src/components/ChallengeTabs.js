@@ -56,7 +56,7 @@ export const ChallengeTabs = (props) => {
 
   const renderTabLabels = () => {
     return (
-      <ul className="challenge-tabs__list">
+      <div className="challenge-tabs__list">
         {React.Children.map(children, (child) => {
           if (child) {
             const { label, disabled } = child.props;
@@ -71,7 +71,7 @@ export const ChallengeTabs = (props) => {
             )
           }
         })}
-      </ul>
+      </div>
     )
   }
 
