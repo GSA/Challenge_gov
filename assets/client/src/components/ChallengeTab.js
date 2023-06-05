@@ -41,8 +41,8 @@ export const ChallengeTab = ({ label, downloadsLabel, section, challenge, childr
   return (
     <section className="challenge-tab container">
       <div className="challenge-tab__header">
-        <span>{label}</span>
-        {renderCopyShareButton()}
+        <span>{label}</span>        
+        {/* {renderCopyShareButton()} */}
       </div>
       <hr />
       <section className="challenge-tab__content">
@@ -50,5 +50,5 @@ export const ChallengeTab = ({ label, downloadsLabel, section, challenge, childr
       </section>
       <SectionResources challenge={challenge} section={section} label={downloadsLabel} />
     </section>
-  );
+  )
 };

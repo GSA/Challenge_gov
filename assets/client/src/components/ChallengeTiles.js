@@ -281,13 +281,13 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     }
   };
 
-  return (
+    return (
     <>
       <section id="active-challenges" className="cards__section">
         {renderHeader()}
         {renderSubHeader()}
         {renderYearFilter()}
-        {renderFilter()}
+        {/* {renderFilter()} */}
         {renderSortText()}
         {renderChallengeTiles()}
       </section>
