@@ -278,7 +278,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         <img
           className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
           src={challenge.logo}
-          alt={`Challenge image for ${challenge.title}`}
+          alt={`Challenge image for \"${challenge.title}\"`}
         />
       );
     }
