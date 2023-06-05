@@ -16,11 +16,9 @@ export const ChallengeTab = ({ label, downloadsLabel, section, challenge, childr
 
   const handleCopyLink = () => {
     let copyText = document.getElementById("challenge-link-text");
-
     copyText.select();
     copyText.setSelectionRange(0, 99999);
     document.execCommand("copy");
-
     setCopyTooltipOpen(true);
   };
 

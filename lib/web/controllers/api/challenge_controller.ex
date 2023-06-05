@@ -17,6 +17,26 @@ defmodule Web.Api.ChallengeController do
     |> render("index.json")
   end
 
+  # def index(conn, _params) do
+  #   challenges = Challenges.all_public()
+
+  #   json_challenges = for challenge <- challenges do
+  #     %{
+  #       id: challenge.id,
+  #       status: challenge.status,
+  #       sub_status: challenge.sub_status,
+  #       end_date: challenge.end_date,
+  #       inserted_at: challenge.inserted_at,
+  #       primary_type: challenge.primary_type
+  #     }
+  #   end
+
+  #   conn
+  #   |> assign(:challenges, json_challenges)
+  #   |> assign(:base_url, Routes.api_challenge_url(conn, :index))
+  #   |> render("index.json")
+  # end
+
   def index(conn, _params) do
     challenges = Challenges.all_public()
 
