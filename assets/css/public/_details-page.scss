@@ -336,6 +336,101 @@
     }
   }
 
+  .cards__section {
+    max-width: none;
+  }
+
+  .cards__year-filter {
+    margin-left: unset;
+  }
+
+  .filter-container {
+    background-color: #f4f4f4;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+  
+  .filter-module {
+    background-color: #ebebeb;  // Update the color to grey
+    margin: 0 -15px;
+    padding: 10px 25px;
+    position: relative;
+    border-radius: 4px; // Add border radius for a smoother appearance
+  }
+
+  .filter-module.full-width {
+    padding: 10px 25px;
+  }
+
+  .filter-module__item {
+    position: relative; // Add this line to set position context for the clear button
+  }
+
+  .filter-label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 5px; // Add this line to make the offset above label equal to the bottom one
+  }
+
+  .filter-select {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #ffffff;
+  }
+
+  .filter-input-container {
+     display: flex;
+     align-items: center;
+   }
+
+  .filter-input {
+    width: calc(100% - 110px);
+  }
+
+  .keyword-input-spacing {
+    margin-right: 10px;
+  }
+
+  .sort-text-container {
+    position: absolute;
+    top: 100%; 
+    left: 25px; 
+    padding-top: 10px;
+  }
+
+  .filter-dropdowns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); // Make columns adjustable, min-width 200px and 1 fraction unit as max-width
+    gap: 10px; 
+    justify-content: center; 
+    max-width: 90%; 
+    margin: 0 auto; 
+  }
+
+  .filter-button {
+    position: absolute;
+    right: 10px;
+    top: 26%; // Center vertically along the input field
+    border: none;
+    background-color: #1e73be;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    right: 40px; 
+    &:hover {
+      background-color: #155a8a;
+    }
+  }
+
   // MOBILE
   @media screen
   and (max-device-width: 425px) {
@@ -455,6 +550,23 @@
         width: 100%;
         box-shadow: 0 2px 8px 0 rgba(0, 94, 162, 0.7);
       }
+    }
+
+    .filter-module {
+      flex-direction: column;
+      
+      &__item {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+
+    .filter-buttons {
+      width: 100%;
+    }
+
+    .filter-button {
+      width: 100%;
     }
   }
 

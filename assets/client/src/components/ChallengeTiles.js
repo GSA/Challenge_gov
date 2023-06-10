@@ -34,7 +34,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const [primaryAgency, setPrimaryAgency] = useState("");
   const [dateAdded, setDateAdded] = useState("");
   const [lastDay, setLastDay] = useState("");
-  const [primaryChallengeType, setPrimaryChallengeType] = useState("");
+  const [primaryChallengeType, setPrimaryChallengeType] = useState([]);
   const [keyword, setKeyword] = useState("");
   const [filteredChallenges, setFilteredChallenges] = useState([]);
 
@@ -70,14 +70,20 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           }
 
           filtered = filtered.filter((challenge) => {
-            const challengeDate = moment(challenge.start_date); // Use start_date instead of date_added
+            //const challengeDate = moment(challenge.start_date);
+            const challengeDate = moment(challenge.inserted_at); 
             return challengeDate.isBetween(fromDate, now, null, "[)");
           });
         }
 
         // Add filtering by primary challenge type
-        if (primaryChallengeType) {
+        /*if (primaryChallengeType) {
             filtered = filtered.filter(challenge => challenge.primary_type === primaryChallengeType);
+        }*/
+
+        // Add filtering by primary challenge type
+        if (primaryChallengeType.length > 0) {
+          filtered = filtered.filter(challenge => primaryChallengeType.includes(challenge.primary_type));
         }
 
         if (lastDay) {
@@ -137,50 +143,44 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       }
   }, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
 
-
-  const renderFilterDropdown = (label, options, selectedValue, handleChange) => (
-    <div>
-      <label>{label}</label>
-      <select value={selectedValue} onChange={handleChange}>
-        <option value="">Select...</option>
-        {options.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
+  const renderFilterDropdown = (
+  label,
+  options,
+  selectedValue,
+  handleChange,
+  multiple = false,
+  className = "",
+  placeholder = "Select..." // Add an optional placeholder parameter
+) => (
+  <div className={`filter-module__item ${className}`}>
+    <label className="filter-label">{label}</label>
+    <select
+      className="filter-select"
+      value={selectedValue}
+      onChange={handleChange}
+      multiple={multiple}
+    >
+      <option value="">{placeholder}</option> // Use the passed placeholder value
+      {options.map((option, index) => (
+        <option key={index} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+);
 
   const handleClearFilters = () => {
     setPrimaryAgency('');
     setDateAdded('');
     setLastDay('');
-    setPrimaryChallengeType('');
+    setPrimaryChallengeType([]);
     setKeyword('');
-  };
-
-  const handleSearch = () => {
-    const queryParams = new URLSearchParams();
-    queryParams.append('primaryAgency', primaryAgency);
-    queryParams.append('dateAdded', dateAdded);
-    queryParams.append('lastDay', lastDay);
-    queryParams.append('primaryChallengeType', primaryChallengeType);
-    queryParams.append('keyword', keyword);
-
-    fetch(`/api/challenges?${queryParams.toString()}`)
-      .then(response => response.json())
-      .then(data => {
-        setFilteredChallenges(data.collection);
-      })
-      .catch(error => {
-        // Handle any errors
-      });
-  };
+  };  
 
   const renderHeader = () => (
     <h2 className="mb-5">
-      {isArchived ? "Archived Challenges" : "Active Challenges"}
+      {isArchived ? "Archived Challenges" : "Filter by open/active challenges."}
     </h2>
   );
 
@@ -214,7 +214,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       return <p className="card__section--sort"><i>Challenges sorted by those most recently closed to open submissions.</i></p>;
     } else {
       if (data.collection && data.collection.length >= 1) {
-        return <p className="card__section--sort"><i>Challenges are sorted by those closing soonest.</i></p>;
+        return <p className="card__section--sort"><i>By default, challenges are sorted by those closing soonest.</i></p>;
       }
     }
   };
@@ -259,40 +259,52 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
 
   const renderFilter = () => {
-    if (!isArchived) {
-      return (
-        <div className="filter-module">
-          <div className="filter-label">Filter by open/active challenges</div>
-          <div className="filter-dropdowns">
+  if (!isArchived) {
+    return (
+      <div className={`filter-module full-width`}>
+        <div className="filter-dropdowns">
+          
+        
             {renderFilterDropdown('Primary agency sponsor', primaryAgencyOptions, primaryAgency, (event) => setPrimaryAgency(event.target.value))}
             {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value))}
             {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value))}
-            {renderFilterDropdown('Primary challenge type', primaryChallengeTypeOptions, primaryChallengeType, (event) => setPrimaryChallengeType(event.target.value))}
-            <div>
+            {renderFilterDropdown(
+              "Primary challenge type",
+              primaryChallengeTypeOptions,
+              primaryChallengeType,
+              (event) => {
+                const selectedOptions = Array.from(
+                  event.target.selectedOptions,
+                  (option) => option.value
+                );
+                setPrimaryChallengeType(selectedOptions);
+              },
+              true,
+              "",
+              "Multi select..." // Pass the custom placeholder text
+            )}
+            <div className="filter-module__item">
               <label className="filter-label">Keyword or phrase</label>
-              <input type="text" placeholder="Keyword or phrase" value={keyword} onChange={(event) => setKeyword(event.target.value)} />
+              <input className="filter-input" type="text" placeholder="Keyword or phrase" value={keyword} onChange={(event) => setKeyword(event.target.value)} />
+              <button className="filter-button" onClick={handleClearFilters}>Clear</button>
             </div>
           </div>
-          <div className="filter-buttons">
-            <button onClick={handleSearch}>Search</button>
-            <button onClick={handleClearFilters}>Clear</button>
-          </div>
-        </div>
-      );
-    }
-  };
+      </div>
+    );
+  }
+};
 
-    return (
-    <>
-      <section id="active-challenges" className="cards__section">
-        {renderHeader()}
-        {renderSubHeader()}
-        {renderYearFilter()}
-        {/* {renderFilter()} */}
-        {renderSortText()}
-        {renderChallengeTiles()}
-      </section>
-    </>
+  return (
+  <>
+    <section id="active-challenges" className="cards__section">
+      {renderHeader()}
+      {renderSubHeader()}
+      {renderYearFilter()}
+      {renderFilter()}
+      {renderSortText()}
+      {renderChallengeTiles()}
+    </section>
+  </>
   );
 };
 
