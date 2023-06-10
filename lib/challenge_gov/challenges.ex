@@ -224,6 +224,10 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  def inserted_at(challenge) do
+    challenge.inserted_at
+  end
+
   # BOOKMARK: Create and update helper functions
   defp changeset_for_action(struct, params, action) do
     struct = challenge_form_preload(struct)
