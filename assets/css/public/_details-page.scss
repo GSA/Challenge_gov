@@ -431,8 +431,36 @@
     }
   }
 
-  // MOBILE
+  .filter-select:focus,
+  .filter-input:focus,
+  .filter-button:focus {
+    outline: 2px solid #1e73be;
+  }
 
+  // SCREEN READER STYLES
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  .sr-only-focusable:active,
+  .sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    display: block;
+  }
+
+  // MOBILE
   @media screen
   and (max-device-width: 425px) {
 
