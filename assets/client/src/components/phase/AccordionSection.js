@@ -52,12 +52,12 @@ export const AccordionSection = ({phase, index, section, children, print}) => {
           <span className={phaseClass}>{phaseText}</span>
         </button>
       </h2>
-      <div
-          id={`a${challengeId}-${index}`}
-          className="usa-accordion__content"
-          hidden={!expanded && !print}
+      <div        
+        id={`a-${section}-${phase.id}`} 
+        className="usa-accordion__content"
+        hidden={!expanded && !print}
       >
-          {children}
+        {children}
       </div>
     </div>
   );
