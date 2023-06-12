@@ -15,13 +15,18 @@ export const HowToEnter = ({challenge, print}) => {
       return (
         <Accordion>
           {
-            phases.map((phase, index) => {
-              return (
-                <AccordionSection key={phase.id} phase={phase} index={index} section="how to enter" print={print}>
-                  <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phase.how_to_enter }}></div>
-                </AccordionSection>
-              )
-            })
+            challenge.phases.map((phase, index) => (
+              <AccordionSection
+                key={phase.id}
+                challengeId={challenge.id}
+                phase={phase}
+                index={index}
+                section="how to enter"
+                print={print}
+              >
+                <div className="ql-editor" dangerouslySetInnerHTML={{ __html: phase.how_to_enter }}></div>
+              </AccordionSection>
+            ))
           }
         </Accordion>
       )
