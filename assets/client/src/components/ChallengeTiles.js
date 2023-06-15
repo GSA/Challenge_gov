@@ -145,32 +145,32 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   }, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
 
   const renderFilterDropdown = (
-  label,
-  options,
-  selectedValue,
-  handleChange,
-  multiple = false,
-  className = "",
-  placeholder = "Select..." // Add an optional placeholder parameter
-) => (
-  <div className={`filter-module__item ${className}`}>
-    <label className="filter-label">{label}</label>
-    <select
-      className="filter-select"
-      value={selectedValue}
-      onChange={handleChange}
-      multiple={multiple}
-      aria-label={label}
-    >
-      <option value="">{placeholder}</option> // Use the passed placeholder value
-      {options.map((option, index) => (
-        <option key={index} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  </div>
-);
+    label,
+    options,
+    selectedValue,
+    handleChange,
+    multiple = false,
+    className = "",
+    placeholder = "Select..."
+  ) => (
+    <div className={`filter-module__item ${className}`}>
+      <label className="filter-label">{label}</label>
+      <select
+        className="filter-select"
+        value={selectedValue}
+        onChange={handleChange}
+        multiple={multiple}
+        aria-label={label}
+      >
+        <option value="">{placeholder}</option>
+        {options.map((option, index) => (
+          <option key={index} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
 
   const handleClearFilters = () => {
     setPrimaryAgency('');
@@ -199,7 +199,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       return (
         <div className="cards__year-filter">
           <div>Filter by year:</div>
-          <select value={selectedYear} onChange={handleYearChange}>
+          <select value={selectedYear} onChange={handleYearChange} aria-label="Filter archive by year">
             {
               years.map(year => {
                 return <option key={year}>{year}</option>
