@@ -169,7 +169,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         return (
           <div className="detail-section__apply">
             <a {...applyButtonAttr}>
-              <button className="apply-btn">{applyButtonText}</button>
+              <button className="apply-btn" role="button" tabIndex="0" aria-label={applyButtonText}>{applyButtonText}</button>
             </a>
           </div>
         )
