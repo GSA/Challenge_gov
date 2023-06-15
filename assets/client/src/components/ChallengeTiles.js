@@ -135,13 +135,11 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     handleChange,
     multiple = false,
     className = "",
-    placeholder = "Select...",
-    id // Add id parameter here
+    placeholder = "Select..."
   ) => (
     <div className={`filter-module__item ${className}`}>
-      <label className="filter-label" htmlFor={id}>{label}</label>
+      <label className="filter-label">{label}</label>
       <select
-        id={id} // Add id attribute here
         className="filter-select"
         value={selectedValue}
         onChange={handleChange}
@@ -185,7 +183,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       return (
         <div className="cards__year-filter">
           <div>Filter by year:</div>
-          <select value={selectedYear} onChange={handleYearChange}>
+          <select value={selectedYear} onChange={handleYearChange} aria-label="Filter archive by year">
             {
               years.map(year => {
                 return <option key={year}>{year}</option>
