@@ -215,7 +215,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
             <div className="container"> 
               <p className="card__section--sort">
                 <i>
-                  Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press Clear to start a new search.
+                  Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press "Clear" to start a new search.
                 </i>
               </p>
             </div>
@@ -264,10 +264,10 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
 
   const renderFilter = () => {
-  if (!isArchived) {
-    return (
-      <form className={`filter-module full-width`} onSubmit={handleFormSubmit}>
-        <div className="filter-dropdowns">        
+    if (!isArchived) {
+      return (
+        <form className={`filter-module full-width`} onSubmit={handleFormSubmit}>
+          <div className="filter-dropdowns">
             {renderFilterDropdown('Primary agency sponsor', primaryAgencyOptions, primaryAgency, (event) => setPrimaryAgency(event.target.value))}
             {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value))}
             {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value))}
@@ -284,22 +284,24 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
               },
               true,
               "",
-              "Multi select..." // Pass the custom placeholder text
+              "Multi select..."
             )}
-            <div className="filter-module__item">
-              <label className="filter-label" htmlFor="keyword-or-phrase">Keyword or phrase</label>
-              <input
-                id="keyword-or-phrase" // Add id attribute
-                className="filter-input"
-                type="text"
-                placeholder="Keyword or phrase"
-                value={keyword}
-                onChange={(event) => setKeyword(event.target.value)}
-                aria-label="Keyword or phrase"
-              />
-              <button className="filter-button" onClick={handleClearFilters}>
-                Clear
-              </button>
+            <div className="filter-module__item keyword-item"> {/* Add "keyword-item" class */}
+              <label className="filter-label" htmlFor="keyword">Keyword</label>
+              <div className="keyword-input-wrapper"> {/* Add "keyword-input-wrapper" div */}
+                <input
+                  id="keyword"
+                  className="filter-input"
+                  type="text"
+                  placeholder="Keyword"
+                  value={keyword}
+                  onChange={(event) => setKeyword(event.target.value)}
+                  aria-label="Keyword"
+                />
+                <button className="filter-button" onClick={handleClearFilters}>
+                  Clear
+                </button>
+              </div>
             </div>
           </div>
         </form>
