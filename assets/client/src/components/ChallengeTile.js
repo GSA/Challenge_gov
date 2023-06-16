@@ -110,8 +110,8 @@ export const ChallengeTile = ({challenge, preview}) => {
           <img
             className="agency-logo"
             src={imageBase + challenge.agency_logo}
-            alt={`${challenge.agency_name} logo`}
-            title="Challenge agency logo" />
+            alt={truncateString(`Agency Logo: ${challenge.agency_name}`, 90)}
+          />
         </div>
       )
     }
@@ -119,7 +119,7 @@ export const ChallengeTile = ({challenge, preview}) => {
     if (challenge.logo) {
       return (
         <div className="image_wrapper">
-          <img src={challenge.logo} alt={challenge.logo_alt_text} title="Challenge logo" className="w-100"/>
+          <img src={challenge.logo} alt={truncateString(challenge.agency_name, 90)} className="w-100" />
         </div>
       )
     }
@@ -127,10 +127,9 @@ export const ChallengeTile = ({challenge, preview}) => {
     return (
       <div className="image_wrapper">
         <img
-          src={imageBase + challenge.agency_logo}
-          alt="Challenge agency logo"
-          title="Challenge agency logo"
-          className="w-100"
+            className="agency-logo"
+            src={imageBase + challenge.agency_logo}
+            alt={truncateString(`Agency Logo: ${challenge.agency_name}`, 90)}
         />
       </div>
     )
@@ -139,12 +138,12 @@ export const ChallengeTile = ({challenge, preview}) => {
   return (
     challenge ? (
       <div key={challenge.id} className="challenge-tile card">
-        <a href={challengeTileUrl(challenge, preview)} target={challenge.external_url ? "_blank" : ""} aria-label="View challenge details">
+        <a href={challengeTileUrl(challenge, preview)} target={challenge.external_url ? "_blank" : ""} aria-label="">
           {renderTileLogo()}
           <div className="challenge-tile__text-wrapper">
-            <p className="challenge-tile__title test" aria-label="Challenge title">{truncateString(challenge.title, 90)}</p>
-            <p className="challenge-tile__agency-name" aria-label="Agency name">{truncateString(challenge.agency_name, 90)}</p>
-            <p className="challenge-tile__tagline" aria-label="Challenge tagline">{truncateString(challenge.tagline, 90)}</p>
+            <h2 className="challenge-tile__title test" aria-label="" style={{ textAlign: 'left', paddingLeft: '20px', paddingTop: '20px', lineHeight: '30px' }}>{truncateString(challenge.title, 90)}</h2>
+            <p className="challenge-tile__agency-name" aria-label="">{truncateString(challenge.agency_name, 90)}</p>
+            <p className="challenge-tile__tagline" aria-label="">{truncateString(challenge.tagline, 90)}</p>
             <p className="challenge-tile__date">{renderDate(challenge)}</p>
             {renderTags(challenge)}
           </div>

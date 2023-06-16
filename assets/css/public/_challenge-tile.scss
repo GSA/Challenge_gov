@@ -214,6 +214,16 @@ p {
   }
 }
 
+.filter-dropdowns {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.filter-item {
+  margin: 1em;
+}
+
 @media screen and (min-device-width: 768px) {
   .saved-challenges-grid {
     padding: 3rem;

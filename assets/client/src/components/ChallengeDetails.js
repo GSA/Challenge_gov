@@ -169,7 +169,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         return (
           <div className="detail-section__apply">
             <a {...applyButtonAttr}>
-              <button className="apply-btn">{applyButtonText}</button>
+              <button className="apply-btn" role="button" tabIndex="0" aria-label={applyButtonText}>{applyButtonText}</button>
             </a>
           </div>
         )
@@ -229,12 +229,12 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
           {renderApplyButton(challenge)}
           <div className="detail-section__split-btns">
             {!challenge.is_archived &&
-              <div className="follow-btn" id="followChallengeButton">
+              <div className="follow-btn" id="followChallengeButton" tabIndex="0">
                 {renderFollowButton(challenge)}
                 {renderFollowTooltip()}
               </div>
             }
-            <div className="social-share-btn" id="shareChallengeButton">
+            <div className="social-share-btn" id="shareChallengeButton" tabIndex="0">
               <span className="details__btn">
                 <i className="fas fa-share-alt me-2"></i>
                 Share
@@ -268,26 +268,27 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         <img
           className="agency-logo"
           src={challenge.agency_logo}
-          alt={`${challenge.agency_name} logo`}
-          title="Challenge agency logo" />
+          alt={`Agency logo for ${challenge.agency_name}`}        
+        />
       )
     }
 
     if (challenge.logo) {
       return (
         <img
-        className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
-        src={challenge.logo} alt={challenge.title}
-        title={`${challenge.title} - Challenge.Gov`} />
-      )
+          className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
+          src={challenge.logo}
+          alt={`Challenge image for \"${challenge.title}\"`}
+        />
+      );
     }
 
     return (
       <img
         className="agency-logo"
         src={challenge.agency_logo}
-        alt={`${challenge.agency_name} logo`}
-        title="Challenge agency logo" />
+        alt={`Agency logo for ${challenge.agency_name}`}        
+      />
     )
   }
 
@@ -304,15 +305,28 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                     <img
                       className="agency-logo"
                       src={imageBase + challenge.agency_logo}
-                      alt={`${challenge.agency_name} logo`}
-                      title="Challenge agency logo" />
-                    { (challenge.federal_partners.length > 0 && challenge.federal_partners[0].logo) &&
-                      <img
-                        className="agency-logo"
-                        src={challenge.federal_partners[0].logo}
-                        alt={`${challenge.federal_partners[0].name} logo`}
-                        title="Federal partner agency logo"/>
-                    }
+                      alt={`Agency logo for ${challenge.agency_name}`}                    
+                    />
+
+                    {challenge.federal_partners.length > 0 && (
+                    <React.Fragment>
+                      {challenge.federal_partners.map((partner, index) => {
+                        if (partner.logo) {
+                          return (
+                            <img
+                              key={index}
+                              className="agency-logo"
+                              src={partner.logo}
+                              alt={`Partner logo for ${partner.name}`}
+                            />
+                          );
+                        } else {
+                          return null;
+                        }
+                      })}
+                    </React.Fragment>
+                  )}
+
                   </div>
                 }
                 <h1 className="title">{challenge.title}</h1>

@@ -1,15 +1,245 @@
-import React from 'react'
-import { Link } from "react-router-dom";
-import moment from "moment"
-import { ChallengeTile } from "./ChallengeTile"
+import React, { useState, useEffect } from 'react';
+import moment from "moment";
+import { ChallengeTile } from "./ChallengeTile";
 
-export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleYearChange}) => {
+const dateAddedOptions = [
+  "Past Week",
+  "Past Month",
+  "Past 90 Days",
+  "Past Year",
+  //"Custom",   #todo
+];
+
+const lastDayOptions = [
+  "Next Week",
+  "Next Month",
+  "Next 90 days",
+  "Within Year",
+  //"Custom",   #todo
+];
+
+const primaryChallengeTypeOptions = [
+  "Software and apps",
+  "Creative (Multimedia & Design)",
+  "Ideas",
+  "Technology demonstration and hardware",
+  "Nominations",
+  "Business plans",
+  "Analytics, visualizations, algorithms",
+  "Scientific",
+];
+
+export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handleYearChange }) => {
+  const [primaryAgencyOptions, setPrimaryAgencyOptions] = useState([]);
+  const [primaryAgency, setPrimaryAgency] = useState("");
+  const [dateAdded, setDateAdded] = useState("");
+  const [lastDay, setLastDay] = useState("");
+  const [primaryChallengeType, setPrimaryChallengeType] = useState([]);
+  const [keyword, setKeyword] = useState("");
+  const [filteredChallenges, setFilteredChallenges] = useState([]);
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+  };
+
+  useEffect(() => {
+    if (data && data.collection) {
+        const agencies = Array.from(new Set(data.collection.map(challenge => challenge.agency_name)));
+        setPrimaryAgencyOptions(agencies);
+
+        let filtered = data.collection;
+
+        if (primaryAgency) {
+            filtered = filtered.filter(challenge => challenge.agency_name === primaryAgency);
+        }
+
+        if (dateAdded) {
+          // Calculate fromDate based on dateAdded
+          const now = moment();
+          let fromDate = now.clone().subtract(1, "years"); // Default to "Past Year"
+
+          switch (dateAdded) {
+            case "Past Week":
+              fromDate = now.clone().subtract(7, "days");
+              break;
+            case "Past Month":
+              fromDate = now.clone().subtract(1, "months");
+              break;
+            case "Past 90 Days":
+              fromDate = now.clone().subtract(90, "days");
+              break;
+            default:
+              break;
+          }
+
+          // Filter challenges based on fromDate
+          filtered = filtered.filter((challenge) => {
+            const challengeDate = moment(challenge.inserted_at);
+            return challengeDate.isBetween(fromDate, now, null, "[)");
+          });
+        }
+
+        // Add filtering by primary challenge type
+        if (primaryChallengeType.length > 0) {
+          filtered = filtered.filter(challenge => primaryChallengeType.includes(challenge.primary_type));
+        }
+
+        if (lastDay) {
+          const now = moment();
+          let toDate;
+
+          switch (lastDay) {
+            case "Next Week":
+              toDate = now.clone().add(7, "days");
+              break;
+            case "Next Month":
+              toDate = now.clone().add(1, "months");
+              break;
+            case "Next 90 days":
+              toDate = now.clone().add(90, "days");
+              break;
+            case "Within Year":
+              toDate = now.clone().add(1, "years");
+              break;
+            default:
+              toDate = now.clone().add(1, "years"); // Default to "Within Year"
+              break;
+          }
+
+        // Filter challenges based on toDate
+        filtered = filtered.filter((challenge) => {
+            const challengeEnd = moment(challenge.end_date);
+            return challengeEnd.isBetween(now, toDate, null, "[)");
+          });
+        }
+
+        if (keyword) {
+          const searchFields = ["agency_name", "title", "tagline"];
+
+          filtered = filtered.filter((challenge) => {
+            // Search in agency_name, title, and tagline fields
+            for (const field of searchFields) {
+              if (challenge[field] && challenge[field].toLowerCase().includes(keyword.toLowerCase())) {
+                return true;
+              }
+            }
+
+            // Search in how_to_enter and judging_criteria fields inside phases
+            for (const phase of challenge.phases) {
+              if (phase.how_to_enter && phase.how_to_enter.toLowerCase().includes(keyword.toLowerCase())) {
+                return true;
+              }
+              if (phase.judging_criteria && phase.judging_criteria.toLowerCase().includes(keyword.toLowerCase())) {
+                return true;
+              }
+            }
+
+            return false;
+          });
+        }
+
+        // implement other filters here
+
+        setFilteredChallenges(filtered);
+      }
+  }, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
+
+  const renderFilterDropdown = (
+    label,
+    options,
+    selectedValue,
+    handleChange,
+    multiple = false,
+    className = "",
+    placeholder = "Select..."
+  ) => (
+    <div className={`filter-module__item ${className}`}>
+      <label className="filter-label">{label}</label>
+      <select
+        className="filter-select"
+        value={selectedValue}
+        onChange={handleChange}
+        multiple={multiple}
+        aria-label={label}
+      >
+        <option value="">{placeholder}</option>
+        {options.map((option, index) => (
+          <option key={index} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+
+  const handleClearFilters = () => {
+    setPrimaryAgency('');
+    setDateAdded('');
+    setLastDay('');
+    setPrimaryChallengeType([]);
+    setKeyword('');
+  };  
+
+  const renderHeader = () => (
+    <h2 className="mb-5">
+      {isArchived ? "Archived Challenges" : "Filter by open/active challenges."}
+    </h2>
+  );
+
+  const renderSubHeader = () => isArchived ? <p>Challenges on this page are completed (closed to submissions) or only open to select winners of a previous competition phase.</p> : null;
+
+  const renderYearFilter = () => {
+    const startYear = 2010;
+    const currentYear = moment().year();
+    const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
+
+    const years = range(currentYear, startYear, -1);
+
+    if (isArchived) {
+      return (
+        <div className="cards__year-filter">
+          <div>Filter by year:</div>
+          <select value={selectedYear} onChange={handleYearChange} aria-label="Filter archive by year">
+            {
+              years.map(year => {
+                return <option key={year}>{year}</option>
+              })
+            }
+          </select>
+        </div>
+      );
+    }
+  };
+
+    const renderSortText = () => {
+      if (isArchived) {
+        return (
+          <div className="container">
+            <p className="card__section--sort">
+              <i>Challenges sorted by those most recently closed to open submissions.</i>
+            </p>
+          </div>
+        );
+      } else {
+        if (data.collection && data.collection.length >= 1) {
+          return (
+            <div className="container"> 
+              <p className="card__section--sort">
+                <i>
+                  Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press Clear to start a new search.
+                </i>
+              </p>
+            </div>
+          );
+        }
+      }
+    };
 
   const renderChallengeTiles = () => {
     if (loading) {
       return (
         <div className="cards__loader-wrapper" aria-label="Loading active challenges">
-          {[1,2,3,4,5,6].map(numOfPlaceholders => (
+          {[1, 2, 3, 4, 5, 6].map(numOfPlaceholders => (
             <div key={numOfPlaceholders}>
               <div className="card__loader--image"></div>
               <div className="card__loader--text line-1"></div>
@@ -20,18 +250,18 @@ export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleY
         </div>
       )
     } else {
-      if (data.collection) {
-        if (data.collection.length > 0) {
+      if (filteredChallenges) {
+        if (filteredChallenges.length > 0) {
           return (
             <div className="cards">
-              {data.collection.map(c => (
-                  <ChallengeTile key={c.id} challenge={c} />
+              {filteredChallenges.map(c => (
+                <ChallengeTile key={c.id} challenge={c} />
               ))}
             </div>
           )
         }
 
-        if (data.collection.length == 0) {
+        if (filteredChallenges.length === 0) {
           return (
             <div className="cards">
               <p className="cards__none">
@@ -42,66 +272,71 @@ export const ChallengeTiles = ({data, loading, isArchived, selectedYear, handleY
         }
       }
     }
-  }
+  };
 
-  const renderHeader = () => {
+  const renderFilter = () => {
+  if (!isArchived) {
     return (
-      <h2 className="mb-5">
-        {isArchived ? "Archived Challenges" : "Active Challenges"}
-      </h2>
-    )
-  }
-  
-  const renderSubHeader = () => {
-    return isArchived ?
-      (
-        <p>
-          Challenges on this page are completed (closed to submissions) or only open to select winners of a previous competition phase.
-        </p>
-      )
-      : null
-  }
-
-  const renderYearFilter = () => {
-    const startYear = 2010
-    const currentYear = moment().year()
-    const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1}, (_, i) => start + (i * step));
-
-    const years = range(currentYear, startYear, -1)
-
-    if (isArchived) {
-      return (
-        <div className="cards__year-filter">
-          <div>Filter by year:</div>
-          <select value={selectedYear} onChange={handleYearChange}>
-            {
-              years.map(year => {
-                return <option key={year}>{year}</option>
-              })
-            }
-          </select>
-        </div>
-      )
-    } 
-  }
-
-  const renderSortText = () => {
-    if (isArchived) {
-      return <p className="card__section--sort"><i>Challenges sorted by those most recently closed to open submissions.</i></p>
-    } else {
-      if (data.collection && data.collection.length >= 1) {
-        return <p className="card__section--sort"><i>Challenges are sorted by those closing soonest.</i></p>
-      }
+      <form className={`filter-module full-width`} onSubmit={handleFormSubmit}>
+        <div className="filter-dropdowns">        
+            {renderFilterDropdown('Primary agency sponsor', primaryAgencyOptions, primaryAgency, (event) => setPrimaryAgency(event.target.value))}
+            {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value))}
+            {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value))}
+            {renderFilterDropdown(
+              "Primary challenge type",
+              primaryChallengeTypeOptions,
+              primaryChallengeType,
+              (event) => {
+                const selectedOptions = Array.from(
+                  event.target.selectedOptions,
+                  (option) => option.value
+                );
+                setPrimaryChallengeType(selectedOptions);
+              },
+              true,
+              "",
+              "Multi select..." // Pass the custom placeholder text
+            )}
+            <div className="filter-module__item">
+              <label className="filter-label" htmlFor="keyword-or-phrase">Keyword or phrase</label>
+              <input
+                id="keyword-or-phrase" // Add id attribute
+                className="filter-input"
+                type="text"
+                placeholder="Keyword or phrase"
+                value={keyword}
+                onChange={(event) => setKeyword(event.target.value)}
+                aria-label="Keyword or phrase"
+              />
+              <button className="filter-button" onClick={handleClearFilters}>
+                Clear
+              </button>
+            </div>
+          </div>
+        </form>
+      );
     }
-  }
+  };
 
   return (
-    <section id="active-challenges" className="cards__section">
+  <>
+    <a href="#main-content" className="sr-only sr-only-focusable">
+      Skip to main content
+    </a>
+    <section
+      id="active-challenges"
+      className="cards__section"
+      tabIndex="-1" // Add tabindex to bring the focus to the section when clicked on skip link      
+    >    
       {renderHeader()}
       {renderSubHeader()}
       {renderYearFilter()}
+      {renderFilter()}
       {renderSortText()}
       {renderChallengeTiles()}
     </section>
-  )
-}
+  </>
+  );
+};
+
+export default ChallengeTiles;

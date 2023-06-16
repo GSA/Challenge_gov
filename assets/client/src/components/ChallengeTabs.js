@@ -30,13 +30,14 @@ export const ChallengeTabs = (props) => {
       className: tabClasses(label, disabled),
       disabled: disabled,
       "aria-disabled": disabled,
-    }
+      tabIndex: 0
+    };
 
     if (disabled) {
-      tProps["tab-index"] = -1
+      tProps["tabIndex"] = -1;
     }
 
-    return tProps
+    return tProps;
   }
   const tabClasses = (label, disabled) => {
     return "challenge-tabs__tab" + activeTabClasses(label) + disabledTabClasses(disabled)
@@ -56,7 +57,7 @@ export const ChallengeTabs = (props) => {
 
   const renderTabLabels = () => {
     return (
-      <ul className="challenge-tabs__list">
+      <div className="challenge-tabs__list">
         {React.Children.map(children, (child) => {
           if (child) {
             const { label, disabled } = child.props;
@@ -71,7 +72,7 @@ export const ChallengeTabs = (props) => {
             )
           }
         })}
-      </ul>
+      </div>
     )
   }
 

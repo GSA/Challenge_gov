@@ -224,6 +224,10 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  def inserted_at(challenge) do
+    challenge.inserted_at
+  end
+
   # BOOKMARK: Create and update helper functions
   defp changeset_for_action(struct, params, action) do
     struct = challenge_form_preload(struct)
@@ -904,6 +908,10 @@ defmodule ChallengeGov.Challenges do
 
   def is_unpublished?(%{status: "unpublished"}), do: true
   def is_unpublished?(_user), do: false
+
+  def is_opening_soon?(%{status: "published", sub_status: nil}), do: true
+
+  def is_opening_soon?(_challenge), do: false
 
   def is_open?(%{sub_status: "open"}), do: true
 
