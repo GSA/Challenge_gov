@@ -324,26 +324,32 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
 
   return (
-    <div className="container">
-      <>
-        <a href="#main-content" className="sr-only sr-only-focusable">
-          Skip to main content
-        </a>
-        <section
-          id="active-challenges"
-          className="cards__section"
-          tabIndex="-1"
-        >    
+    <>
+      <a href="#main-content" className="sr-only sr-only-focusable">
+        Skip to main content
+      </a>
+      <section
+        id="active-challenges"
+        className="cards__section"
+        tabIndex="-1" // Add tabindex to bring the focus to the section when clicked on the skip link
+      >
+        <div className="container">
           {renderHeader()}
           {renderSubHeader()}
           {renderYearFilter()}
-          {renderFilter()}
-          <div style={{ paddingBottom: "40px" }}>&nbsp;</div>
+        </div> {/* Close the first container div */}
+        <div className="full-width-background">{/* Add full-width-background div */}
+          <div className="container">
+            {renderFilter()}
+          </div>
+        </div>{/* Close the full-width-background div */}
+        <div className="container">
+          <div style={{ paddingBottom: "40px" }}>&nbsp;</div> {/* Add the div for padding after the filter */}
           {renderSortText()}
           {renderChallengeTiles()}
-        </section>
-      </>
-    </div>
+        </div> {/* Close the second container div */}
+      </section>
+    </>
   );
 };
 
