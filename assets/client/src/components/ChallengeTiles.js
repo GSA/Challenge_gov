@@ -268,7 +268,21 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       return (
         <form className={`filter-module full-width`} onSubmit={handleFormSubmit}>
           <div className="filter-dropdowns">
-            {renderFilterDropdown('Primary agency sponsor', primaryAgencyOptions, primaryAgency, (event) => setPrimaryAgency(event.target.value))}
+            <div className={`filter-module__item`}>
+              <label className="filter-label" htmlFor="primaryAgency">Primary agency sponsor</label>
+              <select
+                id="primaryAgency"
+                className="filter-select"
+                value={primaryAgency}
+                onChange={(event) => setPrimaryAgency(event.target.value)}
+                aria-label="Primary agency sponsor"
+              >
+                <option value="">Select...</option>
+                {primaryAgencyOptions.map((option, index) => (
+                  <option key={index} value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
             {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value))}
             {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value))}
             {renderFilterDropdown(
