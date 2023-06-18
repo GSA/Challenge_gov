@@ -64,17 +64,24 @@ export const ChallengeTabs = (props) => {
             const titleCasedLabel = label === "faq" ? label.toUpperCase() :
               label[0].toUpperCase() + label.slice(1).toLowerCase();
             return (
-              <div {...tabProps(label, disabled)}
-                  onClick={(e) => handleTabClick(label, disabled)}>
+              <div
+                {...tabProps(label, disabled)}
+                onClick={(e) => handleTabClick(label, disabled)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.keyCode === 13) {
+                    handleTabClick(label, disabled);
+                  }
+                }} // Add onKeyDown event listener
+              >
                 {renderWinnersIcon(label, disabled)}
                 {titleCasedLabel}
               </div>
-            )
+            );
           }
         })}
       </div>
-    )
-  }
+    );
+  };
 
   const renderTabContent = () => {
     return (
