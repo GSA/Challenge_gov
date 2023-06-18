@@ -1,11 +1,15 @@
 <div class="card winners-overview">
   <div class="card-body">
     <h2>Winners overview</h2>
-
+    <span>Add Winners details to your challenge profile page.</span>
+    <hr size='2'>
     <%= form_for(@changeset, @action, [class: "form-horizontal", multipart: true, data: [phase_winner_id: @changeset.data.id]], fn f -> %>
-      <div class="col winner-overview">
-        <label>Winners description (optional)</label>
-        <%= FormView.rt_textarea_field(f, :overview) %>
+      <div class="col Add Winners details to your challenge profile page.winner-overview">
+        <h3>Winners description (optional)</h3>
+        <span>Using the text editor blow, you can display a Winners Description detailing winner names and rank with any important
+messaging and hyperlinking. No image uploads available at this time.</span><br><br>
+        <%= FormView.rt_textarea_field(f, :overview , style: "height:150px")  %>
+       <!--
         <label>Winners overview image (optional)</label>
         <%= hidden_input f, :overview_image_key %>
         <%= hidden_input f, :overview_image_extension %>
@@ -21,9 +25,11 @@
       </div>
 
       <hr/>
-
+      -->
+      <br><br>
       <div class="col individual-winners">
-        <h2>Add individual winners with name, rank and photo (optional)</h2>
+        <h2>Individual Winner Info</h2>
+        <b>Add individual winners with name, rank and photo (optional)</b><br><br>
 
         <%= render Web.PhaseWinnerView, "winners/_form.html", form: f, upload_error: @upload_error %>
       </div>
@@ -33,7 +39,7 @@
       <div class="col">
         <div class="row winner-options">
           <div class="col-md cancel-winner">
-            <%= link("Cancel", to: Routes.challenge_path(@conn, :show, @challenge.id)) %>          
+            <%= link("Cancel", to: Routes.challenge_path(@conn, :show, @challenge.id)) %>
           </div>
           <div class="col-md">
             <a class="disabled btn">Save draft</a>

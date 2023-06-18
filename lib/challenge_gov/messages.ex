@@ -182,7 +182,7 @@ defmodule ChallengeGov.Messages do
       )
       when author_id != original_recipient_id do
     recipient = ChallengeGov.Repo.get!(ChallengeGov.Accounts.User, original_recipient_id)
-    content = scrub(message.content)
+    content = message.content
 
     recipient
     |> Emails.message_center_new_message(content)
