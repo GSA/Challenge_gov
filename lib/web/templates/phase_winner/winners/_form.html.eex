@@ -18,7 +18,7 @@
             <div><%= label winner, :place_title, "Place title (ex. First Place or Grand Winner) (optional)" %></div>
             <%= text_input winner, :place_title %>
           </div>
-          
+
           <div class="form-group">
             <div><%= label winner, :name, "Name (optional)" %></div>
             <%= text_input winner, :name %>
@@ -28,7 +28,7 @@
             <%= hidden_input winner, :image_key, data: [field: :image_key] %>
             <%= hidden_input winner, :image_extension, data: [field: :image_extension] %>
           </div>
-          
+
           <div class="form-group">
             <div><%= label winner, :image, "Upload image (optional)", class: "control-label" %></div>
             <%= file_input winner, :image, data: [field: :image] %>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="grid-col flex-2 remove-winner-container">
-          <a href="#" class="js-dynamic-nested-remove">Remove</a>
+          <a href="#" class="float-right js-dynamic-nested-remove btn btn-primary">Remove</a>
         </div>
       </div>
     <% end) %>
@@ -63,12 +63,12 @@
           <div><label >Place title (ex. First Place or Grand Winner) (optional)</label></div>
           <%= text_input :template, :field, data: [field: :place_title] %>
         </div>
-        
+
         <div class="js-dynamic-nested-group form-group">
           <div><label>Name (optional)</label></div>
           <%= text_input :template, :field, data: [field: :name] %>
         </div>
-        
+
         <div class="js-dynamic-nested-group form-group">
           <%= hidden_input :template, :field, data: [field: :image_path] %>
         </div>
@@ -85,10 +85,12 @@
       </div>
 
       <div class="grid-col flex-2 remove-winner-container">
-        <a href="#" class="js-dynamic-nested-remove">Remove</a>
+        <a href="#" class="float-right js-dynamic-nested-remove btn btn-primary">Remove</a>
       </div>
     </div>
   </div>
+  <h3>Add Aditional Winners</h3>
+  <b>Add additional winners. These will display in a grid format in other displayed above.</b><br><br>
 
   <div class="js-dynamic-nested-add btn btn-primary" data-parent="phase_winner" data-child="winners">Add</div>
 </div>
