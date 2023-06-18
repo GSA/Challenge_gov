@@ -1,8 +1,6 @@
 <div id="winners-form">
   <div class="js-dynamic-nested-items">
-    <%= if @upload_error do %>
-      <div class="mb-3 invalid-feedback d-block">Files must be .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
-    <% end %>
+
     <%= inputs_for(@form, :winners, [skip_hidden: true], fn winner -> %>
       <div class="js-dynamic-nested-item grid-row mb-2" data-index=<%= winner.index %>>
         <div class="form-group">
@@ -58,19 +56,7 @@
           <%= text_input :template, :field, data: [field: :name] %>
         </div>
 
-        <div class="js-dynamic-nested-group form-group">
-          <%= hidden_input :template, :field, data: [field: :image_path] %>
-        </div>
 
-        <div class="js-dynamic-nested-group form-group">
-          <div><label class="control-label">Upload image (optional)</label></div>
-          <%= file_input :template, :field, data: [field: :image] %>
-          <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
-        </div>
-
-        <div class="js-dynamic-nested-group form-group">
-          <%= render_remove_image_checkbox(:template, :field, data: [field: :remove_image]) %>
-        </div>
       </div>
 
       <div class="grid-col flex-2 remove-winner-container">
