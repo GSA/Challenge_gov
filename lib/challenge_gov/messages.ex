@@ -194,7 +194,7 @@ defmodule ChallengeGov.Messages do
   def maybe_send_email(solver_ids, message_content) when is_list(solver_ids) do
     Enum.map(solver_ids, fn solver_id ->
       recipient = ChallengeGov.Repo.get!(ChallengeGov.Accounts.User, solver_id)
-      content = scrub(message_content)
+      content = message_content
 
       recipient
       |> Emails.message_center_new_message(content)

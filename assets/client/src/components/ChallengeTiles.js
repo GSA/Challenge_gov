@@ -114,22 +114,11 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         }
 
         if (keyword) {
-          const searchFields = ["agency_name", "title", "tagline"];
-
+          const searchFields = ["title", "tagline", "brief_description"];
           filtered = filtered.filter((challenge) => {
-            // Search in agency_name, title, and tagline fields
+            // Search in title, tagline, and brief_description fields
             for (const field of searchFields) {
               if (challenge[field] && challenge[field].toLowerCase().includes(keyword.toLowerCase())) {
-                return true;
-              }
-            }
-
-            // Search in how_to_enter and judging_criteria fields inside phases
-            for (const phase of challenge.phases) {
-              if (phase.how_to_enter && phase.how_to_enter.toLowerCase().includes(keyword.toLowerCase())) {
-                return true;
-              }
-              if (phase.judging_criteria && phase.judging_criteria.toLowerCase().includes(keyword.toLowerCase())) {
                 return true;
               }
             }
@@ -226,7 +215,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
             <div className="container"> 
               <p className="card__section--sort">
                 <i>
-                  Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press Clear to start a new search.
+                  Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press "Clear" to start a new search.
                 </i>
               </p>
             </div>
@@ -275,11 +264,25 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
 
   const renderFilter = () => {
-  if (!isArchived) {
-    return (
-      <form className={`filter-module full-width`} onSubmit={handleFormSubmit}>
-        <div className="filter-dropdowns">        
-            {renderFilterDropdown('Primary agency sponsor', primaryAgencyOptions, primaryAgency, (event) => setPrimaryAgency(event.target.value))}
+    if (!isArchived) {
+      return (
+        <form className={`filter-module full-width`} onSubmit={handleFormSubmit}>
+          <div className="filter-dropdowns">
+            <div className={`filter-module__item`}>
+              <label className="filter-label" htmlFor="primaryAgency">Primary agency sponsor</label>
+              <select
+                id="primaryAgency"
+                className="filter-select"
+                value={primaryAgency}
+                onChange={(event) => setPrimaryAgency(event.target.value)}
+                aria-label="Primary agency sponsor"
+              >
+                <option value="">Select...</option>
+                {primaryAgencyOptions.map((option, index) => (
+                  <option key={index} value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
             {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value))}
             {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value))}
             {renderFilterDropdown(
@@ -295,22 +298,24 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
               },
               true,
               "",
-              "Multi select..." // Pass the custom placeholder text
+              "Multi select..."
             )}
-            <div className="filter-module__item">
-              <label className="filter-label" htmlFor="keyword-or-phrase">Keyword or phrase</label>
-              <input
-                id="keyword-or-phrase" // Add id attribute
-                className="filter-input"
-                type="text"
-                placeholder="Keyword or phrase"
-                value={keyword}
-                onChange={(event) => setKeyword(event.target.value)}
-                aria-label="Keyword or phrase"
-              />
-              <button className="filter-button" onClick={handleClearFilters}>
-                Clear
-              </button>
+            <div className="filter-module__item keyword-item">
+              <label className="filter-label" htmlFor="keyword">Keyword</label>
+              <div className="keyword-input-wrapper">
+                <input
+                  id="keyword"
+                  className="filter-input"
+                  type="text"
+                  placeholder="Keyword"
+                  value={keyword}
+                  onChange={(event) => setKeyword(event.target.value)}
+                  aria-label="Keyword"
+                />
+                <button className="filter-button" onClick={handleClearFilters}>
+                  Clear
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -319,23 +324,32 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
 
   return (
-  <>
-    <a href="#main-content" className="sr-only sr-only-focusable">
-      Skip to main content
-    </a>
-    <section
-      id="active-challenges"
-      className="cards__section"
-      tabIndex="-1" // Add tabindex to bring the focus to the section when clicked on skip link      
-    >    
-      {renderHeader()}
-      {renderSubHeader()}
-      {renderYearFilter()}
-      {renderFilter()}
-      {renderSortText()}
-      {renderChallengeTiles()}
-    </section>
-  </>
+    <>
+      <a href="#main-content" className="sr-only sr-only-focusable">
+        Skip to main content
+      </a>
+      <section
+        id="active-challenges"
+        className="cards__section"
+        tabIndex="-1" // Add tabindex to bring the focus to the section when clicked on the skip link
+      >
+        <div className="container">
+          {renderHeader()}
+          {renderSubHeader()}
+          {renderYearFilter()}
+        </div> {/* Close the first container div */}
+        <div className="full-width-background">{/* Add full-width-background div */}
+          <div className="container">
+            {renderFilter()}
+          </div>
+        </div>{/* Close the full-width-background div */}
+        <div className="container">
+          <div style={{ paddingBottom: "40px" }}>&nbsp;</div> {/* Add the div for padding after the filter */}
+          {renderSortText()}
+          {renderChallengeTiles()}
+        </div> {/* Close the second container div */}
+      </section>
+    </>
   );
 };
 
