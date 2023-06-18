@@ -11,13 +11,23 @@
   </div>
 </div>
 
+          <div class="content-header">
+            <div class="container-fluid">
+              <div class="callout callout-warning d-flex align-items-center">
+                <i class="fa fa-exclamation-circle h4 mb-0 flash-icon"></i><span><b>Important Notice</b><br>
+Image upload functionality on this page has been deactivated due to accessibility upgrading. For questions or updates please email team@challenge.gov.</span>
+              </div>
+            </div>
+          </div>
+
+
 <div class="content phase-winners">
   <div class="container-fluid">
     <%= render_title(@challenge, @phase) %>
 
-    <%= render Web.PhaseWinnerView, "_form.html", 
-      conn: @conn, 
-      changeset: @changeset, 
+    <%= render Web.PhaseWinnerView, "_form.html",
+      conn: @conn,
+      changeset: @changeset,
       action: @action,
       challenge: @challenge,
       phase: @phase,

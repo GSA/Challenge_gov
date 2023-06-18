@@ -29,17 +29,6 @@
             <%= hidden_input winner, :image_extension, data: [field: :image_extension] %>
           </div>
 
-          <div class="form-group">
-            <div><%= label winner, :image, "Upload image (optional)", class: "control-label" %></div>
-            <%= file_input winner, :image, data: [field: :image] %>
-            <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
-          </div>
-          <div class="my-3"><%= render_winner_image(winner.data) %></div>
-          <%= if winner.data.image_key do %>
-            <div class="form-group">
-              <%= render_remove_image_checkbox(winner, :image) %>
-            </div>
-          <% end %>
         </div>
 
         <div class="grid-col flex-2 remove-winner-container">
