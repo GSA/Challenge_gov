@@ -6,16 +6,14 @@ const dateAddedOptions = [
   "Past Week",
   "Past Month",
   "Past 90 Days",
-  "Past Year",
-  //"Custom",   #todo
+  "Past Year"
 ];
 
 const lastDayOptions = [
   "Next Week",
   "Next Month",
   "Next 90 days",
-  "Within Year",
-  //"Custom",   #todo
+  "Within Year"
 ];
 
 const primaryChallengeTypeOptions = [
@@ -39,7 +37,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const [filteredChallenges, setFilteredChallenges] = useState([]);
 
   const handleFormSubmit = (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
+    event.preventDefault();
   };
 
   useEffect(() => {
@@ -115,8 +113,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
 
         if (keyword) {
           const searchFields = ["title", "tagline", "brief_description"];
-          filtered = filtered.filter((challenge) => {
-            // Search in title, tagline, and brief_description fields
+          filtered = filtered.filter((challenge) => {            
             for (const field of searchFields) {
               if (challenge[field] && challenge[field].toLowerCase().includes(keyword.toLowerCase())) {
                 return true;
@@ -126,40 +123,41 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
             return false;
           });
         }
-
         // implement other filters here
-
         setFilteredChallenges(filtered);
       }
   }, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
 
   const renderFilterDropdown = (
-  label,
-  options,
-  selectedValue,
-  handleChange,
-  multiple = false,
-  className = "",
-  placeholder = "Select..." // Add an optional placeholder parameter
-) => (
-  <div className={`filter-module__item ${className}`}>
-    <label className="filter-label">{label}</label>
-    <select
-      className="filter-select"
-      value={selectedValue}
-      onChange={handleChange}
-      multiple={multiple}
-      aria-label={label}
-    >
-      <option value="">{placeholder}</option> // Use the passed placeholder value
-      {options.map((option, index) => (
-        <option key={index} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  </div>
-);
+
+    label,
+    options,
+    selectedValue,
+    handleChange,
+    multiple = false,
+    className = "",
+    placeholder = "Select...",
+    id // Add id parameter here
+  ) => (
+    <div className={`filter-module__item ${className}`}>
+      <label className="filter-label" htmlFor={id}>{label}</label>
+      <select
+        id={id} // Add id attribute here
+        className="filter-select"
+        value={selectedValue}
+        onChange={handleChange}
+        multiple={multiple}
+        aria-label={label}
+      >
+        <option value="">{placeholder}</option>
+        {options.map((option, index) => (
+          <option key={index} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
 
   const handleClearFilters = () => {
     setPrimaryAgency('');
@@ -283,8 +281,10 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                 ))}
               </select>
             </div>
-            {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value))}
-            {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value))}
+            {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value), false, "", "Select...", "dateAdded")}
+            {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value), false, "", "Select...",
+              "lastDay"
+            )}
             {renderFilterDropdown(
               "Primary challenge type",
               primaryChallengeTypeOptions,
@@ -298,7 +298,8 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
               },
               true,
               "",
-              "Multi select..."
+              "Multi select...",
+              "primaryChallengeType" // Add id here
             )}
             <div className="filter-module__item keyword-item">
               <label className="filter-label" htmlFor="keyword">Keyword</label>
@@ -337,20 +338,18 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           {renderHeader()}
           {renderSubHeader()}
           {renderYearFilter()}
-        </div> {/* Close the first container div */}
-        <div className="full-width-background">{/* Add full-width-background div */}
+        </div>
+        <div className="full-width-background">
           <div className="container">
             {renderFilter()}
           </div>
-        </div>{/* Close the full-width-background div */}
+        </div>
         <div className="container">
-          <div style={{ paddingBottom: "40px" }}>&nbsp;</div> {/* Add the div for padding after the filter */}
+          <div style={{ paddingBottom: "40px" }}>&nbsp;</div>
           {renderSortText()}
           {renderChallengeTiles()}
-        </div> {/* Close the second container div */}
+        </div>
       </section>
     </>
   );
 };
-
-export default ChallengeTiles;
