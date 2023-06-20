@@ -15,7 +15,7 @@ export const ChallengeTab = ({ label, downloadsLabel, section, challenge, childr
   }, [copyTooltipOpen]);
 
   const handleCopyLink = () => {
-    let copyText = document.getElementById("challenge-link-text");
+    let copyText = document.getElementById(`challenge-link-text-${section}`);
     copyText.select();
     copyText.setSelectionRange(0, 99999);
     document.execCommand("copy");
@@ -26,7 +26,7 @@ export const ChallengeTab = ({ label, downloadsLabel, section, challenge, childr
     if (label === "Overview") {
       return (
         <div className="float-right" id="challenge-link">
-          <input id="challenge-link-text" className="opacity-0" defaultValue={window.location.href} />
+          <input id={`challenge-link-text-${section}`} className="opacity-0" defaultValue={window.location.href} />
           <button id="challenge-link-btn" className="usa-button usa-button--unstyled text-decoration-none" onClick={handleCopyLink}>
             <i className="far fa-copy me-1"></i>
             <span>Copy share link</span>
@@ -39,7 +39,7 @@ export const ChallengeTab = ({ label, downloadsLabel, section, challenge, childr
   };
 
   return (
-    <section className="challenge-tab container">
+    <section className="challenge-tab container" id={`challenge-tab-${section}`}>
       <div className="challenge-tab__header">
         <span>{label}</span>        
         {/* {renderCopyShareButton()} */}
