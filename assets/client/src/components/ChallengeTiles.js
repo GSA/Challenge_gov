@@ -114,11 +114,22 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         }
 
         if (keyword) {
-          const searchFields = ["title", "tagline", "brief_description"];
+          const searchFields = ["agency_name", "title", "tagline"];
+
           filtered = filtered.filter((challenge) => {
-            // Search in title, tagline, and brief_description fields
+            // Search in agency_name, title, and tagline fields
             for (const field of searchFields) {
               if (challenge[field] && challenge[field].toLowerCase().includes(keyword.toLowerCase())) {
+                return true;
+              }
+            }
+
+            // Search in how_to_enter and judging_criteria fields inside phases
+            for (const phase of challenge.phases) {
+              if (phase.how_to_enter && phase.how_to_enter.toLowerCase().includes(keyword.toLowerCase())) {
+                return true;
+              }
+              if (phase.judging_criteria && phase.judging_criteria.toLowerCase().includes(keyword.toLowerCase())) {
                 return true;
               }
             }

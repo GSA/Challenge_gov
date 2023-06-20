@@ -25,7 +25,6 @@ defmodule Web.Api.ChallengeView do
       uuid: challenge.uuid,
       title: challenge.title,
       tagline: challenge.tagline,
-      brief_description: challenge.brief_description,
       custom_url: challenge.custom_url,
       external_url: challenge.external_url,
       agency_name: ChallengeView.agency_name(challenge),
