@@ -38,10 +38,6 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const [keyword, setKeyword] = useState("");
   const [filteredChallenges, setFilteredChallenges] = useState([]);
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
-  };
-
   useEffect(() => {
     if (data && data.collection) {
         const agencies = Array.from(new Set(data.collection.map(challenge => challenge.agency_name)));
@@ -80,6 +76,11 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         }
 
         // Add filtering by primary challenge type
+        /*if (primaryChallengeType) {
+            filtered = filtered.filter(challenge => challenge.primary_type === primaryChallengeType);
+        }*/
+
+        // Add filtering by primary challenge type
         if (primaryChallengeType.length > 0) {
           filtered = filtered.filter(challenge => primaryChallengeType.includes(challenge.primary_type));
         }
@@ -106,8 +107,8 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
               break;
           }
 
-        // Filter challenges based on toDate
-        filtered = filtered.filter((challenge) => {
+          // Filter challenges based on toDate
+          filtered = filtered.filter((challenge) => {
             const challengeEnd = moment(challenge.end_date);
             return challengeEnd.isBetween(now, toDate, null, "[)");
           });
@@ -263,8 +264,10 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const renderFilter = () => {
   if (!isArchived) {
     return (
-      <form className={`filter-module full-width`} onSubmit={handleFormSubmit}>
-        <div className="filter-dropdowns">        
+      <div className={`filter-module full-width`}>
+        <div className="filter-dropdowns">
+          
+        
             {renderFilterDropdown('Primary agency sponsor', primaryAgencyOptions, primaryAgency, (event) => setPrimaryAgency(event.target.value))}
             {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value))}
             {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value))}
@@ -289,21 +292,14 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
               <button className="filter-button" onClick={handleClearFilters}>Clear</button>
             </div>
           </div>
-      </form>
+      </div>
     );
   }
 };
 
   return (
   <>
-    <a href="#main-content" className="sr-only sr-only-focusable">
-      Skip to main content
-    </a>
-    <section
-      id="active-challenges"
-      className="cards__section"
-      tabIndex="-1" // Add tabindex to bring the focus to the section when clicked on skip link      
-    >    
+    <section id="active-challenges" className="cards__section">
       {renderHeader()}
       {renderSubHeader()}
       {renderYearFilter()}
