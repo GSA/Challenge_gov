@@ -40,14 +40,25 @@ export const AccordionSection = ({phase, index, section, children, print}) => {
   return (
     <div>
       <h2 className="usa-accordion__heading">
-        <div className="usa-accordion__button" aria-expanded={expanded}  onClick={UpdateExpanded}>
-          <span>{`Phase ${index + 1}${phase.title ? ": " + phase.title : ""}`}</span>
+        <button
+          className="usa-accordion__button"
+          aria-expanded={expanded}
+          onClick={UpdateExpanded}
+          tabIndex="0"
+        >
+          <span>{`Phase ${index + 1}${
+            phase.title ? ': ' + phase.title : ''
+          }`}</span>
           <span className={phaseClass}>{phaseText}</span>
-        </div>
+        </button>
       </h2>
-      <div id={`a${index}`} className="usa-accordion__content" hidden={!expanded && !print}>
+      <div        
+        id={`a-${section}-${phase.id}`} 
+        className="usa-accordion__content"
+        hidden={!expanded && !print}
+      >
         {children}
       </div>
     </div>
-  )
+  );
 }
