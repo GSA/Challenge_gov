@@ -137,6 +137,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       }
   }, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
 
+
   const renderFilterDropdown = (label, options, selectedValue, handleChange) => (
     <div>
       <label>{label}</label>
@@ -196,7 +197,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       return (
         <div className="cards__year-filter">
           <div>Filter by year:</div>
-          <select value={selectedYear} onChange={handleYearChange}>
+          <select value={selectedYear} onChange={handleYearChange} aria-label="Filter archive by year">
             {
               years.map(year => {
                 return <option key={year}>{year}</option>
