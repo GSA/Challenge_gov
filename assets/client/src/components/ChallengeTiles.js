@@ -50,10 +50,8 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         }
 
         if (dateAdded) {
-          // Calculate fromDate based on dateAdded
           const now = moment();
-          let fromDate = now.clone().subtract(1, "years"); // Default to "Past Year"
-
+          let fromDate;
           switch (dateAdded) {
             case "Past Week":
               fromDate = now.clone().subtract(7, "days");
@@ -64,13 +62,16 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
             case "Past 90 Days":
               fromDate = now.clone().subtract(90, "days");
               break;
-            default:
+            case "Past Year":
+              fromDate = now.clone().subtract(1, "years");
               break;
+            default:
+              fromDate = now;
           }
 
-          // Filter challenges based on fromDate
           filtered = filtered.filter((challenge) => {
-            const challengeDate = moment(challenge.inserted_at);
+            //const challengeDate = moment(challenge.start_date);
+            const challengeDate = moment(challenge.inserted_at); 
             return challengeDate.isBetween(fromDate, now, null, "[)");
           });
         }
@@ -88,7 +89,6 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         if (lastDay) {
           const now = moment();
           let toDate;
-
           switch (lastDay) {
             case "Next Week":
               toDate = now.clone().add(7, "days");
@@ -103,11 +103,9 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
               toDate = now.clone().add(1, "years");
               break;
             default:
-              toDate = now.clone().add(1, "years"); // Default to "Within Year"
-              break;
+              toDate = now;
           }
 
-          // Filter challenges based on toDate
           filtered = filtered.filter((challenge) => {
             const challengeEnd = moment(challenge.end_date);
             return challengeEnd.isBetween(now, toDate, null, "[)");
