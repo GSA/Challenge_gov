@@ -33,7 +33,7 @@ defmodule Web.Api.ChallengeView do
       logo_alt_text: challenge.logo_alt_text,
       primary_type: challenge.primary_type,
       open_until: Challenges.find_end_date(challenge),
-      inserted_at: Challenges.inserted_at(challenge),
+      # inserted_at: Challenges.inserted_at(challenge),
       start_date: challenge.start_date,
       end_date: challenge.end_date,
       announcement_datetime: challenge.announcement_datetime,
