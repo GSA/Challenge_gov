@@ -6,14 +6,16 @@ const dateAddedOptions = [
   "Past Week",
   "Past Month",
   "Past 90 Days",
-  "Past Year"
+  "Past Year",
+  //"Custom",   #todo
 ];
 
 const lastDayOptions = [
   "Next Week",
   "Next Month",
   "Next 90 days",
-  "Within Year"
+  "Within Year",
+  //"Custom",   #todo
 ];
 
 const primaryChallengeTypeOptions = [
@@ -37,7 +39,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const [filteredChallenges, setFilteredChallenges] = useState([]);
 
   const handleFormSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent the default form submission behavior
   };
 
   useEffect(() => {
@@ -113,7 +115,8 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
 
         if (keyword) {
           const searchFields = ["title", "tagline", "brief_description"];
-          filtered = filtered.filter((challenge) => {            
+          filtered = filtered.filter((challenge) => {
+            // Search in title, tagline, and brief_description fields
             for (const field of searchFields) {
               if (challenge[field] && challenge[field].toLowerCase().includes(keyword.toLowerCase())) {
                 return true;
@@ -123,7 +126,9 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
             return false;
           });
         }
+
         // implement other filters here
+
         setFilteredChallenges(filtered);
       }
   }, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
@@ -278,10 +283,8 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                 ))}
               </select>
             </div>
-            {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value), false, "", "Select...", "dateAdded")}
-            {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value), false, "", "Select...",
-              "lastDay"
-            )}
+            {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value))}
+            {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value))}
             {renderFilterDropdown(
               "Primary challenge type",
               primaryChallengeTypeOptions,
@@ -295,8 +298,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
               },
               true,
               "",
-              "Multi select...",
-              "primaryChallengeType" // Add id here
+              "Multi select..."
             )}
             <div className="filter-module__item keyword-item">
               <label className="filter-label" htmlFor="keyword">Keyword</label>
@@ -335,18 +337,20 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           {renderHeader()}
           {renderSubHeader()}
           {renderYearFilter()}
-        </div>
-        <div className="full-width-background">
+        </div> {/* Close the first container div */}
+        <div className="full-width-background">{/* Add full-width-background div */}
           <div className="container">
             {renderFilter()}
           </div>
-        </div>
+        </div>{/* Close the full-width-background div */}
         <div className="container">
-          <div style={{ paddingBottom: "40px" }}>&nbsp;</div>
+          <div style={{ paddingBottom: "40px" }}>&nbsp;</div> {/* Add the div for padding after the filter */}
           {renderSortText()}
           {renderChallengeTiles()}
-        </div>
+        </div> {/* Close the second container div */}
       </section>
     </>
   );
 };
+
+export default ChallengeTiles;
