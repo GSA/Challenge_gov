@@ -300,9 +300,9 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
               "",
               "Multi select..."
             )}
-            <div className="filter-module__item keyword-item">
+            <div className="filter-module__item keyword-item"> {/* Add "keyword-item" class */}
               <label className="filter-label" htmlFor="keyword">Keyword</label>
-              <div className="keyword-input-wrapper">
+              <div className="keyword-input-wrapper"> {/* Add "keyword-input-wrapper" div */}
                 <input
                   id="keyword"
                   className="filter-input"
@@ -324,26 +324,23 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
 
   return (
-    <div className="container">
-      <>
-        <a href="#main-content" className="sr-only sr-only-focusable">
-          Skip to main content
-        </a>
-        <section
-          id="active-challenges"
-          className="cards__section"
-          tabIndex="-1"
-        >    
-          {renderHeader()}
-          {renderSubHeader()}
-          {renderYearFilter()}
-          {renderFilter()}
-          <div style={{ paddingBottom: "40px" }}>&nbsp;</div>
-          {renderSortText()}
-          {renderChallengeTiles()}
-        </section>
-      </>
-    </div>
+  <>
+    <a href="#main-content" className="sr-only sr-only-focusable">
+      Skip to main content
+    </a>
+    <section
+      id="active-challenges"
+      className="cards__section"
+      tabIndex="-1" // Add tabindex to bring the focus to the section when clicked on skip link      
+    >    
+      {renderHeader()}
+      {renderSubHeader()}
+      {renderYearFilter()}
+      {renderFilter()}
+      {renderSortText()}
+      {renderChallengeTiles()}
+    </section>
+  </>
   );
 };
 
