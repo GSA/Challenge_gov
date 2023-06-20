@@ -211,29 +211,15 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     }
   };
 
-    const renderSortText = () => {
-      if (isArchived) {
-        return (
-          <div className="container">
-            <p className="card__section--sort">
-              <i>Challenges sorted by those most recently closed to open submissions.</i>
-            </p>
-          </div>
-        );
-      } else {
-        if (data.collection && data.collection.length >= 1) {
-          return (
-            <div className="container"> 
-              <p className="card__section--sort">
-                <i>
-                  Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press Clear to start a new search.
-                </i>
-              </p>
-            </div>
-          );
-        }
+  const renderSortText = () => {
+    if (isArchived) {
+      return <p className="card__section--sort"><i>Challenges sorted by those most recently closed to open submissions.</i></p>;
+    } else {
+      if (data.collection && data.collection.length >= 1) {
+        return <p className="card__section--sort"><i>By default, challenges are sorted by those closing soonest.</i></p>;
       }
-    };
+    }
+  };
 
   const renderChallengeTiles = () => {
     if (loading) {
@@ -298,25 +284,15 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
               "Multi select..." // Pass the custom placeholder text
             )}
             <div className="filter-module__item">
-              <label className="filter-label" htmlFor="keyword-or-phrase">Keyword or phrase</label>
-              <input
-                id="keyword-or-phrase" // Add id attribute
-                className="filter-input"
-                type="text"
-                placeholder="Keyword or phrase"
-                value={keyword}
-                onChange={(event) => setKeyword(event.target.value)}
-                aria-label="Keyword or phrase"
-              />
-              <button className="filter-button" onClick={handleClearFilters}>
-                Clear
-              </button>
+              <label className="filter-label">Keyword or phrase</label>
+              <input className="filter-input" type="text" placeholder="Keyword or phrase" value={keyword} onChange={(event) => setKeyword(event.target.value)} />
+              <button className="filter-button" onClick={handleClearFilters}>Clear</button>
             </div>
           </div>
-        </form>
-      );
-    }
-  };
+      </form>
+    );
+  }
+};
 
   return (
   <>
