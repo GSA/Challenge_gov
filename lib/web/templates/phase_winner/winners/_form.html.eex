@@ -1,8 +1,6 @@
 <div id="winners-form">
   <div class="js-dynamic-nested-items">
-    <%= if @upload_error do %>
-      <div class="mb-3 invalid-feedback d-block">Files must be .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
-    <% end %>
+
     <%= inputs_for(@form, :winners, [skip_hidden: true], fn winner -> %>
       <div class="js-dynamic-nested-item grid-row mb-2" data-index=<%= winner.index %>>
         <div class="form-group">
@@ -18,7 +16,7 @@
             <div><%= label winner, :place_title, "Place title (ex. First Place or Grand Winner) (optional)" %></div>
             <%= text_input winner, :place_title %>
           </div>
-          
+
           <div class="form-group">
             <div><%= label winner, :name, "Name (optional)" %></div>
             <%= text_input winner, :name %>
@@ -28,22 +26,11 @@
             <%= hidden_input winner, :image_key, data: [field: :image_key] %>
             <%= hidden_input winner, :image_extension, data: [field: :image_extension] %>
           </div>
-          
-          <div class="form-group">
-            <div><%= label winner, :image, "Upload image (optional)", class: "control-label" %></div>
-            <%= file_input winner, :image, data: [field: :image] %>
-            <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
-          </div>
-          <div class="my-3"><%= render_winner_image(winner.data) %></div>
-          <%= if winner.data.image_key do %>
-            <div class="form-group">
-              <%= render_remove_image_checkbox(winner, :image) %>
-            </div>
-          <% end %>
+
         </div>
 
         <div class="grid-col flex-2 remove-winner-container">
-          <a href="#" class="js-dynamic-nested-remove">Remove</a>
+          <a href="#" class="float-right js-dynamic-nested-remove btn btn-primary">Remove</a>
         </div>
       </div>
     <% end) %>
@@ -63,32 +50,22 @@
           <div><label >Place title (ex. First Place or Grand Winner) (optional)</label></div>
           <%= text_input :template, :field, data: [field: :place_title] %>
         </div>
-        
+
         <div class="js-dynamic-nested-group form-group">
           <div><label>Name (optional)</label></div>
           <%= text_input :template, :field, data: [field: :name] %>
         </div>
-        
-        <div class="js-dynamic-nested-group form-group">
-          <%= hidden_input :template, :field, data: [field: :image_path] %>
-        </div>
 
-        <div class="js-dynamic-nested-group form-group">
-          <div><label class="control-label">Upload image (optional)</label></div>
-          <%= file_input :template, :field, data: [field: :image] %>
-          <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
-        </div>
 
-        <div class="js-dynamic-nested-group form-group">
-          <%= render_remove_image_checkbox(:template, :field, data: [field: :remove_image]) %>
-        </div>
       </div>
 
       <div class="grid-col flex-2 remove-winner-container">
-        <a href="#" class="js-dynamic-nested-remove">Remove</a>
+        <a href="#" class="float-right js-dynamic-nested-remove btn btn-primary">Remove</a>
       </div>
     </div>
   </div>
+  <h3>Add Aditional Winners</h3>
+  <b>Add additional winners. These will display in a grid format in order displayed above.</b><br><br>
 
   <div class="js-dynamic-nested-add btn btn-primary" data-parent="phase_winner" data-child="winners">Add</div>
 </div>
