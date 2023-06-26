@@ -52,6 +52,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         }
 
         if (dateAdded) {
+
           // Calculate fromDate based on dateAdded
           const now = moment();
           let fromDate = now.clone().subtract(1, "years"); // Default to "Past Year"
@@ -78,6 +79,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         }
 
         // Add filtering by primary challenge type
+
         if (primaryChallengeType.length > 0) {
           filtered = filtered.filter(challenge => primaryChallengeType.includes(challenge.primary_type));
         }
@@ -85,7 +87,6 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         if (lastDay) {
           const now = moment();
           let toDate;
-
           switch (lastDay) {
             case "Next Week":
               toDate = now.clone().add(7, "days");
@@ -100,33 +101,40 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
               toDate = now.clone().add(1, "years");
               break;
             default:
+
               toDate = now.clone().add(1, "years"); // Default to "Within Year"
               break;
           }
 
         // Filter challenges based on toDate
         filtered = filtered.filter((challenge) => {
+
             const challengeEnd = moment(challenge.end_date);
             return challengeEnd.isBetween(now, toDate, null, "[)");
           });
         }
 
         if (keyword) {
+
           const searchFields = ["title", "tagline", "brief_description"];
           filtered = filtered.filter((challenge) => {            
+
             for (const field of searchFields) {
               if (challenge[field] && challenge[field].toLowerCase().includes(keyword.toLowerCase())) {
                 return true;
               }
             }
 
+
             return false;
           });
         }
         // implement other filters here
+
         setFilteredChallenges(filtered);
       }
   }, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
+
 
   const renderFilterDropdown = (
     label,
@@ -149,6 +157,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         aria-label={label}
       >
         <option value="">{placeholder}</option>
+
         {options.map((option, index) => (
           <option key={index} value={option}>
             {option}
@@ -196,6 +205,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       );
     }
   };
+
 
     const renderSortText = () => {
       if (isArchived) {
@@ -352,3 +362,4 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     </>
   );
 };
+
