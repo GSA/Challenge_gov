@@ -2,7 +2,7 @@
 defaults: &defaults
   buildpacks:
     - https://github.com/cloudfoundry/apt-buildpack
-    - https://github.com/jdonis/heroku-buildpack-elixir
+    - https://github.com/HashNuke/heroku-buildpack-elixir
   memory: 512M
   disk_quota: 2G
   stack: cflinuxfs4
@@ -16,6 +16,7 @@ applications:
   disk_quota: 6GB
   env:
     MIX_ENV: prod
+    STACK: heroku-22
     HOST: challenge-portal-dev.app.cloud.gov
     LOGIN_PRIVATE_KEY_PATH: dev_key.pem
     LOGIN_PUBLIC_KEY_PATH: dev_cert.pem
@@ -29,6 +30,7 @@ applications:
   instances: 2
   env:
     MIX_ENV: prod
+    STACK: heroku-22
     HOST: challenge-portal-staging.app.cloud.gov
     LOGIN_PRIVATE_KEY_PATH: staging_key.pem
     LOGIN_PUBLIC_KEY_PATH: staging_cert.pem
@@ -43,6 +45,7 @@ applications:
   memory: 1G
   env:
     MIX_ENV: prod
+    STACK: heroku-22    
     HOST: portal.challenge.gov
     LOGIN_PRIVATE_KEY_PATH: production_key.pem
     LOGIN_PUBLIC_KEY_PATH: production_cert.pem
