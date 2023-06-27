@@ -49,7 +49,7 @@ asdf plugin-add nodejs
 bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
 asdf install nodejs 11.13.
 
-asdf plugin-add yarn 
+asdf plugin-add yarn
 asdf install yarn 1.22.5
 
 ```
@@ -112,7 +112,7 @@ Setup and seed the database
 ```bash
 mix ecto.create
 mix ecto.migrate
-mix run priv/repo/seeds_updated.exs
+mix run priv/repo/seeds.exs
 ```
 
 Once the database is setup, make sure to install javascript dependencies.

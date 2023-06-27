@@ -19,6 +19,12 @@ alias ChallengeGov.Challenges.Challenge
 alias ChallengeGov.CSVParser
 alias ChallengeGov.Repo
 
+Code.require_file("seed_modules/accounts.exs", __DIR__)
+Code.require_file("seed_modules/agencies.exs", __DIR__)
+Code.require_file("seed_modules/challenges.exs", __DIR__)
+Code.require_file("seed_modules/phase_winners.exs", __DIR__)
+Code.require_file("seed_modules/submissions.exs", __DIR__)
+
 defmodule Helpers do
   def create_super_admin(nil, nil, nil) do
   end
@@ -190,10 +196,15 @@ defmodule Seeds do
       System.get_env("FIRST_USER_LN")
     )
 
-    # create_agencies("priv/repo/agencies.txt")
+    Seeds.SeedModules.Agencies.run()
+    Seeds.SeedModules.Accounts.run()
+    challenges = Seeds.SeedModules.Challenges.run()
+    Seeds.SeedModules.Submissions.run(challenges)
+    Seeds.SeedModules.PhaseWinners.run(challenges)
+
+
     create_user_certifications()
     # create_admin("admin@example.com")
-    # create_agencies("priv/repo/agencies.txt")
     import_agencies_csv("priv/repo/agencies_updated.csv")
 
     # import_agencies_api("https://usagov.platform.gsa.gov/usaapi/api/v1/usagov/directory_records/federal.json")
