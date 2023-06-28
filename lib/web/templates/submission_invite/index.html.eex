@@ -64,7 +64,7 @@
       <div class="row mb-3">
         <div class="col">
           <%= link("Cancel", to: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id)) %>
-          <%= submit("Send invite", class: "btn btn-primary ms-3", id: "submission-invites__submit", disabled: true) %>
+          <%= submit("Send invite", class: "usa-button ms-3", id: "submission-invites__submit", disabled: true) %>
         </div>
       </div>
     </div>
