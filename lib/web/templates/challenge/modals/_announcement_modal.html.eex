@@ -14,8 +14,8 @@
         </div>
         <div class="modal-footer">
           <%= remove_update_button(@conn, @challenge) %>
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-          <%= submit("Publish", class: "btn btn-primary", data: [confirm: "Are you sure you want to post this update?"] ) %>
+          <button type="button" class="usa-button bg-base" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+          <%= submit("Publish", class: "usa-button", data: [confirm: "Are you sure you want to post this update?"] ) %>
         </div>
       </div>
     <% end) %>
