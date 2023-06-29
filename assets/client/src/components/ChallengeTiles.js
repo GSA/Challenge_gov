@@ -356,6 +356,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         </div>
 
         <div className="container">
+          <div style={{ paddingBottom: "20px" }}>&nbsp;</div>
           {renderSortText()}
           {renderChallengeTiles()}
         </div>
