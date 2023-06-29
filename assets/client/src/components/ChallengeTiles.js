@@ -41,7 +41,9 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
 
   useEffect(() => {
-    if (data && data.collection) {
+    try {
+      if (data && data.collection) {
+        console.log(data);
         const agencies = Array.from(new Set(data.collection.map(challenge => challenge.agency_name)));
         setPrimaryAgencyOptions(agencies);
 
@@ -124,8 +126,13 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           });
         }
         // implement other filters here
-        setFilteredChallenges(filtered);
+         setFilteredChallenges(filtered);
+        
+        console.log(filteredChallenges);  // this is the other modification
       }
+    } catch (error) {
+      console.error(error);
+    }
   }, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
 
   const renderFilterDropdown = (
