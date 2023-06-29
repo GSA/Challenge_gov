@@ -199,7 +199,7 @@ defmodule Web.SubmissionView do
         link(opts[:label] || "Submit",
           to: Routes.submission_path(conn, :submit, submission.id),
           method: :put,
-          class: "usa-button float-right"
+          class: "btn btn-primary float-right"
         )
 
       false ->
@@ -225,7 +225,7 @@ defmodule Web.SubmissionView do
           Routes.submission_path(conn, :index)
       end
 
-    link("Cancel", to: route, class: "usa-link")
+    link("Cancel", to: route, class: "btn btn-link")
   end
 
   def accept_terms(_conn, form, user, challenge) do

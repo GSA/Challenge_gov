@@ -24,7 +24,7 @@
       <p>Current resource banner:</p>
       <%= resource_banner_img(@data, height: 100) %>
       <br/>
-      <%= button("Remove resource banner", to: Routes.challenge_path(@conn, :remove_resource_banner, @challenge.id, section: @section), class: "usa-button usa-button--secondary mt-3", data: [confirm: "Are you sure?"]) %>
+      <%= button("Remove resource banner", to: Routes.challenge_path(@conn, :remove_resource_banner, @challenge.id, section: @section), class: "btn btn-danger mt-3", data: [confirm: "Are you sure?"]) %>
     <% end %>
   <% end %>
 </div>
@@ -40,7 +40,7 @@
     <input class="challenge_document_name form-control" type="text">
     <br/>
     <input class="challenge_document_file form-file-control" type="file">
-    <div class="challenge_document_upload usa-button">Upload file</div>
+    <div class="challenge_document_upload btn btn-primary">Upload file</div>
     <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
     <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
   </div>
@@ -70,7 +70,7 @@
     <input class="challenge_document_name form-control" type="text">
     <br/>
     <input class="challenge_document_file form-file-control" type="file">
-    <div class="challenge_document_upload usa-button">Upload file</div>
+    <div class="challenge_document_upload btn btn-primary">Upload file</div>
     <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
     <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
   </div>

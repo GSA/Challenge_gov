@@ -28,7 +28,7 @@ messaging and hyperlinking.  No image uploads available at this time.</span><br>
           <div class="col-md text-right">
             <a class="disabled btn ">Save draft</a>
             <a class="disabled btn ">Preview</a>
-            <%= submit("Review + Publish", class: "usa-button") %>
+            <%= submit("Review + Publish", class: "btn btn-primary ") %>
           </div>
         </div>
       </div>

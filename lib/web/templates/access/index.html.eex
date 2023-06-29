@@ -32,7 +32,7 @@
         </div>
       </div>
       <%= if @user.status == "active" do %>
-        <%= link "Return to Dashboard", to: Routes.dashboard_path(@conn, :index), class: "usa-button" %>
+        <%= link "Return to Dashboard", to: Routes.dashboard_path(@conn, :index), class: "btn btn-primary" %>
       <% end %>
     </div>
   <% else %>

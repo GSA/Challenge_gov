@@ -24,17 +24,17 @@
         </div>
 
         <div class="col-2">
-          <div class="remove-nested-section usa-link">Remove</div>
+          <div class="remove-nested-section btn btn-link">Remove</div>
         </div>
       </div>
     <% end) %>
   </div>
 
   <!-- Add new federal partner button -->
-  <div class="add-nested-section usa-button" data-parent="challenge" data-child="federal_partners">Add federal partner</div>
+  <div class="add-nested-section btn btn-primary" data-parent="challenge" data-child="federal_partners">Add federal partner</div>
 
   <!-- Add new federal partner button -->
-  <div class="dynamic-nested-form-template d-none">
+  <div class="dynamic-nested-form-template d-none">    
     <div class="form-collection row mb-3">
       <div class="col-10">
         <div class="<%= FormView.nested_form_group_classes(@form, :federal_partners, :agency_id, -1) %> row" data-field="agency_id">
@@ -56,7 +56,7 @@
       </div>
 
       <div class="col-2">
-        <div class="remove-nested-section usa-link">Remove</div>
+        <div class="remove-nested-section btn btn-link">Remove</div>
       </div>
     </div>
   </div>

@@ -14,6 +14,6 @@
   </div>
 
   <div class="card-footer">
-    <%= submit("Submit", class: "usa-button pull-right") %>
+    <%= submit("Submit", class: "btn btn-primary pull-right") %>
   </div>
 <% end) %>

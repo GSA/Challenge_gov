@@ -4,7 +4,7 @@
   </a>
 
   <%= if Mix.env() == :dev do %>
-    <%= button("Dev Accounts", to: Routes.dev_accounts_page_path(@conn, :dev_accounts), method: :get, class: "usa-button") %>
+    <%= button("Dev Accounts", to: Routes.dev_accounts_page_path(@conn, :dev_accounts), method: :get, class: "btn btn-primary") %>
   <% end %>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -26,7 +26,7 @@
    </div>
    <div class="col-auto">
     <div class="input-group">
-      <%= link("My account", to: Routes.session_path(@conn, :new), class: "usa-button usa-button--outline") %>
+      <%= link("My account", to: Routes.session_path(@conn, :new), class: "header__login") %>
     </div>
    </div>
   </form>

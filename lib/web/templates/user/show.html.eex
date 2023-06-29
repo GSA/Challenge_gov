@@ -23,7 +23,7 @@
           <div class="card-header">
             <h3 class="card-title" style="font-size: 24px; font-weight: 900;">General User Information</h3>
             <div class="card-tools">
-              <%= link("Edit", to: Routes.user_path(@conn, :edit, @user.id), class: "usa-button") %>
+              <%= link("Edit", to: Routes.user_path(@conn, :edit, @user.id), class: "btn btn-primary") %>
             </div>
           </div>
           <div class="card-body">
@@ -51,11 +51,11 @@
           </div>
           <div class="card-body text-center">
             <%= if !Accounts.is_active?(@user) and !Accounts.is_decertified?(@user) do %>
-              <%= link("Activate", to: Routes.user_path(@conn, :toggle, @user.id, action: "activate"), method: :post, class: "usa-button usa-button--outline me-4") %>
+              <%= link("Activate", to: Routes.user_path(@conn, :toggle, @user.id, action: "activate"), method: :post, class: "btn btn-default me-4") %>
             <% end %>
             <%= if Accounts.is_active?(@user) do %>
               <%= link("Suspend", to: Routes.user_path(@conn, :toggle, @user.id, action: "suspend"), method: :post, class: "btn btn-warning me-4") %>
-              <%= link("Revoke", to: Routes.user_path(@conn, :toggle, @user.id, action: "revoke"), method: :post, class: "usa-button usa-button--secondary") %>
+              <%= link("Revoke", to: Routes.user_path(@conn, :toggle, @user.id, action: "revoke"), method: :post, class: "btn btn-danger") %>
             <% end %>
           </div>
         </div>
