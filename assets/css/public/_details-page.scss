@@ -463,7 +463,6 @@
     }
   }
 
-
   .filter-select:focus,
   .filter-input:focus,
   .filter-button:focus {
@@ -492,7 +491,11 @@
     clip: auto;
     display: block;
   }
-
+  .usa-accordion__button {
+    &:focus {
+      outline: 2px solid #1e73be;
+    }
+  }
 
   // MOBILE
   @media screen
