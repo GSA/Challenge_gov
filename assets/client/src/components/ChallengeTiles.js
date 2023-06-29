@@ -376,4 +376,4 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       </section>
     </>
   );
-};
+}
