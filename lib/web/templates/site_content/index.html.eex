@@ -29,7 +29,7 @@
               <dd>Certification and security reports. Upload site analytics reports.</dd>
               <br>
             </dl>
-            <%= link "View Reports", to: Routes.reports_path(@conn, :new), class: "btn btn-primary" %>
+            <%= link "View Reports", to: Routes.reports_path(@conn, :new), class: "usa-button" %>
           </div>
         </div>
         <div class="card nav_card me-5">
@@ -39,7 +39,7 @@
               <dd>View and manage agencies</dd>
               <br>
             </dl>
-            <%= link "View Agencies", to: Routes.agency_path(@conn, :index), class: "btn btn-primary" %>
+            <%= link "View Agencies", to: Routes.agency_path(@conn, :index), class: "usa-button" %>
           </div>
         </div>
         <div class="card nav_card">
@@ -49,7 +49,7 @@
               <dd>View reports</dd>
               <br>
             </dl>
-            <%= link "View Reports", to: Routes.reports_path(@conn, :pmo_page), class: "btn btn-primary" %>
+            <%= link "View Reports", to: Routes.reports_path(@conn, :pmo_page), class: "usa-button" %>
           </div>
         </div>
       </div>
