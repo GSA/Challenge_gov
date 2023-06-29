@@ -16,15 +16,26 @@ const lastDayOptions = [
   'Within Year',
 ];
 
+/*const primaryChallengeTypeOptions = [
+  { display: 'Software and apps', value: 'Software and apps' },
+  { display: 'Creative (Multimedia & Design)', value: 'Creative (Multimedia & Design)' },
+  { display: 'Ideas', value: 'Ideas' },
+  { display: 'Technology demonstration and hardware', value: 'Technology demonstration and hardware' },
+  { display: 'Nominations', value: 'Nominations' },
+  { display: 'Business Plans', value: 'Business plans' },
+  { display: 'Analytics, visualizations, algorithms', value: 'Analytics, visualizations, algorithms' },
+  { display: 'Scientific', value: 'Scientific' },
+];*/
+
 const primaryChallengeTypeOptions = [
-  'Software & Apps',
-  'Multimedia & Design',
-  'Ideas',
-  'Technology & Hardware',
-  'Nominations',
-  'Business Plans',
-  'Analytics & Algorithms',
-  'Scientific',
+  { display: 'Software & Apps', value: 'Software and apps' },
+  { display: 'Creative', value: 'Creative (Multimedia & Design)' },
+  { display: 'Ideas', value: 'Ideas' },
+  { display: 'Technology & Hardware', value: 'Technology demonstration and hardware' },
+  { display: 'Nominations', value: 'Nominations' },
+  { display: 'Business Plans', value: 'Business plans' },
+  { display: 'Analytics & Algorithms', value: 'Analytics, visualizations, algorithms' },
+  { display: 'Scientific', value: 'Scientific' },
 ];
 
 export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handleYearChange }) => {
@@ -36,100 +47,101 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const [keyword, setKeyword] = useState('');
   const [filteredChallenges, setFilteredChallenges] = useState([]);
 
-  useEffect(() => {
-    try {
-      if (data && data.collection) {
-        console.log(data);
-        const agencies = Array.from(new Set(data.collection.map(challenge => challenge.agency_name)));
-        setPrimaryAgencyOptions(agencies);
+ useEffect(() => {
+  try {
+    if (data && data.collection) {
+      const agencies = Array.from(new Set(data.collection.map(challenge => challenge.agency_name)));
+      setPrimaryAgencyOptions(agencies);
 
-        let filtered = data.collection;
+      let filtered = data.collection;
 
-        if (primaryAgency) {
-            filtered = filtered.filter(challenge => challenge.agency_name === primaryAgency);
+      if (primaryAgency) {
+        filtered = filtered.filter(challenge => challenge.agency_name === primaryAgency);
+      }
+
+      if (dateAdded) {
+        const now = moment();
+        let fromDate = now.clone().subtract(1, "years"); 
+
+        switch (dateAdded) {
+          case "Past Week":
+            fromDate = now.clone().subtract(7, "days");
+            break;
+          case "Past Month":
+            fromDate = now.clone().subtract(1, "months");
+            break;
+          case "Past 90 Days":
+            fromDate = now.clone().subtract(90, "days");
+            break;
+          default:
+            break;
         }
 
-        if (dateAdded) {
-          // Calculate fromDate based on dateAdded
-          const now = moment();
-          let fromDate = now.clone().subtract(1, "years"); // Default to "Past Year"
+        filtered = filtered.filter((challenge) => {
+          const challengeDate = moment(challenge.inserted_at);
+          return challengeDate.isBetween(fromDate, now, null, "[)");
+        });
+      }
 
-          switch (dateAdded) {
-            case "Past Week":
-              fromDate = now.clone().subtract(7, "days");
-              break;
-            case "Past Month":
-              fromDate = now.clone().subtract(1, "months");
-              break;
-            case "Past 90 Days":
-              fromDate = now.clone().subtract(90, "days");
-              break;
-            default:
-              break;
-          }
+      /*if (primaryChallengeType.length > 0) {
+        filtered = filtered.filter(challenge => {
+          const displayType = primaryChallengeTypeOptions.find(option => option.value === challenge.primary_type)?.display;
+          return primaryChallengeType.includes(displayType);
+        });
+      }*/
 
-          // Filter challenges based on fromDate
-          filtered = filtered.filter((challenge) => {
-            const challengeDate = moment(challenge.inserted_at);
-            return challengeDate.isBetween(fromDate, now, null, "[)");
-          });
-        }
-
-        // Add filtering by primary challenge type
         if (primaryChallengeType.length > 0) {
           filtered = filtered.filter(challenge => primaryChallengeType.includes(challenge.primary_type));
+      }
+
+      if (lastDay) {
+        const now = moment();
+        let toDate;
+
+        switch (lastDay) {
+          case "Next Week":
+            toDate = now.clone().add(7, "days");
+            break;
+          case "Next Month":
+            toDate = now.clone().add(1, "months");
+            break;
+          case "Next 90 days":
+            toDate = now.clone().add(90, "days");
+            break;
+          case "Within Year":
+            toDate = now.clone().add(1, "years");
+            break;
+          default:
+            toDate = now.clone().add(1, "years");
+            break;
         }
 
-        if (lastDay) {
-          const now = moment();
-          let toDate;
+      filtered = filtered.filter((challenge) => {
+          const challengeEnd = moment(challenge.end_date);
+          return challengeEnd.isBetween(now, toDate, null, "[)");
+        });
+      }
 
-          switch (lastDay) {
-            case "Next Week":
-              toDate = now.clone().add(7, "days");
-              break;
-            case "Next Month":
-              toDate = now.clone().add(1, "months");
-              break;
-            case "Next 90 days":
-              toDate = now.clone().add(90, "days");
-              break;
-            case "Within Year":
-              toDate = now.clone().add(1, "years");
-              break;
-            default:
-              toDate = now.clone().add(1, "years"); // Default to "Within Year"
-              break;
+      if (keyword) {
+        const searchFields = ["title", "tagline", "brief_description"];
+        filtered = filtered.filter((challenge) => {
+          for (const field of searchFields) {
+            if (challenge[field] && challenge[field].toLowerCase().includes(keyword.toLowerCase())) {
+              return true;
+            }
           }
 
-        // Filter challenges based on toDate
-        filtered = filtered.filter((challenge) => {
-            const challengeEnd = moment(challenge.end_date);
-            return challengeEnd.isBetween(now, toDate, null, "[)");
-          });
-        }
-
-        if (keyword) {
-          const searchFields = ["title", "tagline", "brief_description"];
-          filtered = filtered.filter((challenge) => {            
-            for (const field of searchFields) {
-              if (challenge[field] && challenge[field].toLowerCase().includes(keyword.toLowerCase())) {
-                return true;
-              }
-            }
-
-            return false;
-          });
-        }
-        // implement other filters here
-         setFilteredChallenges(filtered);
-        
-        console.log(filteredChallenges);  // this is the other modification
+          return false;
+        });
       }
-    } catch (error) {
-      console.error(error);
+
+      setFilteredChallenges(filtered);
+      console.log(filteredChallenges); 
     }
-  }, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
+  } catch (error) {
+    console.error(error);
+  }
+}, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
 
   const styles ={
     smallWidth: {
@@ -187,28 +199,30 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
   
   const renderSortText = () => {
-      if (isArchived) {
+    const sortTextStyle = { textAlign: 'center', marginBottom: '20px' };
+
+    if (isArchived) {
+      return (
+        <div style={sortTextStyle}>
+          <p className="card__section--sort">
+            <i>Challenges sorted by those most recently closed to open submissions.</i>
+          </p>
+        </div>
+      );
+    } else {
+      if (data.collection && data.collection.length >= 1) {
         return (
-          <div className="container">
+          <div style={sortTextStyle}>
             <p className="card__section--sort">
-              <i>Challenges sorted by those most recently closed to open submissions.</i>
+              <i>
+                Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press "Clear" to start a new search.
+              </i>
             </p>
           </div>
         );
-      } else {
-        if (data.collection && data.collection.length >= 1) {
-          return (
-            <div className="container"> 
-              <p className="card__section--sort">
-                <i>
-                  Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press "Clear" to start a new search.
-                </i>
-              </p>
-            </div>
-          );
-        }
       }
-    };
+    }
+  };
 
   const renderChallengeTiles = () => {
     if (loading) {
@@ -260,6 +274,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
 
         <div className="full-width-background">
           <div className="container">
+            {renderSortText()}
             <form className="filter-module full-width">
 
               <div className="filter-dropdowns">
@@ -325,9 +340,9 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                     }}
                     multiple
                   >
-                    <option value="">Select...</option>
+                    <option value="">Select one or more...</option>
                     {primaryChallengeTypeOptions.map((option, index) => (
-                      <option key={index} value={option}>{option}</option>
+                      <option key={index} value={option.value}>{option.display}</option>
                     ))}
                   </select>
                 </div>
@@ -343,7 +358,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                       value={keyword}
                       onChange={(event) => setKeyword(event.target.value)}
                     />
-                    <button className="usa-button" onClick={handleClearFilters}>
+                    <button className="usa-button" onClick={handleClearFilters} style={{ marginTop: '5px' }}>
                       Clear
                     </button>
                   </div>
@@ -356,8 +371,6 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         </div>
 
         <div className="container">
-          <div style={{ paddingBottom: "20px" }}>&nbsp;</div>
-          {renderSortText()}
           {renderChallengeTiles()}
         </div>
       </section>
