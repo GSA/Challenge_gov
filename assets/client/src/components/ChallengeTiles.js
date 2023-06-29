@@ -221,8 +221,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           </div>
         );
       }
-    }
-  };
+    };
 
   const renderChallengeTiles = () => {
     if (loading) {
