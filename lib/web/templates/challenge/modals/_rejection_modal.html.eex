@@ -12,7 +12,7 @@
           <%= textarea f, :rejection_message, style: "width: 100%;", rows: 10, value: @challenge.rejection_message %>
         </div>
         <div class="modal-footer">
-          <%= submit("Request Edits", class: "usa-button usa-button--secondary", data: [confirm: "Are you sure you want to reject this challenge?"] ) %>
+          <%= submit("Request Edits", class: "btn btn-danger", data: [confirm: "Are you sure you want to reject this challenge?"] ) %>
         </div>
       </div>
     <% end) %>

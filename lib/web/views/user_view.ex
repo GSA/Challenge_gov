@@ -40,7 +40,7 @@ defmodule Web.UserView do
       false ->
         link("Edit",
           to: Routes.user_path(conn, :edit, user.id),
-          class: "usa-button"
+          class: "btn btn-primary"
         )
     end
   end
@@ -53,7 +53,7 @@ defmodule Web.UserView do
       false ->
         link("Edit",
           to: Routes.user_path(conn, :edit, user.id),
-          class: "usa-button"
+          class: "btn btn-primary"
         )
     end
   end

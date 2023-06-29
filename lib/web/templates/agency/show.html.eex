@@ -24,8 +24,8 @@
           <div class="card-header clear-after d-flex justify-content-between">
             <h3 class="card-title font-weight-bold align-self-center">Agency Details</h3>
             <div class="card-tools">
-              <%= link("Edit", to: Routes.agency_path(@conn, :edit, @agency.id), class: "usa-button usa-button--outline me-2") %>
-              <%= link("Delete", to: Routes.agency_path(@conn, :delete, @agency.id), class: "usa-button usa-button--secondary", method: :delete, data: [confirm: "Are you sure?"]) %>
+              <%= link("Edit", to: Routes.agency_path(@conn, :edit, @agency.id), class: "btn btn-default me-2") %>
+              <%= link("Delete", to: Routes.agency_path(@conn, :delete, @agency.id), class: "btn btn-danger", method: :delete, data: [confirm: "Are you sure?"]) %>
             </div>
           </div>
           <div class="card-body">
@@ -49,7 +49,7 @@
 
               <%= if @agency.avatar_key do %>
                 <br/>
-                <%= button("Remove Logo", to: Routes.agency_path(@conn, :remove_logo, @agency.id), class: "usa-button usa-button--secondary", data: [confirm: "Are you sure?"]) %>
+                <%= button("Remove Logo", to: Routes.agency_path(@conn, :remove_logo, @agency.id), class: "btn btn-danger", data: [confirm: "Are you sure?"]) %>
               <% end %>
             </dl>
           </div>
@@ -63,15 +63,15 @@
           <div class="card">
             <div class="card-header clear-after d-flex justify-content-between">
               <h3 class="card-title align-self-center">Agency Component</h3>
-              <span><%= link("Add", to: Routes.agency_path(@conn, :new, @agency.id), class: "usa-button bg-primary-dark") %></span>
+              <span><%= link("Add", to: Routes.agency_path(@conn, :new, @agency.id), class: "btn btn-info") %></span>
             </div>
             <div class="card-body">
               <%= Enum.map(active_component_agencies(@agency.sub_agencies), fn sub_agency -> %>
                 <div class="d-flex justify-content-between">
                   <%= link(sub_agency.name, to: Routes.agency_path(@conn, :show, sub_agency.id)) %>
                   <div>
-                    <%= link("Edit", to: Routes.agency_path(@conn, :edit, sub_agency.id), class: "usa-button usa-button--outline btn-xs mx-1") %>
-                    <%= link("Delete", to: Routes.agency_path(@conn, :delete, sub_agency.id), class: "usa-button usa-button--secondary btn-xs mx-1", method: :delete, data: [confirm: "Are you sure?"]) %>
+                    <%= link("Edit", to: Routes.agency_path(@conn, :edit, sub_agency.id), class: "btn btn-default btn-xs mx-1") %>
+                    <%= link("Delete", to: Routes.agency_path(@conn, :delete, sub_agency.id), class: "btn btn-danger btn-xs mx-1", method: :delete, data: [confirm: "Are you sure?"]) %>
                   </div>
                 </div>
               <% end) %>

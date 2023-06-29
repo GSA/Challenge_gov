@@ -49,7 +49,7 @@ defmodule Web.DashboardView do
     link("Request Recertification",
       to: Routes.access_path(conn, :recertification),
       target: "",
-      class: "usa-button",
+      class: "btn btn-primary",
       style: "color:white;text-decoration:none;"
     )
   end

@@ -6,7 +6,7 @@
     </div>
   </div>
   <div>
-    <%= submit "Search", class: "usa-button" %>
+    <%= submit "Search", class: "btn btn-primary" %>
     <%= link "Clear", to: Routes.user_path(@conn, :index), class: "btn" %>
   </div>
 <% end %>

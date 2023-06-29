@@ -539,7 +539,7 @@ defmodule Web.FormView do
                             content_tag(:div, class: "col-md-2") do
                               if index < 1 do
                                 content_tag(:div, "Remove",
-                                  class: "remove-nested-section usa-link"
+                                  class: "remove-nested-section btn btn-link"
                                 )
                               end
                             end
@@ -554,7 +554,7 @@ defmodule Web.FormView do
           end)
         end,
         content_tag(:div, "Add #{capitalized_children_name}",
-          class: "add-nested-section usa-button",
+          class: "add-nested-section btn btn-primary",
           data: [parent: form.name, child: children_name]
         ),
         content_tag(:div, class: "col dynamic-nested-form-template d-none") do
@@ -637,7 +637,7 @@ defmodule Web.FormView do
   #         end)
   #       end,
   #       content_tag(:div, "Add phase")
-  #         class: "add-nested-section usa-button",
+  #         class: "add-nested-section btn btn-primary",
   #         data: [parent: form.name, child: :phases]
   #       ),
   #       content_tag(:div, class: "col dynamic-nested-form-template d-none") do

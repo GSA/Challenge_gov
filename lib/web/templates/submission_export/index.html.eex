@@ -4,7 +4,7 @@
 
     <h1 class="mb-3">Recent downloads for <%= @challenge.title %></h1>
 
-    <button class="usa-button" data-bs-toggle="modal" data-bs-target="#submission-download-modal">Create new download</button>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#submission-download-modal">Create new download</button>
   </div>
 </div>
 
@@ -66,7 +66,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <%= submit "Create download", class: "usa-button" %>
+          <%= submit "Create download", class: "btn btn-primary" %>
         </div>
       <% end %>
     </div>
