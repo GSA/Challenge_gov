@@ -10,6 +10,6 @@
   </div>
 
   <div class="box-footer">
-    <%= submit(@save, class: "btn btn-primary pull-right") %>
+    <%= submit(@save, class: "usa-button pull-right") %>
   </div>
 <% end) %>

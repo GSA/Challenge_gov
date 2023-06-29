@@ -74,7 +74,7 @@
       <input class="dap_file_name form-control" type="text">
       <br/>
       <input class="dap_report_file form-file-control" type="file">
-      <div class="dap_report_upload btn btn-primary">Upload file</div>
+      <div class="dap_report_upload usa-button">Upload file</div>
       <div class="dap_report_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
       <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
 

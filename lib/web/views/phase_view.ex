@@ -27,7 +27,7 @@ defmodule Web.PhaseView do
     content_tag(:span, class: "submission-filter__helper-text p-3", style: "display: inline;") do
       submit("Message solvers",
         formaction: action,
-        class: "btn btn-primary mb-3 js-multi-submission-msg-btn",
+        class: "usa-button mb-3 js-multi-submission-msg-btn",
         disabled: true
       )
     end
@@ -346,7 +346,7 @@ defmodule Web.PhaseView do
         content_tag(:div, class: "col p-3") do
           link("Manage invites for next phase",
             to: Routes.submission_invite_path(conn, :index, phase.id),
-            class: "btn btn-primary float-right"
+            class: "usa-button float-right"
           )
         end
       end

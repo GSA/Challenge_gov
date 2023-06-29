@@ -538,7 +538,7 @@ defmodule Web.ChallengeView do
       submit("Save",
         name: "action",
         value: "save",
-        class: "btn btn-primary px-5 mr-2",
+        class: "usa-button px-5 mr-2",
         data: [confirm: confirmation_message(:save, challenge)]
       )
     end
@@ -598,7 +598,7 @@ defmodule Web.ChallengeView do
           name: "action",
           value: "submit",
           data: [confirm: confirmation_message(:submit_for_approval, challenge)],
-          class: "btn btn-primary px-5"
+          class: "usa-button px-5"
         )
 
       !final_section? ->

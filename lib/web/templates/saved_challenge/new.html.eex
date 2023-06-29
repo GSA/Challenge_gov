@@ -7,8 +7,8 @@
       </div>
       <h4 class="text-center mb-5"><%= @challenge.title %></h4>
       <div>
-        <%= link "Cancel", to: ChallengeView.public_details_url(@challenge), class: "btn btn-link" %>
-        <%= link "Finish", to: Routes.challenge_saved_challenge_path(@conn, :create, @challenge.id), method: "post", class: "btn btn-primary float-right" %>
+        <%= link "Cancel", to: ChallengeView.public_details_url(@challenge), class: "usa-link" %>
+        <%= link "Finish", to: Routes.challenge_saved_challenge_path(@conn, :create, @challenge.id), method: "post", class: "usa-button float-right" %>
       </div>
     </div>
   </div>

@@ -30,7 +30,7 @@
         </div>
 
         <div class="grid-col flex-2 remove-winner-container">
-          <a href="#" class="float-right js-dynamic-nested-remove btn btn-primary">Remove</a>
+          <a href="#" class="float-right js-dynamic-nested-remove usa-button">Remove</a>
         </div>
       </div>
     <% end) %>
@@ -60,12 +60,12 @@
       </div>
 
       <div class="grid-col flex-2 remove-winner-container">
-        <a href="#" class="float-right js-dynamic-nested-remove btn btn-primary">Remove</a>
+        <a href="#" class="float-right js-dynamic-nested-remove usa-button">Remove</a>
       </div>
     </div>
   </div>
   <h3>Add Aditional Winners</h3>
   <b>Add additional winners. These will display in a grid format in order displayed above.</b><br><br>
 
-  <div class="js-dynamic-nested-add btn btn-primary" data-parent="phase_winner" data-child="winners">Add</div>
+  <div class="js-dynamic-nested-add usa-button" data-parent="phase_winner" data-child="winners">Add</div>
 </div>
