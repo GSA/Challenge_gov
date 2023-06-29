@@ -1,45 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import moment from "moment";
-import { ChallengeTile } from "./ChallengeTile";
+import moment from 'moment';
+import { ChallengeTile } from './ChallengeTile';
 
 const dateAddedOptions = [
-  "Past Week",
-  "Past Month",
-  "Past 90 Days",
-  "Past Year",
-  //"Custom",   #todo
+  'Past Week',
+  'Past Month',
+  'Past 90 Days',
+  'Past Year',
 ];
 
 const lastDayOptions = [
-  "Next Week",
-  "Next Month",
-  "Next 90 days",
-  "Within Year",
-  //"Custom",   #todo
+  'Next Week',
+  'Next Month',
+  'Next 90 days',
+  'Within Year',
 ];
 
 const primaryChallengeTypeOptions = [
-  "Software and apps",
-  "Creative (Multimedia & Design)",
-  "Ideas",
-  "Technology demonstration and hardware",
-  "Nominations",
-  "Business plans",
-  "Analytics, visualizations, algorithms",
-  "Scientific",
+  'Software & Apps',
+  'Multimedia & Design',
+  'Ideas',
+  'Technology & Hardware',
+  'Nominations',
+  'Business Plans',
+  'Analytics & Algorithms',
+  'Scientific',
 ];
 
 export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handleYearChange }) => {
   const [primaryAgencyOptions, setPrimaryAgencyOptions] = useState([]);
-  const [primaryAgency, setPrimaryAgency] = useState("");
-  const [dateAdded, setDateAdded] = useState("");
-  const [lastDay, setLastDay] = useState("");
-  const [primaryChallengeType, setPrimaryChallengeType] = useState("");
-  const [keyword, setKeyword] = useState("");
+  const [primaryAgency, setPrimaryAgency] = useState('');
+  const [dateAdded, setDateAdded] = useState('');
+  const [lastDay, setLastDay] = useState('');
+  const [primaryChallengeType, setPrimaryChallengeType] = useState([]);
+  const [keyword, setKeyword] = useState('');
   const [filteredChallenges, setFilteredChallenges] = useState([]);
 
   useEffect(() => {
-    if (data && data.collection) {
+    try {
+      if (data && data.collection) {
+        console.log(data);
         const agencies = Array.from(new Set(data.collection.map(challenge => challenge.agency_name)));
         setPrimaryAgencyOptions(agencies);
 
@@ -50,8 +50,10 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         }
 
         if (dateAdded) {
+          // Calculate fromDate based on dateAdded
           const now = moment();
-          let fromDate;
+          let fromDate = now.clone().subtract(1, "years"); // Default to "Past Year"
+
           switch (dateAdded) {
             case "Past Week":
               fromDate = now.clone().subtract(7, "days");
@@ -62,27 +64,26 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
             case "Past 90 Days":
               fromDate = now.clone().subtract(90, "days");
               break;
-            case "Past Year":
-              fromDate = now.clone().subtract(1, "years");
-              break;
             default:
-              fromDate = now;
+              break;
           }
 
+          // Filter challenges based on fromDate
           filtered = filtered.filter((challenge) => {
-            const challengeDate = moment(challenge.start_date); // Use start_date instead of date_added
+            const challengeDate = moment(challenge.inserted_at);
             return challengeDate.isBetween(fromDate, now, null, "[)");
           });
         }
 
         // Add filtering by primary challenge type
-        if (primaryChallengeType) {
-            filtered = filtered.filter(challenge => challenge.primary_type === primaryChallengeType);
+        if (primaryChallengeType.length > 0) {
+          filtered = filtered.filter(challenge => primaryChallengeType.includes(challenge.primary_type));
         }
 
         if (lastDay) {
           const now = moment();
           let toDate;
+
           switch (lastDay) {
             case "Next Week":
               toDate = now.clone().add(7, "days");
@@ -97,32 +98,22 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
               toDate = now.clone().add(1, "years");
               break;
             default:
-              toDate = now;
+              toDate = now.clone().add(1, "years"); // Default to "Within Year"
+              break;
           }
 
-          filtered = filtered.filter((challenge) => {
+        // Filter challenges based on toDate
+        filtered = filtered.filter((challenge) => {
             const challengeEnd = moment(challenge.end_date);
             return challengeEnd.isBetween(now, toDate, null, "[)");
           });
         }
 
         if (keyword) {
-          const searchFields = ["agency_name", "title", "tagline"];
-
-          filtered = filtered.filter((challenge) => {
-            // Search in agency_name, title, and tagline fields
+          const searchFields = ["title", "tagline", "brief_description"];
+          filtered = filtered.filter((challenge) => {            
             for (const field of searchFields) {
               if (challenge[field] && challenge[field].toLowerCase().includes(keyword.toLowerCase())) {
-                return true;
-              }
-            }
-
-            // Search in how_to_enter and judging_criteria fields inside phases
-            for (const phase of challenge.phases) {
-              if (phase.how_to_enter && phase.how_to_enter.toLowerCase().includes(keyword.toLowerCase())) {
-                return true;
-              }
-              if (phase.judging_criteria && phase.judging_criteria.toLowerCase().includes(keyword.toLowerCase())) {
                 return true;
               }
             }
@@ -130,62 +121,43 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
             return false;
           });
         }
-
         // implement other filters here
-
-        setFilteredChallenges(filtered);
+         setFilteredChallenges(filtered);
+        
+        console.log(filteredChallenges);  // this is the other modification
       }
+    } catch (error) {
+      console.error(error);
+    }
   }, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
 
+  const styles ={
+    smallWidth: {
+      width: '100%' // or any desired width
+    },
+    largeWidth: {
+      width: '100%' // or any desired width
+    }
+  };
 
-  const renderFilterDropdown = (label, options, selectedValue, handleChange) => (
-    <div>
-      <label>{label}</label>
-      <select value={selectedValue} onChange={handleChange}>
-        <option value="">Select...</option>
-        {options.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-
-  const handleClearFilters = () => {
+  const handleClearFilters = (event) => {
+    event.preventDefault();
     setPrimaryAgency('');
     setDateAdded('');
     setLastDay('');
-    setPrimaryChallengeType('');
+    setPrimaryChallengeType([]);
     setKeyword('');
-  };
-
-  const handleSearch = () => {
-    const queryParams = new URLSearchParams();
-    queryParams.append('primaryAgency', primaryAgency);
-    queryParams.append('dateAdded', dateAdded);
-    queryParams.append('lastDay', lastDay);
-    queryParams.append('primaryChallengeType', primaryChallengeType);
-    queryParams.append('keyword', keyword);
-
-    fetch(`/api/challenges?${queryParams.toString()}`)
-      .then(response => response.json())
-      .then(data => {
-        setFilteredChallenges(data.collection);
-      })
-      .catch(error => {
-        // Handle any errors
-      });
+    setFilteredChallenges(data.collection);
   };
 
   const renderHeader = () => (
     <h2 className="mb-5">
-      {isArchived ? "Archived Challenges" : "Active Challenges"}
+      {isArchived ? "Archived Challenges" : "Filter by open/active challenges."}
     </h2>
   );
-
+  
   const renderSubHeader = () => isArchived ? <p>Challenges on this page are completed (closed to submissions) or only open to select winners of a previous competition phase.</p> : null;
-
+  
   const renderYearFilter = () => {
     const startYear = 2010;
     const currentYear = moment().year();
@@ -197,7 +169,12 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       return (
         <div className="cards__year-filter">
           <div>Filter by year:</div>
-          <select value={selectedYear} onChange={handleYearChange} aria-label="Filter archive by year">
+          <select 
+            className=""
+            value={selectedYear} 
+            onChange={handleYearChange} 
+            aria-label="Filter archive by year"
+          >
             {
               years.map(year => {
                 return <option key={year}>{year}</option>
@@ -208,16 +185,30 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       );
     }
   };
-
+  
   const renderSortText = () => {
-    if (isArchived) {
-      return <p className="card__section--sort"><i>Challenges sorted by those most recently closed to open submissions.</i></p>;
-    } else {
-      if (data.collection && data.collection.length >= 1) {
-        return <p className="card__section--sort"><i>Challenges are sorted by those closing soonest.</i></p>;
+      if (isArchived) {
+        return (
+          <div className="container">
+            <p className="card__section--sort">
+              <i>Challenges sorted by those most recently closed to open submissions.</i>
+            </p>
+          </div>
+        );
+      } else {
+        if (data.collection && data.collection.length >= 1) {
+          return (
+            <div className="container"> 
+              <p className="card__section--sort">
+                <i>
+                  Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press "Clear" to start a new search.
+                </i>
+              </p>
+            </div>
+          );
+        }
       }
-    }
-  };
+    };
 
   const renderChallengeTiles = () => {
     if (loading) {
@@ -257,43 +248,119 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       }
     }
   };
+  
+  return (
+    <>
+      <section id="active-challenges" className="cards__section" tabIndex="-1">
+        <div className="container">
+          {renderHeader()}
+          {renderSubHeader()}
+          {renderYearFilter()}
+        </div>
 
-  const renderFilter = () => {
-    if (!isArchived) {
-      return (
-        <div className="filter-module">
-          <div className="filter-label">Filter by open/active challenges</div>
-          <div className="filter-dropdowns">
-            {renderFilterDropdown('Primary agency sponsor', primaryAgencyOptions, primaryAgency, (event) => setPrimaryAgency(event.target.value))}
-            {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value))}
-            {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value))}
-            {renderFilterDropdown('Primary challenge type', primaryChallengeTypeOptions, primaryChallengeType, (event) => setPrimaryChallengeType(event.target.value))}
-            <div>
-              <label className="filter-label">Keyword or phrase</label>
-              <input type="text" placeholder="Keyword or phrase" value={keyword} onChange={(event) => setKeyword(event.target.value)} />
-            </div>
-          </div>
-          <div className="filter-buttons">
-            <button onClick={handleSearch}>Search</button>
-            <button onClick={handleClearFilters}>Clear</button>
+        <div className="full-width-background">
+          <div className="container">
+            <form className="filter-module full-width">
+
+              <div className="filter-dropdowns">
+
+                <div className="filter-module__item">
+                  <label className="filter-label" htmlFor="primaryAgency">Primary agency sponsor</label>
+                  <select
+                    id="primaryAgency"
+                    className="usa-select"
+                    value={primaryAgency}
+                    onChange={(event) => setPrimaryAgency(event.target.value)}
+                  >
+                    <option value="">Select...</option>
+                    {primaryAgencyOptions.map((option, index) => (
+                      <option key={index} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="filter-module__item" style={styles.smallWidth}>
+                  <label className="filter-label" htmlFor="dateAdded">Date added</label>
+                  <select
+                    id="dateAdded"
+                    className="usa-select"
+                    value={dateAdded}
+                    onChange={(event) => setDateAdded(event.target.value)}
+                  >
+                    <option value="">Select...</option>
+                    {dateAddedOptions.map((option, index) => (
+                      <option key={index} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="filter-module__item">
+                  <label className="filter-label" htmlFor="lastDay">Last day to submit</label>
+                  <select
+                    id="lastDay"
+                    className="usa-select"
+                    value={lastDay}
+                    onChange={(event) => setLastDay(event.target.value)}
+                  >
+                    <option value="">Select...</option>
+                    {lastDayOptions.map((option, index) => (
+                      <option key={index} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="filter-module__item" style={styles.largeWidth}>
+                  <label className="filter-label" htmlFor="primaryChallengeType">Primary challenge type</label>
+                  <select
+                    id="primaryChallengeType"
+                    className="usa-select"
+                    style={{ height: '150px'}} // or desired height
+                    value={primaryChallengeType}
+                    onChange={(event) => {
+                      const selectedOptions = Array.from(
+                        event.target.selectedOptions,
+                        (option) => option.value
+                      );
+                      setPrimaryChallengeType(selectedOptions);
+                    }}
+                    multiple
+                  >
+                    <option value="">Select...</option>
+                    {primaryChallengeTypeOptions.map((option, index) => (
+                      <option key={index} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="filter-module__item keyword-item">
+                  <label className="filter-label" htmlFor="keyword">Keyword</label>
+                  <div className="keyword-input-wrapper">
+                    <input
+                      id="keyword"
+                      className="filter-input"
+                      type="text"
+                      placeholder="Keyword"
+                      value={keyword}
+                      onChange={(event) => setKeyword(event.target.value)}
+                    />
+                    <button className="usa-button" onClick={handleClearFilters}>
+                      Clear
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
           </div>
         </div>
-      );
-    }
-  };
 
-    return (
-    <>
-      <section id="active-challenges" className="cards__section">
-        {renderHeader()}
-        {renderSubHeader()}
-        {renderYearFilter()}
-        {/* {renderFilter()} */}
-        {renderSortText()}
-        {renderChallengeTiles()}
+        <div className="container">
+          <div style={{ paddingBottom: "20px" }}>&nbsp;</div>
+          {renderSortText()}
+          {renderChallengeTiles()}
+        </div>
       </section>
     </>
   );
 };
-
-export default ChallengeTiles;
