@@ -109,7 +109,9 @@ defmodule ChallengeGov.Analytics do
     year
   end
 
-  def calculate_prize_amount(challenge = %{imported: true}), do: challenge.prize_total || 0
+  def calculate_prize_amount_imported(challenge = %{imported: true}),
+    do: challenge.prize_total || 0
+
   def calculate_prize_amount(challenge), do: (challenge.prize_total || 0) / 100
 
   def all_challenges(challenges, years) do
