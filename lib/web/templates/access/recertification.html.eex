@@ -17,7 +17,7 @@
           <% end %>
         </div>
         <div class="btn-wrapper">
-          <%= submit("Request Recertification", class: "btn btn-primary") %>
+          <%= submit("Request Recertification", class: "usa-button") %>
         </div>
       <% end) %>
   </div>

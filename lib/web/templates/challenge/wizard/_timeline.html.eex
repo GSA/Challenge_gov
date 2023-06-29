@@ -40,7 +40,7 @@
         </div>
 
         <div class="row">
-          <div class="remove-nested-section btn btn-link text-danger">Remove event</div>
+          <div class="remove-nested-section usa-link text-danger">Remove event</div>
         </div>
 
         <hr/>
@@ -50,7 +50,7 @@
   </div>
 
   <!-- Add new timeline event button -->
-  <div class="add-nested-section btn btn-primary mt-5" data-parent="challenge" data-child="timeline_events">Add event</div>
+  <div class="add-nested-section usa-button mt-5" data-parent="challenge" data-child="timeline_events">Add event</div>
 
   <!-- Timeline event template -->
   <div class="dynamic-nested-form-template d-none">
@@ -77,7 +77,7 @@
       </div>
 
       <div class="row">
-        <div class="remove-nested-section btn btn-link text-danger">Remove event</div>
+        <div class="remove-nested-section usa-link text-danger">Remove event</div>
       </div>
       <hr/>
     </div>

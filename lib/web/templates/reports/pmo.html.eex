@@ -63,7 +63,7 @@
           <input id="challenge_auto_publish_date" label="Publish date" name="challenge[auto_publish_date]" type="hidden" value="">
 
       </div>
-      <button type="submit" class="btn btn-primary">Export report</button>
+      <button type="submit" class="usa-button">Export report</button>
     </form>
 
     </div>
