@@ -1,44 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import moment from "moment";
-import { ChallengeTile } from "./ChallengeTile";
+import moment from 'moment';
+import { ChallengeTile } from './ChallengeTile';
 
 const dateAddedOptions = [
-  "Past Week",
-  "Past Month",
-  "Past 90 Days",
-  "Past Year"
+  'Past Week',
+  'Past Month',
+  'Past 90 Days',
+  'Past Year',
 ];
 
 const lastDayOptions = [
-  "Next Week",
-  "Next Month",
-  "Next 90 days",
-  "Within Year"
+  'Next Week',
+  'Next Month',
+  'Next 90 days',
+  'Within Year',
 ];
 
 const primaryChallengeTypeOptions = [
-  "Software and apps",
-  "Creative (Multimedia & Design)",
-  "Ideas",
-  "Technology demonstration and hardware",
-  "Nominations",
-  "Business plans",
-  "Analytics, visualizations, algorithms",
-  "Scientific",
+  'Software & Apps',
+  'Multimedia & Design',
+  'Ideas',
+  'Technology & Hardware',
+  'Nominations',
+  'Business Plans',
+  'Analytics & Algorithms',
+  'Scientific',
 ];
 
 export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handleYearChange }) => {
   const [primaryAgencyOptions, setPrimaryAgencyOptions] = useState([]);
-  const [primaryAgency, setPrimaryAgency] = useState("");
-  const [dateAdded, setDateAdded] = useState("");
-  const [lastDay, setLastDay] = useState("");
+  const [primaryAgency, setPrimaryAgency] = useState('');
+  const [dateAdded, setDateAdded] = useState('');
+  const [lastDay, setLastDay] = useState('');
   const [primaryChallengeType, setPrimaryChallengeType] = useState([]);
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState('');
   const [filteredChallenges, setFilteredChallenges] = useState([]);
-
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-  };
 
   useEffect(() => {
     try {
@@ -135,53 +131,33 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     }
   }, [primaryAgency, dateAdded, lastDay, primaryChallengeType, keyword, data]);
 
-  const renderFilterDropdown = (
+  const styles ={
+    smallWidth: {
+      width: '100%' // or any desired width
+    },
+    largeWidth: {
+      width: '100%' // or any desired width
+    }
+  };
 
-    label,
-    options,
-    selectedValue,
-    handleChange,
-    multiple = false,
-    className = "",
-    placeholder = "Select...",
-    id // Add id parameter here
-  ) => (
-    <div className={`filter-module__item ${className}`}>
-      <label className="filter-label" htmlFor={id}>{label}</label>
-      <select
-        id={id} // Add id attribute here
-        className="filter-select"
-        value={selectedValue}
-        onChange={handleChange}
-        multiple={multiple}
-        aria-label={label}
-      >
-        <option value="">{placeholder}</option>
-        {options.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-
-  const handleClearFilters = () => {
+  const handleClearFilters = (event) => {
+    event.preventDefault();
     setPrimaryAgency('');
     setDateAdded('');
     setLastDay('');
     setPrimaryChallengeType([]);
     setKeyword('');
-  };  
+    setFilteredChallenges(data.collection);
+  };
 
   const renderHeader = () => (
     <h2 className="mb-5">
       {isArchived ? "Archived Challenges" : "Filter by open/active challenges."}
     </h2>
   );
-
+  
   const renderSubHeader = () => isArchived ? <p>Challenges on this page are completed (closed to submissions) or only open to select winners of a previous competition phase.</p> : null;
-
+  
   const renderYearFilter = () => {
     const startYear = 2010;
     const currentYear = moment().year();
@@ -193,7 +169,12 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       return (
         <div className="cards__year-filter">
           <div>Filter by year:</div>
-          <select value={selectedYear} onChange={handleYearChange} aria-label="Filter archive by year">
+          <select 
+            className=""
+            value={selectedYear} 
+            onChange={handleYearChange} 
+            aria-label="Filter archive by year"
+          >
             {
               years.map(year => {
                 return <option key={year}>{year}</option>
@@ -204,8 +185,8 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       );
     }
   };
-
-    const renderSortText = () => {
+  
+  const renderSortText = () => {
       if (isArchived) {
         return (
           <div className="container">
@@ -267,92 +248,114 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       }
     }
   };
-
-  const renderFilter = () => {
-    if (!isArchived) {
-      return (
-        <form className={`filter-module full-width`} onSubmit={handleFormSubmit}>
-          <div className="filter-dropdowns">
-            <div className={`filter-module__item`}>
-              <label className="filter-label" htmlFor="primaryAgency">Primary agency sponsor</label>
-              <select
-                id="primaryAgency"
-                className="filter-select"
-                value={primaryAgency}
-                onChange={(event) => setPrimaryAgency(event.target.value)}
-                aria-label="Primary agency sponsor"
-              >
-                <option value="">Select...</option>
-                {primaryAgencyOptions.map((option, index) => (
-                  <option key={index} value={option}>{option}</option>
-                ))}
-              </select>
-            </div>
-            {renderFilterDropdown('Date added', dateAddedOptions, dateAdded, (event) => setDateAdded(event.target.value), false, "", "Select...", "dateAdded")}
-            {renderFilterDropdown('Last day to submit', lastDayOptions, lastDay, (event) => setLastDay(event.target.value), false, "", "Select...",
-              "lastDay"
-            )}
-            {renderFilterDropdown(
-              "Primary challenge type",
-              primaryChallengeTypeOptions,
-              primaryChallengeType,
-              (event) => {
-                const selectedOptions = Array.from(
-                  event.target.selectedOptions,
-                  (option) => option.value
-                );
-                setPrimaryChallengeType(selectedOptions);
-              },
-              true,
-              "",
-              "Multi select...",
-              "primaryChallengeType" // Add id here
-            )}
-            <div className="filter-module__item keyword-item">
-              <label className="filter-label" htmlFor="keyword">Keyword</label>
-              <div className="keyword-input-wrapper">
-                <input
-                  id="keyword"
-                  className="filter-input"
-                  type="text"
-                  placeholder="Keyword"
-                  value={keyword}
-                  onChange={(event) => setKeyword(event.target.value)}
-                  aria-label="Keyword"
-                />
-                <button className="filter-button" onClick={handleClearFilters}>
-                  Clear
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      );
-    }
-  };
-
+  
   return (
     <>
-      <a href="#main-content" className="sr-only sr-only-focusable">
-        Skip to main content
-      </a>
-      <section
-        id="active-challenges"
-        className="cards__section"
-        tabIndex="-1" // Add tabindex to bring the focus to the section when clicked on the skip link
-      >
+      <section id="active-challenges" className="cards__section" tabIndex="-1">
         <div className="container">
           {renderHeader()}
           {renderSubHeader()}
           {renderYearFilter()}
         </div>
+
         <div className="full-width-background">
           <div className="container">
-            {renderFilter()}
+            <form className="filter-module full-width">
+
+              <div className="filter-dropdowns">
+
+                <div className="filter-module__item">
+                  <label className="filter-label" htmlFor="primaryAgency">Primary agency sponsor</label>
+                  <select
+                    id="primaryAgency"
+                    className="usa-select"
+                    value={primaryAgency}
+                    onChange={(event) => setPrimaryAgency(event.target.value)}
+                  >
+                    <option value="">Select...</option>
+                    {primaryAgencyOptions.map((option, index) => (
+                      <option key={index} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="filter-module__item" style={styles.smallWidth}>
+                  <label className="filter-label" htmlFor="dateAdded">Date added</label>
+                  <select
+                    id="dateAdded"
+                    className="usa-select"
+                    value={dateAdded}
+                    onChange={(event) => setDateAdded(event.target.value)}
+                  >
+                    <option value="">Select...</option>
+                    {dateAddedOptions.map((option, index) => (
+                      <option key={index} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="filter-module__item">
+                  <label className="filter-label" htmlFor="lastDay">Last day to submit</label>
+                  <select
+                    id="lastDay"
+                    className="usa-select"
+                    value={lastDay}
+                    onChange={(event) => setLastDay(event.target.value)}
+                  >
+                    <option value="">Select...</option>
+                    {lastDayOptions.map((option, index) => (
+                      <option key={index} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="filter-module__item" style={styles.largeWidth}>
+                  <label className="filter-label" htmlFor="primaryChallengeType">Primary challenge type</label>
+                  <select
+                    id="primaryChallengeType"
+                    className="usa-select"
+                    style={{ height: '150px'}} // or desired height
+                    value={primaryChallengeType}
+                    onChange={(event) => {
+                      const selectedOptions = Array.from(
+                        event.target.selectedOptions,
+                        (option) => option.value
+                      );
+                      setPrimaryChallengeType(selectedOptions);
+                    }}
+                    multiple
+                  >
+                    <option value="">Select...</option>
+                    {primaryChallengeTypeOptions.map((option, index) => (
+                      <option key={index} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="filter-module__item keyword-item">
+                  <label className="filter-label" htmlFor="keyword">Keyword</label>
+                  <div className="keyword-input-wrapper">
+                    <input
+                      id="keyword"
+                      className="filter-input"
+                      type="text"
+                      placeholder="Keyword"
+                      value={keyword}
+                      onChange={(event) => setKeyword(event.target.value)}
+                    />
+                    <button className="usa-button" onClick={handleClearFilters}>
+                      Clear
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
           </div>
         </div>
+
         <div className="container">
-          <div style={{ paddingBottom: "40px" }}>&nbsp;</div>
           {renderSortText()}
           {renderChallengeTiles()}
         </div>
