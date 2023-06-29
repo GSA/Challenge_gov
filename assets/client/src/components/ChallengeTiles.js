@@ -83,13 +83,6 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         });
       }
 
-      /*if (primaryChallengeType.length > 0) {
-        filtered = filtered.filter(challenge => {
-          const displayType = primaryChallengeTypeOptions.find(option => option.value === challenge.primary_type)?.display;
-          return primaryChallengeType.includes(displayType);
-        });
-      }*/
-
         if (primaryChallengeType.length > 0) {
           filtered = filtered.filter(challenge => primaryChallengeType.includes(challenge.primary_type));
       }
@@ -145,10 +138,10 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
 
   const styles ={
     smallWidth: {
-      width: '100%' // or any desired width
+      width: '100%'
     },
     largeWidth: {
-      width: '100%' // or any desired width
+      width: '100%'
     }
   };
 
@@ -221,7 +214,8 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           </div>
         );
       }
-    };
+    }
+  };
 
   const renderChallengeTiles = () => {
     if (loading) {
@@ -375,4 +369,4 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       </section>
     </>
   );
-}
+};
