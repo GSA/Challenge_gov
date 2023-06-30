@@ -24,7 +24,7 @@
           <div class="card-header">
             <h3 class="card-title">Edit</h3>
           </div>
-          
+
           <%= form_for(@changeset, Routes.user_path(@conn, :update, @user.id), [class: "form-horizontal", multipart: true], fn f -> %>
             <div class="card-body">
               <div class="form-group">
@@ -55,10 +55,10 @@
                   </div>
                 </div>
               <% end %>
-            </div>            
+            </div>
 
             <div class="card-footer">
-              <%= submit("Submit", class: "btn btn-primary pull-right") %>
+              <%= submit("Submit", class: "usa-button pull-right") %>
             </div>
           <% end) %>
         </div>

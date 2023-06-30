@@ -32,7 +32,7 @@
           <% end %>
         </div>
         <div class="btn-wrapper">
-          <%= submit("Submit", class: "btn btn-primary") %>
+          <%= submit("Submit", class: "usa-button") %>
         </div>
       <% end) %>
   </div>

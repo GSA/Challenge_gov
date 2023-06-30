@@ -41,7 +41,7 @@
     </div>
   </div>
   <div>
-    <%= submit "Filter", class: "btn btn-primary" %>
-    <%= link "Clear", to: Routes.challenge_path(@conn, :index), class: "btn" %>
+    <%= submit "Filter", class: "usa-button" %>
+    <%= link "Clear", to: Routes.challenge_path(@conn, :index), class: "usa-button usa-button--outline" %>
   </div>
 <% end) %>

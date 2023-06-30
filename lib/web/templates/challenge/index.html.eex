@@ -28,12 +28,12 @@
         <h1 class="m-0 text-dark">
           <span>All Challenges</span>
           <div class="btn-group">
-            <%= link "New", to: Routes.challenge_path(@conn, :new, show_info: true), class: "btn btn-primary" %>
-          </div>
-          <a class="btn btn-info" data-widget="control-sidebar" href="#">Filter</a>
+            <%= link "New", to: Routes.challenge_path(@conn, :new, show_info: true), class: "usa-button" %>
+          <a class="usa-button" data-widget="control-sidebar" href="#">Filter</a>
           <%= if is_map(@filter) && map_size(@filter) > 0 do %>
-            <%= link "clear filters", to: Routes.challenge_path(@conn, :index), class: "btn btn-link" %>
+            <%= link "clear filters", to: Routes.challenge_path(@conn, :index), class: "usa-link" %>
           <% end %>
+          </div>
         </h1>
       </div>
     </div>

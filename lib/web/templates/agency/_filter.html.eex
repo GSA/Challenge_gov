@@ -9,8 +9,8 @@
         </div>
       </div>
       <div>
-        <%= submit "Filter", class: "btn btn-primary" %>
-        <%= link "Clear", to: Routes.agency_path(@conn, :index), class: "btn" %>
+        <%= submit "Filter", class: "usa-button bg-primary-dark" %>
+        <%= link "Clear", to: Routes.agency_path(@conn, :index), class: "usa-button" %>
       </div>
     <% end) %>
   </div>

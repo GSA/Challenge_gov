@@ -137,7 +137,7 @@ defmodule Web.MessageContextView do
   def render_new_message_button(conn, _user) do
     link("New Message",
       to: Routes.message_context_path(conn, :new, context: "challenge"),
-      class: "btn btn-primary me-3"
+      class: "usa-button me-3"
     )
   end
 
@@ -224,13 +224,13 @@ defmodule Web.MessageContextView do
 
     cond do
       Map.get(filter, route) ->
-        "btn-primary"
+        "usa-button"
 
       route == "all" and filter == %{} ->
-        "btn-primary"
+        "usa-button"
 
       true ->
-        "btn-link"
+        "usa-button usa-button--outline"
     end
   end
 end

@@ -151,8 +151,10 @@ defmodule Web.MessageContextViewTest do
     test "success: all" do
       conn = %{params: %{}}
 
-      assert MessageContextView.filter_active_class(conn, "all") == "btn-primary"
-      assert MessageContextView.filter_active_class(conn, "non_active_filter") == "btn-link"
+      assert MessageContextView.filter_active_class(conn, "all") == "usa-button"
+
+      assert MessageContextView.filter_active_class(conn, "non_active_filter") ==
+               "usa-button usa-button--outline"
     end
 
     test "success: starred" do
@@ -164,8 +166,10 @@ defmodule Web.MessageContextViewTest do
         }
       }
 
-      assert MessageContextView.filter_active_class(conn, "starred") == "btn-primary"
-      assert MessageContextView.filter_active_class(conn, "non_active_filter") == "btn-link"
+      assert MessageContextView.filter_active_class(conn, "starred") == "usa-button"
+
+      assert MessageContextView.filter_active_class(conn, "non_active_filter") ==
+               "usa-button usa-button--outline"
     end
   end
 
@@ -219,7 +223,7 @@ defmodule Web.MessageContextViewTest do
                   60,
                   "a",
                   [
-                    [32, "class", 61, 34, "btn btn-primary me-3", 34],
+                    [32, "class", 61, 34, "usa-button me-3", 34],
                     [32, "href", 61, 34, "/messages/new?context=challenge", 34]
                   ],
                   62,
