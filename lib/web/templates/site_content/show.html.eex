@@ -22,7 +22,7 @@
         <div class="card">
           <div class="card-header">
             <div class="card-tools">
-              <%= link("Edit", to: Routes.site_content_path(@conn, :edit, @content.section), class: "btn btn-default me-2") %>
+              <%= link("Edit", to: Routes.site_content_path(@conn, :edit, @content.section), class: "usa-button me-2") %>
             </div>
           </div>
           <div class="card-body">

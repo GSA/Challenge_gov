@@ -40,7 +40,7 @@
         </div>
 
         <div class="row">
-          <div class="remove-nested-section usa-link text-danger">Remove event</div>
+          <div class="remove-nested-section usa-link text-error-dark">Remove event</div>
         </div>
 
         <hr/>
@@ -77,7 +77,7 @@
       </div>
 
       <div class="row">
-        <div class="remove-nested-section usa-link text-danger">Remove event</div>
+        <div class="remove-nested-section usa-link text-error-dark">Remove event</div>
       </div>
       <hr/>
     </div>

@@ -66,7 +66,7 @@
           <div class="row">
             <%= if phase_form.index != 0 do %>
               <%= hidden_input phase_form, :delete_phase, value: false, class: "delete-phase" %>
-              <a class="remove-nested-section usa-link text-danger">Remove phase <%= phase_form.index + 1 %></a>
+              <a class="remove-nested-section usa-link text-error-dark">Remove phase <%= phase_form.index + 1 %></a>
             <% end %>
           </div>
         </div>
@@ -159,7 +159,7 @@
       </div>
 
       <div class="row">
-        <a class="remove-nested-section usa-link text-danger"></a>
+        <a class="remove-nested-section usa-link text-error-dark"></a>
       </div>
     </div>
   </div>

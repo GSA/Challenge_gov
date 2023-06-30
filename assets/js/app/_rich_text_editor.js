@@ -56,7 +56,7 @@ $(".rt-textarea").each(function(textarea) {
   // make sure the tooltip has no remaining errors in new instance
   quill.theme.tooltip.show = function() {
     $(this.root).removeClass('is-invalid');
-    $("span").remove('.text-danger')
+    $("span").remove('.text-error-dark')
     $("span").remove('.text-secondary')
     tooltipShow.call(this);
   }
@@ -66,7 +66,7 @@ $(".rt-textarea").each(function(textarea) {
     var url = this.textbox.value;
     // clean out any previous errors
     $(this.root).removeClass('is-invalid');
-    $("span").remove('.text-danger')
+    $("span").remove('.text-error-dark')
     $("span").remove('.text-secondary')
 
     let httpRegex = /^https?:\/\//i
@@ -76,7 +76,7 @@ $(".rt-textarea").each(function(textarea) {
     }
     else {
       $(this.root).addClass('is-invalid');
-      $(this.root).append('<span class="text-danger">links must contain "https"</span>')
+      $(this.root).append('<span class="text-error-dark">links must contain "https"</span>')
       $(this.root).append('<span class="text-secondary">tip: copy and paste url</span>')
     }
   };

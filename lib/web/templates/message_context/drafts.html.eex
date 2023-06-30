@@ -20,15 +20,15 @@
       <%= form_for(@conn, Routes.message_context_path(@conn, :drafts, filter: @filter), [method: :get, as: :filter], fn f -> %>
         <div class="row mb-3">
           <div class="col">
-            <%= link("New Message", to: Routes.message_context_path(@conn, :new, context: "challenge"), class: "btn btn-primary me-3") %>
+            <%= link("New Message", to: Routes.message_context_path(@conn, :new, context: "challenge"), class: "usa-button me-3") %>
               <%= select(f, :challenge_id, Enum.map(@challenges, &{&1.title, &1.id}), value: @filter["challenge_id"], prompt: "Filter by challenge", class: "js-select2 message_center__challenge_filter") %>
           </div>
           <div class="col text-right">
-            <%= link("All", to: Routes.message_context_path(@conn, :index), class: "btn btn-link") %>
-            <%= link("Starred", to: Routes.message_context_path(@conn, :index, filter: %{starred: true}), class: "btn #{filter_active_class(@conn, "starred")}") %>
-            <%= link("Unread", to: Routes.message_context_path(@conn, :index, filter: %{read: false}), class: "btn #{filter_active_class(@conn, "read")}") %>
-            <%= link("Archived", to: Routes.message_context_path(@conn, :index, filter: %{archived: true}), class: "btn #{filter_active_class(@conn, "archived")}") %>
-            <%= link("Drafts", to: Routes.message_context_path(@conn, :drafts), class: "btn btn-primary") %>
+            <%= link("All", to: Routes.message_context_path(@conn, :index), class: "usa-button usa-button--outline") %>
+            <%= link("Starred", to: Routes.message_context_path(@conn, :index, filter: %{starred: true}), class: "#{filter_active_class(@conn, "starred")}") %>
+            <%= link("Unread", to: Routes.message_context_path(@conn, :index, filter: %{read: false}), class: "#{filter_active_class(@conn, "read")}") %>
+            <%= link("Archived", to: Routes.message_context_path(@conn, :index, filter: %{archived: true}), class: "#{filter_active_class(@conn, "archived")}") %>
+            <%= link("Drafts", to: Routes.message_context_path(@conn, :drafts), class: "usa-button") %>
           </div>
         </div>
       <% end) %>
