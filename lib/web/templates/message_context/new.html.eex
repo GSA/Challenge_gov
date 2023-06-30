@@ -46,7 +46,7 @@
               </div>
             </div>
             <hr/>
-            <%= submit "New message", class: "btn btn-primary" %>
+            <%= submit "New message", class: "usa-button" %>
           <% end) %>
         </div>
       </div>

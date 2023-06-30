@@ -9,10 +9,10 @@
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">
           <span>Agencies</span>
-          <%= link "New", to: Routes.agency_path(@conn, :new), class: "btn btn-primary" %>
-          <a class="btn btn-info" data-widget="control-sidebar" href="#">Filter</a>
+          <%= link "New", to: Routes.agency_path(@conn, :new), class: "usa-button" %>
+          <a class="usa-button" data-widget="control-sidebar" href="#">Filter</a>
           <%= if is_map(@filter) && map_size(@filter) > 0 do %>
-            <%= link "clear filters", to: Routes.agency_path(@conn, :index), class: "btn btn-link" %>
+            <%= link "clear filters", to: Routes.agency_path(@conn, :index), class: "usa-button usa-button--outline" %>
           <% end %>
         </h1>
       </div>
@@ -44,8 +44,8 @@
                       <%= if agency.parent, do: link(agency.parent.name, to: Routes.agency_path(@conn, :show, agency.parent.id)) %>
                     </td>
                     <td>
-                      <%= link("View", to: Routes.agency_path(@conn, :show, agency.id), class: "btn btn-default btn-xs") %>
-                      <%= link("Edit", to: Routes.agency_path(@conn, :edit, agency.id), class: "btn btn-default btn-xs") %>
+                      <%= link("View", to: Routes.agency_path(@conn, :show, agency.id), class: "usa-button") %>
+                      <%= link("Edit", to: Routes.agency_path(@conn, :edit, agency.id), class: "usa-button") %>
                     </td>
                   </tr>
                 <% end %>

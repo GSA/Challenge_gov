@@ -246,7 +246,7 @@ defmodule Web.PhaseView do
     map = %{
       status: submission.judging_status,
       prev_status: prev_status,
-      class: "btn btn-xs js-select-for-judging "
+      class: "usa-button js-select-for-judging "
     }
 
     case {submission.judging_status, filter["judging_status"]} do

@@ -5,19 +5,19 @@
     <%= if !Challenges.is_published?(@challenge) or !(Challenges.is_closed?(@challenge) or Challenges.is_archived_new?(@challenge) or Challenges.is_archived?(@challenge)) do %>
       <div class="btn-toolbar">
         <%= if Challenges.is_approvable?(@challenge, @user) do  %>
-          <%= link("Approve", to: Routes.challenge_path(@conn, :approve, @challenge.id), method: :post, class: "btn btn-primary") %>
+          <%= link("Approve", to: Routes.challenge_path(@conn, :approve, @challenge.id), method: :post, class: "usa-button") %>
         <% end %>
         <%= if Challenges.is_publishable?(@challenge, @user) do  %>
-          <%= link("Publish", to: Routes.challenge_path(@conn, :publish, @challenge.id), method: :post, class: "btn btn-primary") %>
+          <%= link("Publish", to: Routes.challenge_path(@conn, :publish, @challenge.id), method: :post, class: "usa-button") %>
         <% end %>
         <%= if Challenges.is_unpublishable?(@challenge, @user) do  %>
-          <%= link("Unpublish", to: Routes.challenge_path(@conn, :unpublish, @challenge.id), method: :post, class: "btn btn-danger", data: [confirm: "Are you sure you want to unpublish this challenge?"]) %>
+          <%= link("Unpublish", to: Routes.challenge_path(@conn, :unpublish, @challenge.id), method: :post, class: "usa-button usa-button--secondary", data: [confirm: "Are you sure you want to unpublish this challenge?"]) %>
         <% end %>
         <%= if Accounts.has_admin_access?(@user) and Challenges.is_submittable?(@challenge, @user) do  %>
-          <%= link("Submit", to: Routes.challenge_path(@conn, :submit, @challenge.id), method: :post, class: "btn btn-primary", data: [confirm: "Are you sure you want to submit this challenge for approval?"]) %>
+          <%= link("Submit", to: Routes.challenge_path(@conn, :submit, @challenge.id), method: :post, class: "usa-button", data: [confirm: "Are you sure you want to submit this challenge for approval?"]) %>
         <% end %>
         <%= if Challenges.can_request_edits?(@challenge, @user) do  %>
-          <%= link("Request Edits", to: "#", class: "btn btn-danger",  "data-bs-toggle": "modal", "data-bs-target": "#rejection-modal" ) %>
+          <%= link("Request Edits", to: "#", class: "usa-button usa-button--secondary",  "data-bs-toggle": "modal", "data-bs-target": "#rejection-modal" ) %>
         <% end %>
       </div>
     <% end %>

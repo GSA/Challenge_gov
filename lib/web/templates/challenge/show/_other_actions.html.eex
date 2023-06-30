@@ -2,25 +2,25 @@
   <div class="card-body">
     <h4>Other actions</h4>
     <div class="btn-toolbar">
-      <%= challenge_submissions_link(@conn, @challenge, @user, label: "View submissions", class: "btn btn-primary") %>
+      <%= challenge_submissions_link(@conn, @challenge, @user, label: "View submissions", class: "usa-button") %>
       <%= if Accounts.has_admin_access?(@user) or !(Challenges.is_archived?(@challenge) or Challenges.is_archived_new?(@challenge)) do %>
-        <%= link "Preview", to: Routes.public_preview_path(@conn, :index, challenge: @challenge.uuid), target: "_blank", class: "btn btn-info" %>
-        <%= link "Print", to: Routes.public_preview_path(@conn, :index, challenge: @challenge.uuid, print: true), target: "_blank", class: "btn btn-info" %>
-        <%= link "JSON", to: Routes.export_path(@conn, :export_challenge, @challenge.id, "json"), target: "_blank", class: "btn btn-info" %>
-        <%= link "CSV", to: Routes.export_path(@conn, :export_challenge, @challenge.id, "csv"), target: "_blank", class: "btn btn-info" %>
-        <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "btn btn-danger") %>
+        <%= link "Preview", to: Routes.public_preview_path(@conn, :index, challenge: @challenge.uuid), target: "_blank", class: "usa-button" %>
+        <%= link "Print", to: Routes.public_preview_path(@conn, :index, challenge: @challenge.uuid, print: true), target: "_blank", class: "usa-button" %>
+        <%= link "JSON", to: Routes.export_path(@conn, :export_challenge, @challenge.id, "json"), target: "_blank", class: "usa-button" %>
+        <%= link "CSV", to: Routes.export_path(@conn, :export_challenge, @challenge.id, "csv"), target: "_blank", class: "usa-button" %>
+        <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "usa-button usa-button--secondary") %>
       <% end %>
 
       <%= if Challenges.allowed_to_edit(@user, @challenge) do %>
         <%= if length(Challenges.get_closed_phases(@challenge)) > 0 and @challenge.status != "draft" do %>
-          <%= link("Add winners", to: Routes.phase_winner_path(@conn, :index, @challenge.id), class: "btn btn-primary") %>
+          <%= link("Add winners", to: Routes.phase_winner_path(@conn, :index, @challenge.id), class: "usa-button") %>
         <% else %>
-          <%= link("Add winners", to: "#", class: "btn btn-primary disabled", disabled: true) %>
+          <%= link("Add winners", to: "#", class: "usa-button disabled", disabled: true) %>
         <% end %>
       <% end %>
 
       <%= if Challenges.is_published?(@challenge) do %>
-      <%= link("Add/Edit announcement", to: "#", class: "btn btn-primary", "data-bs-toggle": "modal", "data-bs-target": "#announcement-modal") %>
+      <%= link("Add/Edit announcement", to: "#", class: "usa-button", "data-bs-toggle": "modal", "data-bs-target": "#announcement-modal") %>
       <% end %>
     </div>
   </div>

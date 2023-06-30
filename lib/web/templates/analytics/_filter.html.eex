@@ -28,8 +28,8 @@
       <%= select(f, :agency_id, Enum.map(@agencies, &{&1.name, &1.id}), value: @filter["agency_id"], prompt: "All", class: "form-control js-select") %>
     </div>
     <div>
-      <%= submit "Filter", class: "btn btn-primary" %>
-      <%= link "Clear", to: Routes.analytics_path(@conn, :index), class: "btn" %>
+      <%= submit "Filter", class: "usa-button" %>
+      <%= link "Clear", to: Routes.analytics_path(@conn, :index), class: "usa-button usa-button--outline" %>
     </div>
   </div>
 <% end) %>

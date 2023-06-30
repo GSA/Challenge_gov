@@ -518,14 +518,14 @@ defmodule Web.ChallengeView do
         submit("Previous",
           name: "action",
           value: "back",
-          class: "btn btn-outline-primary px-5",
+          class: "usa-button usa-button--outline px-5",
           data: [confirm: confirmation_message(:previous, challenge)],
           formnovalidate: true
         )
       else
         link("Previous",
           to: Routes.challenge_path(conn, :index),
-          class: "btn btn-outline-primary",
+          class: "usa-button usa-button--outline",
           data: [confirm: confirmation_message(:previous, challenge)],
           formnovalidate: true
         )
@@ -548,13 +548,13 @@ defmodule Web.ChallengeView do
     if is_final_section?(section) do
       link("Exit",
         to: Routes.challenge_path(conn, :show, id),
-        class: "btn btn-outline-primary px-5",
+        class: "usa-button usa-button--outline px-5",
         formnovalidate: true
       )
     else
       link("Exit",
         to: Routes.challenge_path(conn, :show, id),
-        class: "btn btn-outline-primary px-5",
+        class: "usa-button usa-button--outline px-5",
         data: [confirm: confirmation_message(:exit, challenge)],
         formnovalidate: true
       )
@@ -565,13 +565,13 @@ defmodule Web.ChallengeView do
     if is_final_section?(section) do
       link("Exit",
         to: Routes.challenge_path(conn, :index),
-        class: "btn btn-outline-primary px-5",
+        class: "usa-button usa-button--outline px-5",
         formnovalidate: true
       )
     else
       link("Exit",
         to: Routes.challenge_path(conn, :index),
-        class: "btn btn-outline-primary px-5",
+        class: "usa-button usa-button--outline px-5",
         data: [confirm: confirmation_message(:exit, challenge)],
         formnovalidate: true
       )
@@ -582,7 +582,7 @@ defmodule Web.ChallengeView do
     if is_final_section?(section) do
       link("Preview Challenge in New Tab",
         to: Routes.public_preview_path(conn, :index, challenge: challenge.uuid),
-        class: "btn btn-outline-primary px-5 mr-2",
+        class: "usa-button usa-button--outline px-5 mr-2",
         target: "_blank"
       )
     end
@@ -606,7 +606,7 @@ defmodule Web.ChallengeView do
           name: "action",
           value: "next",
           data: [confirm: confirmation_message(:next, challenge)],
-          class: "btn btn-outline-primary px-5 btn-testing"
+          class: "usa-button usa-button--outline px-5 btn-testing"
         )
 
       true ->
@@ -632,7 +632,7 @@ defmodule Web.ChallengeView do
     link("Remove update",
       to: Routes.challenge_path(conn, :remove_announcement, challenge.id),
       method: :post,
-      class: "btn btn-outline-danger",
+      class: "usa button usa-button--secondary",
       data: [confirm: "Are you sure you want to remove this update?"]
     )
   end

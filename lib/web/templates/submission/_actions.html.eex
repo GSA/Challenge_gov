@@ -1,7 +1,7 @@
 <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
-  <%= link("View", to: Routes.submission_path(@conn, :show, @submission.id), class: "btn btn-default btn-xs me-2") %>
+  <%= link("View", to: Routes.submission_path(@conn, :show, @submission.id), class: "usa-button me-2") %>
   <%= if Submissions.is_editable?(@user, @submission) do %>
-    <%= link("Edit", to: Routes.submission_path(@conn, :edit, @submission.id), class: "btn btn-default btn-xs me-2") %>
+    <%= link("Edit", to: Routes.submission_path(@conn, :edit, @submission.id), class: "usa-button me-2") %>
   <% else %>
     <span class="row-text">closed</span>
   <% end %>
@@ -10,7 +10,7 @@
       More options
     </button>
     <div class="dropdown-menu text-center" aria-labelledby="btnGroupDrop1">
-      <%= submission_delete_link(@conn, @submission, @user, label: "Delete", class: "btn btn-default") %>
+      <%= submission_delete_link(@conn, @submission, @user, label: "Delete", class: "usa-button") %>
     </div>
   </div>
 </div>

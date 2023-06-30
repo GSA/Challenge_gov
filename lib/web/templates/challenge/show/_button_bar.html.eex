@@ -19,10 +19,10 @@
     <%= link("Submit", to: Routes.challenge_path(@conn, :submit, @challenge.id), method: :post, class: "usa-button", data: [confirm: "Are you sure you want to submit this challenge for approval?"]) %>
   <% end %>
   <%= if Challenges.is_archivable?(@challenge, @user) do  %>
-    <%= link("Archive", to: Routes.challenge_path(@conn, :archive, @challenge.id), method: :post, class: "btn btn-default", data: [confirm: "Are you sure you want to archive this challenge?"] ) %>
+    <%= link("Archive", to: Routes.challenge_path(@conn, :archive, @challenge.id), method: :post, class: "usa-button", data: [confirm: "Are you sure you want to archive this challenge?"] ) %>
   <% end %>
   <%= if Challenges.is_unarchivable?(@challenge, @user) do  %>
-    <%= link("Unarchive", to: Routes.challenge_path(@conn, :unarchive, @challenge.id), method: :post, class: "btn btn-default", data: [confirm: "Are you sure you want to archive this challenge?"] ) %>
+    <%= link("Unarchive", to: Routes.challenge_path(@conn, :unarchive, @challenge.id), method: :post, class: "usa-button", data: [confirm: "Are you sure you want to archive this challenge?"] ) %>
   <% end %>
 
   <%= if Challenges.is_editable?(@challenge, @user) do %>
@@ -30,6 +30,6 @@
     <%= challenge_full_edit_link(@conn, @challenge, @user, class: "usa-button") %>
   <% end %>
 
-  <%= link "Preview", to: Routes.public_preview_path(@conn, :index, challenge: @challenge.uuid), target: "_blank", class: "usa-button bg-primary-dark" %>
+  <%= link "Preview", to: Routes.public_preview_path(@conn, :index, challenge: @challenge.uuid), target: "_blank", class: "usa-button" %>
   <%= challenge_delete_link(@conn, @challenge, @user, label: "Delete", class: "usa-button usa-button--secondary") %>
 </div>

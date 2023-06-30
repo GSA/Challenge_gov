@@ -171,7 +171,7 @@ defmodule Web.SubmissionView do
         link(opts[:label] || "Delete",
           to: Routes.submission_path(conn, :delete, submission.id),
           method: :delete,
-          class: "btn btn-link text-danger",
+          class: "usa-button usa-button--unstyled text-error-dark",
           data: [confirm: "Are you sure you want to delete this submission?"]
         )
 
@@ -185,7 +185,7 @@ defmodule Web.SubmissionView do
       true ->
         link(opts[:label] || "Edit",
           to: Routes.submission_path(conn, :edit, submission.id),
-          class: "btn btn-link float-right"
+          class: "usa-button usa-button--unstyled float-right"
         )
 
       false ->
@@ -285,7 +285,7 @@ defmodule Web.SubmissionView do
       submit("Save draft",
         name: "action",
         value: "draft",
-        class: "btn btn-outline-secondary me-2 float-right",
+        class: "usa-button usa-button--outline me-2 float-right",
         formnovalidate: true
       )
     end
