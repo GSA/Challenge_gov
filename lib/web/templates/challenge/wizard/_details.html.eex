@@ -149,10 +149,12 @@
     </p>
     <div class="col upload-logo">
       <div class="row">
-        <%= label class: "control-label" do %>
-          <%= radio_button(@form, :upload_logo, true, class: "me-2", required: true) %>
+      <div class="usa-radio">
+        <%= radio_button(@form, :upload_logo, true, class: "usa-radio__input", required: true) %>
+        <%= label for: "challenge_upload_logo_true", class: "usa-radio__label" do %>
           Upload my own logo (341 x 160 px)
         <% end %>
+      </div>
       </div>
       <div class="row logo-file-field collapse">
         <div class="d-flex flex-column">
@@ -165,10 +167,12 @@
         </div>
       </div>
       <div class="row">
-        <%= label class: "control-label" do %>
-          <%= radio_button(@form, :upload_logo, false, class: "me-2", required: true) %>
+      <div class="usa-radio">
+        <%= radio_button(@form, :upload_logo, false, class: "usa-radio__input", required: true) %>
+        <%= label for: "challenge_upload_logo_false", class: "usa-radio__label" do %>
           Use agency seal
         <% end %>
+       </div>
       </div>
     </div>
     <%= if @data.logo_key do %>
@@ -224,16 +228,20 @@
   <div class="col ms-2">
     <div class="multi-phase-toggle">
       <div class="row">
-        <%= label class: "control-label" do %>
-          <%= radio_button(@form, :is_multi_phase, true, class: "me-2", required: true) %>
+      <div class="usa-radio">
+        <%= radio_button(@form, :is_multi_phase, true, class: "usa-radio__input ", required: true) %>
+        <%= label for: "challenge_is_multi_phase_true", class: "usa-radio__label " do %>
           Yes
         <% end %>
       </div>
+      </div>
       <div class="row">
-        <%= label class: "control-label" do %>
-          <%= radio_button(@form, :is_multi_phase, false, class: "me-2", required: true) %>
+      <div class="usa-radio">
+        <%= radio_button(@form, :is_multi_phase, false, class: "usa-radio__input", required: true) %>
+        <%= label for: "challenge_is_multi_phase_false", class: "usa-radio__label" do %>
           No
         <% end %>
+      </div>
       </div>
     </div>
     <div>
