@@ -150,8 +150,8 @@
     <div class="col upload-logo">
       <div class="row">
       <div class="usa-radio">
-        <%= radio_button(@form, :upload_logo, true, class: "usa-radio__input", required: true) %>
-        <%= label for: "challenge_upload_logo_true", class: "usa-radio__label" do %>
+        <%= radio_button(@form, :upload_logo, true, class: "", required: true) %>
+        <%= label for: "challenge_upload_logo_true", class: "" do %>
           Upload my own logo (341 x 160 px)
         <% end %>
       </div>
@@ -168,8 +168,9 @@
       </div>
       <div class="row">
       <div class="usa-radio">
-        <%= radio_button(@form, :upload_logo, false, class: "usa-radio__input", required: true) %>
-        <%= label for: "challenge_upload_logo_false", class: "usa-radio__label" do %>
+
+        <%= radio_button(@form, :upload_logo, false, class: "", required: true) %>
+        <%= label for: "challenge_upload_logo_false", class: "" do %>
           Use agency seal
         <% end %>
        </div>
@@ -229,16 +230,16 @@
     <div class="multi-phase-toggle">
       <div class="row">
       <div class="usa-radio">
-        <%= radio_button(@form, :is_multi_phase, true, class: "usa-radio__input ", required: true) %>
-        <%= label for: "challenge_is_multi_phase_true", class: "usa-radio__label " do %>
+        <%= radio_button(@form, :is_multi_phase, true, class: "", required: true) %>
+        <%= label for: "challenge_is_multi_phase_true", class: "" do %>
           Yes
         <% end %>
       </div>
       </div>
       <div class="row">
       <div class="usa-radio">
-        <%= radio_button(@form, :is_multi_phase, false, class: "usa-radio__input", required: true) %>
-        <%= label for: "challenge_is_multi_phase_false", class: "usa-radio__label" do %>
+        <%= radio_button(@form, :is_multi_phase, false, class: "", required: true) %>
+        <%= label for: "challenge_is_multi_phase_false", class: "" do %>
           No
         <% end %>
       </div>

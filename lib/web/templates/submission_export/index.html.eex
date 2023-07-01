@@ -39,17 +39,17 @@
           <div class="usa-radio">
             <%= radio_button(f, :judging_status, "all", class: "usa-radio__input") %>
             <%= label for: "judging_status_all", class: "usa-radio__label" do %>
-            <span class="ms-1">All entries</span>
+              All entries
             <% end %>
 
             <%= radio_button(f, :judging_status, "selected", class: "usa-radio__input") %>
             <%= label for: "judging_status_selected", class: "usa-radio__label" do %>
-              <span class="ms-1">Selected for judging</span>
+              Selected for judging
             <% end %>
 
             <%= radio_button(f, :judging_status, "winner", class: "usa-radio__input") %>
             <%= label for: "judging_status_winner", class: "usa-radio__label" do %>
-              <span class="ms-1">Selected for next phase / as winner</span>
+              Selected for next phase / as winner
             <% end %>
           </div>
           <br/>

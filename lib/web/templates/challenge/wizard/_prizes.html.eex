@@ -6,16 +6,16 @@
   <label for="prize_type">Select prize award <em>(select from list)</em><span class="required">*</span></label>
   <p class="ms-2 text-muted">Select between offering a cash prize, a non-monetary prize, or both a cash prize and non-monetary prize.</p>
   <div class="usa-radio">
-    <%= radio_button(@form, :prize_type, "monetary", class: "usa-radio__input", required: true) %>
-    <label class="usa-radio__label" for="challenge_prize_type_monetary">Cash prize</label>
+    <%= radio_button(@form, :prize_type, "monetary", class: "", required: true) %>
+    <label class="" for="challenge_prize_type_monetary">Cash prize</label>
   </div>
   <div class="usa-radio">
-    <%= radio_button(@form, :prize_type, "non_monetary", class: "usa-radio__input", required: true) %>
-    <label class="usa-radio__label" for="challenge_prize_type_non_monetary">Non-monetary prize</label>
+    <%= radio_button(@form, :prize_type, "non_monetary", class: "", required: true) %>
+    <label class="" for="challenge_prize_type_non_monetary">Non-monetary prize</label>
   </div>
   <div class="usa-radio">
-    <%= radio_button(@form, :prize_type, "both", class: "usa-radio__input", required: true) %>
-    <label class="usa-radio__label" for="challenge_prize_type_both">Both a cash prize and non-monetary prize</label>
+    <%= radio_button(@form, :prize_type, "both", class: "", required: true) %>
+    <label class="" for="">Both a cash prize and non-monetary prize</label>
   </div>
 </div>
 <br/>
