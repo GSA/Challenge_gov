@@ -1,15 +1,15 @@
 <%= form_for(@conn, Routes.analytics_path(@conn, :index, filter: @filter), [method: :get, as: :filter], fn f -> %>
   <div>
     <%= inputs_for(f, :year_filter, fn yf -> %>
-      <div class="form-group">
-        <%= label yf, :target_date_start do %>
-          <%= radio_button yf, :target_date, "start", checked: @filter["year_filter"]["target_date"] == "start" %>
+      <div class="usa-radio">
+          <%= radio_button yf, :target_date, "start", class: "usa-radio__input", checked: @filter["year_filter"]["target_date"] == "start" %>
+        <%= label  yf, :target_date_start, class: "usa-radio__label" do %>
           Filter on start date
         <% end %>
       </div>
-      <div class="form-group">
-        <%= label yf, :target_date_end do %>
-          <%= radio_button yf, :target_date, "end", checked: @filter["year_filter"]["target_date"] == "end" %>
+      <div class="usa-radio">
+        <%= radio_button yf, :target_date, "end", class: "usa-radio__input", checked: @filter["year_filter"]["target_date"] == "end" %>
+        <%= label yf, :target_date_end, class: "usa-radio__label" do %>
           Filter on end date
         <% end %>
       </div>
