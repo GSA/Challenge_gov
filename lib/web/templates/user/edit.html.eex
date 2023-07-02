@@ -42,7 +42,7 @@
                     Role
                   <% end %>
                   <div class="col-md-8">
-                    <%= select(f, :role, Enum.map(Accounts.roles(@current_user), &{&1.label, &1.id}), label: "Role", required: true, class: "js-select") %>
+                    <%= select(f, :role, Enum.map(Accounts.roles(@current_user), &{&1.label, &1.id}), label: "Role", required: true, class: "usa-select") %>
                   </div>
                 </div>
 
@@ -51,7 +51,7 @@
                     Status
                   <% end %>
                   <div class="col-md-8">
-                    <%= select(f, :status, Accounts.statuses(), label: "Role", required: true, class: "js-select") %>
+                    <%= select(f, :status, Accounts.statuses(), label: "Role", required: true, class: "usa-select") %>
                   </div>
                 </div>
               <% end %>

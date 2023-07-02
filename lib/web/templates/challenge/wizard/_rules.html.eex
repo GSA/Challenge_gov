@@ -39,11 +39,11 @@
 <br/>
 
 <div class="challenge-file-upload col" data-section=<%= @section %>>
-  <label class="control-label">Upload rules documents (optional)</label>
+  <label class="usa-label">Upload rules documents (optional)</label>
   <p class="ms-2 text-muted">Provide any tables, PDFs you wish to provide as rules documentation. All files must be 508 compliant.</p>
   <div class="col">
-    <label for="challenge_document_name" class="control-label">File name (optional)</label>
-    <input class="challenge_document_name form-control" type="text">
+    <label for="challenge_document_name" class="usa-label">File name (optional)</label>
+    <input class="challenge_document_name usa-input" type="text">
     <br/>
     <input class="challenge_document_file form-file-control" type="file">
     <div class="challenge_document_upload usa-button">Upload file</div>
