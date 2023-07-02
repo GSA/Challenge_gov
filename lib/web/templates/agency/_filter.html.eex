@@ -5,7 +5,7 @@
       <div class="card-body">
         <div class="form-group">
           <%= label f, :search %>
-          <%= text_input f, :search, value: @filter["search"], class: "form-control" %>
+          <%= text_input f, :search, value: @filter["search"], class: "usa-input" %>
         </div>
       </div>
       <div>

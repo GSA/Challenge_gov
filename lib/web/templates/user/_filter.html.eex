@@ -2,7 +2,7 @@
   <div class="card-body">
     <div class="form-group">
       <%= label :user, :search, "Search" %>
-      <%= text_input :user, :search, value: @filter["search"], class: "form-control" %>
+      <%= text_input :user, :search, value: @filter["search"], class: "usa-input" %>
     </div>
   </div>
   <div>
