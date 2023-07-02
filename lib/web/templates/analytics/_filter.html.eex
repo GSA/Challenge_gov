@@ -15,17 +15,17 @@
       </div>
       <div class="form-group">
         <%= label yf, :start_year %>
-        <%= select(yf, :start_year, @years, prompt: "Select year", class: "form-control js-select", selected: @filter["year_filter"]["start_year"]) %>
+        <%= select(yf, :start_year, @years, prompt: "Select year", class: "usa-select", selected: @filter["year_filter"]["start_year"]) %>
       </div>
       <div class="form-group">
         <%= label yf, :end_year %>
-        <%= select(yf, :end_year, @years, prompt: "Select year", class: "form-control js-select", selected: @filter["year_filter"]["end_year"]) %>
+        <%= select(yf, :end_year, @years, prompt: "Select year", class: "usa-select", selected: @filter["year_filter"]["end_year"]) %>
       </div>
     <% end) %>
 
     <div class="form-group">
       <%= label f, :agency_id %>
-      <%= select(f, :agency_id, Enum.map(@agencies, &{&1.name, &1.id}), value: @filter["agency_id"], prompt: "All", class: "form-control js-select") %>
+      <%= select(f, :agency_id, Enum.map(@agencies, &{&1.name, &1.id}), value: @filter["agency_id"], prompt: "All", class: "usa-select") %>
     </div>
     <div>
       <%= submit "Filter", class: "usa-button" %>

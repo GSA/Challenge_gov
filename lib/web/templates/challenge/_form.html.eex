@@ -17,9 +17,9 @@
             <%= winner_img(@data, height: 100) %>
           <% end %>
         <% end %>
-        <%= FormView.text_field(f, :challenge_manager, label: "Challenge Manager", required: true) %>
-        <%= FormView.text_field(f, :challenge_manager_email, label: "Challenge Manager Email", required: true) %>
-        <%= FormView.text_field(f, :poc_email, label: "Point of Contact Email", required: true) %>
+        <%= FormView.text_field(f, :challenge_manager, class: "usa-input", label: "Challenge Manager", required: true) %>
+        <%= FormView.text_field(f, :challenge_manager_email, class: "usa-input", label: "Challenge Manager Email", required: true) %>
+        <%= FormView.text_field(f, :poc_email, class: "usa-input", label: "Point of Contact Email", required: true) %>
 
         <%= FormView.select_field(f, :agency_id, collection: Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), label: "Lead agency name", prompt: "Choose an agency", required: true) %>
         <%= FormView.select_field(f, :sub_agency_id, collection: Enum.map(AgencyView.sub_agencies(f.data.agency), &{&1.name, &1.id}), label: "Sub-agency name (optional)", prompt: "Choose a sub-agency") %>
@@ -43,7 +43,7 @@
         <div class="<%= FormView.form_group_classes(f, :types) %>">
           <label for="challenge_types" class="col">Additional challenge type (optional)</label>
           <div class="col">
-            <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(f, :types) %>" name="challenge[types][]">
+            <select id="challenge_types" class="usa-select js-challenge-type <%= FormView.form_control_classes(f, :types) %>" name="challenge[types][]">
               <option></option>
               <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 0)) %>
             </select>
@@ -53,7 +53,7 @@
         <div class="<%= FormView.form_group_classes(f, :types) %>">
           <label for="challenge_types" class="col">Additional challenge type (optional)</label>
           <div class="col">
-            <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(f, :types) %>" name="challenge[types][]">
+            <select id="challenge_types" class="usa-select js-challenge-type <%= FormView.form_control_classes(f, :types) %>" name="challenge[types][]">
               <option></option>
               <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 1)) %>
             </select>
@@ -63,7 +63,7 @@
         <div class="<%= FormView.form_group_classes(f, :types) %>">
           <label for="challenge_types" class="col">Additional challenge type (optional)</label>
           <div class="col">
-            <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(f, :types) %>" name="challenge[types][]">
+            <select id="challenge_types" class="usa-select js-challenge-type <%= FormView.form_control_classes(f, :types) %>" name="challenge[types][]">
               <option></option>
               <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types, 2)) %>
             </select>
@@ -165,7 +165,7 @@
           Legal Authority <span class="required">*</span>
           <% end %>
           <div class="col-md-8">
-            <%= select(f, :legal_authority, Challenges.legal_authority(), class: "form-control js-select") %>
+            <%= select(f, :legal_authority, Challenges.legal_authority(), class: "usa-select") %>
           </div>
         </div>
         <%= FormView.text_field(f, :other, label: "Other") %>

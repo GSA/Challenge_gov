@@ -18,7 +18,7 @@
    <div class="col-auto">
 
     <div class="input-group">
-      <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+      <input class="usa-input" type="text" placeholder="Search" aria-label="Search">
       <button class="usa-button input-group-text" type="submit">
        <i class="fas fa-search"></i>
       </button>

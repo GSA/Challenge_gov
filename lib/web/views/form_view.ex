@@ -22,12 +22,12 @@ defmodule Web.FormView do
 
     case Keyword.get(opts, :required, false) do
       true ->
-        label(form, field, class: "form-label col") do
+        label(form, field, class: "usa-label") do
           [text, content_tag(:span, " *", class: "required")]
         end
 
       false ->
-        label(form, field, text, class: "form-label col")
+        label(form, field, text, class: "usa-label")
     end
   end
 
@@ -217,7 +217,7 @@ defmodule Web.FormView do
               form,
               field,
               opts[:collection],
-              Keyword.merge([class: "js-select #{opts[:class]} #{classes}"], select_opts)
+              Keyword.merge([class: "usa-select #{opts[:class]} #{classes}"], select_opts)
             ),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
@@ -456,10 +456,11 @@ defmodule Web.FormView do
   def form_control_classes(form, field) do
     case Keyword.has_key?(form.errors, field) do
       true ->
-        "form-control is-invalid"
+        "usa-input is-invalid"
 
       false ->
-        "form-control"
+        # form-control
+        "usa-input"
     end
   end
 
@@ -489,10 +490,12 @@ defmodule Web.FormView do
 
     case !is_nil(current_field) and Keyword.has_key?(current_field.errors, field) and index != -1 do
       true ->
-        "form-control nested-form-control is-invalid"
+        # "form-control nested-form-control is-invalid"
+        "usa-input is-invalid"
 
       false ->
-        "form-control nested-form-control"
+        # "form-control nested-form-control"
+        "usa-input"
     end
   end
 
@@ -573,12 +576,12 @@ defmodule Web.FormView do
                       content_tag(:div, class: "row") do
                         [
                           content_tag(:div, class: "col-md-10") do
-                            text_input(:template, field, class: "form-control template-input")
+                            text_input(:template, field, class: "usa-input")
                           end,
                           content_tag(:div, class: "col-md-2") do
                             if index < 1 do
                               content_tag(:div, "Remove",
-                                class: "remove-nested-section btn btn-link"
+                                class: "remove-nested-section usa-button usa-button--unstyled"
                               )
                             end
                           end

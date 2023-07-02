@@ -13,7 +13,7 @@ defmodule Web.TermsView do
             select(f, :agency_id, Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}),
               required: true,
               placeholder: "Agency Name",
-              class: "form-control fc-input"
+              class: "usa-input fc-input"
             )
           ]
         end
