@@ -52,6 +52,7 @@ yarn.lock
 # secrets files as long as you replace their contents by environment
 # variables.
 /config/*.secret.exs
+/config/dev.exs
 /config/dev.local.exs
 /config/test.local.exs
 /uploads
@@ -62,3 +63,7 @@ yarn.lock
 **/**~
 **/*~
 **/#*#
+
+# Erlang build files
+/otp-OTP-24.0.2/
+/otp-OTP-24.1.2/
