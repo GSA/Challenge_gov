@@ -38,7 +38,7 @@
 
       <div class="mb-3">
         <label for="" class="form-label">Report Name</label>
-        <select  class="usa-select onchange="change_url(this)">
+        <select  class="usa-select" onchange="change_url(this)">
           <option value="publish-active-challenge">Currently published/active challenges</option>
           <option value="published-date-range">Challenges published within a specified date range</option>
           <option value="created-date-range">Challenges created within a specified date range</option>
@@ -53,7 +53,7 @@
       </div>
       <div class="mb-3">
           <%#= date_and_time_inputs(@conn, @form, :auto_publish_date, "Publish date", "challenge_auto_publish") %>
-          <label for="" class="form-label">Start Date</label>
+          <label for="start_date" class="form-label">Start Date</label>
           <input class="usa-input js-datetime-input" id="start_date" label="Start date" name="start_date" type="date" required="" disabled dtype="datetime-local">
           <input id="start_date" label="Publish date" name="challenge[auto_publish_date]" type="hidden" value="">
       </div>

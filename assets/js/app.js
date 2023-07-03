@@ -1,6 +1,9 @@
 // USWDS
 import "/node_modules/uswds/dist/scss/uswds.scss";
+//import "/node_modules/uswds/dist/css/uswds.css";
+//import "/node_modules/uswds/dist/js/uswds-init.min.js" 
 import "/node_modules/uswds/dist/js/uswds.js";
+
 
 // Bootstrap
 import "bootstrap/dist/css/bootstrap.css";
