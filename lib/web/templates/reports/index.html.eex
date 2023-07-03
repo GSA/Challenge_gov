@@ -19,7 +19,7 @@
   <div class="row">
     <div class="col-md-12 row content-sub-1">
       <h4 class="box-title">Security Log</h4>
-      <%= link(to: Routes.reports_path(@conn, :export_security_log), class: "btn component-btn mx-3") do %>
+      <%= link(to: Routes.reports_path(@conn, :export_security_log), class: "usa-button mx-3") do %>
         <span>Export All</span>
       <% end %>
     </div>
@@ -27,11 +27,11 @@
       <h5>Filter by date:</h5>
       <div class="col-md-6 p-0">
         <%= form_for(@changeset, Routes.reports_path(@conn, :export_security_log), [method: :get], fn f -> %>
-          <%= FormView.select_field(f, :year, collection: Enum.map(@years, &(&1)), prompt: "", label: "Year", class: "form-control", required: true) %>
-          <%= FormView.select_field(f, :month, collection: Enum.map(@months, &(&1)), prompt: "", label: "Month", class: "form-control") %>
-          <%= FormView.select_field(f, :day, collection: Enum.map(@days, &(&1)), prompt: "", label: "Day", class: "form-control") %>
+          <%= FormView.select_field(f, :year, collection: Enum.map(@years, &(&1)), prompt: "", label: "Year", class: "usa-select", required: true) %>
+          <%= FormView.select_field(f, :month, collection: Enum.map(@months, &(&1)), prompt: "", label: "Month", class: "usa-select") %>
+          <%= FormView.select_field(f, :day, collection: Enum.map(@days, &(&1)), prompt: "", label: "Day", class: "usa-select") %>
           <div class="ch-export-btn-wrapper">
-            <%= submit("Export", class: "btn component-btn report-export") %>
+            <%= submit("Export", class: "usa-button report-export") %>
           </div>
         <% end) %>
       </div>
@@ -45,7 +45,7 @@
   <div class="row">
     <div class="col-md-12 row content-sub-1">
       <h4 class="box-title">Certification Log</h4>
-      <%= link(to: Routes.reports_path(@conn, :export_certification_log), class: "btn component-btn mx-3") do %>
+      <%= link(to: Routes.reports_path(@conn, :export_certification_log), class: "usa-button mx-3") do %>
         <span>Export All</span>
       <% end %>
     </div>
@@ -53,9 +53,9 @@
       <h5>Filter by year certified:</h5>
       <div class="col-md-6 p-0">
         <%= form_for(@conn, Routes.reports_path(@conn, :export_certification_log), [method: :get], fn f -> %>
-          <%= FormView.select_field(f, :year, collection: Enum.map(@years, &(&1)), prompt: "", label: "Year", class: "form-control", required: true) %>
+          <%= FormView.select_field(f, :year, collection: Enum.map(@years, &(&1)), prompt: "", label: "Year", class: "usa-select", required: true) %>
           <div class="ch-export-btn-wrapper">
-            <%= submit("Export", class: "btn component-btn") %>
+            <%= submit("Export", class: "usa-button") %>
           </div>
         <% end) %>
       </div>
@@ -71,7 +71,7 @@
     <div class="dap-file-upload content-sub-1">
       <h4 class="box-title mb-5">Upload site analytics reports</h4>
       <label for="dap_file_name" class="control-label">File name (optional)</label>
-      <input class="dap_file_name form-control" type="text">
+      <input class="dap_file_name usa-input" type="text">
       <br/>
       <input class="dap_report_file form-file-control" type="file">
       <div class="dap_report_upload usa-button">Upload file</div>

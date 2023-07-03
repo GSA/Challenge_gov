@@ -31,7 +31,7 @@
             <%= link "New", to: Routes.challenge_path(@conn, :new, show_info: true), class: "usa-button" %>
           <a class="usa-button" data-widget="control-sidebar" href="#">Filter</a>
           <%= if is_map(@filter) && map_size(@filter) > 0 do %>
-            <%= link "clear filters", to: Routes.challenge_path(@conn, :index), class: "usa-link" %>
+            <%= link "Clear filters", to: Routes.challenge_path(@conn, :index), class: "usa-button usa-button--outline" %>
           <% end %>
           </div>
         </h1>

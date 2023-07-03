@@ -19,9 +19,10 @@
             <div class="mb-3">
               <%= label timeline_event_form, :title, "Timeline event title" %>
               <span class="required">*</span>
-              <%= text_input timeline_event_form, :title, class: "#{FormView.nested_form_control_classes(@form, :phases, :title, timeline_event_form.index)}", required: true %>
+              <%= text_input timeline_event_form, :title, class: "usa-input #{FormView.nested_form_control_classes(@form, :phases, :title, timeline_event_form.index)}", required: true %>
+              <%=# text_input timeline_event_form, :title, class: "usa-input", required: true %>
               <%= error_tag(timeline_event_form, :title) %>
-              <p class="ms-2 text-muted">If you have key dates you want reflected, please include them in your description text. Consider including key dates for informational webinars, judging period, winner announcements, different phases, etc.</p>
+              <p class="text-muted">If you have key dates you want reflected, please include them in your description text. Consider including key dates for informational webinars, judging period, winner announcements, different phases, etc.</p>
             </div>
           </div>
         </div>
@@ -59,8 +60,8 @@
         <div class="col">
           <%= label :template, :title, "Timeline event title", class: "template-label" %>
           <span class="required">*</span>
-          <%= text_input :template, :title, class: "form-control template-input" %>
-          <p class="ms-2 text-muted">If you have key dates you want reflected, please include them in your Description text. Consider including key dates for informational webinars, judging period, winner announcements, different phases, etc.</p>
+          <%= text_input :template, :title, class: "usa-input template-input" %>
+          <p class="text-muted">If you have key dates you want reflected, please include them in your Description text. Consider including key dates for informational webinars, judging period, winner announcements, different phases, etc.</p>
         </div>
       </div>
 
