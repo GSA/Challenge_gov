@@ -185,7 +185,7 @@ defmodule Web.SubmissionView do
       true ->
         link(opts[:label] || "Edit",
           to: Routes.submission_path(conn, :edit, submission.id),
-          class: "usa-button usa-button--unstyled float-right"
+          class: "usa-button usa-button--outline float-right"
         )
 
       false ->
