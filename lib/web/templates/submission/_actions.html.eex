@@ -6,7 +6,7 @@
     <span class="row-text">closed</span>
   <% end %>
   <div class="btn-group btn-group-sm ms-2" role="group">
-    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button id="btnGroupDrop1" type="button" class="usa-button dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       More options
     </button>
     <div class="dropdown-menu text-center" aria-labelledby="btnGroupDrop1">

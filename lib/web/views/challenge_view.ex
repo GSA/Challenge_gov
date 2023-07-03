@@ -632,7 +632,7 @@ defmodule Web.ChallengeView do
     link("Remove update",
       to: Routes.challenge_path(conn, :remove_announcement, challenge.id),
       method: :post,
-      class: "usa button usa-button--secondary",
+      class: "usa-button usa-button--secondary",
       data: [confirm: "Are you sure you want to remove this update?"]
     )
   end
