@@ -20,7 +20,7 @@
   <p class="ms-2 text-muted">Provide any tables, PDFs you wish to provide as judging documentation. All files must be 508 compliant.</p>
   <div class="col">
     <label for="challenge_document_name" class="control-label">File name (optional)</label>
-    <input class="challenge_document_name form-control" type="text">
+    <input class="challenge_document_name usa-input" type="text">
     <br/>
     <input class="challenge_document_file form-file-control" type="file">
     <div class="challenge_document_upload usa-button">Upload file</div>

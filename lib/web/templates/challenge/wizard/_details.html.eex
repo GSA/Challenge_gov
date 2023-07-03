@@ -3,23 +3,23 @@
 <h4>Add challenge details</h4>
 <br/>
 <p class="form__note"><span class="form__note--red">*</span>Required field</p>
-  <%= FormView.text_field(@form, :title, label: "Challenge title (90 character limit)", limit: 90, required: true) %>
+  <%= FormView.text_field(@form, :title, class: "input-text", label: "Challenge title (90 character limit)", limit: 90, required: true) %>
   <p class="ms-2 text-muted">Provide the official title of your challenge. Your challenge title will appear in your challenge’s listing tile on the Challenge.gov homepage.</p>
 <br/>
 
-<%= FormView.text_field(@form, :tagline, label: "Tagline (90 character limit)", limit: 90, required: true) %>
+<%= FormView.text_field(@form, :tagline, class: "input-text", label: "Tagline (90 character limit)", limit: 90, required: true) %>
 <p class="ms-2 text-muted">Provide a clear one-sentence call to action for solvers - essentially your challenge’s headline. It is required that taglines be limited to 90 characters or less. The tagline will also appear at the top of your individual challenge page, and on the challenge preview tile.</p>
 
 <br/>
 <hr/>
 <br/>
 
-<%= FormView.select_field(@form, :primary_type, collection: Challenges.challenge_types(), class: "js-challenge-type form-select", label: "Primary challenge type (select from list)", prompt: "", required: false) %>
+<%= FormView.select_field(@form, :primary_type, collection: Challenges.challenge_types(), class: "js-challenge-type usa-select", label: "Primary challenge type (select from list)", prompt: "", required: false) %>
 <p class="ms-2 text-muted">Select a category that best describes your challenge.</p>
 <div class="<%= FormView.form_group_classes(@form, :types) %>">
   <label for="challenge_types" class="form-label col">Additional challenge type <em>(optional)</em></label>
   <div class="col">
-    <select id="challenge_types" class="js-select form-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
+    <select id="challenge_types" class="usa-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
       <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types || [], 0)) %>
     </select>
@@ -32,7 +32,7 @@
 <div class="<%= FormView.form_group_classes(@form, :types) %>">
   <label for="challenge_types" class="col">Additional challenge type <em>(optional)</em></label>
   <div class="col">
-    <select id="challenge_types" class="js-select js-challenge-type form-select <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
+    <select id="challenge_types" class="usa-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
       <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types || [], 1)) %>
     </select>
@@ -45,7 +45,7 @@
 <div class="<%= FormView.form_group_classes(@form, :types) %>">
   <label for="challenge_types" class="col">Additional challenge type <em>(optional)</em></label>
   <div class="col">
-    <select id="challenge_types" class="js-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
+    <select id="challenge_types" class="usa-select js-challenge-type <%= FormView.form_control_classes(@form, :types) %>" name="challenge[types][]">
       <option></option>
       <%= options_for_select(Challenges.challenge_types, Enum.at(@changeset.data.types || [], 2)) %>
     </select>
@@ -114,8 +114,8 @@
 <div class="challenge-file-upload col" data-section=<%= @section %>>
   <label class="control-label">Upload additional description materials (optional)</label>
   <div class="col">
-    <label for="challenge_document_name" class="control-label">File name (optional)</label>
-    <input class="challenge_document_name form-control" type="text">
+    <label for="challenge_document_name" class="usa-label">File name (optional)</label>
+    <input class="challenge_document_name usa-input" type="text">
     <br/>
     <input class="challenge_document_file form-file-control" type="file">
     <div class="challenge_document_upload usa-button">Upload file</div>
@@ -149,10 +149,12 @@
     </p>
     <div class="col upload-logo">
       <div class="row">
-        <%= label class: "control-label" do %>
-          <%= radio_button(@form, :upload_logo, true, class: "me-2", required: true) %>
+      <div class="usa-radio">
+        <%= radio_button(@form, :upload_logo, true, class: "", required: true) %>
+        <%= label for: "challenge_upload_logo_true", class: "" do %>
           Upload my own logo (341 x 160 px)
         <% end %>
+      </div>
       </div>
       <div class="row logo-file-field collapse">
         <div class="d-flex flex-column">
@@ -165,10 +167,13 @@
         </div>
       </div>
       <div class="row">
-        <%= label class: "control-label" do %>
-          <%= radio_button(@form, :upload_logo, false, class: "me-2", required: true) %>
+      <div class="usa-radio">
+
+        <%= radio_button(@form, :upload_logo, false, class: "", required: true) %>
+        <%= label for: "challenge_upload_logo_false", class: "" do %>
           Use agency seal
         <% end %>
+       </div>
       </div>
     </div>
     <%= if @data.logo_key do %>
@@ -224,16 +229,20 @@
   <div class="col ms-2">
     <div class="multi-phase-toggle">
       <div class="row">
-        <%= label class: "control-label" do %>
-          <%= radio_button(@form, :is_multi_phase, true, class: "me-2", required: true) %>
+      <div class="usa-radio">
+        <%= radio_button(@form, :is_multi_phase, true, class: "", required: true) %>
+        <%= label for: "challenge_is_multi_phase_true", class: "" do %>
           Yes
         <% end %>
       </div>
+      </div>
       <div class="row">
-        <%= label class: "control-label" do %>
-          <%= radio_button(@form, :is_multi_phase, false, class: "me-2", required: true) %>
+      <div class="usa-radio">
+        <%= radio_button(@form, :is_multi_phase, false, class: "", required: true) %>
+        <%= label for: "challenge_is_multi_phase_false", class: "" do %>
           No
         <% end %>
+      </div>
       </div>
     </div>
     <div>

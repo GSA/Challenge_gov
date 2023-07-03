@@ -31,6 +31,16 @@ a {
   }
 }
 
+.usa-select {
+  background-image: url(https://designsystem.digital.gov/assets/img/usa-icons/unfold_more.svg), linear-gradient(transparent, transparent) !important;
+  background-repeat: no-repeat;
+  appearance: none;
+  background-color: white;
+  background-position: right 0.5rem center;
+  background-size: 1.25rem;
+  padding-right: 2rem;
+}
+
 a.mx-3  {
   width: fit-content;
   background-color:  #FA9441;

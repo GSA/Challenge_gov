@@ -14,26 +14,26 @@
 
 <br/>
 
-<%= FormView.text_field(@form, :challenge_manager, label: "Challenge manager of record (does not appear on public listing)", required: true) %>
+<%= FormView.text_field(@form, :challenge_manager, class: "usa-input", label: "Challenge manager of record (does not appear on public listing)", required: true) %>
 <p class="ms-2 text-muted">Provide the name of the challenge manager.  For Challenge.Gov team use only. This does not display on the public site.</p>
 
 <br/>
 
-<%= FormView.email_field(@form, :challenge_manager_email, label: "Challenge manager email (does not appear on public listing)", placeholder: "challenge_manager@example.com", required: true) %>
+<%= FormView.email_field(@form, :challenge_manager_email, class: "usa-input", label: "Challenge manager email (does not appear on public listing)", placeholder: "challenge_manager@example.com", required: true) %>
 <p class="ms-2 text-muted">Provide an email address where the challenge manager can be contacted. For Challenge.Gov team use only. This does not display on the public site.</p>
 
 <br/>
 
-<%= FormView.email_field(@form, :poc_email, class: "form-label", label: "Point of contact email", placeholder: "point_of_contact@example.com", required: true) %>
+<%= FormView.email_field(@form, :poc_email, class: "usa-input", label: "Point of contact email", placeholder: "point_of_contact@example.com", required: true) %>
 <p class="ms-2 text-muted">Provide an email address for participants and members of the public to use for questions about your challenge. This will not appear publicly, instead it will be the receiving email to the form on the contact page of the challenge.</p>
 
 <br/>
 <hr/>
 <br/>
 
-<%= FormView.select_field(@form, :agency_id,  class: "form-select", collection: Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), label: "Lead agency name (select from list)", prompt: "Choose an agency", required: true) %>
+<%= FormView.select_field(@form, :agency_id,  class: "usa-select", collection: Enum.map(Agencies.all_for_select(), &{&1.name, &1.id}), label: "Lead agency name (select from list)", prompt: "Choose an agency", required: true) %>
 <p class="ms-2 text-muted">Select the name of the lead agency sponsoring the challenge.</p>
-<%= FormView.select_field(@form, :sub_agency_id, class: "form-select", collection: Enum.map(Web.AgencyView.sub_agencies(@form.data.agency), &{&1.name, &1.id}), label: "Sub-agency name (optional) select from list", prompt: "Choose a sub-agency") %>
+<%= FormView.select_field(@form, :sub_agency_id, class: "usa-select", collection: Enum.map(Web.AgencyView.sub_agencies(@form.data.agency), &{&1.name, &1.id}), label: "Sub-agency name (optional) select from list", prompt: "Choose a sub-agency") %>
 <p class="ms-2 text-muted">Select the name of the sub-agency sponsoring the challenge.</p>
 
 <br/>
@@ -60,5 +60,5 @@
 <hr/>
 <br/>
 
-<%= FormView.text_field(@form, :fiscal_year, label: "Fiscal year ", placeholder: "FY22", required: true) %>
+<%= FormView.text_field(@form, :fiscal_year, class: "usa-input", label: "Fiscal year ", placeholder: "FY22", required: true) %>
 <p class="ms-2 text-muted">Provide the fiscal year(s) during which your challenge is being run (launched, ongoing, completed). This must be in the format FY[YY]-FY[YY]</p>

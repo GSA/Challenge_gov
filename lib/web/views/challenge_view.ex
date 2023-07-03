@@ -225,7 +225,7 @@ defmodule Web.ChallengeView do
                 Accounts.all_managers_for_select(),
                 &{"#{&1.first_name} #{&1.last_name}", &1.id}
               ),
-              class: "form-control js-select"
+              class: "usa-select"
             )
           end
         ]
@@ -256,7 +256,7 @@ defmodule Web.ChallengeView do
                   &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}
                 ),
                 selected: Enum.map(changeset.data.challenge_manager_users, & &1.id),
-                class: "form-control js-multiselect"
+                class: "usa-select js-multiselect"
               ),
               error_tag(form, :challenge_managers)
             ]
@@ -287,7 +287,7 @@ defmodule Web.ChallengeView do
       ]
     else
       content_tag(:input, "",
-        class: "form-control js-datetime-input",
+        class: "usa-input js-datetime-input",
         id: "#{id_prefix}_date",
         label: label,
         name: name,
@@ -373,7 +373,7 @@ defmodule Web.ChallengeView do
                 &{"#{&1.first_name} #{&1.last_name} (#{&1.email})", &1.id}
               ),
               selected: initial_challenge_managers(form, user, changeset),
-              class: "form-control js-multiselect",
+              class: "usa-select js-multiselect",
               disabled: !Accounts.has_admin_access?(user)
             ),
             error_tag(form, :challenge_managers)
@@ -431,7 +431,7 @@ defmodule Web.ChallengeView do
               form,
               :status,
               Enum.map(Challenges.statuses(), &{&1.label, &1.id}),
-              class: "form-control js-select"
+              class: "usa-select"
             )
           end
         ]
