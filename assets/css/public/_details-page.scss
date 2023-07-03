@@ -336,6 +336,167 @@
     }
   }
 
+  .cards__section {
+    max-width: none;
+  }
+
+  .cards__year-filter {
+    margin-left: unset;
+  }
+
+  .filter-container {
+    background-color: #f4f4f4;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+  
+  .filter-module {
+    background-color: #ebebeb;  // Update the color to grey
+    margin: 0 -15px;
+    padding: 10px 25px;
+    position: relative;
+    border-radius: 4px; // Add border radius for a smoother appearance
+  }
+
+  .filter-module.full-width {
+    padding: 10px 25px;
+  }
+
+  .filter-module__item {
+    position: relative; // Add this line to set position context for the clear button
+  }
+
+  .filter-module__item.keyword-item .keyword-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  @media (min-width: 576px) {
+    .filter-module__item.keyword-item .keyword-input-wrapper {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .filter-label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 5px; // Add this line to make the offset above label equal to the bottom one
+  }
+
+  .filter-select {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #ffffff;
+  }
+
+  .filter-input-container {
+     display: flex;
+     align-items: center;
+   }
+
+  .filter-input {
+    width: calc(100% - 110px);
+  }
+  
+  .full-width-background {
+    background-color: #ebebeb;
+  }
+
+  .keyword-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .keyword-input-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .keyword-item .filter-button {
+    margin-left: 10px;
+  }
+
+  .keyword-input-spacing {
+    margin-right: 10px;
+  }
+
+  .sort-text-container {
+    position: absolute;
+    top: 100%; 
+    left: 25px; 
+    padding-top: 10px;
+  }
+
+  .filter-dropdowns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); // Make columns adjustable, min-width 200px and 1 fraction unit as max-width
+    gap: 10px; 
+    justify-content: center; 
+    max-width: 90%; 
+    margin: 0 auto; 
+  }
+
+  .filter-button {
+    position: absolute;
+    right: 10px;
+    top: 26%; // Center vertically along the input field
+    border: none;
+    background-color: #1e73be;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    right: 40px; 
+    &:hover {
+      background-color: #155a8a;
+    }
+  }
+
+  .filter-select:focus,
+  .filter-input:focus,
+  .filter-button:focus {
+    outline: 2px solid #1e73be;
+  }
+
+  // SCREEN READER STYLES
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  .sr-only-focusable:active,
+  .sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    display: block;
+  }
+  .usa-accordion__button {
+    &:focus {
+      outline: 2px solid #1e73be;
+    }
+  }
+
   // MOBILE
   @media screen
   and (max-device-width: 425px) {
@@ -449,6 +610,10 @@
       display: none;
     }
 
+    .filter-buttons {
+      width: 100%;
+    }
+
     .follow-tooltip {
 
       &__inner {
@@ -456,10 +621,36 @@
         box-shadow: 0 2px 8px 0 rgba(0, 94, 162, 0.7);
       }
     }
+
+     .filter-module {
+      .keyword-item {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .filter-label {
+        grid-row: 1;
+      }
+
+      .keyword-input-wrapper {
+        grid-row: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      input.filter-input { }
+
+      .filter-button {
+        width: auto;
+        height: auto;
+        margin-top: 15px; // nudge the clear button down
+      }
+    }
   }
 
   // DESKTOP
-
   @media screen
   and (min-device-width: 768px) {
 
