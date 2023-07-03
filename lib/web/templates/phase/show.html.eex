@@ -40,14 +40,14 @@
   <%= if @has_closed_phases do %>
     <div class="row p-2 mb-1">
       <div class="col">
-        <%= link "Download", to: Routes.submission_export_path(@conn, :index, @challenge.id), class: "btn btn-primary" %>
+        <%= link "Download", to: Routes.submission_export_path(@conn, :index, @challenge.id), class: "usa-button" %>
       </div>
     </div>
   <% end %>
 </div>
 <div class="main-container">
-  <%= render Web.PhaseView, "submission_table/_table.html", 
-    conn: @conn, user: @user, challenge: @challenge, phase: @phase, submissions: @submissions, 
+  <%= render Web.PhaseView, "submission_table/_table.html",
+    conn: @conn, user: @user, challenge: @challenge, phase: @phase, submissions: @submissions,
     checked_selected_submission_ids: @checked_selected_submission_ids, hidden_selected_submission_ids: @hidden_selected_submission_ids,
     selected_submission_ids: @selected_submission_ids, pagination: @pagination, sort: @sort, filter: @filter %>
 </div>

@@ -8,7 +8,7 @@
         to monitoring. Individuals found performing unauthorized activities are
         subject to disciplinary action including criminal prosecution.
       </p>
-        <%= button("Accept and Sign-in", to: Routes.session_path(@conn, :create), method: :post, class: "btn btn-primary center-btn") %>
+        <%= button("Accept and Sign-in", to: Routes.session_path(@conn, :create), method: :post, class: "usa-button center-btn") %>
     </div>
   </div>
 </div>

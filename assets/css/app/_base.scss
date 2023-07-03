@@ -13,6 +13,9 @@ a {
   color: #0076D6;
 }
 
+.table tbody a.usa-button {
+  text-decoration: none;
+}
 .btn-primary {
   background-color: #0076D6;
   border-color: #0076D6;
@@ -496,7 +499,7 @@ label {
   }
 }
 
-.btn-link.text-danger {
+.btn-link.text-error-dark {
   cursor: pointer;
 }
 

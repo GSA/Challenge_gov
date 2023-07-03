@@ -17,7 +17,7 @@
             <div class="dropdown-menu text-center" aria-labelledby="btnGroupDrop1">
               <%= link("View invite", to: Routes.submission_invite_path(@conn, :show, @phase.id, submission.invite.id), class: "btn btn-link mt-2") %>
               <hr/>
-              <%= link("Revoke invite", to: Routes.submission_invite_path(@conn, :revoke, submission.invite.id), method: :post, class: "btn btn-link text-danger mb-2") %>
+              <%= link("Revoke invite", to: Routes.submission_invite_path(@conn, :revoke, submission.invite.id), method: :post, class: "btn btn-link text-error-dark mb-2") %>
             </div>
           </div>
         <% end %>

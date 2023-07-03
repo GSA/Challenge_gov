@@ -3,7 +3,7 @@
   <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
     <%= if Accounts.has_admin_access?(@user) and @data.status != "submitted" do %>
       <%= solver_field(f, @user, @data) %>
-      <div id="submission_document_upload__error-solver-addr" class="js-indented-error-tag text-danger"></div>
+      <div id="submission_document_upload__error-solver-addr" class="js-indented-error-tag text-error-dark"></div>
     <% else %>
       <%= if Accounts.has_admin_access?(@user) do %>
         <div class="form-group">
@@ -44,10 +44,10 @@
           Step 2: Rename file (optional)
            <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "", class: "my-3") %>
 
-          Step 3: <div id="submission_document_upload" class="btn btn-primary">Attach</div>
+          Step 3: <div id="submission_document_upload" class="usa-button">Attach</div>
           <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
         </div>
-        <span id="submission_document_upload__error-no-email" class="js-error-tag text-danger"></span>
+        <span id="submission_document_upload__error-no-email" class="js-error-tag text-error-dark"></span>
       </div>
       <div class="submission-documents-list">
         <%= Enum.map(@data.documents, fn document -> %>
@@ -78,7 +78,7 @@
     <%= verify_review(f, @user.id, @data) %>
 
     <%= cancel_button(@conn, @action, @challenge, @phase, @user) %>
-    <%= submit("Review and submit", name: "action", value: "review", class: "btn btn-primary float-right") %>
+    <%= submit("Review and submit", name: "action", value: "review", class: "usa-button float-right") %>
     <%= save_draft_button(@data) %>
   <% end) %>
 </section>

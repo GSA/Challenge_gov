@@ -12,7 +12,7 @@
           <dd><%= winner_img(@challenge, height: 150) %></dd>
           <%= if @challenge.winner_image_key do %>
             <br/>
-            <%= button("Remove Winner Image", to: Routes.challenge_path(@conn, :remove_winner_image, @challenge.id), class: "btn btn-danger", data: [confirm: "Are you sure?"]) %>
+            <%= button("Remove Winner Image", to: Routes.challenge_path(@conn, :remove_winner_image, @challenge.id), class: "usa-button usa-button--secondary", data: [confirm: "Are you sure?"]) %>
           <% end %>
         </div>
       </div>

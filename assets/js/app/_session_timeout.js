@@ -1,5 +1,5 @@
 //  $(".wrapper").prepend(
-//    `<button type="button" id="showModal" class="btn btn-primary d-none" tabindex="-1" data-bs-toggle="modal" data-bs-target="#renew-modal">
+//    `<button type="button" id="showModal" class="usa-button d-none" tabindex="-1" data-bs-toggle="modal" data-bs-target="#renew-modal">
 //     </button>
 //    <div class="modal fade timeout-modal" id="renew-modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 //    <div class="modal-dialog">
@@ -11,7 +11,7 @@
 //        <div class="modal-body">
 //             <p>Your session will expire in <span id="countdown"></span></p>
 //             <p>Please click below if you would like to continue.</p>
-//             <button class="btn btn-primary modal-btn" id="renew" type="button">Renew Session</button>
+//             <button class="usa-button modal-btn" id="renew" type="button">Renew Session</button>
 //        </div>
 //      </div>
 //    </div>
@@ -26,7 +26,7 @@ if ($("#session_timeout").length > 0) {
       <div class="modal-content">
         <p>Your session will expire in <span id="countdown"></span></p>
         <p>Please click below if you would like to continue.</p>
-        <button class="btn btn-primary modal-btn" id="renew" type="button">Renew Session</button>
+        <button class="usa-button modal-btn" id="renew" type="button">Renew Session</button>
       </div>
     </div>`
   )
@@ -49,7 +49,7 @@ if ($("#session_timeout").length > 0) {
 
   const renewSession = () => {
     $.ajax({
-      url: "/api/session/renew", 
+      url: "/api/session/renew",
       type: "post",
       processData: false,
       contentType: false,
@@ -105,8 +105,8 @@ if ($("#session_timeout").length > 0) {
     }
 
     // If session expiration gets renewed then clear the countdown interval
-    if (now < session_expiration - 120) { 
-      clearInterval(countdown) 
+    if (now < session_expiration - 120) {
+      clearInterval(countdown)
     }
 
     // If the current time gets to the session expiration time then show logged out modal
