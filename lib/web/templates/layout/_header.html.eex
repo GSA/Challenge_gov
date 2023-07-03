@@ -10,28 +10,30 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
     </ul>
-    <!-- form class="form-inline my-2 my-lg-0 me-5" -->
 
-
-  <form class="row gy-2 gx-3">
 
    <div class="col-auto">
-
-    <div class="input-group">
-      <input class="usa-input" type="text" placeholder="Search" aria-label="Search">
-      <button class="usa-button input-group-text" type="submit">
-       <i class="fas fa-search"></i>
-      </button>
-    </div>
+    <section aria-label="Search component">
+      <form class="usa-search" role="search">
+        <label class="usa-sr-only" for="search-field">Search</label>
+        <input class="usa-input" id="search-field" type="search" name="search" />
+        <button class="usa-button" type="submit">
+          <span class="usa-search__submit-text">Search </span
+          ><img
+            src="/assets/img/usa-icons-bg/search--white.svg"
+            class="usa-search__submit-icon"
+            alt="Search"
+          />
+        </button>
+      </form>
+    </section>
    </div>
+
    <div class="col-auto">
     <div class="input-group">
       <%= link("My account", to: Routes.session_path(@conn, :new), class: "usa-button usa-button--outline") %>
     </div>
    </div>
-  </form>
-
-
 
 
   </div>
