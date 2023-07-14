@@ -610,6 +610,10 @@
       display: none;
     }
 
+    .filter-buttons {
+      width: 100%;
+    }
+
     .follow-tooltip {
 
       &__inner {
@@ -617,10 +621,36 @@
         box-shadow: 0 2px 8px 0 rgba(0, 94, 162, 0.7);
       }
     }
+
+     .filter-module {
+      .keyword-item {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .filter-label {
+        grid-row: 1;
+      }
+
+      .keyword-input-wrapper {
+        grid-row: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      input.filter-input { }
+
+      .filter-button {
+        width: auto;
+        height: auto;
+        margin-top: 15px; // nudge the clear button down
+      }
+    }
   }
 
   // DESKTOP
-
   @media screen
   and (min-device-width: 768px) {
 
