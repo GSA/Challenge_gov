@@ -57,8 +57,10 @@
                 <span><i>Challenge is open to submissions during this period</i></span>
                 <%= hidden_input phase_form, :open_to_submissions, value: true %>
               <% else %>
-                <%= checkbox phase_form, :open_to_submissions, class: "me-2" %>
-                <%= label(phase_form, :open_to_submissions, "Challenge is open to submissions during this period") %>
+               <div class="usa-checkbox">
+                <%= checkbox phase_form, :open_to_submissions, class: "usa-checkbox__input" %>
+                <%= label(phase_form, :open_to_submissions, "Challenge is open to submissions during this period", class: "usa-checkbox__label") %>
+               </div>
               <% end %>
             </div>
           </div>
@@ -152,9 +154,11 @@
 
       <div class="<%= FormView.nested_form_group_classes(@form, :phases, :open_to_submissions, -1) %> row" data-field="open_to_submissions">
         <div class="col">
-          <%= hidden_input :template, :open_to_submissions, value: false, class: "template-input" %>
-          <%= checkbox :template, :open_to_submissions, class: "template-input me-2" %>
-          <%= label(:template, :open_to_submissions, "Challenge is open to submissions during this period", class: "template-label usa-label") %>
+          <div class="usa-checkbox">
+           <%= hidden_input :template, :open_to_submissions, value: false, class: "template-input" %>
+           <%= checkbox :template, :open_to_submissions, class: "template-input usa-checkbox__input" %>
+           <%= label(:template, :open_to_submissions, "Challenge is open to submissions during this period", class: "template-label usa-checkbox__label") %>
+          </div>
         </div>
       </div>
 

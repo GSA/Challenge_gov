@@ -32,8 +32,8 @@
     <%= form_for(@conn, Routes.submission_invite_path(@conn, :create, @phase.id), [class: "form-horizontal usa-form", multipart: true], fn f -> %>
       <div class="row mb-3">
         <div class="col">
-          <input id="submission-invites__select-all" class="submission-invites__select-all" type="checkbox" name="submission-invites__select-all">
-          <label for="submission-invites__select-all">Select all solvers</label>
+          <input id="submission-invites__select-all" class="submission-invites__select-all usa-checkbox__input" type="checkbox" name="submission-invites__select-all">
+          <label for="submission-invites__select-all usa-checkbox__label">Select all solvers</label>
         </div>
       </div>
       <%= render Web.SubmissionInviteView, "table/_table.html", conn: @conn, challenge: @challenge, phase: @phase, submissions: @submissions %>
