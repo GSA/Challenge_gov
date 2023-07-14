@@ -12,6 +12,36 @@
 <%= render Web.SubmissionExportView, "table/_table.html", conn: @conn, challenge: @challenge, submission_exports: @submission_exports %>
 
 <!-- Filter selection modal -->
+<div id="submission-download-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create new download report</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <%= form_for @conn, Routes.submission_export_path(@conn, :create, @challenge.id), fn f -> %>
+        <div class="modal-body">
+          <%= if length(@closed_phases) > 1 do %>
+            <p>Choose challenge phases:</p>
+            <%= Enum.map(@closed_phases, fn phase -> %>
+              <%= checkbox(f, "phase_ids[]", checked_value: phase.id, hidden_input: false, class: "usa-checkbox__input") %>
+              <%= label for: "phase_ids[]", class: "usa-checkbox__label" do %>
+                <span><%= phase.title %></span>
+              <% end %>
+              <br/>
+            <% end) %>
+            <br/>
+          <% else %>
+            <%= hidden_input f, "phase_ids[]", value: Enum.at(@challenge.phases, 0).id %>
+          <% end %>
+          <p>Include:</p>
+          <div class="usa-radio">
+            <%= radio_button(f, :judging_status, "all", class: "usa-radio__input") %>
+            <%= label for: "judging_status_all", class: "usa-radio__label" do %>
+              All entries
+            <% end %>
 
 <div
     class="usa-modal usa-modal--lg"

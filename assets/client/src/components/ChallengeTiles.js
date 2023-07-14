@@ -338,9 +338,26 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       </p>
     </div>;
 
-  if (!isArchived) {
-    if (data.collection && data.collection.length >= 1) {
-      return sortedTextComponent;
+
+    if (isArchived) {
+      return (
+        <div style={sortTextStyle}>
+          <p className="card__section--sort">
+            <i>Challenges sorted by those most recently closed to open submissions.</i>
+          </p>
+        </div>
+      );
+    } else {
+      if (data.collection && data.collection.length >= 1) {
+        return (
+          <div style={sortTextStyle}>
+            <p className="card__section--sort">
+              <i>
+                Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press "Clear" to start a new search.
+              </i>
+            </p>
+          </div>
+        );
       }
     } else {
       return (<>
