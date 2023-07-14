@@ -233,22 +233,27 @@ defmodule Web.SubmissionView do
     if Accounts.is_solver?(user) do
       content_tag(:div, class: "form-group") do
         content_tag(:div, class: "col") do
-          [
-            label(form, :terms_accepted) do
+          content_tag(:div, class: "usa-checkbox") do
+            [
               [
                 checkbox(form, :terms_accepted,
-                  class: FormView.form_group_classes(form, :terms_accepted)
+                  class:
+                    "usa-checkbox__input " <> FormView.form_group_classes(form, :terms_accepted)
                 ),
-                " I have read the ",
-                link("rules, terms and conditions ",
-                  to: ChallengeView.public_details_url(challenge, tab: "rules"),
-                  target: "_blank"
-                ),
-                " of this challenge",
-                error_tag(form, :terms_accepted)
+                label(form, :terms_accepted, class: "usa-checkbox__label") do
+                  [
+                    " I have read the ",
+                    link("rules, terms and conditions ",
+                      to: ChallengeView.public_details_url(challenge, tab: "rules"),
+                      target: "_blank"
+                    ),
+                    " of this challenge",
+                    error_tag(form, :terms_accepted)
+                  ]
+                end
               ]
-            end
-          ]
+            ]
+          end
         end
       end
     end
