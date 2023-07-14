@@ -378,13 +378,14 @@ defmodule Web.FormView do
 
     content_tag(:div, class: "checkbox mb-3") do
       content_tag(:div, class: "col-md-8 col-md-offset-4") do
-        [
-          label(form, field, class: "col-md-4") do
-            [checkbox(form, field), " ", opts[:label]]
-          end,
-          error_tag(form, field),
-          Keyword.get(opts, :do, "")
-        ]
+        content_tag(:div, class: "usa-checkbox") do
+          [
+            checkbox(form, field, class: "usa-checkbox__input"),
+            label(form, field, opts[:label], class: "usa-checkbox__label"),
+            error_tag(form, field),
+            Keyword.get(opts, :do, "")
+          ]
+        end
       end
     end
   end

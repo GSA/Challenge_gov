@@ -17,8 +17,7 @@
   <br/>
   <p class="ms-2 mb-0 text-muted">Provide any image you wish to display at the top of the resources section for the public solvers.</p>
   <p class="ms-2 text-muted"><em>This image will display at the top of the resources section</em></p>
-  <%= FormView.file_field(@form, :resource_banner, label: false) do %>
-    <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
+  <%= FormView.file_field(@form, :resource_banner, label: false, class: "usa-file-input") do %>
     <br/>
     <%= if @data.resource_banner_key do %>
       <p>Current resource banner:</p>
@@ -27,6 +26,7 @@
       <%= button("Remove resource banner", to: Routes.challenge_path(@conn, :remove_resource_banner, @challenge.id, section: @section), class: "usa-button usa-button--secondary mt-3", data: [confirm: "Are you sure?"]) %>
     <% end %>
   <% end %>
+    <small class="form-text text-muted font-italic">Allowed file types: .jpg, .jpeg, .png, .gif</small>
 </div>
 
 <hr/>
@@ -39,10 +39,10 @@
     <label for="challenge_document_name" class="control-label">File name (optional)</label>
     <input class="challenge_document_name usa-input" type="text">
     <br/>
-    <input class="challenge_document_file form-file-control" type="file">
-    <div class="challenge_document_upload usa-button">Upload file</div>
+    <input class="challenge_document_file usa-file-input" type="file">
     <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
     <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
+    <div class="challenge_document_upload usa-button mt-1">Upload file</div>
   </div>
 
   <br/>
@@ -69,10 +69,10 @@
     <label for="challenge_document_name" class="control-label">File name (optional)</label>
     <input class="challenge_document_name usa-input" type="text">
     <br/>
-    <input class="challenge_document_file form-file-control" type="file">
-    <div class="challenge_document_upload usa-button">Upload file</div>
+    <input class="challenge_document_file usa-file-input" type="file">
     <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
     <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
+    <div class="challenge_document_upload usa-button mt-1">Upload file</div>
   </div>
 
   <br/>
