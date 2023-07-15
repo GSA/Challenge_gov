@@ -5,7 +5,7 @@
 
     <%= FormView.text_field(f, :acronym, label: "Acronym", required: true) %>
 
-    <%= FormView.file_field(f, :avatar, label: "Logo", class: "usa-file-input") do %>
+    <%= FormView.file_field(f, :avatar, label: "Logo", class: "") do %>
       <%= if @data.avatar_key do %>
         <p>Current Logo:</p>
         <%= AgencyView.avatar_img(@data, height: 100) %>

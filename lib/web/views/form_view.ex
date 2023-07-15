@@ -468,10 +468,12 @@ defmodule Web.FormView do
   def form_control_file_classes(form, field) do
     case Keyword.has_key?(form.errors, field) do
       true ->
-        "form-control-file is-invalid"
+        # "form-control-file is-invalid"
+        "usa-file-input is-invalid"
 
       false ->
-        "form-control-file"
+        # "form-control-file usa-file-input"
+        "usa-file-input"
     end
   end
 
