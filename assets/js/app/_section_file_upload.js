@@ -39,6 +39,9 @@ $(".challenge-file-upload").on("click", ".challenge_document_upload", function()
       success: function(document) {
         $(nameInput).val("")
         $(fileInput).val("")
+        fileInput_USWDS.find(".usa-file-input__preview-heading").remove()
+        fileInput_USWDS.find(".usa-file-input__preview").remove()
+        $(fileInput_USWDS).find(".usa-file-input__instructions").toggleClass('display-none display-block')
 
         challengeDocuments.append(`
           <div>
