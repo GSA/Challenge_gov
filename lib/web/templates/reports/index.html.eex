@@ -73,8 +73,8 @@
       <label for="dap_file_name" class="control-label">File name (optional)</label>
       <input class="dap_file_name usa-input" type="text">
       <br/>
+      <span class="dap_report_upload_error usa-error-message display-none">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</span>
       <input class="dap_report_file usa-file-input" type="file">
-      <div class="dap_report_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
       <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
       <div class="dap_report_upload usa-button mt-1">Upload file</div>
 
