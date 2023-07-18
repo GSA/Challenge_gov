@@ -5,12 +5,15 @@
   <% else %>
     <span class="row-text">closed</span>
   <% end %>
-  <div class="btn-group btn-group-sm ms-2" role="group">
-    <button id="btnGroupDrop1" type="button" class="usa-button dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <div class="btn-group btn-group" role="group">
+   <div class="dropdown">
+     <button id="btnGroupDrop1" type="button" class="usa-button"  aria-haspopup="true" aria-expanded="false">
       More options
-    </button>
-    <div class="dropdown-menu text-center" aria-labelledby="btnGroupDrop1">
-      <%= submission_delete_link(@conn, @submission, @user, label: "Delete", class: "usa-button") %>
+     </button>
+     <div class="dropdown-content">
+        <div>
+          <%= submission_delete_link(@conn, @submission, @user, label: "Delete", class: "usa-button") %>
+        </div>
     </div>
-  </div>
+   </div>
 </div>

@@ -56,8 +56,17 @@
                     <td><%= user.role %></td>
                     <td><%= status(user.status) %></td>
                     <td>
-                      <%= link("View", to: Routes.user_path(@conn, :show, user.id), class: "usa-button") %>
-                      <%= user_edit_link(@conn, user, @current_user) %>
+
+                      <ul class="usa-button-group">
+                        <li class="usa-button-group__item">
+                          <%= link("View", to: Routes.user_path(@conn, :show, user.id), class: "usa-button") %>
+                        </li>
+                        <li class="usa-button-group__item">
+                          <%= user_edit_link(@conn, user, @current_user) %>
+                        </li>
+                      </ul>
+
+
                     </td>
                   </tr>
                 <% end %>
