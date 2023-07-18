@@ -118,6 +118,7 @@ defmodule Web.ChallengeView do
     if (user.role == "challenge_manager" or
           Accounts.has_admin_access?(user)) and length(challenge.phases) > 0 do
       link_location = manage_submissions_initial_path(conn, challenge)
+
       content_tag :div do
         link(
           opts[:label] || "View submissions",
