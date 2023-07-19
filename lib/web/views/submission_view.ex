@@ -271,7 +271,7 @@ defmodule Web.SubmissionView do
         content_tag(:div, class: "col") do
           [
             checkbox(form, :review_verified,
-              class:  "usa-checkbox__input " <> FormView.form_group_classes(form, :review_verified)
+              class: "usa-checkbox__input " <> FormView.form_group_classes(form, :review_verified)
             ),
             label(form, :review_verified, class: "usa-checkbox__label") do
               [
