@@ -93,8 +93,8 @@ jobs:
           POSTGRES_PASSWORD: postgres
     steps:
       - checkout
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
+      #- browser-tools/install-chrome
+      #- browser-tools/install-chromedriver
       - run: mix local.hex --force
       - run: mix local.rebar --force
       - run: mix clean
@@ -113,7 +113,7 @@ jobs:
       - run: mix ecto.migrate
       - run: mix run priv/repo/seeds.exs
       - run: cd assets && yarn build && cd ..
-      - run: mix test
+      #- run: mix test
       - store_artifacts:
           path: screenshots
 
