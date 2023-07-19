@@ -36,6 +36,10 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
       success: function(document) {
         $(nameInput).val("")
         $(fileInput).val("")
+        fileInput_USWDS.find(".usa-file-input__preview-heading").remove()
+        fileInput_USWDS.find(".usa-file-input__preview").remove()
+        $(fileInput_USWDS).find(".usa-file-input__instructions").toggleClass('display-none display-block')
+      
 
         setTimeout(() => {
           $(".loading-feedback").remove()
