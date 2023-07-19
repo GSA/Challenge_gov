@@ -11,6 +11,7 @@
       <td>
         <%= if !is_nil(submission.invite) do %>
           <div class="btn-group btn-group-sm ms-2" role="group">
+
             <div class="dropdown">
               <button id="btnGroupDrop1" type="button" class="usa-button"  data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
                 More options
@@ -19,6 +20,7 @@
                 <div><%= link("View invite", to: Routes.submission_invite_path(@conn, :show, @phase.id, submission.invite.id), class: "usa-button usa-button--unstyled") %></div>
                 <div><%= link("Revoke invite", to: Routes.submission_invite_path(@conn, :revoke, submission.invite.id), method: :post, class: "usa-button usa-button--unstyled") %></div>
               </div>
+
           </div>
         <% end %>
       </td>

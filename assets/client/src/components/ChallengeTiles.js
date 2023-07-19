@@ -16,6 +16,17 @@ const lastDayOptions = [
   'Within Year',
 ];
 
+/*const primaryChallengeTypeOptions = [
+  { display: 'Software and apps', value: 'Software and apps' },
+  { display: 'Creative (Multimedia & Design)', value: 'Creative (Multimedia & Design)' },
+  { display: 'Ideas', value: 'Ideas' },
+  { display: 'Technology demonstration and hardware', value: 'Technology demonstration and hardware' },
+  { display: 'Nominations', value: 'Nominations' },
+  { display: 'Business Plans', value: 'Business plans' },
+  { display: 'Analytics, visualizations, algorithms', value: 'Analytics, visualizations, algorithms' },
+  { display: 'Scientific', value: 'Scientific' },
+];*/
+
 const primaryChallengeTypeOptions = [
   { display: 'Software & Apps', value: 'Software and apps' },
   { display: 'Creative', value: 'Creative (Multimedia & Design)' },
@@ -116,6 +127,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           return false;
         });
       }
+
       setFilteredChallenges(filtered);
       console.log(filteredChallenges); 
     }
@@ -138,14 +150,14 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     setPrimaryAgency('');
     setDateAdded('');
     setLastDay('');
-    setPrimaryChallengeType('');
+    setPrimaryChallengeType([]);
     setKeyword('');
     setFilteredChallenges(data.collection);
   };
 
   const renderHeader = () => (
     <h2 className="mb-5">
-      {isArchived ? "Archived Challenges" : "Active Challenges"}
+      {isArchived ? "Archived Challenges" : "Filter by open/active challenges."}
     </h2>
   );
   
@@ -181,6 +193,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   
   const renderSortText = () => {
     const sortTextStyle = { textAlign: 'center', marginBottom: '20px' };
+
     if (isArchived) {
       return (
         <div style={sortTextStyle}>

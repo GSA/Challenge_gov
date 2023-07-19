@@ -5,14 +5,14 @@
   <div class="row col-md-9 justify-content-center">
       <%= form_for(@changeset, Routes.access_path(@conn, :request_recertification), [method: :post], fn f -> %>
         <div class="checkbox-input">
-          <%= Phoenix.HTML.Form.checkbox(f, :accept_terms_of_use, required: true) %>
-          <%= label(f, :accept_terms_of_use, class: "label-text") do %>
+          <%= Phoenix.HTML.Form.checkbox(f, :accept_terms_of_use, required: true, class: "usa-checkbox__input") %>
+          <%= label(f, :accept_terms_of_use, class: "usa-checkbox__label") do %>
             I accept the <%= link "Terms of Use", to: "https://www.challenge.gov/terms/", target: "_blank" %><span style="color:red"> *</span>
           <% end %>
         </div>
         <div class="checkbox-input">
-          <%= Phoenix.HTML.Form.checkbox(f, :accept_privacy_guidelines, required: true) %>
-          <%= label(f, :accept_privacy_guidelines, class: "label-text") do %>
+          <%= Phoenix.HTML.Form.checkbox(f, :accept_privacy_guidelines, required: true, class: "usa-checkbox__input") %>
+          <%= label(f, :accept_privacy_guidelines, class: "usa-checkbox__label") do %>
             I accept the <%= link "Privacy Guidelines", to: "https://www.challenge.gov/privacy-policy", target: "_blank" %><span style="color:red"> *</span>
           <% end %>
         </div>

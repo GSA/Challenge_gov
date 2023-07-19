@@ -8,7 +8,9 @@ use Mix.Config
 # with webpack to recompile .js and .css sources.
 config :challenge_gov, Web.Endpoint,
   http: [port: 4000],
-  secret_key_base: "h5tf+3+7fGXHxj5zuK6jPjHu6RXu0uglJEjUEixL08fai2VADaR6hWkQiZXuKiz8",
+
+  secret_key_base: "",
+
   debug_errors: true,
   code_reloader: true,
   check_origin: false,

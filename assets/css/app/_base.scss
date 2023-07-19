@@ -31,6 +31,12 @@ a {
   }
 }
 
+
+.usa-checkbox__input:checked+[class*=__label]::before, .usa-checkbox__input:checked:disabled+[class*=__label]::before, .usa-checkbox__input:checked[aria-disabled=true]+[class*=__label]::before {
+  background-image: url(https://designsystem.digital.gov/assets/img/correct8.svg),linear-gradient(transparent,transparent);
+  background-repeat: no-repeat;
+}
+
 .usa-select {
   background-image: url(https://designsystem.digital.gov/assets/img/usa-icons/unfold_more.svg), linear-gradient(transparent, transparent) !important;
   background-repeat: no-repeat;
@@ -40,6 +46,7 @@ a {
   background-size: 1.25rem;
   padding-right: 2rem;
 }
+
 
 /* Style for dropdown content */
 .dropdown-content {
@@ -65,8 +72,6 @@ a {
 .dropdown:hover .dropdown-content {
   display: block;
 }
-
-
 
 
 a.mx-3  {

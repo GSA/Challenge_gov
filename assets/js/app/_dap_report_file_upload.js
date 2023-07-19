@@ -14,7 +14,9 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
   nameInput = $(this).siblings(".dap_file_name")
   name = nameInput.val()
 
-  fileInput = $(this).siblings(".dap_report_file")
+  fileInput_USWDS = $(this).siblings(".usa-file-input")
+  fileInput = fileInput_USWDS.find(".dap_report_file")
+
   file = fileInput.prop("files")[0]
   uploadedReport = parentComponent.find(".dap_uploaded_report")
 
@@ -34,6 +36,10 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
       success: function(document) {
         $(nameInput).val("")
         $(fileInput).val("")
+        fileInput_USWDS.find(".usa-file-input__preview-heading").remove()
+        fileInput_USWDS.find(".usa-file-input__preview").remove()
+        $(fileInput_USWDS).find(".usa-file-input__instructions").toggleClass('display-none display-block')
+      
 
         setTimeout(() => {
           $(".loading-feedback").remove()
@@ -55,7 +61,7 @@ $(".dap-file-upload").on("click", ".dap_report_upload", function() {
 
         setTimeout(() => {
           $(".loading-feedback").remove()
-          $(fileInput).addClass("is-invalid")
+          $(fileInput_USWDS).siblings(".usa-error-message").toggleClass('display-none display-block')
         }, 1000);
       }
     })
