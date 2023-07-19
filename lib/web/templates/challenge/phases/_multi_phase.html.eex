@@ -155,6 +155,7 @@
       <div class="<%= FormView.nested_form_group_classes(@form, :phases, :open_to_submissions, -1) %> row" data-field="open_to_submissions">
         <div class="col">
 
+
           <div class="usa-checkbox">
            <%= hidden_input :template, :open_to_submissions, value: false, class: "template-input" %>
            <%= checkbox :template, :open_to_submissions, class: "template-input usa-checkbox__input" %>

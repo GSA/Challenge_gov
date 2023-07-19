@@ -117,6 +117,7 @@
     <label for="challenge_document_name" class="usa-label">File name (optional)</label>
     <input class="challenge_document_name usa-input" type="text">
     <br/>
+
     <span class="challenge_document_upload_error usa-error-message display-none">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</span>
     <input class="challenge_document_file usa-file-input" type="file">
     <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
@@ -150,12 +151,15 @@
     </p>
     <div class="col upload-logo">
       <div class="row">
+
         <div class="usa-radio">
           <%= radio_button(@form, :upload_logo, true, class: "", required: true) %>
           <%= label for: "challenge_upload_logo_true", class: "" do %>
             Upload my own logo (341 x 160 px)
           <% end %>
         </div>
+
+      </div>
       </div>
       <div class="row logo-file-field collapse">
          <div dlass="usa-form-group">
