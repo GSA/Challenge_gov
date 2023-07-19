@@ -17,8 +17,7 @@
     </ul>
 
 
-   <div class="grid-col">
-
+   <div class="col-auto">
     <section aria-label="Search component">
       <form class="usa-search" role="search">
         <label class="usa-sr-only" for="search-field">Search</label>

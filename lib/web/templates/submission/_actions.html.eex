@@ -9,7 +9,8 @@
   <% else %>
     <span class="row-text">closed</span>
   <% end %>
-  <li class="usa-button-group__item">
+
+  <div class="btn-group btn-group" role="group">
    <div class="dropdown">
      <button id="btnGroupDrop1" type="button" class="usa-button"  aria-haspopup="true" aria-expanded="false">
       More options
@@ -20,5 +21,4 @@
         </div>
     </div>
    </div>
-  </li>
-</ul>
+</div>

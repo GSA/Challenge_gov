@@ -31,6 +31,7 @@ a {
   }
 }
 
+
 .usa-checkbox__input:checked+[class*=__label]::before, .usa-checkbox__input:checked:disabled+[class*=__label]::before, .usa-checkbox__input:checked[aria-disabled=true]+[class*=__label]::before {
   background-image: url(https://designsystem.digital.gov/assets/img/correct8.svg),linear-gradient(transparent,transparent);
   background-repeat: no-repeat;
@@ -46,16 +47,6 @@ a {
   padding-right: 2rem;
 }
 
-/* Style for challenge tabs container */
-.usa-card {
-  border: 1px solid rgba(0,0,0,.125);
-  border-radius: .25rem;
-  word-wrap: break-word;
-}
-
-/*.usa-card-body {
-  padding: 15px 15px 15px 15px;    
-}*/
 
 /* Style for dropdown content */
 .dropdown-content {
@@ -82,62 +73,6 @@ a {
   display: block;
 }
 
-/*.w-100 equivalent*/
-.usa-full-width {
-  width: 100%;
-}
-
-/*.me-2 equivalent*/
-.usa-mr-one-half {
-    margin-right: 0.5rem;
-}
-
-/*.me-3 equivalent*/  
-.usa-mr-one-full {
-    margin-right: 1rem;
-}
-
-/*.ms-3 equivalent*/
-.usa-ml-one-full {
-  margin-left: 1rem;
-}
-
-/*.mb-5 equivalent*/
-.usa-mb-5rem {
-  margin-bottom: 5rem;
-}
-
-/*.m-3 equivalent */
-.usa-m-1rem {
-  margin: 1rem;
-}
-
-/*.my-3 equivalent*/
-.usa-tbm-1rem {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-@media (max-width: 767px) {
-  .exportContainer {
-    flex-direction: column;
-  }
-
-  .exportTextContainer,
-  .exportButtonContainer {
-    width: 100%;
-    margin: 10px 0;
-    text-align: center;
-  }
-}
-
-/*.cardsOverride {
-  margin-top: -37px !important;
-}*/
-
-.padding-left-25 {
-  padding-left: 25px;
-}
 
 a.mx-3  {
   width: fit-content;
