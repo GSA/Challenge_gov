@@ -97,11 +97,11 @@ jobs:
       #- browser-tools/install-chromedriver
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
-      - run:
-          command: |
-            google-chrome --version
-            chromedriver --version
-          name: Check install
+      # - run:
+      #     command: |
+      #       google-chrome --version
+      #       chromedriver --version
+      #     name: Check install
       - run: mix local.hex --force
       - run: mix local.rebar --force
       - run: mix clean
@@ -120,7 +120,7 @@ jobs:
       - run: mix ecto.migrate
       - run: mix run priv/repo/seeds.exs
       - run: cd assets && yarn build && cd ..
-      #- run: mix test
+      - run: mix test
       - store_artifacts:
           path: screenshots
 
