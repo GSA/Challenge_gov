@@ -28,7 +28,6 @@ defmodule Web.SubmissionView do
                 Accounts.all_solvers_for_select(),
                 &{"#{&1.email} (#{&1.first_name} #{&1.last_name})", &1.email}
               ),
-
               class: "usa-select",
               disabled: !Accounts.has_admin_access?(user),
               value: persist_solver_email_on_edit(data)
