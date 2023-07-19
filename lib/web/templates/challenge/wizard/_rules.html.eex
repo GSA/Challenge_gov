@@ -19,7 +19,7 @@
 
 <br/>
 
-<%= FormView.checkbox_field(@form, :terms_equal_rules, label: "Terms and conditions same as rules", class: "js-terms-equal-rules", required: true) %>
+<%= FormView.checkbox_field(@form, :terms_equal_rules, label: "Terms and conditions same as rules", class: "js-terms-equal-rules usa-checkbox__input", required: true) %>
 <p class="ms-2 text-muted">Select if the terms & conditions are the same as rules or provide the terms & conditions for your challenge.</p>
 
 <br/>
@@ -45,10 +45,10 @@
     <label for="challenge_document_name" class="usa-label">File name (optional)</label>
     <input class="challenge_document_name usa-input" type="text">
     <br/>
-    <input class="challenge_document_file form-file-control" type="file">
-    <div class="challenge_document_upload usa-button">Upload file</div>
-    <div class="challenge_document_upload_error invalid-feedback">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+    <span class="challenge_document_upload_error usa-error-message display-none">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</span>
+    <input class="challenge_document_file usa-file-input" type="file">
     <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
+    <div class="challenge_document_upload usa-button mt-1">Upload file</div>
   </div>
 
   <br/>
