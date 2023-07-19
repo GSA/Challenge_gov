@@ -16,7 +16,9 @@ $(".challenge-file-upload").on("click", ".challenge_document_upload", function()
 
   nameInput = $(this).siblings(".challenge_document_name")
   name = nameInput.val()
-  fileInput = $(this).siblings(".challenge_document_file")
+  fileInput_USWDS = $(this).siblings(".usa-file-input")
+  fileInput = fileInput_USWDS.find(".challenge_document_file")
+  //fileInput = $(this).siblings(".challenge_document_file")  
   file = fileInput.prop("files")[0]
   challengeDocuments = parentComponent.find(".challenge_uploaded_documents")
 
@@ -37,6 +39,9 @@ $(".challenge-file-upload").on("click", ".challenge_document_upload", function()
       success: function(document) {
         $(nameInput).val("")
         $(fileInput).val("")
+        fileInput_USWDS.find(".usa-file-input__preview-heading").remove()
+        fileInput_USWDS.find(".usa-file-input__preview").remove()
+        $(fileInput_USWDS).find(".usa-file-input__instructions").toggleClass('display-none display-block')
 
         challengeDocuments.append(`
           <div>
@@ -50,7 +55,10 @@ $(".challenge-file-upload").on("click", ".challenge_document_upload", function()
       },
       error: function(err) {
         console.log("Something went wrong")
-        $(fileInput).addClass("is-invalid")
+        // backward compatiblity error msg
+        //$(fileInput).addClass("is-invalid")
+        // new USWDS error msg
+        $(fileInput_USWDS).siblings(".usa-error-message").toggleClass('display-none display-block')
       }
     })
   }
