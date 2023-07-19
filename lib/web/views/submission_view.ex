@@ -28,7 +28,7 @@ defmodule Web.SubmissionView do
                 Accounts.all_solvers_for_select(),
                 &{"#{&1.email} (#{&1.first_name} #{&1.last_name})", &1.email}
               ),
-              class: "usa-intput",
+              class: "usa-select",
               disabled: !Accounts.has_admin_access?(user),
               value: persist_solver_email_on_edit(data)
             ),
@@ -233,22 +233,27 @@ defmodule Web.SubmissionView do
     if Accounts.is_solver?(user) do
       content_tag(:div, class: "form-group") do
         content_tag(:div, class: "col") do
-          [
-            label(form, :terms_accepted) do
+          content_tag(:div, class: "usa-checkbox") do
+            [
               [
                 checkbox(form, :terms_accepted,
-                  class: FormView.form_group_classes(form, :terms_accepted)
+                  class:
+                    "usa-checkbox__input " <> FormView.form_group_classes(form, :terms_accepted)
                 ),
-                " I have read the ",
-                link("rules, terms and conditions ",
-                  to: ChallengeView.public_details_url(challenge, tab: "rules"),
-                  target: "_blank"
-                ),
-                " of this challenge",
-                error_tag(form, :terms_accepted)
+                label(form, :terms_accepted, class: "usa-checkbox__label") do
+                  [
+                    " I have read the ",
+                    link("rules, terms and conditions ",
+                      to: ChallengeView.public_details_url(challenge, tab: "rules"),
+                      target: "_blank"
+                    ),
+                    " of this challenge",
+                    error_tag(form, :terms_accepted)
+                  ]
+                end
               ]
-            end
-          ]
+            ]
+          end
         end
       end
     end
@@ -265,11 +270,11 @@ defmodule Web.SubmissionView do
       content_tag(:div) do
         content_tag(:div, class: "col") do
           [
-            label(form, :review_verified) do
+            checkbox(form, :review_verified,
+              class: "usa-checkbox__input " <> FormView.form_group_classes(form, :review_verified)
+            ),
+            label(form, :review_verified, class: "usa-checkbox__label") do
               [
-                checkbox(form, :review_verified,
-                  class: FormView.form_group_classes(form, :review_verified)
-                ),
                 " I have reviewed the submission and verify it is accurate",
                 error_tag(form, :review_verified)
               ]
