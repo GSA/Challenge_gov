@@ -25,9 +25,9 @@
           <%= if length(@closed_phases) > 1 do %>
             <p>Choose challenge phases:</p>
             <%= Enum.map(@closed_phases, fn phase -> %>
-              <%= label do %>
-                <%= checkbox(f, "phase_ids[]", checked_value: phase.id, hidden_input: false) %>
-                <span class="ms-1"><%= phase.title %></span>
+              <%= checkbox(f, "phase_ids[]", checked_value: phase.id, hidden_input: false, class: "usa-checkbox__input") %>
+              <%= label for: "phase_ids[]", class: "usa-checkbox__label" do %>
+                <span><%= phase.title %></span>
               <% end %>
               <br/>
             <% end) %>
