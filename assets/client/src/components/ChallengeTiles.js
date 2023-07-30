@@ -156,6 +156,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         });
       }
 
+
       setFilteredChallenges(filtered);
       console.log(filteredChallenges); 
     }
@@ -336,6 +337,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         <i>Results will update automatically as you filter. Press "Clear Search" to start a new search. Press "Export" to download a CSV file of your results.</i>
       </p>
     </div>;
+
 
     if (isArchived) {
       return (
