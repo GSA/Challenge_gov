@@ -128,6 +128,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         });
       }
 
+
       setFilteredChallenges(filtered);
       console.log(filteredChallenges); 
     }
@@ -193,6 +194,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   
   const renderSortText = () => {
     const sortTextStyle = { textAlign: 'center', marginBottom: '20px' };
+
 
     if (isArchived) {
       return (

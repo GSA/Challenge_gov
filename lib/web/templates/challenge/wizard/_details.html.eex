@@ -151,15 +151,12 @@
     </p>
     <div class="col upload-logo">
       <div class="row">
-
         <div class="usa-radio">
           <%= radio_button(@form, :upload_logo, true, class: "", required: true) %>
           <%= label for: "challenge_upload_logo_true", class: "" do %>
             Upload my own logo (341 x 160 px)
           <% end %>
         </div>
-
-      </div>
       </div>
       <div class="row logo-file-field collapse">
          <div dlass="usa-form-group">

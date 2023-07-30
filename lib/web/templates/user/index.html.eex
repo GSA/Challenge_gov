@@ -65,7 +65,6 @@
                           <%= user_edit_link(@conn, user, @current_user) %>
                         </li>
                       </ul>
-
                     </td>
                   </tr>
                 <% end %>

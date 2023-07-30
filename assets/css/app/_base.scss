@@ -31,6 +31,18 @@ a {
   }
 }
 
+.usa-breadcrumb__list-item:not(:last-child)::after {
+  background: 0 0;
+  background-color: #757575;
+  -webkit-mask-image: url("/images/navigate_next.svg"),linear-gradient(transparent,transparent);
+  mask-image: url("/imges/navigate_next.svg"),linear-gradient(transparent,transparent);
+  -webkit-mask-position: center center;
+  mask-position: center center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 2ex 2ex;
+  mask-size: 2ex 2ex;
+}
 
 .usa-checkbox__input:checked+[class*=__label]::before, .usa-checkbox__input:checked:disabled+[class*=__label]::before, .usa-checkbox__input:checked[aria-disabled=true]+[class*=__label]::before {
   background-image: url(https://designsystem.digital.gov/assets/img/correct8.svg),linear-gradient(transparent,transparent);
