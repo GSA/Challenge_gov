@@ -133,7 +133,9 @@ defmodule Web.SharedView do
   def render_breadcrumbs(breadcrumbs) do
     content_tag :div, class: "row mb-2" do
       content_tag :div, class: "col" do
-        maybe_truncate_breadcrumbs(breadcrumbs)
+        content_tag :nav, class: "usa-breadcrumb", style: "background:#f4f6f9;" do
+          maybe_truncate_breadcrumbs(breadcrumbs)
+        end
       end
     end
   end
@@ -154,8 +156,8 @@ defmodule Web.SharedView do
       if length(visible_breadcrumbs) > 2 do
         [
           content_tag(:span, "", class: "truncated-breadcrumbs", "data-breadcrumbs": data),
-          content_tag :li, class: "breadcrumb-item btn-link" do
-            content_tag(:a, "...", href: "", class: "hidden-breadcrumbs")
+          content_tag :li, class: "usa-breadcrumb__list-item" do
+            content_tag(:a, "...", href: "", class: "usa-breadcrumb__list-item")
           end,
           get_breadcrumb_html(breadcrumbs)
         ]
@@ -163,7 +165,7 @@ defmodule Web.SharedView do
         get_breadcrumb_html(breadcrumbs)
       end
 
-    content_tag :ol, class: "breadcrumb" do
+    content_tag :ol, class: "usa-breadcrumb__list" do
       breadcrumb_display
     end
   end
@@ -175,8 +177,8 @@ defmodule Web.SharedView do
       is_visible = Map.get(breadcrumb, :is_visible, true)
 
       if is_visible do
-        content_tag :li, class: "breadcrumb-item #{if is_nil(route), do: 'active'}" do
-          content_tag(:a, text, href: route)
+        content_tag :li, class: "usa-breadcrumb__list-item #{if is_nil(route), do: 'active'}" do
+          content_tag(:a, text, class: "usa-breadcrumb__link", href: route)
         end
       else
         []
