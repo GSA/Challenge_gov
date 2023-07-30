@@ -464,50 +464,65 @@ defmodule Web.ChallengeView do
 
     base_classes = ""
 
-    content_tag :div, class: "challenge-progressbar container" do
-      content_tag :div, class: "row" do
+    content_tag :div,
+      class: " usa-step-indicator usa-step-indicator--counters",
+      style: "padding:1rem;",
+      aria: [label: "progress"] do
+      content_tag :ol, class: "usa-step-indicator__segments" do
         [
-          content_tag :div, class: "col-12" do
-            content_tag(:div, class: "progress eqrs-progress") do
-              content_tag(:div, "",
-                class: "progress-bar progress-bar--success",
-                style: "width: #{progressbar_width}%",
-                role: "progressbar"
-              )
-            end
-          end,
           Enum.map(Enum.with_index(sections), fn {section, index} ->
-            content_tag :div, class: "button-container col" do
-              [
-                cond do
-                  section.id == current_section ->
-                    link(index + 1, to: "#", class: base_classes <> " btn-not-completed_hasFocus")
+            [
+              cond do
+                section.id == current_section ->
+                  content_tag :li,
+                    class: "usa-step-indicator__segment usa-step-indicator__segment--current" do
+                    content_tag :span, class: "usa-step-indicator__segment-label" do
+                      link(section.label, to: "#", class: "usa-step-indicator__segment-label")
+                    end
+                  end
 
-                  action == :new || action == :create ->
-                    link(index + 1,
-                      to: "#",
-                      class: base_classes <> " btn-disabled",
-                      disabled: true,
-                      aria: [disabled: true]
-                    )
+                action == :new || action == :create ->
+                  content_tag :li, class: "usa-step-indicator__segment" do
+                    content_tag :span, class: "usa-step-indicator__segment-label" do
+                      section.label
+                      # link(index + 1,
+                      #     to: "#",
+                      #     class: base_classes <> " btn-disabled",
+                      #     disabled: true,
+                      #     aria: [disabled: true]
+                      #   )
+                    end
+                  end
 
-                  Challenges.section_index(section.id) < current_section_index ->
-                    link(index + 1,
-                      to: Routes.challenge_path(conn, :edit, challenge.id, section.id),
-                      class: base_classes <> " btn-completed"
-                    )
+                Challenges.section_index(section.id) < current_section_index ->
+                  content_tag :li,
+                    class: "usa-step-indicator__segment usa-step-indicator__segment--complete" do
+                    content_tag :span, class: "usa-step-indicator__segment-label" do
+                      content_tag(:span, "completed", class: "usa-sr-only")
+                      # section.label
+                      link(section.label,
+                        to: Routes.challenge_path(conn, :edit, challenge.id, section.id),
+                        class: "usa-step-indicator__segment-label"
+                      )
+                    end
+                  end
 
-                  true ->
-                    link(index + 1,
-                      to: "#",
-                      class: base_classes <> " btn-disabled",
-                      disabled: true,
-                      aria: [disabled: true]
-                    )
-                end,
-                content_tag(:p, section.label, class: "section__title")
-              ]
-            end
+                true ->
+                  content_tag :li, class: "usa-step-indicator__segment" do
+                    content_tag :span, class: "usa-step-indicator__segment-label" do
+                      content_tag(:span, "not completed", class: "usa-sr-only")
+                      section.label
+
+                      # link(section.label,
+                      #   to: "#",
+                      #   class: "usa-step-indicator__segment-label",
+                      #   disabled: true,
+                      #   aria: [disabled: true]
+                      # )
+                    end
+                  end
+              end
+            ]
           end)
         ]
       end
