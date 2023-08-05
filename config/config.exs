@@ -16,16 +16,7 @@ config :challenge_gov, Web.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: Web.ErrorView, accepts: ~w(html json)],
   pubsub_server: ChallengeGov.PubSub,
-  live_view: [signing_salt: "SECRET_SALT"],
-  http: [
-    protocol_options: [
-      hsts: [
-        max_age: 31_536_000,
-        include_subdomains: true,
-        preload: true
-      ]
-    ]
-  ]
+  live_view: [signing_salt: "SECRET_SALT"]
 
 # Configures Elixir's Logger
 config :logger, :console,
