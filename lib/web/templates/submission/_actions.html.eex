@@ -5,7 +5,6 @@
   <% else %>
     <span class="row-text">closed</span>
   <% end %>
-
   <div class="btn-group btn-group" role="group">
    <div class="dropdown">
      <button id="btnGroupDrop1" type="button" class="usa-button"  aria-haspopup="true" aria-expanded="false">
