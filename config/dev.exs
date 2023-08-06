@@ -107,6 +107,12 @@ config :challenge_gov, :gov_delivery, module: ChallengeGov.GovDelivery.Mock
 
 config :challenge_gov, :public_root_url, "http://localhost:4001"
 
+config :wallaby,
+  otp_app: :challenge_gov,
+  js_logger: nil,
+  max_wait_time: 8_000,
+  screenshot_on_failure: true
+
 config :waffle,
   storage: Waffle.Storage.Local,
   storage_dir_prefix: Path.expand("../priv/waffle/uploads", __DIR__)
