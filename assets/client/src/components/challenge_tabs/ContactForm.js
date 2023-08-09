@@ -13,20 +13,28 @@ export const ContactForm = ({ challenge, preview }) => {
   const { apiUrl } = useContext(ApiUrlContext)
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+  e.preventDefault()
 
-    axios
-      .post(apiUrl + `/api/challenges/${challenge.id}/contact_form`, { email, body })
-      .then((res) => {
-        setIsOpen(true)
-        setEmail('')
-        setBody('')
-        setErrors({})
-      })
-      .catch((e) => {
-        let error = e.response.data.errors
-        setErrors(error)
-      })
+  if (body.length <= 2) {
+    setErrors({
+      ...errors,
+      body: "Your question or comment must be greater than 2 characters"
+    })
+    return
+  }
+
+  axios
+    .post(apiUrl + `/api/challenges/${challenge.id}/contact_form`, { email, body })
+    .then((res) => {
+      setIsOpen(true)
+      setEmail('')
+      setBody('')
+      setErrors({})
+    })
+    .catch((e) => {
+      let error = e.response.data.errors
+      setErrors(error)
+    })
   }
 
   const closeModal = () => {
