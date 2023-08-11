@@ -62,43 +62,61 @@
       <div class="content-wrapper">
         <%= if Map.has_key?(@conn.assigns, :site_wide_banner) do %>
           <div class="content-header">
-            <div class="container-fluid site-wide-banner">
-              <div class="callout callout-warning">
-                <i class="fa fa-exclamation-circle"></i>
+
+           <div class="usa-alert usa-alert--warning usa-alert--no-icon">
+             <div class="usa-alert__body">
+              <p class="usa-alert__text">
                 <span class="ql-editor">
                   <span><%= raw (@conn.assigns.site_wide_banner.content) %></span>
                 </span>
-              </span>
+              </p>
+             </div>
             </div>
+
           </div>
         <% end %>
 
         <%= if get_flash(@conn, :info) do %>
           <div class="content-header">
-            <div class="container-fluid">
-              <div class="callout callout-success d-flex align-items-center">
-                <i class="fa fa-check-circle h4 mb-0 flash-icon"></i><span><%= get_flash(@conn, :info) %></span>
-              </div>
+
+            <div class="usa-alert usa-alert--success usa-alert--no-icon">
+             <div class="usa-alert__body">
+              <p class="usa-alert__text">
+                <%= get_flash(@conn, :info) %>
+              </p>
+             </div>
             </div>
+            <!-- div class="usa-alert usa-alert--success">
+              <div class="usa-alert__body">
+                <h4 class="usa-alert__heading">Success status</h4>
+                <p class="usa-alert__text">
+                  <%= get_flash(@conn, :info) %>
+                </p>
+              </div>
+            </div -->
           </div>
         <% end %>
 
         <%= if get_flash(@conn, :error) do %>
           <div class="content-header">
-            <div class="container-fluid">
-              <div class="callout callout-danger d-flex align-items-center">
-                <i class="fa fa-exclamation-circle h4 mb-0 flash-icon"></i><span><%= get_flash(@conn, :error) %></span>
-              </div>
+            <div class="usa-alert usa-alert--danger usa-alert--no-icon">
+             <div class="usa-alert__body">
+              <p class="usa-alert__text">
+                <%= get_flash(@conn, :error) %>
+              </p>
+             </div>
             </div>
           </div>
         <% end %>
 
         <%= if get_flash(@conn, :warning) do %>
           <div class="content-header">
-            <div class="container-fluid">
-              <div class="callout callout-warning d-flex align-items-center">
-                <i class="fa fa-exclamation-circle h4 mb-0 flash-icon"></i><span><%= get_flash(@conn, :warning) %></span>
-              </div>
+            <div class="usa-alert usa-alert--warning usa-alert--no-icon">
+             <div class="usa-alert__body">
+              <p class="usa-alert__text">
+                <%= get_flash(@conn, :warning) %>
+              </p>
+             </div>
             </div>
           </div>
         <% end %>
