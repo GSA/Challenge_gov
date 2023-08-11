@@ -95,12 +95,20 @@
               </p>
              </div>
             </div>
+            <!-- div class="usa-alert usa-alert--success">
+              <div class="usa-alert__body">
+                <h4 class="usa-alert__heading">Success status</h4>
+                <p class="usa-alert__text">
+                  <%= get_flash(@conn, :info) %>
+                </p>
+              </div>
+            </div -->
           </div>
         <% end %>
 
         <%= if get_flash(@conn, :error) do %>
           <div class="content-header">
-            <div class="usa-alert usa-alert--error usa-alert--no-icon">
+            <div class="usa-alert usa-alert--danger usa-alert--no-icon">
              <div class="usa-alert__body">
               <p class="usa-alert__text">
                 <%= get_flash(@conn, :error) %>
