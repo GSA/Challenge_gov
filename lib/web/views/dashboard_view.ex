@@ -27,19 +27,23 @@ defmodule Web.DashboardView do
     ~E"""
       <div class="content-header">
         <div class="container-fluid">
-          <div class="callout callout-warning d-flex align-items-center">
-            <i class="fa fa-check-circle h4 mb-0 flash-icon"></i>
-            <span>
-              <%= if user.renewal_request == "certification" do %>
-                <p class="h4 mb-0">Recertification Pending</p>
-                <p>Your annual account certification is now pending approval.</p>
-              <% else %>
-                <p class="h4 mb-0">It's time for your annual account recertification.</p>
-                <p>Your annual account certification will expire on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
-                <p><%= recertification_action(conn, user) %></p>
-              <% end %>
-            </span>
-          </div>
+
+        <div class="usa-alert usa-alert--warning usa-alert--no-icon">
+        <div class="usa-alert__body">
+         <p class="usa-alert__text">
+          <%= if user.renewal_request == "certification" do %>
+            <p class="h4 mb-0">Recertification Pending</p>
+            <p>Your annual account certification is now pending approval.</p>
+          <% else %>
+            <p class="h4 mb-0">It's time for your annual account recertification.</p>
+            <p>Your annual account certification will expire on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
+            <p><%= recertification_action(conn, user) %></p>
+          <% end %>
+
+         </p>
+        </div>
+       </div>
+
         </div>
       </div>
     """
