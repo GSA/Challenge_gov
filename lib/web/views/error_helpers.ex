@@ -51,7 +51,10 @@ defmodule Web.ErrorHelpers do
   end
 
   def all_errors(%{errors: errors}) when is_list(errors) and length(errors) > 0 do
-    content_tag(:ul, class: "callout callout-danger", style: "list-style: none") do
+    content_tag(:ul,
+      class: "usa-alert usa-alert--danger usa-alert--no-icon",
+      style: "list-style: none"
+    ) do
       Enum.map(errors, fn {error_key, {error_msg, _}} ->
         content_tag(:li, "#{humanize(error_key)} #{error_msg}")
       end)
