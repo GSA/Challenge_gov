@@ -247,7 +247,7 @@
       </div>
     </div>
     <div>
-      <%= error_tag @form, :phase_dates, "usa-alert usa-alert--danger usa-alert--no-icon d-block my-3", style: "padding-left:1rem" %>
+      <%= error_tag @form, :phase_dates, "usa-alert usa-alert--danger usa-alert--no-icon d-block padding-1"  %>
     </div>
     <br/>
 
