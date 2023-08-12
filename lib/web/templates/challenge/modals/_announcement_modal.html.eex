@@ -1,23 +1,41 @@
-<div class="modal fade" id="announcement-modal" tabindex="-1"  aria-labelledby="announcement-modal-label" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
-    <%= form_for(@conn, Routes.challenge_path(@conn, :create_announcement, @challenge.id), fn f -> %>
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="modal-title" id="announcement-modal-label">Add an update to <%= @challenge.title %></h2>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+<div
+    class="usa-modal usa-modal--lg"
+    id="announcement-modal"
+    aria-labelledby="modal-2-heading"
+    aria-describedby="modal-2-description"
+  >
+    <div class="usa-modal__content">
+      <div class="usa-modal__main">
+        <%= form_for(@conn, Routes.challenge_path(@conn, :create_announcement, @challenge.id), fn f -> %>
+            <h2 class="usa-modal__heading" id="modal-2-heading">
+              Add an update to <%= @challenge.title %>
+            </h2>
+            <div class="usa-prose">
+              <p id="modal-2-description">
+                  <p>Your update will display on the Challenge for 2 weeks from the date you publish it.</p>
+                  <%= FormView.textarea_field(f, :announcement, label: "Banner update text", style: "width: 100%;", limit: 150, rows: 10, maxlength: 150, value: @challenge.announcement) %>
+
+              </p>
+            </div>
+            <div class="usa-modal__footer">
+
+              <%= remove_update_button(@conn, @challenge) %>
+              <%= submit("Publish", class: "usa-button", data: [confirm: "Are you sure you want to post this update?"] ) %>
+              <button type="button" class="usa-button usa-button--unstyled padding-105 text-center" data-close-modal>Cancel</button>
+
+            </div>
+          </div>
+          <button
+            type="button"
+            class="usa-button usa-modal__close"
+            aria-label="Close this window"
+            data-close-modal
+          >
+            <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+              <use xlink:href="/assets/img/sprite.svg#close"></use>
+            </svg>
           </button>
-        </div>
-        <div class="modal-body">
-          <p>Your update will display on the Challenge for 2 weeks from the date you publish it.</p>
-          <%= FormView.textarea_field(f, :announcement, label: "Banner update text", style: "width: 100%;", limit: 150, rows: 10, maxlength: 150, value: @challenge.announcement) %>
-        </div>
-        <div class="modal-footer">
-          <%= remove_update_button(@conn, @challenge) %>
-          <button type="button" class="usa-button bg-base" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-          <%= submit("Publish", class: "usa-button", data: [confirm: "Are you sure you want to post this update?"] ) %>
-        </div>
-      </div>
-    <% end) %>
+      <% end) %>
+    </div>
   </div>
 </div>
