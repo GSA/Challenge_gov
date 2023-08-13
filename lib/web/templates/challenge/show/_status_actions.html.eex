@@ -17,9 +17,10 @@
           <%= link("Submit", to: Routes.challenge_path(@conn, :submit, @challenge.id), method: :post, class: "usa-button", data: [confirm: "Are you sure you want to submit this challenge for approval?"]) %>
         <% end %>
         <%= if Challenges.can_request_edits?(@challenge, @user) do  %>
-          <%= link("Request Edits", to: "#", class: "usa-button usa-button--secondary",  "data-bs-toggle": "modal", "data-bs-target": "#rejection-modal" ) %>
+          <%= link("Request Edits", to: "#rejection-modal1", class: "usa-button usa-button--secondary", "data-open-modal": "true", "aria-controls": "rejection-modal1") %>
         <% end %>
       </div>
     <% end %>
+
   </div>
 </div>
