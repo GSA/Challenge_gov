@@ -15,12 +15,15 @@
           <%= if Map.has_key?(@conn.assigns, :site_wide_banner) do %>
             <div class="content-header">
               <div class="site-wide-banner">
-                <div class="callout callout-warning">
-                  <i class="fa fa-exclamation-circle"></i>
-                  <span class="ql-editor">
-                    <span><%= raw (@conn.assigns.site_wide_banner.content) %></span>
-                  </span>
-                </span>
+                <div class="usa-alert usa-alert--warning usa-alert--no-icon">
+                  <div class="usa-alert__body">
+                    <p class="usa-alert__text">
+                        <span class="ql-editor">
+                          <span><%= raw (@conn.assigns.site_wide_banner.content) %></span>
+                        </span>
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           <% end %>
