@@ -191,12 +191,12 @@ defmodule Web.ChallengeView do
     if challenge.status == "edits_requested" and challenge.rejection_message do
       content_tag :div, class: "row position-sticky sticky-top" do
         content_tag :div, class: "col-md-12" do
-          content_tag :div, class: "card card-danger" do
+          content_tag :div, class: "usa-card__container card-danger" do
             [
-              content_tag(:div, class: "card-header") do
+              content_tag(:div, class: "usa-card__header") do
                 "Edits have been requested for this challenge. Please review your challenge and make any necessary edits prior to re-submitting."
               end,
-              content_tag(:div, class: "card-body") do
+              content_tag(:div, class: "usa-card__body") do
                 challenge.rejection_message
               end
             ]

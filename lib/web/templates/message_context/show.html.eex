@@ -18,8 +18,8 @@
 
   <section class="content">
     <div class="container-fluid">
-      <div class="card">
-        <div class="card-body">
+      <div class="usa-card__container">
+        <div class="usa-card__body">
           <div class="row">
             <div class="col">To: <%= display_audience(@user, @message_context) %></div>
           </div>

@@ -1,5 +1,5 @@
 <%= link to: ChallengeView.public_details_url(@saved_challenge.challenge), target: "_blank" do %>
-  <div class="challenge-tile saved-challenge-tile card">
+  <div class="challenge-tile saved-challenge-tile usa-card__container ">
       <div class="image_wrapper">
         <%= img_tag(
           ChallengeView.logo_url(@saved_challenge.challenge),

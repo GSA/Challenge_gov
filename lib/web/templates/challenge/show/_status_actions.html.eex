@@ -1,5 +1,5 @@
-<div class="card">
-  <div class="card-body">
+<div class="usa-card__container">
+  <div class="usa-card__body">
     <h4>Status</h4>
     <p><%= status_display_name(@challenge) %></p>
     <%= if !Challenges.is_published?(@challenge) or !(Challenges.is_closed?(@challenge) or Challenges.is_archived_new?(@challenge) or Challenges.is_archived?(@challenge)) do %>

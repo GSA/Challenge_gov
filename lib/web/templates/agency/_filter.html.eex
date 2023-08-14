@@ -1,14 +1,14 @@
-    <div class="card-header">
-      <h3 class="card-title">Filter</h3>
+    <div class="usa-card__header">
+      <h3 class="usa-card__heading">Filter</h3>
     </div>
     <%= form_for(@conn, Routes.agency_path(@conn, :index), [method: :get, as: :filter], fn f -> %>
-      <div class="card-body">
+      <div class="usa-card__body">
         <div class="form-group">
           <%= label f, :search %>
           <%= text_input f, :search, value: @filter["search"], class: "usa-input" %>
         </div>
       </div>
-      <div>
+      <div class="usa-card__footer">
         <%= submit "Filter", class: "usa-button bg-primary-dark" %>
         <%= link "Clear", to: Routes.agency_path(@conn, :index), class: "usa-button" %>
       </div>

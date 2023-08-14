@@ -1,8 +1,8 @@
-<div class="card-header">
-  <h3 class="card-title">Filter</h3>
+<div class="usa-card__header">
+  <h3 class="usa-card__heading">Filter</h3>
 </div>
 <%= form_for(@conn, Routes.challenge_path(@conn, :index, sort: @sort), [method: :get, as: :filter], fn f -> %>
-  <div class="card-body">
+  <div class="usa-card__body">
     <div class="form-group">
       <%= label f, :search, "Search" %>
       <%= text_input f, :search, value: @filter["search"], class: "usa-input" %>
@@ -42,7 +42,7 @@
       <%= date_input(f, :end_date_end, value: @filter["end_date_end"], class: "usa-input") %>
     </div>
   </div>
-  <div>
+  <div class="usa-card__footer">
     <%= submit "Filter", class: "usa-button" %>
     <%= link "Clear", to: Routes.challenge_path(@conn, :index), class: "usa-button usa-button--outline" %>
   </div>
