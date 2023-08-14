@@ -1,10 +1,10 @@
 <section class="content">
   <div class="container-fluid">
-    <div class="grid-row">
-      <div class="grid-col-12">
-        <div class="usa-card__container_ _padding-3"> <!-- **TABLE NON-RESPONSIVE** -->
-          <div dclass="table">
-            <table class="usa-table">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="usa-card__container"> <!-- **TABLE RESPONSIVE** -->
+          <div class="table">
+            <table class="table table-striped">
               <%= render Web.ChallengeView, "table/_header.html", conn: @conn, user: @user, filter: @filter, sort: @sort, sortable: @sortable %>
               <%= render Web.ChallengeView, "table/_content.html", conn: @conn, user: @user, challenges: @challenges %>
             </table>

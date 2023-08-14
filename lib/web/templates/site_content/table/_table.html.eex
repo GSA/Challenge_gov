@@ -2,7 +2,9 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-            <table class="usa-table">
+        <div class="usa-card__container">
+          <div class="table-responsive">
+            <table class="table table-striped">
               <%= render Web.SiteContentView, "table/_header.html", conn: @conn, user: @user, filter: @filter, sort: @sort, sortable: @sortable %>
               <%= render Web.SiteContentView, "table/_content.html", conn: @conn, user: @user, site_content: @site_content %>
             </table>

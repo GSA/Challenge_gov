@@ -25,11 +25,11 @@
       </div>
     </div>
 
-    <div class="grid-row margin-bottom-3 px-5">
-      <div class="grid-col-3">
+    <div class="row mb-3 px-5">
+      <div class="col-md-3">
         <div class="usa-card__container">
           <div class="usa-card__body text-center">
-            <div class="font-ui-2xl"><%= length(@phase.submissions) %></div>
+            <div class="display-3"><%= length(@phase.submissions) %></div>
             <div>Total # of Submissions</div>
           </div>
         </div>

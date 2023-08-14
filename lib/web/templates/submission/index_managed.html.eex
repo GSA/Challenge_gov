@@ -19,10 +19,11 @@
       <%= link("New solver submission", to: Routes.challenge_phase_submission_path(@conn, :new, @challenge.id, @phase.id), class: "usa-button") %>
      </div>
     </div>
-    <div class="grid-row">
-      <div class="grid-col-12">
-        <div dclass="usa-card__container padding-2">
-            <table class="usa-table">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="usa-card__container">
+          <div class="table-responsive">
+            <table class="table table-striped">
               <thead>
                 <tr>
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "id", "ID") %>

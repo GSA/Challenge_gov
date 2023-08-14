@@ -20,12 +20,12 @@
 
 <div class="content">
   <div class="container-fluid">
-    <div class="grid-row">
-      <div class="display-flex flex-row">
+    <div class="row">
+      <div class="col-md-12 d-flex">
         <div class="usa-card__container nav_card me-5">
-          <div class="usa-card__body display-flex flex-column justify-content-center">
-            <b>Reporting & Analytics</b>
-            <dl class="height-15">
+          <div class="usa-card__body d-flex flex-column justify-content-center">
+            <dl class="h-75">
+              <dt>Reporting & Analytics</dt>
               <dd>Certification and security reports. Upload site analytics reports.</dd>
               <br>
             </dl>
@@ -35,21 +35,21 @@
           </div>
         </div>
         <div class="usa-card__container nav_card me-5">
-          <div class="usa-card__body display-flex flex-column justify-content-center">
-              <b>Agencies</b>
-            <dl class="height-15">
+          <div class="usa-card__body d-flex flex-column justify-content-center">
+            <dl class="h-75">
+              <dt>Agencies</dt>
               <dd>View and manage agencies</dd>
               <br>
             </dl>
-            <p class="flex-align-self-end">
+            <p>
             <%= link "View Agencies", to: Routes.agency_path(@conn, :index), class: "usa-button" %>
             </p>
           </div>
         </div>
         <div class="usa-card__container nav_card">
-          <div class="usa-card__body display-flex flex-column justify-content-center">
-              <b>PMO Reports</b>
-            <dl class="height-15">
+          <div class="usa-card__body d-flex flex-column justify-content-center">
+            <dl class="h-75">
+              <dt>PMO Reports</dt>
               <dd>View reports</dd>
               <br>
             </dl>

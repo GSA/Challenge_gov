@@ -3,10 +3,7 @@
     <div class="grid-row">
       <div class="grid-col-12">
         <%= render_submission_filter_tabs(@conn, @challenge, @phase, @filter) %>
-
-        <div class="usa-card__container margin-left-0 ">
-
-        <div class="usa-card__body">
+        <div class="usa-card__container">
           <%= render_submission_filter_helper_text(@challenge, @phase, @filter) %>
           <%= render_manage_submissions_button(@conn, @user, @challenge, @phase) %>
           <%# to: Routes.challenge_phase_submission_path(@conn, :new, @challenge.id, @phase.id)) %>
@@ -20,7 +17,7 @@
                   conn: @conn, user: @user, challenge: @challenge, phase: @phase, submissions: @submissions,
                   checked_selected_submission_ids: @checked_selected_submission_ids,
                   page: @pagination.current, sort: @sort, filter: @filter %>
-              </table><br>
+              </table>
               <%= Enum.map @hidden_selected_submission_ids, fn submission_id -> %>
                 <%= hidden_input f, "sid[]", value: submission_id %>
               <% end %>

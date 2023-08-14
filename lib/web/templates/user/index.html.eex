@@ -30,10 +30,11 @@
     </div>
   </div>
   <div class="container-fluid">
-    <div class="grid-row">
-      <div class="grid-col-12">
-        <div dclass="usa-card__container padding-3">
-            <table class="usa-table">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="usa-card__container">
+          <div class="table-responsive">
+            <table class="table table-striped">
               <thead>
                 <tr>
                   <th>ID</th>
