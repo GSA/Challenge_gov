@@ -11,14 +11,20 @@
   </div>
 </div>
 
-          <div class="content-header">
-            <div class="container-fluid">
-              <div class="callout callout-warning d-flex align-items-center">
-                <i class="fa fa-exclamation-circle h4 mb-0 flash-icon"></i><span><b>Important Notice</b><br>
-Image upload functionality on this page has been deactivated due to accessibility upgrading. For questions or updates please email team@challenge.gov.</span>
-              </div>
+
+            <div class="content-header">
+
+                <div class="usa-alert usa-alert--warning usa-alert--no-icon">
+                  <div class="usa-alert__body">
+                    <p class="usa-alert__text">
+                    <b>Important Notice</b><br>
+                    Image upload functionality on this page has been deactivated due to accessibility upgrading. For questions
+                    or updates please email team@challenge.gov.
+                    </p>
+                  </div>
+                </div>
+
             </div>
-          </div>
 
 
 <div class="content phase-winners">

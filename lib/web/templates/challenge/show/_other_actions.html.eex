@@ -37,7 +37,7 @@
 
       <%= if Challenges.is_published?(@challenge) do %>
       <li class="usa-button-group__item">
-       <%= link("Add/Edit announcement", to: "#", class: "usa-button", "data-bs-toggle": "modal", "data-bs-target": "#announcement-modal") %>
+       <%= link("Add/Edit announcement", to: "#announcement-modal", class: "usa-button", "data-open-modal": "true", "aria-controls": "announcement-modal") %>
       </li>
       <% end %>
     </ul>
