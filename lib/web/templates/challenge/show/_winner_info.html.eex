@@ -1,8 +1,8 @@
 <%= if @challenge.winner_information || @challenge. winner_image_key do %>
   <div class="row">
     <div class="col-md-12">
-      <div class="card">
-        <div class="card-body">
+      <div class="usa-card__container">
+        <div class="usa-card__body">
           <h4>Winner info</h4>
           <hr/>
           <dt>Winner Information</dd>

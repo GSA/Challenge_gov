@@ -1,5 +1,5 @@
-<div class="card winners-overview">
-  <div class="card-body">
+<div class="usa-card__container winners-overview">
+  <div class="usa-card__body">
     <h2>Winners overview</h2>
     <span>Add Winners details to your challenge profile page.</span>
     <hr size='2'>

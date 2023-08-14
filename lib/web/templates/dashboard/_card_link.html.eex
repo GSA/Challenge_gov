@@ -1,6 +1,6 @@
-<div class="dashboard-card col-md-6">
-  <a class="card m-3 text-dark" href="<%= @to %>" target="<%= @target %>">
-    <div class="card-body d-flex align-items-center">
+<div class="dashboard-card col-md-6 padding-2">
+  <a class="usa-card__container text-dark" href="<%= @to %>" target="<%= @target %>">
+    <div class="usa-card__body d-flex align-items-center">
       <div class="dashboard-card__icon-container">
         <%= @icon %>
       </div>
