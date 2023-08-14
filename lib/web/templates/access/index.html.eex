@@ -1,13 +1,12 @@
 <section class="content-header text-center">
  <%= if @user.status in ["decertified", "active"] && @user.renewal_request == "certification" do %>
     <div class="content-header">
-      <div class="container-fluid">
-        <div class="callout callout-success d-flex align-items-center">
-          <i class="fa fa-check-circle h4 mb-0 flash-icon"></i>
-          <span>
-            <p class="h4">Account Recertification Requested</p>
-            <p>Thank you! Your annual account recertification request has been submitted.</p>
-          </span>
+      <div class="usa-alert usa-alert--success usa-alert--no-icon">
+        <div class="usa-alert__body">
+        <p class="usa-alert__text">
+          <p class="h4">Account Recertification Requested</p>
+          <p>Thank you! Your annual account recertification request has been submitted.</p>
+        </p>
         </div>
       </div>
     </div>
