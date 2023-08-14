@@ -1,11 +1,11 @@
 <%= form_tag Routes.user_path(@conn, :index), method: :get do %>
-  <div class="card-body">
+  <div class="usa-card__body">
     <div class="form-group">
       <%= label :user, :search, "Search" %>
       <%= text_input :user, :search, value: @filter["search"], class: "usa-input" %>
     </div>
   </div>
-  <div>
+ <div class="usa-card__footer">
     <%= submit "Search", class: "usa-button" %>
     <%= link "Clear", to: Routes.user_path(@conn, :index), class: "usa-button usa-button--outline" %>
   </div>

@@ -18,8 +18,8 @@
 
   <section class="content">
     <div class="container-fluid">
-      <div class="card">
-        <div class="card-body">
+      <div class="usa-card__container">
+        <div class="usa-card__body">
           <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
             <%= hidden_input(f, :context, value: @changeset.changes.context) %>
             <%= FormView.select_field(f, :context_id, collection: Enum.map(@challenges, &{&1.title, &1.id}), label: "Select your challenge", required: true) %>

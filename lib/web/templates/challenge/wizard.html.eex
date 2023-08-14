@@ -21,11 +21,11 @@
     <div class="row">
       <div class="col-md-12">
         <%= if @show_info == "true" and !is_nil(@wizard_info.content) do %>
-          <div class="card">
-            <div class="card-body">
+          <div class="usa-card__container">
+            <div class="usa-card__body">
               <%= SharedView.render_safe_html(@wizard_info.content) %>
             </div>
-            <div class="card-footer">
+            <div class="usa-card__footer">
               <%= link "Next", to: Routes.challenge_path(@conn, :new), class: "usa-button float-right" %>
             </div>
           </div>
@@ -36,13 +36,13 @@
 
             <%#= Web.ErrorHelpers.all_errors(@changeset) %>
 
-            <div class="card">
+            <div class="usa-card__container">
               <%= hidden_input f, :section, value: @section %>
               <%= hidden_input f, :user_id, value: @user.id %>
               <%= hidden_input f, :challenge_id, value: if @challenge, do: @challenge.id, else: nil %>
               <%= hidden_input f, :local_timezone, id: "local-timezone-input" %>
 
-              <div class="card-body">
+              <div class="usa-card__body">
                 <%= render Web.ChallengeView, "wizard/_#{@section}.html",
                   form: f,
                   action: @action,
@@ -58,7 +58,7 @@
                 %>
               </div>
 
-              <div class="card-footer">
+              <div class="usa-card__footer">
                 <span class="mr-2">
                   <%= previous_button(@conn, @changeset.data, @section) %>
                 </span>

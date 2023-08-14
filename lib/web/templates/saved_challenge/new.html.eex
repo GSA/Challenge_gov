@@ -1,6 +1,6 @@
 <section class="follow-challenge">
-  <div class="card col-md-6 mx-auto">
-    <div class="card-body justify-content-center">
+  <div class="usa-card__container col-md-6 mx-auto">
+    <div class="usa-card__body justify-content-center">
       <h4 class="text-center mb-5">You are saving the following challenge to your saved list.</h4>
       <div class="text-center mb-5">
         <%= ChallengeView.logo_img(@challenge, class: "mx-auto") %>

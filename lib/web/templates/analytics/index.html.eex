@@ -16,8 +16,8 @@
       <div class="container" style="max-width: unset">
         <h3>Site Analytics Reports</h3>
         <p class="pl-0">Reports for the last 6 months</p>
-        <div class="card">
-          <div class="card-body dap-grid">
+        <div class="usa-card__container">
+          <div class="usa-card__body dap-grid">
             <%= Enum.map(@dap_reports, fn report -> %>
               <div class="row">
                 <div class="col text-center">
@@ -38,24 +38,24 @@
   <div class="row analytics-counts" style="font-size: 1.5rem;">
     <div class="col">
       <p>Total active</p>
-      <div class="card">
-        <div class="card-body" style="text-align: center; font-size: 3rem;">
+      <div class="usa-card__container">
+        <div class="usa-card__body" style="text-align: center; font-size: 3rem;">
           <%= @active_challenges_count %>
         </div>
       </div>
     </div>
     <div class="col">
       <p>Total archived</p>
-      <div class="card">
-        <div class="card-body" style="text-align: center; font-size: 3rem;">
+      <div class="usa-card__container">
+        <div class="usa-card__body" style="text-align: center; font-size: 3rem;">
           <%= @archived_challenges_count %>
         </div>
       </div>
     </div>
     <div class="col">
       <p>Total in draft</p>
-      <div class="card">
-        <div class="card-body" style="text-align: center; font-size: 3rem;">
+      <div class="usa-card__container">
+        <div class="usa-card__body" style="text-align: center; font-size: 3rem;">
           <%= @draft_challenges_count %>
         </div>
       </div>
@@ -69,8 +69,8 @@
   <div class="content">
     <div class="container" style="max-width: unset">
       <h3>Trends analytics</h3>
-      <div class="card">
-        <div class="card-body">
+      <div class="usa-card__container">
+        <div class="usa-card__body">
           <%= render Web.AnalyticsView, "_filter.html", conn: @conn, filter: @filter, agencies: @agencies, years: @years %>
 
           <hr/>

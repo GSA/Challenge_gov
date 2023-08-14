@@ -1,5 +1,5 @@
-<div class="card">
-  <div class="card-body">
+<div class="usa-card__container">
+  <div class="usa-card__body">
     <h3><%= "Phase #{@index + 1}: #{@phase.title}" %></h3>
     <div class="mb-2">
       <div><span>Start date: </span><span class="js-local-datetime"><%= @phase.start_date %></span></div>

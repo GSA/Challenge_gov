@@ -21,8 +21,8 @@
     <div class="row">
       <div class="col-md-12">
         <%= form_for(@changeset, @path, [class: "form-horizontal"], fn f -> %>
-          <div class="card">
-            <div class="card-body">
+          <div class="usa-card__container">
+            <div class="usa-card__body">
               <%= FormView.text_field(f, :subject, label: "Subject", limit: 350, required: false) %>
               <hr/>
               <div class="col">
@@ -31,7 +31,7 @@
               </div>
             </div>
 
-            <div class="card-footer">
+            <div class="usa-card__footer">
               <%= submit("Submit", name: "action", value: "submit", class: "usa-button float-right") %>
             </div>
           </div>

@@ -19,7 +19,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <div class="card">
+        <div class="usa-card__container">
           <%= render Web.AgencyView, "_form.html", changeset: @changeset, data: @changeset.data, parent_id: @parent_id, path: Routes.agency_path(@conn, :create) %>
         </div>
       </div>
