@@ -10,7 +10,7 @@
     <%= link("Unpublish", to: Routes.challenge_path(@conn, :unpublish, @challenge.id), method: :post, class: "usa-button usa-button--secondary", data: [confirm: "Are you sure you want to unpublish this challenge?"]) %>
   <% end %>
   <%= if Challenges.can_request_edits?(@challenge, @user) do  %>
-    <%= link("Request Edits", to: "#", class: "usa-button usa-button--secondary", "data-bs-toggle": "modal", "data-bs-target": "#announcement-modal") %>
+   <%= link("Request Edits", to: "#announcement-modal", class: "usa-button usa-button--secondary", "data-open-modal": "true", "aria-controls": "announcement-modal") %>
   <% end %>
   <%#= if Challenges.can_post_announcement?(@challenge, @user) do  %>
     <%= link("Add/Edit Update", to: "#", class: "usa-button",  ) %>
