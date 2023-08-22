@@ -302,7 +302,7 @@ defmodule Web.PhaseView do
     next_phase_closed? = next_phase_closed?(challenge, phase)
 
     [
-      content_tag(:div, class: "submission-filter__helper-text p-3 bg-white") do
+      content_tag(:div, class: "submission-filter__helper-text p-3") do
         submission_filter_helper_text(judging_status_filter_value, next_phase_closed?)
       end,
       submission_filter_winner_note(judging_status_filter_value, next_phase_closed?)
