@@ -25,8 +25,8 @@
             <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-expanded="true">
               <span><%= u.email %></span>
             </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-              <%= link to: Routes.session_path(@conn, :delete), method: :delete, class: "dropdown-item" do %>
+            <div class="dropdown-content padding-2 float-right" style="min-width:280px">
+              <%= link to: Routes.session_path(@conn, :delete), method: :delete, class: "dropdown-item_" do %>
               <i class="fas fa-sign-out-alt me-2"></i> Logout
               <% end %>
             </div>
