@@ -20,15 +20,15 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <div class="card">
-          <div class="card-header clear-after d-flex justify-content-between">
-            <h3 class="card-title font-weight-bold align-self-center">Agency Details</h3>
+        <div class="usa-card__container">
+          <div class="usa-card__header clear-after d-flex justify-content-between">
+            <h3 class="usa-card__heading font-weight-bold align-self-center">Agency Details</h3>
             <div class="card-tools">
               <%= link("Edit", to: Routes.agency_path(@conn, :edit, @agency.id), class: "usa-button usa-button--outline me-2") %>
               <%= link("Delete", to: Routes.agency_path(@conn, :delete, @agency.id), class: "usa-button usa-button--secondary", method: :delete, data: [confirm: "Are you sure?"]) %>
             </div>
           </div>
-          <div class="card-body">
+          <div class="usa-card__body">
             <dl>
               <dt>Name</dd>
               <dd><%= @agency.name %></dd>
@@ -60,12 +60,12 @@
     <%= if !@agency.parent do %>
       <div class="row">
         <div class="col-md-12">
-          <div class="card">
-            <div class="card-header clear-after d-flex justify-content-between">
-              <h3 class="card-title align-self-center">Agency Component</h3>
+          <div class="usa-card__container">
+            <div class="usa-card__header clear-after d-flex justify-content-between">
+              <h3 class="usa-card__heading align-self-center">Agency Component</h3>
               <span><%= link("Add", to: Routes.agency_path(@conn, :new, @agency.id), class: "usa-button bg-primary-dark") %></span>
             </div>
-            <div class="card-body">
+            <div class="usa-card__body">
               <%= Enum.map(active_component_agencies(@agency.sub_agencies), fn sub_agency -> %>
                 <div class="d-flex justify-content-between">
                   <%= link(sub_agency.name, to: Routes.agency_path(@conn, :show, sub_agency.id)) %>
@@ -83,11 +83,11 @@
 
     <div class="row">
       <div class="col-md-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Is a lead agency for these challenges</h3>
+        <div class="usa-card__container">
+          <div class="usa-card__header">
+            <h3 class="usa-card__heading">Is a lead agency for these challenges</h3>
           </div>
-          <div class="card-body">
+          <div class="usa-card__body">
             <ul>
               <%= Enum.map(@agency.challenges, fn challenge -> %>
                 <li><%= Web.ChallengeView.name_link(@conn, challenge) %></li>
@@ -100,11 +100,11 @@
 
     <div class="row">
       <div class="col-md-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Is a federal partner for these challenges</h3>
+        <div class="usa-card__container">
+          <div class="usa-card__header">
+            <h3 class="usa-card__heading">Is a federal partner for these challenges</h3>
           </div>
-          <div class="card-body">
+          <div class="usa-card__body">
             <ul>
               <%= Enum.map(@agency.federal_partner_challenges, fn challenge -> %>
                 <li><%= Web.ChallengeView.name_link(@conn, challenge) %></li>

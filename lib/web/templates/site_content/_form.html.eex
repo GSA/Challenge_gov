@@ -1,5 +1,5 @@
 <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
-  <div class="card-body">
+  <div class="usa-card__body">
     <%= FormView.rt_textarea_field(f, :content) %>
     <%= if @section === "site_wide_banner" do %>
       <div class="w-25 d-flex">
@@ -17,7 +17,7 @@
     <% end %>
   </div>
 
-  <div class="card-footer">
+  <div class="usa-card__footer">
     <%= submit("Submit", class: "usa-button pull-right") %>
   </div>
 <% end) %>

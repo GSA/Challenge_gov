@@ -20,13 +20,13 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Edit</h3>
+        <div class="usa-card__container">
+          <div class="usa-card__header">
+            <h3 class="usa-card__heading">Edit</h3>
           </div>
 
           <%= form_for(@changeset, Routes.user_path(@conn, :update, @user.id), [class: "form-horizontal", multipart: true], fn f -> %>
-            <div class="card-body">
+            <div class="usa-card__body">
               <div class="form-group">
                 <div class="col-md-4">Name</div>
                 <%= FormView.text_field(f, :first_name, label: "First name", required: true) %>
@@ -57,7 +57,7 @@
               <% end %>
             </div>
 
-            <div class="card-footer">
+            <div class="usa-card__footer">
               <%= submit("Submit", class: "usa-button pull-right") %>
             </div>
           <% end) %>

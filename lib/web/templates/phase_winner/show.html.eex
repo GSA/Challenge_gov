@@ -13,8 +13,8 @@
 <div class="content phase-winners">
   <div class="container-fluid">
     <%= render_title(@challenge, @phase) %>
-    <div class="card">
-      <div class="card-body">
+    <div class="usa-card__container">
+      <div class="usa-card__body">
         <%= link("Edit", to: Routes.phase_winner_path(@conn, :edit, @phase.id)) %>
         <hr/>
         <h2>Winner Overview Info</h2>

@@ -30,11 +30,15 @@ $("#submission_document_upload").on("click", function(e) {
       contentType: false,
       data: fd,
       success: function(document) {
+        //$(".usa-error-message").toggleClass('display-block display-none')
         $("#submission_document_upload__error-no-email").text("")
         $("#submission_document_upload__error-solver-addr").text("").css("padding-bottom", "0")
 
         $(name_input).val("")
         $(file_input).val("")
+        $(".usa-file-input__preview-heading").remove()
+        $(".usa-file-input__preview").remove()
+        $(".usa-file-input__instructions").toggleClass('display-none display-block')
 
         $(".submission-documents-list").append(`
           <div class="submission-document-row">
@@ -52,7 +56,7 @@ $("#submission_document_upload").on("click", function(e) {
         if(err["solver_addr"]) {
           handleFileUploadError(err.responseJSON.errors)
         } else {
-          $(file_input).addClass("is-invalid")
+          $(".usa-error-message").toggleClass('display-none display-block')
         }
       }
     })

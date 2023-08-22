@@ -19,13 +19,13 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <div class="card">
-          <div class="card-header">
+        <div class="usa-card__container">
+          <div class="usa-card__header">
             <div class="card-tools">
               <%= link("Edit", to: Routes.site_content_path(@conn, :edit, @content.section), class: "usa-button me-2") %>
             </div>
           </div>
-          <div class="card-body">
+          <div class="usa-card__body">
             <dt>Section</dt>
             <dd><%= @content.section %></dd>
             <br/>

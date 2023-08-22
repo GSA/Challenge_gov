@@ -31,6 +31,24 @@ a {
   }
 }
 
+.usa-breadcrumb__list-item:not(:last-child)::after {
+  background: 0 0;
+  background-color: #757575;
+  -webkit-mask-image: url("/images/navigate_next.svg"),linear-gradient(transparent,transparent);
+  mask-image: url("/imges/navigate_next.svg"),linear-gradient(transparent,transparent);
+  -webkit-mask-position: center center;
+  mask-position: center center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 2ex 2ex;
+  mask-size: 2ex 2ex;
+}
+
+.usa-checkbox__input:checked+[class*=__label]::before, .usa-checkbox__input:checked:disabled+[class*=__label]::before, .usa-checkbox__input:checked[aria-disabled=true]+[class*=__label]::before {
+  background-image: url(https://designsystem.digital.gov/assets/img/correct8.svg),linear-gradient(transparent,transparent);
+  background-repeat: no-repeat;
+}
+
 .usa-select {
   background-image: url(https://designsystem.digital.gov/assets/img/usa-icons/unfold_more.svg), linear-gradient(transparent, transparent) !important;
   background-repeat: no-repeat;
@@ -40,6 +58,34 @@ a {
   background-size: 1.25rem;
   padding-right: 2rem;
 }
+
+/* Style for dropdown content */
+.dropdown-content {
+  display: none; /* Hidden by default */
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* Style for each content div */
+.dropdown-content div {
+  padding: 10px 10px 10px 15px;
+}
+
+/* Highlight dropdown options on hover */
+.dropdown-content div:hover {
+  background-color: #eaeaea;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+
 
 a.mx-3  {
   width: fit-content;

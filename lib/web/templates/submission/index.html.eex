@@ -37,9 +37,10 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-12">
-            <div class="cards">
+            <ul class="usa-card-group">
               <%= Enum.map @submissions, fn (submission) -> %>
-                <div class="challenge-tile card me-4">
+                <li class="usa-card tablet:grid-col-4">
+                <div class="challenge-tile usa-card__container">
                   <%= link to: Routes.submission_path(@conn, :edit, submission.id) do %>
                     <div class="image_wrapper">
                       <%= img_tag(
@@ -64,8 +65,9 @@
                     </div>
                   <% end %>
                 </div>
+                </li>
               <% end %>
-            </div>
+            </ul>
           </div>
         </div>
         <%= SharedView.pagination(path: Routes.submission_path(@conn, :index), pagination: @pagination) %>

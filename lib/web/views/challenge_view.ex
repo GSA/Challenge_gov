@@ -119,15 +119,17 @@ defmodule Web.ChallengeView do
           Accounts.has_admin_access?(user)) and length(challenge.phases) > 0 do
       link_location = manage_submissions_initial_path(conn, challenge)
 
-      link(
-        opts[:label] || "View submissions",
-        Keyword.merge(
-          [
-            to: link_location
-          ],
-          opts
+      content_tag :div do
+        link(
+          opts[:label] || "View submissions",
+          Keyword.merge(
+            [
+              to: link_location
+            ],
+            opts
+          )
         )
-      )
+      end
     end
   end
 
@@ -189,12 +191,12 @@ defmodule Web.ChallengeView do
     if challenge.status == "edits_requested" and challenge.rejection_message do
       content_tag :div, class: "row position-sticky sticky-top" do
         content_tag :div, class: "col-md-12" do
-          content_tag :div, class: "card card-danger" do
+          content_tag :div, class: "usa-card__container card-danger" do
             [
-              content_tag(:div, class: "card-header") do
+              content_tag(:div, class: "usa-card__header") do
                 "Edits have been requested for this challenge. Please review your challenge and make any necessary edits prior to re-submitting."
               end,
-              content_tag(:div, class: "card-body") do
+              content_tag(:div, class: "usa-card__body") do
                 challenge.rejection_message
               end
             ]
@@ -462,50 +464,65 @@ defmodule Web.ChallengeView do
 
     base_classes = ""
 
-    content_tag :div, class: "challenge-progressbar container" do
-      content_tag :div, class: "row" do
+    content_tag :div,
+      class: " usa-step-indicator usa-step-indicator--counters",
+      style: "padding:1rem;",
+      aria: [label: "progress"] do
+      content_tag :ol, class: "usa-step-indicator__segments" do
         [
-          content_tag :div, class: "col-12" do
-            content_tag(:div, class: "progress eqrs-progress") do
-              content_tag(:div, "",
-                class: "progress-bar progress-bar--success",
-                style: "width: #{progressbar_width}%",
-                role: "progressbar"
-              )
-            end
-          end,
           Enum.map(Enum.with_index(sections), fn {section, index} ->
-            content_tag :div, class: "button-container col" do
-              [
-                cond do
-                  section.id == current_section ->
-                    link(index + 1, to: "#", class: base_classes <> " btn-not-completed_hasFocus")
+            [
+              cond do
+                section.id == current_section ->
+                  content_tag :li,
+                    class: "usa-step-indicator__segment usa-step-indicator__segment--current" do
+                    content_tag :span, class: "usa-step-indicator__segment-label" do
+                      link(section.label, to: "#", class: "usa-step-indicator__segment-label")
+                    end
+                  end
 
-                  action == :new || action == :create ->
-                    link(index + 1,
-                      to: "#",
-                      class: base_classes <> " btn-disabled",
-                      disabled: true,
-                      aria: [disabled: true]
-                    )
+                action == :new || action == :create ->
+                  content_tag :li, class: "usa-step-indicator__segment" do
+                    content_tag :span, class: "usa-step-indicator__segment-label" do
+                      section.label
+                      # link(index + 1,
+                      #     to: "#",
+                      #     class: base_classes <> " btn-disabled",
+                      #     disabled: true,
+                      #     aria: [disabled: true]
+                      #   )
+                    end
+                  end
 
-                  Challenges.section_index(section.id) < current_section_index ->
-                    link(index + 1,
-                      to: Routes.challenge_path(conn, :edit, challenge.id, section.id),
-                      class: base_classes <> " btn-completed"
-                    )
+                Challenges.section_index(section.id) < current_section_index ->
+                  content_tag :li,
+                    class: "usa-step-indicator__segment usa-step-indicator__segment--complete" do
+                    content_tag :span, class: "usa-step-indicator__segment-label" do
+                      content_tag(:span, "completed", class: "usa-sr-only")
+                      # section.label
+                      link(section.label,
+                        to: Routes.challenge_path(conn, :edit, challenge.id, section.id),
+                        class: "usa-step-indicator__segment-label"
+                      )
+                    end
+                  end
 
-                  true ->
-                    link(index + 1,
-                      to: "#",
-                      class: base_classes <> " btn-disabled",
-                      disabled: true,
-                      aria: [disabled: true]
-                    )
-                end,
-                content_tag(:p, section.label, class: "section__title")
-              ]
-            end
+                true ->
+                  content_tag :li, class: "usa-step-indicator__segment" do
+                    content_tag :span, class: "usa-step-indicator__segment-label" do
+                      content_tag(:span, "not completed", class: "usa-sr-only")
+                      section.label
+
+                      # link(section.label,
+                      #   to: "#",
+                      #   class: "usa-step-indicator__segment-label",
+                      #   disabled: true,
+                      #   aria: [disabled: true]
+                      # )
+                    end
+                  end
+              end
+            ]
           end)
         ]
       end
@@ -632,7 +649,7 @@ defmodule Web.ChallengeView do
     link("Remove update",
       to: Routes.challenge_path(conn, :remove_announcement, challenge.id),
       method: :post,
-      class: "usa button usa-button--secondary",
+      class: "usa-button usa-button--secondary",
       data: [confirm: "Are you sure you want to remove this update?"]
     )
   end

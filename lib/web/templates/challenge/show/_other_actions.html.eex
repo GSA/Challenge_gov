@@ -1,5 +1,5 @@
-<div class="card">
-  <div class="card-body">
+<div class="usa-card__container">
+  <div class="usa-card__body">
     <h4>Other actions</h4>
    <ul class="usa-button-group">
      <li class="usa-button-group__item">
@@ -37,7 +37,7 @@
 
       <%= if Challenges.is_published?(@challenge) do %>
       <li class="usa-button-group__item">
-       <%= link("Add/Edit announcement", to: "#", class: "usa-button", "data-bs-toggle": "modal", "data-bs-target": "#announcement-modal") %>
+       <%= link("Add/Edit announcement", to: "#announcement-modal", class: "usa-button", "data-open-modal": "true", "aria-controls": "announcement-modal") %>
       </li>
       <% end %>
     </ul>

@@ -18,8 +18,8 @@
 
   <section class="content">
     <div class="container-fluid">
-      <div class="card">
-        <div class="card-body">
+      <div class="usa-card__container">
+        <div class="usa-card__body">
           <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
             <%= hidden_input(f, :context, value: @changeset.changes.context) %>
             <%= FormView.select_field(f, :context_id, collection: Enum.map(@challenges, &{&1.title, &1.id}), label: "Select your challenge", required: true) %>
@@ -27,22 +27,28 @@
             <div class="form-group">
               <label class="col">Send message to</label>
               <div class="col">
-                <%= label do %>
-                  <%= radio_button(f, :audience, "challenge_managers", class: "me-2", required: true) %>
+              <div class="usa-radio">
+                <%= radio_button(f, :audience, "challenge_managers", class: "usa-radio__input", required: true) %>
+                <%= label for: "message_context_audience_challenge_managers", class: "usa-radio__label" do %>
                   Challenge managers of this challenge
                 <% end %>
               </div>
-              <div class="col">
-                <%= label do %>
-                  <%= radio_button(f, :audience, "all", class: "me-2", required: true) %>
-                  All members of this challenge
-                <% end %>
               </div>
               <div class="col">
-                <%= label do %>
-                  <%= radio_button(f, :audience, "individual", class: "me-2", required: true) %>
+              <div class="usa-radio">
+                <%= radio_button(f, :audience, "all", class: "usa-radio__input", required: true) %>
+                <%= label for: "message_context_audience_all", class: "usa-radio__label" do %>
+                  All members of this challenge
+                <% end %>
+               </div>
+              </div>
+              <div class="col">
+              <div class="usa-radio">
+                <%= radio_button(f, :audience, "individual", class: "usa-radio__input", required: true) %>
+                <%= label for: "message_context_audience_individual", class: "usa-radio__label" do %>
                   Individual solver of this challenge
                 <% end %>
+               </div>
               </div>
             </div>
             <hr/>

@@ -12,7 +12,7 @@ use Mix.Config
 config :challenge_gov, Web.Endpoint,
   http: [:inet4, port: System.get_env("PORT") || 4000],
   url: [host: System.get_env("HOST"), scheme: "https", port: 443],
-  force_ssl: [rewrite_on: [:x_forwarded_proto], hsts: true, host: nil],
+  force_ssl: [rewrite_on: [:x_forwarded_proto], hsts: true, preload: true, host: nil],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 

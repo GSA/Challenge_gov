@@ -1,17 +1,17 @@
 <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
-  <div class="card-body">
+  <div class="usa-card__body">
     <div>
       <div>
         <%= challenge_manager_field(f, @user, @action) %>
         <%= challenge_managers_field(f, @user, @changeset, @action) %>
         <%= challenge_status_field(f, @user, @action) %>
-        <%= FormView.file_field(f, :logo, label: "Logo") do %>
+        <%= FormView.file_field(f, :logo, label: "Logo",  class: "") do %>
           <%= if @data.logo_key do %>
             <p>Current Logo:</p>
             <%= logo_img(@data, height: 100) %>
           <% end %>
         <% end %>
-        <%= FormView.file_field(f, :winner_image, label: "Winner Image") do %>
+        <%= FormView.file_field(f, :winner_image, label: "Winner Image", class: "") do %>
           <%= if @data.winner_image_key do %>
             <p>Current Winner Image:</p>
             <%= winner_img(@data, height: 100) %>
@@ -190,7 +190,7 @@
 
   <!-- Congressional Reporting -->
 
-  <div class="card-footer">
+  <div class="usa-card__footer">
     <%= submit("Submit", class: "usa-button pull-right") %>
   </div>
 <% end) %>

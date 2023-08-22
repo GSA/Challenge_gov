@@ -1,11 +1,11 @@
 <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
   <%= hidden_input(f, :parent_id, value: @parent_id) %>
-  <div class="card-body">
+  <div class="usa-card__body">
     <%= FormView.text_field(f, :name, label: "Name", required: true) %>
 
     <%= FormView.text_field(f, :acronym, label: "Acronym", required: true) %>
 
-    <%= FormView.file_field(f, :avatar, label: "Logo") do %>
+    <%= FormView.file_field(f, :avatar, label: "Logo", class: "") do %>
       <%= if @data.avatar_key do %>
         <p>Current Logo:</p>
         <%= AgencyView.avatar_img(@data, height: 100) %>
@@ -13,7 +13,7 @@
     <% end %>
   </div>
 
-  <div class="card-footer">
+  <div class="usa-card__footer">
     <%= submit("Submit", class: "usa-button pull-right") %>
   </div>
 <% end) %>
