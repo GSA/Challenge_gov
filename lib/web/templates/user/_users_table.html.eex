@@ -1,10 +1,9 @@
 <section class="content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-9">
-        <div class="usa-card__container">
-          <div class="table-responsive">
-            <table class="table table-striped">
+      <div class="col-md-12">
+        <div dclass="usa-card__container padding-3">
+            <table class="usa-table">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -39,7 +38,6 @@
                 <% end %>
               </tbody>
             </table>
-          </div>
         </div>
       </div>
     </div>

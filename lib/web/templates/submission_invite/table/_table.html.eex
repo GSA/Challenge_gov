@@ -2,13 +2,11 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <div class="usa-card__container">
-          <div class="table-responsive">
-            <table class="table table-striped">
+        <div dclass="usa-card__container">
+            <table class="usa-table">
               <%= render Web.SubmissionInviteView, "table/_header.html", conn: @conn, phase: @phase %>
               <%= render Web.SubmissionInviteView, "table/_content.html", conn: @conn, phase: @phase, submissions: @submissions%>
             </table>
-          </div>
         </div>
       </div>
     </div>
