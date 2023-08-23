@@ -22,7 +22,7 @@
 
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
-            <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-expanded="true">
+            <a class="nav-link"  href="#" aria-expanded="true">
               <span><%= u.email %></span>
             </a>
             <div class="dropdown-content padding-2 float-right" style="min-width:280px">
