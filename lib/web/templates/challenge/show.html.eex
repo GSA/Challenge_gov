@@ -18,8 +18,8 @@
 
 <section class="content">
   <div class="container-fluid">
-    <div class="grid-row challenge-show-actions padding-bottom-1">
-      <div class="grid-col-6">
+    <div class="row challenge-show-actions margin-1">
+      <div class="col-md-6">
         <%= render Web.ChallengeView, "show/_status_actions.html", conn: @conn, challenge: @challenge, user: @user %>
       </div>
       <div class="grid-col-6">

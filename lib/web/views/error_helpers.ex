@@ -52,7 +52,7 @@ defmodule Web.ErrorHelpers do
 
   def all_errors(%{errors: errors}) when is_list(errors) and length(errors) > 0 do
     content_tag(:ul,
-      class: "usa-alert usa-alert--danger usa-alert--no-icon",
+      class: "usa-alert usa-alert--error usa-alert--no-icon",
       style: "list-style: none"
     ) do
       Enum.map(errors, fn {error_key, {error_msg, _}} ->

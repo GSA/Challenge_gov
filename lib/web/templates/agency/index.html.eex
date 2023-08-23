@@ -24,9 +24,8 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-        <div class="usa-card__container">
-          <div class="table-responsive">
-            <table class="table table-striped">
+        <div dclass="usa-card__container">
+            <table class="usa-table">
               <thead>
                 <tr>
                   <th>ID</th>

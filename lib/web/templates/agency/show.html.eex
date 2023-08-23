@@ -18,8 +18,8 @@
 
 <section class="content">
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
+    <div class="grid-row padding-1">
+      <div class="grid-col-12">
         <div class="usa-card__container">
           <div class="usa-card__header clear-after d-flex justify-content-between">
             <h3 class="usa-card__heading font-weight-bold align-self-center">Agency Details</h3>
@@ -58,8 +58,8 @@
     </div>
 
     <%= if !@agency.parent do %>
-      <div class="row">
-        <div class="col-md-12">
+      <div class="grid-row padding-1">
+        <div class="grid-col-12">
           <div class="usa-card__container">
             <div class="usa-card__header clear-after d-flex justify-content-between">
               <h3 class="usa-card__heading align-self-center">Agency Component</h3>
@@ -81,8 +81,8 @@
       </div>
   <% end %>
 
-    <div class="row">
-      <div class="col-md-12">
+    <div class="grid-row padding-1">
+      <div class="grid-col-12">
         <div class="usa-card__container">
           <div class="usa-card__header">
             <h3 class="usa-card__heading">Is a lead agency for these challenges</h3>
@@ -98,8 +98,8 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-12">
+    <div class="grid-row padding-1">
+      <div class="grid-col-12">
         <div class="usa-card__container">
           <div class="usa-card__header">
             <h3 class="usa-card__heading">Is a federal partner for these challenges</h3>

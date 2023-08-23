@@ -21,9 +21,8 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="usa-card__container">
-          <div class="table-responsive">
-            <table class="table table-striped">
+        <div dclass="usa-card__container padding-2">
+            <table class="usa-table">
               <thead>
                 <tr>
                   <%= sortable_managed_header(@conn, @challenge, @phase, @sort, @filter, "id", "ID") %>
