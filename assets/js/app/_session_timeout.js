@@ -12,46 +12,6 @@ if ($("#session_timeout").length > 0) {
   //   </div>`
   // )
 
-  $(".wrapper").prepend(
-    `
-    <a href="#renew-modal" style="display:none;" id="newModal" class="usa-button" aria-controls="renew-modal" data-open-modal>Open default modal</a>
-
-    <div
-    class="usa-modal"
-    id="renew-modal"
-    aria-labelledby="modal-1-heading"
-    aria-describedby="modal-1-description"
-  >
-    <div class="usa-modal__content">
-      <div class="usa-modal__main">
-        <h2 class="usa-modal__heading" id="modal-1-heading">
-          Session expire
-        </h2>
-        <div class="usa-prose">
-          <p id="modal-1-description">
-              Your session will expire in <span id="countdown"></span><br>
-              Please click below if you would like to continue.
-          </p>
-        </div>
-        <div class="usa-modal__footer">
-           <button class="usa-button modal-btn" id="renew" data-close-modal type="button">Renew Session</button>
-        </div>
-      </div>
-      <button
-        type="button"
-        class="usa-button usa-modal__close"
-        aria-label="Close this window"
-        data-close-modal
-      >
-        <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
-          <use xlink:href="/assets/img/sprite.svg#close"></use>
-        </svg>
-      </button>
-    </div>
-  </div>
-    `
-  )
-
   let renewModal = $("#renew-modal")
 
   // When the renew button is clicked renew session and fetch new timeout then close modal
