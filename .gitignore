@@ -45,6 +45,9 @@ yarn.lock
 
 /tmp/import_output/
 
+# Images from USWDS / Images copied at build time 
+/assets/static/images/uswds
+
 # Files matching config/*.secret.exs pattern contain sensitive
 # data and you should not commit them into version control.
 #
