@@ -28,8 +28,8 @@
     <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
   </head>
 
-  <body class="hold-transition sidebar-collapse sidebar-mini">
-    <div class="wrapper usa-prose">
+  <body class="hold-transition dsidebar-collapse dsidebar-mini">
+    <div class="wrapper">
         <%= @inner_content %>
     </div>
 
