@@ -133,7 +133,7 @@ defmodule Web.SharedView do
   def render_breadcrumbs(breadcrumbs) do
     content_tag :div, class: "row mb-2" do
       content_tag :div, class: "col" do
-        content_tag :nav, class: "usa-breadcrumb", style: "background:#f4f6f9;" do
+        content_tag :nav, class: "usa-breadcrumb padding-top-1", style: "background:#f4f6f9;" do
           maybe_truncate_breadcrumbs(breadcrumbs)
         end
       end
