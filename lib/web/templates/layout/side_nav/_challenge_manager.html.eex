@@ -2,18 +2,18 @@
   <ul class="usa-sidenav usa-icon-list--size-lg">
     <li class="usa-sidenav__item">
       <%= link(to: Routes.dashboard_path(@conn, :index), class: "#{tab_selected(@conn, "dashboard")}")  do %>
-        <span class="padding-left-1">Dashboard</span>
-         <svg class="usa-icon usa-challenge-menu float-left" aria-hidden="true" focusable="false" role="img">
+         <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
            <use xlink:href="/assets/img/sprite.svg#grid_view"></use>
          </svg>
+        <span class="padding-left-1">Dashboard</span>
       <% end %>
     </li>
     <li class="usa-sidenav__item">
       <%= link(to: Routes.challenge_path(@conn, :index), class: "#{tab_selected(@conn, "challenges")}") do %>
-        <span class="padding-left-1">Challenges</span>
-        <svg class="usa-icon usa-challenge-menu float-left" aria-hidden="true" focusable="false" role="img">
+        <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
           <use xlink:href="/assets/img/sprite.svg#emoji_events"></use>
         </svg>
+        <span class="padding-left-1">Challenges</span>
       <% end %>
     </li>
   </ul>
@@ -23,18 +23,18 @@
     <%= render_message_center_icon(@conn, @user) %>
     <li class="usa-sidenav__item">
       <%= link(to: Routes.analytics_path(@conn, :index), class: "#{tab_selected(@conn, "analytics")}") do %>
-      <span class="padding-left-1">Analytics</span>
-      <svg class="usa-icon usa-challenge-menu float-left" aria-hidden="true" focusable="false" role="img">
+      <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#assessment"></use>
       </svg>
+      <span class="padding-left-1">Analytics</span>
       <% end %>
     </li>
     <li class="usa-sidenav__item">
       <%= link(to: Routes.help_path(@conn, :index), class: "#{tab_selected(@conn, "help")}") do %>
-        <span class="padding-left-1">Help</span>
-        <svg class="usa-icon usa-challenge-menu float-left" aria-hidden="true" focusable="false" role="img">
+        <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#help"></use>
         </svg>
+        <span class="padding-left-1">Help</span>
       <% end %>
     </li>
   </ul>

@@ -31,6 +31,11 @@ a {
   }
 }
 
+.usa-challenge-menu {
+  height: 25px;
+  width: 25px;
+}
+
 .usa-breadcrumb__list-item:not(:last-child)::after {
   background: 0 0;
   background-color: #757575;
