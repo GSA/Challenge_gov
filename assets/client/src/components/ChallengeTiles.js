@@ -157,7 +157,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
 
   const renderHeader = () => (
-    <h2 className="mb-5">
+    <h2 className="usa-margin-bottom-5">  
       {isArchived ? "Archived Challenges" : "Filter by open/active challenges."}
     </h2>
   );
