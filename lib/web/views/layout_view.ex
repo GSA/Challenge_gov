@@ -46,7 +46,7 @@ defmodule Web.LayoutView do
   def tab_selected(conn, "dashboard") do
     case conn.path_info == [] do
       true ->
-        "icon-active"
+        "usa-current"
 
       false ->
         ""
@@ -56,19 +56,19 @@ defmodule Web.LayoutView do
   def tab_selected(conn, route) do
     case conn.path_info do
       ["admin", ^route] ->
-        "icon-active"
+        "usa-current"
 
       ["admin", ^route, _] ->
-        "icon-active"
+        "usa-current"
 
       [^route] ->
-        "icon-active"
+        "usa-current"
 
       [^route, _, _, _] ->
-        "icon-active"
+        "usa-current"
 
       [^route, _] ->
-        "icon-active"
+        "usa-current"
 
       _ ->
         ""
@@ -76,8 +76,8 @@ defmodule Web.LayoutView do
   end
 
   def render_message_center_icon(conn, user) do
-    nav_item_classes = "nav-item"
-    link_classes = "nav-link #{tab_selected(conn, "messages")}"
+    nav_item_classes = "usa-sidenav__item"
+    link_classes = "#{tab_selected(conn, "messages")}"
     has_messages? = MessageContextStatuses.has_messages?(user)
     has_unread_messages? = MessageContextStatuses.has_unread_messages?(user)
 
@@ -98,16 +98,32 @@ defmodule Web.LayoutView do
       link to: route, class: link_classes do
         [
           with_message(has_unread_messages?),
-          content_tag(:p, "Message Center")
+          content_tag(:span, "Message Center", class: "padding-left-1")
         ]
       end
     end
   end
 
-  defp with_message(true),
-    do: content_tag(:i, "", class: "nav-icon fas fa-envelope", style: "color: #C64A22;")
+  def with_message(true) do
+    content_tag :svg,
+      class: "usa-icon usa-challenge-menu",
+      "aria-hidden": "true",
+      focusable: "false",
+      role: "img",
+      style: "color: #C64A22;" do
+      content_tag(:use, "", href: "/assets/img/sprite.svg#mail")
+    end
+  end
 
-  defp with_message(false), do: content_tag(:i, "", class: "nav-icon fas fa-envelope-open")
+  def with_message(false) do
+    content_tag :svg,
+      class: "usa-icon usa-challenge-menu",
+      "aria-hidden": "true",
+      focusable: "false",
+      role: "img" do
+      content_tag(:use, "", href: "/assets/img/sprite.svg#mail")
+    end
+  end
 
   def load_filter_panel(conn, view_module) do
     # credo:disable-for-previous-line

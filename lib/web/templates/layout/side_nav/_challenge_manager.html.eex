@@ -1,32 +1,40 @@
-<nav class="mt-2">
-  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-    <li class="nav-item">
-      <%= link(to: Routes.dashboard_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "dashboard")}")  do %>
-        <i class="nav-icon fa fa-th-large"></i>
-        <p>Dashboard</p>
+<nav class="margin-top-2">
+  <ul class="usa-sidenav usa-icon-list--size-lg">
+    <li class="usa-sidenav__item">
+      <%= link(to: Routes.dashboard_path(@conn, :index), class: "#{tab_selected(@conn, "dashboard")}")  do %>
+         <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
+           <use xlink:href="/assets/img/sprite.svg#grid_view"></use>
+         </svg>
+        <span class="padding-left-1">Dashboard</span>
       <% end %>
     </li>
-    <li class="nav-item">
-      <%= link(to: Routes.challenge_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "challenges")}") do %>
-        <i class="nav-icon fas fa-award"></i>
-        <p>Challenges</p>
+    <li class="usa-sidenav__item">
+      <%= link(to: Routes.challenge_path(@conn, :index), class: "#{tab_selected(@conn, "challenges")}") do %>
+        <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
+          <use xlink:href="/assets/img/sprite.svg#emoji_events"></use>
+        </svg>
+        <span class="padding-left-1">Challenges</span>
       <% end %>
     </li>
   </ul>
 </nav>
-<nav class="mt-5">
-  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+<nav class="margin-top-4">
+  <ul class="usa-sidenav">
     <%= render_message_center_icon(@conn, @user) %>
-    <li class="nav-item">
-      <%= link(to: Routes.analytics_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "analytics")}") do %>
-      <i class="nav-icon fas fa-chart-bar"></i>
-      <p>Analytics</p>
+    <li class="usa-sidenav__item">
+      <%= link(to: Routes.analytics_path(@conn, :index), class: "#{tab_selected(@conn, "analytics")}") do %>
+      <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
+        <use xlink:href="/assets/img/sprite.svg#assessment"></use>
+      </svg>
+      <span class="padding-left-1">Analytics</span>
       <% end %>
     </li>
-    <li class="nav-item">
-      <%= link(to: Routes.help_path(@conn, :index), class: "nav-link #{tab_selected(@conn, "help")}") do %>
-        <i class="nav-icon fas fa-question-circle"></i>
-        <p>Help</p>
+    <li class="usa-sidenav__item">
+      <%= link(to: Routes.help_path(@conn, :index), class: "#{tab_selected(@conn, "help")}") do %>
+        <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
+        <use xlink:href="/assets/img/sprite.svg#help"></use>
+        </svg>
+        <span class="padding-left-1">Help</span>
       <% end %>
     </li>
   </ul>
