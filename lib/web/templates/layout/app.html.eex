@@ -29,7 +29,7 @@
           </nav>
         </div>
       </header>
-
+      <% end %>
 
       <div class="grid-row grid-gap">
       <div class="grid-col-2">
@@ -37,35 +37,35 @@
       <% nil -> %>
       <% u -> %>
 
-      <%= if view_module(@conn) != Web.TermsController and view_module(@conn) != Web.TermsView and view_module(@conn) != Web.AccessView do %>
-        <div class="challenge_sidebar padding-left-2">
+        <%= if view_module(@conn) != Web.TermsController and view_module(@conn) != Web.TermsView and view_module(@conn) != Web.AccessView do %>
+          <div class="challenge_sidebar padding-left-2">
 
-          <nav aria-label="Side navigation,">
-           <ul class="usa-sidenav">
-            <li class="usa-sidenav__item">
-              <a href="https://www.challenge.gov" class="brand-link">
-                <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
-                  <use xlink:href="/assets/img/sprite.svg#home"></use>
-                </svg>
-                <span class="padding-left-1">Challenge.gov</span>
-              </a>
-            </li>
-           </ul>
-         </nav>
+            <nav aria-label="Side navigation,">
+            <ul class="usa-sidenav">
+              <li class="usa-sidenav__item">
+                <a href="https://www.challenge.gov" class="brand-link">
+                  <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
+                    <use xlink:href="/assets/img/sprite.svg#home"></use>
+                  </svg>
+                  <span class="padding-left-1">Challenge.gov</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
 
-              <%= if Accounts.role_at_or_below(u, "solver") do %>
-                <%= render Web.LayoutView, "side_nav/_solver.html", conn: @conn, user: u %>
-              <% end %>
-              <%= if ChallengeGov.Accounts.is_challenge_manager?(u) do %>
-                <%= render Web.LayoutView, "side_nav/_challenge_manager.html", conn: @conn, user: u %>
-              <% end %>
-              <%= if ChallengeGov.Accounts.has_admin_access?(u) do %>
-                <%= render Web.LayoutView, "side_nav/_admin.html", conn: @conn, user: u %>
-              <% end %>
+                <%= if Accounts.role_at_or_below(u, "solver") do %>
+                  <%= render Web.LayoutView, "side_nav/_solver.html", conn: @conn, user: u %>
+                <% end %>
+                <%= if ChallengeGov.Accounts.is_challenge_manager?(u) do %>
+                  <%= render Web.LayoutView, "side_nav/_challenge_manager.html", conn: @conn, user: u %>
+                <% end %>
+                <%= if ChallengeGov.Accounts.has_admin_access?(u) do %>
+                  <%= render Web.LayoutView, "side_nav/_admin.html", conn: @conn, user: u %>
+                <% end %>
 
-         <% end %>
-        </div>
-      <% end %>
+          </div>
+        <% end %>
+       <% end %>
       </div>  <!-- end of menu -->
       <div class="grid-col-10" style="background:#f4f6f9;">
       <div class="usa-section padding-top-1 minh-tablet-lg">
@@ -95,14 +95,6 @@
               </p>
              </div>
             </div>
-            <!-- div class="usa-alert usa-alert--success">
-              <div class="usa-alert__body">
-                <h4 class="usa-alert__heading">Success status</h4>
-                <p class="usa-alert__text">
-                  <%= get_flash(@conn, :info) %>
-                </p>
-              </div>
-            </div -->
           </div>
         <% end %>
 
@@ -134,7 +126,7 @@
 
       </div>
       <aside class="control-sidebar control-sidebar-light">
-        <div class="p-3">
+        <div class="padding-2">
           <%= if load_filter_panel(@conn, view_module(@conn)) do %>
           <%= render view_module(@conn), "_filter.html", conn: @conn, user: @user, filter: @filter, sort: @sort %>
           <% end%>
