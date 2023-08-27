@@ -19,7 +19,7 @@
     <li class="usa-sidenav__item">
       <%= link(to: Routes.challenge_path(@conn, :index), class: "#{tab_selected(@conn, "challenges")}") do %>
         <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#bookmark"></use>
+        <use xlink:href="/assets/img/sprite.svg#emoji_events"></use>
         </svg>
         <span class="padding-left-1">Challenges</span>
       <% end %>
@@ -42,7 +42,7 @@
       <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#list"></use>
       </svg>
-      <span class="padding-left-1">Site Management</span>
+      <span class="padding-left-1">Site Admin</span>
       <% end %>
     </li>
   </ul>
