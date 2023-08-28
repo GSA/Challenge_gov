@@ -66,11 +66,15 @@ defmodule Web.UserView do
 
     if after? || status == "decertified" do
       ~E"""
-        <span style="color:#B50808"><i class="fas fa-shield-alt"></i>&nbsp;Decertified</span>
+        <span style="color:#B50808"><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+        <use xlink:href="/assets/img/sprite.svg#shield"></use>
+      </svg>&nbsp;Decertified</span>
       """
     else
       ~E"""
-        <span style="color:#4D8055"><i class="fas fa-shield-alt"></i>&nbsp;Certified</span>
+        <span style="color:#4D8055"><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+        <use xlink:href="/assets/img/sprite.svg#shield"></use>
+      </svg>&nbsp;Certified</span>
       """
     end
   end
@@ -100,31 +104,43 @@ defmodule Web.UserView do
 
   def status("active"),
     do: ~E"""
-     <span style="color:#4D8055"><span><i class="fas fa-user-circle"></i>&nbsp;</span>Active</span>
+     <span style="color:#4D8055"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+     <use xlink:href="/assets/img/sprite.svg#person"></use>
+   </svg>&nbsp;</span>Active</span>
     """
 
   def status("pending"),
     do: ~E"""
-     <span style="color:#E5A002"><span><i class="fas fa-user-circle"></i>&nbsp;</span>Pending</span>
+     <span style="color:#E5A002"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+     <use xlink:href="/assets/img/sprite.svg#person"></use>
+   </svg>&nbsp;</span>Pending</span>
     """
 
   def status("deactivated"),
     do: ~E"""
-     <span style="color:#B50808"><span><i class="fas fa-user-circle"></i>&nbsp;</span>Deactivated</span>
+     <span style="color:#B50808"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+     <use xlink:href="/assets/img/sprite.svg#person"></use>
+   </svg>&nbsp;</span>Deactivated</span>
     """
 
   def status("decertified"),
     do: ~E"""
-     <span style="color:#B50808"><span><i class="fas fa-user-circle"></i>&nbsp;</span>Decertified</span>
+     <span style="color:#B50808"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+     <use xlink:href="/assets/img/sprite.svg#person"></use>
+   </svg>&nbsp;</span>Decertified</span>
     """
 
   def status("suspended"),
     do: ~E"""
-     <span style="color:#E5A000"><span><i class="fas fa-user-circle"></i>&nbsp;</span>Suspended</span>
+     <span style="color:#E5A000"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+     <use xlink:href="/assets/img/sprite.svg#person"></use>
+   </svg>&nbsp;</span>Suspended</span>
     """
 
   def status("revoked"),
     do: ~E"""
-     <span style="color:#B50808"><span><i class="fas fa-user-circle"></i>&nbsp;</span>Revoked</span>
+     <span style="color:#B50808"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+     <use xlink:href="/assets/img/sprite.svg#person"></use>
+   </svg>&nbsp;</span>Revoked</span>
     """
 end

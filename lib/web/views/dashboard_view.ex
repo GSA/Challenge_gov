@@ -127,7 +127,7 @@ defmodule Web.DashboardView do
       render("_card_link.html",
         to: Routes.message_context_path(Endpoint, :index),
         target: "",
-        icon: content_tag(:i, "", class: "dashboard-card-icon fas fa-envelope"),
+        icon: my_icon("mail"),
         title: "Message Center",
         description: "View and send messages to Challenge.Gov users."
       )
