@@ -6,7 +6,6 @@
               <%= render Web.SiteContentView, "table/_header.html", conn: @conn, user: @user, filter: @filter, sort: @sort, sortable: @sortable %>
               <%= render Web.SiteContentView, "table/_content.html", conn: @conn, user: @user, site_content: @site_content %>
             </table>
-
           <%= Web.SharedView.pagination(path: Routes.site_content_path(@conn, :index, filter: @filter, sort: @sort), pagination: @pagination) %>
       </div>
     </div>
