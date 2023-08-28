@@ -106,41 +106,41 @@ defmodule Web.UserView do
     do: ~E"""
      <span style="color:#4D8055"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
-   </svg>&nbsp;</span>Active</span>
+    </svg>&nbsp;</span>Active</span>
     """
 
   def status("pending"),
     do: ~E"""
      <span style="color:#E5A002"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
-   </svg>&nbsp;</span>Pending</span>
+    </svg>&nbsp;</span>Pending</span>
     """
 
   def status("deactivated"),
     do: ~E"""
      <span style="color:#B50808"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
-   </svg>&nbsp;</span>Deactivated</span>
+    </svg>&nbsp;</span>Deactivated</span>
     """
 
   def status("decertified"),
     do: ~E"""
      <span style="color:#B50808"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
-   </svg>&nbsp;</span>Decertified</span>
+    </svg>&nbsp;</span>Decertified</span>
     """
 
   def status("suspended"),
     do: ~E"""
      <span style="color:#E5A000"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
-   </svg>&nbsp;</span>Suspended</span>
+    </svg>&nbsp;</span>Suspended</span>
     """
 
   def status("revoked"),
     do: ~E"""
      <span style="color:#B50808"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
-   </svg>&nbsp;</span>Revoked</span>
+    </svg>&nbsp;</span>Revoked</span>
     """
 end
