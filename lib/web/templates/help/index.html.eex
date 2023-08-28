@@ -27,15 +27,17 @@
           <h3 class="text-center mb-4 font-weight-bold">Getting started</h3>
           <div class="d-flex flex-row justify-content-around mt-4 help-page__getting-started-content">
             <div class="text-center help-card__section">
-              <i class="dashboard-card-icon fa fa-question-circle"></i>
+              <svg class="usa-icon dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
+                <use xlink:href="/assets/img/sprite.svg#help"></use>
+              </svg>
               <h4 class="m-4">FAQs</h4>
               <p>Check out our <%= link("frequently asked questions", to: Routes.static_path(@conn, "/pdfs/challenge_manager_faq.pdf"), target: "_blank") %> on challenge and submission management.</p>
             </div>
             <span class="vr-light">&nbsp;</span>
             <div class="text-center help-card__section">
-              <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#local_library"></use>
-      </svg>
+              <svg class="usa-icon dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
+                <use xlink:href="/assets/img/sprite.svg#local_library"></use>
+              </svg>
               <h4 class="m-4">User Guide</h4>
               <p>Our <%= link("User guide", to: Routes.static_path(@conn, "/pdfs/challenge_manager_user_guide.pdf"), target: "_blank") %> is full of useful information on how to get started.</p>
             </div>
@@ -57,7 +59,9 @@
         <div class="card help-card p-4 my-5 mx-auto help-page__toolkit-section">
           <div class="d-flex flex-row py-4">
             <div class="help-card-icon text-center w-25 left-section">
-              <i class="align-self-center fa fa-tools"></i>
+              <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+                <use xlink:href="/assets/img/sprite.svg#construction"></use>
+              </svg>
             </div>
             <div class="w-50 mx-5 my-auto right-section">
               <h3 class="mb-4 font-weight-bold">Federal employee toolkit</h3>

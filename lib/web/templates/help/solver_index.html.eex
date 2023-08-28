@@ -27,13 +27,17 @@
           <h3 class="text-center mb-4 font-weight-bold">Getting started</h3>
           <div class="d-flex flex-row justify-content-around mt-4 help-page__getting-started-content">
             <div class="text-center help-card__section">
-              <i class="dashboard-card-icon fa fa-question-circle"></i>
+              <svg class="usa-icon dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
+                <use xlink:href="/assets/img/sprite.svg#help"></use>
+              </svg>
               <h4 class="m-4">FAQs</h4>
               <p>Check out our <%= link("frequently asked questions", to: "https://www.challenge.gov/public-innovator-faqs/", target: "_blank") %> on prize competitions and crowdsourcing, and use of the Challenge.Gov platform.</p>
             </div>
             <span class="vr-light">&nbsp;</span>
             <div class="text-center help-card__section">
-              <i class="dashboard-card-icon fa fa-tools"></i>
+              <svg class="usa-icon  dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
+                <use xlink:href="/assets/img/sprite.svg#construction"></use>
+              </svg>
               <h4 class="m-4">User Guide</h4>
               <p>Our <%= link("user guide", to: "https://www.challenge.gov/user-guide/", target: "_blank") %> is full of useful information to help you get started.</p>
             </div>
