@@ -36,7 +36,6 @@
       <%= case current_user(@conn) do %>
       <% nil -> %>
       <% u -> %>
-
         <%= if view_module(@conn) != Web.TermsController and view_module(@conn) != Web.TermsView and view_module(@conn) != Web.AccessView do %>
           <div class="challenge_sidebar padding-left-2">
 
