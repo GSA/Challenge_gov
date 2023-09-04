@@ -21,24 +21,23 @@
 
 <section class="content help-page">
   <div class="container-fluid">
-    <div class="grid-row">
-      <div class="grid-col-12">
-        <div class="usa-card help-card padding-4 my-5 mx-auto">
-          <div class="usa-card__container">
-          <h2 class="text-center margin-bottom-4 font-weight-bold">Getting started</h2>
-          <div class="grid-row  margin-top-4 help-page__getting-started-content">
-            <div class="text-center grid-col-6 dhelp-card__section padding-6">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card help-card p-4 my-5 mx-auto">
+          <h3 class="text-center mb-4 font-weight-bold">Getting started</h3>
+          <div class="d-flex flex-row justify-content-around mt-4 help-page__getting-started-content">
+            <div class="text-center help-card__section">
               <svg class="usa-icon dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
                 <use xlink:href="/assets/img/sprite.svg#help"></use>
               </svg>
-              <h4 class="margin-4">FAQs</h4>
+              <h4 class="m-4">FAQs</h4>
               <p>Check out our <%= link("frequently asked questions", to: Routes.static_path(@conn, "/pdfs/challenge_manager_faq.pdf"), target: "_blank") %> on challenge and submission management.</p>
             </div>
             <span class="vr-light">&nbsp;</span>
             <div class="text-center help-card__section">
-              <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#local_library"></use>
-      </svg>
+              <svg class="usa-icon dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
+                <use xlink:href="/assets/img/sprite.svg#local_library"></use>
+              </svg>
               <h4 class="m-4">User Guide</h4>
               <p>Our <%= link("User guide", to: Routes.static_path(@conn, "/pdfs/challenge_manager_user_guide.pdf"), target: "_blank") %> is full of useful information on how to get started.</p>
             </div>

@@ -30,7 +30,7 @@
               <svg class="usa-icon dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
                 <use xlink:href="/assets/img/sprite.svg#help"></use>
               </svg>
-              <h3 class="m-4">FAQs</h3>
+              <h4 class="m-4">FAQs</h4>
               <p>Check out our <%= link("frequently asked questions", to: "https://www.challenge.gov/public-innovator-faqs/", target: "_blank") %> on prize competitions and crowdsourcing, and use of the Challenge.Gov platform.</p>
             </div>
             <span class="vr-light">&nbsp;</span>
@@ -38,7 +38,7 @@
               <svg class="usa-icon  dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
                 <use xlink:href="/assets/img/sprite.svg#construction"></use>
               </svg>
-              <h3 class="m-4">User Guide</h3>
+              <h4 class="m-4">User Guide</h4>
               <p>Our <%= link("user guide", to: "https://www.challenge.gov/user-guide/", target: "_blank") %> is full of useful information to help you get started.</p>
             </div>
           </div>

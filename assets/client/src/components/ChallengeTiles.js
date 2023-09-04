@@ -443,6 +443,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       <section id="active-challenges" className="cards__section" tabIndex="-1">
         <div className="container">
           {renderHeader()}
+          
           {renderYearFilter()}
         </div>
 
