@@ -132,7 +132,7 @@
       <%= @inner_content %>
 
       </div>
-      <aside class="control-sidebar control-sidebar-light">
+      <aside class="control-sidebar control-sidebar-light border">
         <div class="padding-2">
           <%= if load_filter_panel(@conn, view_module(@conn)) do %>
           <%= render view_module(@conn), "_filter.html", conn: @conn, user: @user, filter: @filter, sort: @sort %>
