@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import moment from "moment"
 import { stripHtml } from "string-strip-html";
-import { Tooltip } from 'reactstrap'
+import { Tooltip } from 'reactstrap';
 import NumberFormat from 'react-number-format';
 
 import { ChallengeTabs } from "../components/ChallengeTabs"
@@ -65,9 +65,25 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
   const renderFollowButton = (challenge) => {
     if (challenge.subscriber_count > 0) {
-      return <span className="details__btn"><i className="far fa-bookmark me-2"></i>Follow challenge ({ challenge.subscriber_count })</span>
+      return (
+        <span className="details__btn">
+            <svg className="usa-icon" aria-hidden="true" focusable="false" role="img" style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
+                <title id="follow-challenges">ChallengeGov follow challenges</title>         
+                <use xlinkHref="/assets/uswds/img/sprite.svg#bookmark"></use>
+            </svg> 
+            Follow challenge ({ challenge.subscriber_count })
+       </span>
+      )
     } else {
-      return <span className="details__btn"><i className="far fa-bookmark me-2"></i>Follow challenge</span>
+      return (
+        <span className="details__btn">
+            <svg className="usa-icon" aria-hidden="true" focusable="false" role="img" style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
+                <title id="follow-challenges">ChallengeGov follow challenges</title>         
+                <use xlinkHref="/assets/uswds/img/sprite.svg#bookmark"></use>
+            </svg> 
+            Follow challenge
+        </span>
+       )
     }
   }
 
@@ -236,7 +252,10 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
             }
             <div className="social-share-btn" id="shareChallengeButton" tabIndex="0">
               <span className="details__btn">
-                <i className="fas fa-share-alt me-2"></i>
+                <svg className="usa-icon" aria-hidden="true" focusable="false" role="img" style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
+                  <title id="share-challenge">ChallengeGov share challenge</title>
+                  <use xlinkHref="/assets/uswds/img/sprite.svg#share"></use>
+                </svg>
                 Share
               </span>
               <SocialSharingTooltip shareTooltipOpen={shareTooltipOpen} toggleShareTooltip={toggleShareTooltip} challenge={challenge}/>
@@ -245,7 +264,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         </>
       )
     }
-  }
+}
 
   const disableWinners = () => {
     return challengePhases.every(phase => {
@@ -294,7 +313,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
 
   return (
     (challenge && !!challengePhases) ? (
-      <div className="w-100">
+      <div className="usa-full-width">
         <section className="hero__wrapper" aria-label="Challenge overview details">
           <section className="hero__content">
             <ChallengeAnnouncement challenge={challenge} />
@@ -359,7 +378,14 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
               }
               {!print &&
                 <a className="follow__btn" href={apiUrl + `/public/previews/challenges?challenge=${challenge.uuid}&print=true`} target="_blank">
-                  <span className="details__btn"><i className="fas fa-print me-2"></i>Print challenge</span>
+                  <span className="details__btn">
+                      <svg className="usa-icon" aria-hidden="true" focusable="false" role="img"
+                           style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
+                          <title id="print-challenge">ChallengeGov print challenge</title>
+                          <use xlinkHref="/assets/uswds/img/sprite.svg#print"></use>
+                      </svg>
+                      Print challenge
+                  </span>
                 </a>
               }
             </div>

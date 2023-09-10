@@ -69,6 +69,17 @@ a {
   padding-right: 2rem;
 }
 
+/* Style for challenge tabs container */
+.usa-card {
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+  word-wrap: break-word;
+}
+
+/*.usa-card-body {
+  padding: 15px 15px 15px 15px;    
+}*/
+
 /* Style for dropdown content */
 .dropdown-content {
   display: none; /* Hidden by default */
@@ -92,6 +103,46 @@ a {
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
   display: block;
+}
+
+/*.w-100 equivalent*/
+.usa-full-width {
+  width: 100%;
+}
+
+/*.me-2 equivalent*/
+.usa-mr-one-half {
+    margin-right: 0.5rem;
+}
+
+/*.me-3 equivalent*/  
+.usa-mr-one-full {
+    margin-right: 1rem;
+}
+
+/*.ms-3 equivalent*/
+.usa-ml-one-full {
+  margin-left: 1rem;
+}
+
+/*.mb-5 equivalent*/
+.usa-mb-5rem {
+  margin-bottom: 5rem;
+}
+
+/*.m-3 equivalent */
+.usa-m-1rem {
+  margin: 1rem;
+}
+
+/*.my-3 equivalent*/
+.usa-tbm-1rem {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.padding-left-25 {
+  padding-left: 25px;
 }
 
 a.mx-3  {
@@ -253,11 +304,11 @@ a.mx-3:hover {
   font-size: 20px;
 }
 
-.winner-manage div.card-body {
+.winner-manage div.usa-card-body {
   position: relative;  
 }
 
-.winner-manage div.card-body .mng-winner-btn {
+.winner-manage div.usa-card-body .mng-winner-btn {
   position: absolute;
   bottom: 10px;
   left: 45px;
@@ -549,10 +600,11 @@ label {
   .card {
     min-height: 11rem;
   }
-  .card-body {
+  .usa-card-body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 15px 15px 15px 15px;
   }
   h4 {
     flex-grow: 1;
