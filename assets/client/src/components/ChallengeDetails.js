@@ -69,7 +69,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         <span className="details__btn">
             <svg className="usa-icon" aria-hidden="true" focusable="false" role="img" style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
                 <title id="follow-challenges">ChallengeGov follow challenges</title>         
-                <use xlinkHref="/assets/img/sprite.svg#bookmark"></use>                
+                <use xlinkHref="../img/sprite.svg#bookmark"></use>                
             </svg> 
             Follow challenge ({ challenge.subscriber_count })
        </span>
@@ -79,7 +79,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
         <span className="details__btn">
             <svg className="usa-icon" aria-hidden="true" focusable="false" role="img" style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
                 <title id="follow-challenges">ChallengeGov follow challenges</title>         
-                <use xlinkHref="/assets/img/sprite.svg#bookmark"></use>
+                <use xlinkHref="../img/sprite.svg#bookmark"></use>
             </svg> 
             Follow challenge
         </span>
@@ -254,7 +254,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
               <span className="details__btn">
                 <svg className="usa-icon" aria-hidden="true" focusable="false" role="img" style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
                   <title id="share-challenge">ChallengeGov share challenge</title>
-                  <use xlinkHref="/assets/img/sprite.svg#share"></use>
+                  <use xlinkHref="../img/sprite.svg#share"></use>
                 </svg>
                 Share
               </span>
@@ -382,7 +382,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                       <svg className="usa-icon" aria-hidden="true" focusable="false" role="img"
                            style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
                           <title id="print-challenge">ChallengeGov print challenge</title>
-                          <use xlinkHref="/assets/img/sprite.svg#print"></use>
+                          <use xlinkHref="../img/sprite.svg#print"></use>
                       </svg>
                       Print challenge
                   </span>
