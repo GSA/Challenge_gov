@@ -35,7 +35,7 @@ export const SectionResources = ({label, section, challenge}) => {
         <>
           <div className="challenge-tab__header">{label || "Additional documents"}</div>
           <hr/>
-          <section className="card challenge-tab__resources">
+          <section className="usa-card challenge-tab__resources">
             <ul>
               {renderResources()}
             </ul>

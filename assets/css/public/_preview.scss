@@ -7,11 +7,12 @@
   &__banner {
     height: 100%;
 
-    .card-body {
+    .usa-card-body {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
+      align-items: center;    
+      padding: 15px 15px 15px 15px;    
     }
   }
 }
