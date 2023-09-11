@@ -20,7 +20,7 @@
       <%= form_for(@conn, Routes.message_context_path(@conn, :index, filter: @filter), [method: :get, as: :filter], fn f -> %>
         <div class="grid-row padding-bottom-3">
           <div class="grid-col">
-            <%= render_new_message_button(@conn, @user) %><br>
+            <%= render_new_message_button(@conn, @user) %>
             <%= select(f, :challenge_id, Enum.map(@challenges, &{&1.title, &1.id}), value: @filter["challenge_id"], prompt: "Filter by challenge", class: "js-select2 message_center__challenge_filter") %>
           </div>
           <div class="grid-col text-right">

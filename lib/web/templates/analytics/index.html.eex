@@ -38,7 +38,7 @@
   <div class="grid-row analytics-counts" style="font-size: 1.5rem;">
   <div class="grid-col">
     <p>Total active</p>
-    <div class="">
+    <div class="usa-card">
       <div class="usa-card__container">
         <div class="usa-card__body" style="text-align: center; font-size: 3rem;">
           <%= @active_challenges_count %>
@@ -48,7 +48,7 @@
    </div>
 
   <div class="grid-col">
-    <div class="">
+    <div class="usa-card">
       <p>Total archived</p>
       <div class="usa-card__container">
         <div class="usa-card__body" style="text-align: center; font-size: 3rem;">
@@ -58,7 +58,7 @@
     </div>
   </div>
   <div class="grid-col">
-    <div class="">
+    <div class="usa-card">
       <p>Total in draft</p>
       <div class="usa-card__container">
         <div class="usa-card__body" style="text-align: center; font-size: 3rem;">
