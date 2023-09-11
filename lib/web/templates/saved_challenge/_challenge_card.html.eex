@@ -1,4 +1,4 @@
-<%= link to: ChallengeView.public_details_url(@saved_challenge.challenge), target: "_blank" do %>
+<%= link to: ChallengeView.public_details_url(@saved_challenge.challenge), target: "_blank", class: "text-no-underline" do %>
   <div class="challenge-tile saved-challenge-tile usa-card__container ">
       <div class="image_wrapper">
         <%= img_tag(
@@ -10,11 +10,11 @@
       </div>
       <div class="challenge-tile__text-wrapper submission-wrapper">
         <p class="challenge-tile__info" aria-label="Challenge title">
-          <span class="title"><%= @saved_challenge.challenge.title %></span>
+          <span class="font-ui-lg"><%= @saved_challenge.challenge.title %></span>
         </p>
       </div>
       <p class="challenge-tile__remove" aria-label="Remove from saved challenges button">
-        <%= button("Remove", to: Routes.saved_challenge_path(@conn, :delete, @saved_challenge.id), method: "delete", data: [confirm: "Are you sure you want to unsave this challenge?"], class: "text-error-dark float-right btn btn-link") %>
+        <%= button("Remove", to: Routes.saved_challenge_path(@conn, :delete, @saved_challenge.id), method: "delete", data: [confirm: "Are you sure you want to unsave this challenge?"], class: "usa-button usa-button--secondary float-right") %>
       </p>
   </div>
 <% end %>

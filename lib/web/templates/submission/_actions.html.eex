@@ -1,11 +1,15 @@
-<div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
-  <%= link("View", to: Routes.submission_path(@conn, :show, @submission.id), class: "usa-button me-2") %>
+<ul class="usa-button-group" role="group" aria-label="Button group with nested dropdown">
+ <li class="usa-button-group__item">
+   <%= link("View", to: Routes.submission_path(@conn, :show, @submission.id), class: "usa-button me-2") %>
+ </li>
   <%= if Submissions.is_editable?(@user, @submission) do %>
+  <li class="usa-button-group__item">
     <%= link("Edit", to: Routes.submission_path(@conn, :edit, @submission.id), class: "usa-button me-2") %>
+  </li>
   <% else %>
     <span class="row-text">closed</span>
   <% end %>
-  <div class="btn-group btn-group" role="group">
+  <li class="usa-button-group__item">
    <div class="dropdown">
      <button id="btnGroupDrop1" type="button" class="usa-button"  aria-haspopup="true" aria-expanded="false">
       More options
@@ -16,4 +20,5 @@
         </div>
     </div>
    </div>
-</div>
+  </li>
+</ul>

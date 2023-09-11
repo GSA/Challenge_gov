@@ -9,7 +9,10 @@ defmodule Web.PhaseView do
 
   def render_manage_submissions_button(conn, user, challenge, phase) do
     if Accounts.has_admin_access?(user) do
-      content_tag(:span, class: "submission-filter__helper-text p-3", style: "display: inline;") do
+      content_tag(:span,
+        class: "submission-filter__helper-text padding-3",
+        style: "display: inline;"
+      ) do
         link("Add solver submission ->",
           to:
             Routes.challenge_phase_managed_submission_path(
@@ -24,10 +27,13 @@ defmodule Web.PhaseView do
   end
 
   def render_message_submissions_button(action) do
-    content_tag(:span, class: "submission-filter__helper-text p-3", style: "display: inline;") do
+    content_tag(:span,
+      class: "submission-filter__helper-text padding-left-3",
+      style: "display: inline;"
+    ) do
       submit("Message solvers",
         formaction: action,
-        class: "usa-button mb-3 js-multi-submission-msg-btn",
+        class: "usa-button margin-bottom-3 js-multi-submission-msg-btn",
         disabled: true
       )
     end
@@ -275,7 +281,7 @@ defmodule Web.PhaseView do
 
   # Submission filter tab functions
   def render_submission_filter_tabs(conn, challenge, phase, filter) do
-    content_tag(:ul, class: "submission-filter nav nav-tabs") do
+    content_tag(:ul, class: "submission-filter usa-button-group padding-bottom-1") do
       [
         render_submission_filter_tab(conn, challenge, phase, filter, "all"),
         render_submission_filter_tab(conn, challenge, phase, filter, "selected"),
@@ -288,7 +294,7 @@ defmodule Web.PhaseView do
     judging_status_filter_value = Map.get(filter, "judging_status", "all")
     filter = Map.put(filter, "judging_status", filter_key)
 
-    content_tag(:li, class: "nav-item") do
+    content_tag(:li, class: "usa-button-group__item") do
       link(filter_tab_content(challenge, phase, filter, filter_key),
         to:
           Routes.challenge_phase_path(conn, :show, phase.challenge.id, phase.id, filter: filter),
@@ -302,7 +308,7 @@ defmodule Web.PhaseView do
     next_phase_closed? = next_phase_closed?(challenge, phase)
 
     [
-      content_tag(:div, class: "submission-filter__helper-text p-3") do
+      content_tag(:div, class: "submission-filter__helper-text padding-3") do
         submission_filter_helper_text(judging_status_filter_value, next_phase_closed?)
       end,
       submission_filter_winner_note(judging_status_filter_value, next_phase_closed?)
@@ -330,7 +336,7 @@ defmodule Web.PhaseView do
 
   defp submission_filter_winner_note("winner", true) do
     content_tag(:div,
-      class: "submission-filter__helper-note px-3 pb-3 bg-white text-bold text-italic"
+      class: "submission-filter__helper-note px-3 padding-bottom-3 bg-white text-bold text-italic"
     ) do
       "Note: Only solvers in this table can submit during the next phase."
     end
@@ -342,8 +348,8 @@ defmodule Web.PhaseView do
     next_phase_closed? = next_phase_closed?(challenge, phase)
 
     if next_phase_closed? do
-      content_tag(:div, class: "col") do
-        content_tag(:div, class: "col p-3") do
+      content_tag(:div, class: "grid-col") do
+        content_tag(:div, class: "grid-col padding-3") do
           link("Manage invites for next phase",
             to: Routes.submission_invite_path(conn, :index, phase.id),
             class: "usa-button float-right"
@@ -367,20 +373,21 @@ defmodule Web.PhaseView do
   end
 
   def filter_tab_text(_challenge, _phase, "all"),
-    do: content_tag(:span, "All submissions", class: "submission-filter__text me-1")
+    do: content_tag(:span, "All submissions", class: "submission-filter__text margin-right-1")
 
   def filter_tab_text(_challenge, _phase, "selected"),
-    do: content_tag(:span, "Selected for judging", class: "submission-filter__text me-1")
+    do:
+      content_tag(:span, "Selected for judging", class: "submission-filter__text margin-right-1")
 
   def filter_tab_text(challenge, phase, "winner") do
     text =
       if next_phase_closed?(challenge, phase), do: "Selected for next phase", else: "Awardees"
 
-    content_tag(:span, text, class: "submission-filter__text me-1")
+    content_tag(:span, text, class: "submission-filter__text margin-right-1")
   end
 
   def filter_tab_text(_challenge, _phase, _filter_key),
-    do: content_tag(:span, "Undefined", class: "submission-filter__text me-1")
+    do: content_tag(:span, "Undefined", class: "submission-filter__text margin-right-1")
 
   def filter_tab_count(phase, filter) do
     [
@@ -390,8 +397,8 @@ defmodule Web.PhaseView do
     ]
   end
 
-  def filter_tab_class("winner", "winner"), do: "nav-link active"
-  def filter_tab_class("selected", "selected"), do: "nav-link active"
-  def filter_tab_class("all", "all"), do: "nav-link active"
-  def filter_tab_class(_filter, _filter_key), do: "nav-link"
+  def filter_tab_class("winner", "winner"), do: "usa-button active"
+  def filter_tab_class("selected", "selected"), do: "usa-button active"
+  def filter_tab_class("all", "all"), do: "usa-button active"
+  def filter_tab_class(_filter, _filter_key), do: "usa-button usa-button--outline"
 end

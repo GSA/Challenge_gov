@@ -8,9 +8,9 @@
     <%= render Web.ChallengeView, "_challenge_manager_banner.html", user: @user %>
     <div class="row">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">
+        <div class="font-ui-xl text-dark padding-1">
           Challenge #<%= @challenge.id %>
-        </h1>
+        </div>
       </div>
     </div>
   </div>
@@ -18,11 +18,11 @@
 
 <section class="content">
   <div class="container-fluid">
-    <div class="row challenge-show-actions margin-1">
-      <div class="col-md-6">
+    <div class="grid-row challenge-show-actions padding-bottom-1">
+      <div class="grid-col-6">
         <%= render Web.ChallengeView, "show/_status_actions.html", conn: @conn, challenge: @challenge, user: @user %>
       </div>
-      <div class="col-md-6">
+      <div class="grid-col-6">
         <%= render Web.ChallengeView, "show/_other_actions.html", conn: @conn, challenge: @challenge, user: @user %>
       </div>
     </div>

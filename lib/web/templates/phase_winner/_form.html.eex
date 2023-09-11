@@ -4,14 +4,14 @@
     <span>Add Winners details to your challenge profile page.</span>
     <hr size='2'>
     <%= form_for(@changeset, @action, [class: "form-horizontal", multipart: true, data: [phase_winner_id: @changeset.data.id]], fn f -> %>
-      <div class="col Add Winners details to your challenge profile page.winner-overview">
+      <div class="grid-col Add Winners details to your challenge profile page.winner-overview">
         <h3>Winners description (optional)</h3>
         <span>Using the text editor blow, you can display a Winners Description detailing winner names and rank with any important
 messaging and hyperlinking.  No image uploads available at this time.</span><br><br>
         <%= FormView.rt_textarea_field(f, :overview , style: "height:150px")  %>
 
       <br><br>
-      <div class="col individual-winners">
+      <div class="grid-col individual-winners">
         <h2>Individual Winner Info</h2>
         <b>Add individual winners with name and rank (optional)</b><br><br>
 
@@ -20,14 +20,14 @@ messaging and hyperlinking.  No image uploads available at this time.</span><br>
 
       <hr/>
 
-      <div class="col">
-        <div class="row winner-options">
-          <div class="col-md cancel-winner">
+      <div class="grid-col">
+        <div class="grid-row winner-options">
+          <div class="grid-col cancel-winner">
             <%= link("Cancel", to: Routes.challenge_path(@conn, :show, @challenge.id)) %>
           </div>
-          <div class="col-md text-right">
-            <a class="disabled btn ">Save draft</a>
-            <a class="disabled btn ">Preview</a>
+          <div class="grid-col text-right">
+            <button class=" usa-button usa-button--outline" disabled="disabled">Save draft</button>
+            <button class="usa-button usa-button--outline" disabled="disabled">Preview</button>
             <%= submit("Review + Publish", class: "usa-button") %>
           </div>
         </div>

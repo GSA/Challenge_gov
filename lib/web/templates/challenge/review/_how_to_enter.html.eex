@@ -1,6 +1,6 @@
 <div class="display-flex flex-row flex-justify">
-  <h5 id="how_to_enter">How to enter</h5>
-   <%= render("_edit_button.html", user: @user, challenge: @challenge, route: Routes.challenge_path(@conn, :edit, @challenge.id, "how_to_enter")) %>
+  <h3 id="how_to_enter">How to enter</h3>
+  <div><%= render("_edit_button.html", user: @user, challenge: @challenge, route: Routes.challenge_path(@conn, :edit, @challenge.id, "how_to_enter")) %></div>
 </div>
 <br/>
 <div>

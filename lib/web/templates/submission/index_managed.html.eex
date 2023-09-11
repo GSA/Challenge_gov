@@ -14,13 +14,13 @@
   <div class="container-fluid">
 
     <h1>Add solver submission for <%= @challenge.title %></h1>
-    <div class="row" id="new-offline-submissions">
-     <div class="col-2">
+    <div class="grid-row" id="new-offline-submissions">
+     <div class="grid-col-2">
       <%= link("New solver submission", to: Routes.challenge_phase_submission_path(@conn, :new, @challenge.id, @phase.id), class: "usa-button") %>
      </div>
     </div>
-    <div class="row">
-      <div class="col-md-12">
+    <div class="grid-row">
+      <div class="grid-col-12">
         <div dclass="usa-card__container padding-2">
             <table class="usa-table">
               <thead>
