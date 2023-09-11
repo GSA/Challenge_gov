@@ -5,7 +5,7 @@
           ChallengeView.logo_url(@saved_challenge.challenge),
           alt: @saved_challenge.challenge.logo_alt_text,
           title: "Challenge logo",
-          class: "w-100"
+          class: "width-full"
         ) %>
       </div>
       <div class="challenge-tile__text-wrapper submission-wrapper">
