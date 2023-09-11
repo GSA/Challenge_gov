@@ -56,7 +56,7 @@ export const ChallengeTabs = (props) => {
         <svg className="usa-icon" aria-hidden="true" focusable="false" role="img" style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
           <title id="challenge-winners">ChallengeGov</title>
           <use xlinkHref="assets/uswds/img/emoji_events.svg#print"></use>
-        </svg>Challenge Winners
+        </svg>
       </span>
     )
   }
