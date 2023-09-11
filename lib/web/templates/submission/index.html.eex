@@ -35,11 +35,11 @@
 
     <section class="content">
       <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-12">
+        <div class="grid-row">
+          <div class="grid-col-12">
             <ul class="usa-card-group">
               <%= Enum.map @submissions, fn (submission) -> %>
-                <li class="usa-card tablet:grid-col-4">
+                <li class="grid-col-4 margin-1">
                 <div class="challenge-tile usa-card__container">
                   <%= link to: Routes.submission_path(@conn, :edit, submission.id) do %>
                     <div class="image_wrapper">
@@ -47,7 +47,7 @@
                         ChallengeView.logo_url(submission.challenge),
                         alt: submission.challenge.logo_alt_text,
                         title: "Challenge logo",
-                        class: "w-100"
+                        class: "width-full"
                       ) %>
                     </div>
                     <div class="challenge-tile__text-wrapper submission-wrapper">

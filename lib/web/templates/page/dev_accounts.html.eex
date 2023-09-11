@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="grid-container">
   <div>
     <h1>Super Admin Accounts</h1>
     <%= button("Active", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "super_admin_active@example.com"), method: :post, class: "usa-button") %>
