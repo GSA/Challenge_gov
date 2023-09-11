@@ -23,7 +23,7 @@
   <div class="container-fluid">
     <div class="grid-row">
       <div class="grid-col-12">
-        <div class="grid-container padding-1 my-5 mx-auto">
+        <div class="grid-container padding-1 my-5 mx-auto margin-bottom-2">
           <div class="usa-card__container">
           <h2 class="text-center margin-bottom-1 font-ui-xl">Getting started</h2>
           <div class="grid-row  margin-top-1 help-page__getting-started-content">
@@ -45,9 +45,9 @@
           </div>
         </div>
 
-        <div class="card padding-4 grid-container">
+        <div class="card padding-4 grid-container margin-top-3 usa-card__container">
           <div class="grid-row">
-            <div class="grid-col-6 px-5 my-auto left-section">
+            <div class="grid-col-6 padding-5 my-auto left-section">
               <h3 class="margin-bottom-4 font-weight-bold">Question about creating a challenge?</h3>
               <span>View detailed information in the <%= link("Creating a new challenge", to: Routes.static_path(@conn, "/pdfs/creating_new_challenge.pdf"), target: "_blank") %> document.</span>
             </div>
@@ -57,7 +57,7 @@
           </div>
         </div>
 
-        <div class="card grid-container padding-4">
+        <div class="card margin-top-3">
          <div class="grid-row">
             <div class="grid-col-6 ">
              <div class="usa-card__container display-flex flex-row padding-4">
