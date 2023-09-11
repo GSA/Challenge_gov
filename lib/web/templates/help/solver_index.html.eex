@@ -20,17 +20,17 @@
 </div>
 
 <section class="content help-page">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card help-card p-4 my-5 mx-auto">
-          <h3 class="text-center mb-4 font-weight-bold">Getting started</h3>
-          <div class="d-flex flex-row justify-content-around mt-4 help-page__getting-started-content">
+  <div class="grid-container">
+    <div class="">
+      <div class="grid-row">
+        <div class="card grid-col-12 usa-card__container padding-4">
+          <h2 class="text-center margin-bottom-4 font-weight-bold">Getting started</h2>
+          <div class="display-flex flex-row " style="justify-content: space-around;">
             <div class="text-center help-card__section">
               <svg class="usa-icon dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
                 <use xlink:href="/assets/img/sprite.svg#help"></use>
               </svg>
-              <h4 class="m-4">FAQs</h4>
+              <h3 class="m-4">FAQs</h3>
               <p>Check out our <%= link("frequently asked questions", to: "https://www.challenge.gov/public-innovator-faqs/", target: "_blank") %> on prize competitions and crowdsourcing, and use of the Challenge.Gov platform.</p>
             </div>
             <span class="vr-light">&nbsp;</span>
@@ -38,32 +38,32 @@
               <svg class="usa-icon  dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
                 <use xlink:href="/assets/img/sprite.svg#construction"></use>
               </svg>
-              <h4 class="m-4">User Guide</h4>
+              <h3 class="m-4">User Guide</h3>
               <p>Our <%= link("user guide", to: "https://www.challenge.gov/user-guide/", target: "_blank") %> is full of useful information to help you get started.</p>
             </div>
           </div>
         </div>
 
-        <div class="card help-card p-4 my-5 mx-auto help-page__question-section">
-          <div class="d-flex flex-row justify-content-around py-3">
-            <div class="w-50 px-5 my-auto left-section">
+        <div class="card grid-col-12 usa-card__container padding-4 margin-top-2">
+          <div class="display-flex flex-row " style="justify-content: space-around;">
+            <div class="width-card-lg left-section">
               <h3 class="mb-4 font-weight-bold">Question about a challenge?</h3>
               <span>Get in touch with the Challenge <em>Point of Contact</em> from the contact tab on the challenge details page.</span>
               <br />
               <span><a href="https://www.challenge.gov/" target="_blank">Search Active Challenges</a></span>
             </div>
-            <div class="text-center w-50 right-section">
+            <div class="text-center width-card-lg right-section">
               <img src="/images/contact_indication.svg" alt="contact button indication on challenge details page" title="Contact indication" />
             </div>
           </div>
         </div>
 
-        <div class="card help-card p-4 my-5 mx-auto help-page__technical-issues">
-          <div class="d-flex flex-row py-4">
-            <div class="text-center mx-5 left-section">
+        <div class="card grid-col-12 usa-card__container padding-4 margin-top-2">
+          <div class="display-flex flex-row py-4" style="justify-content: center;">
+            <div class="text-center margin-2 left-section">
               <img src="/images/click.svg" alt="hand " title="Contact indication" />
             </div>
-            <div class="w-50 mx-5 my-auto right-section">
+            <div class="margin-left-1 my-auto right-section">
               <h3 class="mb-4 font-weight-bold">For technical issues with the platform</h3>
               <span>Contact <a href="mailto: team@challenge.gov" target="_blank">team@challenge.gov</a> for help with submissions.</span>
             </div>
