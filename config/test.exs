@@ -60,7 +60,7 @@ config :challenge_gov, :public_root_url, "http://localhost:4001"
 config :wallaby,
   driver: Wallaby.Chrome,
   chromedriver: [
-    path: "/usr/local/bin/chromedriver/chromedriver"
+    path: "/usr/local/bin/chromedriver"
   ]
 
 if File.exists?("config/test.local.exs") do

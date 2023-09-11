@@ -8,8 +8,8 @@
       %{text: @phase.title, route: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id), is_visible: length(@challenge.phases) > 1},
       %{text: "Submissions"}
     ])%>
-    <div class="row mb-3">
-      <div class="col">
+    <div class="grid-row margin-bottom-3">
+      <div class="grid-col">
         <%= if length(@challenge.phases) > 1 do %>
           <h2><div class="font-italic"><%= @challenge.title %></div></h2>
           <h2><div class="font-italic"><%= @phase.title %></div></h2>
@@ -19,17 +19,17 @@
       </div>
     </div>
 
-    <div class="row mb-4">
-      <div class="col">
-        <span class="font-weight-bold">Submission period: </span><%= submission_period_text(@phase) %>
+    <div class="grid-row margin-bottom-4">
+      <div class="grid-col">
+        <span class="text-bold">Submission period: </span><%= submission_period_text(@phase) %>
       </div>
     </div>
 
-    <div class="row mb-3 px-5">
-      <div class="col-md-3">
+    <div class="grid-row margin-bottom-3 px-5">
+      <div class="grid-col-3">
         <div class="usa-card__container">
           <div class="usa-card__body text-center">
-            <div class="display-3"><%= length(@phase.submissions) %></div>
+            <div class="font-ui-2xl"><%= length(@phase.submissions) %></div>
             <div>Total # of Submissions</div>
           </div>
         </div>
@@ -38,8 +38,8 @@
   </div>
 
   <%= if @has_closed_phases do %>
-    <div class="row p-2 mb-1">
-      <div class="col">
+    <div class="grid-row padding-2 margin-bottom-1">
+      <div class="grid-col">
         <%= link "Download", to: Routes.submission_export_path(@conn, :index, @challenge.id), class: "usa-button" %>
       </div>
     </div>

@@ -563,7 +563,7 @@ defmodule Web.FormView do
           class: "add-nested-section usa-button",
           data: [parent: form.name, child: children_name]
         ),
-        content_tag(:div, class: "col dynamic-nested-form-template d-none") do
+        content_tag(:div, class: "col dynamic-nested-form-template display-none") do
           [
             content_tag(:div, class: "form-collection") do
               [

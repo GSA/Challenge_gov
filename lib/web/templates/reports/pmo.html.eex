@@ -30,13 +30,13 @@
 </div>
 
 <section class="content">
-  <div class="row justify-content-md-center">
+  <div class="grid-row justify-content-md-center">
 
-    <div class="col-md-5">
+    <div class="grid-col-5">
     <h3>PMO Reports</h3>
     <form id="main" action="/reports/pmo/publish-active-challenge">
 
-      <div class="mb-3">
+      <div class="padding-bottom-3">
         <label for="" class="form-label">Report Name</label>
         <select  class="usa-select" onchange="change_url(this)">
           <option value="publish-active-challenge">Currently published/active challenges</option>
@@ -51,13 +51,13 @@
         </select>
 
       </div>
-      <div class="mb-3">
+      <div class="padding-bottom-3">
           <%#= date_and_time_inputs(@conn, @form, :auto_publish_date, "Publish date", "challenge_auto_publish") %>
           <label for="start_date" class="form-label">Start Date</label>
           <input class="usa-input js-datetime-input" id="start_date" label="Start date" name="start_date" type="date" required="" disabled dtype="datetime-local">
           <input id="start_date" label="Publish date" name="challenge[auto_publish_date]" type="hidden" value="">
       </div>
-      <div class="mb-3">
+      <div class="padding-bottom-3">
           <label for="" class="form-label">End Date</label>
           <input class="usa-input js-datetime-input" id="end_date" label="End date" name="end_date" type="date" required="" disabled>
           <input id="challenge_auto_publish_date" label="Publish date" name="challenge[auto_publish_date]" type="hidden" value="">

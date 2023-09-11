@@ -1,4 +1,4 @@
-<div class="p-3">
+<div class="padding-3">
   <div class="content-header">
     <div class="container-fluid">
       <%= SharedView.render_breadcrumbs([
@@ -7,7 +7,7 @@
       ])%>
 
       <h1>Challenge.gov analytics</h1>
-      <p class="pl-0">Snapshot of all Challenges across the Challenge.gov platform</p>
+      <p class="padding-left-0">Snapshot of all Challenges across the Challenge.gov platform</p>
     </div>
   </div>
 
@@ -15,7 +15,7 @@
     <div class="content">
       <div class="container" style="max-width: unset">
         <h3>Site Analytics Reports</h3>
-        <p class="pl-0">Reports for the last 6 months</p>
+        <p class="padding-left-0">Reports for the last 6 months</p>
         <div class="usa-card__container">
           <div class="usa-card__body dap-grid">
             <%= Enum.map(@dap_reports, fn report -> %>
@@ -35,16 +35,20 @@
     <br/>
   <% end %>
 
-  <div class="row analytics-counts" style="font-size: 1.5rem;">
-    <div class="col">
-      <p>Total active</p>
+  <div class="grid-row analytics-counts" style="font-size: 1.5rem;">
+  <div class="grid-col">
+    <p>Total active</p>
+    <div class="usa-card">
       <div class="usa-card__container">
         <div class="usa-card__body" style="text-align: center; font-size: 3rem;">
           <%= @active_challenges_count %>
         </div>
       </div>
     </div>
-    <div class="col">
+   </div>
+
+  <div class="grid-col">
+    <div class="usa-card">
       <p>Total archived</p>
       <div class="usa-card__container">
         <div class="usa-card__body" style="text-align: center; font-size: 3rem;">
@@ -52,7 +56,9 @@
         </div>
       </div>
     </div>
-    <div class="col">
+  </div>
+  <div class="grid-col">
+    <div class="usa-card">
       <p>Total in draft</p>
       <div class="usa-card__container">
         <div class="usa-card__body" style="text-align: center; font-size: 3rem;">
@@ -61,13 +67,14 @@
       </div>
     </div>
   </div>
+  </div>
 
   <br/>
   <hr/>
   <br/>
 
-  <div class="content">
-    <div class="container" style="max-width: unset">
+  <div class="grid-row">
+    <div class="grid-col" dstyle="max-width: unset">
       <h3>Trends analytics</h3>
       <div class="usa-card__container">
         <div class="usa-card__body">

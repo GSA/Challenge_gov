@@ -8,8 +8,8 @@ import "/node_modules/uswds/dist/js/uswds.js";
 //import "bootstrap/dist/js/bootstrap.js";
 
 // Admin LTE
-import "admin-lte/dist/css/adminlte.css";
-import "admin-lte/dist/js/adminlte.js";
+//import "admin-lte/dist/css/adminlte.css";
+//import "admin-lte/dist/js/adminlte.js";
 
 // Rich Text Editor
 import "quill/dist/quill.core.css";

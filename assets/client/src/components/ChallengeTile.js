@@ -31,7 +31,7 @@ export const ChallengeTile = ({challenge, preview}) => {
 
     if (tags.length > 0) {
       return (
-        <div className="display-flex flex-align-start p-3">
+        <div className="display-flex flex-align-start padding-3">
           {tags}
         </div>
       )

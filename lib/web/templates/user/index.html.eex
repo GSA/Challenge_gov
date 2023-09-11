@@ -4,15 +4,15 @@
       %{text: "Home", route: Routes.dashboard_path(@conn, :index)},
       %{text: "Users"},
     ])%>
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-dark">
+    <div class="grid-row ">
+      <div class="grid-col-6">
+        <div class="m-0 font-ui-xl text-dark">
           <span style="color:#C5221F">Admin Action Required</span>
           <a class="usa-button" data-widget="control-sidebar" href="#">Search</a>
           <%= if is_map(@filter) && map_size(@filter) > 0 do %>
             <%= link "Clear search", to: Routes.user_path(@conn, :index), class: "usa-button usa-button--outline" %>
           <% end %>
-        </h1>
+        </div>
       </div>
     </div>
   </div>
@@ -24,16 +24,14 @@
 <% end%>
 
 <section class="content">
-  <div class="row mb-2">
-    <div class="col-sm-6">
-      <h1 class="m-0 text-dark">
-        <span>User List</span>
-      </h1>
+  <div class="grid-row mb-2">
+    <div class="grid-col-6">
+        <span class="font-ui-xl">User List</span>
     </div>
   </div>
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
+    <div class="grid-row">
+      <div class="grid-col-12">
         <div dclass="usa-card__container padding-3">
             <table class="usa-table">
               <thead>

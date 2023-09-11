@@ -13,7 +13,7 @@
             <section class="padding-top-2 padding-right-2">
                <ul class="navbar-nav">
                   <li class="nav-item dropdown">
-                    <a class="nav-link text-bold text-white "  href="#" aria-expanded="true">
+                    <a class="nav-link text-bold text-white text-no-underline"  href="#" aria-expanded="true">
                       <span><%= u.email %></span>
                     </a>
                     <div class="dropdown-content padding-2 float-right" style="min-width:280px">
@@ -44,10 +44,10 @@
             <ul class="usa-sidenav">
               <li class="usa-sidenav__item">
                 <a href="https://www.challenge.gov" class="brand-link">
-                  <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
+                  <span class="padding-left-1">Challenge.Gov</span>
+                  <svg class="usa-icon usa-challenge-menu float-left" aria-hidden="true" focusable="false" role="img">
                     <use xlink:href="/assets/img/sprite.svg#home"></use>
                   </svg>
-                  <span class="padding-left-1">Challenge.Gov</span>
                 </a>
               </li>
             </ul>
@@ -125,7 +125,7 @@
       <%= @inner_content %>
 
       </div>
-      <aside class="control-sidebar control-sidebar-light border">
+      <aside class="float-right control-sidebar control-sidebar-light border">
         <div class="padding-2">
           <%= if load_filter_panel(@conn, view_module(@conn)) do %>
           <%= render view_module(@conn), "_filter.html", conn: @conn, user: @user, filter: @filter, sort: @sort %>

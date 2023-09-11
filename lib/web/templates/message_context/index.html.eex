@@ -5,8 +5,8 @@
         %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
         %{text: "Message center"},
       ])%>
-      <div class="row mb-2">
-        <div class="col-sm-6">
+      <div class="grid-row padding-bottom-2">
+        <div class="grid-col-6">
           <h1 class="m-0 text-dark">
             <span>Message center</span>
           </h1>
@@ -18,12 +18,12 @@
   <section class="content">
     <div class="container-fluid">
       <%= form_for(@conn, Routes.message_context_path(@conn, :index, filter: @filter), [method: :get, as: :filter], fn f -> %>
-        <div class="row mb-3">
-          <div class="col">
+        <div class="grid-row padding-bottom-3">
+          <div class="grid-col">
             <%= render_new_message_button(@conn, @user) %>
             <%= select(f, :challenge_id, Enum.map(@challenges, &{&1.title, &1.id}), value: @filter["challenge_id"], prompt: "Filter by challenge", class: "js-select2 message_center__challenge_filter") %>
           </div>
-          <div class="col text-right">
+          <div class="grid-col text-right">
             <%= link("All", to: Routes.message_context_path(@conn, :index), class: "#{filter_active_class(@conn, "all")}") %>
             <%= link("Starred", to: Routes.message_context_path(@conn, :index, filter: %{starred: true}), class: "#{filter_active_class(@conn, "starred")}") %>
             <%= link("Unread", to: Routes.message_context_path(@conn, :index, filter: %{read: false}), class: "#{filter_active_class(@conn, "read")}") %>
@@ -33,8 +33,8 @@
         </div>
       <% end) %>
 
-      <div class="row">
-        <div class="col-md-12">
+      <div class="grid-row">
+        <div class="grid-col-12">
           <div class="usa-card__container padding-2">
               <table class="usa-table">
                 <thead class="message_center__header">

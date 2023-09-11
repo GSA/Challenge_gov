@@ -120,7 +120,7 @@
     <span class="challenge_document_upload_error usa-error-message display-none">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</span>
     <input class="challenge_document_file usa-file-input" type="file">
     <small class="form-text text-muted font-italic">Allowed file types: .pdf, .txt, .csv, .jpg, .png, or .tiff</small>
-    <div class="challenge_document_upload usa-button mt-1">Upload file</div>
+    <div class="challenge_document_upload usa-button display-table margin-top-1">Upload file</div>
     <p class="text-muted">Provide any tables, PDFs or other resources you wish to be included as a resource for the public solvers.</p>
 
   </div>

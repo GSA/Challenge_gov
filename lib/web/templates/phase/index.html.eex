@@ -6,17 +6,17 @@
       %{text: @challenge.title, route: Routes.challenge_path(@conn, :show, @challenge.id)},
       %{text: "Phases"},
     ])%>
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-dark">
+    <div class="grid-row margin-bottom-2">
+      <div class="grid-col-6">
+        <h1 class="margin-0 text-dark">
           View submissions for <%= @challenge.title %>
         </h1>
       </div>
     </div>
 
     <%= if @has_closed_phases do %>
-      <div class="row mb-2">
-        <div class="col">
+      <div class="grid-row margin-bottom-2">
+        <div class="grid-col">
           <%= link "Download", to: Routes.submission_export_path(@conn, :index, @challenge.id), class: "usa-button" %>
         </div>
       </div>
@@ -28,9 +28,9 @@
   <%= if !Enum.empty?(@phases) do %>
     <%= Enum.map(Enum.with_index(@phases), fn {phase, index} -> %>
       <%= if rem(index, 3) === 0 do %>
-        <div class="row">
+        <div class="grid-row">
       <% end %>
-      <div class="col-md-4 p-5">
+      <div class="grid-col-4 padding-5">
         <%= render "_card.html", conn: @conn, challenge: @challenge, phase: phase, index: index %>
       </div>
       <%= if rem(index, 3) === 2 or length(@phases) - 1 === index do %>
