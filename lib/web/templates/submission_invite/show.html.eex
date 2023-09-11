@@ -1,6 +1,6 @@
 <section class="content padding-3">
   <div class="container-fluid">
-    <div class="usa-card__container p-3">
+    <div class="usa-card__container padding-3">
       <div class="row mb-3">
         <div class="col">
           Invite for <%= @submission_invite.submission.title %>
