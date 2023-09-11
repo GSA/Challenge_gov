@@ -12,32 +12,7 @@
     <%= button("Dev Accounts", to: Routes.dev_accounts_page_path(@conn, :dev_accounts), method: :get, class: "usa-button") %>
   <% end %>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-    </ul>
-
-
-   <div class="grid-col">
-
-    <section aria-label="Search component">
-      <form class="usa-search" role="search">
-        <label class="usa-sr-only" for="search-field">Search</label>
-        <input class="usa-input" id="search-field" type="search" name="search" />
-        <button class="usa-button" type="submit">
-          <span class="usa-search__submit-text">Search </span
-          ><img
-            src="/assets/img/usa-icons-bg/search--white.svg"
-            class="usa-search__submit-icon"
-            alt="Search"
-          />
-        </button>
-      </form>
-    </section>
-
-   </div>
-
-   <div class="grid-col">
-    <div class="input-group">
+    <div>
       <%= link("My account", to: Routes.session_path(@conn, :new), class: "usa-button usa-button--outline") %>
     </div>
 
