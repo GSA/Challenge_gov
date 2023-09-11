@@ -28,12 +28,12 @@ defmodule Web.PhaseView do
 
   def render_message_submissions_button(action) do
     content_tag(:span,
-      class: "submission-filter__helper-text padding-3",
+      class: "submission-filter__helper-text padding-left-3",
       style: "display: inline;"
     ) do
       submit("Message solvers",
         formaction: action,
-        class: "usa-button mb-3 js-multi-submission-msg-btn",
+        class: "usa-button margin-bottom-3 js-multi-submission-msg-btn",
         disabled: true
       )
     end
