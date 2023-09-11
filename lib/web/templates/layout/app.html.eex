@@ -9,18 +9,11 @@
       <header class="usa-header usa-header--basic height-8 bg-primary-dark ">
         <div class="usa-nav">
           <nav class="usa-nav">
-<<<<<<< HEAD
 
             <section class="padding-top-2 padding-right-2">
                <ul class="navbar-nav">
                   <li class="nav-item dropdown">
                     <a class="nav-link text-bold text-white text-no-underline"  href="#" aria-expanded="true">
-=======
-            <section class="padding-top-2 padding-right-2">
-               <ul class="navbar-nav">
-                  <li class="nav-item dropdown">
-                    <a class="nav-link text-bold text-white "  href="#" aria-expanded="true">
->>>>>>> staging
                       <span><%= u.email %></span>
                     </a>
                     <div class="dropdown-content padding-2 float-right" style="min-width:280px">
@@ -102,14 +95,6 @@
               </p>
              </div>
             </div>
-            <!-- div class="usa-alert usa-alert--success">
-              <div class="usa-alert__body">
-                <h4 class="usa-alert__heading">Success status</h4>
-                <p class="usa-alert__text">
-                  <%= get_flash(@conn, :info) %>
-                </p>
-              </div>
-            </div -->
           </div>
         <% end %>
 
@@ -140,11 +125,7 @@
       <%= @inner_content %>
 
       </div>
-<<<<<<< HEAD
       <aside class="float-right control-sidebar control-sidebar-light border">
-=======
-      <aside class="control-sidebar control-sidebar-light border">
->>>>>>> staging
         <div class="padding-2">
           <%= if load_filter_panel(@conn, view_module(@conn)) do %>
           <%= render view_module(@conn), "_filter.html", conn: @conn, user: @user, filter: @filter, sort: @sort %>

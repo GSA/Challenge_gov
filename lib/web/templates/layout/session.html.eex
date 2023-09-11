@@ -9,8 +9,12 @@
       <div class="main container-fluid">
         <div class="content-area">
           <%= if flash = get_flash(@conn, :info) do %>
-            <div class="alert alert-primary" role="alert">
-              <%= flash %>
+            <div class="usa-alert usa-alert--info usa-alert--no-icon">
+              <div class="usa-alert__body">
+                <p class="usa-alert__text">
+                  <%= flash %>
+                </p>
+              </div>
             </div>
           <% end %>
           <%= if flash = get_flash(@conn, :error) do %>
