@@ -27,7 +27,7 @@
       <%= label f, :agency_id %>
       <%= select(f, :agency_id, Enum.map(@agencies, &{&1.name, &1.id}), value: @filter["agency_id"], prompt: "All", class: "usa-select") %>
     </div>
-    <div>
+    <div class="padding-top-2 padding-bottom-3">
       <%= submit "Filter", class: "usa-button" %>
       <%= link "Clear", to: Routes.analytics_path(@conn, :index), class: "usa-button usa-button--outline" %>
     </div>

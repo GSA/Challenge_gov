@@ -229,6 +229,6 @@ $("#winners-form").on("click", ".js-dynamic-nested-remove", (e) => {
     removeInput = $(`#phase_winner_winners_${index}_remove`)
 
     $(removeInput).val(true)
-    parent.addClass("d-none")
+    parent.addClass("display-none")
   }
 })

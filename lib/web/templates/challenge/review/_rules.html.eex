@@ -1,6 +1,6 @@
 <div class="display-flex flex-row flex-justify">
-  <h5 id="rules">Rules</h5>
-   <%= render("_edit_button.html", user: @user, challenge: @challenge, route: Routes.challenge_path(@conn, :edit, @challenge.id, "rules")) %>
+  <h3 id="rules">Rules</h3>
+   <div><%= render("_edit_button.html", user: @user, challenge: @challenge, route: Routes.challenge_path(@conn, :edit, @challenge.id, "rules")) %></div>
 </div>
 <br/>
 <div>

@@ -17,7 +17,7 @@
                 </div>
                 <div class="challenge-tile__text-wrapper submission-wrapper">
                   <p class="challenge-tile__info" aria-label="Challenge title">
-                    <span class="title"><%= submission.challenge.title %></span>
+                    <span class="font-ui-lg"><%= submission.challenge.title %></span>
                   </p>
                   <%= phase_number(submission) %>
                   <p class="challenge-tile__info" aria-label="Submission close">

@@ -1,11 +1,11 @@
-<div class="dashboard-card col-md-6 padding-2">
-  <a class="usa-card__container text-dark" href="<%= @to %>" target="<%= @target %>">
-    <div class="usa-card__body d-flex align-items-center">
-      <div class="dashboard-card__icon-container">
+<div class="dashboard-card grid-col-6 padding-2">
+  <a class="usa-card__container text-no-underline" href="<%= @to %>" target="<%= @target %>">
+    <div class="usa-card__body grid-row align-items-center">
+      <div class="dashboard-card__icon-container grid-col flex-auto">
         <%= @icon %>
       </div>
-      <div class="ms-3 d-flex flex-column justify-content-center">
-        <h3 class="dashboard-card__title"><%= @title %></h3>
+      <div class="grid-col padding-left-1">
+        <div class="dashboard-card__title font-ui-lg"><%= @title %></div>
         <%= if @description do %>
           <span class="mb-0"><%= @description %></span>
         <% end %>

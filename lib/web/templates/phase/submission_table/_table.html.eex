@@ -1,9 +1,12 @@
 <section class="content">
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
+    <div class="grid-row">
+      <div class="grid-col-12">
         <%= render_submission_filter_tabs(@conn, @challenge, @phase, @filter) %>
-        <div class="usa-card__container_ padding-3">
+
+        <div class="usa-card__container margin-left-0 ">
+
+        <div class="usa-card__body">
           <%= render_submission_filter_helper_text(@challenge, @phase, @filter) %>
           <%= render_manage_submissions_button(@conn, @user, @challenge, @phase) %>
           <%# to: Routes.challenge_phase_submission_path(@conn, :new, @challenge.id, @phase.id)) %>
@@ -25,6 +28,8 @@
             <%= Web.SharedView.pagination_post(path: Routes.challenge_phase_path(@conn, :show, @challenge.id, @phase.id, filter: @filter, sort: @sort), pagination: @pagination) %>
           <% end) %>
         </div>
+        </div>
+
       </div>
     </div>
   </div>

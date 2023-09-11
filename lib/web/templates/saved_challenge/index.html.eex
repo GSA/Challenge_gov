@@ -20,7 +20,7 @@
 
 <section class="saved-challenges-grid container-fluid">
   <%= if !Enum.empty?(@open_saved_challenges) do %>
-    <h5>Open for submissions  (<%= Enum.count(@open_saved_challenges)%>)</h5>
+    <h4>Open for submissions  (<%= Enum.count(@open_saved_challenges)%>)</h4>
     <hr/>
     <div class="cards">
       <%= Enum.map(@open_saved_challenges, fn saved_challenge -> %>
@@ -30,7 +30,7 @@
   <% end %>
 
   <%= if !Enum.empty?(@opening_soon_challenges) do %>
-    <h5>Opening soon (<%= Enum.count(@opening_soon_challenges)%>)</h5>
+    <h4>Opening soon (<%= Enum.count(@opening_soon_challenges)%>)</h4>
     <hr/>
     <div class="cards">
       <%= Enum.map(@opening_soon_challenges, fn saved_challenge -> %>
@@ -40,7 +40,7 @@
   <% end %>
 
   <%= if !Enum.empty?(@closed_saved_challenges) do %>
-    <h5>Closed to submissions</h5>
+    <h4>Closed to submissions</h4>
     <hr/>
     <div class="cards">
       <%= Enum.map(@closed_saved_challenges, fn saved_challenge -> %>

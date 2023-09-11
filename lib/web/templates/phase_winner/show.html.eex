@@ -15,7 +15,9 @@
     <%= render_title(@challenge, @phase) %>
     <div class="usa-card__container">
       <div class="usa-card__body">
-        <%= link("Edit", to: Routes.phase_winner_path(@conn, :edit, @phase.id)) %>
+        <div>
+        <%= link("Edit", to: Routes.phase_winner_path(@conn, :edit, @phase.id), class: "usa-button") %>
+        </div>
         <hr/>
         <h2>Winner Overview Info</h2>
         <%= SharedView.render_safe_html(@phase_winner.overview) %>

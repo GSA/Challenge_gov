@@ -10,7 +10,7 @@
         <h1 class="m-0 text-dark">
           <span>Agencies</span>
           <%= link "New", to: Routes.agency_path(@conn, :new), class: "usa-button" %>
-          <a class="usa-button" data-widget="control-sidebar" href="#">Filter</a>
+          <a class="usa-button" data-widget="control-sidebar" onclick="$('.control-sidebar').show()" href="#">Filter</a>
           <%= if is_map(@filter) && map_size(@filter) > 0 do %>
             <%= link "clear filters", to: Routes.agency_path(@conn, :index), class: "usa-button usa-button--outline" %>
           <% end %>

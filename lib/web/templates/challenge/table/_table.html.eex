@@ -1,7 +1,7 @@
 <section class="content">
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
+    <div class="grid-row">
+      <div class="grid-col-12">
         <div class="usa-card__container_ _padding-3"> <!-- **TABLE NON-RESPONSIVE** -->
           <div dclass="table">
             <table class="usa-table">

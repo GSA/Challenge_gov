@@ -22,8 +22,9 @@
         <p><b>Start date: </b><%= Timex.format!(p.start_date, "{M}/{D}/{YYYY}") %></p>
         <p><b>End date: </b><%= Timex.format!(p.end_date, "{M}/{D}/{YYYY}") %></p>
         </div>
-
-        <%= link("Manage Winners", to: Routes.phase_winner_path(@conn, :show, p.id), class: "usa-button mng-winner-btn") %>
+        <div>
+          <%= link("Manage Winners", to: Routes.phase_winner_path(@conn, :show, p.id), class: "usa-button mng-winner-btn") %>
+        </div>
       </div>
     </div>
     <% end %>
