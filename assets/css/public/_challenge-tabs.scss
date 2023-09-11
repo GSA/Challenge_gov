@@ -32,6 +32,8 @@
 
   &__content {
     padding: 2rem;
+    max-width: 95%;
+    margin: 0 auto;
   }
 }
 
@@ -69,5 +71,9 @@
 
   .card-header {
     padding: 1rem 4rem;
+  }
+
+  .invalid-feedback {
+    color: red;
   }
 }

@@ -79,7 +79,6 @@
       <div class="dap_report_upload usa-button display-table margin-top-1">Upload file</div>
 
       <div class="dap_report_loading"></div>
-
       <div class="dap_uploaded_report">
         View all reports currently on display <%= link("here", to: Routes.analytics_path(@conn, :index))%>
       </div>
