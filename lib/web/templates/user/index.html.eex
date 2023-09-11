@@ -30,8 +30,8 @@
     </div>
   </div>
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
+    <div class="grid-row">
+      <div class="grid-col-12">
         <div dclass="usa-card__container padding-3">
             <table class="usa-table">
               <thead>

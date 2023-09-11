@@ -1,7 +1,7 @@
-<div class="dashboard-card col-md-6 padding-2">
-  <a class="usa-card__container text-dark" href="<%= @to %>" target="<%= @target %>">
-    <div class="usa-card__body d-flex align-items-center">
-      <div class="dashboard-card__icon-container">
+<div class="dashboard-card grid-col-6 padding-2">
+  <a class="usa-card__container text-no-underline" href="<%= @to %>" target="<%= @target %>">
+    <div class="usa-card__body grid-row align-items-center">
+      <div class="dashboard-card__icon-container grid-col flex-auto">
         <%= @icon %>
       </div>
       <div class="grid-col padding-left-1">

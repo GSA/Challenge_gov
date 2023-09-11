@@ -15,7 +15,7 @@
     <div class="content">
       <div class="container" style="max-width: unset">
         <h3>Site Analytics Reports</h3>
-        <p class="pl-0">Reports for the last 6 months</p>
+        <p class="padding-left-0">Reports for the last 6 months</p>
         <div class="usa-card__container">
           <div class="usa-card__body dap-grid">
             <%= Enum.map(@dap_reports, fn report -> %>
@@ -35,9 +35,10 @@
     <br/>
   <% end %>
 
-  <div class="row analytics-counts" style="font-size: 1.5rem;">
-    <div class="col">
-      <p>Total active</p>
+  <div class="grid-row analytics-counts" style="font-size: 1.5rem;">
+  <div class="grid-col">
+    <p>Total active</p>
+    <div class="usa-card">
       <div class="usa-card__container">
         <div class="usa-card__body" style="text-align: center; font-size: 3rem;">
           <%= @active_challenges_count %>

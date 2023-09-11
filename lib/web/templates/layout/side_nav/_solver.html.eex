@@ -3,26 +3,26 @@
 
     <li class="usa-sidenav__item">
       <%= link(to: Routes.dashboard_path(@conn, :index), class: "#{tab_selected(@conn, "dashboard")}")  do %>
-         <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
+        <span class="padding-left-1">Dashboard</span>
+         <svg class="usa-icon usa-challenge-menu float-left" aria-hidden="true" focusable="false" role="img">
            <use xlink:href="/assets/img/sprite.svg#grid_view"></use>
          </svg>
-        <span class="padding-left-1">Dashboard</span>
       <% end %>
     </li>
     <li class="usa-sidenav__item">
       <%= link(to: Routes.submission_path(@conn, :index), class: "#{tab_selected(@conn, "submissions")}") do %>
-        <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
+        <span class="padding-left-1">Submissions</span>
+        <svg class="usa-icon usa-challenge-menu float-left" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#file_present"></use>
         </svg>
-        <span class="padding-left-1">Submissions</span>
       <% end %>
     </li>
     <li class="usa-sidenav__item">
       <%= link(to: Routes.saved_challenge_path(@conn, :index), class: "#{tab_selected(@conn, "saved_challenges")}") do %>
-        <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
+        <span class="padding-left-1">Saved challenges</span>
+        <svg class="usa-icon usa-challenge-menu float-left" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#emoji_events"></use>
         </svg>
-        <span class="padding-left-1">Saved challenges</span>
       <% end %>
     </li>
   </ul>
@@ -32,10 +32,10 @@
     <%= render_message_center_icon(@conn, @user) %>
     <li class="usa-sidenav__item">
       <%= link(to: Routes.help_path(@conn, :solver_index), class: "#{tab_selected(@conn, "help")}") do %>
-        <svg class="usa-icon usa-challenge-menu" aria-hidden="true" focusable="false" role="img">
+        <span class="padding-left-1">Help</span>
+        <svg class="usa-icon usa-challenge-menu float-left" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#help"></use>
         </svg>
-        <span class="padding-left-1">Help</span>
       <% end %>
     </li>
   </ul>

@@ -17,12 +17,12 @@
 
 <section class="content">
   <div class="container-fluid">
-    <div class="row">
-      <div class="col">
+    <div class="grid-row">
+      <div class="grid-col">
         <div class="usa-card__container">
-          <div class="usa-card__header">
-            <h3 class="usa-card__heading" style="font-size: 24px; font-weight: 900;">General User Information</h3>
-            <div class="card-tools">
+          <div class="usa-card__header grid-row">
+            <div class="usa-card__heading font-ui-xl grid-col-10">General User Information</div>
+            <div class="card-tools grid-col-2">
               <%= link("Edit", to: Routes.user_path(@conn, :edit, @user.id), class: "usa-button") %>
             </div>
           </div>
@@ -43,11 +43,11 @@
         </div>
       </div>
 
-      <div class="col">
+      <div class="grid-col">
         <div class="usa-card__container">
-          <div class="usa-card__header row">
-            <h3 class="usa-card__heading col-9" style="font-size: 24px; font-weight: 900;">User Status</h3>
-            <div class="col-3"><%= status(@user.status) %></div>
+          <div class="usa-card__header grid-row">
+            <div class="usa-card__heading grid-col-9 font-ui-xl">User Status</div>
+            <div class="grid-col-3"><%= status(@user.status) %></div>
           </div>
           <div class="usa-card__body text-center">
           <p>
@@ -65,8 +65,8 @@
         <%= if !Accounts.is_solver?(@user) and !Accounts.is_pending?(@user) do %>
           <div class="usa-card__container">
             <div class="usa-card__header">
-              <h3 class="usa-card__heading col-9" style="font-size: 24px; font-weight: 900;">Recertification Status</h3>
-              <span class="col-3 pull-right"><%= certification_status(@certification, @user) %></span>
+              <h3 class="usa-card__heading grid-col-9 font-ui-xl">Recertification Status</h3>
+              <span class="grid-col-3 pull-right"><%= certification_status(@certification, @user) %></span>
             </div>
             <div class="usa-card__body text-center">
               <div style="padding:10px; background-color:#F3F2F3">
@@ -85,10 +85,10 @@
         <% end %>
       </div>
 
-      <div class="col">
+      <div class="grid-col">
         <div class="usa-card__container">
           <div class="usa-card__header">
-            <h3 class="usa-card__heading" style="font-size: 24px; font-weight: 900;">Revoked Challenges</h3>
+            <div class="usa-card__heading font-ui-xl" >Revoked Challenges</div>
           </div>
           <div class="usa-card__body">
               <%= Enum.map(Accounts.revoked_challenges(@user), fn challenge ->  %>
