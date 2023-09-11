@@ -28,7 +28,10 @@ export const ChallengeTab = ({ label, downloadsLabel, section, challenge, childr
         <div className="float-right" id="challenge-link">
           <input id={`challenge-link-text-${section}`} className="opacity-0" defaultValue={window.location.href} />
           <button id="challenge-link-btn" className="usa-button usa-button--unstyled text-decoration-none" onClick={handleCopyLink}>
-            <i className="far fa-copy me-1"></i>
+            <svg className="usa-icon" aria-hidden="true" focusable="false" role="img" style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
+                <title id="copy-share-link">ChallengeGov follow challenges</title>         
+                <use xlinkHref="assets/uswds/img/sprite.svg#content_copy"></use>                
+            </svg> 
             <span>Copy share link</span>
           </button>
           <Tooltip isOpen={copyTooltipOpen} fade={true} target="challenge-link-btn">Link copied</Tooltip>
@@ -42,7 +45,7 @@ export const ChallengeTab = ({ label, downloadsLabel, section, challenge, childr
     <section className="challenge-tab container" id={`challenge-tab-${section}`}>
       <div className="challenge-tab__header">
         <span>{label}</span>        
-        {/* {renderCopyShareButton()} */}
+        {renderCopyShareButton()}
       </div>
       <hr />
       <section className="challenge-tab__content">
