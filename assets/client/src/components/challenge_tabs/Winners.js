@@ -22,7 +22,7 @@ export const Winners = ({challenge, challengePhases, print}) => {
     return winners.map(winner => {
       const {id, image_path, name, place_title} = winner
       return (
-        <div key={id} className="d-flex flex-row align-items-center my-3">
+        <div key={id} className="d-flex flex-row align-items-center usa-tbm-1rem">
           {image_path && <img src={imageBase + winner.image_path} alt="winner image" title="winner image" className="phase-winner-image me-3" />}
           {name && <p>{name}</p>}
           {place_title && <p>{` - ${place_title}`}</p>}
@@ -44,11 +44,11 @@ export const Winners = ({challenge, challengePhases, print}) => {
       const phaseWinner = phase.phase_winner
       if (phaseWinner && Object.keys(phaseWinner).length >= 1 && hasPhaseWinnerData(phaseWinner)) {
         return (
-          <div key={phaseWinner.id || idx } className="card">
-            <div className="card-body ql-editor">
+          <div key={phaseWinner.id || idx } className="usa-card">
+            <div className="usa-card-body ql-editor">
               {renderOverviewImage(phaseWinner)}
-              <h1 className="my-3">{phaseWinner.phase_title}</h1>
-              <div className="my-3" dangerouslySetInnerHTML={{ __html: phaseWinner.overview }}></div>
+              <h1 className="usa-tbm-1rem">{phaseWinner.phase_title}</h1>
+              <div className="usa-tbm-1rem" dangerouslySetInnerHTML={{ __html: phaseWinner.overview }}></div>
               {phaseWinner.winners && phaseWinner.winners.length >= 1 &&
                 <div className="winners-section">{renderWinners(phaseWinner.winners)}</div>
               }

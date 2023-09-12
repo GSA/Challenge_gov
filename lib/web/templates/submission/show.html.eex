@@ -24,7 +24,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-8">
-        <div class="usa-card__container p-3">
+        <div class="usa-card__container padding-3">
           <%= render Web.SubmissionView, "_header.html", conn: @conn, user: @user, challenge: @submission.challenge, phase: @phase %>
           <section>
             <%= if Challenges.allowed_to_edit?(@user, @challenge) do %>

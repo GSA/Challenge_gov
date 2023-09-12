@@ -31,7 +31,7 @@ export const ChallengeTile = ({challenge, preview}) => {
 
     if (tags.length > 0) {
       return (
-        <div className="display-flex flex-align-start p-3">
+        <div className="display-flex flex-align-start padding-3">
           {tags}
         </div>
       )
@@ -119,9 +119,9 @@ export const ChallengeTile = ({challenge, preview}) => {
     if (challenge.logo) {
       return (
         <div className="image_wrapper">
-          <img src={challenge.logo} alt={truncateString(challenge.agency_name, 90)} className="w-100" />
+          <img src={challenge.logo} alt={truncateString(challenge.agency_name, 90)} className="width-full" />
         </div>
-      )
+     )
     }
 
     return (

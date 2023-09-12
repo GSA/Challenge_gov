@@ -9,9 +9,9 @@
 
 <div class="content-header">
   <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-dark">
+    <div class="grid-row margin-bottom-2">
+      <div class="grid-col-6">
+        <h1 class="margin-0 text-dark">
           <span>Help</span>
         </h1>
       </div>
@@ -21,66 +21,71 @@
 
 <section class="content help-page">
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card help-card p-4 my-5 mx-auto">
-          <h3 class="text-center mb-4 font-weight-bold">Getting started</h3>
-          <div class="d-flex flex-row justify-content-around mt-4 help-page__getting-started-content">
-            <div class="text-center help-card__section">
+    <div class="grid-row">
+      <div class="grid-col-12">
+        <div class="grid-container padding-1 my-5 mx-auto margin-bottom-2">
+          <div class="usa-card__container">
+          <h2 class="text-center margin-bottom-1 font-ui-xl">Getting started</h2>
+          <div class="grid-row  margin-top-1 help-page__getting-started-content">
+            <div class="text-center grid-col-6 dhelp-card__section padding-2">
               <svg class="usa-icon dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
                 <use xlink:href="/assets/img/sprite.svg#help"></use>
               </svg>
-              <h4 class="m-4">FAQs</h4>
+              <h3 class="margin-2">FAQs</h3>
               <p>Check out our <%= link("frequently asked questions", to: Routes.static_path(@conn, "/pdfs/challenge_manager_faq.pdf"), target: "_blank") %> on challenge and submission management.</p>
             </div>
-            <span class="vr-light">&nbsp;</span>
-            <div class="text-center help-card__section">
+            <span class="vr-light display-none">&nbsp;</span>
+            <div class="text-center grid-col-6 dhelp-card__section padding-2">
               <svg class="usa-icon dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
                 <use xlink:href="/assets/img/sprite.svg#local_library"></use>
               </svg>
-              <h4 class="m-4">User Guide</h4>
+              <h3 class="margin-2">User Guide</h3>
               <p>Our <%= link("User guide", to: Routes.static_path(@conn, "/pdfs/challenge_manager_user_guide.pdf"), target: "_blank") %> is full of useful information on how to get started.</p>
             </div>
           </div>
         </div>
 
-        <div class="card help-card p-4 my-5 mx-auto help-page__question-section">
-          <div class="d-flex flex-row justify-content-around py-3">
-            <div class="w-50 px-5 my-auto left-section">
-              <h3 class="mb-4 font-weight-bold">Question about creating a challenge?</h3>
+        <div class="card padding-4 grid-container margin-top-3 usa-card__container">
+          <div class="grid-row">
+            <div class="grid-col-6 padding-5 my-auto left-section">
+              <h3 class="margin-bottom-4 font-weight-bold">Question about creating a challenge?</h3>
               <span>View detailed information in the <%= link("Creating a new challenge", to: Routes.static_path(@conn, "/pdfs/creating_new_challenge.pdf"), target: "_blank") %> document.</span>
             </div>
-            <div class="text-center w-50 right-section">
+            <div class="grid-col-6 text-center right-section">
               <img src="/images/challenge_details_page.svg" alt="example challenge details page" title="Challenge details page" class="help-card-image"/>
             </div>
           </div>
         </div>
 
-        <div class="card help-card p-4 my-5 mx-auto help-page__toolkit-section">
-          <div class="d-flex flex-row py-4">
-            <div class="help-card-icon text-center w-25 left-section">
-              <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
-                <use xlink:href="/assets/img/sprite.svg#construction"></use>
-              </svg>
+        <div class="card margin-top-3">
+         <div class="grid-row">
+            <div class="grid-col-6 ">
+             <div class="usa-card__container display-flex flex-row padding-4">
+                <div class="help-card-icon text-center left-section">
+                  <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+                    <use xlink:href="/assets/img/sprite.svg#construction"></use>
+                  </svg>
+                </div>
+                <div class="margin-left-2 right-section">
+                  <h3 class="mb-4 font-weight-bold">Federal employee toolkit</h3>
+                  <span>For more information see the <%= link("Prize and Challenge Toolkit", to: Routes.static_path(@conn, "/pdfs/prize_and_challenge_toolkit.pdf"), target: "_blank") %>.</span>
+                </div>
+             </div>
             </div>
-            <div class="w-50 mx-5 my-auto right-section">
-              <h3 class="mb-4 font-weight-bold">Federal employee toolkit</h3>
-              <span>For more information see the <%= link("Prize and Challenge Toolkit", to: Routes.static_path(@conn, "/pdfs/prize_and_challenge_toolkit.pdf"), target: "_blank") %>.</span>
+
+            <div class="grid-col-6">
+              <div class="display-flex flex-row padding-4 usa-card__container">
+                <div class="text-center w-25 left-section">
+                  <img src="/images/click.svg" alt="hand " title="Contact indication" />
+                </div>
+                <div class="margin-left-2 right-section">
+                  <h3 class="mb-4 font-weight-bold">For technical issues with the platform</h3>
+                  <span>Contact <a href="mailto: team@challenge.gov" target="_blank">team@challenge.gov</a> for help.</span>
+                </div>
+              </div>
             </div>
-          </div>
         </div>
 
-        <div class="card help-card p-4 my-5 mx-auto help-page__technical-issues">
-          <div class="d-flex flex-row py-4">
-            <div class="text-center w-25 left-section">
-              <img src="/images/click.svg" alt="hand " title="Contact indication" />
-            </div>
-            <div class="w-50 mx-5 my-auto right-section">
-              <h3 class="mb-4 font-weight-bold">For technical issues with the platform</h3>
-              <span>Contact <a href="mailto: team@challenge.gov" target="_blank">team@challenge.gov</a> for help.</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

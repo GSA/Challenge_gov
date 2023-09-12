@@ -1,9 +1,9 @@
 // Bootstrap Import
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap/dist/js/bootstrap.js";
+//import "bootstrap/dist/css/bootstrap.css";
+//import "bootstrap/dist/js/bootstrap.js";
 
 // Import dependencies
-import "@fortawesome/fontawesome-free/css/all.css";
+//import "@fortawesome/fontawesome-free/css/all.css";
 import jquery from  "jquery";
 import "popper.js";
 import "phoenix_html"

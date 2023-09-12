@@ -23,10 +23,9 @@
 
 <div class="content-header">
   <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0 text-dark">
-          <span>All Challenges</span>
+    <div class="grid-row padding-bottom-2">
+      <div class="grid-col-6">
+          <div class="font-ui-xl padding-1">All Challenges</div>
           <div class="btn-group">
             <%= link "New", to: Routes.challenge_path(@conn, :new, show_info: true), class: "usa-button" %>
           <a class="usa-button" data-widget="control-sidebar" href="#">Filter</a>
@@ -34,25 +33,24 @@
             <%= link "Clear filters", to: Routes.challenge_path(@conn, :index), class: "usa-button usa-button--outline" %>
           <% end %>
           </div>
-        </h1>
       </div>
     </div>
   </div>
 </div>
 <div class="content-header">
   <div class="container-fluid">
-    <div class="row mb-2">
-      <div id="challenges" class="col-sm-12">
+    <div class="grid-row mb-2">
+      <div id="challenges" class="grid-col-12">
         <section id="active-challenges" style="margin-bottom: 20px;">
-          <h4 style="margin-bottom: 15px; padding-left: 12px;"><strong>Active</strong></h4>
+          <div class="font-ui-lg"  style="margin-bottom: 15px; padding-left: 12px;">Active</div>
           <%= render Web.ChallengeView, "_challenge_table.html", conn: @conn, user: @user, challenges: @challenges.published, sort: @sort, filter: @filter, sortable: true %>
         </section>
         <section id="draft-challenges" style="margin-bottom: 20px;">
-          <h4 style="margin-bottom: 15px; padding-left: 12px;"><strong>Drafts</strong></h4>
+          <div class="font-ui-lg" style="margin-bottom: 15px; padding-left: 12px;">Drafts</h4>
           <%= render Web.ChallengeView, "_challenge_table.html", conn: @conn, user: @user, challenges: @challenges.draft, sort: @sort, filter: @filter, sortable: true %>
         </section>
         <section id="archived-challenges" style="margin-bottom: 20px;">
-          <h4 style="margin-bottom: 15px; padding-left: 12px;"><strong>Closed and Archived</strong></h4>
+          <div class="font-ui-lg" style="margin-bottom: 15px; padding-left: 12px;">Closed and Archived</div>
           <%= render Web.ChallengeView, "_challenge_table.html", conn: @conn, user: @user, challenges: @challenges.archived, sort: @sort, filter: @filter, sortable: true %>
         </section>
       </div>

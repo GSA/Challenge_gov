@@ -12,7 +12,6 @@ if ($("#session_timeout").length > 0) {
   //   </div>`
   // )
 
-
   let renewModal = $("#renew-modal")
 
   // When the renew button is clicked renew session and fetch new timeout then close modal

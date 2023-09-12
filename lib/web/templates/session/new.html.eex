@@ -1,7 +1,7 @@
 <div class="usa-card__container custom-card col-md-6 rules-of-behavior">
   <div class="usa-card__body">
     <div class="rules-wrapper">
-      <h4 class="text-center">You must accept the U.S. Government System terms to sign into this website</h4>
+      <h2 class="text-center">You must accept the U.S. Government System terms to sign into this website</h2>
       <p class="text-center rules-text">
         This is a U.S. General Services Administration Federal Government
         computer system that is "FOR OFFICIAL USE ONLY." This System is subject

@@ -47,11 +47,11 @@ export const ContactForm = ({ challenge, preview }) => {
         <div className="challenge-tab__header">Contact</div>
         <hr />
         <div className="contact-form__wrapper">
-          <div className="mb-5">
+          <div className="usa-mb-5rem">
             Have a question or comment about this challenge? Reach out by
             completing the form below.
           </div>
-          <form className="usa-form w-100" onSubmit={handleSubmit}>
+          <form className="usa-form usa-full-width" onSubmit={handleSubmit}>
             <div className="form-group">
               <label
                 className="usa-label"

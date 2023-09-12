@@ -30,7 +30,7 @@ export const Judging = ({challenge, print}) => {
 
   return (
     <ChallengeTab label="Judging" downloadsLabel="Additional judging documents" section="judging" challenge={challenge} wrapContent={isSinglePhase(challenge)} print={print}>
-      <div className="card">
+      <div className="usa-card">
         {renderPhaseData(challenge.phases)}
       </div>
     </ChallengeTab>

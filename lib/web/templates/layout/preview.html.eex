@@ -2,7 +2,7 @@
 <html lang="en">
   <%= render("_head.html", assigns) %>
 
-  <div id="recaptcha-key" class="d-none"><%= Recaptcha.recaptcha_key() %></div>
+  <div id="recaptcha-key" class="display-none"><%= Recaptcha.recaptcha_key() %></div>
 
   <body>
     <div class="main-wrapper">

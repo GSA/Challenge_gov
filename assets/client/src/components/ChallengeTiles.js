@@ -350,23 +350,25 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
 
                 <div className="filter-module__item keyword-item">
                   <label className="filter-label" htmlFor="keyword">Keyword</label>
-                  <div className="keyword-input-wrapper">
+                  
+                  <div className="keyword-input-wrapper" style={{ display: 'flex', alignItems: 'flex-start', marginTop: '0' }}>
                     <input
                       id="keyword"
-                      className="filter-input"
+                      className="usa-input"
                       type="text"
                       placeholder="Keyword"
                       value={keyword}
                       onChange={(event) => setKeyword(event.target.value)}
+                      style={{ marginTop: '1px' }}
                     />
-                    <button className="usa-button" onClick={handleClearFilters} style={{ marginTop: '5px' }}>
+                    <button className="usa-button" onClick={handleClearFilters} style={{ marginTop: '1.5px', marginLeft: '5px' }}>                    
                       Clear
                     </button>
                   </div>
+
+
                 </div>
-
               </div>
-
             </form>
           </div>
         </div>
