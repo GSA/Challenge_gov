@@ -18,6 +18,10 @@ applications:
     MIX_ENV: prod
     STACK: heroku-22
     HOST: challenge-portal-dev.app.cloud.gov
+    HTTPS_PROXY: https://user:pass@challengeproxy.apps.internal:61443
+    HTTP_PROXY: https://user:pass@challengeproxy.apps.internal:61443
+    NO_PROXY: '*.repo.hex.pm'
+    HEX_UNSAFE_HTTPS: "1"
     LOGIN_PRIVATE_KEY_PATH: dev_key.pem
     LOGIN_PUBLIC_KEY_PATH: dev_cert.pem
     LOGIN_REDIRECT_URL: https://challenge-portal-dev.app.cloud.gov/auth/result
