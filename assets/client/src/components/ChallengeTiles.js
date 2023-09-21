@@ -173,9 +173,8 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     return [
       `"${challenge.id}"`,
       `"${challenge.title}"`,
-      `"${challenge.agency_name}"`,
-      `""`, 
-      `""`, 
+      `"${challenge.agency_name}"`,      
+      `"${challenge.prize_total}"`,
       `"${challenge.start_date}"`,
       `"${challenge.end_date}"`,
       `"${challenge.primary_type}"`,
@@ -189,7 +188,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       "Challenge ID",
       "Challenge Name",
       "Primary Agency Name",
-      "Primary Sub-agency Name",
+      /*"Primary Sub-agency Name",*/
       "Prize Amount",
       "Challenge Start Date",
       "Challenge End Date",

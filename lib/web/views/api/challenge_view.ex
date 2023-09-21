@@ -28,6 +28,7 @@ defmodule Web.Api.ChallengeView do
       brief_description: challenge.brief_description,
       custom_url: challenge.custom_url,
       external_url: challenge.external_url,
+      prize_total: challenge.prize_total,
       agency_name: ChallengeView.agency_name(challenge),
       agency_logo: ChallengeView.agency_logo(challenge),
       logo: ChallengeView.logo_url(challenge),
