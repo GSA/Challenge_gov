@@ -203,62 +203,39 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
 
   const handleExportButtonClick = (event) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    if (filteredChallenges.length === 0) return;
+  if (filteredChallenges.length === 0) return;
 
-    // First map call to apply cleanUpString
-    const cleanedChallenges = filteredChallenges.map((challenge) => {
-        const cleanedChallenge = {...challenge}
-        cleanedChallenge.id = challenge.id;
-        cleanedChallenge.title = cleanUpString(challenge.title);
-        cleanedChallenge.agency_name = cleanUpString(challenge.agency_name);
-        cleanedChallenge.start_date = cleanUpString(challenge.start_date);
-        cleanedChallenge.end_date = cleanUpString(challenge.end_date);
-        cleanedChallenge.primary_type = cleanUpString(challenge.primary_type);
-        cleanedChallenge.tagline = cleanUpString(challenge.tagline);
-        cleanedChallenge.brief_description = cleanUpString(challenge.brief_description);
+  const csvData = filteredChallenges.map(challenge => {
 
-        let formattedUrl = '';
-        if (challenge.external_url) {
-          formattedUrl = cleanUpString(challenge.external_url);
-        } else if (challenge.custom_url) {
-          formattedUrl = `https://www.challenge.gov/?challenge=${cleanUpString(challenge.custom_url)}`;
-        }
-        cleanedChallenge.formattedUrl = formattedUrl;
+    let formattedUrl = '';
+    if (challenge.external_url) {
+      formattedUrl = challenge.external_url;
+    } else if (challenge.custom_url) {
+      formattedUrl = `https://www.challenge.gov/?challenge=${challenge.custom_url}`;
+    }
 
-        let prizeAmountFormatted = '';
-        if(challenge.prize_total){
-          prizeAmountFormatted = formatPrizeAmount(challenge.prize_total);
-        } else {
-          prizeAmountFormatted = "No monetary prize for this challenge"
-        }
-        cleanedChallenge.prizeAmountFormatted = prizeAmountFormatted;
-
-        return cleanedChallenge;
-    });
-
-    // Second map call to prepare CSV data
-    const csvData = cleanedChallenges.map(challenge => {
-      return [
-        escapeFieldForCsv(challenge.id),
-        escapeFieldForCsv(challenge.title),
-        escapeFieldForCsv(challenge.agency_name),
-        escapeFieldForCsv(challenge.prizeAmountFormatted),
-        escapeFieldForCsv(challenge.start_date),
-        escapeFieldForCsv(challenge.end_date),
-        escapeFieldForCsv(challenge.primary_type),
-        escapeFieldForCsv(challenge.tagline),
-        escapeFieldForCsv(challenge.brief_description),
-        escapeFieldForCsv(challenge.formattedUrl)
-      ].join(',');
-    });
-
-    // Unshift the headers
-    csvData.unshift([
+    return [
+      `"${challenge.id}"`,
+      `"${challenge.title}"`,
+      `"${challenge.agency_name}"`,
+      `""`, 
+      `""`, 
+      `"${challenge.start_date}"`,
+      `"${challenge.end_date}"`,
+      `"${challenge.primary_type}"`,
+      `"${challenge.tagline}"`,
+      `"${challenge.brief_description}"`,
+      `${formattedUrl}` 
+    ].join(',');
+  }); 
+    
+   csvData.unshift([
       "Challenge ID",
       "Challenge Name",
       "Primary Agency Name",
+      "Primary Sub-agency Name",
       "Prize Amount",
       "Challenge Start Date",
       "Challenge End Date",
@@ -542,7 +519,16 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                 <div className="filter-module__item keyword-item">
                   <label className="filter-label" htmlFor="keyword">Keyword</label>
                   
-                  <div className="keyword-input-wrapper" style={{ display: 'flex', alignItems: 'flex-start', marginTop: '0' }}>
+                  <div className="keyword-input-wrapper" 
+                     style={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        alignItems: 'flex-start', 
+                        marginTop: '0', 
+                        flexWrap: 'wrap', 
+                        width: '100%', 
+                     }}
+                    >
                     <input
                       id="keyword"
                       className="usa-input"
@@ -550,13 +536,35 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                       placeholder="Keyword"
                       value={keyword}
                       onChange={(event) => setKeyword(event.target.value)}
-                      style={{ marginTop: '1px' }}
+                      style={{ 
+                          marginTop: '1px', 
+                          width: '100%', 
+                          marginBottom: '10px' 
+                      }}
                     />
-                    <button className="usa-button" onClick={handleClearFilters} style={{ marginTop: '1.5px', marginLeft: '5px' }}>                    
-                      Clear
+                    <button className="usa-button" 
+                            onClick={handleClearFilters} 
+                            style={{ 
+                              marginTop: '1.5px', 
+                              marginBottom: '10px', 
+                              width: '100%' 
+                            }}
+                    >                    
+                      Clear Search
+                    </button>
+
+                    <button className="usa-button usa-button--accent-warm" 
+                      onClick={handleExportButtonClick} 
+                      style={{ 
+                        marginTop: '1.5px', 
+                        width: '100%' 
+                      }}
+                      disabled={filteredChallenges.length === 0}  // Make disabled when there's no output
+                      type="button"
+                    >
+                      Export
                     </button>
                   </div>
-
 
                 </div>
               </div>
