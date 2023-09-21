@@ -265,7 +265,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
 
   const renderHeader = () => (
     <h2 className="usa-margin-bottom-5">  
-      {isArchived ? "Archived Challenges" : "Filter by open/active challenges."}
+      {isArchived ? "Archived Challenges" : "Filter by open/active challenges"}
     </h2>
   );
   
@@ -330,7 +330,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           <div style={sortTextStyle}>
             <p className="card__section--sort">
               <i>
-                Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press "Clear" to start a new search.
+                Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press "Clear Filter" to start a new search.
               </i>
             </p>
           </div>
@@ -550,7 +550,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                               width: '100%' 
                             }}
                     >                    
-                      Clear Search
+                      Clear Filter
                     </button>
 
                     <button className="usa-button usa-button--accent-warm" 
