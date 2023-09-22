@@ -457,7 +457,6 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                       Export
                     </button>
                   </div>
-
                 </div>
               </div>
             </form>
