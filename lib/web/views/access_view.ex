@@ -10,12 +10,12 @@ defmodule Web.AccessView do
         ~E"""
           <div class="content-header">
 
-            <div class="usa-alert usa-alert--warning usa-alert--no-icon">
+            <div class="usa-alert usa-alert--warning usa-alert--no-icon margin-3">
              <div class="usa-alert__body">
               <p class="usa-alert__text">
-                <p class="h4">User Account Recertification Needed</p>
+                <p class="font-ui-lg">User Account Recertification Needed</p>
                 <p class="pl-0">Your account was decertified on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
-              </p>
+                </p>
              </div>
             </div>
 
@@ -48,12 +48,12 @@ defmodule Web.AccessView do
           <div class="content-header">
             <div class="container-fluid">
 
-            <div class="usa-alert usa-alert--warning usa-alert--no-icon">
+            <div class="usa-alert usa-alert--warning usa-alert--no-icon margin-3">
              <div class="usa-alert__body">
               <p class="usa-alert__text">
-                <p class="h4">Account Expiration Notice</p>
+                <p class="font-ui-lg">Account Expiration Notice</p>
                 <p class="pl-0">Your annual account certification will expire on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
-              </p>
+                </p>
              </div>
             </div>
 
@@ -86,6 +86,7 @@ defmodule Web.AccessView do
 
       _ ->
         {:ok, %{expires_at: %{month: nil, day: nil, year: nil}}}
+
     end
   end
 
