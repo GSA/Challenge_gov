@@ -156,9 +156,69 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     setFilteredChallenges(data.collection);
   };
 
+  const handleExportButtonClick = (event) => {
+  event.preventDefault();
+
+  if (filteredChallenges.length === 0) return;
+
+  const csvData = filteredChallenges.map(challenge => {
+
+    let formattedUrl = '';
+    if (challenge.external_url) {
+      formattedUrl = challenge.external_url;
+    } else if (challenge.custom_url) {
+      formattedUrl = `https://www.challenge.gov/?challenge=${challenge.custom_url}`;
+    }
+
+    return [
+      `"${challenge.id}"`,
+      `"${challenge.title}"`,
+      `"${challenge.agency_name}"`,      
+      `"${challenge.prize_total}"`,
+      `"${challenge.start_date}"`,
+      `"${challenge.end_date}"`,
+      `"${challenge.primary_type}"`,
+      `"${challenge.tagline}"`,
+      `"${challenge.brief_description}"`,
+      `${formattedUrl}` 
+    ].join(',');
+  }); 
+    
+   csvData.unshift([
+      "Challenge ID",
+      "Challenge Name",
+      "Primary Agency Name",
+      /*"Primary Sub-agency Name",*/
+      "Prize Amount",
+      "Challenge Start Date",
+      "Challenge End Date",
+      "Primary Challenge Type",
+      "Tagline",
+      "Short Description",
+      "URL of Challenge Landing Page"
+    ].join(','));
+
+    const blob = new Blob([csvData.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = 'Challenges.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Track this event
+    window.gtag('event', 'challenge_filter_export', {
+    'event_category': 'button_click',
+    'event_label': 'Export',
+    'value': 1 //  Google Analytics will increment the total value for the 'export_click' event by 1 each time the event is triggered
+    });
+  }  
+
   const renderHeader = () => (
     <h2 className="usa-margin-bottom-5">  
-      {isArchived ? "Archived Challenges" : "Filter by open/active challenges."}
+      {isArchived ? "Archived Challenges" : "Filter by open/active challenges"}
     </h2>
   );
   
@@ -216,7 +276,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           <div style={sortTextStyle}>
             <p className="card__section--sort">
               <i>
-                Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press "Clear" to start a new search.
+                Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press "Clear Filter" to start a new search.
               </i>
             </p>
           </div>
@@ -351,7 +411,16 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                 <div className="filter-module__item keyword-item">
                   <label className="filter-label" htmlFor="keyword">Keyword</label>
                   
-                  <div className="keyword-input-wrapper" style={{ display: 'flex', alignItems: 'flex-start', marginTop: '0' }}>
+                  <div className="keyword-input-wrapper" 
+                     style={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        alignItems: 'flex-start', 
+                        marginTop: '0', 
+                        flexWrap: 'wrap', 
+                        width: '100%', 
+                     }}
+                    >
                     <input
                       id="keyword"
                       className="usa-input"
@@ -359,14 +428,35 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                       placeholder="Keyword"
                       value={keyword}
                       onChange={(event) => setKeyword(event.target.value)}
-                      style={{ marginTop: '1px' }}
+                      style={{ 
+                          marginTop: '1px', 
+                          width: '100%', 
+                          marginBottom: '10px' 
+                      }}
                     />
-                    <button className="usa-button" onClick={handleClearFilters} style={{ marginTop: '1.5px', marginLeft: '5px' }}>                    
-                      Clear
+                    <button className="usa-button" 
+                            onClick={handleClearFilters} 
+                            style={{ 
+                              marginTop: '1.5px', 
+                              marginBottom: '10px', 
+                              width: '100%' 
+                            }}
+                    >                    
+                      Clear Filter
+                    </button>
+
+                    <button className="usa-button usa-button--accent-warm" 
+                      onClick={handleExportButtonClick} 
+                      style={{ 
+                        marginTop: '1.5px', 
+                        width: '100%' 
+                      }}
+                      disabled={filteredChallenges.length === 0}  // Make disabled when there's no output
+                      type="button"
+                    >
+                      Export
                     </button>
                   </div>
-
-
                 </div>
               </div>
             </form>
