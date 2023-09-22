@@ -155,6 +155,7 @@ defmodule ChallengeGov.CertificationLogs do
   def check_user_certification_history(user) do
     CertificationLog
     |> where([r], r.user_id == ^user.id)
+    |> where([r], is_nil(r.requested_at))
     |> order_by([r], desc: r.expires_at)
     |> limit(1)
     |> Repo.all()

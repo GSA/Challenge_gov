@@ -85,6 +85,7 @@ defmodule ChallengeGov.Accounts.User do
     field(:agency_id, :integer)
 
     field(:last_active, :utc_datetime)
+    field(:recertification_expired_at, :utc_datetime)
     field(:active_session, :boolean)
 
     field(:renewal_request, :string)

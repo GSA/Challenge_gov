@@ -40,7 +40,7 @@
 
           <% end %>
           <%= if flash = get_flash(@conn, :error) do %>
-            <div class="alert alert-danger" role="alert">
+            <div class="usa-alert usa-alert--error usa-alert--no-icon" role="alert">
               <%= flash %>
             </div>
           <% end %>

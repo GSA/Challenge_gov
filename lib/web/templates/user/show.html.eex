@@ -70,7 +70,7 @@
             </div>
             <div class="usa-card__body text-center">
               <div style="padding:10px; background-color:#F3F2F3">
-                <span class="me-5">
+                <span class="margin-right-5">
                   <%= certification_info(@certification, @user) %>
                 </span>
                 <span class="ml-5">
