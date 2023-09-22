@@ -1,10 +1,10 @@
 <section class="content-header text-center">
  <%= if @user.status in ["decertified", "active"] && @user.renewal_request == "certification" do %>
     <div class="content-header">
-      <div class="usa-alert usa-alert--success usa-alert--no-icon">
+      <div class="usa-alert usa-alert--success usa-alert--no-icon margin-3">
         <div class="usa-alert__body">
         <p class="usa-alert__text">
-          <p class="h4">Account Recertification Requested</p>
+          <p class="font-ui-lg">Account Recertification Requested</p>
           <p>Thank you! Your annual account recertification request has been submitted.</p>
         </p>
         </div>
@@ -13,20 +13,20 @@
     <div>
       <div class="row">
         <div class="col-4"></div>
-        <div class="col-4 mb-3">
+        <div class="col-4 margin-bottom-3">
           Thank you! Your annual account recertification request has been submitted.
         </div>
       </div>
       <div class="row">
         <div class="col-4"></div>
-        <div class="col-4 mb-3">
+        <div class="col-4 margin-bottom-3">
           Please allow up to two business days for a Challenge.Gov Administrator to process your request.
           Once processed you will receive an email from <a href="mailto:team@challenge.gov">team@challenge.gov</a> letting you know your account has been recertified.
         </div>
       </div>
       <div class="row">
         <div class="col-4"></div>
-        <div class="col-4 mb-3">
+        <div class="col-4 margin-bottom-3">
           If you have any questions, please email us at <a href="mailto:team@challenge.gov">team@challenge.gov</a>
         </div>
       </div>
