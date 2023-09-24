@@ -314,26 +314,9 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       </p>
     </div>;
 
-
-    if (isArchived) {
-      return (
-        <div style={sortTextStyle}>
-          <p className="card__section--sort">
-            <i>Challenges sorted by those most recently closed to open submissions.</i>
-          </p>
-        </div>
-      );
-    } else {
-      if (data.collection && data.collection.length >= 1) {
-        return (
-          <div style={sortTextStyle}>
-            <p className="card__section--sort">
-              <i>
-                Results will update automatically as you filter. Press "Clear Search" to start a new search. Press "Export" to download a CSV file of your results.
-              </i>
-            </p>
-          </div>
-        );
+  if (!isArchived) {
+    if (data.collection && data.collection.length >= 1) {
+      return sortedTextComponent;
       }
     } else {
       return (<>
@@ -419,7 +402,6 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       <section id="active-challenges" className="cards__section" tabIndex="-1">
         <div className="container">
           {renderHeader()}
-          
           {renderYearFilter()}
         </div>
 
@@ -445,123 +427,91 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                     </select>
                   </div>
 
-              <div className="filter-dropdowns">
-
-                <div className="filter-module__item">
-                  <label className="filter-label" htmlFor="primaryAgency">Primary agency sponsor</label>
-                  <select
-                    id="primaryAgency"
-                    className="usa-select"
-                    value={primaryAgency}
-                    onChange={(event) => setPrimaryAgency(event.target.value)}
-                  >
-                    <option value="">Select...</option>
-                    {primaryAgencyOptions.map((option, index) => (
-                      <option key={index} value={option}>{option}</option>
-                    ))}
-                  </select>
+                  <div className="filter-module__item">
+                    <label className="filter-label" htmlFor="dateAdded">Date added</label>
+                      <select
+                        id="dateAdded"
+                        className="usa-select"
+                        value={dateAdded}
+                        onChange={(event) => setDateAdded(event.target.value)}
+                      >
+                        <option value="">Select...</option>
+                        {dateAddedOptions.map((option, index) => (
+                          <option key={index} value={option}>{option}</option>
+                        ))}
+                      </select>
+                  </div>
                 </div>
 
-                <div className="filter-module__item" style={styles.smallWidth}>
-                  <label className="filter-label" htmlFor="dateAdded">Date added</label>
-                  <select
-                    id="dateAdded"
-                    className="usa-select"
-                    value={dateAdded}
-                    onChange={(event) => setDateAdded(event.target.value)}
-                  >
-                    <option value="">Select...</option>
-                    {dateAddedOptions.map((option, index) => (
-                      <option key={index} value={option}>{option}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="filter-module__item">
-                  <label className="filter-label" htmlFor="lastDay">Last day to submit</label>
-                  <select
-                    id="lastDay"
-                    className="usa-select"
-                    value={lastDay}
-                    onChange={(event) => setLastDay(event.target.value)}
-                  >
-                    <option value="">Select...</option>
-                    {lastDayOptions.map((option, index) => (
-                      <option key={index} value={option}>{option}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="filter-module__item" style={styles.largeWidth}>
-                  <label className="filter-label" htmlFor="primaryChallengeType">Primary challenge type</label>
-                  <select
-                    id="primaryChallengeType"
-                    className="usa-select"
-                    style={{ height: '150px'}} // or desired height
-                    value={primaryChallengeType}
-                    onChange={(event) => {
-                      const selectedOptions = Array.from(
-                        event.target.selectedOptions,
-                        (option) => option.value
-                      );
-                      setPrimaryChallengeType(selectedOptions);
-                    }}
-                    multiple
-                  >
-                    <option value="">Select one or more...</option>
-                    {primaryChallengeTypeOptions.map((option, index) => (
-                      <option key={index} value={option.value}>{option.display}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="filter-module__item keyword-item">
-                  <label className="filter-label" htmlFor="keyword">Keyword</label>
-                  
-                  <div className="keyword-input-wrapper" 
-                     style={{ 
-                        display: 'flex', 
-                        flexDirection: 'column', 
-                        alignItems: 'flex-start', 
-                        marginTop: '0', 
-                        flexWrap: 'wrap', 
-                        width: '100%', 
-                     }}
+                <div style={{ flex: 2, minWidth: '160px', marginRight: '10px'}}>
+                  <div className="filter-module__item">
+                    <label className="filter-label" htmlFor="lastDay">Last day to submit</label>
+                    <select
+                      id="lastDay"
+                      className="usa-select"
+                      value={lastDay}
+                      style={{ marginBottom: '10px' }} 
+                      onChange={(event) => setLastDay(event.target.value)}
                     >
+                      <option value="">Select...</option>
+                      {lastDayOptions.map((option, index) => (
+                        <option key={index} value={option}>{option}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="filter-module__item keyword-item">
+                    <label className="filter-label" htmlFor="keyword">Keyword</label>
                     <input
                       id="keyword"
                       className="usa-input"
                       type="text"
                       placeholder="Keyword"
+                      style={{ marginTop: '0px' }}
                       value={keyword}
                       onChange={(event) => setKeyword(event.target.value)}
-                      style={{ 
-                          marginTop: '1px', 
-                          width: '100%', 
-                          marginBottom: '10px' 
-                      }}
                     />
-                    <button className="usa-button" 
-                            onClick={handleClearFilters} 
-                            style={{ 
-                              marginTop: '1.5px', 
-                              marginBottom: '10px', 
-                              width: '100%' 
-                            }}
-                    >                    
-                      Clear Search
-                    </button>
+                  </div>
+                </div>
 
-                    <button className="usa-button usa-button--accent-warm" 
-                      onClick={handleExportButtonClick} 
-                      style={{ 
-                        marginTop: '1.5px', 
-                        width: '100%' 
+                <div style={{ flex: 3, minWidth: '200px', marginRight: '10px'}}>
+                  <div className="filter-module__item">
+                    <label className="filter-label" htmlFor="primaryChallengeType">Primary challenge type</label>
+                    <select
+                      id="primaryChallengeType"
+                      className="usa-select"
+                      style={{ height: '150px' }} // or desired height
+                      value={primaryChallengeType}
+                      onChange={(event) => {
+                        const selectedOptions = Array.from(
+                          event.target.selectedOptions,
+                          (option) => option.value
+                        );
+                        setPrimaryChallengeType(selectedOptions);
                       }}
-                      disabled={filteredChallenges.length === 0}  // Make disabled when there's no output
-                      type="button"
+                      multiple
                     >
-                      Export
+                      <option value="">Select one or more...</option>
+                      {primaryChallengeTypeOptions.map((option, index) => (
+                        <option key={index} value={option.value}>{option.display}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{ flex: 1, minWidth: '155', display: 'flex', justifyContent: 'flex-end' }}>
+                  <div className="filter-module__item" style={{ marginLeft: '0' }}>
+                      <button className="usa-button" 
+                        onClick={handleClearFilters} 
+                        style={{ 
+                            marginTop: '32px', 
+                            marginBottom: '10px',  
+                            width: 'auto',
+                            minWidth: '100px', // Adjust this value based on your needs
+                            whiteSpace: 'nowrap' // Add this to your style
+                        }}
+                    >                    
+                        Clear Search
                     </button>
                   </div>
 
