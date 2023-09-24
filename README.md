@@ -1,168 +1,56 @@
-# ChallengeGov
+Challenge.Gov is an open source platform that accepts contributions and feedback from our customers.   
 
-[![GSA](https://circleci.com/gh/GSA/Challenge_gov.svg?style=svg)](https://app.circleci.com/pipelines/github/GSA/Challenge_gov)
+## Code of Conduct
 
-Welcome to the ChallengeGov Data Portal
+Challenge.Gov is committed to building a safe, welcoming, harassment-free culture for everyone. Challenge.Gov is a part of the Technology Transformation Services (TTS) within the General Services Administration (GSA), and we expect everyone to follow the [GSA TTS Code of Conduct](https://handbook.tts.gsa.gov/about-us/code-of-conduct/).
 
-## Requirements
+We encourage you to read this platform’s [DEVCONFIG](DEVCONFIG.md), its [LICENSE]( https://github.com/GSA/Challenge_gov/blob/main/LICENSE), and its [README](README.md). If you want to read more about our open source policy or have questions, check out the GSA’s Open Source Policy (https://open.gsa.gov/oss/ or send us an [email](mailto:team@challenge.gov).
 
-- [PostgreSQL 10](https://www.postgresql.org/) - database
-- [Elixir 1.9](https://elixir-lang.org) - server language
-- [Erlang 21.2](https://www.erlang.org/) - server language
-- [node.js 11.10](https://nodejs.org/en/) - front end language
-- [yarn 1.22.5](https://yarnpkg.com/) - package manager
+## How you can contribute
 
-## Install & Setup
+Anyone can contribute to Challenge.Gov. Whether it's notifying us of an issue, proposing a new feature, or suggestions for content or workflow improvements, we welcome your ideas on how to improve this site.
 
-### Requirements
+First time contributor? We’re here to help guide you through a successful contribution. We review all contributions before merging them into Challenge.Gov. If you’re unsure about anything, just ask (mailto:team@challenge.Gov).
 
-Install PostgreSQL according to your OS of choice, for MacOS [Postgres.app](https://postgresapp.com/) is recommended.
+Before submitting a contribution, you’ll just need to create a GitHub account or sign in to your existing account.  
 
-Alternatively, use the Challenge_gov docker-compose file to run psql locally in a container.
+## Submitting bugs and issues
 
-```cd docker
-docker-compose run --service-ports psql
-```
+If something isn’t working the way it's supposed to:
 
-To install Elixir, Erlang, and NodeJS it is recommended to use the [asdf version manager](https://asdf-vm.com/#/). Install instructions are copied here for MacOS, for other OSs see [asdf docs](https://asdf-vm.com/#/core-manage-asdf-vm). This also assumes you have [HomeBrew](https://brew.sh/) installed.
+Email (mailto:team@Challenge.Gov) and document how to reproduce the bug. Before submitting a bug, try to recreate it and document the steps we can take to reproduce it. If you can, take screen shots to capture specific details about the bug. This helps us understand its context. We can only fix bugs that we're able to understand and reproduce.
 
-```bash
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.7.0
-echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.bash_profile
-echo -e '\n. $HOME/.asdf/completions/asdf.bash' >> ~/.bash_profile
+## To Contribute to fixing bugs, developing features and enhancements
 
-brew install \
-  coreutils automake autoconf openssl \
-  libyaml readline libxslt libtool unixodbc
-```
+Before submitting a contribution, you’ll just need to create a GitHub account or sign in to your existing account.  
 
-Once asdf is set up, install each language. NodeJS may require setting up keys, and should display help to guide you.
+Fork this repo into your GitHub account. Read more about forking a repo on [GitHub](https://help.github.com/articles/fork-a-repo/).
+Create a branch from `production` and name it in a way that lightly defines what you’re working on (for example, `add-styles`).
+Once you’re ready to submit a pull request, fill out the [pull request template (https://github.com/GSA/Challenge_gov/compare)
+Submit your pull request against the `main` branch. 
 
-```bash
-asdf plugin-add erlang
-asdf install erlang 21.2.5
+If the pull request is accepted, we will merge the pull request for you. 
 
-asdf plugin-add elixir
-asdf install elixir 1.8.0
+## How we prioritize
 
-asdf plugin-add nodejs
-bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
-asdf install nodejs 11.13.
+Once you’ve submitted a contribution, we'll review the code and triage it based on the following considerations:
+1. **Severity:** What type of functionality is impacted? Is there a workaround?
+2. **Priority:** Does this align with our vision and roadmap goals?
+3. **Size:** Can we accomplish this in a 2 week sprint or will this take longer? 
 
-asdf plugin-add yarn 
-asdf install yarn 1.22.5
+Note: We prioritize issues that affect accessibility, user experience, and system security. 
 
-```
+These considerations help us decide if and when we can work on the issue. If the issue is accepted, we will schedule them for an upcoming 2-week sprint.
 
-### ChallengeGov Setup
+## Common terms
 
-Create the file `config/dev.local.exs` and set a secret key base, and if needed, include local PostgreSQL connection information.
-It will look something like (replacing with your local configuration):
+There can be a lot of jargon when discussing how you can contribute to Challenge.Gov. We’ve included some common terms we use below.
 
-```elixir
-use Mix.Config
-
-config :challenge_gov, Web.Endpoint,
-  secret_key_base: "<OUTPUT OF `mix phx.gen.secret`>"
-
-config :challenge_gov, ChallengeGov.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "challenge_gov_dev",
-  hostname: "localhost",
-  pool_size: 10
-```
-
-Create the file `config/test.local.exs` and set a secret key base, and if needed, include local PostgreSQL connection information.
-It will look something like (replacing with your local configuration):
-
-```elixir
-use Mix.Config
-
-config :challenge_gov, Web.Endpoint,
-  secret_key_base: "<OUTPUT OF `mix phx.gen.secret`>"
-
-config :challenge_gov, ChallengeGov.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "challenge_gov_test",
-  hostname: "localhost",
-  pool_size: 10
-```
-
-Start with cloning the application. Once cloned, in your terminal run the following commands inside the cloned folder.
-
-```bash
-mix local.hex --force
-mix local.rebar --force
-mix deps.get
-mix compile
-```
-
-This sets up your basic elixir environment. Next setup the database. The following commands will create and migrate locally, as well as migrate seeds.
-
-Super-Admin (optional) -- If you would like to seed the database with a default super-admin user, please set the following environment variables:
-
-- FIRST_USER_EMAIL
-- FIRST_USER_FN
-- FIRST_USER_LN
-
-Setup and seed the database
-
-```bash
-mix ecto.create
-mix ecto.migrate
-mix run priv/repo/seeds_updated.exs
-```
-
-Once the database is setup, make sure to install javascript dependencies.
-
-```bash
-cd assets/
-yarn
-cd ..
-```
-
-Now you can run the server.
-
-```bash
-mix phx.server
-```
-
-## Development
-
-Gain access to the portal by going to http://localhost:4000/ and clicking on 'Dev Accounts' to select and sign in under different user roles.
-
-## Testing
-
-The ChallengeGov runs each pull request (and every commit on the `master` branch) through CI. Make sure to add tests as you extend the application. We also run [Credo](https://github.com/rrrene/credo) and the built in formatter in CI to ensure code quality.
-
-## Deployment
-
-Passing CI on master deploys to the dev environment via Cloud Foundry as part of the Drone build.
-
-## Importing Data
-
-Run importers in order of Open, Closed, ClosedImported. Afterward set the challlenges_seq_id to the max challenge-id.
-
-Commands to run:
-
-```
-$ iex -S mix run
-> Mix.Tasks.OpenChallengeImporter.run("")
-> Mix.Tasks.ClosedChallengeImporter.run("")
-> Mix.Tasks.ClosedImportedChallengeImporter.run("")
-```
-
-In psql after imports:
-
-```
-SELECT setval('challenges_id_seq', max(id)) FROM challenges;
-```
-
-## Learn more about Phoenix
-
-  * Official website: http://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Source: https://github.com/phoenixframework/phoenix
+- **Bug** - problem resulting in something not working properly or as expected.
+- **Enhancement** - a proposal to make something existing work better. 
+- **Feature request** - a proposal for something new to be added to the system. 
+- **Fork** - a copy of a repository that you manage. 
+- **Open source** - something that can be viewed, modified, and shared by anyone in the public with permissions enforced through an open source license.
+- **Pull request** - a way to notify project team members when a contributor/developer wants to merge new code changes into a main project repository. You can read more on GitHub, (https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).
+- **Repository (aka repo)** - In Github, a repository contains all your projects’ files and each of their revisions. You can read more on GitHub (https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories). 
+- **Roadmap** - a summary that outlines a product’s goals, priorities, and progress over a period of time. 
