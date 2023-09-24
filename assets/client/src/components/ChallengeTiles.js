@@ -32,40 +32,6 @@ function formatPrizeAmount(num) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(formatNum);
 }
 
-function escapeFieldForCsv(field) {
-  // if the field includes commas, newline characters or double-quotes, then
-  // - wrap them in quotes
-  // - replace inner double quotes with a pair of double quotes
-  // - replace newline characters with '\n'
-  if (typeof field === 'string' && /[,\"\n]/.test(field)) {
-    field = `"${field.replace(/"/g, '""').replace(/\n/g, '\\n')}"`;
-  }
-  return field;
-}
-
-// this function will replace each occurrence of these error characters with the correct one 
-// we can add more such cases as we find them; this fix will handle most such issues
-function cleanUpString(str) {
-  if (!str || typeof str !== 'string') {
-    return '';
-  }
-
-const replacements = [
-    { from: /â€“/g, to: "-" },
-    { from: /â€œ/g, to: "'" },
-    { from: /â€˜/g, to: "'" },
-    { from: /â€\u009D/g, to: "'" },
-    { from: /â€\u0080/g, to: "'" },
-    { from: /â€\u009C/g, to: "'" },
-    { from: /â€\u008B/g, to: "'" },
-    { from: /Ã©/g, to: "é" }
-  ];
-  replacements.forEach(({ from, to }) => {
-      str = str.replace(from, to);
-    });
-    return str;
-  }
-
 export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handleYearChange }) => {
   const [primaryAgencyOptions, setPrimaryAgencyOptions] = useState([]);
   const [primaryAgency, setPrimaryAgency] = useState('');
@@ -210,17 +176,25 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const csvData = filteredChallenges.map(challenge => {
 
     let formattedUrl = '';
+    let prizeAmountFormatted = '';
     if (challenge.external_url) {
       formattedUrl = challenge.external_url;
     } else if (challenge.custom_url) {
       formattedUrl = `https://www.challenge.gov/?challenge=${challenge.custom_url}`;
     }
 
+    //Format the weblink for the challenge
+    if(challenge.prize_total){
+      prizeAmountFormatted = formatPrizeAmount(challenge.prize_total);
+    } else {
+      prizeAmountFormatted = "No monetary prize for this challenge"
+    }
+    
     return [
       `"${challenge.id}"`,
       `"${challenge.title}"`,
       `"${challenge.agency_name}"`,      
-      `"${challenge.prize_total}"`,
+      `"${prizeAmountFormatted}"`,
       `"${challenge.start_date}"`,
       `"${challenge.end_date}"`,
       `"${challenge.primary_type}"`,
@@ -228,7 +202,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       `"${challenge.brief_description}"`,
       `${formattedUrl}` 
     ].join(',');
-  }); 
+  });
     
    csvData.unshift([
       "Challenge ID",
