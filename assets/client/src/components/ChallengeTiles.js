@@ -38,6 +38,11 @@ const primaryChallengeTypeOptions = [
   { display: 'Scientific', value: 'Scientific' },
 ];
 
+function formatPrizeAmount(num) {
+  const formatNum = num / 100;
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(formatNum);
+}
+
 export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handleYearChange }) => {
   const [primaryAgencyOptions, setPrimaryAgencyOptions] = useState([]);
   const [primaryAgency, setPrimaryAgency] = useState('');
@@ -182,17 +187,25 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const csvData = filteredChallenges.map(challenge => {
 
     let formattedUrl = '';
+    let prizeAmountFormatted = '';
     if (challenge.external_url) {
       formattedUrl = challenge.external_url;
     } else if (challenge.custom_url) {
       formattedUrl = `https://www.challenge.gov/?challenge=${challenge.custom_url}`;
     }
 
+    //Format the weblink for the challenge
+    if(challenge.prize_total){
+      prizeAmountFormatted = formatPrizeAmount(challenge.prize_total);
+    } else {
+      prizeAmountFormatted = "No monetary prize for this challenge"
+    }
+    
     return [
       `"${challenge.id}"`,
       `"${challenge.title}"`,
       `"${challenge.agency_name}"`,      
-      `"${challenge.prize_total}"`,
+      `"${prizeAmountFormatted}"`,
       `"${challenge.start_date}"`,
       `"${challenge.end_date}"`,
       `"${challenge.primary_type}"`,
@@ -200,7 +213,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       `"${challenge.brief_description}"`,
       `${formattedUrl}` 
     ].join(',');
-  }); 
+  });
     
    csvData.unshift([
       "Challenge ID",
