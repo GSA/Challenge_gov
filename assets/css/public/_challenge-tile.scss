@@ -16,6 +16,7 @@ p {
   display: grid;
   // grid-template-columns: repeat(auto-fit, minmax(42.5rem, 1fr));
   margin: auto;
+  margin-top: -37px !important;
   padding: 20px;
 
   &__none {

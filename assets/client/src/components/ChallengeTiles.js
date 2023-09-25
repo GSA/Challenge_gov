@@ -38,6 +38,11 @@ const primaryChallengeTypeOptions = [
   { display: 'Scientific', value: 'Scientific' },
 ];
 
+function formatPrizeAmount(num) {
+  const formatNum = num / 100;
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(formatNum);
+}
+
 export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handleYearChange }) => {
   const [primaryAgencyOptions, setPrimaryAgencyOptions] = useState([]);
   const [primaryAgency, setPrimaryAgency] = useState('');
@@ -143,7 +148,25 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     },
     largeWidth: {
       width: '100%'
-    }
+    },
+    exportContainer: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '5px 0 5px 0', // reduce the bottom padding here
+    },
+    exportTextContainer: {
+      width: '50%',
+      textAlign: 'left',
+      /*marginLeft: '410px',*/
+    },
+    exportButtonContainer: {
+      width: '50%',
+      textAlign: 'right',
+      marginRight: '10px',
+    },
   };
 
   const handleClearFilters = (event) => {
@@ -156,9 +179,77 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     setFilteredChallenges(data.collection);
   };
 
+  const handleExportButtonClick = (event) => {
+  event.preventDefault();
+
+  if (filteredChallenges.length === 0) return;
+
+  const csvData = filteredChallenges.map(challenge => {
+
+    let formattedUrl = '';
+    let prizeAmountFormatted = '';
+    if (challenge.external_url) {
+      formattedUrl = challenge.external_url;
+    } else if (challenge.custom_url) {
+      formattedUrl = `https://www.challenge.gov/?challenge=${challenge.custom_url}`;
+    }
+
+    //Format the weblink for the challenge
+    if(challenge.prize_total){
+      prizeAmountFormatted = formatPrizeAmount(challenge.prize_total);
+    } else {
+      prizeAmountFormatted = "No monetary prize for this challenge"
+    }
+    
+    return [
+      `"${challenge.id}"`,
+      `"${challenge.title}"`,
+      `"${challenge.agency_name}"`,      
+      `"${prizeAmountFormatted}"`,
+      `"${challenge.start_date}"`,
+      `"${challenge.end_date}"`,
+      `"${challenge.primary_type}"`,
+      `"${challenge.tagline}"`,
+      `"${challenge.brief_description}"`,
+      `${formattedUrl}` 
+    ].join(',');
+  });
+    
+   csvData.unshift([
+      "Challenge ID",
+      "Challenge Name",
+      "Primary Agency Name",
+      /*"Primary Sub-agency Name",*/
+      "Prize Amount",
+      "Challenge Start Date",
+      "Challenge End Date",
+      "Primary Challenge Type",
+      "Tagline",
+      "Short Description",
+      "URL of Challenge Landing Page"
+    ].join(','));
+
+    const blob = new Blob([csvData.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = 'Challenges.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Track this event
+    window.gtag('event', 'challenge_filter_export', {
+    'event_category': 'button_click',
+    'event_label': 'Export',
+    'value': 1 //  Google Analytics will increment the total value for the 'export_click' event by 1 each time the event is triggered
+    });
+  }  
+
   const renderHeader = () => (
     <h2 className="usa-margin-bottom-5">  
-      {isArchived ? "Archived Challenges" : "Filter by open/active challenges."}
+      {isArchived ? "Archived Challenges" : "Filter open challenges"}
     </h2>
   );
   
@@ -199,30 +290,57 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
 };
   
   const renderSortText = () => {
-    const sortTextStyle = { textAlign: 'center', marginBottom: '20px' };
+  const sortTextStyle = { textAlign: 'center', marginBottom: '20px' };
+  
+  const sortedTextComponent = 
+    <div style={sortTextStyle}>
+      <p className="card__section--sort">
+        <i>Results will update automatically as you filter. Press "Clear Search" to start a new search. Press "Export" to download a CSV file of your results.</i>
+      </p>
+    </div>;
 
-
-    if (isArchived) {
-      return (
-        <div style={sortTextStyle}>
-          <p className="card__section--sort">
-            <i>Challenges sorted by those most recently closed to open submissions.</i>
-          </p>
-        </div>
-      );
-    } else {
-      if (data.collection && data.collection.length >= 1) {
-        return (
-          <div style={sortTextStyle}>
-            <p className="card__section--sort">
-              <i>
-                Challenges are sorted by those closing soonest. Results will update automatically as you filter. Press "Clear" to start a new search.
-              </i>
-            </p>
-          </div>
-        );
+  if (!isArchived) {
+    if (data.collection && data.collection.length >= 1) {
+      return sortedTextComponent;
       }
+    } else {
+      return (<>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          {renderSubHeader()}
+        </div>
+        <div style={{
+          display: 'flex', 
+          flexDirection: 'column',
+          justifyContent: 'center', 
+          alignItems: 'center',
+          maxWidth: '1200px', 
+          margin: '0 auto'
+        }}>
+          {sortedTextComponent}
+        </div>
+      </>);
     }
+  };
+
+  const renderExportButton = () => {
+    return (
+      <div className="exportContainer" style={styles.exportContainer}>
+        <div className="exportTextContainer" style={styles.exportTextContainer}>
+          <p>Challenges are sorted by those closing soonest.</p>
+        </div>
+
+        <div className="exportButtonContainer" style={styles.exportButtonContainer}>
+          <button 
+            className="usa-button usa-button--accent-warm" 
+            onClick={handleExportButtonClick} 
+            disabled={filteredChallenges.length === 0} 
+            type="button"
+          >
+              Export
+          </button>
+        </div>
+      </div>
+    );
   };
 
   const renderChallengeTiles = () => {
@@ -243,7 +361,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       if (filteredChallenges) {
         if (filteredChallenges.length > 0) {
           return (
-            <div className="cards">
+            <div className="cards" style={{ marginTop: 0 }}>
               {filteredChallenges.map(c => (
                 <ChallengeTile key={c.id} challenge={c} />
               ))}
@@ -251,11 +369,11 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           )
         }
 
-        if (filteredChallenges.length === 0) {
+        if (filteredChallenges && filteredChallenges.length === 0) {
           return (
-            <div className="cards">
-              <p className="cards__none">
-                Please check back again soon!
+            <div className="cards cardsOverride" style={{ marginTop: 0 }}>
+              <p className="cards__none" style={{ textAlign: 'left', fontWeight: 'bold', color: 'green', margin: '0' }}>
+                  Please check back again soon!
               </p>
             </div>
           )
@@ -269,7 +387,6 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       <section id="active-challenges" className="cards__section" tabIndex="-1">
         <div className="container">
           {renderHeader()}
-          
           {renderYearFilter()}
         </div>
 
@@ -277,96 +394,111 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           <div className="container">
             {renderSortText()}
             <form className="filter-module full-width">
+              <div className="filter-dropdowns" style={{ display: 'flex' }}>
+                <div style={{ flex: 2, minWidth: '160px', marginRight: '10px'}}>
+                  <div className="filter-module__item">
+                    <label className="filter-label" htmlFor="primaryAgency">Primary agency sponsor</label>
+                    <select
+                      id="primaryAgency"
+                      className="usa-select"
+                      value={primaryAgency}
+                      style={{ marginBottom: '10px' }} 
+                      onChange={(event) => setPrimaryAgency(event.target.value)}
+                    >
+                      <option value="">Select...</option>
+                      {primaryAgencyOptions.map((option, index) => (
+                        <option key={index} value={option}>{option}</option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="filter-dropdowns">
-
-                <div className="filter-module__item">
-                  <label className="filter-label" htmlFor="primaryAgency">Primary agency sponsor</label>
-                  <select
-                    id="primaryAgency"
-                    className="usa-select"
-                    value={primaryAgency}
-                    onChange={(event) => setPrimaryAgency(event.target.value)}
-                  >
-                    <option value="">Select...</option>
-                    {primaryAgencyOptions.map((option, index) => (
-                      <option key={index} value={option}>{option}</option>
-                    ))}
-                  </select>
+                  <div className="filter-module__item">
+                    <label className="filter-label" htmlFor="dateAdded">Date added</label>
+                      <select
+                        id="dateAdded"
+                        className="usa-select"
+                        value={dateAdded}
+                        onChange={(event) => setDateAdded(event.target.value)}
+                      >
+                        <option value="">Select...</option>
+                        {dateAddedOptions.map((option, index) => (
+                          <option key={index} value={option}>{option}</option>
+                        ))}
+                      </select>
+                  </div>
                 </div>
 
-                <div className="filter-module__item" style={styles.smallWidth}>
-                  <label className="filter-label" htmlFor="dateAdded">Date added</label>
-                  <select
-                    id="dateAdded"
-                    className="usa-select"
-                    value={dateAdded}
-                    onChange={(event) => setDateAdded(event.target.value)}
-                  >
-                    <option value="">Select...</option>
-                    {dateAddedOptions.map((option, index) => (
-                      <option key={index} value={option}>{option}</option>
-                    ))}
-                  </select>
-                </div>
+                <div style={{ flex: 2, minWidth: '160px', marginRight: '10px'}}>
+                  <div className="filter-module__item">
+                    <label className="filter-label" htmlFor="lastDay">Last day to submit</label>
+                    <select
+                      id="lastDay"
+                      className="usa-select"
+                      value={lastDay}
+                      style={{ marginBottom: '10px' }} 
+                      onChange={(event) => setLastDay(event.target.value)}
+                    >
+                      <option value="">Select...</option>
+                      {lastDayOptions.map((option, index) => (
+                        <option key={index} value={option}>{option}</option>
+                      ))}
+                    </select>
+                  </div>
 
-                <div className="filter-module__item">
-                  <label className="filter-label" htmlFor="lastDay">Last day to submit</label>
-                  <select
-                    id="lastDay"
-                    className="usa-select"
-                    value={lastDay}
-                    onChange={(event) => setLastDay(event.target.value)}
-                  >
-                    <option value="">Select...</option>
-                    {lastDayOptions.map((option, index) => (
-                      <option key={index} value={option}>{option}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="filter-module__item" style={styles.largeWidth}>
-                  <label className="filter-label" htmlFor="primaryChallengeType">Primary challenge type</label>
-                  <select
-                    id="primaryChallengeType"
-                    className="usa-select"
-                    style={{ height: '150px'}} // or desired height
-                    value={primaryChallengeType}
-                    onChange={(event) => {
-                      const selectedOptions = Array.from(
-                        event.target.selectedOptions,
-                        (option) => option.value
-                      );
-                      setPrimaryChallengeType(selectedOptions);
-                    }}
-                    multiple
-                  >
-                    <option value="">Select one or more...</option>
-                    {primaryChallengeTypeOptions.map((option, index) => (
-                      <option key={index} value={option.value}>{option.display}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="filter-module__item keyword-item">
-                  <label className="filter-label" htmlFor="keyword">Keyword</label>
-                  
-                  <div className="keyword-input-wrapper" style={{ display: 'flex', alignItems: 'flex-start', marginTop: '0' }}>
+                  <div className="filter-module__item keyword-item">
+                    <label className="filter-label" htmlFor="keyword">Keyword</label>
                     <input
                       id="keyword"
                       className="usa-input"
                       type="text"
                       placeholder="Keyword"
+                      style={{ marginTop: '0px' }}
                       value={keyword}
                       onChange={(event) => setKeyword(event.target.value)}
-                      style={{ marginTop: '1px' }}
                     />
-                    <button className="usa-button" onClick={handleClearFilters} style={{ marginTop: '1.5px', marginLeft: '5px' }}>                    
-                      Clear
+                  </div>
+                </div>
+
+                <div style={{ flex: 3, minWidth: '200px', marginRight: '10px'}}>
+                  <div className="filter-module__item">
+                    <label className="filter-label" htmlFor="primaryChallengeType">Primary challenge type</label>
+                    <select
+                      id="primaryChallengeType"
+                      className="usa-select"
+                      style={{ height: '150px' }} // or desired height
+                      value={primaryChallengeType}
+                      onChange={(event) => {
+                        const selectedOptions = Array.from(
+                          event.target.selectedOptions,
+                          (option) => option.value
+                        );
+                        setPrimaryChallengeType(selectedOptions);
+                      }}
+                      multiple
+                    >
+                      <option value="">Select one or more...</option>
+                      {primaryChallengeTypeOptions.map((option, index) => (
+                        <option key={index} value={option.value}>{option.display}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{ flex: 1, minWidth: '155', display: 'flex', justifyContent: 'flex-end' }}>
+                  <div className="filter-module__item" style={{ marginLeft: '0' }}>
+                      <button className="usa-button" 
+                        onClick={handleClearFilters} 
+                        style={{ 
+                            marginTop: '32px', 
+                            marginBottom: '10px',  
+                            width: 'auto',
+                            minWidth: '100px', // Adjust this value based on your needs
+                            whiteSpace: 'nowrap' // Add this to your style
+                        }}
+                    >                    
+                        Clear Search
                     </button>
                   </div>
-
-
                 </div>
               </div>
             </form>
@@ -374,8 +506,10 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         </div>
 
         <div className="container">
+          {renderExportButton()}
           {renderChallengeTiles()}
         </div>
+
       </section>
     </>
   );
