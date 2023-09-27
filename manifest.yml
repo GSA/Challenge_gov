@@ -17,10 +17,10 @@ applications:
   env:
     MIX_ENV: prod
     STACK: heroku-22
-    # HTTPS_PROXY: https://user:password@challengecproxy.apps.internal:61443
-    # HTTP_PROXY: https://user:password@challengecproxy.apps.internal:61443
-    # https_proxy: https://user:password@challengecproxy.apps.internal:61443
-    # http_proxy: https://user:password@challengecproxy.apps.internal:61443
+    HTTPS_PROXY: https://user:password@challengecproxy.apps.internal:61443
+    HTTP_PROXY: https://user:password@challengecproxy.apps.internal:61443
+    https_proxy: https://user:password@challengecproxy.apps.internal:61443
+    http_proxy: https://user:password@challengecproxy.apps.internal:61443
     NO_PROXY: '*.repo.hex.pm'
     HEX_UNSAFE_HTTPS: "1"
     HOST: challenge-portal-dev.app.cloud.gov
