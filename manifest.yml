@@ -22,6 +22,7 @@ applications:
     https_proxy: https://user:password@challengecproxy.apps.internal:61443
     http_proxy: https://user:password@challengecproxy.apps.internal:61443
     NO_PROXY: '*.repo.hex.pm, *.idp.int.identitysandbox.gov'
+    no_proxy: '*.repo.hex.pm, *.idp.int.identitysandbox.gov'
     HEX_UNSAFE_HTTPS: "1"
     HOST: challenge-portal-dev.app.cloud.gov
     LOGIN_PRIVATE_KEY_PATH: dev_key.pem
