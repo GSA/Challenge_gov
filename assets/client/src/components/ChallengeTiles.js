@@ -318,7 +318,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           <p>Challenges are sorted by those closing soonest.</p>
         </div>
 
-        {/*<div className="exportButtonContainer" style={styles.exportButtonContainer}>
+        <div className="exportButtonContainer" style={styles.exportButtonContainer}>
           <button 
             className="usa-button usa-button--accent-warm" 
             onClick={handleExportButtonClick} 
@@ -327,7 +327,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
           >
               Export
           </button>
-        </div>*/}
+        </div>
       </div>
     );
   };
