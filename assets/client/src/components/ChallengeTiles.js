@@ -16,17 +16,6 @@ const lastDayOptions = [
   'Within Year',
 ];
 
-/*const primaryChallengeTypeOptions = [
-  { display: 'Software and apps', value: 'Software and apps' },
-  { display: 'Creative (Multimedia & Design)', value: 'Creative (Multimedia & Design)' },
-  { display: 'Ideas', value: 'Ideas' },
-  { display: 'Technology demonstration and hardware', value: 'Technology demonstration and hardware' },
-  { display: 'Nominations', value: 'Nominations' },
-  { display: 'Business Plans', value: 'Business plans' },
-  { display: 'Analytics, visualizations, algorithms', value: 'Analytics, visualizations, algorithms' },
-  { display: 'Scientific', value: 'Scientific' },
-];*/
-
 const primaryChallengeTypeOptions = [
   { display: 'Software & Apps', value: 'Software and apps' },
   { display: 'Creative', value: 'Creative (Multimedia & Design)' },
@@ -41,6 +30,31 @@ const primaryChallengeTypeOptions = [
 function formatPrizeAmount(num) {
   const formatNum = num / 100;
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(formatNum);
+}
+
+function escapeFieldForCsv(field) {
+  // if the field includes commas, newline characters or double-quotes, then
+  // - wrap them in quotes
+  // - replace inner double quotes with a pair of double quotes
+  // - replace newline characters with '\n'
+  if (typeof field === 'string' && /[,\"\n]/.test(field)) {
+    field = `"${field.replace(/"/g, '""').replace(/\n/g, '\\n')}"`;
+  }
+  return field;
+}
+
+// this function will replace each occurrence of these error characters with the correct one 
+// we can add more such cases as we find them; this fix will handle most such issues
+function cleanUpString(str) {
+    return str
+    .replace(/â€“/g, "-")
+    .replace(/â€œ/g, "'")
+    .replace(/â€˜/g, "'")
+    .replace(/â€\u009D/g, "'")
+    .replace(/â€\u0080/g, "'")
+    .replace(/â€\u009C/g, "'")
+    .replace(/â€\u008B/g, "'")
+    .replace(/Ã©/g, "é");
 }
 
 export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handleYearChange }) => {
@@ -180,11 +194,11 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
 
   const handleExportButtonClick = (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  if (filteredChallenges.length === 0) return;
+    if (filteredChallenges.length === 0) return;
 
-  const csvData = filteredChallenges.map(challenge => {
+    const csvData = filteredChallenges.map(challenge => {
 
     let formattedUrl = '';
     let prizeAmountFormatted = '';
@@ -202,32 +216,31 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
     }
     
     return [
-      `"${challenge.id}"`,
-      `"${challenge.title}"`,
-      `"${challenge.agency_name}"`,      
-      `"${prizeAmountFormatted}"`,
-      `"${challenge.start_date}"`,
-      `"${challenge.end_date}"`,
-      `"${challenge.primary_type}"`,
-      `"${challenge.tagline}"`,
-      `"${challenge.brief_description}"`,
-      `${formattedUrl}` 
+      escapeFieldForCsv(cleanUpString(challenge.id)),
+      escapeFieldForCsv(cleanUpString(challenge.title)),
+      escapeFieldForCsv(cleanUpString(challenge.agency_name)),
+      escapeFieldForCsv(cleanUpString(prizeAmountFormatted)),
+      escapeFieldForCsv(cleanUpString(challenge.start_date)),
+      escapeFieldForCsv(cleanUpString(challenge.end_date)),
+      escapeFieldForCsv(cleanUpString(challenge.primary_type)),
+      escapeFieldForCsv(cleanUpString(challenge.tagline)),
+      escapeFieldForCsv(cleanUpString(challenge.brief_description)),
+      escapeFieldForCsv(cleanUpString(formattedUrl))
     ].join(',');
   });
-    
-   csvData.unshift([
-      "Challenge ID",
-      "Challenge Name",
-      "Primary Agency Name",
-      /*"Primary Sub-agency Name",*/
-      "Prize Amount",
-      "Challenge Start Date",
-      "Challenge End Date",
-      "Primary Challenge Type",
-      "Tagline",
-      "Short Description",
-      "URL of Challenge Landing Page"
-    ].join(','));
+
+  csvData.unshift([
+    "Challenge ID",
+    "Challenge Name",
+    "Primary Agency Name",
+    "Prize Amount",
+    "Challenge Start Date",
+    "Challenge End Date",
+    "Primary Challenge Type",
+    "Tagline",
+    "Short Description",
+    "URL of Challenge Landing Page"
+  ].join(','));
 
     const blob = new Blob([csvData.join('\n')], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
