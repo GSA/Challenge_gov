@@ -46,16 +46,25 @@ function escapeFieldForCsv(field) {
 // this function will replace each occurrence of these error characters with the correct one 
 // we can add more such cases as we find them; this fix will handle most such issues
 function cleanUpString(str) {
-    return str
-    .replace(/â€“/g, "-")
-    .replace(/â€œ/g, "'")
-    .replace(/â€˜/g, "'")
-    .replace(/â€\u009D/g, "'")
-    .replace(/â€\u0080/g, "'")
-    .replace(/â€\u009C/g, "'")
-    .replace(/â€\u008B/g, "'")
-    .replace(/Ã©/g, "é");
-}
+  if (!str || typeof str !== 'string') {
+    return '';
+  }
+
+const replacements = [
+    { from: /â€“/g, to: "-" },
+    { from: /â€œ/g, to: "'" },
+    { from: /â€˜/g, to: "'" },
+    { from: /â€\u009D/g, to: "'" },
+    { from: /â€\u0080/g, to: "'" },
+    { from: /â€\u009C/g, to: "'" },
+    { from: /â€\u008B/g, to: "'" },
+    { from: /Ã©/g, to: "é" }
+  ];
+  replacements.forEach(({ from, to }) => {
+      str = str.replace(from, to);
+    });
+    return str;
+  }
 
 export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handleYearChange }) => {
   const [primaryAgencyOptions, setPrimaryAgencyOptions] = useState([]);
@@ -198,49 +207,66 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
 
     if (filteredChallenges.length === 0) return;
 
-    const csvData = filteredChallenges.map(challenge => {
+    // First map call to apply cleanUpString
+    const cleanedChallenges = filteredChallenges.map((challenge) => {
+        const cleanedChallenge = {...challenge}
+        cleanedChallenge.id = challenge.id;
+        cleanedChallenge.title = cleanUpString(challenge.title);
+        cleanedChallenge.agency_name = cleanUpString(challenge.agency_name);
+        cleanedChallenge.start_date = cleanUpString(challenge.start_date);
+        cleanedChallenge.end_date = cleanUpString(challenge.end_date);
+        cleanedChallenge.primary_type = cleanUpString(challenge.primary_type);
+        cleanedChallenge.tagline = cleanUpString(challenge.tagline);
+        cleanedChallenge.brief_description = cleanUpString(challenge.brief_description);
 
-    let formattedUrl = '';
-    let prizeAmountFormatted = '';
-    if (challenge.external_url) {
-      formattedUrl = challenge.external_url;
-    } else if (challenge.custom_url) {
-      formattedUrl = `https://www.challenge.gov/?challenge=${challenge.custom_url}`;
-    }
+        let formattedUrl = '';
+        if (challenge.external_url) {
+          formattedUrl = cleanUpString(challenge.external_url);
+        } else if (challenge.custom_url) {
+          formattedUrl = `https://www.challenge.gov/?challenge=${cleanUpString(challenge.custom_url)}`;
+        }
+        cleanedChallenge.formattedUrl = formattedUrl;
 
-    //Format the weblink for the challenge
-    if(challenge.prize_total){
-      prizeAmountFormatted = formatPrizeAmount(challenge.prize_total);
-    } else {
-      prizeAmountFormatted = "No monetary prize for this challenge"
-    }
-    
-    return [
-      escapeFieldForCsv(cleanUpString(challenge.id)),
-      escapeFieldForCsv(cleanUpString(challenge.title)),
-      escapeFieldForCsv(cleanUpString(challenge.agency_name)),
-      escapeFieldForCsv(cleanUpString(prizeAmountFormatted)),
-      escapeFieldForCsv(cleanUpString(challenge.start_date)),
-      escapeFieldForCsv(cleanUpString(challenge.end_date)),
-      escapeFieldForCsv(cleanUpString(challenge.primary_type)),
-      escapeFieldForCsv(cleanUpString(challenge.tagline)),
-      escapeFieldForCsv(cleanUpString(challenge.brief_description)),
-      escapeFieldForCsv(cleanUpString(formattedUrl))
-    ].join(',');
-  });
+        let prizeAmountFormatted = '';
+        if(challenge.prize_total){
+          prizeAmountFormatted = formatPrizeAmount(challenge.prize_total);
+        } else {
+          prizeAmountFormatted = "No monetary prize for this challenge"
+        }
+        cleanedChallenge.prizeAmountFormatted = prizeAmountFormatted;
 
-  csvData.unshift([
-    "Challenge ID",
-    "Challenge Name",
-    "Primary Agency Name",
-    "Prize Amount",
-    "Challenge Start Date",
-    "Challenge End Date",
-    "Primary Challenge Type",
-    "Tagline",
-    "Short Description",
-    "URL of Challenge Landing Page"
-  ].join(','));
+        return cleanedChallenge;
+    });
+
+    // Second map call to prepare CSV data
+    const csvData = cleanedChallenges.map(challenge => {
+      return [
+        escapeFieldForCsv(challenge.id),
+        escapeFieldForCsv(challenge.title),
+        escapeFieldForCsv(challenge.agency_name),
+        escapeFieldForCsv(challenge.prizeAmountFormatted),
+        escapeFieldForCsv(challenge.start_date),
+        escapeFieldForCsv(challenge.end_date),
+        escapeFieldForCsv(challenge.primary_type),
+        escapeFieldForCsv(challenge.tagline),
+        escapeFieldForCsv(challenge.brief_description),
+        escapeFieldForCsv(challenge.formattedUrl)
+      ].join(',');
+    });
+
+    // Unshift the headers
+    csvData.unshift([
+      "Challenge ID",
+      "Challenge Name",
+      "Primary Agency Name",
+      "Prize Amount",
+      "Challenge Start Date",
+      "Challenge End Date",
+      "Primary Challenge Type",
+      "Tagline",
+      "Short Description",
+      "URL of Challenge Landing Page"
+    ].join(','));
 
     const blob = new Blob([csvData.join('\n')], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
