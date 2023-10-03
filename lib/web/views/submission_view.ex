@@ -225,7 +225,7 @@ defmodule Web.SubmissionView do
           Routes.submission_path(conn, :index)
       end
 
-    link("Cancel", to: route, class: "usa-link")
+    link("Cancel", to: route, class: "usa-link float-left margin-top-2")
   end
 
   def accept_terms(_conn, form, user, challenge) do
