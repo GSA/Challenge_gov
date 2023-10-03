@@ -472,21 +472,6 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                     </select>
                   </div>
                 </div>
-                <div style={{ flex: 1, minWidth: '155', display: 'flex', justifyContent: 'flex-end' }}>
-                  <div className="filter-module__item" style={{ marginLeft: '0' }}>
-                      <button className="usa-button" 
-                        onClick={handleClearFilters} 
-                        style={{ 
-                            marginTop: '32px', 
-                            marginBottom: '10px',  
-                            width: 'auto',
-                            minWidth: '100px', // Adjust this value based on your needs
-                            whiteSpace: 'nowrap' // Add this to your style
-                        }}
-                    >                    
-                        Clear Search
-                    </button>
-                  </div>
 
                 <div style={{ flex: 1, minWidth: '155', display: 'flex', justifyContent: 'flex-end' }}>
                   <div className="filter-module__item" style={{ marginLeft: '0' }}>
@@ -503,6 +488,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                         Clear Search
                     </button>
                   </div>
+
                 </div>
               </div>
             </form>
