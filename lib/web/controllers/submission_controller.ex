@@ -124,6 +124,28 @@ defmodule Web.SubmissionController do
     |> render("index_managed.html")
   end
 
+  defp is_closed(conn, end_date) do
+    now = Timex.now()
+
+    case Timex.compare(end_date, now) do
+      1 ->
+        add_the_msg(conn, "No")
+
+      tc when tc == -1 or tc == 0 ->
+        add_the_msg(conn, "Yes")
+    end
+  end
+
+  defp add_the_msg(conn, "Yes") do
+    conn
+    |> put_flash(:error, "View Only - Submission cannot be edited")
+  end
+
+  defp add_the_msg(conn, _) do
+    conn
+    |> render("show.html")
+  end
+
   def show(conn, params = %{"id" => _id}) do
     %{current_user: user, current_submission: submission, page: page} = conn.assigns
 
@@ -142,6 +164,7 @@ defmodule Web.SubmissionController do
       |> assign(:sort, sort)
       |> assign(:action, action_name(conn))
       |> assign(:navbar_text, submission.title || "Submission #{submission.id}")
+      |> is_closed(phase.end_date)
       |> render("show.html")
     else
       {:error, :not_found} ->
