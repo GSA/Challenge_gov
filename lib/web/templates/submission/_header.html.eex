@@ -4,7 +4,6 @@
     <%= if @phase.title do %>
       <h3><i><%= @phase.title %></i></h3>
     <% end %>
-    <br/>
     <%= link to: ChallengeView.public_details_url(@challenge), target: "_blank" do %>
       View challenge details <i class="fa fa-external-link-alt"></i>
     <% end %>

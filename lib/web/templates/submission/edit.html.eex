@@ -27,17 +27,9 @@
     <div class="row">
       <div class="col-md-8">
         <div class="usa-card__container padding-3">
-          <h4>Edit/View submission for:</h4>
+          <h4>Edit submission for:</h4>
           <%= render Web.SubmissionView, "_header.html", conn: @conn, challenge: @submission.challenge, phase: @phase %>
-
-
-          <% flash = get_flash(@conn, :error) %>
-          <%= if (flash == "View Only - Submission cannot be edited") do %>
-             <%= render Web.SubmissionView, "_form_view.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.submission_path(@conn, :update, @submission.id), user: @user, challenge: @submission.challenge, phase: @phase %>
-          <% else %>
-               <%= render Web.SubmissionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.submission_path(@conn, :update, @submission.id), user: @user, challenge: @submission.challenge, phase: @phase %>
-          <% end %>
-
+           <%= render Web.SubmissionView, "_form.html", conn: @conn, changeset: @changeset, action: @action, data: @changeset.data, path: Routes.submission_path(@conn, :update, @submission.id), user: @user, challenge: @submission.challenge, phase: @phase %>
         </div>
       </div>
     </div>
