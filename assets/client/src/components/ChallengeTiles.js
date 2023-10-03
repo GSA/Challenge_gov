@@ -16,17 +16,6 @@ const lastDayOptions = [
   'Within Year',
 ];
 
-/*const primaryChallengeTypeOptions = [
-  { display: 'Software and apps', value: 'Software and apps' },
-  { display: 'Creative (Multimedia & Design)', value: 'Creative (Multimedia & Design)' },
-  { display: 'Ideas', value: 'Ideas' },
-  { display: 'Technology demonstration and hardware', value: 'Technology demonstration and hardware' },
-  { display: 'Nominations', value: 'Nominations' },
-  { display: 'Business Plans', value: 'Business plans' },
-  { display: 'Analytics, visualizations, algorithms', value: 'Analytics, visualizations, algorithms' },
-  { display: 'Scientific', value: 'Scientific' },
-];*/
-
 const primaryChallengeTypeOptions = [
   { display: 'Software & Apps', value: 'Software and apps' },
   { display: 'Creative', value: 'Creative (Multimedia & Design)' },
@@ -483,6 +472,21 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                     </select>
                   </div>
                 </div>
+                <div style={{ flex: 1, minWidth: '155', display: 'flex', justifyContent: 'flex-end' }}>
+                  <div className="filter-module__item" style={{ marginLeft: '0' }}>
+                      <button className="usa-button" 
+                        onClick={handleClearFilters} 
+                        style={{ 
+                            marginTop: '32px', 
+                            marginBottom: '10px',  
+                            width: 'auto',
+                            minWidth: '100px', // Adjust this value based on your needs
+                            whiteSpace: 'nowrap' // Add this to your style
+                        }}
+                    >                    
+                        Clear Search
+                    </button>
+                  </div>
 
                 <div style={{ flex: 1, minWidth: '155', display: 'flex', justifyContent: 'flex-end' }}>
                   <div className="filter-module__item" style={{ marginLeft: '0' }}>
