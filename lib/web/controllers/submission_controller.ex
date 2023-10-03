@@ -295,6 +295,19 @@ defmodule Web.SubmissionController do
         conn
         |> put_flash(:error, "Submission cannot be edited")
         |> redirect_by_user_type(user, submission)
+
+      {:error, :not_editable_solver} ->
+        conn
+        |> put_flash(:error, "View Only - Submission cannot be edited")
+        |> assign(:user, user)
+        |> assign(:submission, submission)
+        |> assign(:challenge, submission.challenge)
+        |> assign(:phase, submission.phase)
+        |> assign(:action, action_name(conn))
+        |> assign(:path, Routes.submission_path(conn, :update, id))
+        |> assign(:changeset, Submissions.edit(submission))
+        |> assign(:navbar_text, "View submission")
+        |> render("edit.html")
     end
   end
 

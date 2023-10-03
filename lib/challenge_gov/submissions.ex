@@ -270,14 +270,14 @@ defmodule ChallengeGov.Submissions do
   """
   def is_editable(%{role: "solver"}, submission) do
     if submission.challenge.sub_status === "archived" do
-      {:error, :not_editable}
+      {:error, :not_editable_solver}
     else
       case submission_phase_is_open?(submission) do
         true ->
           {:ok, submission}
 
         false ->
-          {:error, :not_editable}
+          {:error, :not_editable_solver}
       end
     end
   end

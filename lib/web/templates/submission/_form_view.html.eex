@@ -8,29 +8,27 @@
       <%= if Accounts.has_admin_access?(@user) do %>
         <div class="form-group">
           <label class="col">Solver</label>
-          <%= content_tag(:div, "#{@data.submitter.email}", class: "col") %>
+          <%= content_tag(:div, "#{@data.submitter.email}", class: "col", disabled: "disabled") %>
         </div>
       <% end %>
     <% end %>
 
-    <%= FormView.text_field(f, :title, label: "Title", required: true) %>
-      <br>
+    <%= FormView.text_field(f, :title, label: "Title", required: true, disabled: "disabled") %>
+    <br>
     <div class="col">
       <label for="brief_description">Brief Description <span class="required">*</span></label>
-      <%= FormView.rt_textarea_field(f, :brief_description, limit: 500) %>
+      <%= FormView.rt_textarea_field(f, :brief_description, limit: 500, disabled: "disabled") %>
     </div>
-      <br>
+     <br>
     <div class="col">
       <label><%= "Description" %> <span class="required">*</span></label>
-      <%= FormView.rt_textarea_field(f, :description) %>
+      <%= FormView.rt_textarea_field(f, :description, disabled: "disabled") %>
     </div>
-        <br>
+     <br>
     <div class="form-group">
-      <label class="col">Upload Files (optional)<br>
-      <p>Follow the steps below to attach files to your submission. To add additional files, repeat steps 1-3. <br>
-       <b>Allowed file types:</b> .pdf, .txt, .csv, .jpg, .png, .tiff;  <b>Max file size:</b> 8 MB
-      </p></label>
-      <div class="col">
+      <label class="col">Uploaded Files (optional)<br>
+      </label>
+      <div class="col display-none">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
             <%= hidden_input f, :document_id, name: "submission[document_ids][]", value: document_id %>
@@ -56,9 +54,9 @@
           <div class="row submission-document-row">
             <i class="fa fa-paperclip me-1"></i>
             <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
-            <%= link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
+            <%= #link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
               <i class="fa fa-trash"></i>
-            <% end %>
+            <% #end %>
           </div>
         <% end) %>
         <%= Enum.map(@changeset.changes[:document_objects] || [], fn document -> %>
@@ -73,14 +71,14 @@
       </div>
     </div>
 <hr>
-    <%= FormView.text_field(f, :external_url, label: "External URL (optional) (Use format: http://www.example.com/)") %>
+    <%= FormView.text_field(f, :external_url, label: "External URL (optional) (Use format: http://www.example.com/)",  disabled: "disabled") %>
     <br/>
 
     <%= accept_terms(@conn, f, @user, @challenge) %>
     <%= verify_review(f, @user.id, @data) %>
 
-    <%= cancel_button(@conn, @action, @challenge, @phase, @user, class: "usa-link usa-link float-left margin-top-2") %>
-    <%= submit("Review and submit", name: "action", value: "review", class: "usa-button float-right") %>
-    <%= save_draft_button(@data) %>
+    <%= cancel_button(@conn, @action, @challenge, @phase, @user, class: "usa-link float-left margin-top-2") %>
+    <%= #submit("Review and submit", name: "action", value: "review", class: "usa-button float-right") %>
+    <%= #save_draft_button(@data) %>
   <% end) %>
 </section>
