@@ -32,7 +32,7 @@
                 <use xlink:href="/assets/img/sprite.svg#help"></use>
               </svg>
               <h3 class="margin-2">FAQs</h3>
-              <p>Check out our <%= link("frequently asked questions", to: Routes.static_path(@conn, "/pdfs/challenge_manager_faq.pdf"), target: "_blank") %> on challenge and submission management.</p>
+              <p>Check out our <%= link("frequently asked questions", to: "https://www.challenge.gov/cm-user-faqs/", target: "_blank") %> on challenge and submission management.</p>
             </div>
             <span class="vr-light display-none">&nbsp;</span>
             <div class="text-center grid-col-6 dhelp-card__section padding-2">
@@ -40,7 +40,7 @@
                 <use xlink:href="/assets/img/sprite.svg#local_library"></use>
               </svg>
               <h3 class="margin-2">User Guide</h3>
-              <p>Our <%= link("User guide", to: Routes.static_path(@conn, "/pdfs/challenge_manager_user_guide.pdf"), target: "_blank") %> is full of useful information on how to get started.</p>
+              <p>Our <%= link("User guide", to: "https://www.challenge.gov/cm-user-guide/", target: "_blank") %> is full of useful information on how to get started.</p>
             </div>
           </div>
         </div>
