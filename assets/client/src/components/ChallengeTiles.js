@@ -16,17 +16,6 @@ const lastDayOptions = [
   'Within Year',
 ];
 
-/*const primaryChallengeTypeOptions = [
-  { display: 'Software and apps', value: 'Software and apps' },
-  { display: 'Creative (Multimedia & Design)', value: 'Creative (Multimedia & Design)' },
-  { display: 'Ideas', value: 'Ideas' },
-  { display: 'Technology demonstration and hardware', value: 'Technology demonstration and hardware' },
-  { display: 'Nominations', value: 'Nominations' },
-  { display: 'Business Plans', value: 'Business plans' },
-  { display: 'Analytics, visualizations, algorithms', value: 'Analytics, visualizations, algorithms' },
-  { display: 'Scientific', value: 'Scientific' },
-];*/
-
 const primaryChallengeTypeOptions = [
   { display: 'Software & Apps', value: 'Software and apps' },
   { display: 'Creative', value: 'Creative (Multimedia & Design)' },
@@ -499,6 +488,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
                         Clear Search
                     </button>
                   </div>
+
                 </div>
               </div>
             </form>
