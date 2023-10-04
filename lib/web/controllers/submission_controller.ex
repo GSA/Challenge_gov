@@ -139,6 +139,7 @@ defmodule Web.SubmissionController do
   defp add_the_msg(conn, "Yes") do
     conn
     |> put_flash(:error, "View Only - Submission cannot be edited")
+    |> render("show.html")
   end
 
   defp add_the_msg(conn, _) do
@@ -165,7 +166,8 @@ defmodule Web.SubmissionController do
       |> assign(:action, action_name(conn))
       |> assign(:navbar_text, submission.title || "Submission #{submission.id}")
       |> is_closed(phase.end_date)
-      |> render("show.html")
+
+      # |> render("show.html")
     else
       {:error, :not_found} ->
         conn
@@ -318,19 +320,6 @@ defmodule Web.SubmissionController do
         conn
         |> put_flash(:error, "Submission cannot be edited")
         |> redirect_by_user_type(user, submission)
-
-      {:error, :not_editable_solver} ->
-        conn
-        |> put_flash(:error, "View Only - Submission cannot be edited")
-        |> assign(:user, user)
-        |> assign(:submission, submission)
-        |> assign(:challenge, submission.challenge)
-        |> assign(:phase, submission.phase)
-        |> assign(:action, action_name(conn))
-        |> assign(:path, Routes.submission_path(conn, :update, id))
-        |> assign(:changeset, Submissions.edit(submission))
-        |> assign(:navbar_text, "View submission")
-        |> render("edit.html")
     end
   end
 
