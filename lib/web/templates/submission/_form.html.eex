@@ -14,17 +14,17 @@
     <% end %>
 
     <%= FormView.text_field(f, :title, label: "Title", required: true) %>
-      <hr>
+      <br>
     <div class="col">
       <label for="brief_description">Brief Description <span class="required">*</span></label>
       <%= FormView.rt_textarea_field(f, :brief_description, limit: 500) %>
     </div>
-      <hr>
+      <br>
     <div class="col">
       <label><%= "Description" %> <span class="required">*</span></label>
       <%= FormView.rt_textarea_field(f, :description) %>
     </div>
-        <hr>
+        <br>
     <div class="form-group">
       <label class="col">Upload Files (optional)<br>
       <p>Follow the steps below to attach files to your submission. To add additional files, repeat steps 1-3. <br>
@@ -79,7 +79,7 @@
     <%= accept_terms(@conn, f, @user, @challenge) %>
     <%= verify_review(f, @user.id, @data) %>
 
-    <%= cancel_button(@conn, @action, @challenge, @phase, @user) %>
+    <%= cancel_button(@conn, @action, @challenge, @phase, @user, class: "usa-link usa-link float-left margin-top-2") %>
     <%= submit("Review and submit", name: "action", value: "review", class: "usa-button float-right") %>
     <%= save_draft_button(@data) %>
   <% end) %>

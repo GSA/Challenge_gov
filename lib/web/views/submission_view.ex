@@ -57,6 +57,18 @@ defmodule Web.SubmissionView do
     end
   end
 
+  def is_closed(end_date) do
+    now = Timex.now()
+
+    case Timex.compare(end_date, now) do
+      1 ->
+        "No"
+
+      tc when tc == -1 or tc == 0 ->
+        "Yes"
+    end
+  end
+
   def close_header(end_date) do
     now = Timex.now()
 
@@ -225,7 +237,7 @@ defmodule Web.SubmissionView do
           Routes.submission_path(conn, :index)
       end
 
-    link("Cancel", to: route, class: "usa-link")
+    link("Cancel", to: route, class: "usa-link float-left margin-top-2")
   end
 
   def accept_terms(_conn, form, user, challenge) do
