@@ -22,7 +22,7 @@
   <%= if !Enum.empty?(@open_saved_challenges) do %>
     <h2>Open for submissions  (<%= Enum.count(@open_saved_challenges)%>)</h2>
     <hr/>
-    <div class="dcards margin-top-3">
+    <div class="cards margin-top-3">
       <%= Enum.map(@open_saved_challenges, fn saved_challenge -> %>
         <%= render "_challenge_card.html", conn: @conn, saved_challenge: saved_challenge %>
       <% end) %>
@@ -32,7 +32,7 @@
   <%= if !Enum.empty?(@opening_soon_challenges) do %>
     <h2>Opening soon (<%= Enum.count(@opening_soon_challenges)%>)</h2>
     <hr/>
-    <div class="dcards margin-top-3">
+    <div class="cards margin-top-3">
       <%= Enum.map(@opening_soon_challenges, fn saved_challenge -> %>
         <%= render "_challenge_card.html", conn: @conn, saved_challenge: saved_challenge %>
       <% end) %>
@@ -42,7 +42,7 @@
   <%= if !Enum.empty?(@closed_saved_challenges) do %>
     <h2>Closed to submissions</h2>
     <hr/>
-    <div class="dcards margin-top-3">
+    <div class="cards margin-top-3">
       <%= Enum.map(@closed_saved_challenges, fn saved_challenge -> %>
         <%= render "_challenge_card.html", conn: @conn, saved_challenge: saved_challenge %>
       <% end) %>
