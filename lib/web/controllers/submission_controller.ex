@@ -124,6 +124,29 @@ defmodule Web.SubmissionController do
     |> render("index_managed.html")
   end
 
+  defp is_closed(conn, end_date) do
+    now = Timex.now()
+
+    case Timex.compare(end_date, now) do
+      1 ->
+        add_the_msg(conn, "No")
+
+      tc when tc == -1 or tc == 0 ->
+        add_the_msg(conn, "Yes")
+    end
+  end
+
+  defp add_the_msg(conn, "Yes") do
+    conn
+    |> put_flash(:error, "View Only - Submission cannot be edited")
+    |> render("show.html")
+  end
+
+  defp add_the_msg(conn, _) do
+    conn
+    |> render("show.html")
+  end
+
   def show(conn, params = %{"id" => _id}) do
     %{current_user: user, current_submission: submission, page: page} = conn.assigns
 
@@ -142,7 +165,9 @@ defmodule Web.SubmissionController do
       |> assign(:sort, sort)
       |> assign(:action, action_name(conn))
       |> assign(:navbar_text, submission.title || "Submission #{submission.id}")
-      |> render("show.html")
+      |> is_closed(phase.end_date)
+
+      # |> render("show.html")
     else
       {:error, :not_found} ->
         conn
@@ -295,19 +320,6 @@ defmodule Web.SubmissionController do
         conn
         |> put_flash(:error, "Submission cannot be edited")
         |> redirect_by_user_type(user, submission)
-
-      {:error, :not_editable_solver} ->
-        conn
-        |> put_flash(:error, "View Only - Submission cannot be edited")
-        |> assign(:user, user)
-        |> assign(:submission, submission)
-        |> assign(:challenge, submission.challenge)
-        |> assign(:phase, submission.phase)
-        |> assign(:action, action_name(conn))
-        |> assign(:path, Routes.submission_path(conn, :update, id))
-        |> assign(:changeset, Submissions.edit(submission))
-        |> assign(:navbar_text, "View submission")
-        |> render("edit.html")
     end
   end
 

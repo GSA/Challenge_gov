@@ -41,7 +41,7 @@
               <%= Enum.map @submissions, fn (submission) -> %>
                 <li class="grid-col-4 margin-1">
                 <div class="challenge-tile usa-card__container">
-                  <%= link to: Routes.submission_path(@conn, :edit, submission.id) do %>
+                  <%= link to: Routes.submission_path(@conn, if is_closed(submission.phase.end_date)=="Yes" do :show else :edit end, submission.id) do %>
                     <div class="image_wrapper">
                       <%= img_tag(
                         ChallengeView.logo_url(submission.challenge),

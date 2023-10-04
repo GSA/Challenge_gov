@@ -57,6 +57,18 @@ defmodule Web.SubmissionView do
     end
   end
 
+  def is_closed(end_date) do
+    now = Timex.now()
+
+    case Timex.compare(end_date, now) do
+      1 ->
+        "No"
+
+      tc when tc == -1 or tc == 0 ->
+        "Yes"
+    end
+  end
+
   def close_header(end_date) do
     now = Timex.now()
 
