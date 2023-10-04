@@ -30,6 +30,7 @@ $("#submission_document_upload").on("click", function(e) {
       contentType: false,
       data: fd,
       success: function(document) {
+
         //$(".usa-error-message").toggleClass('display-block display-none')
         $("#submission_document_upload__error-no-email").text("")
         $("#submission_document_upload__error-solver-addr").text("").css("padding-bottom", "0")
