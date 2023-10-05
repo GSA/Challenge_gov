@@ -35,6 +35,7 @@ function formatPrizeAmount(num) {
 function escapeFieldForCsv(field) {
   // if the field includes commas, newline characters or double-quotes, then 1. wrap them in quotes
   // 2. replace inner double quotes with a pair of double quotes, and 3. replace newline characters with '\n'
+
   if (typeof field === 'string' && /[,\"\n]/.test(field)) {
     field = `"${field.replace(/"/g, '""').replace(/\n/g, '\\n')}"`;
   }
@@ -43,6 +44,7 @@ function escapeFieldForCsv(field) {
 
 // this function will replace each occurrence of these error characters with the correct one 
 // we can add more such cases as we find them; this fix will all cases at the time of this writing
+
 function cleanUpString(str) {
   if (!str || typeof str !== 'string') {
     return '';
