@@ -25,7 +25,7 @@ $("#submission_document_upload").on("click", function(e) {
   fd.set("solver_email", solver_email)
 
   if (file) {
-
+    
     if(name.length > 2)  {
       
         $.ajax({
