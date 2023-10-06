@@ -9,6 +9,8 @@ $("#submission_document").on("change", function() {
 })
 
 $("#submission_document_upload").on("click", function(e) {
+  $(".challenge_document_upload_error_required").addClass('display-none')
+  $(".challenge_document_upload_error").addClass('display-none')
   name_input = $("#submission_document_name")
   name = name_input.val()
   current_user = $("#current_user").data("user")
@@ -23,45 +25,51 @@ $("#submission_document_upload").on("click", function(e) {
   fd.set("solver_email", solver_email)
 
   if (file) {
-    $.ajax({
-      url: "/api/submission_documents",
-      type: "post",
-      processData: false,
-      contentType: false,
-      data: fd,
-      success: function(document) {
+    
+    if(name.length > 2)  {
+      
+        $.ajax({
+          url: "/api/submission_documents",
+          type: "post",
+          processData: false,
+          contentType: false,
+          data: fd,
+          success: function(document) {
+            //$(".usa-error-message").toggleClass('display-block display-none')
+            $("#submission_document_upload__error-no-email").text("")
+            $("#submission_document_upload__error-solver-addr").text("").css("padding-bottom", "0")
 
-        //$(".usa-error-message").toggleClass('display-block display-none')
-        $("#submission_document_upload__error-no-email").text("")
-        $("#submission_document_upload__error-solver-addr").text("").css("padding-bottom", "0")
+            $(name_input).val("")
+            $(file_input).val("")
+            $(".usa-file-input__preview-heading").remove()
+            $(".usa-file-input__preview").remove()
+            $(".usa-file-input__instructions").toggleClass('display-none display-block')
 
-        $(name_input).val("")
-        $(file_input).val("")
-        $(".usa-file-input__preview-heading").remove()
-        $(".usa-file-input__preview").remove()
-        $(".usa-file-input__instructions").toggleClass('display-none display-block')
-
-        $(".submission-documents-list").append(`
-          <div class="submission-document-row">
-            <input type="hidden" name="submission[document_ids][]" value="${document.id}">
-            <i class="fa fa-paperclip me-1"></i>
-            <a href=${document.url} target="_blank">${document.display_name}</a>
-            <a href="" data-document-id=${document.id} class="submission_uploaded_document_delete">
-              <i class="fa fa-trash"></i>
-            </a>
-          </div>
-        `)
-      },
-      error: function(err) {
-        console.log("Something went wrong")
-        if(err["solver_addr"]) {
-          handleFileUploadError(err.responseJSON.errors)
-        } else {
-          $(".usa-error-message").toggleClass('display-none display-block')
-        }
-      }
-    })
-  }
+            $(".submission-documents-list").append(`
+              <div class="submission-document-row">
+                <input type="hidden" name="submission[document_ids][]" value="${document.id}">
+                <i class="fa fa-paperclip me-1"></i>
+                <a href=${document.url} target="_blank">${document.display_name}</a>
+                <a href="" data-document-id=${document.id} class="submission_uploaded_document_delete">
+                  <i class="fa fa-trash"></i>
+                </a>
+              </div>
+            `)
+          },
+          error: function(err) {
+            console.log("Something went wrong")
+            if(err["solver_addr"]) {
+              handleFileUploadError(err.responseJSON.errors)
+            } else {
+              $(".challenge_document_upload_error").toggleClass('display-none display-block')
+            }
+          }
+        })
+   }     
+   else {
+    $(".challenge_document_upload_error_required").toggleClass('display-none display-block')
+   }
+  }  
 })
 
 const handleFileUploadError = (errors) => {
