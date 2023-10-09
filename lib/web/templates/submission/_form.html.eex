@@ -42,9 +42,8 @@
           <span data-user="<%= @user.email %>", id="current_user"></span><br>
 
           Step 2:
-           <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "File Name", class: "rename-file my-3") %>
-           <div class="challenge_document_upload_error_required usa-error-message display-none">Please give a name for your file</div>
-           <br>
+           <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "Rename file (optional)", class: "my-3") %>
+
           Step 3:<br>
           <div id="submission_document_upload" class="usa-button">Attach File</div>
           <div class="challenge_document_upload_error usa-error-message display-none">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
