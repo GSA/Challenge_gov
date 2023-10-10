@@ -21,8 +21,6 @@ applications:
     HTTP_PROXY: ((CADDY_PROXY))
     https_proxy: ((CADDY_PROXY))
     http_proxy: ((CADDY_PROXY))
-    NO_PROXY: '*.repo.hex.pm, *.idp.int.identitysandbox.gov'
-    no_proxy: '*.repo.hex.pm, *.idp.int.identitysandbox.gov'
     HEX_UNSAFE_HTTPS: "1"
     HOST: challenge-portal-dev.app.cloud.gov
     LOGIN_PRIVATE_KEY_PATH: dev_key.pem
