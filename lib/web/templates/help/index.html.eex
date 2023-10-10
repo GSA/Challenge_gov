@@ -32,7 +32,7 @@
                 <use xlink:href="/assets/img/sprite.svg#help"></use>
               </svg>
               <h3 class="margin-2">FAQs</h3>
-              <p>Check out our <%= link("frequently asked questions", to: Routes.static_path(@conn, "/pdfs/challenge_manager_faq.pdf"), target: "_blank") %> on challenge and submission management.</p>
+              <p>Check out our <%= link("frequently asked questions", to: "https://www.challenge.gov/cm-user-faqs/", target: "_blank") %> on challenge and submission management.</p>
             </div>
             <span class="vr-light display-none">&nbsp;</span>
             <div class="text-center grid-col-6 dhelp-card__section padding-2">
@@ -40,19 +40,7 @@
                 <use xlink:href="/assets/img/sprite.svg#local_library"></use>
               </svg>
               <h3 class="margin-2">User Guide</h3>
-              <p>Our <%= link("User guide", to: Routes.static_path(@conn, "/pdfs/challenge_manager_user_guide.pdf"), target: "_blank") %> is full of useful information on how to get started.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="card padding-4 grid-container margin-top-3 usa-card__container">
-          <div class="grid-row">
-            <div class="grid-col-6 padding-5 my-auto left-section">
-              <h3 class="margin-bottom-4 font-weight-bold">Question about creating a challenge?</h3>
-              <span>View detailed information in the <%= link("Creating a new challenge", to: Routes.static_path(@conn, "/pdfs/creating_new_challenge.pdf"), target: "_blank") %> document.</span>
-            </div>
-            <div class="grid-col-6 text-center right-section">
-              <img src="/images/challenge_details_page.svg" alt="example challenge details page" title="Challenge details page" class="help-card-image"/>
+              <p>Our <%= link("User guide", to: "https://www.challenge.gov/cm-user-guide/", target: "_blank") %> is full of useful information on how to get started.</p>
             </div>
           </div>
         </div>
