@@ -153,10 +153,6 @@ jobs:
       - run: echo -e $DEV_PUBLIC_CERT > dev_cert.pem
       - run: echo 'export CF_PASSWORD=$CF_PASSWORD_DEV' >> $BASH_ENV
       - run: echo 'export CF_USERNAME=$CF_USERNAME_DEV' >> $BASH_ENV
-      - run: echo 'export CADDY_PROXY=$HTTPS_PROXY' >> $BASH_ENV
-      - run: echo 'export CADDY_PROXY=$HTTP_PROXY' >> $BASH_ENV
-      - run: echo 'export CADDY_PROXY=$https_proxy' >> $BASH_ENV
-      - run: echo 'export CADDY_PROXY=$http_proxy' >> $BASH_ENV
       - run:
           name: Install Cloud Foundry CLI
           command: |
@@ -171,7 +167,7 @@ jobs:
           endpoint: "https://api.fr.cloud.gov"
           org: gsa-tts-innovation-challenge
           space: dev
-      - run: cf push challenge-portal-dev --strategy rolling
+      - run: cf push challenge-portal-dev --strategy rolling --var CADDY_PROXY=$CADDY_PROXY
 
   staging-deploy:
     parallelism: 1
