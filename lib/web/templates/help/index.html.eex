@@ -43,7 +43,7 @@
                   <div class="margin-left-2 right-section">
                     <h3 class="font-weight-bold">FAQs</h3>
                     <span>Check out our frequently asked questions concerning challenge and submission management.</span><br><br>
-                    <a href="https://www.challenge.gov/public-innovator-faqs/" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">FAQs</span></a>                        
+                    <a href="https://www.challenge.gov/cm-user-faqs/" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">FAQs</span></a>                        
                   </div>
                 </div>
               </div>
@@ -59,7 +59,7 @@
                 <div class="margin-left-2 right-section">
                   <h3 class="font-weight-bold">User Guide</h3>
                   <span>Our user guide has information on prize competitions, crowdsourcing, and use of the Challenge.Gov platform.</span><br><br>
-                  <a href="https://www.challenge.gov/user-guide/" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">User Guide</span></a>    
+                  <a href="https://www.challenge.gov/cm-user-guide/" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">User Guide</span></a>    
                 </div>
               </div>
 
@@ -81,8 +81,8 @@
             </div>
             <div class="margin-left-2 right-section">
               <h3 class="font-weight-bold">Federal Employee Toolkit</h3>
-              <span>For more information, see the Prize and Challenge Toolkit.</span><br><br>
-              <%= link "Toolkit", to: Routes.static_path(@conn, "/pdfs/prize_and_challenge_toolkit.pdf"), class: "usa-button usa-button margin-bottom-0", target: "_blank", style: "color:#ffffff;" %>                   
+              <span>For more information, see the Prize and Challenge Toolkit.</span><br><br>              
+              <%= link "Toolkit", to: "https://www.challenge.gov/assets/document-library/Challenge-Gov-Federal-Agency-Toolkit.pdf", class: "usa-button usa-button margin-bottom-0", target: "_blank", style: "color:#ffffff;" %>
             </div>
           </div>
         </div>
