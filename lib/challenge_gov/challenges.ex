@@ -348,7 +348,10 @@ defmodule ChallengeGov.Challenges do
   """
   def all_for_govdelivery() do
     base_query()
-    |> where([c], c.status == "published" and c.sub_status != "archived")
+    |> where(
+      [c],
+      c.status == "published" and (c.sub_status != "archived" or is_nil(c.sub_status))
+    )
     |> where([c], is_nil(c.gov_delivery_topic))
     |> where(
       [c],
