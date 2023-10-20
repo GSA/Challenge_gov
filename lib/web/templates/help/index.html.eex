@@ -62,6 +62,7 @@
                   <a href="https://www.challenge.gov/user-guide/" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">User Guide</span></a>    
                 </div>
               </div>
+
             </div>
 
           </div>
@@ -79,10 +80,30 @@
               </svg>
             </div>
             <div class="margin-left-2 right-section">
-    <h3 class="font-weight-bold">Federal Employee Toolkit</h3>
-    <span>For more information, see the Prize and Challenge Toolkit.</span><br><br>
-    <%= link "Toolkit", to: Routes.static_path(@conn, "/pdfs/prize_and_challenge_toolkit.pdf"), class: "usa-button usa-button margin-bottom-0", target: "_blank", style: "color:#ffffff;" %>                   
-</div>
+              <h3 class="font-weight-bold">Federal Employee Toolkit</h3>
+              <span>For information, see the Prize and Challenge toolkit.</span><br><br>
+              <a href="https://www.challenge.gov/public-innovator-faqs/" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">Toolkit</span></a>                        
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card margin-top-3">
+         <div class="grid-row">
+
+          <!-- federal employee toolkit -->
+          <div class="grid-col-6">
+           <div class="usa-card__container display-flex flex-row padding-4">
+            <div class="help-card-icon text-center left-section">
+              <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+                <use xlink:href="/assets/img/sprite.svg#construction"></use>
+              </svg>
+            </div>
+            <div class="margin-left-2 right-section">
+              <h3 class="font-weight-bold">Federal Employee Toolkit</h3>
+              <span>For more information, see the Prize and Challenge Toolkit.</span><br><br>
+              <%= link "Toolkit", to: Routes.static_path(@conn, "/pdfs/prize_and_challenge_toolkit.pdf"), class: "usa-button usa-button margin-bottom-0", target: "_blank", style: "color:#ffffff;" %>                   
+            </div>
           </div>
         </div>
 
@@ -100,6 +121,7 @@
             <a href="mailto: team@challenge.gov" target="_blank" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">Email</span></a>    
           </div>
         </div>
+
       </div>
 
     </div>
