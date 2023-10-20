@@ -29,8 +29,6 @@
 
             <h2 class="text-center">Getting Started</h2> 
 
-            <!-- first row of cards -->
-
             <div class="card margin-top-3">
               <div class="grid-row">
 
@@ -44,7 +42,7 @@
                   </div>
                   <div class="margin-left-2 right-section">
                     <h3 class="font-weight-bold">FAQs</h3>
-                    <span>Check out our frequently asked questions about challenges and submission management.</span><br><br>
+                    <span>Check out our frequently asked questions concerning challenge and submission management.</span><br><br>
                     <a href="https://www.challenge.gov/public-innovator-faqs/" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">FAQs</span></a>                        
                   </div>
                 </div>
@@ -64,11 +62,11 @@
                   <a href="https://www.challenge.gov/user-guide/" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">User Guide</span></a>    
                 </div>
               </div>
+
             </div>
 
           </div>
         </div>
-
 
         <div class="card margin-top-3">
          <div class="grid-row">
@@ -83,8 +81,8 @@
             </div>
             <div class="margin-left-2 right-section">
               <h3 class="font-weight-bold">Federal Employee Toolkit</h3>
-              <span>For information, see the Prize and Challenge toolkit.</span><br><br>
-              <a href="https://www.challenge.gov/public-innovator-faqs/" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">Toolkit</span></a>                        
+              <span>For more information, see the Prize and Challenge Toolkit.</span><br><br>
+              <%= link "Toolkit", to: Routes.static_path(@conn, "/pdfs/prize_and_challenge_toolkit.pdf"), class: "usa-button usa-button margin-bottom-0", target: "_blank", style: "color:#ffffff;" %>                   
             </div>
           </div>
         </div>
@@ -103,6 +101,7 @@
             <a href="mailto: team@challenge.gov" target="_blank" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">Email</span></a>    
           </div>
         </div>
+
       </div>
 
     </div>
