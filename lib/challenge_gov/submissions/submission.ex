@@ -139,10 +139,11 @@ defmodule ChallengeGov.Submissions.Submission do
     |> validate_inclusion(:status, status_ids())
   end
 
+  # the review chance to submited
   def update_review_changeset(struct, params) do
     struct
     |> changeset(params)
-    |> put_change(:status, "draft")
+    |> put_change(:status, "submitted")
     |> foreign_key_constraint(:submitter)
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)

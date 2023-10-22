@@ -73,15 +73,77 @@
         <% end) %>
       </div>
     </div>
-<hr>
+    <hr>
     <%= FormView.text_field(f, :external_url, label: "External URL (optional) (Use format: http://www.example.com/)") %>
     <br/>
 
     <%= accept_terms(@conn, f, @user, @challenge) %>
     <%= verify_review(f, @user.id, @data) %>
 
-    <%= cancel_button(@conn, @action, @challenge, @phase, @user, class: "usa-link usa-link float-left margin-top-2") %>
-    <%= submit("Review and submit", name: "action", value: "review", class: "usa-button float-right") %>
+    <%= cancel_button(@conn, @action, @challenge, @phase, @user, class: "usa-button usa-button--outline float-left margin-top-2") %>
+    <%= submit("Review and submit", name: "action", value: "review", class: "usa-button float-right submit-form display-none") %>
+    <a href="#submit-modal-1" class="usa-button float-right" aria-controls="submit-modal-1" data-open-modal>Submit</a>
+
     <%= save_draft_button(@data) %>
+
+  <div
+    class="usa-modal"
+    id="submit-modal-1"
+    aria-labelledby="modal-1-heading"
+    aria-describedby="modal-1-description"
+  >
+    <div class="usa-modal__content">
+      <div class="usa-modal__main">
+
+        <div class="usa-prose">
+          <p id="modal-1-description">
+          By clicking <b>Submit</b> you are confirming you have reviewed your details.
+          </p>
+        </div>
+        <div class="usa-modal__footer">
+          <ul class="usa-button-group float-right">
+            <li class="usa-button-group__item">
+              <button
+                type="button"
+                class="usa-button usa-button--unstyled padding-105 text-center"
+                data-close-modal
+              >
+                Cancel
+              </button>
+            </li>
+            <li class="usa-button-group__item">
+
+
+              <button class="usa-button" id="sumbmit-event" href="">Submit</button>
+
+            </li>
+          </ul>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="usa-button usa-modal__close submit-close"
+        aria-label="Close this window"
+        data-close-modal
+      >
+        <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+          <use xlink:href="/assets/img/sprite.svg#close"></use>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+
+
+
+
   <% end) %>
+
+
+
+
+
+
+
+
 </section>
