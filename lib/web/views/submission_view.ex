@@ -183,7 +183,7 @@ defmodule Web.SubmissionView do
         link(opts[:label] || "Delete",
           to: Routes.submission_path(conn, :delete, submission.id),
           method: :delete,
-          class: "usa-button usa-button--unstyled text-error-dark",
+          class: "usa-button usa-button--outline text-error-dark",
           data: [confirm: "Are you sure you want to delete this submission?"]
         )
 
@@ -197,7 +197,7 @@ defmodule Web.SubmissionView do
       true ->
         link(opts[:label] || "Edit",
           to: Routes.submission_path(conn, :edit, submission.id),
-          class: "usa-button usa-button--outline float-right"
+          class: "usa-button float-right"
         )
 
       false ->
@@ -212,6 +212,20 @@ defmodule Web.SubmissionView do
           to: Routes.submission_path(conn, :submit, submission.id),
           method: :put,
           class: "usa-button float-right"
+        )
+
+      false ->
+        nil
+    end
+  end
+
+  def submit_button2(conn, submission, user, opts \\ []) do
+    case Submissions.is_editable?(user, submission) do
+      true ->
+        button(opts[:label] || "Submit",
+          to: Routes.submission_path(conn, :submit, submission.id),
+          method: :put,
+          class: "usa-button float-right submit-form display-none"
         )
 
       false ->
@@ -237,13 +251,13 @@ defmodule Web.SubmissionView do
           Routes.submission_path(conn, :index)
       end
 
-    link("Cancel", to: route, class: "usa-link float-left margin-top-2")
+    link("Cancel", to: route, class: "usa-button usa-button--outline float-left margin-top-2")
   end
 
   def accept_terms(_conn, form, user, challenge) do
     # show for solvers even on editing
     if Accounts.is_solver?(user) do
-      content_tag(:div, class: "form-group") do
+      content_tag(:div, class: "form-group padding-bottom-2") do
         content_tag(:div, class: "col") do
           content_tag(:div, class: "usa-checkbox") do
             [
@@ -260,7 +274,7 @@ defmodule Web.SubmissionView do
                       target: "_blank"
                     ),
                     " of this challenge",
-                    error_tag(form, :terms_accepted)
+                    error_tag(form, :terms_accepted, "usa-error-message")
                   ]
                 end
               ]
