@@ -49,7 +49,7 @@ defmodule ChallengeGov.LoginGov do
       response_type: "code",
       acr_values: acr_values,
       scope: "openid email",
-      redirect_uri: redirect_uri,
+      redirect_uri: uri_join(redirect_uri, "/auth/result"),
       state: random_value(),
       nonce: random_value(),
       prompt: "select_account"
