@@ -107,8 +107,9 @@ defmodule ChallengeGov.Submissions do
     |> Repo.transaction()
     |> case do
       {:ok, %{submission: submission}} ->
-        GovDelivery.subscribe_user_general(user)
-        GovDelivery.subscribe_user_challenge(user, challenge)
+        # removing GovDeliver suscriptions to check later
+        # GovDelivery.subscribe_user_general(user)
+        # GovDelivery.subscribe_user_challenge(user, challenge)
 
         {:ok, submission}
 
