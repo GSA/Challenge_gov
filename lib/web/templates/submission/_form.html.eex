@@ -96,7 +96,7 @@
       <div class="usa-modal__main">
 
         <div class="usa-prose">
-          <p id="modal-1-description">
+          <p id="modal-1-description" class="text-center">
           By clicking <b>Submit</b> you are confirming you have reviewed your details.
           </p>
         </div>

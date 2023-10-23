@@ -79,7 +79,7 @@
               </div>
             <% end %>
 
-            <div class="form-group">
+            <div class="form-group padding-bottom-3">
               <label class="col"><strong>Last updated date:</strong></label>
               <div class="col"><%= SharedView.local_datetime_tag(@submission.updated_at) %></div>
             </div>

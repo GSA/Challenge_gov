@@ -264,7 +264,7 @@ defmodule Web.SubmissionController do
             conn
             |> assign(:phase_id, phase.id)
             |> put_flash(
-              :info,
+              :warning,
               "Your submission is in Draft mode. To Submit, click on Submit at the bottom of the page."
             )
             |> redirect(to: Routes.submission_path(conn, :edit, submission.id))
@@ -276,10 +276,14 @@ defmodule Web.SubmissionController do
       "review" ->
         case Submissions.create_review(submission_params, submitter, challenge, phase) do
           {:ok, submission} ->
-            submit(conn, %{"id" => submission.id})
+            # submit(conn, %{"id" => submission.id})
 
-          # conn
-          # |> redirect(to: Routes.submission_path(conn, :show, submission.id))
+            conn
+            |> put_flash(
+              :info,
+              "Congratulations on submiting your entry. You can edit and update your submission up until the deadline."
+            )
+            |> redirect(to: Routes.submission_path(conn, :show, submission.id))
 
           {:error, changeset} ->
             create_error(conn, changeset, current_user, challenge, phase)
@@ -300,6 +304,18 @@ defmodule Web.SubmissionController do
     |> render("new.html")
   end
 
+  defp draft_message(conn, %{"status" => "draft"}) do
+    conn
+    |> put_flash(
+      :warning,
+      "Your submission is in Draft mode. To Submit, click on Submit at the bottom of the page."
+    )
+  end
+
+  defp draft_message(conn, %{"status" => "submitted"}) do
+    conn
+  end
+
   def edit(conn, %{"id" => id}) do
     %{current_user: user, current_submission: submission} = conn.assigns
 
@@ -313,6 +329,7 @@ defmodule Web.SubmissionController do
       |> assign(:action, action_name(conn))
       |> assign(:path, Routes.submission_path(conn, :update, id))
       |> assign(:changeset, Submissions.edit(submission))
+      |> draft_message(%{"status" => submission.status})
       |> assign(:navbar_text, "Edit submission")
       |> render("edit.html")
     else
@@ -340,7 +357,7 @@ defmodule Web.SubmissionController do
          {:ok, submission} <- Submissions.update_draft(submission, submission_params) do
       conn
       |> put_flash(
-        :info,
+        :warning,
         "Your submission is in Draft mode. To Submit, click on Submit at the bottom of the page."
       )
       |> redirect(to: Routes.submission_path(conn, :edit, submission.id))

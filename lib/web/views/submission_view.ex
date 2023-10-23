@@ -197,7 +197,7 @@ defmodule Web.SubmissionView do
       true ->
         link(opts[:label] || "Edit",
           to: Routes.submission_path(conn, :edit, submission.id),
-          class: "usa-button usa-button--outline float-right"
+          class: "usa-button float-right"
         )
 
       false ->
@@ -257,7 +257,7 @@ defmodule Web.SubmissionView do
   def accept_terms(_conn, form, user, challenge) do
     # show for solvers even on editing
     if Accounts.is_solver?(user) do
-      content_tag(:div, class: "form-group") do
+      content_tag(:div, class: "form-group padding-bottom-2") do
         content_tag(:div, class: "col") do
           content_tag(:div, class: "usa-checkbox") do
             [

@@ -113,7 +113,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> put_change(:challenge_id, challenge.id)
     |> put_change(:phase_id, phase.id)
     |> put_change(:manager_id, params["manager_id"])
-    |> put_change(:status, "draft")
+    |> put_change(:status, "submitted")
     |> foreign_key_constraint(:submitter)
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)
