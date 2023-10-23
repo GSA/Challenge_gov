@@ -14,9 +14,7 @@
     "@babel/preset-react": "^7.8.7",
     "@fortawesome/fontawesome-free": "^5.12.1",
     "@popperjs/core": "2.9.3",
-    "admin-lte": "^3.2.0",
     "axios": "^0.21.2",
-    "bootstrap": "^5.2.2",
     "chart.js": "^3.2.1",
     "chokidar": "^3.3.1",
     "create-react-app": "^5.0.1",
@@ -56,7 +54,7 @@
     "optimize-css-assets-webpack-plugin": "^4.0.0",
     "sass-loader": "^12.3.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^5.37.0",
+    "webpack": "^5.76.0",
     "webpack-cli": "^4.7.0"
   }
 }
