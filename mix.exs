@@ -87,7 +87,7 @@ defmodule ChallengeGov.MixProject do
       {:timex, "~> 3.5"},
       {:waffle, "~> 1.1.5"},
       {:waffle_ecto, "~> 0.0.11"},
-      {:wallaby, "~> 0.28.0", runtime: false, only: :test},
+      {:wallaby, "~> 0.30.6", runtime: false, only: :test},
       {:xml_builder, "~> 2.1.1", override: true}
     ]
   end
