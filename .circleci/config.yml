@@ -93,7 +93,11 @@ jobs:
           POSTGRES_PASSWORD: postgres
     steps:
       - checkout
-      # - browser-tools/install-chrome
+      - browser-tools/install-browser-tools:
+          chrome-version: 118.0.5993.70
+          install-chrome:
+          install-chromedriver:
+      # - brwoser-tools/install-chrome
       # - browser-tools/install-chromedriver
       - run: mix local.hex --force
       - run: mix local.rebar --force
