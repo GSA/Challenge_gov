@@ -17,10 +17,10 @@ applications:
   env:
     MIX_ENV: prod
     STACK: heroku-22
-    # HTTPS_PROXY: ((CADDY_PROXY))
-    # HTTP_PROXY: ((CADDY_PROXY))
-    # https_proxy: ((CADDY_PROXY))
-    # http_proxy: ((CADDY_PROXY))
+    HTTPS_PROXY: ((CADDY_PROXY))
+    HTTP_PROXY: ((CADDY_PROXY))
+    https_proxy: ((CADDY_PROXY))
+    http_proxy: ((CADDY_PROXY))
     NO_PROXY: '*.repo.hex.pm'
     no_proxy: '*.repo.hex.pm'
     HEX_UNSAFE_HTTPS: "1"
