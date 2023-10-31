@@ -157,7 +157,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   };
 
   const renderHeader = () => (
-    <h2 className="mb-5">
+    <h2 className="usa-margin-bottom-5">  
       {isArchived ? "Archived Challenges" : "Filter by open/active challenges."}
     </h2>
   );
@@ -165,32 +165,38 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const renderSubHeader = () => isArchived ? <p>Challenges on this page are completed (closed to submissions) or only open to select winners of a previous competition phase.</p> : null;
   
   const renderYearFilter = () => {
-    const startYear = 2010;
-    const currentYear = moment().year();
-    const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
+  const startYear = 2010;
+  const currentYear = moment().year();
+  const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
+  const years = range(currentYear, startYear, -1);
 
-    const years = range(currentYear, startYear, -1);
-
-    if (isArchived) {
-      return (
-        <div className="cards__year-filter">
-          <div>Filter by year:</div>
+  if (isArchived) {
+    return (
+      <div className="cards__year-filter">
+        <form className="usa-form" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          {renderSubHeader()}
+          <label className="usa-label" htmlFor="options">Filter by year:</label>
           <select 
-            className=""
+            className="usa-select"
+            name="options" 
+            id="options"
             value={selectedYear} 
             onChange={handleYearChange} 
             aria-label="Filter archive by year"
+            style={{width: '80px'}} // Inline style for select
           >
+            <option value>- Select -</option>
             {
               years.map(year => {
-                return <option key={year}>{year}</option>
+                return <option key={year} value={year}>{year}</option>
               })
             }
           </select>
-        </div>
-      );
-    }
-  };
+        </form>
+      </div>
+    );
+  }
+};
   
   const renderSortText = () => {
     const sortTextStyle = { textAlign: 'center', marginBottom: '20px' };
@@ -263,7 +269,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       <section id="active-challenges" className="cards__section" tabIndex="-1">
         <div className="container">
           {renderHeader()}
-          {renderSubHeader()}
+          
           {renderYearFilter()}
         </div>
 
