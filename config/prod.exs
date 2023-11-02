@@ -81,7 +81,8 @@ config :challenge_gov, :oidc_config, %{
   private_key_path: System.get_env("LOGIN_PRIVATE_KEY_PATH"),
   private_key_password: System.get_env("LOGIN_PRIVATE_KEY_PASSWORD"),
   public_key_path: System.get_env("LOGIN_PUBLIC_KEY_PATH"),
-  token_endpoint: System.get_env("LOGIN_TOKEN_ENDPOINT")
+  token_endpoint: System.get_env("LOGIN_TOKEN_ENDPOINT"),
+  idp_https_proxy: System.get_env("HTTPS_PROXY")
 }
 
 config :challenge_gov, :login_gov_logout, %{

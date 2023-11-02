@@ -119,6 +119,12 @@ defmodule ChallengeGov.LoginGov do
     |> URI.to_string()
   end
 
+  # adjust the request options to work with the proxy
+  defp process_request_options(options) do
+    [{:proxy, {:http, Application.get_env(:challenge_gov, :idp_https_proxy) }},
+       {:follow_redirect, true}]
+  end
+
   def process_response_body(body) do
     Poison.decode!(body)
   end
