@@ -13,7 +13,8 @@ defmodule ChallengeGov.SecurityLogs do
   require Logger
 
   def track(params) do
-    Logger.info("Audit event #{params[:action]}", log_type: "audit", params: params)
+   # Logger.info("Audit event #{params[:action]}", log_type: "audit", params: params)
+    Logger.info("Audit event #{params[:action]}")
 
     %SecurityLog{}
     |> SecurityLog.changeset(params)
