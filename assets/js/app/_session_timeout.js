@@ -1,7 +1,7 @@
 
 if ($("#session_timeout").length > 0) {
   let doRenewSession = false
-
+  let msgWindow = false
   // $(".wrapper").prepend(
   //   `<div id="renew-modal" class="modal timeout-modal">
   //     <div class="modal-content">
@@ -17,15 +17,20 @@ if ($("#session_timeout").length > 0) {
   // When the renew button is clicked renew session and fetch new timeout then close modal
   $("body").on("click", "#renew", function(e) {
     e.preventDefault()
-    console.log("click ")
     renewSession()
   })
 
-  $("html").on("click", () => {
-    doRenewSession = true
+  $("html").on("click", (e) => {
+    if (e.target.id=="newModal") {
+       doRenewSession = false
+    } else {
+      msgWindow = false
+      doRenewSession = true
+    }
   })
 
   $("html").on("keydown", () => {
+    msgWindow = false
     doRenewSession = true
   })
 
@@ -39,6 +44,7 @@ if ($("#session_timeout").length > 0) {
         $("#session_timeout").data("session_expiration", res.new_timeout)
     
         //renewModal.hide()
+        msgWindow = false
         doRenewSession = false
       },
       error: function(err) {
@@ -54,43 +60,46 @@ if ($("#session_timeout").length > 0) {
     const now = Math.floor(new Date().getTime()/1000)
 
     // When current time gets within 2 minutes of session timeout show countdown modal
-    if (now === (session_expiration - 120)) {
-      if (doRenewSession) {
-        return renewSession()
-      }
 
-      let seconds = 60
-      let minutes = 1
+        if (now === (session_expiration - 120) && msgWindow === false  ) {
 
-      countdown = setInterval(function() {
-        seconds--;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
+          if (doRenewSession) {
+            return renewSession()
+          }
 
-        if (minutes == 1 && seconds == 0) {
-          seconds = 60
-          minutes = 0
-          time = seconds
+          let seconds = 60
+          let minutes = 1
+
+          countdown = setInterval(function() {
+            seconds--;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            if (minutes == 1 && seconds == 0) {
+              seconds = 60
+              minutes = 0
+              time = seconds
+            }
+            if (minutes == 0 && seconds == 0) {
+              clearInterval(countdown);
+            }
+
+            let time = `${minutes}:${seconds}`
+            document.getElementById("countdown").textContent = time;
+
+           if (seconds <= 0) clearInterval(countdown);
+          }, 1000);
+
+
+          msgWindow = true  
+          document.getElementById("newModal").click()
         }
-        if (minutes == 0 && seconds == 0) {
-          clearInterval(countdown);
-        }
-
-        let time = `${minutes}:${seconds}`
-
-        document.getElementById("countdown").textContent = time;
-
-        if (seconds <= 0) clearInterval(countdown);
-      }, 1000);
-
-      //renewModal.show()
-      document.getElementById("newModal").click()
-    }
+     
 
     // If session expiration gets renewed then clear the countdown interval
     if (now < session_expiration - 120) {
       clearInterval(countdown)
     }
-
+    
     // If the current time gets to the session expiration time then show logged out modal
     if (now === (session_expiration)) {
       if (doRenewSession) {
