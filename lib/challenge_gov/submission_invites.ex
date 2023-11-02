@@ -60,17 +60,21 @@ defmodule ChallengeGov.SubmissionInvites do
     end
   end
 
+  def submision_choose(params, submission) do
+    if submission.invite do
+      reinvite(submission.invite, params)
+    else
+      create(params, submission)
+    end
+  end
+
   def bulk_create(params, submission_ids) do
     submission_ids
     |> Enum.reduce(Ecto.Multi.new(), fn submission_id, multi ->
       Ecto.Multi.run(multi, submission_id, fn _repo, _changes ->
         {:ok, submission} = Submissions.get(submission_id)
 
-        if submission.invite do
-          reinvite(submission.invite, params)
-        else
-          create(params, submission)
-        end
+        submision_choose(params, submission)
       end)
     end)
     |> Repo.transaction()
