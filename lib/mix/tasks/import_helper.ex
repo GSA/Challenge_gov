@@ -45,6 +45,10 @@ defmodule Mix.Tasks.ImportHelper do
     end
   end
 
+  def matched_component_agency_val(matched_component_agency) do
+    if matched_component_agency, do: matched_component_agency.id, else: nil
+  end
+
   # Agency Helpers
   def match_agency(name, _logo \\ nil, challenge_id \\ nil, mappings \\ %{}) do
     name = String.trim(name)
@@ -85,8 +89,7 @@ defmodule Mix.Tasks.ImportHelper do
           {matched_parent_agency, matched_component_agency, mappings} =
             find_agency_matches(mapped_agency["parent"], mapped_agency["component"], mappings)
 
-          matched_component_agency_id =
-            if matched_component_agency, do: matched_component_agency.id, else: nil
+          matched_component_agency_id = matched_component_agency_val(matched_component_agency)
 
           {
             %{
@@ -165,6 +168,10 @@ defmodule Mix.Tasks.ImportHelper do
     {matched_parent_agency, matched_component_agency, mappings}
   end
 
+  defp parent_agency_val(parent_agency, map_match) do
+    if parent_agency, do: map_match["component"], else: map_match["parent"]
+  end
+
   defp find_or_create_agency_match(agency_name, agencies, mappings, parent_agency \\ nil) do
     if Enum.empty?(agencies) do
       create_agency_match(agency_name, mappings, parent_agency)
@@ -187,8 +194,8 @@ defmodule Mix.Tasks.ImportHelper do
 
         is_map(map_match) ->
           # credo:disable-for-next-line
-          agency_map_match =
-            if parent_agency, do: map_match["component"], else: map_match["parent"]
+          agency_map_match = parent_agency_val(parent_agency, map_match)
+          # if parent_agency, do: map_match["component"], else: map_match["parent"]
 
           # credo:disable-for-next-line
           IO.inspect("Mapping match: #{agency_name} -> #{agency_map_match}")
