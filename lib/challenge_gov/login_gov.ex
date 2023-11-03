@@ -122,8 +122,7 @@ defmodule ChallengeGov.LoginGov do
   # adjust the request options to work with the proxy
   def process_request_options(options) do
     [
-      {:proxy, {:http, Application.get_env(:challenge_gov, :idp_https_proxy)}},
-      {:follow_redirect, true}
+      {:proxy, {:http, Application.get_env(:challenge_gov, :idp_https_proxy), Application.get_env(:challenge_gov, :http_port)}}
     ]
   end
 
