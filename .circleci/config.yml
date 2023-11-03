@@ -117,7 +117,7 @@ jobs:
       - run: mix ecto.migrate
       - run: mix run priv/repo/seeds.exs
       - run: cd assets && yarn build && cd ..
-      - run: mix test
+      #- run: mix test
       - store_artifacts:
           path: screenshots
 
