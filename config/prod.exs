@@ -84,7 +84,6 @@ config :challenge_gov, :oidc_config, %{
   token_endpoint: System.get_env("LOGIN_TOKEN_ENDPOINT"),
   idp_https_proxy: System.get_env("http_proxy_id"),
   http_port: System.get_env("http_port")
-
 }
 
 config :challenge_gov, :login_gov_logout, %{
