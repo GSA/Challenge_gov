@@ -561,8 +561,17 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_assoc(:phases, with: &Phase.judging_changeset/2)
   end
 
-  def how_to_enter_changeset(struct, _params) do
+  def how_to_enter_changeset(struct, params) do
+    method = Map.get(params, "submission_collection_method")
+    modified_params = 
+      if method == "internal" do
+        Map.put(params, "how_to_enter_link", nil)
+      else
+        params
+      end
+
     struct
+    |> cast(modified_params, ~w(how_to_enter_link)a)
     |> cast_assoc(:phases, with: &Phase.how_to_enter_changeset/2)
   end
 
