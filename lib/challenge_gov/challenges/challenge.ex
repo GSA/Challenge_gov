@@ -110,17 +110,20 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:captured_on, :date)
     field(:auto_publish_date, :utc_datetime)
     field(:published_on, :date)
-    field(:rejection_message, :string)
-    field(:how_to_enter_link, :string)
+    field(:rejection_message, :string)    
     field(:announcement, :string)
     field(:announcement_datetime, :utc_datetime)
     field(:gov_delivery_topic, :string)
     field(:gov_delivery_subscribers, :integer, default: 0)
     field(:short_url, :string)
-
     field(:upload_logo, :boolean)
     field(:is_multi_phase, :boolean)
     field(:terms_equal_rules, :boolean)
+    field(:file_upload_required, :boolean)
+    field(:upload_instruction_note, :string)
+    field(:how_to_enter_link, :string)
+    field(:submission_collection_method, :string)
+
 
     # Virtual Fields
     field(:logo, :string, virtual: true)
@@ -322,11 +325,14 @@ defmodule ChallengeGov.Challenges.Challenge do
       :upload_logo,
       :is_multi_phase,
       :terms_equal_rules,
-      :prize_type,
-      :how_to_enter_link,
+      :prize_type,      
       :announcement,
       :announcement_datetime,
-      :short_url
+      :short_url,
+      :file_upload_required,
+      :upload_instruction_note,
+      :how_to_enter_link,
+      :submission_collection_method
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)

@@ -1,22 +1,52 @@
 <div class="display-flex flex-row flex-justify">
   <h3 id="how_to_enter">How to enter</h3>
-  <div><%= render("_edit_button.html", user: @user, challenge: @challenge, route: Routes.challenge_path(@conn, :edit, @challenge.id, "how_to_enter")) %></div>
+  <div>
+    <%= render("_edit_button.html", user: @user, challenge: @challenge, route: Routes.challenge_path(@conn, :edit, @challenge.id, "how_to_enter")) %>
+  </div>
 </div>
 <br/>
+
 <div>
-  <%= Enum.map(@challenge.phases, fn phase -> %>
+  <%= if @challenge.submission_collection_method == "internal" do %>
+    <div class="text-bold">Submission Handling:</div>
     <div>
-      <span class="text-bold">Phase:</span>
-      <span><%= phase.title %></span>
+      <%= case @challenge.submission_collection_method do
+        "internal" -> "Challenge.Gov Managed"
+        _ -> @challenge.submission_collection_method
+      end %>
     </div>
-    <div>
-      <div class="text-bold">How to enter:</div>
-      <%= SharedView.render_safe_html(phase.how_to_enter) %>
-    </div>
-    <br/>
-  <% end) %>
+    <br />
+    <div class="text-bold">File Upload Required:</div>
+    <div><%= @challenge.file_upload_required %></div>
+    <br />
+    <div class="text-bold">Upload Instruction Note:</div>
+    <div><%= @challenge.upload_instruction_note %></div>
+    <br />    
+  <% else %>
+    <%= if @challenge.submission_collection_method == "external" do %>
+      <div class="text-bold">Submission Handling:</div>
+      <div>
+        <%= case @challenge.submission_collection_method do
+          "external" -> "External Submission Site"
+          _ -> @challenge.submission_collection_method
+        end %>
+      </div>
+      <br />
+      <div class="text-bold">External Submission Link:</div>
+      <div><%= @challenge.how_to_enter_link %></div>
+      <br />
+    <% end %>
+  <% end %>
 </div>
-<div>
-  <div class="text-bold">How to enter link:</div>
-  <div><%= @challenge.how_to_enter_link %></div>
-</div>
+
+<% Enum.map(@challenge.phases, fn phase -> %>
+  <div>
+    <span class="text-bold">Phase:</span>
+    <span><%= phase.title %></span>
+  </div>
+  <div>
+    <div class="text-bold">How to enter:</div>
+    <%= SharedView.render_safe_html(phase.how_to_enter) %>
+  </div>
+  <br/>
+<% end) %>
