@@ -11,7 +11,7 @@
     <div class="text-bold">Submission Handling:</div>
     <div>
       <%= case @challenge.submission_collection_method do
-        "internal" -> "Challenge.Gov Managed"
+        "internal" -> "Managed by Challenge.Gov"
         _ -> @challenge.submission_collection_method
       end %>
     </div>
