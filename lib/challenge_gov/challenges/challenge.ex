@@ -562,16 +562,22 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   def how_to_enter_changeset(struct, params) do
-    method = Map.get(params, "submission_collection_method")
-    modified_params = 
-      if method == "internal" do
+  method = Map.get(params, "submission_collection_method")
+
+  modified_params = 
+    case method do
+      "internal" ->
         Map.put(params, "how_to_enter_link", nil)
-      else
+      "external" ->
         params
-      end
+        |> Map.put("upload_instruction_note", nil)
+        |> Map.put("file_upload_required", nil)
+      _ ->
+        params
+    end
 
     struct
-    |> cast(modified_params, ~w(how_to_enter_link)a)
+    |> cast(modified_params, ~w(how_to_enter_link upload_instruction_note file_upload_required)a)
     |> cast_assoc(:phases, with: &Phase.how_to_enter_changeset/2)
   end
 
