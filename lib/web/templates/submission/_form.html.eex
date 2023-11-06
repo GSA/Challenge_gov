@@ -44,7 +44,7 @@
           <% end) %>
         </div>
         <div class="col">
-          Step 1: <%= file_input f, :document, name: "submission[document][file]", class: "usa-file-input" %>
+          Step 1: <%= file_input f, :document, name: "submission[document_ids][]", class: "usa-file-input" %>
           <span data-user="<%= @user.email %>", id="current_user"></span><br>
           Step 2:
           <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "File Name", class: "rename-file my-3") %>
@@ -53,6 +53,7 @@
           Step 3:<br>
           <div id="submission_document_upload" class="usa-button">Attach File</div>
           <div class="challenge_document_upload_error usa-error-message display-none">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
+          
         </div>
         <span id="submission_document_upload__error-no-email" class="js-error-tag text-error-dark"></span>
       </div>
