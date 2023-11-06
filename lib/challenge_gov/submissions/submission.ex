@@ -45,7 +45,8 @@ defmodule ChallengeGov.Submissions.Submission do
     belongs_to(:manager, User)
     has_one(:invite, SubmissionInvite)
     has_many(:documents, Document)
-    field(:document_ids, :map, virtual: true)
+    #field(:document_ids, :map, virtual: true)
+    field(:document_ids, {:array, :integer}, virtual: true)
     field(:document_objects, :map, virtual: true)
 
     # Fields
@@ -82,7 +83,8 @@ defmodule ChallengeGov.Submissions.Submission do
         :terms_accepted,
         :review_verified,
         :submitter_id,
-        :manager_id
+        :manager_id,
+        :document_ids
       ]
     )
   end
@@ -104,6 +106,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
+    |> validate_file_upload(challenge) #call the validate_file_upload function here
   end
 
   def review_changeset(struct, params, user, challenge, phase) do
@@ -124,8 +127,10 @@ defmodule ChallengeGov.Submissions.Submission do
     |> validate_required([
       :title,
       :brief_description,
-      :description
+      :description,
+      :document_ids
     ])
+    |> validate_file_upload(challenge) #call the validate_file_upload function here
   end
 
   def update_draft_changeset(struct, params) do
@@ -154,7 +159,8 @@ defmodule ChallengeGov.Submissions.Submission do
     |> validate_required([
       :title,
       :brief_description,
-      :description
+      :description,
+      :document_ids
     ])
   end
 
@@ -197,6 +203,21 @@ defmodule ChallengeGov.Submissions.Submission do
     struct = validate_review_verify(struct)
 
     struct
+  end
+
+  defp validate_file_upload(changeset, challenge) do
+    if challenge.file_upload_required do
+      case changeset.changes.document_ids do
+        nil -> 
+          changeset
+          |> add_error(:document_ids, "at least one file should be uploaded, it is required")
+
+        _ -> 
+          changeset
+      end
+    else
+      changeset
+    end
   end
 
   defp validate_terms(struct) do
