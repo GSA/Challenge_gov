@@ -110,7 +110,7 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:captured_on, :date)
     field(:auto_publish_date, :utc_datetime)
     field(:published_on, :date)
-    field(:rejection_message, :string)    
+    field(:rejection_message, :string)
     field(:announcement, :string)
     field(:announcement_datetime, :utc_datetime)
     field(:gov_delivery_topic, :string)
@@ -123,7 +123,6 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:upload_instruction_note, :string)
     field(:how_to_enter_link, :string)
     field(:submission_collection_method, :string)
-
 
     # Virtual Fields
     field(:logo, :string, virtual: true)
@@ -325,7 +324,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :upload_logo,
       :is_multi_phase,
       :terms_equal_rules,
-      :prize_type,      
+      :prize_type,
       :announcement,
       :announcement_datetime,
       :short_url,
@@ -562,19 +561,21 @@ defmodule ChallengeGov.Challenges.Challenge do
   end
 
   def how_to_enter_changeset(struct, params) do
-  method = Map.get(params, "submission_collection_method")
+    method = Map.get(params, "submission_collection_method")
 
-  modified_params = 
-    case method do
-      "internal" ->
-        Map.put(params, "how_to_enter_link", nil)
-      "external" ->
-        params
-        |> Map.put("upload_instruction_note", nil)
-        |> Map.put("file_upload_required", nil)
-      _ ->
-        params
-    end
+    modified_params =
+      case method do
+        "internal" ->
+          Map.put(params, "how_to_enter_link", nil)
+
+        "external" ->
+          params
+          |> Map.put("upload_instruction_note", nil)
+          |> Map.put("file_upload_required", nil)
+
+        _ ->
+          params
+      end
 
     struct
     |> cast(modified_params, ~w(how_to_enter_link upload_instruction_note file_upload_required)a)

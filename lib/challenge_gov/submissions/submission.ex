@@ -45,7 +45,7 @@ defmodule ChallengeGov.Submissions.Submission do
     belongs_to(:manager, User)
     has_one(:invite, SubmissionInvite)
     has_many(:documents, Document)
-    #field(:document_ids, :map, virtual: true)
+    # field(:document_ids, :map, virtual: true)
     field(:document_ids, {:array, :integer}, virtual: true)
     field(:document_objects, :map, virtual: true)
 
@@ -106,7 +106,8 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
-    |> validate_file_upload(challenge) #call the validate_file_upload function here
+    # call the validate_file_upload function here
+    |> validate_file_upload(challenge)
   end
 
   def review_changeset(struct, params, user, challenge, phase) do
@@ -130,7 +131,8 @@ defmodule ChallengeGov.Submissions.Submission do
       :description,
       :document_ids
     ])
-    |> validate_file_upload(challenge) #call the validate_file_upload function here
+    # call the validate_file_upload function here
+    |> validate_file_upload(challenge)
   end
 
   def update_draft_changeset(struct, params) do
@@ -208,11 +210,11 @@ defmodule ChallengeGov.Submissions.Submission do
   defp validate_file_upload(changeset, challenge) do
     if challenge.file_upload_required do
       case changeset.changes.document_ids do
-        nil -> 
+        nil ->
           changeset
           |> add_error(:document_ids, "at least one file should be uploaded, it is required")
 
-        _ -> 
+        _ ->
           changeset
       end
     else
