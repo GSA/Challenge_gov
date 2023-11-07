@@ -62,6 +62,7 @@ config :challenge_gov, ChallengeGov.Mailer,
   port: 25,
   tls: :never,
   ssl: false,
+  hackney_opts: [{:proxy, {:http, System.get_env("http_proxy_id"), System.get_env("http_port")}}],
   retries: 1
 
 config :stein_storage,
