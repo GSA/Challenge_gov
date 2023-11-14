@@ -57,9 +57,9 @@ config :challenge_gov, ChallengeGov.GovDelivery,
 config :challenge_gov, ChallengeGov.Mailer,
   from: System.get_env("MAILER_FROM_ADDRESS"),
   adapter: Bamboo.SMTPAdapter,
-  server: "smtp-relay.gmail.com",
+  server: "challenge-sproxy.apps.internal",
   hostname: System.get_env("HOST"),
-  port: 25,
+  port: 587,
   tls: :never,
   ssl: false,
   hackney_opts: [{:proxy, {:http, System.get_env("http_proxy_id"), System.get_env("http_port")}}],
@@ -84,7 +84,7 @@ config :challenge_gov, :oidc_config, %{
   public_key_path: System.get_env("LOGIN_PUBLIC_KEY_PATH"),
   token_endpoint: System.get_env("LOGIN_TOKEN_ENDPOINT"),
   idp_https_proxy: System.get_env("http_proxy_id"),
-  http_port: System.get_env("http_port")
+  http_port: System.get_env("http_port_id")
 }
 
 config :challenge_gov, :login_gov_logout, %{
