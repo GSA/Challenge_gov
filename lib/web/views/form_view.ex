@@ -217,7 +217,7 @@ defmodule Web.FormView do
               form,
               field,
               opts[:collection],
-              Keyword.merge([class: "usa-select #{opts[:class]} #{classes}"], select_opts)
+              Keyword.merge([class: "js-select usa-select #{opts[:class]} #{classes}"], select_opts)
             ),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
@@ -494,11 +494,11 @@ defmodule Web.FormView do
     case !is_nil(current_field) and Keyword.has_key?(current_field.errors, field) and index != -1 do
       true ->
         # "form-control nested-form-control is-invalid"
-        "usa-input is-invalid"
+        "form-control nested-form-control usa-input is-invalid"
 
       false ->
         # "form-control nested-form-control"
-        "usa-input"
+        "form-control nested-form-control usa-input"
     end
   end
 
@@ -579,7 +579,7 @@ defmodule Web.FormView do
                       content_tag(:div, class: "row") do
                         [
                           content_tag(:div, class: "col-md-10") do
-                            text_input(:template, field, class: "usa-input")
+                            text_input(:template, field, class: "form-control usa-input template-input")
                           end,
                           content_tag(:div, class: "col-md-2") do
                             if index < 1 do
