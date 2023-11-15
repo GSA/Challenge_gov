@@ -62,7 +62,7 @@ config :challenge_gov, ChallengeGov.Mailer,
   port: 587,
   tls: :never,
   ssl: false,
-  hackney_opts: [{:proxy, {:http, System.get_env("http_proxy_id"), System.get_env("http_port")}}],
+  hackney_opts: [{:proxy, {:http, System.get_env("http_proxys_id"), System.get_env("http_ports")}}],
   retries: 1
 
 config :stein_storage,
