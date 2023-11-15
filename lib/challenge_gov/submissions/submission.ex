@@ -103,7 +103,8 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
-    |> validate_inclusion(:status, status_ids())
+    |> validate_inclusion(:status, status_ids())    
+    |> validate_file_upload(challenge, params) # Validate file upload on draft.
   end
 
   def review_changeset(struct, params, user, challenge, phase) do
@@ -121,14 +122,11 @@ defmodule ChallengeGov.Submissions.Submission do
     |> validate_inclusion(:status, status_ids())
     |> validate_review_verify(params)
     |> validate_terms(params)
-    |> validate_required([
-      :title,
-      :brief_description,
-      :description
-    ])
-  end
+    |> validate_required([:title, :brief_description, :description])    
+    |> validate_file_upload(challenge, params) # Validate file upload on review.
+  end 
 
-  def update_draft_changeset(struct, params) do
+  def update_draft_changeset(struct, params, challenge) do
     struct
     |> changeset(params)
     |> put_change(:status, "draft")
@@ -137,10 +135,10 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
+    |> validate_file_upload(challenge, params) # Validate file upload on update draft.
   end
 
-  # the review chance to submited
-  def update_review_changeset(struct, params) do
+  def update_review_changeset(struct, params, challenge) do
     struct
     |> changeset(params)
     |> put_change(:status, "submitted")
@@ -150,12 +148,36 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
     |> validate_review_verify(params)
-    |> validate_terms(params)
-    |> validate_required([
-      :title,
-      :brief_description,
-      :description
-    ])
+    |> validate_terms(params)    
+    |> validate_required([:title, :brief_description, :description]) 
+    |> validate_file_upload(challenge, params) # Validate file upload on update review.    
+  end
+
+  defp validate_file_upload(changeset, challenge, params) do
+    # Inspect the challenge to see if file upload is required
+    # IO.inspect(challenge, label: "Challenge file_upload_required")
+    # IO.inspect(challenge.file_upload_required, label: "File upload required")
+
+    # Inspect the incoming params
+    # IO.inspect(params, label: "Incoming params")
+
+    # Inspect the current state of the changeset
+    # IO.inspect(changeset, label: "Current Changeset State")
+
+    if challenge.file_upload_required do
+      case params["document_ids"] || changeset.data.documents do
+        [] ->
+          # If no documents are associated, log the situation and add an error
+          # IO.inspect("No documents attached, but required", label: "Validation Error")
+          add_error(changeset, :document_ids, "At least one file must be attached.")
+        _ ->
+          # If documents are associated, inspect them
+          # IO.inspect(params["document_ids"] || changeset.data.documents, label: "Associated Documents")
+          changeset
+      end
+    else
+      changeset
+    end
   end
 
   def submit_changeset(struct) do

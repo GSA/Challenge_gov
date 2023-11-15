@@ -346,7 +346,9 @@ defmodule Web.SubmissionController do
   end
 
   def update(conn, %{"id" => id, "action" => "draft", "submission" => submission_params}) do
-    %{current_user: user, current_submission: submission} = conn.assigns
+    %{current_user: user} = conn.assigns
+    submission = Submissions.get!(id)  # Assuming you have a `get!` function in Submissions context
+    {:ok, challenge} = Challenges.get(submission.challenge_id)
 
     {submitter, _submission_params} = get_params_by_current_user(submission_params, user)
     submission_params = Map.put_new(submission_params, "submitter_id", submitter.id)
@@ -354,7 +356,7 @@ defmodule Web.SubmissionController do
     with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
          {:ok, submission} <- Submissions.is_editable(user, submission),
          true <- Submissions.has_not_been_submitted?(submission),
-         {:ok, submission} <- Submissions.update_draft(submission, submission_params) do
+         {:ok, submission} <- Submissions.update_draft(submission, submission_params, challenge) do        
       conn
       |> put_flash(
         :warning,
@@ -382,14 +384,19 @@ defmodule Web.SubmissionController do
     end
   end
 
-  def update(conn, %{"id" => _id, "action" => "review", "submission" => submission_params}) do
+  def update(conn, %{"id" => id, "action" => "review", "submission" => submission_params}) do
     %{current_user: user, current_submission: submission} = conn.assigns
+    {:ok, challenge} = Challenges.get(submission.challenge_id)  # Fetch the challenge
 
     with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
          {:ok, submission} <- Submissions.is_editable(user, submission),
-         {:ok, submission} <- Submissions.update_review(submission, submission_params) do
-      submit(conn, %{"id" => submission.id})
+         {:ok, updated_submission} <- Submissions.update_review(submission, submission_params, challenge) do         
+      # If all operations succeed, redirect to the show page with a success message
+      conn
+      |> put_flash(:info, "Review updated successfully.")
+      |> redirect(to: Routes.submission_path(conn, :show, updated_submission.id))
     else
+      # Handle cases where any operation fails
       {:error, :not_permitted} ->
         conn
         |> put_flash(:error, "You are not authorized to edit this submission")
@@ -401,6 +408,7 @@ defmodule Web.SubmissionController do
         |> redirect(to: Routes.submission_path(conn, :index))
 
       {:error, changeset} ->
+        # If the last operation fails, it's likely to be a changeset error, handled by update_error
         update_error(conn, changeset, user, submission)
     end
   end

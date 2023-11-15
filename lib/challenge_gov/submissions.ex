@@ -99,7 +99,12 @@ defmodule ChallengeGov.Submissions do
 
   def create_draft(params, user, challenge, phase) do
     params = attach_default_multi_params(params)
-    changeset = Submission.draft_changeset(%Submission{}, params, user, challenge, phase)
+    changeset =
+      Submission.draft_changeset(%Submission{}, params, user, challenge, phase)
+      |> validate_file_upload(challenge, params) # Apply file upload validation
+
+    #IO.inspect(params, label: "create_draft params")
+    #IO.inspect(changeset, label: "create_draft changeset")
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:submission, changeset)
@@ -127,7 +132,12 @@ defmodule ChallengeGov.Submissions do
 
   def create_review(params, user, challenge, phase) do
     params = attach_default_multi_params(params)
-    changeset = Submission.review_changeset(%Submission{}, params, user, challenge, phase)
+    changeset =
+      Submission.review_changeset(%Submission{}, params, user, challenge, phase)
+      |> validate_file_upload(challenge, params) # Apply file upload validation
+
+    #IO.inspect(params, label: "create_review params")
+    #IO.inspect(changeset, label: "create_review changeset")    
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:submission, changeset)
@@ -149,6 +159,23 @@ defmodule ChallengeGov.Submissions do
         }
 
         {:error, changeset}
+    end
+  end
+
+  defp validate_file_upload(changeset, challenge, params) do
+    #IO.inspect(challenge.file_upload_required, label: "File upload required")
+    if challenge.file_upload_required do
+      case params["document_ids"] || (changeset.data.documents |> Enum.map(& &1.id)) do
+        [] ->
+          #IO.inspect("No documents attached, but required", label: "Validation Error")
+          Ecto.Changeset.add_error(changeset, :document_ids, "At least one file must be attached.")
+        _ ->
+          #IO.inspect(params["document_ids"] || changeset.data.documents, label: "Associated Documents")
+          changeset
+      end
+    else
+      #IO.inspect("No files needed; skipping file upload validation.", label: "File upload validation skipped")
+      changeset
     end
   end
 
@@ -174,9 +201,11 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
-  def update_review(submission, params) do
+  def update_review(submission, params, challenge) do
     params = attach_default_multi_params(params)
-    changeset = Submission.update_review_changeset(submission, params)
+    
+    # Pass the `challenge` into the `update_review_changeset`
+    changeset = Submission.update_review_changeset(submission, params, challenge)
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:submission, changeset)
