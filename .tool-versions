@@ -1,5 +1,6 @@
 elixir 1.12.3
-erlang 23.3.2
+#erlang 23.3.2
+erlang 24.2
 #nodejs 16.13.0
 nodejs 18.17.1
 yarn 1.22.5

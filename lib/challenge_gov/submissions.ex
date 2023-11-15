@@ -9,7 +9,7 @@ defmodule ChallengeGov.Submissions do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.Emails
-  alias ChallengeGov.GovDelivery
+  #alias ChallengeGov.GovDelivery
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
   alias ChallengeGov.SecurityLogs
@@ -183,9 +183,10 @@ defmodule ChallengeGov.Submissions do
     Submission.changeset(submission, %{})
   end
 
-  def update_draft(submission, params) do
+  def update_draft(submission, params, challenge) do
+    # Fetch the challenge if not already passed in, or use the given `challenge` parameter.
     params = attach_default_multi_params(params)
-    changeset = Submission.update_draft_changeset(submission, params)
+    changeset = Submission.update_draft_changeset(submission, params, challenge)    
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:submission, changeset)

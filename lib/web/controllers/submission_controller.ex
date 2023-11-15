@@ -166,8 +166,7 @@ defmodule Web.SubmissionController do
       |> assign(:action, action_name(conn))
       |> assign(:navbar_text, submission.title || "Submission #{submission.id}")
       |> is_closed(phase.end_date)
-
-      # |> render("show.html")
+      #|> render("show.html")
     else
       {:error, :not_found} ->
         conn
@@ -347,7 +346,7 @@ defmodule Web.SubmissionController do
 
   def update(conn, %{"id" => id, "action" => "draft", "submission" => submission_params}) do
     %{current_user: user} = conn.assigns
-    submission = Submissions.get!(id)  # Assuming you have a `get!` function in Submissions context
+    submission = Submissions.get!(id)
     {:ok, challenge} = Challenges.get(submission.challenge_id)
 
     {submitter, _submission_params} = get_params_by_current_user(submission_params, user)
