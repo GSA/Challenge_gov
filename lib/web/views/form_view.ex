@@ -217,7 +217,10 @@ defmodule Web.FormView do
               form,
               field,
               opts[:collection],
-              Keyword.merge([class: "js-select usa-select #{opts[:class]} #{classes}"], select_opts)
+              Keyword.merge(
+                [class: "js-select usa-select #{opts[:class]} #{classes}"],
+                select_opts
+              )
             ),
             error_tag(form, field),
             Keyword.get(opts, :do, "")
@@ -545,7 +548,7 @@ defmodule Web.FormView do
                             content_tag(:div, class: "col-md-2") do
                               if index < 1 do
                                 content_tag(:div, "Remove",
-                                  class: "remove-nested-section usa-link"
+                                  class: "margin-bottom-2 btn remove-nested-section usa-link"
                                 )
                               end
                             end
@@ -579,12 +582,15 @@ defmodule Web.FormView do
                       content_tag(:div, class: "row") do
                         [
                           content_tag(:div, class: "col-md-10") do
-                            text_input(:template, field, class: "form-control usa-input template-input")
+                            text_input(:template, field,
+                              class: "form-control usa-input template-input"
+                            )
                           end,
                           content_tag(:div, class: "col-md-2") do
                             if index < 1 do
                               content_tag(:div, "Remove",
-                                class: "remove-nested-section usa-button usa-button--unstyled"
+                                class:
+                                  "btn remove-nested-section usa-button usa-button--unstyled margin-bottom-2"
                               )
                             end
                           end
