@@ -233,7 +233,6 @@ defmodule Web.SubmissionView do
     end
   end
 
-  
   def cancel_button(conn, action, challenge, phase, user, opts \\ []) do
     route =
       cond do

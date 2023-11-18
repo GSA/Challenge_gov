@@ -166,7 +166,8 @@ defmodule Web.SubmissionController do
       |> assign(:action, action_name(conn))
       |> assign(:navbar_text, submission.title || "Submission #{submission.id}")
       |> is_closed(phase.end_date)
-      #|> render("show.html")
+
+      # |> render("show.html")
     else
       {:error, :not_found} ->
         conn
@@ -353,17 +354,28 @@ defmodule Web.SubmissionController do
           {:ok, challenge} ->
             case Phases.get(submission.phase_id) do
               {:ok, phase} ->
-                update_submission(conn, action, submission_params, submission, challenge, phase, user)
+                update_submission(
+                  conn,
+                  action,
+                  submission_params,
+                  submission,
+                  challenge,
+                  phase,
+                  user
+                )
+
               {:error, _} ->
                 conn
                 |> put_flash(:error, "There was an error getting the phase.")
                 |> redirect(to: Routes.dashboard_path(conn, :index))
             end
+
           {:error, _} ->
             conn
             |> put_flash(:error, "There was an error getting the challenge.")
             |> redirect(to: Routes.dashboard_path(conn, :index))
         end
+
       {:error, _} ->
         conn
         |> put_flash(:error, "There was an error getting the submission.")
@@ -375,12 +387,18 @@ defmodule Web.SubmissionController do
   defp update_submission(conn, "draft", submission_params, submission, challenge, phase, user) do
     case Submissions.update_draft(submission, submission_params, challenge) do
       {:ok, updated_submission} ->
-         conn
-          |> put_flash(:info, "Draft saved successfully.")
-          |> redirect(to: Routes.submission_path(conn, :show, updated_submission.id))      
+        conn
+        |> put_flash(:info, "Draft saved successfully.")
+        |> redirect(to: Routes.submission_path(conn, :show, updated_submission.id))
 
       {:error, changeset} ->
-        render_error(conn, "edit.html", changeset: changeset, submission: submission, user: user, phase: phase, action: "draft")
+        render_error(conn, "edit.html",
+          changeset: changeset,
+          submission: submission,
+          user: user,
+          phase: phase,
+          action: "draft"
+        )
     end
   end
 
@@ -388,15 +406,29 @@ defmodule Web.SubmissionController do
     case Submissions.update_review(submission, submission_params, challenge) do
       {:ok, updated_submission} ->
         conn
-          |> put_flash(:info, "Submission received successfully.")
-          |> redirect(to: Routes.submission_path(conn, :show, updated_submission.id))
+        |> put_flash(:info, "Submission received successfully.")
+        |> redirect(to: Routes.submission_path(conn, :show, updated_submission.id))
 
       {:error, changeset} ->
-        render_error(conn, "edit.html", changeset: changeset, submission: submission, user: user, phase: phase, action: "review")
+        render_error(conn, "edit.html",
+          changeset: changeset,
+          submission: submission,
+          user: user,
+          phase: phase,
+          action: "review"
+        )
     end
   end
 
-  defp update_submission(conn, _unknown_action, _submission_params, _submission, _challenge, _phase, _user) do
+  defp update_submission(
+         conn,
+         _unknown_action,
+         _submission_params,
+         _submission,
+         _challenge,
+         _phase,
+         _user
+       ) do
     conn
     |> put_flash(:error, "Unknown submission action.")
     |> redirect(to: Routes.submission_path(conn, :index))
@@ -407,7 +439,7 @@ defmodule Web.SubmissionController do
     |> put_flash(:error, "There was an error updating the submission.")
     |> Phoenix.Controller.render(template, assigns)
   end
-  
+
   defp update_error(conn, changeset, user, submission) do
     conn
     |> assign(:user, user)

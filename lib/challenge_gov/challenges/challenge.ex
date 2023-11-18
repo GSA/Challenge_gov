@@ -332,7 +332,7 @@ defmodule ChallengeGov.Challenges.Challenge do
       :announcement_datetime,
       :short_url,
       :file_upload_required,
-      :upload_instruction_note,      
+      :upload_instruction_note,
       :submission_collection_method
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
@@ -566,23 +566,23 @@ defmodule ChallengeGov.Challenges.Challenge do
     method = Map.get(params, "submission_collection_method")
 
     modified_params =
-    case method do
-      "internal" ->
-      # When the method is internal, clear the how_to_enter_link
-      # as it isn't relevant for internal submissions
-      Map.put(params, "how_to_enter_link", nil)
+      case method do
+        "internal" ->
+          # When the method is internal, clear the how_to_enter_link
+          # as it isn't relevant for internal submissions
+          Map.put(params, "how_to_enter_link", nil)
 
-      "external" ->
-      # When the method is external, clear the fields that are only relevant for internal method
-      params
-      |> Map.put("upload_instruction_note", nil)
-      |> Map.put("file_upload_required", nil)
+        "external" ->
+          # When the method is external, clear the fields that are only relevant for internal method
+          params
+          |> Map.put("upload_instruction_note", nil)
+          |> Map.put("file_upload_required", nil)
 
-      _ ->
-      # If there's no specific method or an unrecognized one,
-      # don't modify the incoming params
-      params
-    end
+        _ ->
+          # If there's no specific method or an unrecognized one,
+          # don't modify the incoming params
+          params
+      end
 
     # Now cast the parameters. Whether modified or not, they need to match
     # the fields expected for the struct.

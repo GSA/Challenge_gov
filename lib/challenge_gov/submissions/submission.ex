@@ -103,7 +103,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
-    |> validate_inclusion(:status, status_ids())    
+    |> validate_inclusion(:status, status_ids())
   end
 
   def review_changeset(struct, params, user, challenge, phase) do
@@ -121,9 +121,10 @@ defmodule ChallengeGov.Submissions.Submission do
     |> validate_inclusion(:status, status_ids())
     |> validate_review_verify(params)
     |> validate_terms(params)
-    |> validate_required([:title, :brief_description, :description])    
-    |> validate_file_upload(challenge, params) # Validate file upload on review.
-  end 
+    |> validate_required([:title, :brief_description, :description])
+    # Validate file upload on review.
+    |> validate_file_upload(challenge, params)
+  end
 
   def update_draft_changeset(struct, params, challenge) do
     struct
@@ -133,7 +134,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
-    |> validate_inclusion(:status, status_ids())    
+    |> validate_inclusion(:status, status_ids())
   end
 
   def update_review_changeset(struct, params, challenge) do
@@ -146,16 +147,22 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())
     |> validate_review_verify(params)
-    |> validate_terms(params)    
-    |> validate_required([:title, :brief_description, :description]) 
-    |> validate_file_upload(challenge, params) # Validate file upload on update review.    
+    |> validate_terms(params)
+    |> validate_required([:title, :brief_description, :description])
+    # Validate file upload on update review.    
+    |> validate_file_upload(challenge, params)
   end
 
   defp validate_file_upload(changeset, challenge, params) do
     if challenge.file_upload_required do
       case params["document_ids"] || changeset.data.documents do
         [] ->
-          add_error(changeset, :document_ids, "At least one file must be uploaded with your submission.")
+          add_error(
+            changeset,
+            :document_ids,
+            "At least one file must be uploaded with your submission."
+          )
+
         _ ->
           changeset
       end
