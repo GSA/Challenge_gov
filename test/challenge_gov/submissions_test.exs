@@ -123,7 +123,8 @@ defmodule ChallengeGov.SubmissionsTest do
       {:ok, updated_submission} =
         Submissions.update_draft(
           submission,
-          %{"title" => nil}
+          %{"title" => nil},
+          challenge
         )
 
       assert updated_submission.submitter_id === user.id
@@ -146,7 +147,8 @@ defmodule ChallengeGov.SubmissionsTest do
           submission,
           %{
             "title" => "New Test Title"
-          }
+          },
+          challenge
         )
 
       assert updated_submission.submitter_id === user.id
@@ -184,7 +186,8 @@ defmodule ChallengeGov.SubmissionsTest do
       {:error, changeset} =
         Submissions.update_review(
           submission,
-          %{"title" => nil}
+          %{"title" => nil},
+          challenge
         )
 
       assert changeset.errors[:title]
