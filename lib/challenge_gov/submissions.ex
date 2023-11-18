@@ -128,7 +128,7 @@ defmodule ChallengeGov.Submissions do
 
   # def create_review(params, user, challenge, phase) do
   #   params = attach_default_multi_params(params)
-    
+
   #   # Create the changeset independently
   #   changeset = 
   #     Submission.review_changeset(%Submission{}, params, user, challenge, phase)
@@ -160,15 +160,15 @@ defmodule ChallengeGov.Submissions do
 
   def create_review(params, user, challenge, phase) do
     params_with_defaults = attach_default_multi_params(params)
-    
+
     # Initialize the submission and pipe it through the changeset function and validation
-    changeset = 
+    changeset =
       %Submission{}
       |> Submission.review_changeset(params_with_defaults, user, challenge, phase)
       |> validate_file_upload(challenge, params_with_defaults)
 
     # Initialize the Multi and include the changeset
-    multi = 
+    multi =
       Ecto.Multi.new()
       |> Ecto.Multi.insert(:submission, changeset)
       |> attach_documents(params_with_defaults)
@@ -185,10 +185,10 @@ defmodule ChallengeGov.Submissions do
         changeset
         |> preserve_document_ids_on_error(params_with_defaults)
         |> Repo.preload([:documents, :submitter])
-        |> (fn cs -> {:error, cs} end).() # Ensuring the return is a tuple
+        # Ensuring the return is a tuple
+        |> (fn cs -> {:error, cs} end).()
     end
   end
-
 
   defp validate_file_upload(changeset, challenge, params) do
     if challenge.file_upload_required do
