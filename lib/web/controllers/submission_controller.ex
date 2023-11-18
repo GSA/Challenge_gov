@@ -345,41 +345,83 @@ defmodule Web.SubmissionController do
     end
   end
 
+  # def update(conn, %{"id" => id, "action" => action, "submission" => submission_params}) do
+  #   %{current_user: user} = conn.assigns
+
+  #   case Submissions.get(id) do
+  #     {:ok, submission} ->
+  #       case Challenges.get(submission.challenge_id) do
+  #         {:ok, challenge} ->
+  #           case Phases.get(submission.phase_id) do
+  #             {:ok, phase} ->
+  #               update_submission(
+  #                 conn,
+  #                 action,
+  #                 submission_params,
+  #                 submission,
+  #                 challenge,
+  #                 phase,
+  #                 user
+  #               )
+
+  #             {:error, _} ->
+  #               conn
+  #               |> put_flash(:error, "There was an error getting the phase.")
+  #               |> redirect(to: Routes.dashboard_path(conn, :index))
+  #           end
+
+  #         {:error, _} ->
+  #           conn
+  #           |> put_flash(:error, "There was an error getting the challenge.")
+  #           |> redirect(to: Routes.dashboard_path(conn, :index))
+  #       end
+
+  #     {:error, _} ->
+  #       conn
+  #       |> put_flash(:error, "There was an error getting the submission.")
+  #       |> redirect(to: Routes.submission_path(conn, :index))
+  #   end
+  # end
+
   def update(conn, %{"id" => id, "action" => action, "submission" => submission_params}) do
     %{current_user: user} = conn.assigns
 
     case Submissions.get(id) do
       {:ok, submission} ->
-        case Challenges.get(submission.challenge_id) do
-          {:ok, challenge} ->
-            case Phases.get(submission.phase_id) do
-              {:ok, phase} ->
-                update_submission(
-                  conn,
-                  action,
-                  submission_params,
-                  submission,
-                  challenge,
-                  phase,
-                  user
-                )
-
-              {:error, _} ->
-                conn
-                |> put_flash(:error, "There was an error getting the phase.")
-                |> redirect(to: Routes.dashboard_path(conn, :index))
-            end
-
-          {:error, _} ->
-            conn
-            |> put_flash(:error, "There was an error getting the challenge.")
-            |> redirect(to: Routes.dashboard_path(conn, :index))
-        end
+        get_challenge_and_phase_and_update(conn, submission, action, submission_params, user)
 
       {:error, _} ->
         conn
         |> put_flash(:error, "There was an error getting the submission.")
         |> redirect(to: Routes.submission_path(conn, :index))
+    end
+  end
+
+  defp get_challenge_and_phase_and_update(conn, submission, action, submission_params, user) do
+    case Challenges.get(submission.challenge_id) do
+      {:ok, challenge} ->
+        case Phases.get(submission.phase_id) do
+          {:ok, phase} ->
+            update_submission(
+              conn,
+              action,
+              submission_params,
+              submission,
+              challenge,
+              phase,
+              user
+            )
+
+          {:error, _} ->
+            conn
+            |> put_flash(:error, "There was an error getting the phase.")
+            |> redirect(to: Routes.dashboard_path(conn, :index))
+        end
+
+      {:error, _} ->
+        conn
+        |> put_flash(:error, "There was an error getting the challenge.")
+        |> redirect(to: Routes.dashboard_path(conn, :index))
     end
   end
 
