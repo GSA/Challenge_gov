@@ -233,7 +233,8 @@ defmodule Web.SubmissionView do
     end
   end
 
-  def cancel_button(conn, action, challenge, phase, user, _opts \\ []) do
+  
+  def cancel_button(conn, action, challenge, phase, user, opts \\ []) do
     route =
       cond do
         Accounts.has_admin_access?(user) ->
@@ -244,10 +245,14 @@ defmodule Web.SubmissionView do
             phase.id
           )
 
-        action === :new or action === :create ->
+        action in [:new, :create] ->
           ChallengeView.public_details_url(challenge)
 
-        action === :edit or action === :update or action === :submit ->
+        action in [:edit, :update, :submit] ->
+          Routes.submission_path(conn, :index)
+
+        true ->
+          # default route to handle any other unknown `action` values
           Routes.submission_path(conn, :index)
       end
 

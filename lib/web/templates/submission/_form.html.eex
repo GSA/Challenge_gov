@@ -50,6 +50,7 @@
 
         <div class="col">
           Step 1: <%= file_input f, :document, name: "submission[document][file]", class: "usa-file-input" %>
+          <%= error_tag f, :document_ids %>
           <span data-user="<%= @user.email %>", id="current_user"></span><br>
 
           Step 2:

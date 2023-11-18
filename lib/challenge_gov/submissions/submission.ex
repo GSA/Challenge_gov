@@ -104,7 +104,6 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
     |> validate_inclusion(:status, status_ids())    
-    |> validate_file_upload(challenge, params) # Validate file upload on draft.
   end
 
   def review_changeset(struct, params, user, challenge, phase) do
@@ -134,8 +133,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> foreign_key_constraint(:challenge)
     |> foreign_key_constraint(:phase)
     |> foreign_key_constraint(:manager)
-    |> validate_inclusion(:status, status_ids())
-    |> validate_file_upload(challenge, params) # Validate file upload on update draft.
+    |> validate_inclusion(:status, status_ids())    
   end
 
   def update_review_changeset(struct, params, challenge) do
@@ -154,25 +152,11 @@ defmodule ChallengeGov.Submissions.Submission do
   end
 
   defp validate_file_upload(changeset, challenge, params) do
-    # Inspect the challenge to see if file upload is required
-    # IO.inspect(challenge, label: "Challenge file_upload_required")
-    # IO.inspect(challenge.file_upload_required, label: "File upload required")
-
-    # Inspect the incoming params
-    # IO.inspect(params, label: "Incoming params")
-
-    # Inspect the current state of the changeset
-    # IO.inspect(changeset, label: "Current Changeset State")
-
     if challenge.file_upload_required do
       case params["document_ids"] || changeset.data.documents do
         [] ->
-          # If no documents are associated, log the situation and add an error
-          # IO.inspect("No documents attached, but required", label: "Validation Error")
-          add_error(changeset, :document_ids, "At least one file must be attached.")
+          add_error(changeset, :document_ids, "At least one file must be uploaded with your submission.")
         _ ->
-          # If documents are associated, inspect them
-          # IO.inspect(params["document_ids"] || changeset.data.documents, label: "Associated Documents")
           changeset
       end
     else
