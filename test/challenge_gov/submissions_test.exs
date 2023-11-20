@@ -183,8 +183,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       submission = SubmissionHelpers.create_draft_submission(%{}, user, challenge)
 
-      {:error, changeset} =
-        Submissions.update_review(submission, %{"title" => nil}, challenge)
+      {:error, changeset} = Submissions.update_review(submission, %{"title" => nil}, challenge)
       assert changeset.errors[:title]
     end
 
@@ -203,7 +202,11 @@ defmodule ChallengeGov.SubmissionsTest do
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
       {:ok, updated_submission} =
-        Submissions.update_review(submission, %{"title" => "New Test Title", "terms_accepted" => "true", "review_verified" => "true"}, challenge)
+        Submissions.update_review(
+          submission,
+          %{"title" => "New Test Title", "terms_accepted" => "true", "review_verified" => "true"},
+          challenge
+        )
 
       {:ok, updated_submission} = Submissions.submit(updated_submission)
 
@@ -227,9 +230,9 @@ defmodule ChallengeGov.SubmissionsTest do
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
+      # Submissions.update_review(submission, %{"title" => nil})
       {:error, changeset} =
-        #Submissions.update_review(submission, %{"title" => nil})
-        Submissions.update_review(submission, %{ "title" => "Updated Title" }, challenge)
+        Submissions.update_review(submission, %{"title" => "Updated Title"}, challenge)
 
       assert changeset.errors[:title]
     end

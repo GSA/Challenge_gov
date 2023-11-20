@@ -5,3 +5,5 @@ defmodule ChallengeGov.Repo.Migrations.AddFileUploadRequiredBooleanToChallenges 
     alter table(:challenges) do
       add :file_upload_required, :boolean, default: false
     end
+  end
+end
