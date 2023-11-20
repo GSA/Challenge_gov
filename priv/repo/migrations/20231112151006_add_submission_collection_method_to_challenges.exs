@@ -8,7 +8,7 @@ defmodule ChallengeGov.Repo.Migrations.AddSubmissionCollectionMethodToChallenges
       IF NOT EXISTS (
         SELECT 1
         FROM information_schema.columns
-        WHERE table_schema = 'public' -- replace with your schema if different
+        WHERE table_schema = 'public'
         AND table_name = 'challenges'
         AND column_name = 'submission_collection_method'
       ) THEN
@@ -26,7 +26,7 @@ defmodule ChallengeGov.Repo.Migrations.AddSubmissionCollectionMethodToChallenges
       IF EXISTS (
         SELECT 1
         FROM information_schema.columns
-        WHERE table_schema = 'public' -- replace with your schema if different
+        WHERE table_schema = 'public'
         AND table_name = 'challenges'
         AND column_name = 'submission_collection_method'
       ) THEN
