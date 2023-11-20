@@ -1,12 +1,12 @@
 defmodule ChallengeGov.SubmissionDocumentsTest do
-  use ChallengeGov.DataCase
+  # use ChallengeGov.DataCase
 
-  alias ChallengeGov.Submissions
-  alias ChallengeGov.SubmissionDocuments
-  alias ChallengeGov.TestHelpers.AccountHelpers
-  alias ChallengeGov.TestHelpers.ChallengeHelpers
-  alias ChallengeGov.TestHelpers.SubmissionHelpers
-  alias ChallengeGov.TestHelpers.SubmissionDocumentHelpers
+  # alias ChallengeGov.Submissions
+  # alias ChallengeGov.SubmissionDocuments
+  # alias ChallengeGov.TestHelpers.AccountHelpers
+  # alias ChallengeGov.TestHelpers.ChallengeHelpers
+  # alias ChallengeGov.TestHelpers.SubmissionHelpers
+  # alias ChallengeGov.TestHelpers.SubmissionDocumentHelpers
 
   # describe "uploading documents" do
   #   test "successfully" do

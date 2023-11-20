@@ -1,13 +1,13 @@
 defmodule ChallengeGov.SubmissionsTest do
-  use ChallengeGov.DataCase
-  use Bamboo.Test
+  # use ChallengeGov.DataCase
+  # use Bamboo.Test
 
-  alias ChallengeGov.Emails
-  alias ChallengeGov.Submissions
-  alias ChallengeGov.SecurityLogs
-  alias ChallengeGov.TestHelpers.AccountHelpers
-  alias ChallengeGov.TestHelpers.ChallengeHelpers
-  alias ChallengeGov.TestHelpers.SubmissionHelpers
+  # alias ChallengeGov.Emails
+  # alias ChallengeGov.Submissions
+  # alias ChallengeGov.SecurityLogs
+  # alias ChallengeGov.TestHelpers.AccountHelpers
+  # alias ChallengeGov.TestHelpers.ChallengeHelpers
+  # alias ChallengeGov.TestHelpers.SubmissionHelpers
 
   # describe "creating a submission" do
   #   test "saving as draft with no data" do
