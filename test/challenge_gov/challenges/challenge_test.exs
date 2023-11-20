@@ -1,12 +1,12 @@
 defmodule ChallengeGov.ChallengeTest do
-  use ChallengeGov.DataCase
-  use Bamboo.Test
+  # use ChallengeGov.DataCase
+  # use Bamboo.Test
 
-  alias ChallengeGov.Challenges
-  alias ChallengeGov.Emails
-  alias ChallengeGov.TestHelpers.AccountHelpers
-  alias ChallengeGov.TestHelpers.ChallengeHelpers
-  alias ChallengeGov.TestHelpers.SubmissionHelpers
+  # alias ChallengeGov.Challenges
+  # alias ChallengeGov.Emails
+  # alias ChallengeGov.TestHelpers.AccountHelpers
+  # alias ChallengeGov.TestHelpers.ChallengeHelpers
+  # alias ChallengeGov.TestHelpers.SubmissionHelpers
 
   # describe "submit challenge" do
   #   test "successfully" do
