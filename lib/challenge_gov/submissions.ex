@@ -9,7 +9,7 @@ defmodule ChallengeGov.Submissions do
 
   alias ChallengeGov.Accounts
   alias ChallengeGov.Emails
-  alias ChallengeGov.GovDelivery
+  # alias ChallengeGov.GovDelivery
   alias ChallengeGov.Mailer
   alias ChallengeGov.Repo
   alias ChallengeGov.SecurityLogs
@@ -100,6 +100,7 @@ defmodule ChallengeGov.Submissions do
   def create_draft(params, user, challenge, phase) do
     params = attach_default_multi_params(params)
     changeset = Submission.draft_changeset(%Submission{}, params, user, challenge, phase)
+    # |> validate_file_upload(challenge, params)
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:submission, changeset)
@@ -125,30 +126,95 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
-  def create_review(params, user, challenge, phase) do
-    params = attach_default_multi_params(params)
-    changeset = Submission.review_changeset(%Submission{}, params, user, challenge, phase)
+  # def create_review(params, user, challenge, phase) do
+  #   params = attach_default_multi_params(params)
 
-    Ecto.Multi.new()
-    |> Ecto.Multi.insert(:submission, changeset)
-    |> attach_documents(params)
-    |> Repo.transaction()
-    |> case do
+  #   # Create the changeset independently
+  #   changeset = 
+  #     Submission.review_changeset(%Submission{}, params, user, challenge, phase)
+  #     |> validate_file_upload(challenge, params) # start pipe here
+
+  #   # Initialize the Multi and include the changeset
+  #   Ecto.Multi.new()
+  #   |> Ecto.Multi.insert(:submission, changeset)
+  #   |> attach_documents(params)
+  #   |> Repo.transaction()
+  #   |> case do
+  #     {:ok, %{submission: submission}} ->
+  #       submission = new_form_preload(submission)
+  #       if submission.manager_id, do: send_submission_review_email(user, phase, submission)
+
+  #       {:ok, submission}
+
+  #     {:error, _type, changeset, _changes} ->
+  #       changeset = preserve_document_ids_on_error(changeset, params)
+
+  #       changeset = %Ecto.Changeset{
+  #         changeset
+  #         | data: Repo.preload(changeset.data, [:documents, :submitter])
+  #       }
+
+  #       {:error, changeset}
+  #   end
+  # end
+
+  def create_review(params, user, challenge, phase) do
+    params_with_defaults = attach_default_multi_params(params)
+
+    # Initialize the submission and pipe it through the changeset function and validation
+    changeset =
+      %Submission{}
+      |> Submission.review_changeset(params_with_defaults, user, challenge, phase)
+      |> validate_file_upload(challenge, params_with_defaults)
+
+    # Initialize the Multi and include the changeset
+    multi =
+      Ecto.Multi.new()
+      |> Ecto.Multi.insert(:submission, changeset)
+      |> attach_documents(params_with_defaults)
+      |> Repo.transaction()
+
+    # Handle the transaction result
+    case multi do
       {:ok, %{submission: submission}} ->
         submission = new_form_preload(submission)
         if submission.manager_id, do: send_submission_review_email(user, phase, submission)
-
         {:ok, submission}
 
       {:error, _type, changeset, _changes} ->
-        changeset = preserve_document_ids_on_error(changeset, params)
+        changeset
+        |> preserve_document_ids_on_error(params_with_defaults)
+        |> Repo.preload([:documents, :submitter])
+        # Ensuring the return is a tuple
+        |> (fn cs -> {:error, cs} end).()
+    end
+  end
 
-        changeset = %Ecto.Changeset{
+  defp validate_file_upload(changeset, challenge, params) do
+    if challenge.file_upload_required do
+      is_documents_loaded = changeset.data.documents != Ecto.Association.NotLoaded
+
+      document_ids =
+        if changeset.data.id && is_documents_loaded do
+          Enum.map(changeset.data.documents, & &1.id)
+        else
+          # Default to empty if it's a new record or documents are not loaded
+          []
+        end
+
+      case params["document_ids"] || document_ids do
+        [] ->
+          Ecto.Changeset.add_error(
+            changeset,
+            :document_ids,
+            "At least one file must be attached."
+          )
+
+        _ ->
           changeset
-          | data: Repo.preload(changeset.data, [:documents, :submitter])
-        }
-
-        {:error, changeset}
+      end
+    else
+      changeset
     end
   end
 
@@ -156,9 +222,9 @@ defmodule ChallengeGov.Submissions do
     Submission.changeset(submission, %{})
   end
 
-  def update_draft(submission, params) do
+  def update_draft(submission, params, challenge) do
     params = attach_default_multi_params(params)
-    changeset = Submission.update_draft_changeset(submission, params)
+    changeset = Submission.update_draft_changeset(submission, params, challenge)
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:submission, changeset)
@@ -174,9 +240,9 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
-  def update_review(submission, params) do
+  def update_review(submission, params, challenge) do
     params = attach_default_multi_params(params)
-    changeset = Submission.update_review_changeset(submission, params)
+    changeset = Submission.update_review_changeset(submission, params, challenge)
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:submission, changeset)

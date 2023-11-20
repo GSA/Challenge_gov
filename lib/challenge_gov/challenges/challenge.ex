@@ -122,6 +122,10 @@ defmodule ChallengeGov.Challenges.Challenge do
     field(:is_multi_phase, :boolean)
     field(:terms_equal_rules, :boolean)
 
+    field(:file_upload_required, :boolean)
+    field(:upload_instruction_note, :string)
+    field(:submission_collection_method, :string)
+
     # Virtual Fields
     field(:logo, :string, virtual: true)
 
@@ -326,7 +330,10 @@ defmodule ChallengeGov.Challenges.Challenge do
       :how_to_enter_link,
       :announcement,
       :announcement_datetime,
-      :short_url
+      :short_url,
+      :file_upload_required,
+      :upload_instruction_note,
+      :submission_collection_method
     ])
     |> cast_assoc(:non_federal_partners, with: &NonFederalPartner.draft_changeset/2)
     |> cast_assoc(:events)
@@ -555,10 +562,40 @@ defmodule ChallengeGov.Challenges.Challenge do
     |> cast_assoc(:phases, with: &Phase.judging_changeset/2)
   end
 
-  def how_to_enter_changeset(struct, _params) do
+  def how_to_enter_changeset(struct, params) do
+    method = Map.get(params, "submission_collection_method")
+
+    modified_params =
+      case method do
+        "internal" ->
+          # When the method is internal, clear the how_to_enter_link
+          # as it isn't relevant for internal submissions
+          Map.put(params, "how_to_enter_link", nil)
+
+        "external" ->
+          # When the method is external, clear the fields that are only relevant for internal method
+          params
+          |> Map.put("upload_instruction_note", nil)
+          |> Map.put("file_upload_required", nil)
+
+        _ ->
+          # If there's no specific method or an unrecognized one,
+          # don't modify the incoming params
+          params
+      end
+
+    # Now cast the parameters. Whether modified or not, they need to match
+    # the fields expected for the struct.
     struct
+    |> cast(modified_params, ~w(how_to_enter_link upload_instruction_note file_upload_required)a)
+    # Also associate the phases with the struct
     |> cast_assoc(:phases, with: &Phase.how_to_enter_changeset/2)
   end
+
+  # def how_to_enter_changeset(struct, _params) do
+  #   struct
+  #   |> cast_assoc(:phases, with: &Phase.how_to_enter_changeset/2)
+  # end
 
   def resources_changeset(struct, _params) do
     struct
