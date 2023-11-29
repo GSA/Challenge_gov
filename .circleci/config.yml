@@ -164,6 +164,7 @@ jobs:
             sudo apt-get install -y ca-certificates jq
             sudo touch /etc/apt/sources.list.d/cloudfoundry-cli.list
             echo "deb [trusted=yes] https://packages.cloudfoundry.org/debian stable main" | sudo tee -a /etc/apt/sources.list.d/cloudfoundry-cli.list
+            echo $CADDY_PROXY
             sudo apt-get update
             sudo apt-get install dpkg
             sudo apt-get install cf7-cli
