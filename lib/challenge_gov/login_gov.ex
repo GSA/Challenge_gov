@@ -10,11 +10,7 @@ defmodule ChallengeGov.LoginGov do
   def get_well_known_configuration(idp_authorize_url) do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
-    |> get([
-      {:proxy,
-       {Application.get_env(:challenge_gov, :http_proxy),
-        Application.get_env(:challenge_gov, :http_port)}}
-    ])
+    |> get()
     |> handle_response("Sorry, could not fetch well known configuration")
   end
 
