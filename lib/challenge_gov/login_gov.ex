@@ -8,8 +8,6 @@ defmodule ChallengeGov.LoginGov do
   alias ChallengeGov.LoginGov.Token
 
   def get_well_known_configuration(idp_authorize_url) do
-    IO.inspect(Application.get_env(:challenge_gov, :http_proxy))
-
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
     |> get()
