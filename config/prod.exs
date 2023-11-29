@@ -84,11 +84,7 @@ config :challenge_gov, :oidc_config, %{
   private_key_path: System.get_env("LOGIN_PRIVATE_KEY_PATH"),
   private_key_password: System.get_env("LOGIN_PRIVATE_KEY_PASSWORD"),
   public_key_path: System.get_env("LOGIN_PUBLIC_KEY_PATH"),
-  token_endpoint: System.get_env("LOGIN_TOKEN_ENDPOINT"),
-  http_proxy: System.get_env("http_proxy_id"),
-  http_port: System.get_env("http_port"),
-  http_proxy_user: System.get_env("http_proxy_user"),
-  http_proxy_pass: System.get_env("http_proxy_pass")
+  token_endpoint: System.get_env("LOGIN_TOKEN_ENDPOINT")
 }
 
 config :challenge_gov, :login_gov_logout, %{
@@ -105,7 +101,11 @@ config :challenge_gov,
   account_deactivation_warning_two_in_days:
     System.get_env("ACCOUNT_DEACTIVATION_WARNING_TWO_IN_DAYS") || 5,
   log_retention_in_days: System.get_env("LOG_RETENTION_IN_DAYS") || 180,
-  challenge_manager_assumed_tlds: System.get_env("CHALLENGE_OWNER_ASSUMED_TLDS") || [".mil"]
+  challenge_manager_assumed_tlds: System.get_env("CHALLENGE_OWNER_ASSUMED_TLDS") || [".mil"],
+  http_proxy: System.get_env("http_proxy_id"),
+  http_port: System.get_env("http_port"),
+  http_proxy_user: System.get_env("http_proxy_user"),
+  http_proxy_pass: System.get_env("http_proxy_pass")
 
 config :challenge_gov, :public_root_url, System.get_env("PUBLIC_ROOT_URL")
 
