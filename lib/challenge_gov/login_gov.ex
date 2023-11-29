@@ -16,7 +16,7 @@ defmodule ChallengeGov.LoginGov do
 
   def get_public_key(jwks_uri) do
     jwks_uri
-    |> get([{:proxy, Application.get_env(:challenge_gov, :http_proxy)}])
+    |> get([:proxy, Application.get_env(:challenge_gov, :http_proxy)])
     |> handle_response("Sorry, could not fetch public key")
     |> case do
       {:ok, body} -> {:ok, body |> Map.fetch!("keys") |> List.first()}
@@ -132,9 +132,9 @@ defmodule ChallengeGov.LoginGov do
   #   ]
   # end
 
-  def process_request_options(options) do
-    [:proxy, Application.get_env(:challenge_gov, :http_proxy)]
-  end
+  # def process_request_options(options) do
+  #   [:proxy, Application.get_env(:challenge_gov, :http_proxy)]
+  # end
 
   # def process_request_options(options) do
   #   [
