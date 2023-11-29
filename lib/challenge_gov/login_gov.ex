@@ -129,13 +129,21 @@ defmodule ChallengeGov.LoginGov do
   def process_request_options(options) do
     [
       {:proxy,
-       {:http, Application.get_env(:challenge_gov, :http_proxy),
-        Application.get_env(:challenge_gov, :http_port)}},
-      {:proxy_auth,
-       {Application.get_env(:challenge_gov, :http_proxy_user),
-        Application.get_env(:challenge_gov, :http_proxy_pass)}}
+       {:host, Application.get_env(:challenge_gov, :http_proxy),
+        Application.get_env(:challenge_gov, :http_port)}}
     ]
   end
+
+  # def process_request_options(options) do
+  #   [
+  #     {:proxy,
+  #      {:http, Application.get_env(:challenge_gov, :http_proxy),
+  #       Application.get_env(:challenge_gov, :http_port)}},
+  #     {:proxy_auth,
+  #      {Application.get_env(:challenge_gov, :http_proxy_user),
+  #       Application.get_env(:challenge_gov, :http_proxy_pass)}}
+  #   ]
+  # end
 
   def process_response_body(body) do
     Poison.decode!(body)
