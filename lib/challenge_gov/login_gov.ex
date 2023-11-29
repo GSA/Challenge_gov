@@ -138,9 +138,7 @@ defmodule ChallengeGov.LoginGov do
 
   def process_request_options(options) do
     [
-      {:proxy,
-       {Application.get_env(:challenge_gov, :http_proxy),
-        Application.get_env(:challenge_gov, :http_port)}},
+      {:proxy, {Application.get_env(:challenge_gov, :http_proxy), 61_443}},
       {:proxy_auth,
        {Application.get_env(:challenge_gov, :http_proxy_user),
         Application.get_env(:challenge_gov, :http_proxy_pass)}}
