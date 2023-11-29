@@ -102,10 +102,10 @@ config :challenge_gov,
     System.get_env("ACCOUNT_DEACTIVATION_WARNING_TWO_IN_DAYS") || 5,
   log_retention_in_days: System.get_env("LOG_RETENTION_IN_DAYS") || 180,
   challenge_manager_assumed_tlds: System.get_env("CHALLENGE_OWNER_ASSUMED_TLDS") || [".mil"],
-  http_proxy: System.get_env("http_proxy_id"),
-  http_port: System.get_env("http_port"),
-  http_proxy_user: System.get_env("http_proxy_user"),
-  http_proxy_pass: System.get_env("http_proxy_pass")
+  http_proxy: System.get_env("HTTP_PROXY_ID"),
+  http_port: System.get_env("HTTP_PORT"),
+  http_proxy_user: System.get_env("HTTP_PROXY_USER"),
+  http_proxy_pass: System.get_env("HTTP_PROXY_PASS")
 
 config :challenge_gov, :public_root_url, System.get_env("PUBLIC_ROOT_URL")
 
