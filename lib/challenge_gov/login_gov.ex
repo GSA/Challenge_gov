@@ -8,6 +8,8 @@ defmodule ChallengeGov.LoginGov do
   alias ChallengeGov.LoginGov.Token
 
   def get_well_known_configuration(idp_authorize_url) do
+    IO.inspect(Application.get_env(:challenge_gov, :http_proxy))
+
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
     |> get()
@@ -130,22 +132,22 @@ defmodule ChallengeGov.LoginGov do
   #   ]
   # end
 
-  def process_request_options(options) do
-    [
-      {:proxy, "#{Application.get_env(:challenge_gov, :http_proxy)}"}
-    ]
-  end
-
   # def process_request_options(options) do
   #   [
-  #     {:proxy,
-  #      {:http, Application.get_env(:challenge_gov, :http_proxy),
-  #       Application.get_env(:challenge_gov, :http_port)}},
-  #     {:proxy_auth,
-  #      {Application.get_env(:challenge_gov, :http_proxy_user),
-  #       Application.get_env(:challenge_gov, :http_proxy_pass)}}
+  #     {:proxy, "#{Application.get_env(:challenge_gov, :http_proxy)}"}
   #   ]
   # end
+
+  def process_request_options(options) do
+    [
+      {:proxy,
+       {Application.get_env(:challenge_gov, :http_proxy),
+        Application.get_env(:challenge_gov, :http_port)}},
+      {:proxy_auth,
+       {Application.get_env(:challenge_gov, :http_proxy_user),
+        Application.get_env(:challenge_gov, :http_proxy_pass)}}
+    ]
+  end
 
   def process_response_body(body) do
     Poison.decode!(body)
