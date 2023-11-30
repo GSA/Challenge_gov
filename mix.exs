@@ -57,7 +57,7 @@ defmodule ChallengeGov.MixProject do
       {:finch, "~> 0.14.0"},
       {:gettext, "~> 0.11"},
       {:hackney, "~> 1.18.0"},
-      {:httpoison, "~> 1.7"},
+      {:httpoison, "~> 1.8.2"},
       {:html_sanitize_ex, "~> 1.3.0-rc3"},
       {:jason, "~> 1.0"},
       {:joken, "~> 2.0"},
