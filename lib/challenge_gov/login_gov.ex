@@ -10,7 +10,7 @@ defmodule ChallengeGov.LoginGov do
   def get_well_known_configuration(idp_authorize_url) do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
-    |> get!()
+    |> get()
     |> handle_response("Sorry, could not fetch well known configuration")
   end
 
@@ -142,9 +142,15 @@ defmodule ChallengeGov.LoginGov do
   def process_request_options(options) do
     [
       {:proxy,
-       {~c"https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}",
+       {socks5,
+        ~c"https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}",
         61_443}}
     ]
+
+    # [
+    #   {:proxy,
+    #    ~c"https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}:61443"}
+    # ]
   end
 
   def process_response_body(body) do
