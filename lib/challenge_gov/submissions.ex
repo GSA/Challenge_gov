@@ -129,13 +129,11 @@ defmodule ChallengeGov.Submissions do
   def create_review(params, user, challenge, phase) do
     params = attach_default_multi_params(params)
 
-    # Create the changeset independently
     changeset =
-      Submission.review_changeset(%Submission{}, params, user, challenge, phase)
-      # start pipe here
+      %Submission{}
+      |> Submission.review_changeset(params, user, challenge, phase)
       |> validate_file_upload(challenge, params)
 
-    # Initialize the Multi and include the changeset
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:submission, changeset)
     |> attach_documents(params)
