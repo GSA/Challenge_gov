@@ -126,7 +126,6 @@ defmodule ChallengeGov.Submissions do
     end
   end
 
-<<<<<<< HEAD
   def create_review(params, user, challenge, phase) do
     params = attach_default_multi_params(params)
 
@@ -142,58 +141,6 @@ defmodule ChallengeGov.Submissions do
     |> attach_documents(params)
     |> Repo.transaction()
     |> case do
-=======
-  # def create_review(params, user, challenge, phase) do
-  #   params = attach_default_multi_params(params)
-
-  #   # Create the changeset independently
-  #   changeset = 
-  #     Submission.review_changeset(%Submission{}, params, user, challenge, phase)
-  #     |> validate_file_upload(challenge, params) # start pipe here
-
-  #   # Initialize the Multi and include the changeset
-  #   Ecto.Multi.new()
-  #   |> Ecto.Multi.insert(:submission, changeset)
-  #   |> attach_documents(params)
-  #   |> Repo.transaction()
-  #   |> case do
-  #     {:ok, %{submission: submission}} ->
-  #       submission = new_form_preload(submission)
-  #       if submission.manager_id, do: send_submission_review_email(user, phase, submission)
-
-  #       {:ok, submission}
-
-  #     {:error, _type, changeset, _changes} ->
-  #       changeset = preserve_document_ids_on_error(changeset, params)
-
-  #       changeset = %Ecto.Changeset{
-  #         changeset
-  #         | data: Repo.preload(changeset.data, [:documents, :submitter])
-  #       }
-
-  #       {:error, changeset}
-  #   end
-  # end
-
-  def create_review(params, user, challenge, phase) do
-    params_with_defaults = attach_default_multi_params(params)
-
-    # Initialize the submission and pipe it through the changeset function and validation
-    changeset =
-      %Submission{}
-      |> Submission.review_changeset(params_with_defaults, user, challenge, phase)
-      |> validate_file_upload(challenge, params_with_defaults)
-
-    # Initialize the Multi and include the changeset
-    multi =
-      Ecto.Multi.new()
-      |> Ecto.Multi.insert(:submission, changeset)
-      |> attach_documents(params_with_defaults)
-      |> Repo.transaction()
-
-    # Handle the transaction result
-    case multi do
->>>>>>> staging
       {:ok, %{submission: submission}} ->
         submission = new_form_preload(submission)
         if submission.manager_id, do: send_submission_review_email(user, phase, submission)
