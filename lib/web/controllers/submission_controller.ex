@@ -345,141 +345,64 @@ defmodule Web.SubmissionController do
     end
   end
 
-  # def update(conn, %{"id" => id, "action" => action, "submission" => submission_params}) do
-  #   %{current_user: user} = conn.assigns
+  def update(conn, %{"id" => id, "action" => "draft", "submission" => submission_params}) do
+    %{current_user: user, current_submission: submission} = conn.assigns
 
-  #   case Submissions.get(id) do
-  #     {:ok, submission} ->
-  #       case Challenges.get(submission.challenge_id) do
-  #         {:ok, challenge} ->
-  #           case Phases.get(submission.phase_id) do
-  #             {:ok, phase} ->
-  #               update_submission(
-  #                 conn,
-  #                 action,
-  #                 submission_params,
-  #                 submission,
-  #                 challenge,
-  #                 phase,
-  #                 user
-  #               )
+    {submitter, _submission_params} = get_params_by_current_user(submission_params, user)
+    submission_params = Map.put_new(submission_params, "submitter_id", submitter.id)
 
-  #             {:error, _} ->
-  #               conn
-  #               |> put_flash(:error, "There was an error getting the phase.")
-  #               |> redirect(to: Routes.dashboard_path(conn, :index))
-  #           end
-
-  #         {:error, _} ->
-  #           conn
-  #           |> put_flash(:error, "There was an error getting the challenge.")
-  #           |> redirect(to: Routes.dashboard_path(conn, :index))
-  #       end
-
-  #     {:error, _} ->
-  #       conn
-  #       |> put_flash(:error, "There was an error getting the submission.")
-  #       |> redirect(to: Routes.submission_path(conn, :index))
-  #   end
-  # end
-
-  def update(conn, %{"id" => id, "action" => action, "submission" => submission_params}) do
-    %{current_user: user} = conn.assigns
-
-    case Submissions.get(id) do
-      {:ok, submission} ->
-        get_challenge_and_phase_and_update(conn, submission, action, submission_params, user)
-
-      {:error, _} ->
+    with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+         {:ok, submission} <- Submissions.is_editable(user, submission),
+         true <- Submissions.has_not_been_submitted?(submission),
+         {:ok, submission} <- Submissions.update_draft(submission, submission_params) do
+      conn
+      |> put_flash(
+        :warning,
+        "Your submission is in Draft mode. To Submit, click on Submit at the bottom of the page."
+      )
+      |> redirect(to: Routes.submission_path(conn, :edit, submission.id))
+    else
+      {:error, :not_permitted} ->
         conn
-        |> put_flash(:error, "There was an error getting the submission.")
+        |> put_flash(:error, "Action not authorized")
         |> redirect(to: Routes.submission_path(conn, :index))
-    end
-  end
 
-  defp get_challenge_and_phase_and_update(conn, submission, action, submission_params, user) do
-    case Challenges.get(submission.challenge_id) do
-      {:ok, challenge} ->
-        case Phases.get(submission.phase_id) do
-          {:ok, phase} ->
-            update_submission(
-              conn,
-              action,
-              submission_params,
-              submission,
-              challenge,
-              phase,
-              user
-            )
-
-          {:error, _} ->
-            conn
-            |> put_flash(:error, "There was an error getting the phase.")
-            |> redirect(to: Routes.dashboard_path(conn, :index))
-        end
-
-      {:error, _} ->
+      {:error, :not_editable} ->
         conn
-        |> put_flash(:error, "There was an error getting the challenge.")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
-    end
-  end
-
-  # Use the renamed helper function `render_error/3`
-  defp update_submission(conn, "draft", submission_params, submission, challenge, phase, user) do
-    case Submissions.update_draft(submission, submission_params, challenge) do
-      {:ok, updated_submission} ->
-        conn
-        |> put_flash(:info, "Draft saved successfully.")
-        |> redirect(to: Routes.submission_path(conn, :show, updated_submission.id))
+        |> put_flash(:error, "Submission cannot be edited")
+        |> redirect_by_user_type(user, submission)
 
       {:error, changeset} ->
-        render_error(conn, "edit.html",
-          changeset: changeset,
-          submission: submission,
-          user: user,
-          phase: phase,
-          action: "draft"
-        )
+        update_error(conn, changeset, user, submission)
+
+      false ->
+        conn
+        |> put_flash(:error, "Submission cannot be saved as a draft")
+        |> redirect(to: Routes.submission_path(conn, :edit, id))
     end
   end
 
-  defp update_submission(conn, "review", submission_params, submission, challenge, phase, user) do
-    case Submissions.update_review(submission, submission_params, challenge) do
-      {:ok, updated_submission} ->
+  def update(conn, %{"id" => _id, "action" => "review", "submission" => submission_params}) do
+    %{current_user: user, current_submission: submission} = conn.assigns
+
+    with {:ok, submission} <- Submissions.allowed_to_edit(user, submission),
+         {:ok, submission} <- Submissions.is_editable(user, submission),
+         {:ok, submission} <- Submissions.update_review(submission, submission_params) do
+      submit(conn, %{"id" => submission.id})
+    else
+      {:error, :not_permitted} ->
         conn
-        |> put_flash(:info, "Submission received successfully.")
-        |> redirect(to: Routes.submission_path(conn, :show, updated_submission.id))
+        |> put_flash(:error, "You are not authorized to edit this submission")
+        |> redirect_by_user_type(user, submission)
+
+      {:error, :not_editable} ->
+        conn
+        |> put_flash(:error, "Submission cannot be edited")
+        |> redirect(to: Routes.submission_path(conn, :index))
 
       {:error, changeset} ->
-        render_error(conn, "edit.html",
-          changeset: changeset,
-          submission: submission,
-          user: user,
-          phase: phase,
-          action: "review"
-        )
+        update_error(conn, changeset, user, submission)
     end
-  end
-
-  defp update_submission(
-         conn,
-         _unknown_action,
-         _submission_params,
-         _submission,
-         _challenge,
-         _phase,
-         _user
-       ) do
-    conn
-    |> put_flash(:error, "Unknown submission action.")
-    |> redirect(to: Routes.submission_path(conn, :index))
-  end
-
-  defp render_error(conn, template, assigns) do
-    conn
-    |> put_flash(:error, "There was an error updating the submission.")
-    |> Phoenix.Controller.render(template, assigns)
   end
 
   defp update_error(conn, changeset, user, submission) do
