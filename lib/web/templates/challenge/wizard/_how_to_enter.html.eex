@@ -1,3 +1,27 @@
+<script>
+  function updateForm() {
+    var method = document.querySelector('input[name="submission_collection_method"]:checked')?.value;
+    var internalForm = document.getElementById('internal-form');
+    var externalForm = document.getElementById('external-form');
+    var hiddenField = document.querySelector('#hidden-field');
+
+    if (method === 'internal') {
+      internalForm.style.display = 'block';
+      externalForm.style.display = 'none';
+    } else if (method === 'external') {
+      internalForm.style.display = 'none';
+      externalForm.style.display = 'block';
+    }
+
+    hiddenField.value = method;
+  }
+
+  // Run on page load
+  document.addEventListener('DOMContentLoaded', function () {
+      updateForm();
+  }, false);
+</script>
+
 <h4>How to Enter</h4>
 <p class="ms-2 mb-0 text-muted form__note"><em>listed per phase</em></p>
 <p class="ms-2 text-muted">Provide any specific instructions or entry guidelines your solvers need to know, including any registration requirements.</p>
@@ -11,7 +35,42 @@
   <br/>
 <% end) %>
 
-<div class="col">
-  <%= FormView.text_field(@form, :how_to_enter_link, label: "External Submission Site - Enter external website link (optional)") %>
+<div style="margin-left: 0;">
+  <p>How do you wish to collect submissions?<span class="form__note--red">*</span></p>
+  <div style="margin-left: 40px;">
+
+    <div class="form-check">
+      <input type="radio" name="submission_collection_method" 
+      value="internal" class="form-check-input" onclick="updateForm()" 
+      id="radio-challenge" required <%= if @form.data.submission_collection_method == "internal", do: "checked" %>>
+      <label class="form-check-label" for="radio-challenge">via Challenge.gov</label>
+    </div>
+
+    <div class="form-check">
+      <input type="radio" name="submission_collection_method" 
+      value="external" class="form-check-input" onclick="updateForm()" 
+      id="radio-external" required <%= if @form.data.submission_collection_method == "external", do: "checked" %>>
+      <label class="form-check-label" for="radio-external">via external submission site</label>
+    </div>
+  </div>
+
 </div>
-<p class="ms-2 text-muted"><b>Note:</b> Only enter a website link here if you’re collecting submissions via an external website. If collecting submissions via the Challenge.Gov platform, leave this field blank.</p>
+<br />
+
+<div id="internal-form" style="display: none;">
+  <div class="form-check mt-2">
+    <%= checkbox(@form, :file_upload_required, class: "form-check-input") %>
+    <label class="form-check-label">By selecting this option, the solver will be required to upload files with their submission.</label>    
+  </div>
+  <div class="col">
+    <%= FormView.text_field(@form, :upload_instruction_note, label: raw("<span style='font-size: 80%;'>File upload instructional text (optional). (This content will appear as a note to instruct the solver on uploading files.)</span>")) %>    
+  </div>
+</div>  
+
+<div id="external-form" style="display: none;">
+  <div class="col">
+    <%= FormView.text_field(@form, :how_to_enter_link, label: raw("<span style='font-size: 80%;'>External Submission Site - Enter external website link (optional)</span>")) %>
+  </div>
+</div>
+
+<%= hidden_input @form, :submission_collection_method, id: "hidden-field", value: "" %>
