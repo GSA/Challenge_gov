@@ -3,22 +3,62 @@
     var method = document.querySelector('input[name="submission_collection_method"]:checked')?.value;
     var internalForm = document.getElementById('internal-form');
     var externalForm = document.getElementById('external-form');
+    var fileUploadCheckbox = document.getElementById('file-upload-required');
+    var fileUploadInstruction = document.getElementById('file-upload-instruction');
     var hiddenField = document.querySelector('#hidden-field');
 
     if (method === 'internal') {
       internalForm.style.display = 'block';
       externalForm.style.display = 'none';
+      toggleFileUploadInstructions(fileUploadCheckbox.checked);
     } else if (method === 'external') {
       internalForm.style.display = 'none';
       externalForm.style.display = 'block';
+      fileUploadInstruction.style.display = 'none';
     }
 
     hiddenField.value = method;
   }
 
+  function toggleFileUploadInstructions(show) {
+    var fileUploadInstruction = document.getElementById('file-upload-instruction');
+    fileUploadInstruction.style.display = show ? 'block' : 'none';
+  }
+
   // Run on page load
   document.addEventListener('DOMContentLoaded', function () {
-      updateForm();
+    var fileUploadCheckbox = document.getElementById('file-upload-required');
+    var uploadInstructionNote = document.getElementById('challenge_upload_instruction_note');
+    var formElement = document.querySelector('form.form-horizontal');
+
+    // Set up the event listeners for the checkbox and form submission
+    if (fileUploadCheckbox) {
+      fileUploadCheckbox.addEventListener('change', function() {
+        toggleFileUploadInstructions(this.checked);
+      });
+    }
+
+    // Add a 'submit' event listener that clears the notes field if the checkbox is unchecked
+    if (formElement) {
+      formElement.addEventListener('submit', function(event) {
+        if (!fileUploadCheckbox.checked) {
+          uploadInstructionNote.value = '';
+        }
+      });
+    }
+    
+    // Add an 'input' event listener to enforce max character count of 255 on input field
+    if (uploadInstructionNote) {
+      uploadInstructionNote.addEventListener('input', function() {
+        if (this.value.length > 255) {
+          this.value = this.value.slice(0, 255);
+        }
+      });
+    }
+
+    // Initialize the form according to the current state
+    updateForm();
+    
   }, false);
 </script>
 
@@ -59,18 +99,27 @@
 
 <div id="internal-form" style="display: none;">
   <div class="form-check mt-2">
-    <%= checkbox(@form, :file_upload_required, class: "form-check-input") %>
-    <label class="form-check-label">By selecting this option, the solver will be required to upload files with their submission.</label>    
+    <%= checkbox(@form, :file_upload_required, class: "form-check-input", id: "file-upload-required") %>
+    <label class="form-check-label">By selecting this option, the solver will be required to upload files with their submission.</label>
   </div>
-  <div class="col">
-    <%= FormView.text_field(@form, :upload_instruction_note, label: raw("<span style='font-size: 80%;'>File upload instructional text (optional). (This content will appear as a note to instruct the solver on uploading files.)</span>")) %>    
+  <div id="file-upload-instruction" style="display: none;">
+    <%= FormView.text_field(
+      @form, 
+      :upload_instruction_note, 
+      maxlength: 255,
+      label: raw("<span style='font-size: 80%;'>File upload instructional text (optional). (This content will appear as a note to instruct the solver on uploading files.)</span>"),
+      id: "upload-instruction-note"
+    ) %>
   </div>
-</div>  
+</div>
 
-<div id="external-form" style="display: none;">
-  <div class="col">
-    <%= FormView.text_field(@form, :how_to_enter_link, label: raw("<span style='font-size: 80%;'>External Submission Site - Enter external website link (optional)</span>")) %>
-  </div>
+<div id="external-form" style="display: none;">  
+    <%= FormView.text_field(
+      @form, 
+      :how_to_enter_link, 
+      label: raw("<span style='font-size: 80%;'>External Submission Site - Enter external website link (optional)</span>")
+      )
+    %>  
 </div>
 
 <%= hidden_input @form, :submission_collection_method, id: "hidden-field", value: "" %>
