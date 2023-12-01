@@ -10,11 +10,11 @@
     if (method === 'internal') {
       internalForm.style.display = 'block';
       externalForm.style.display = 'none';
-      toggleFileUploadInstructions(fileUploadCheckbox.checked); // Hide or show file upload instructions based on checkbox
+      toggleFileUploadInstructions(fileUploadCheckbox.checked);
     } else if (method === 'external') {
       internalForm.style.display = 'none';
-      externalForm.style.display = 'block'; // Show the external form
-      fileUploadInstruction.style.display = 'none'; // Always hide file upload instructions for the external method
+      externalForm.style.display = 'block';
+      fileUploadInstruction.style.display = 'none';
     }
 
     hiddenField.value = method;
@@ -28,31 +28,37 @@
   // Run on page load
   document.addEventListener('DOMContentLoaded', function () {
     var fileUploadCheckbox = document.getElementById('file-upload-required');
-    var fileUploadInstruction = document.getElementById('file-upload-instruction');
     var uploadInstructionNote = document.getElementById('challenge_upload_instruction_note');
-    
-    // Get the actual form using its class attribute
     var formElement = document.querySelector('form.form-horizontal');
 
+    // Set up the event listeners for the checkbox and form submission
     if (fileUploadCheckbox) {
       fileUploadCheckbox.addEventListener('change', function() {
         toggleFileUploadInstructions(this.checked);
       });
     }
-    
+
+    // Add a 'submit' event listener that clears the notes field if the checkbox is unchecked
     if (formElement) {
       formElement.addEventListener('submit', function(event) {
-        // When the form is submitted, check if the fileUploadCheckbox is unchecked
         if (!fileUploadCheckbox.checked) {
-          // Clear the notes field if the checkbox is checked
           uploadInstructionNote.value = '';
         }
-        // The form will continue to submit as normal.
+      });
+    }
+    
+    // Add an 'input' event listener to enforce max character count of 255 on input field
+    if (uploadInstructionNote) {
+      uploadInstructionNote.addEventListener('input', function() {
+        if (this.value.length > 255) {
+          this.value = this.value.slice(0, 255);
+        }
       });
     }
 
+    // Initialize the form according to the current state
     updateForm();
-
+    
   }, false);
 </script>
 
@@ -100,10 +106,10 @@
     <%= FormView.text_field(
       @form, 
       :upload_instruction_note, 
-      label: raw("<span style='font-size: 80%;'>File upload instructional text (optional). (This content will appear as a note to instruct the solver on uploading files.)</span>"), 
+      maxlength: 255,
+      label: raw("<span style='font-size: 80%;'>File upload instructional text (optional). (This content will appear as a note to instruct the solver on uploading files.)</span>"),
       id: "upload-instruction-note"
-      )
-    %>
+    ) %>
   </div>
 </div>
 
