@@ -17,11 +17,13 @@ defmodule ChallengeGov.LoginGov do
       {:proxy,
        "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"}
     ])
+
+    handle_response("Sorry, could not fetch well known configuration")
   end
 
   def get_public_key(jwks_uri) do
     jwks_uri
-    |> get()
+    |> get!()
     |> handle_response("Sorry, could not fetch public key")
     |> case do
       {:ok, body} -> {:ok, body |> Map.fetch!("keys") |> List.first()}
@@ -46,7 +48,7 @@ defmodule ChallengeGov.LoginGov do
 
   def get_user_info(userinfo_endpoint, access_token) do
     userinfo_endpoint
-    |> get([
+    |> get!([
       {"Authorization", "Bearer " <> access_token}
     ])
     |> handle_response("Sorry, could not fetch userinfo")
