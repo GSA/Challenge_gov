@@ -13,7 +13,7 @@ defmodule ChallengeGov.LoginGov do
     # |> get()
     # |> handle_response("Sorry, could not fetch well known configuration")
 
-    get!("#{idp_authorize_url}/.well-known/openid-configuration", [], [
+    get("#{idp_authorize_url}/.well-known/openid-configuration", [], [
       {:proxy,
        "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"}
     ])
@@ -21,7 +21,7 @@ defmodule ChallengeGov.LoginGov do
 
   def get_public_key(jwks_uri) do
     jwks_uri
-    |> get!([], [
+    |> get([], [
       {:proxy,
        "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"}
     ])
@@ -49,7 +49,7 @@ defmodule ChallengeGov.LoginGov do
 
   def get_user_info(userinfo_endpoint, access_token) do
     userinfo_endpoint
-    |> get!(
+    |> get(
       [
         {"Authorization", "Bearer " <> access_token}
       ],
