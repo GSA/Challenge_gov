@@ -129,9 +129,11 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   end
 
   defp complete_how_to_enter_section(session) do
+    verify_previous_section(:phases, :judging_criteria, "Judging criteria described here.")
+
     session
-    # |> click(Query.radio_button("submission_collection_method", "internal"))
-    |> click(Query.radio_button("submission_collection_method", value: "internal", visible: true))
+    |> click(Query.radio_button("submission_collection_method", selected: true))
+    |> populate_markdown_field("How to enter described here.")
     |> touch_scroll(button("Next"), 0, 1)
     |> execute_script("window.confirm = function(){return true;}")
     |> click(button("Next"))
@@ -207,38 +209,21 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     assert(key =~ value)
   end
 
-  # Check if parent_field is a list and get the first item if it is
-  parent_map =
-    if is_list(parent_field) do
-      List.first(parent_field)
-    else
-      parent_field
-    end
+  defp set_date_picker(days) do
+    {:ok, start_date_picker} =
+      Timex.now()
+      |> Timex.shift(days)
+      |> Timex.format("{YYYY}-{0M}-{0D}T{0h12}:{m}")
 
-  # Perform the assertion only if parent_map is not nil
-  if not is_nil(parent_map) do
-    actual_value = Map.get(parent_map, nested_field)
-    # Only assert the actual_value if not nil
-    if not is_nil(actual_value) do
-      assert actual_value =~ value
-    end
+    start_date_picker
   end
-end
 
-defp set_date_picker(days) do
-  {:ok, start_date_picker} =
-    Timex.now()
-    |> Timex.shift(days)
-    |> Timex.format("{YYYY}-{0M}-{0D}T{0h12}:{m}")
+  defp set_date(days) do
+    {:ok, start_date} =
+      Timex.now()
+      |> Timex.shift(days)
+      |> Timex.format("{YYYY}-{0M}-{0D} {0h12}:{m}:{s}Z")
 
-  start_date_picker
-end
-
-defp set_date(days) do
-  {:ok, start_date} =
-    Timex.now()
-    |> Timex.shift(days)
-    |> Timex.format("{YYYY}-{0M}-{0D} {0h12}:{m}:{s}Z")
-
-  start_date
+    start_date
+  end
 end
