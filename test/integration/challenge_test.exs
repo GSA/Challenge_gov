@@ -132,11 +132,11 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     verify_previous_section(:phases, :judging_criteria, "Judging criteria described here.")
 
     session
-    |> click(
-      Query.radio_button("submission_collection_method", fn q ->
-        q |> Query.with(value: "internal")
-      end)
-    )
+    |> click(Query.radio_button("submission_collection method"), fn radio_query ->
+      radio_query
+      |> Query.with(name: "submission_collection_method")
+      |> Query.with(value: "internal")
+    end)
     |> populate_markdown_field("How to enter described here.")
     |> touch_scroll(button("Next"), 0, 1)
     |> execute_script("window.confirm = function(){return true;}")
