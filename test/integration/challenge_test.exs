@@ -129,40 +129,37 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   end
 
   defp complete_how_to_enter_section(session) do
-    # Based on whether the challenge is internal or external, fill in the appropriate fields
-    
-    # Assume that `internal` method is being used for this example
-    # You would also need a test for the `external` condition
-    session
-    |> fill_in(text_field("submission_collection_method"), with: "internal")
-    
-    if is_internal_submission_method() do
-      # Fill in the how_to_enter field for internal submission
-      |> populate_markdown_field("Here are the instructions for entering the challenge.")
+    # First action using the pipe operator
+    session =
+      session
+      |> fill_in(text_field("submission_collection_method"), with: "internal")
 
-      # Conditionally fill in the upload_instruction_note if the checkbox is required
+    if is_internal_submission_method() do
+      # Inside the 'if' block, any further pipe sequence needs to start with the value 
+      session =
+        session
+        |> populate_markdown_field("Here are the instructions for entering the challenge.")
+
+      # Further conditional branch inside the 'if' block
       if is_file_upload_required() do
-        |> check(checkbox("file_upload_required"))
-        |> fill_in(text_field("upload_instruction_note"), with: "Please upload your files here.")
+        session =
+          session
+          |> check(checkbox("file_upload_required"))
+          |> fill_in(text_field("upload_instruction_note"), with: "Please upload your files here.")
       end
     else
-      # Fill in the how_to_enter_link field for external submission
-      |> fill_in(text_field("how_to_enter_link"), with: "https://example.com/submit_here")
+      # The 'else' block also needs to start with the value
+      session =
+        session
+        |> fill_in(text_field("how_to_enter_link"), with: "https://example.com/submit_here")
     end
-    
-    # Continue with the rest of the test flow
+
+    # Resuming pipe sequence outside of 'if' block
+    session
+    |> touch_scroll(button("Next"), 0, 1)
+    |> execute_script("window.confirm = function(){return true;}")
     |> click(button("Next"))
   end
-
-  # defp complete_how_to_enter_section(session) do
-  #   verify_previous_section(:phases, :judging_criteria, "Judging criteria described here.")
-
-  #   session
-  #   |> populate_markdown_field("How to enter described here.")
-  #   |> touch_scroll(button("Next"), 0, 1)
-  #   |> execute_script("window.confirm = function(){return true;}")
-  #   |> click(button("Next"))
-  # end
 
   defp complete_resources_section(session) do
     verify_previous_section(:phases, :how_to_enter, "How to enter described here.")
