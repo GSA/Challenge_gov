@@ -13,18 +13,12 @@ defmodule ChallengeGov.LoginGov do
     # |> get()
     # |> handle_response("Sorry, could not fetch well known configuration")
 
-    get("#{idp_authorize_url}/.well-known/openid-configuration", [], [
-      {:proxy,
-       "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"}
-    ])
+    get("#{idp_authorize_url}/.well-known/openid-configuration", [], adapter: :hackney)
   end
 
   def get_public_key(jwks_uri) do
     jwks_uri
-    |> get([], [
-      {:proxy,
-       "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"}
-    ])
+    |> get([], adapter: :hackney)
     |> handle_response("Sorry, could not fetch public key")
     |> case do
       {:ok, body} -> {:ok, body |> Map.fetch!("keys") |> List.first()}
@@ -49,15 +43,9 @@ defmodule ChallengeGov.LoginGov do
 
   def get_user_info(userinfo_endpoint, access_token) do
     userinfo_endpoint
-    |> get(
-      [
-        {"Authorization", "Bearer " <> access_token}
-      ],
-      [
-        {:proxy,
-         "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"}
-      ]
-    )
+    |> get([
+      {"Authorization", "Bearer " <> access_token}
+    ])
     |> handle_response("Sorry, could not fetch userinfo")
   end
 

@@ -92,6 +92,14 @@ config :challenge_gov, :login_gov_logout, %{
   logout_redirect_uri: System.get_env("LOGOUT_REDIRECT_URI")
 }
 
+config :hackney,
+       :proxy,
+       scheme: "http",
+       host: "https://challengecproxy.apps.internal",
+       port: 61443,
+       user: "0a46f47c-f501-495d-b615-4fbb5cfaa536",
+       password: "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"
+
 config :challenge_gov,
   session_timeout_in_minutes: System.get_env("SESSION_TIMEOUT_IN_MINUTES") || 15,
   account_deactivation_in_days: System.get_env("ACCOUNT_DEACTIVATION_IN_DAYS") || 90,
