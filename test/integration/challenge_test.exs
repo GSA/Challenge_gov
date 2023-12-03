@@ -128,42 +128,15 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> click(button("Next"))
   end
 
-  # defp complete_how_to_enter_section(session) do
-  #   verify_previous_section(:phases, :judging_criteria, "Judging criteria described here.")
-
-  #   session
-  #   |> populate_markdown_field("How to enter described here.")
-  #   |> touch_scroll(button("Next"), 0, 1)
-  #   |> execute_script("window.confirm = function(){return true;}")
-  #   |> click(button("Next"))
-  # end
-
   defp complete_how_to_enter_section(session) do
-    # Fill in the required details for the 'How to Enter' section, as per the new form
     session
-    # Assume internal method is default for the test
-    |> click(radio_button("submission_collection_method_internal"))
-    # |> populate_markdown_field("How to enter described here.")
-
-    # If you have UI elements that need interaction to show `file_upload_required` checkbox and `upload_instruction_note` input
-    # You will need to interact with those elements as necessary.
-
-    # Since we're bypassing this and you're okay with not testing, I'm skipping the file upload interactions
-    # If they are required for form submission, uncomment and adapt the following lines:
-    # |> check(checkbox("file_upload_required"))
-    # |> fill_in(text_field("upload_instruction_note"), with: "Please upload files according to the guidelines.")
+    |> click(Query.radio_button("submission_collection_method", "internal"))
 
     # Continue with the rest of the test flow
     |> touch_scroll(button("Next"), 0, 1)
     |> execute_script("window.confirm = function(){return true;}")
     |> click(button("Next"))
   end
-
-  # Helper function to click a radio button based on its value
-  # defp click_radio_button_by_value(session, name, value) do
-  #   find(Query.radio_button(name, value))
-  #   |> Wallaby.Element.click()
-  # end  
 
   defp complete_resources_section(session) do
     verify_previous_section(:phases, :how_to_enter, "How to enter described here.")
