@@ -131,45 +131,12 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   defp complete_how_to_enter_section(session) do
     verify_previous_section(:phases, :judging_criteria, "Judging criteria described here.")
 
-    # Take a screenshot at the start of the section.
-    session = take_screenshot(session, path: "screenshot_before_radio_button.png")
-
-    # Debug output to console before assert
-    IO.puts("About to check for presence of the radio button")
-
-    # Assert that the radio button is present and print the element.
-    session =
-      session
-      |> assert_has(Query.radio_button("submission_collection_method", value: "internal"))
-
-    IO.inspect(session, label: "Session after assert_has")
-
-    # Take another screenshot after asserting but before clicking to ensure state.
-    session = take_screenshot(session, path: "screenshot_after_assert.png")
-
-    # Now that we're sure the radio is visible and interactable, click it.
-    session =
-      session
-      |> click(Query.radio_button("submission_collection_method", value: "internal"))
-
-    # Debug output to indicate the click action is complete
-    IO.puts("Clicked the internal radio button")
-
-    # Take a screenshot after clicking to verify state.
-    session = take_screenshot(session, path: "screenshot_after_clicking_internal.png")
-
-    # Populate markdown field and attempt to proceed to the next section.
     session
+    |> choose("submission_collection_method", option: "internal")
     |> populate_markdown_field("How to enter described here.")
     |> touch_scroll(button("Next"), 0, 1)
     |> execute_script("window.confirm = function(){return true;}")
     |> click(button("Next"))
-
-    # Take a screenshot at the end of the section.
-    session = take_screenshot(session, path: "screenshot_end_of_how_to_enter.png")
-
-    # Return the session for potential further use.
-    session
   end
 
   defp complete_resources_section(session) do
