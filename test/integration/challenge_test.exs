@@ -129,12 +129,11 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   end
 
   defp complete_how_to_enter_section(session) do
-    session
-    #|> click(Query.radio_button("submission_collection_method", "internal"))
-    #|> click(Query.radio_button("submission_collection_method", value: "internal", visible: true))
-    |> click(radio_button("via Challenge.gov"))
+    verify_previous_section(:phases, :judging_criteria, "Judging criteria described here.")
 
-    # Continue with the rest of the test flow
+    session
+    |> click(radio_button("via Challenge.gov"))
+    # |> populate_markdown_field("How to enter described here.")
     |> touch_scroll(button("Next"), 0, 1)
     |> execute_script("window.confirm = function(){return true;}")
     |> click(button("Next"))
