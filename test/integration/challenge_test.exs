@@ -131,12 +131,16 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   defp complete_how_to_enter_section(session) do
     verify_previous_section(:phases, :judging_criteria, "Judging criteria described here.")
 
-    # Wait for radio buttons to be actionable with a specific timeout.
+    # Use assert_has/2 to wait for radio button to become available
     session
     |> assert_has(Query.radio_button("submission_collection_method", value: "internal"),
       timeout: 10_000
     )
+
+    # Now click on the radio button
     |> click(Query.radio_button("submission_collection_method", value: "internal"))
+
+    # Proceed with the rest of the section completion
     |> populate_markdown_field("How to enter described here.")
     |> touch_scroll(button("Next"), 0, 1)
     |> execute_script("window.confirm = function(){return true;}")
