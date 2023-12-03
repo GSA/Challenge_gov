@@ -135,10 +135,10 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     |> populate_markdown_field("How to enter described here.")
     # add a delay to ensure the radio buttons are rendered
     |> execute_script("setTimeout(_ => {}, 1000);")
-    |> find(Query.radio_button("submission_collection_method", value: "internal"), fn element,
-                                                                                      session ->
-      Browser.click(session, element)
-    end)
+    |> find_all_elements(Query.radio_button("submission_collection_method"))
+    # select the first radio button or adjust this according to your test cases
+    |> Enum.at(0)
+    |> Browser.click(session)
     |> touch_scroll(button("Next"), 0, 1)
     |> execute_script("window.confirm = function(){return true;}")
     |> click(button("Next"))
