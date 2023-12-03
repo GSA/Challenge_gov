@@ -135,7 +135,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     # add a delay to ensure the radio buttons are rendered
     |> execute_script("setTimeout(_ => {}, 1000);")
     # Select the "internal" radio button
-    |> click(Query.radio_button("submission_collection_method", option: "internal"))
+    |> click(Query.radio_button("submission_collection_method", value: "internal"))
     |> populate_markdown_field("How to enter described here.")
     |> touch_scroll(button("Next"), 0, 1)
     |> execute_script("window.confirm = function(){return true;}")
