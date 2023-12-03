@@ -129,13 +129,9 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   end
 
   defp complete_how_to_enter_section(session) do
-    # Click on the radio button to select the challenge.gov submission method
-
     session
-    # Update the selector
-    |> find(Query.css("#submission_collection_method"))
-    |> Wallaby.Element.click()
-    # Proceed to the next section
+    # |> click(Query.radio_button("submission_collection_method", "internal"))
+    |> click(Query.radio_button("submission_collection_method", value: "internal", visible: true))
     |> touch_scroll(button("Next"), 0, 1)
     |> execute_script("window.confirm = function(){return true;}")
     |> click(button("Next"))
@@ -201,47 +197,48 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   end
 
   defp verify_previous_section(field, nested_field, value) do
-    challenge = List.first(Challenges.admin_all())
+    {:ok, [parent_field]} =
+      Challenges.admin_all()
+      |> List.first()
+      |> Map.fetch(field)
 
-    parent_field =
-      case Map.fetch(challenge, field) do
-        {:ok, data} -> data
-        :error -> nil
-      end
+    key = Map.get(parent_field, nested_field)
 
-    # Check if parent_field is a list and get the first item if it is
-    parent_map =
-      if is_list(parent_field) do
-        List.first(parent_field)
-      else
-        parent_field
-      end
+    assert(key =~ value)
+  end
 
-    # Perform the assertion only if parent_map is not nil
-    if not is_nil(parent_map) do
-      actual_value = Map.get(parent_map, nested_field)
-      # Only assert the actual_value if not nil
-      if not is_nil(actual_value) do
-        assert actual_value =~ value
-      end
+  # Check if parent_field is a list and get the first item if it is
+  parent_map =
+    if is_list(parent_field) do
+      List.first(parent_field)
+    else
+      parent_field
+    end
+
+  # Perform the assertion only if parent_map is not nil
+  if not is_nil(parent_map) do
+    actual_value = Map.get(parent_map, nested_field)
+    # Only assert the actual_value if not nil
+    if not is_nil(actual_value) do
+      assert actual_value =~ value
     end
   end
+end
 
-  defp set_date_picker(days) do
-    {:ok, start_date_picker} =
-      Timex.now()
-      |> Timex.shift(days)
-      |> Timex.format("{YYYY}-{0M}-{0D}T{0h12}:{m}")
+defp set_date_picker(days) do
+  {:ok, start_date_picker} =
+    Timex.now()
+    |> Timex.shift(days)
+    |> Timex.format("{YYYY}-{0M}-{0D}T{0h12}:{m}")
 
-    start_date_picker
-  end
+  start_date_picker
+end
 
-  defp set_date(days) do
-    {:ok, start_date} =
-      Timex.now()
-      |> Timex.shift(days)
-      |> Timex.format("{YYYY}-{0M}-{0D} {0h12}:{m}:{s}Z")
+defp set_date(days) do
+  {:ok, start_date} =
+    Timex.now()
+    |> Timex.shift(days)
+    |> Timex.format("{YYYY}-{0M}-{0D} {0h12}:{m}:{s}Z")
 
-    start_date
-  end
+  start_date
 end
