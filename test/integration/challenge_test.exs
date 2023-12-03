@@ -130,7 +130,9 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
   defp complete_how_to_enter_section(session) do
     session
-    |> click(Query.radio_button("submission_collection_method", "internal"))
+    #|> click(Query.radio_button("submission_collection_method", "internal"))
+    #|> click(Query.radio_button("submission_collection_method", value: "internal", visible: true))
+    |> click(radio_button("via Challenge.gov"))
 
     # Continue with the rest of the test flow
     |> touch_scroll(button("Next"), 0, 1)
