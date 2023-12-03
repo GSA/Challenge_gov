@@ -8,17 +8,17 @@ defmodule ChallengeGov.LoginGov do
   alias ChallengeGov.LoginGov.Token
 
   def get_well_known_configuration(idp_authorize_url) do
-    # idp_authorize_url
-    # |> uri_join("/.well-known/openid-configuration")
-    # |> get()
-    # |> handle_response("Sorry, could not fetch well known configuration")
+    idp_authorize_url
+    |> uri_join("/.well-known/openid-configuration")
+    |> get()
+    |> handle_response("Sorry, could not fetch well known configuration")
 
-    get("#{idp_authorize_url}/.well-known/openid-configuration", [], adapter: :hackney)
+    # get("#{idp_authorize_url}/.well-known/openid-configuration", [], adapter: :hackney)
   end
 
   def get_public_key(jwks_uri) do
     jwks_uri
-    |> get([], adapter: :hackney)
+    |> get()
     |> handle_response("Sorry, could not fetch public key")
     |> case do
       {:ok, body} -> {:ok, body |> Map.fetch!("keys") |> List.first()}
@@ -141,23 +141,24 @@ defmodule ChallengeGov.LoginGov do
   #   ]
   # end
 
-  # def process_request_options(options) do
-  #   # [
-  #   #   {:proxy,
-  #   #    {:socks5,
-  #   #     ~c"https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}",
-  #   #     61_443}}
-  #   # ]
+  def process_request_options(options) do
+    #   # [
+    #   #   {:proxy,
+    #   #    {:socks5,
+    #   #     ~c"https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}",
+    #   #     61_443}}
+    #   # ]
 
-  #   # [
-  #   #   {:proxy,
-  #   #    "https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}:61443"}
-  #   # ]
-  #   [
-  #     {:proxy,
-  #      "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"}
-  #   ]
-  # end
+    #   # [
+    #   #   {:proxy,
+    #   #    "https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}:61443"}
+    #   # ]
+    [
+      {:proxy,
+       "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443",
+       ssl: [verify: :verify_none]}
+    ]
+  end
 
   def process_response_body(body) do
     Poison.decode!(body)
