@@ -131,6 +131,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   defp complete_how_to_enter_section(session) do
     verify_previous_section(:phases, :judging_criteria, "Judging criteria described here.")
 
+    # Wait for radio buttons to be actionable with a specific timeout.
     session
     |> assert_has(Query.radio_button("submission_collection_method", value: "internal"),
       timeout: 10_000
