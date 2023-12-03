@@ -132,9 +132,9 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     verify_previous_section(:phases, :judging_criteria, "Judging criteria described here.")
 
     session
-    # add a delay to ensure the radio buttons are rendered
-    |> execute_script("setTimeout(_ => {}, 1000);")
-    # Select the "internal" radio button
+    |> assert_has(Query.radio_button("submission_collection_method", value: "internal"),
+      timeout: 10_000
+    )
     |> click(Query.radio_button("submission_collection_method", value: "internal"))
     |> populate_markdown_field("How to enter described here.")
     |> touch_scroll(button("Next"), 0, 1)
