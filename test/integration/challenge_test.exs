@@ -132,7 +132,8 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     # Click on the radio button to select the challenge.gov submission method
 
     session
-    |> find(Query.css("#submission_collection_method"))  # Update the selector
+    # Update the selector
+    |> find(Query.css("#submission_collection_method"))
     |> Wallaby.Element.click()
     # Proceed to the next section
     |> touch_scroll(button("Next"), 0, 1)
@@ -202,11 +203,12 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   defp verify_previous_section(field, nested_field, value) do
     # This line fetches the challenge data; ensure it's correctly fetching the data
     challenge = List.first(Challenges.admin_all())
-    parent_field = Map.fetch!(challenge, field)  # Used fetch! to be explicit about expecting the data
-    
+    # Used fetch! to be explicit about expecting the data
+    parent_field = Map.fetch!(challenge, field)
+
     # Check if either the parent field or value fetched from it is nil before the assertion
     actual_value = Map.get(parent_field, nested_field)
-    
+
     # Only assert if actual_value is not nil
     if actual_value do
       assert(actual_value =~ value)
