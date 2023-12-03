@@ -141,9 +141,10 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   defp complete_how_to_enter_section(session) do
     # Fill in the required details for the 'How to Enter' section, as per the new form
     session
-    |> click(radio_button("submission_collection_method_internal")) # Assume internal method is default for the test
-    #|> populate_markdown_field("How to enter described here.")
-    
+    # Assume internal method is default for the test
+    |> click(radio_button("submission_collection_method_internal"))
+    # |> populate_markdown_field("How to enter described here.")
+
     # If you have UI elements that need interaction to show `file_upload_required` checkbox and `upload_instruction_note` input
     # You will need to interact with those elements as necessary.
 
