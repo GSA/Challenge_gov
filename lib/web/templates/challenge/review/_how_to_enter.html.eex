@@ -20,3 +20,36 @@
   <div class="text-bold">How to enter link:</div>
   <div><%= @challenge.how_to_enter_link %></div>
 </div>
+<br/>
+<div>
+  <%= if @challenge.submission_collection_method == "internal" do %>
+    <div class="text-bold">Submission Handling:</div>
+    <div>
+      <%= case @challenge.submission_collection_method do
+        "internal" -> "Challenge.Gov Managed"
+        _ -> @challenge.submission_collection_method
+      end %>
+    </div>
+    <br />
+    <div class="text-bold">File Upload Required:</div>
+    <div><%= @challenge.file_upload_required %></div>
+    <br />
+    <div class="text-bold">Upload Instruction Note:</div>
+    <div><%= @challenge.upload_instruction_note %></div>
+    <br />    
+  <% else %>
+    <%= if @challenge.submission_collection_method == "external" do %>
+      <div class="text-bold">Submission Handling:</div>
+      <div>
+        <%= case @challenge.submission_collection_method do
+          "external" -> "External Submission Site"
+          _ -> @challenge.submission_collection_method
+        end %>
+      </div>
+      <br />
+      <div class="text-bold">External Submission Link:</div>
+      <div><%= @challenge.how_to_enter_link %></div>
+      <br />
+    <% end %>
+  <% end %>
+</div>

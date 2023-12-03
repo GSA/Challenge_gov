@@ -121,10 +121,7 @@ defmodule ChallengeGov.SubmissionsTest do
       submission = SubmissionHelpers.create_draft_submission(%{}, user, challenge, phase)
 
       {:ok, updated_submission} =
-        Submissions.update_draft(
-          submission,
-          %{"title" => nil}
-        )
+        Submissions.update_draft(submission, %{"title" => nil}, challenge)
 
       assert updated_submission.submitter_id === user.id
       assert updated_submission.challenge_id === challenge.id
@@ -142,12 +139,7 @@ defmodule ChallengeGov.SubmissionsTest do
       submission = SubmissionHelpers.create_draft_submission(%{}, user, challenge)
 
       {:ok, updated_submission} =
-        Submissions.update_draft(
-          submission,
-          %{
-            "title" => "New Test Title"
-          }
-        )
+        Submissions.update_draft(submission, %{"title" => "New Test Title"}, challenge)
 
       assert updated_submission.submitter_id === user.id
       assert updated_submission.challenge_id === challenge.id
@@ -181,11 +173,7 @@ defmodule ChallengeGov.SubmissionsTest do
 
       submission = SubmissionHelpers.create_draft_submission(%{}, user, challenge)
 
-      {:error, changeset} =
-        Submissions.update_review(
-          submission,
-          %{"title" => nil}
-        )
+      {:error, changeset} = Submissions.update_review(submission, %{"title" => nil}, challenge)
 
       assert changeset.errors[:title]
     end
@@ -207,7 +195,8 @@ defmodule ChallengeGov.SubmissionsTest do
       {:ok, updated_submission} =
         Submissions.update_review(
           submission,
-          %{"title" => "New Test Title", "terms_accepted" => "true", "review_verified" => "true"}
+          %{"title" => "New Test Title", "terms_accepted" => "true", "review_verified" => "true"},
+          challenge
         )
 
       {:ok, updated_submission} = Submissions.submit(updated_submission)
@@ -232,11 +221,8 @@ defmodule ChallengeGov.SubmissionsTest do
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
 
-      {:error, changeset} =
-        Submissions.update_review(
-          submission,
-          %{"title" => nil}
-        )
+      # Submissions.update_review(submission, %{"title" => nil})
+      {:error, changeset} = Submissions.update_review(submission, %{"title" => nil}, challenge)
 
       assert changeset.errors[:title]
     end
