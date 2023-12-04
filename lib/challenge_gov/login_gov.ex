@@ -178,7 +178,7 @@ defmodule ChallengeGov.LoginGov do
     [
       {:proxy,
        {:http,
-        "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal",
+        "0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal",
         61_443}}
     ]
 
