@@ -10,16 +10,15 @@ defmodule ChallengeGov.LoginGov do
   def get_well_known_configuration(idp_authorize_url) do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
-    |> get()
-
-    # |> handle_response("Sorry, could not fetch well known configuration")
+    |> !get()
+    |> handle_response("Sorry, could not fetch well known configuration")
 
     # get("#{idp_authorize_url}/.well-known/openid-configuration", [], adapter: :hackney)
   end
 
   def get_public_key(jwks_uri) do
     jwks_uri
-    |> get()
+    |> !get()
     |> handle_response("Sorry, could not fetch public key")
     |> case do
       {:ok, body} -> {:ok, body |> Map.fetch!("keys") |> List.first()}
