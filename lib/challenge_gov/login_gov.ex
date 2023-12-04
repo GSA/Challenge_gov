@@ -159,10 +159,15 @@ defmodule ChallengeGov.LoginGov do
        "0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
       hackney: [
         ssl_options: [
+          verify: :verify_peer,
+          crl_check: :peer,
           versions: [:"tlsv1.2", :"tlsv1.3"],
           ciphers: :ssl.cipher_suites(:default, :"tlsv1.3"),
           cacertfile: :certifi.cacertfile(),
-          depth: 3
+          depth: 3,
+          customize_hostname_check: [
+            match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
+          ]
         ]
       ]
 
