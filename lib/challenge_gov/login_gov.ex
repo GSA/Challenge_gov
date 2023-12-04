@@ -160,7 +160,6 @@ defmodule ChallengeGov.LoginGov do
       hackney: [
         ssl_options: [
           versions: [:"tlsv1.2", :"tlsv1.3"],
-          ciphers: "TLS_AES_256_GCM_SHA384",
           ciphers: :ssl.cipher_suites(:default, :"tlsv1.3"),
           cacertfile: :certifi.cacertfile(),
           depth: 3
