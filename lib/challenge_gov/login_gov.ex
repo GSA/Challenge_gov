@@ -25,7 +25,7 @@ defmodule ChallengeGov.LoginGov do
       [],
       stream_to: self(),
       proxy:
-        {"http://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
+        {"https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
       hackney: [
         ssl_options: [
           versions: [:"tlsv1.2", :"tlsv1.3"],
