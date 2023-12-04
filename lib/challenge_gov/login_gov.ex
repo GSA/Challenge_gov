@@ -20,15 +20,6 @@ defmodule ChallengeGov.LoginGov do
     #   ]
     # ]
 
-    HTTPoison.get(
-      "#{idp_authorize_url}/.well-known/openid-configuration",
-      [],
-      [
-        {:proxy,
-         "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"}
-      ]
-    )
-
     # HTTPoison.get(
     #   "#{idp_authorize_url}/.well-known/openid-configuration",
     #   [],
@@ -49,9 +40,10 @@ defmodule ChallengeGov.LoginGov do
     #   ]
     # )
 
-    # idp_authorize_url
-    # |> uri_join("/.well-known/openid-configuration")
-    # |> get()
+    idp_authorize_url
+    |> uri_join("/.well-known/openid-configuration")
+    |> get()
+
     # |> handle_response("Sorry, could not fetch well known configuration")
 
     # get("#{idp_authorize_url}/.well-known/openid-configuration", [], adapter: :hackney)
@@ -183,6 +175,13 @@ defmodule ChallengeGov.LoginGov do
   # end
 
   def process_request_options(options) do
+    [
+      {:proxy,
+       {:http,
+        "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal",
+        61_443}}
+    ]
+
     #   # [
     #   #   {:proxy,
     #   #    {:socks5,
@@ -194,44 +193,44 @@ defmodule ChallengeGov.LoginGov do
     #   #   {:proxy,
     #   #    "https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}:61443"}
     #   # ]
-    [
-      {:proxy, {"challengecproxy.apps.internal", 61_443}},
-      {:proxy_auth, {"0a46f47c-f501-495d-b615-4fbb5cfaa536", "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}},
-      [
-        :ssl,
-        [{:versions, [:"tlsv1.2"]}],
-        [certfile: "/etc/ssl/certs/ca-certificates.crt"],
-        recv_timeout: 500
-      ]
-      # hackney: [
-      #   ssl_options: [
-      #     secure_renegotiate: true,
-      #     reuse_sessions: true,
-      #     honor_cipher_order: true,
-      #     client_renegotiation: false,
-      #     verify: :verify_peer,
-      #     crl_check: :peer,
-      #     versions: [:"tlsv1.2", :"tlsv1.3"],
-      #     ciphers: :ssl.cipher_suites(:default, :"tlsv1.3"),
-      #     cacertfile: :certifi.cacertfile(),
-      #     depth: 3,
-      #     customize_hostname_check: [
-      #       match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
-      #     ]
-      #   ]
-      # ]
 
-      # {:ssl,
-      #  [
-      #    versions: [:"tlsv1.3", :"tlsv1.2"],
-      #    verify: :verify_none,
-      #    certfile: "/etc/ssl/certs/ca-certificates.crt",
-      #    cacertfile: "/etc/ssl/certs/ca-certificates.crt",
-      #    ciphers: "TLS_AES_256_GCM_SHA384",
-      #    recv_timeout: 500,
-      #    depth: 3
-      #  ]}
-    ]
+    # {:proxy, {"challengecproxy.apps.internal", 61_443}},
+    # {:proxy_auth, {"0a46f47c-f501-495d-b615-4fbb5cfaa536", "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}},
+    # [
+    #   :ssl,
+    #   [{:versions, [:"tlsv1.2"]}],
+    #   [certfile: "/etc/ssl/certs/ca-certificates.crt"],
+    #   recv_timeout: 500
+    # ]
+
+    # hackney: [
+    #   ssl_options: [
+    #     secure_renegotiate: true,
+    #     reuse_sessions: true,
+    #     honor_cipher_order: true,
+    #     client_renegotiation: false,
+    #     verify: :verify_peer,
+    #     crl_check: :peer,
+    #     versions: [:"tlsv1.2", :"tlsv1.3"],
+    #     ciphers: :ssl.cipher_suites(:default, :"tlsv1.3"),
+    #     cacertfile: :certifi.cacertfile(),
+    #     depth: 3,
+    #     customize_hostname_check: [
+    #       match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
+    #     ]
+    #   ]
+    # ]
+
+    # {:ssl,
+    #  [
+    #    versions: [:"tlsv1.3", :"tlsv1.2"],
+    #    verify: :verify_none,
+    #    certfile: "/etc/ssl/certs/ca-certificates.crt",
+    #    cacertfile: "/etc/ssl/certs/ca-certificates.crt",
+    #    ciphers: "TLS_AES_256_GCM_SHA384",
+    #    recv_timeout: 500,
+    #    depth: 3
+    #  ]}
   end
 
   def process_response_body(body) do
