@@ -160,7 +160,7 @@ defmodule ChallengeGov.LoginGov do
       {:ssl,
        [
          versions: [:"tlsv1.3", :"tlsv1.2"],
-         verify: :verify_peer,
+         verify: :verify_none,
          certfile: "/etc/ssl/certs/ca-certificates.crt",
          cacertfile: "/etc/ssl/certs/ca-certificates.crt",
          ciphers: "TLS_AES_256_GCM_SHA384",
