@@ -8,15 +8,23 @@ defmodule ChallengeGov.LoginGov do
   alias ChallengeGov.LoginGov.Token
 
   def get_well_known_configuration(idp_authorize_url) do
-    options = [ {:proxy, "0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443" },
-                [:ssl,{
-                  [versions: [:"tlsv1.2", :"tlsv1.3"]],
-                  [certfile: "/etc/ssl/certs/ca-certificates.crt"]
-                }
-               ]
-              ]
+    options = [
+      {:proxy,
+       "0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
+      [
+        :ssl,
+        {
+          [versions: [:"tlsv1.2", :"tlsv1.3"]],
+          [certfile: "/etc/ssl/certs/ca-certificates.crt"]
+        }
+      ]
+    ]
 
-    get("#{idp_authorize_url}/.well-known/openid-configuration", [{"Content-Type", "application/json"}], options)
+    get(
+      "#{idp_authorize_url}/.well-known/openid-configuration",
+      [{"Content-Type", "application/json"}],
+      options
+    )
 
     # idp_authorize_url
     # |> uri_join("/.well-known/openid-configuration")
