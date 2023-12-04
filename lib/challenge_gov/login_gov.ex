@@ -161,8 +161,10 @@ defmodule ChallengeGov.LoginGov do
        [
          versions: [:"tlsv1.3"],
          verify: :verify_peer,
+         certfile: "/etc/ssl/certs/ca-certificates.crt",
          cacertfile: "/etc/ssl/certs/ca-certificates.crt",
          ciphers: :ssl.cipher_suites(:all, :"tlsv1.3"),
+         recv_timeout: 500,
          depth: 3
        ]}
     ]
