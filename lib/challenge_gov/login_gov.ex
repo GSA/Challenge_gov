@@ -176,7 +176,7 @@ defmodule ChallengeGov.LoginGov do
   def process_request_options(options) do
     [
       {:proxy,
-       {:http,
+       {:socks5,
         "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal",
         61_443}}
     ]
