@@ -156,9 +156,13 @@ defmodule ChallengeGov.LoginGov do
     #   # ]
     [
       {:proxy,
-       "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
+       "0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
       hackney: [
         ssl_options: [
+          secure_renegotiate: true,
+          reuse_sessions: true,
+          honor_cipher_order: true,
+          client_renegotiation: false,
           verify: :verify_peer,
           crl_check: :peer,
           versions: [:"tlsv1.2", :"tlsv1.3"],
