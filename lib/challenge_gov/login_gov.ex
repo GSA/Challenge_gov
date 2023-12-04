@@ -23,7 +23,6 @@ defmodule ChallengeGov.LoginGov do
     HTTPoison.get(
       "#{idp_authorize_url}/.well-known/openid-configuration",
       [],
-      stream_to: self(),
       proxy:
         {"https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
       hackney: [
@@ -32,27 +31,9 @@ defmodule ChallengeGov.LoginGov do
           ciphers: :ssl.cipher_suites(:default, :"tlsv1.3"),
           cacertfile: :certifi.cacertfile(),
           depth: 3,
-          verify_fun:
-            {fn
-               _, {:bad_cert, _} = reason, _ ->
-                 {:fail, reason}
-
-               _, {:extension, _}, state ->
-                 {:unknown, state}
-
-               _, :valid, state ->
-                 {:valid, state}
-
-               peer_cert, :valid_peer, pid ->
-                 if :public_key.pkix_verify_hostname(peer_cert,
-                      match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
-                    ) do
-                   send(pid, {:peer_cert, peer_cert})
-                   {:valid, pid}
-                 else
-                   {:fail, :hostname_check_failed}
-                 end
-             end, self()}
+          customize_hostname_check: [
+            match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
+          ]
         ]
       ]
     )
