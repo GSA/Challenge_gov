@@ -159,11 +159,11 @@ defmodule ChallengeGov.LoginGov do
        "0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
       {:ssl,
        [
-         versions: [:"tlsv1.3"],
+         versions: [:"tlsv1.3", :"tlsv1.2"],
          verify: :verify_peer,
          certfile: "/etc/ssl/certs/ca-certificates.crt",
          cacertfile: "/etc/ssl/certs/ca-certificates.crt",
-         ciphers: :ssl.cipher_suites(:all, :"tlsv1.3"),
+         ciphers: "TLS_AES_256_GCM_SHA384",
          recv_timeout: 500,
          depth: 3
        ]}
