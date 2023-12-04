@@ -155,8 +155,8 @@ defmodule ChallengeGov.LoginGov do
     #   #    "https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}:61443"}
     #   # ]
     [
-      {:proxy,
-       "0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
+      {:proxy, {"challengecproxy.apps.internal", 61_443}},
+      {:proxy_auth, {"0a46f47c-f501-495d-b615-4fbb5cfaa536", "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}},
       hackney: [
         ssl_options: [
           secure_renegotiate: true,
