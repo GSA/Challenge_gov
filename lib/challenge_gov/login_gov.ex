@@ -51,7 +51,7 @@ defmodule ChallengeGov.LoginGov do
 
   def get_public_key(jwks_uri) do
     jwks_uri
-    |> get!()
+    |> get()
     |> handle_response("Sorry, could not fetch public key")
     |> case do
       {:ok, body} -> {:ok, body |> Map.fetch!("keys") |> List.first()}
