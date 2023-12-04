@@ -156,7 +156,13 @@ defmodule ChallengeGov.LoginGov do
     #   # ]
     [
       {:proxy, {"challengecproxy.apps.internal", 61_443}},
-      {:proxy_auth, {"0a46f47c-f501-495d-b615-4fbb5cfaa536", "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}}
+      {:proxy_auth, {"0a46f47c-f501-495d-b615-4fbb5cfaa536", "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}},
+      [
+        :ssl,
+        [{:versions, [:"tlsv1.2"]}],
+        [certfile: "/etc/ssl/certs/ca-certificates.crt"],
+        recv_timeout: 500
+      ]
       # hackney: [
       #   ssl_options: [
       #     secure_renegotiate: true,
