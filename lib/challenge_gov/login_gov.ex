@@ -157,16 +157,25 @@ defmodule ChallengeGov.LoginGov do
     [
       {:proxy,
        "0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
-      {:ssl,
-       [
-         versions: [:"tlsv1.3", :"tlsv1.2"],
-         verify: :verify_none,
-         certfile: "/etc/ssl/certs/ca-certificates.crt",
-         cacertfile: "/etc/ssl/certs/ca-certificates.crt",
-         ciphers: "TLS_AES_256_GCM_SHA384",
-         recv_timeout: 500,
-         depth: 3
-       ]}
+      hackney: [
+        ssl_options: [
+          versions: [:"tlsv1.2", :"tlsv1.3"],
+          ciphers: :ssl.cipher_suites(:default, :"tlsv1.2", :"tlsv1.3"),
+          cacertfile: :certifi.cacertfile(),
+          depth: 3
+        ]
+      ]
+
+      # {:ssl,
+      #  [
+      #    versions: [:"tlsv1.3", :"tlsv1.2"],
+      #    verify: :verify_none,
+      #    certfile: "/etc/ssl/certs/ca-certificates.crt",
+      #    cacertfile: "/etc/ssl/certs/ca-certificates.crt",
+      #    ciphers: "TLS_AES_256_GCM_SHA384",
+      #    recv_timeout: 500,
+      #    depth: 3
+      #  ]}
     ]
   end
 
