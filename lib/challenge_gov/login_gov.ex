@@ -156,13 +156,13 @@ defmodule ChallengeGov.LoginGov do
     #   # ]
     [
       {:proxy,
-       "0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
+       "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@challengecproxy.apps.internal:61443"},
       {:ssl,
        [
-         versions: [:"tlsv1.2"],
+         versions: [:"tlsv1.3"],
          verify: :verify_peer,
          cacertfile: "/etc/ssl/certs/ca-certificates.crt",
-         ciphers: :ssl.cipher_suites(:all, :"tlsv1.2"),
+         ciphers: :ssl.cipher_suites(:all, :"tlsv1.3"),
          depth: 3
        ]},
       {:hackney, [ssl_options: [verify: :verify_none]]}
