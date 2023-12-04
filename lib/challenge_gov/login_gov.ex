@@ -43,8 +43,7 @@ defmodule ChallengeGov.LoginGov do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
     |> get()
-
-    # |> handle_response("Sorry, could not fetch well known configuration")
+    |> handle_response("Sorry, could not fetch well known configuration")
 
     # get("#{idp_authorize_url}/.well-known/openid-configuration", [], adapter: :hackney)
   end
