@@ -164,8 +164,7 @@ defmodule ChallengeGov.LoginGov do
          cacertfile: "/etc/ssl/certs/ca-certificates.crt",
          ciphers: :ssl.cipher_suites(:all, :"tlsv1.3"),
          depth: 3
-       ]},
-      {:hackney, [ssl_options: [verify: :verify_none]]}
+       ]}
     ]
   end
 
