@@ -7,7 +7,53 @@ defmodule ChallengeGov.LoginGov do
 
   alias ChallengeGov.LoginGov.Token
 
+  # defp default_ssl_options() do
+  #   [
+  #     {:versions, [:"tlsv1.2", :"tlsv1.3"]},
+  #     {:verify, :verify_none},
+  #     {:cacertfile, :certifi.cacertfile()},
+  #     {:depth, 10},
+  #     {:customize_hostname_check,
+  #      [
+  #        match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
+  #      ]}
+  #   ]
+  # end
+
   def get_well_known_configuration(idp_authorize_url) do
+
+    opts = [proxy: "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@127.0.0.1:62443"]
+
+    proxy_host = "https://127.0.0.1/"
+    proxy_port = 62443
+    proxy_user = "0a46f47c-f501-495d-b615-4fbb5cfaa536"
+    proxy_pass = "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"
+
+    #options = [proxy: "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@127.0.0.1:62443"]
+
+    options = [
+    ssl: [{:verions, [:"tlsv1.2", :"tlsv1.3"]},
+      {:verify, :verify_none},
+      {:"verify_fun", {HTTPoison.SSL, :verify_none, []}}
+    ],
+    #ssl_orverride: [{:verify, :verify_none}],
+    socks5_user: proxy_user,
+    socks5_pass: proxy_pass,
+    proxy: {:socks5, proxy_host, proxy_port}
+    #proxy_auth: {proxy_user, proxy_pass}
+    ]
+
+    IO.inspect System.get_env("HTTPS_PROXY"), label: " This is the proxy -------->"
+    options = [{:socks5, "https://challengecproxy.apps.internal", 61_443},
+    {:socks5_user, "0a46f47c-f501-495d-b615-4fbb5cfaa536"},
+    {:socks5_pass, "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}]
+
+    #:hackney_trace.enable(:max, :io)
+    request = get("https://www.google.gov", [], options)
+    now = DateTime.to_string(DateTime.utc_now)
+    IO.inspect now, label: "Time: "
+    IO.inspect request, label: " <--------------------------"
+
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
     |> get()
@@ -117,6 +163,24 @@ defmodule ChallengeGov.LoginGov do
     uri
     |> URI.merge(path)
     |> URI.to_string()
+  end
+
+  def process_response_headers() do
+  [{"Content-type", "application/json"}]
+  end
+
+  def process_request_options(options) do
+    options
+    # [{:proxy, "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@127.0.0.1:62443"},
+    # ssl: [verify: :verify_none]
+    # ]
+
+    # [
+    #   :proxy, {"https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@127.0.0.1", 62_443},
+    #   :ssl {}
+    #   # {:socks5_user, "0a46f47c-f501-495d-b615-4fbb5cfaa536"},
+    #   # {:socks5_pass, "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}
+    # ]
   end
 
   def process_response_body(body) do
