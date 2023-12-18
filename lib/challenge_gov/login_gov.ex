@@ -219,16 +219,15 @@ defmodule ChallengeGov.LoginGov do
     #   ]
     # ]
 
-    {:ssl,
-     [
-       versions: [:"tlsv1.3", :"tlsv1.2"],
-       verify: :verify_none,
-       certfile: "/etc/cf-instance-credentials/instance.crt",
-       cacertfile: "/etc/cf-instance-credentials/instance.crt",
-       ciphers: "TLS_AES_256_GCM_SHA384",
-       recv_timeout: 500,
-       depth: 3
-     ]}
+    [
+      :ssl,
+      {
+        [versions: [:"tlsv1.2", :"tlsv1.3"]],
+        [verify: :verify_none],
+        [certfile: "/etc/cf-instance-credentials/instance.crt"],
+        [cacertfile: "/etc/cf-instance-credentials/instance.crt"]
+      }
+    ]
   end
 
   def process_response_body(body) do
