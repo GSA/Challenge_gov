@@ -173,63 +173,63 @@ defmodule ChallengeGov.LoginGov do
   #   ]
   # end
 
-  # def process_request_options(options) do
-  # [
-  #   {:socks5, "https://127.0.0.1", 62_443},
-  #   {:socks5_user, "0a46f47c-f501-495d-b615-4fbb5cfaa536"},
-  #   {:socks5_pass, "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}
-  # ]
+  def process_request_options(options) do
+    # [
+    #   {:socks5, "https://127.0.0.1", 62_443},
+    #   {:socks5_user, "0a46f47c-f501-495d-b615-4fbb5cfaa536"},
+    #   {:socks5_pass, "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}
+    # ]
 
-  #   # [
-  #   #   {:proxy,
-  #   #    {:socks5,
-  #   #     ~c"https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}",
-  #   #     61_443}}
-  #   # ]
+    #   # [
+    #   #   {:proxy,
+    #   #    {:socks5,
+    #   #     ~c"https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}",
+    #   #     61_443}}
+    #   # ]
 
-  #   # [
-  #   #   {:proxy,
-  #   #    "https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}:61443"}
-  #   # ]
+    #   # [
+    #   #   {:proxy,
+    #   #    "https://#{Application.get_env(:challenge_gov, :http_proxy_user)}:#{Application.get_env(:challenge_gov, :http_proxy_pass)}@#{Application.get_env(:challenge_gov, :http_proxy)}:61443"}
+    #   # ]
 
-  # {:proxy, {"challengecproxy.apps.internal", 61_443}},
-  # {:proxy_auth, {"0a46f47c-f501-495d-b615-4fbb5cfaa536", "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}},
-  # [
-  #   :ssl,
-  #   [{:versions, [:"tlsv1.2"]}],
-  #   [certfile: "/etc/ssl/certs/ca-certificates.crt"],
-  #   recv_timeout: 500
-  # ]
+    # {:proxy, {"challengecproxy.apps.internal", 61_443}},
+    # {:proxy_auth, {"0a46f47c-f501-495d-b615-4fbb5cfaa536", "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}},
+    # [
+    #   :ssl,
+    #   [{:versions, [:"tlsv1.2"]}],
+    #   [certfile: "/etc/ssl/certs/ca-certificates.crt"],
+    #   recv_timeout: 500
+    # ]
 
-  # hackney: [
-  #   ssl_options: [
-  #     secure_renegotiate: true,
-  #     reuse_sessions: true,
-  #     honor_cipher_order: true,
-  #     client_renegotiation: false,
-  #     verify: :verify_peer,
-  #     crl_check: :peer,
-  #     versions: [:"tlsv1.2", :"tlsv1.3"],
-  #     ciphers: :ssl.cipher_suites(:default, :"tlsv1.3"),
-  #     cacertfile: :certifi.cacertfile(),
-  #     depth: 3,
-  #     customize_hostname_check: [
-  #       match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
-  #     ]
-  #   ]
-  # ]
+    # hackney: [
+    #   ssl_options: [
+    #     secure_renegotiate: true,
+    #     reuse_sessions: true,
+    #     honor_cipher_order: true,
+    #     client_renegotiation: false,
+    #     verify: :verify_peer,
+    #     crl_check: :peer,
+    #     versions: [:"tlsv1.2", :"tlsv1.3"],
+    #     ciphers: :ssl.cipher_suites(:default, :"tlsv1.3"),
+    #     cacertfile: :certifi.cacertfile(),
+    #     depth: 3,
+    #     customize_hostname_check: [
+    #       match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
+    #     ]
+    #   ]
+    # ]
 
-  # {:ssl,
-  #  [
-  #    versions: [:"tlsv1.3", :"tlsv1.2"],
-  #    verify: :verify_none,
-  #    certfile: "/etc/ssl/certs/ca-certificates.crt",
-  #    cacertfile: "/etc/ssl/certs/ca-certificates.crt",
-  #    ciphers: "TLS_AES_256_GCM_SHA384",
-  #    recv_timeout: 500,
-  #    depth: 3
-  #  ]}
-  # end
+    {:ssl,
+     [
+       versions: [:"tlsv1.3", :"tlsv1.2"],
+       verify: :verify_none,
+       certfile: "/etc/cf-instance-credentials/instance.crt",
+       cacertfile: "/etc/cf-instance-credentials/instance.crt",
+       ciphers: "TLS_AES_256_GCM_SHA384",
+       recv_timeout: 500,
+       depth: 3
+     ]}
+  end
 
   def process_response_body(body) do
     Poison.decode!(body)
