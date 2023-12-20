@@ -11,7 +11,8 @@ config :challenge_gov,
   namespace: Web,
   ecto_repos: [ChallengeGov.Repo]
 
-# config :ssl, :cacertfile, "/etc/ssl/certs/ca-certificates.crt",
+config :ssl, :cacertfile, "/etc/ssl/certs/ca-certificates.crt"
+
 # certfile: System.get_env("SSL_CERT_FILE") || "/path/to/default/certificate.pem"
 
 # Configures the endpoint
