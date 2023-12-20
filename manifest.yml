@@ -21,6 +21,7 @@ applications:
     HTTP_PROXY: ((CADDY_PROXY))
     https_proxy: ((CADDY_PROXY))
     http_proxy: ((CADDY_PROXY))
+    REQUESTS_CA_BUNDLE: '/etc/ssl/certs/ca-certificates.crt'
     NO_PROXY: '*.repo.hex.pm'
     no_proxy: '*.repo.hex.pm'
     HEX_UNSAFE_HTTPS: "1"
