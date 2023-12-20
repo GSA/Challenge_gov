@@ -164,14 +164,9 @@ defmodule ChallengeGov.LoginGov do
   #   ]
   # end
 
-  # def process_request_options(options) do
-  #   [
-  #     {:proxy, "#{Application.get_env(:challenge_gov, :http_proxy)}"},
-  #     {:proxy_auth,
-  #     {Application.get_env(:challenge_gov, :http_proxy_user),
-  #      Application.get_env(:challenge_gov, :http_proxy_pass)}}
-  #   ]
-  # end
+  def process_request_options(options) do
+    [ssl: [certfile: "/etc/ssl/certs/ca-certificates.crt"]]
+  end
 
   # def process_request_options(options) do
   # [
