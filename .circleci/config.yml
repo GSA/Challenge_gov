@@ -155,7 +155,6 @@ jobs:
           at: ~/project
       - run: echo -e $DEV_PRIVATE_KEY > dev_key.pem
       - run: echo -e $DEV_PUBLIC_CERT > dev_cert.pem
-      - run: echo 'export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt'
       - run: echo 'export CF_PASSWORD=$CF_PASSWORD_DEV' >> $BASH_ENV
       - run: echo 'export CF_USERNAME=$CF_USERNAME_DEV' >> $BASH_ENV
       - run:

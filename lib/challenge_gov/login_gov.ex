@@ -225,7 +225,7 @@ defmodule ChallengeGov.LoginGov do
   #   ]
   # end
 
-  def process_response_body(body) do
-    Poison.decode!(body)
-  end
+  # def process_response_body(body) do
+  #   Poison.decode!(body)
+  # end
 end
