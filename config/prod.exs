@@ -15,6 +15,10 @@ config :challenge_gov, Web.Endpoint,
   force_ssl: [rewrite_on: [:x_forwarded_proto], hsts: true, preload: true, host: nil],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: System.get_env("SECRET_KEY_BASE")
+  https: [
+    # Key for intermediate certificates:
+    cacertfile: "/etc/ssl/certs/ca-certificates.crt"
+  ]
 
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
