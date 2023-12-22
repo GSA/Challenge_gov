@@ -83,7 +83,7 @@ defmodule ChallengeGov.MixProject do
       {:stein, "~> 0.5"},
       {:stein_storage, "~> 0.1"},
       {:sweet_xml, "~> 0.6.6"},
-      {:text_delta, "~> 1.1.0"},
+      {:text_delta, "~> 1.4.0"},
       {:timex, "~> 3.5"},
       {:waffle, "~> 1.1.5"},
       {:waffle_ecto, "~> 0.0.11"},
