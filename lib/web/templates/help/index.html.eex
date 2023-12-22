@@ -3,78 +3,111 @@
     <%= SharedView.render_breadcrumbs([
       %{text: "Home", route: Routes.dashboard_path(Web.Endpoint, :index)},
       %{text: "Help"},
-    ])%>
+      ])%>
+    </div>
   </div>
-</div>
 
-<div class="content-header">
-  <div class="container-fluid">
-    <div class="grid-row margin-bottom-2">
-      <div class="grid-col-6">
-        <h1 class="margin-0 text-dark">
-          <span>Help</span>
-        </h1>
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="grid-row margin-bottom-2">
+        <div class="grid-col-6">
+          <h1 class="margin-0 text-dark">
+            <span>Help</span>
+          </h1>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<section class="content help-page">
-  <div class="container-fluid">
-    <div class="grid-row">
-      <div class="grid-col-12">
-        <div class="grid-container padding-1 my-5 mx-auto margin-bottom-2">
-          <div class="usa-card__container">
-          <h2 class="text-center margin-bottom-1 font-ui-xl">Getting started</h2>
-          <div class="grid-row  margin-top-1 help-page__getting-started-content">
-            <div class="text-center grid-col-6 dhelp-card__section padding-2">
-              <svg class="usa-icon dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
-                <use xlink:href="/assets/img/sprite.svg#help"></use>
-              </svg>
-              <h3 class="margin-2">FAQs</h3>
-              <p>Check out our <%= link("frequently asked questions", to: "https://www.challenge.gov/cm-user-faqs/", target: "_blank") %> on challenge and submission management.</p>
+  <section class="content help-page">
+
+    <div class="container-fluid">
+      <div class="grid-row">
+
+        <div class="grid-col-12">
+          <div class="grid-container padding-1 my-5 mx-auto margin-bottom-2">
+
+            <h2 class="text-center">Getting Started</h2> 
+
+            <div class="card margin-top-3">
+              <div class="grid-row">
+
+               <!-- faqs -->
+               <div class="grid-col-6">
+                 <div class="usa-card__container display-flex flex-row padding-4">
+                  <div class="help-card-icon text-center left-section">
+                    <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+                      <use xlink:href="/assets/img/sprite.svg#help"></use>
+                    </svg>
+                  </div>
+                  <div class="margin-left-2 right-section">
+                    <h3 class="font-weight-bold">FAQs</h3>
+                    <span>Check out our frequently asked questions concerning challenge and submission management.</span><br><br>
+                    <a href="https://www.challenge.gov/cm-user-faqs/" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">FAQs</span></a>                        
+                  </div>
+                </div>
+              </div>
+
+              <!-- user guide -->
+              <div class="grid-col-6">
+               <div class="usa-card__container display-flex flex-row padding-4">
+                <div class="help-card-icon text-center left-section">
+                  <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+                    <use xlink:href="/assets/img/sprite.svg#local_library"></use>
+                  </svg>
+                </div>
+                <div class="margin-left-2 right-section">
+                  <h3 class="font-weight-bold">User Guide</h3>
+                  <span>Our user guide has information on prize competitions, crowdsourcing, and use of the Challenge.Gov platform.</span><br><br>
+                  <a href="https://www.challenge.gov/cm-user-guide/" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">User Guide</span></a>    
+                </div>
+              </div>
+
             </div>
-            <span class="vr-light display-none">&nbsp;</span>
-            <div class="text-center grid-col-6 dhelp-card__section padding-2">
-              <svg class="usa-icon dashboard-card-icon" aria-hidden="true" focusable="false" role="img">
-                <use xlink:href="/assets/img/sprite.svg#local_library"></use>
-              </svg>
-              <h3 class="margin-2">User Guide</h3>
-              <p>Our <%= link("User guide", to: "https://www.challenge.gov/cm-user-guide/", target: "_blank") %> is full of useful information on how to get started.</p>
-            </div>
+
           </div>
         </div>
 
         <div class="card margin-top-3">
          <div class="grid-row">
-            <div class="grid-col-6 ">
-             <div class="usa-card__container display-flex flex-row padding-4">
-                <div class="help-card-icon text-center left-section">
-                  <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
-                    <use xlink:href="/assets/img/sprite.svg#construction"></use>
-                  </svg>
-                </div>
-                <div class="margin-left-2 right-section">
-                  <h3 class="mb-4 font-weight-bold">Federal employee toolkit</h3>
-                  <span>For more information see the <%= link("Prize and Challenge Toolkit", to: Routes.static_path(@conn, "/pdfs/prize_and_challenge_toolkit.pdf"), target: "_blank") %>.</span>
-                </div>
-             </div>
-            </div>
 
-            <div class="grid-col-6">
-              <div class="display-flex flex-row padding-4 usa-card__container">
-                <div class="text-center w-25 left-section">
-                  <img src="/images/click.svg" alt="hand " title="Contact indication" />
-                </div>
-                <div class="margin-left-2 right-section">
-                  <h3 class="mb-4 font-weight-bold">For technical issues with the platform</h3>
-                  <span>Contact <a href="mailto: team@challenge.gov" target="_blank">team@challenge.gov</a> for help.</span>
-                </div>
-              </div>
+          <!-- federal employee toolkit -->
+          <div class="grid-col-6">
+           <div class="usa-card__container display-flex flex-row padding-4">
+            <div class="help-card-icon text-center left-section">
+              <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+                <use xlink:href="/assets/img/sprite.svg#construction"></use>
+              </svg>
             </div>
+            <div class="margin-left-2 right-section">
+              <h3 class="font-weight-bold">Federal Employee Toolkit</h3>
+              <span>For more information, see the Prize and Challenge Toolkit.</span><br><br>              
+              <%= link "Toolkit", to: "https://www.challenge.gov/assets/document-library/Challenge-Gov-Federal-Agency-Toolkit.pdf", class: "usa-button usa-button margin-bottom-0", target: "_blank", style: "color:#ffffff;" %>
+            </div>
+          </div>
+        </div>
+
+        <!-- technical issues -->
+        <div class="grid-col-6">
+         <div class="usa-card__container display-flex flex-row padding-4">
+          <div class="help-card-icon text-center left-section">
+            <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+              <use xlink:href="/assets/img/sprite.svg#support"></use>
+            </svg>
+          </div>
+          <div class="margin-left-2 right-section">
+            <h3 class="font-weight-bold">Need help?</h3>
+            <span>For technical issues with the platform please contact us at team@challenge.gov.</span><br><br>
+            <a href="mailto: team@challenge.gov" target="_blank" class="usa-button usa-button margin-bottom-0"><span style="color: #ffffff;">Email</span></a>    
+          </div>
         </div>
 
       </div>
+
     </div>
   </div>
+
+</div>
+</div>
+
 </section>

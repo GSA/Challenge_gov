@@ -1,50 +1,62 @@
 <section>
   <small class="d-block pl-2 mb-2"><span class="required">*</span> Required fields</small>
   <%= form_for(@changeset, @path, [class: "form-horizontal", multipart: true], fn f -> %>
-    <%= if Accounts.has_admin_access?(@user) and @data.status != "submitted" do %>
-      <%= solver_field(f, @user, @data) %>
-      <div id="submission_document_upload__error-solver-addr" class="js-indented-error-tag text-error-dark"></div>
-    <% else %>
-      <%= if Accounts.has_admin_access?(@user) do %>
-        <div class="form-group">
-          <label class="col">Solver</label>
-          <%= content_tag(:div, "#{@data.submitter.email}", class: "col") %>
-        </div>
-      <% end %>
-    <% end %>
+  <%= if Accounts.has_admin_access?(@user) and @data.status != "submitted" do %>
+  <%= solver_field(f, @user, @data) %>
+  <div id="submission_document_upload__error-solver-addr" class="js-indented-error-tag text-error-dark"></div>
+  <% else %>
+  <%= if Accounts.has_admin_access?(@user) do %>
+  <div class="form-group">
+    <label class="col">Solver</label>
+    <%= content_tag(:div, "#{@data.submitter.email}", class: "col") %>
+  </div>
+  <% end %>
+  <% end %>
 
-    <%= FormView.text_field(f, :title, label: "Title", required: true) %>
-      <br>
-    <div class="col">
-      <label for="brief_description">Brief Description <span class="required">*</span></label>
-      <%= FormView.rt_textarea_field(f, :brief_description, limit: 500) %>
-    </div>
-      <br>
-    <div class="col">
-      <label><%= "Description" %> <span class="required">*</span></label>
-      <%= FormView.rt_textarea_field(f, :description) %>
-    </div>
-        <br>
-    <div class="form-group">
-      <label class="col">Upload Files (optional)<br>
-      <p>Follow the steps below to attach files to your submission. To add additional files, repeat steps 1-3. <br>
-       <b>Allowed file types:</b> .pdf, .txt, .csv, .jpg, .png, .tiff;  <b>Max file size:</b> 8 MB
-      </p></label>
+  <%= FormView.text_field(f, :title, label: "Title", required: true) %>
+  <br>
+  <div class="col">
+    <label for="brief_description">Brief Description <span class="required">*</span></label>
+    <%= FormView.rt_textarea_field(f, :brief_description, limit: 500) %>
+  </div>
+  <br>
+  <div class="col">
+    <label><%= "Description" %> <span class="required">*</span></label>
+    <%= FormView.rt_textarea_field(f, :description) %>
+  </div>
+  <br>
+  <div class="form-group">
+
+    <%= if @challenge.file_upload_required do %>
+    <label class="col"><strong>Upload Files: </strong>Follow the steps below to attach files to your submission. <span class="required">*</span><br />
+      <small>(To add additional files, repeat steps 1-3. <strong>Allowed file types: </strong>.pdf, .txt, .csv, .jpg, .png, .tiff; <strong>Max file size:</strong> 8 MB)</small><br /><br />
+
+      <% else %>
+      <label class="col">Upload Files (optional)<br />
+        <small>(To add additional files, repeat steps 1-3. <strong>Allowed file types: </strong>.pdf, .txt, .csv, .jpg, .png, .tiff; <strong>Max file size:</strong> 8 MB)</small><br /><br />
+        <% end %>
+      </label>
+
+      <%= if @challenge.upload_instruction_note do %>
+      <label><strong>Note:</strong> <%= @challenge.upload_instruction_note %></label><br /><br />
+      <% end %>
+
       <div class="col">
         <div class="submission-document-ids">
           <%= Enum.map(@changeset.changes[:document_ids] || [], fn document_id -> %>
-            <%= hidden_input f, :document_id, name: "submission[document_ids][]", value: document_id %>
+          <%= hidden_input f, :document_id, name: "submission[document_ids][]", value: document_id %>
           <% end) %>
         </div>
 
         <div class="col">
           Step 1: <%= file_input f, :document, name: "submission[document][file]", class: "usa-file-input" %>
+          <%= error_tag f, :document_ids %>
           <span data-user="<%= @user.email %>", id="current_user"></span><br>
 
           Step 2:
-           <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "File Name", class: "rename-file my-3") %>
-           <div class="challenge_document_upload_error_required usa-error-message display-none">Please give a name for your file</div>
-           <br>
+          <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "File Name", class: "rename-file my-3") %>
+          <div class="challenge_document_upload_error_required usa-error-message display-none">Please give a name for your file</div>
+          <br>
           Step 3:<br>
           <div id="submission_document_upload" class="usa-button">Attach File</div>
           <div class="challenge_document_upload_error usa-error-message display-none">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
@@ -52,36 +64,88 @@
         </div>
         <span id="submission_document_upload__error-no-email" class="js-error-tag text-error-dark"></span>
       </div>
+
+
       <div class="submission-documents-list">
         <%= Enum.map(@data.documents, fn document -> %>
-          <div class="row submission-document-row">
-            <i class="fa fa-paperclip me-1"></i>
-            <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
-            <%= link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
-              <i class="fa fa-trash"></i>
-            <% end %>
-          </div>
+        <div class="row submission-document-row">
+          <i class="fa fa-paperclip me-1"></i>
+          <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
+          <%= link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
+          <i class="fa fa-trash"></i>
+          <% end %>
+        </div>
         <% end) %>
         <%= Enum.map(@changeset.changes[:document_objects] || [], fn document -> %>
-          <div class="row submission-document-row">
-            <i class="fa fa-paperclip me-1"></i>
-            <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
-            <%= link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
-             &nbsp; <i class="fa fa-trash"></i>
-            <% end %>
-          </div>
+        <div class="row submission-document-row">
+          <i class="fa fa-paperclip me-1"></i>
+          <%= link(DocumentView.name(document), to: ChallengeGov.SubmissionDocuments.download_document_url(document), target: "_blank", class: "js-confirm-download") %>
+          <%= link to: "#", data: [document_id: document.id], class: "submission_uploaded_document_delete" do %>
+          &nbsp; <i class="fa fa-trash"></i>
+          <% end %>
+        </div>
         <% end) %>
       </div>
     </div>
-<hr>
+    <hr>
     <%= FormView.text_field(f, :external_url, label: "External URL (optional) (Use format: http://www.example.com/)") %>
     <br/>
 
     <%= accept_terms(@conn, f, @user, @challenge) %>
     <%= verify_review(f, @user.id, @data) %>
 
-    <%= cancel_button(@conn, @action, @challenge, @phase, @user, class: "usa-link usa-link float-left margin-top-2") %>
-    <%= submit("Review and submit", name: "action", value: "review", class: "usa-button float-right") %>
+    <%= cancel_button(@conn, @action, @challenge, @phase, @user, class: "usa-button usa-button--outline float-left margin-top-2") %>
+    <%= submit("Review and submit", name: "action", value: "review", class: "usa-button float-right submit-form display-none") %>
+    <a href="#submit-modal-1" class="usa-button float-right" aria-controls="submit-modal-1" data-open-modal>Submit</a>
+
     <%= save_draft_button(@data) %>
-  <% end) %>
+
+    <div
+    class="usa-modal"
+    id="submit-modal-1"
+    aria-labelledby="modal-1-heading"
+    aria-describedby="modal-1-description"
+    >
+    <div class="usa-modal__content">
+      <div class="usa-modal__main">
+
+        <div class="usa-prose">
+          <p id="modal-1-description" class="text-center">
+            By clicking <b>Submit</b> you are confirming you have reviewed your details.
+          </p>
+        </div>
+        <div class="usa-modal__footer">
+          <ul class="usa-button-group float-right">
+            <li class="usa-button-group__item">
+              <button
+              type="button"
+              class="usa-button usa-button--unstyled padding-105 text-center"
+              data-close-modal
+              >
+              Cancel
+            </button>
+          </li>
+          <li class="usa-button-group__item">
+
+
+            <button class="usa-button" id="sumbmit-event" href="">Submit</button>
+
+          </li>
+        </ul>
+      </div>
+    </div>
+    <button
+    type="button"
+    class="usa-button usa-modal__close submit-close"
+    aria-label="Close this window"
+    data-close-modal
+    >
+    <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+      <use xlink:href="/assets/img/sprite.svg#close"></use>
+    </svg>
+  </button>
+</div>
+</div>
+<% end) %>
+
 </section>

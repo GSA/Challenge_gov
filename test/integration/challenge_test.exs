@@ -131,7 +131,14 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
   defp complete_how_to_enter_section(session) do
     verify_previous_section(:phases, :judging_criteria, "Judging criteria described here.")
 
+    # Find and click the 'internal' radio button
+    internal_radio_button =
+      Wallaby.Query.css(
+        "input[type='radio'][name='submission_collection_method'][value='internal']"
+      )
+
     session
+    |> click(internal_radio_button)
     |> populate_markdown_field("How to enter described here.")
     |> touch_scroll(button("Next"), 0, 1)
     |> execute_script("window.confirm = function(){return true;}")

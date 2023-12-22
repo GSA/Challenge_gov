@@ -8,6 +8,11 @@ $("#submission_document").on("change", function() {
   $(this).removeClass("is-invalid")
 })
 
+$("#sumbmit-event").on("click", function(e) {
+  $(".submit-close").click()
+  $(".submit-form").click()
+});
+
 $("#submission_document_upload").on("click", function(e) {
   $(".challenge_document_upload_error_required").addClass('display-none')
   $(".challenge_document_upload_error").addClass('display-none')
@@ -25,7 +30,7 @@ $("#submission_document_upload").on("click", function(e) {
   fd.set("solver_email", solver_email)
 
   if (file) {
-
+    
     if(name.length > 2)  {
       
         $.ajax({

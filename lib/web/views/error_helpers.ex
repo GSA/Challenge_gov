@@ -16,11 +16,25 @@ defmodule Web.ErrorHelpers do
         []
 
       false ->
-        content_tag(:span, class: "help-block invalid-feedback") do
+        content_tag(:span, class: "usa-error-message") do
           errors
         end
     end
   end
+
+  # def error_tag(form, field) do
+  #   errors = Enum.map(Keyword.get_values(form.errors, field), &translate_error/1)
+
+  #   case Enum.empty?(errors) do
+  #     true ->
+  #       []
+
+  #     false ->
+  #       content_tag(:span, class: "usa-error-message") do
+  #         [String.replace(String.capitalize(to_string(field)), "_", " "), " ", errors]
+  #       end
+  #   end
+  # end
 
   def error_tag(form, field) do
     errors = Enum.map(Keyword.get_values(form.errors, field), &translate_error/1)
@@ -30,9 +44,7 @@ defmodule Web.ErrorHelpers do
         []
 
       false ->
-        content_tag(:span, class: "help-block invalid-feedback") do
-          [String.replace(String.capitalize(to_string(field)), "_", " "), " ", errors]
-        end
+        content_tag(:span, errors, class: "usa-error-message")
     end
   end
 

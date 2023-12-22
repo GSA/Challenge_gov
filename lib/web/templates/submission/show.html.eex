@@ -79,14 +79,14 @@
               </div>
             <% end %>
 
-            <div class="form-group">
+            <div class="form-group padding-bottom-3">
               <label class="col"><strong>Last updated date:</strong></label>
               <div class="col"><%= SharedView.local_datetime_tag(@submission.updated_at) %></div>
             </div>
 
             <%= submission_delete_link(@conn, @submission, @user, label: "Delete") %>
             <%= submission_edit_link(@conn, @submission, @user, label: "Edit") %>
-            <%= submit_button(@conn, @submission, @user, label: "Submit") %>
+            <%# <%= submit_button(@conn, @submission, @user, label: "Submit") %>
 
           </section>
         </div>
