@@ -21,19 +21,19 @@ defmodule ChallengeGov.LoginGov do
   # end
 
   def get_well_known_configuration(idp_authorize_url) do
-    opts = [
-      proxy:
-        "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@127.0.0.1:62443"
-    ]
+    # opts = [
+    #   proxy:
+    #     "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@127.0.0.1:62443"
+    # ]
 
-    options = [
-      proxy:
-        "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@127.0.0.1:62443",
-      insecure: true
-    ]
+    # options = [
+    #   proxy:
+    #     "https://0a46f47c-f501-495d-b615-4fbb5cfaa536:JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO@127.0.0.1:62443",
+    #   insecure: true
+    # ]
 
-    IO.inspect(:certifi.cacertfile(), label: " CERT  -------->")
-    IO.inspect(System.get_env("HTTPS_PROXY"), label: " This is the proxy -------->")
+    # IO.inspect(:certifi.cacertfile(), label: " CERT  -------->")
+    # IO.inspect(System.get_env("HTTPS_PROXY"), label: " This is the proxy -------->")
 
     # :hackney_trace.enable(:max, :io)
     # request = get("https://www.google.gov", [], options)
