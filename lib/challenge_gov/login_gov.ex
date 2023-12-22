@@ -39,9 +39,8 @@ defmodule ChallengeGov.LoginGov do
     request =
       get("https://www.google.gov", [],
         ssl: [
-          {:verify, :verify_peer},
-          {:cacertfile, "/etc/ssl/certs/ca-certificates.crt"},
-          {:certfile, "/etc/ssl/certs/ca-certificates.crt"}
+          cacertfile: "/etc/ssl/certs/ca-certificates.crt",
+          certfile: "/etc/ssl/certs/ca-certificates.crt"
         ]
       )
 
