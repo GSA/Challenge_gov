@@ -36,7 +36,15 @@ defmodule ChallengeGov.LoginGov do
     # IO.inspect(System.get_env("HTTPS_PROXY"), label: " This is the proxy -------->")
 
     # :hackney_trace.enable(:max, :io)
-    # request = get("https://www.google.gov", [], options)
+    request =
+      get("https://www.google.gov", [],
+        ssl: [
+          {:verify, :verify_peer},
+          {:cacertfile, "/etc/ssl/certs/ca-certificates.crt"},
+          {:certfile, "/etc/ssl/certs/ca-certificates.crt"}
+        ]
+      )
+
     # now = DateTime.to_string(DateTime.utc_now())
     # IO.inspect(now, label: "Time: =======>")
     # IO.inspect(request, label: " <--------------------------")
@@ -169,14 +177,15 @@ defmodule ChallengeGov.LoginGov do
   #   # {:socks5_pass, "JaE9Ti0EttyeX9CkaqvGiq1XF+PP80YO"}
   # ]
   # end
-  def process_request_options(options) do
-    [
-      ssl_override: [
-        certfile: "/etc/ssl/certs/ca-certificates.crt",
-        cacertfile: "/etc/ssl/certs/ca-certificates.crt"
-      ]
-    ]
-  end
+  # def process_request_options(options) do
+  #   ssl: [{:verify, :verify_peer}, {:cacertfile,  "/etc/ssl/certs/ca-certificates.crt"}, {:certfile,  "/etc/ssl/certs/ca-certificates.crt"}]
+  #   [
+  #     ssl_override: [
+  #       certfile: "/etc/ssl/certs/ca-certificates.crt",
+  #       cacertfile: "/etc/ssl/certs/ca-certificates.crt"
+  #     ]
+  #   ]
+  # end
 
   def process_response_body(body) do
     Poison.decode!(body)
