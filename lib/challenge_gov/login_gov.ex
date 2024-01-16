@@ -122,19 +122,19 @@ defmodule ChallengeGov.LoginGov do
   def process_response_body(body) do
     Poison.decode!(body)
   end
-end
 
-def process_request_options(options) do
-  [
-    proxy: {"https://challengecproxy.apps.internal:62443"},
-    ssl: [verify: :verify_none]
-  ]
+  def process_request_options(options) do
+    [
+      proxy: {"https://challengecproxy.apps.internal:62443"},
+      ssl: [verify: :verify_none]
+    ]
 
-  #   ssl: [{:verify, :verify_peer}, {:cacertfile,  "/etc/ssl/certs/ca-certificates.crt"}, {:certfile,  "/etc/ssl/certs/ca-certificates.crt"}]
-  #   [
-  #     ssl_override: [
-  #       certfile: "/etc/ssl/certs/ca-certificates.crt",
-  #       cacertfile: "/etc/ssl/certs/ca-certificates.crt"
-  #     ]
-  #   ]
+    #   ssl: [{:verify, :verify_peer}, {:cacertfile,  "/etc/ssl/certs/ca-certificates.crt"}, {:certfile,  "/etc/ssl/certs/ca-certificates.crt"}]
+    #   [
+    #     ssl_override: [
+    #       certfile: "/etc/ssl/certs/ca-certificates.crt",
+    #       cacertfile: "/etc/ssl/certs/ca-certificates.crt"
+    #     ]
+    #   ]
+  end
 end
