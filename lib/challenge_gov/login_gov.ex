@@ -125,8 +125,8 @@ defmodule ChallengeGov.LoginGov do
 
   def process_request_options(options) do
     [
-      proxy: {"https://challengecproxy.apps.internal:62443"},
-      ssl: [verify: :verify_none]
+      proxy: {"http://oproxy.apps.internal:3128"}
+      # ssl: [verify: :verify_none]
     ]
 
     #   ssl: [{:verify, :verify_peer}, {:cacertfile,  "/etc/ssl/certs/ca-certificates.crt"}, {:certfile,  "/etc/ssl/certs/ca-certificates.crt"}]
