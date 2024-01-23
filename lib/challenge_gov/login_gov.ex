@@ -125,8 +125,7 @@ defmodule ChallengeGov.LoginGov do
 
   def process_request_options(options) do
     [
-      proxy: {"oproxy.apps.internal:3128"}
-      # ssl: [verify: :verify_none]
+      proxy: {"oproxy.apps.internal", 3128}
     ]
   end
 end
