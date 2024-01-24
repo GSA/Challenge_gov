@@ -125,7 +125,7 @@ defmodule ChallengeGov.LoginGov do
 
   def process_request_options(options) do
     [
-      proxy: {"oproxy.apps.internal", 3128}
+      proxy: {"https://challengecproxy.apps.internal", 61_443}
     ]
   end
 end
