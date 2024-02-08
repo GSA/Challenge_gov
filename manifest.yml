@@ -13,6 +13,7 @@ applications:
 - name: challenge-portal-dev
   <<: *defaults
   instances: 1
+  memory: 640M 
   disk_quota: 6GB
   env:
     MIX_ENV: prod
