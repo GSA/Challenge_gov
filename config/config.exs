@@ -5,7 +5,7 @@
 # is restricted to this project.
 
 # General application configuration
-use Config
+use Mix.Config
 
 config :challenge_gov,
   namespace: Web,
