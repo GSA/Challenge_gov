@@ -129,17 +129,7 @@ defmodule ChallengeGov.LoginGov do
       proxy: {"https://challengecproxy.apps.internal:61443"},
       ssl: [verify: :verify_none],
       hackney: [
-        insecure: true,
-        pool: false,
-        ssl_options: [
-          versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2", :"tlsv1.3"],
-          cacertfile: '/etc/ssl/certs/ca-certificates.crt',
-          depth: 3,
-          verify: :verify_none,
-          customize_hostname_check: [
-            match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
-          ]
-        ]
+        insecure: true
       ]
     ]
   end
