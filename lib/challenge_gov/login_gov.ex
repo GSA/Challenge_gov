@@ -11,7 +11,8 @@ defmodule ChallengeGov.LoginGov do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
     |> get()
-   # |> handle_response("Sorry, could not fetch well known configuration")
+
+    # |> handle_response("Sorry, could not fetch well known configuration")
   end
 
   def get_public_key(jwks_uri) do
