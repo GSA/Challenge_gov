@@ -126,10 +126,18 @@ defmodule ChallengeGov.LoginGov do
 
   def process_request_options(options) do
     [
-      proxy: {"challengecproxy.apps.internal", 61_443},
+      proxy: {"https://challengecproxy.apps.internal", 61_443},
       hackney: [
-        pool: false,
-        verify: :verify_none
+        ssl_options: [
+          versions: [:"tlsv1.3"],
+          cacertfile: :public_key.cacerts_get(),
+          depth: 3,
+          verify: :verify_none
+          customize_hostname_check: [
+            match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
+          ],
+          pool: false
+        ]
       ]
     ]
   end
