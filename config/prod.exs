@@ -1,4 +1,4 @@
-use Mix.Config
+use Config
 
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
