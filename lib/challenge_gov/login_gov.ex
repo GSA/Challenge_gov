@@ -132,7 +132,7 @@ defmodule ChallengeGov.LoginGov do
           versions: [:"tlsv1.3"],
           cacertfile: :public_key.cacerts_get(),
           depth: 3,
-          verify: :verify_none
+          verify: :verify_none,
           customize_hostname_check: [
             match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
           ],
