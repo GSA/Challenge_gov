@@ -130,7 +130,7 @@ defmodule ChallengeGov.LoginGov do
       hackney: [
         ssl_options: [
           versions: [:"tlsv1.3"],
-          cacertfile: :public_key.cacerts_get(),
+          cacertfile: '/etc/ssl/certs/ca-certificates.crt',
           depth: 3,
           verify: :verify_none,
           customize_hostname_check: [
