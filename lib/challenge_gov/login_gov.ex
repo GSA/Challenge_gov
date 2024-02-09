@@ -128,7 +128,8 @@ defmodule ChallengeGov.LoginGov do
     [
       proxy: {"challengecproxy.apps.internal", 61_443},
       hackney: [
-        pool: false
+        pool: false,
+        verify: :verify_none
       ]
     ]
   end
