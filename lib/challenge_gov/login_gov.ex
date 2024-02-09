@@ -135,8 +135,7 @@ defmodule ChallengeGov.LoginGov do
           verify: :verify_none,
           customize_hostname_check: [
             match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
-          ],
-          pool: false
+          ]
         ]
       ]
     ]
