@@ -11,7 +11,7 @@ defmodule ChallengeGov.LoginGov do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
     |> get()
-    |> handle_response("Sorry, could not fetch well known configuration")
+   # |> handle_response("Sorry, could not fetch well known configuration")
   end
 
   def get_public_key(jwks_uri) do
@@ -125,7 +125,7 @@ defmodule ChallengeGov.LoginGov do
 
   def process_request_options(options) do
     [
-      proxy: {"challengecproxy.apps.internal:61443"},
+      proxy: {"challengecproxy.apps.internal", 61_443},
       hackney: [
         pool: false
       ]
