@@ -55,7 +55,7 @@ defmodule ChallengeGov.SubmissionDocuments do
       :ok ->
         user
         |> Ecto.build_assoc(:submission_documents)
-        |> Document.create_changeset(file, key, params["name"])
+        |> Document.create_changeset(file, key, not_valid_characters(params["name"]))
         |> Repo.insert()
 
       {:error, _reason} ->
@@ -65,6 +65,12 @@ defmodule ChallengeGov.SubmissionDocuments do
         |> Ecto.Changeset.add_error(:file, "had an issue uploading")
         |> Ecto.Changeset.apply_action(:insert)
     end
+  end
+
+  defp not_valid_characters(input_string) do
+    # characters to replace
+    to_replace = ~w"/ \\ | # % @ ^ : ? ! & % * $ = < > { }"
+    String.replace(input_string, to_replace, fn _ -> "-" end)
   end
 
   def upload(user, _) do
