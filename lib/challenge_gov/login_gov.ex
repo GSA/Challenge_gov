@@ -128,6 +128,7 @@ defmodule ChallengeGov.LoginGov do
     [
       proxy: {"https://challengecproxy.apps.internal:8080"}
     ]
+
     # [
     #   proxy: {"https://challengecproxy.apps.internal:61443"},
     #   ssl: [verify: :verify_none],
