@@ -123,18 +123,4 @@ defmodule ChallengeGov.LoginGov do
   def process_response_body(body) do
     Poison.decode!(body)
   end
-
-    #  def process_request_options(options) do
-    # [
-    #   proxy: {"https://challengecproxy.apps.internal", 8080}
-    # ]
-
-    # [
-    #   proxy: {"https://challengecproxy.apps.internal:61443"},
-    #   ssl: [verify: :verify_none],
-    #   hackney: [
-    #     insecure: true
-    #   ]
-    # ]
-    # end
 end
