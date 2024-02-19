@@ -7,6 +7,11 @@ defmodule ChallengeGov.LoginGov do
 
   alias ChallengeGov.LoginGov.Token
 
+  proxy_options = [
+    {:proxy, {"http://challengecproxy.apps.internal", 8080}},
+    {:follow_redirect, true}
+  ]
+
   def get_well_known_configuration(idp_authorize_url) do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
