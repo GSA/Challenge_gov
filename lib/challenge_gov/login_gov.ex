@@ -124,7 +124,7 @@ defmodule ChallengeGov.LoginGov do
     Poison.decode!(body)
   end
 
-#  def process_request_options(options) do
+    #  def process_request_options(options) do
     # [
     #   proxy: {"https://challengecproxy.apps.internal", 8080}
     # ]
@@ -136,5 +136,5 @@ defmodule ChallengeGov.LoginGov do
     #     insecure: true
     #   ]
     # ]
-  # end
+    # end
 end
