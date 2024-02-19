@@ -125,17 +125,12 @@ defmodule ChallengeGov.LoginGov do
   end
 
   def process_request_options(options) do
-
     [
-      proxy: {"https://challengecproxy.apps.internal", 8080}
-    ]
-
-    #[
-       #proxy: {"https://challengecproxy.apps.internal:61443"},
-       #ssl: [verify: :verify_none],
-       #hackney: [
-         #insecure: true
-       #]
-     #]
+      proxy: {"https://challengecproxy.apps.internal:8080"},
+      ssl: [verify: :verify_none],
+      hackney: [
+        insecure: true
+       ]
+     ]
   end
 end
