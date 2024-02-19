@@ -12,17 +12,17 @@ defmodule ChallengeGov.LoginGov do
     {:follow_redirect, true}
   ]
 
-  def get_well_known_configuration(idp_authorize_url) do
+  def get_well_known_configuration(idp_authorize_url, proxy_options) do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
-    |> get()
+    |> get([], proxy_options)
 
     # |> handle_response("Sorry, could not fetch well known configuration")
   end
 
-  def get_public_key(jwks_uri) do
+  def get_public_key(jwks_uri, proxy_options) do
     jwks_uri
-    |> get()
+    |> get([], proxy_options)
     |> handle_response("Sorry, could not fetch public key")
     |> case do
       {:ok, body} -> {:ok, body |> Map.fetch!("keys") |> List.first()}
@@ -30,7 +30,7 @@ defmodule ChallengeGov.LoginGov do
     end
   end
 
-  def exchange_code_for_token(code, token_endpoint, jwt) do
+  def exchange_code_for_token(code, token_endpoint, jwt, proxy_options) do
     body = %{
       grant_type: "authorization_code",
       code: code,
@@ -39,13 +39,13 @@ defmodule ChallengeGov.LoginGov do
     }
 
     token_endpoint
-    |> post(Poison.encode!(body), [{"Content-Type", "application/json"}])
+    |> post(Poison.encode!(body), [{"Content-Type", "application/json"}], proxy_options)
     |> handle_response("Sorry, could not exchange code")
   end
 
-  def get_user_info(userinfo_endpoint, access_token) do
+  def get_user_info(userinfo_endpoint, access_token, proxy_options) do
     userinfo_endpoint
-    |> get([{"Authorization", "Bearer " <> access_token}])
+    |> get([{"Authorization", "Bearer " <> access_token}], proxy_options)
     |> handle_response("Sorry, could not fetch userinfo")
   end
 
