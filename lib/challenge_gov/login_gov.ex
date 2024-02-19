@@ -129,11 +129,11 @@ defmodule ChallengeGov.LoginGov do
       proxy: {"https://challengecproxy.apps.internal", 61_443}
     ]
 
-    #[
-    #  proxy: {"https://challengecproxy.apps.internal:8080"},
-    #  ssl: [verify: :verify_none],
-    #  hackney: [
-    #    insecure: true
+    # [
+    #   proxy: {"https://challengecproxy.apps.internal:61443"},
+    #   ssl: [verify: :verify_none],
+    #   hackney: [
+    #     insecure: true
     #   ]
     # ]
   end
