@@ -8,7 +8,7 @@ defmodule ChallengeGov.LoginGov do
   alias ChallengeGov.LoginGov.Token
 
   proxy_options = [
-    {:proxy, {"http://challengecproxy.apps.internal", 8080}},
+    {:proxy, {"challengecproxy.apps.internal", 8080}},
     {:follow_redirect, true}
   ]
 
