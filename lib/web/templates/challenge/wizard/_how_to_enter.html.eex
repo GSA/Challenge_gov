@@ -6,14 +6,17 @@
     var fileUploadCheckbox = document.getElementById('file-upload-required');
     var fileUploadInstruction = document.getElementById('file-upload-instruction');
     var hiddenField = document.querySelector('#hidden-field');
+    var externalInput = document.getElementById('challenge_how_to_enter_link');
 
     if (method === 'internal') {
       internalForm.style.display = 'block';
       externalForm.style.display = 'none';
+      externalInput.removeAttribute("required");
       toggleFileUploadInstructions(fileUploadCheckbox.checked);
     } else if (method === 'external') {
       internalForm.style.display = 'none';
       externalForm.style.display = 'block';
+      externalInput.setAttribute("required", "");
       fileUploadInstruction.style.display = 'none';
     }
 
