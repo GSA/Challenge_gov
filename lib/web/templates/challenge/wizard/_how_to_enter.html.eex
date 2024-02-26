@@ -99,8 +99,10 @@
 
 <div id="internal-form" style="display: none;">
   <div class="form-check mt-2">
+    <label class="form-check-label">
     <%= checkbox(@form, :file_upload_required, class: "form-check-input", id: "file-upload-required") %>
-    <label class="form-check-label">Select the box to require solver to upload a file prior to submission.</label>
+    Select the box to require solver to upload a file prior to submission.
+    </label>
   </div>
   <div id="file-upload-instruction" style="display: none;">
     <%= FormView.text_field(
