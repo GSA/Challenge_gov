@@ -28,12 +28,24 @@
   <div class="form-group">
 
     <%= if @challenge.file_upload_required do %>
-    <label class="col"><strong>Upload Files: </strong>Follow the steps below to attach files to your submission. <span class="required">*</span><br />
-      <small>(To add additional files, repeat steps 1-3. <strong>Allowed file types: </strong>.pdf, .txt, .csv, .jpg, .png, .tiff; <strong>Max file size:</strong> 8 MB)</small><br /><br />
+    <label class="col"><strong>Add Files</strong><br>
+      Follow steps below to upload, name and attach files to your submission. <span class="required">*</span><br />
+      <ul>
+        <li><strong>Allowed file types: </strong>.pdf, .txt, .csv, .jpg, .png, .tiff;</li>
+        <li><strong>Max file size:</strong> 8 MB</li>
+        <li><strong>Naming:</strong> Do not add any special characters when naming your file.  Use only plain text separated by spaces. Example: your file name</li>
+      </ul>
+      <br />
 
       <% else %>
-      <label class="col">Upload Files (optional)<br />
-        <small>(To add additional files, repeat steps 1-3. <strong>Allowed file types: </strong>.pdf, .txt, .csv, .jpg, .png, .tiff; <strong>Max file size:</strong> 8 MB)</small><br /><br />
+      <label class="col"><strong>Add Files</strong> (optional)<br />
+       Follow steps below to upload, name and attach files to your submission.<br />
+      <ul>
+        <li><strong>Allowed file types: </strong>.pdf, .txt, .csv, .jpg, .png, .tiff;</li>
+        <li><strong>Max file size:</strong> 8 MB</li>
+        <li><strong>Naming:</strong> Do not add any special characters when naming your file.  Use only plain text separated by spaces. Example: your file name</li>
+      </ul>
+       <br />
         <% end %>
       </label>
 
@@ -49,16 +61,15 @@
         </div>
 
         <div class="col">
-          Step 1: <%= file_input f, :document, name: "submission[document][file]", class: "usa-file-input" %>
+          <strong>Step 1:</strong> Upload file <br><%= file_input f, :document, name: "submission[document][file]", class: "usa-file-input" %>
           <%= error_tag f, :document_ids %>
           <span data-user="<%= @user.email %>", id="current_user"></span><br>
 
-          Step 2:
-          <%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "File Name", class: "rename-file my-3") %>
-          <div class="challenge_document_upload_error_required usa-error-message display-none">Please give a name for your file</div>
+          <strong>Step 2:</strong> Name file <small>(Do not add any special characters or add the file extension)</small><br>
+          <div><%= FormView.text_field(f, :document_name, name: "submission[document][name]", label: "", class: "rename-file") %><span>.pdf, .txt, .csv, .jpg, .png, .tiff </span></div>
           <br>
-          Step 3:<br>
-          <div id="submission_document_upload" class="usa-button">Attach File</div>
+          <strong>Step 3: </strong>Attach file<br><br>
+          <div id="submission_document_upload" class="usa-button">Attach File</div> <span>To add additional files, repeat steps 1-3.</span>
           <div class="challenge_document_upload_error usa-error-message display-none">File must be a .pdf, .txt, .csv, .jpg, .png, or .tiff</div>
 
         </div>
