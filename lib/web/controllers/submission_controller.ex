@@ -276,7 +276,7 @@ defmodule Web.SubmissionController do
       "review" ->
         case Submissions.create_review(submission_params, submitter, challenge, phase) do
           {:ok, submission} ->
-            # submit(conn, %{"id" => submission.id})
+            Submissions.submit(submission, Security.extract_remote_ip(conn))
 
             conn
             |> put_flash(
