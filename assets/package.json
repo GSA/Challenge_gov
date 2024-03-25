@@ -10,7 +10,6 @@
     "fs": false
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.8.7",
     "@babel/preset-react": "^7.8.7",
     "@fortawesome/fontawesome-free": "^5.12.1",
     "@popperjs/core": "2.9.3",
@@ -45,8 +44,10 @@
     "yarn": "^1.13.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
+    "@babel/core": "^7.24.3",
+    "@babel/plugin-transform-class-properties": "^7.24.1",
+    "@babel/plugin-transform-object-rest-spread": "^7.24.1",
+    "@babel/preset-env": "7.24.1",
     "babel-loader": "8.0.6",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^0.28.10",
