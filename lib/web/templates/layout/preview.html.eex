@@ -1,18 +1,16 @@
-<!-- DOCTYPE html -->
-<!-- html lang="en" -->
-  <!-- testing  --->
-  <!-- %= render("_head.html", assigns) % -->
+<!DOCTYPE html>
+<html lang="en">
+  <%= render("_head.html", assigns) %>
 
   <div id="recaptcha-key" class="display-none"><%= Recaptcha.recaptcha_key() %></div>
 
-  <!-- body -->
+  <body>
     <div class="main-wrapper">
       <%= @inner_content %>
     </div>
-  <!-- /body -->
+  </body>
 
   <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/layout.js") %>"></script>
   <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/public.js") %>"></script>
   <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/preview.js") %>"></script>
-
-<!-- /html -->
+</html>
