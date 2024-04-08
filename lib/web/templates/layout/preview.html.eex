@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <%= render("_head.html", assigns) %>
 
   <div id="recaptcha-key" class="display-none"><%= Recaptcha.recaptcha_key() %></div>
