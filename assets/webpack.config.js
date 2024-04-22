@@ -97,7 +97,10 @@ module.exports = (env, options) => ({
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: '../css/[name].css' }),
-    new CopyWebpackPlugin({patterns: [{ from: 'node_modules/uswds/dist/img', to: '../assets/img/' },{ from: 'static/', to: '../' }]}),
+    new CopyWebpackPlugin({patterns: [{ from: 'node_modules/uswds/dist/img', to: '../assets/img/' },
+    { from: 'node_modules/uswds/dist/fonts', to: '../fonts/' },
+    { from: 'node_modules/@fortawesome/fontawesome-free/webfonts', to: '../webfonts/' },
+    { from: 'static/', to: '../' }]}),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery'

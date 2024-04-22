@@ -40,6 +40,7 @@
     "select2": "^4.0.13",
     "string-strip-html": "^8.3.0",
     "url-loader": "^1.1.2",
+    "file-loader": "^6.2.0",
     "uswds": "2.14.0",
     "yarn": "^1.13.0"
   },
@@ -51,7 +52,6 @@
     "babel-loader": "8.0.6",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
-    "file-loader": "^6.2.0",
     "mini-css-extract-plugin": "^2.9.0",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "sass-loader": "^12.3.0",
