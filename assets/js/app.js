@@ -16,7 +16,8 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 
 // Import dependencies
-import "@fortawesome/fontawesome-free/css/all.css";
+// import "@fortawesome/fontawesome-free/js/all.js";
+// import "@fortawesome/fontawesome-free/css/all.css";
 
 import jquery from  "jquery";
 import "popper.js";
