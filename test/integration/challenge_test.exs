@@ -139,6 +139,9 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
     session
     |> click(internal_radio_button)
+    |> touch_scroll(button("Next"), 0, 1)
+    |> take_screenshot()
+    |> click(checkbox("Select the box to require solver to upload a file prior to submission."))
     |> populate_markdown_field("How to enter described here.")
     |> touch_scroll(button("Next"), 0, 1)
     |> execute_script("window.confirm = function(){return true;}")

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"><!-- root -->
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -12,7 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 
     <title>Challenge.Gov</title>
-
+    <meta name="robots" CONTENT="noindex,nofollow" />
     <meta property="og:description" content="Challenge.Gov empowers federal agencies to engage public solvers in challenges and prize competitions to identify innovative solutions to critical issues." />
 
     <meta property="og:image" content="https://challenge-portal-dev.app.cloud.gov/images/challenge-logo-small-ac86bd43b87671f7ff2531f2f4452982.png?vsn=d">
