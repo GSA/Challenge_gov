@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import fetch from 'node-fetch';
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { ApiUrlContext } from "../../ApiUrlContext";
 
@@ -23,8 +23,8 @@ export const ContactForm = ({ challenge, preview }) => {
     return
   }
 
-  axios
-    .post(apiUrl + `/api/challenges/${challenge.id}/contact_form`, { email, body })
+  
+  fetch(apiUrl + `/api/challenges/${challenge.id}/contact_form`, {method: 'POST', body: { email, body }})
     .then((res) => {
       setIsOpen(true)
       setEmail('')
@@ -35,6 +35,20 @@ export const ContactForm = ({ challenge, preview }) => {
       let error = e.response.data.errors
       setErrors(error)
     })
+
+  // axios
+  //   .post(apiUrl + `/api/challenges/${challenge.id}/contact_form`, { email, body })
+  //   .then((res) => {
+  //     setIsOpen(true)
+  //     setEmail('')
+  //     setBody('')
+  //     setErrors({})
+  //   })
+  //   .catch((e) => {
+  //     let error = e.response.data.errors
+  //     setErrors(error)
+  //   })
+
   }
 
   const closeModal = () => {

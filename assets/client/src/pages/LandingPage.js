@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { ChallengeTiles } from '../components/ChallengeTiles'
-import axios from 'axios'
+import fetch from 'node-fetch'
 import { ApiUrlContext } from '../ApiUrlContext'
 import moment from "moment"
 
@@ -32,16 +32,29 @@ export const LandingPage = ({isArchived}) => {
     let yearFilter = isArchived ? `&filter[year]=${selectedYear}` : ""
     
     setLoadingState(true)
-    axios
-      .get(apiUrl + challengesPath + yearFilter)
-      .then(res => {
-        setCurrentChallenges(res.data)
-        setLoadingState(false)
-      })
-      .catch(e => {
-        setLoadingState(false)
-        console.log({e})
-      })
+
+    fetch(apiUrl + challengesPath + yearFilter, {method: 'GET'})
+    .then((res) => {
+      setCurrentChallenges(res.data)
+      setLoadingState(false)
+    })
+    .catch((e) => {
+      setLoadingState(false)
+      console.log({e})
+    })
+
+
+    // axios
+    //   .get(apiUrl + challengesPath + yearFilter)
+    //   .then(res => {
+    //     setCurrentChallenges(res.data)
+    //     setLoadingState(false)
+    //   })
+    //   .catch(e => {
+    //     setLoadingState(false)
+    //     console.log({e})
+    //   })
+
   }, [selectedYear])
 
   const handleYearChange = (e) => {
