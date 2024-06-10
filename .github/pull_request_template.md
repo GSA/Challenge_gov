@@ -17,6 +17,7 @@
 # Checklist
 - [ ] PR is assigned to a project: Challenge_gov Board
 - [ ] PR is assigned to a milestone: current sprint
+- [ ] GH issues are assigned to the PR (under Development section on the right hand side)
 - [ ] PR is assigned a reviewer, and requires code review and approval by a teammate
 - [ ] New functionality is tested and all tests are green
 - [ ] I have added unit tests for new functionality or updated existing tests for changes.
