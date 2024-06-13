@@ -83,7 +83,8 @@ defmodule ChallengeGov.Submissions.SubmissionExportWorker do
 
         document_path = tmp_file_directory <> "submissions/#{submission.id}/"
         File.mkdir_p(document_path)
-        document_filename = "#{DocumentView.filename(document)}#{document.extension}"
+        # document_filename = "#{DocumentView.filename(document)}#{document.extension}"
+        document_filename = "#{document.key}#{document.extension}"
 
         File.cp!(document_download, document_path <> document_filename)
         File.rm(document_download)
