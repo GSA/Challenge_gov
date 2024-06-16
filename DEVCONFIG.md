@@ -60,7 +60,7 @@ Create the file `config/dev.local.exs` and set a secret key base, and if needed,
 It will look something like (replacing with your local configuration):
 
 ```elixir
-use Mix.Config
+import Config
 
 config :challenge_gov, Web.Endpoint,
   secret_key_base: "<OUTPUT OF `mix phx.gen.secret`>"
@@ -77,7 +77,7 @@ Create the file `config/test.local.exs` and set a secret key base, and if needed
 It will look something like (replacing with your local configuration):
 
 ```elixir
-use Mix.Config
+import Config
 
 config :challenge_gov, Web.Endpoint,
   secret_key_base: "<OUTPUT OF `mix phx.gen.secret`>"

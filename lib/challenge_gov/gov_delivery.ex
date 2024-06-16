@@ -16,7 +16,7 @@ defmodule ChallengeGov.GovDelivery do
   @callback send_bulletin(challenge(), binary(), binary()) :: tuple()
   @callback get_topic_subscribe_count(challenge()) :: tuple()
 
-  @module Application.get_env(:challenge_gov, :gov_delivery)[:module]
+  @module Application.compile_env(:challenge_gov, [:gov_delivery, :module])
 
   @doc """
   Get the username for GovDelivery
