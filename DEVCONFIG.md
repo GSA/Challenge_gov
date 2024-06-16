@@ -7,9 +7,9 @@ Welcome to the ChallengeGov Data Portal
 ## Requirements
 
 - [PostgreSQL 10](https://www.postgresql.org/) - database
-- [Elixir 1.9](https://elixir-lang.org) - server language
-- [Erlang 21.2](https://www.erlang.org/) - server language
-- [node.js 11.10](https://nodejs.org/en/) - front end language
+- [Elixir 1.16.3](https://elixir-lang.org) - server language
+- [Erlang 26.2.5](https://www.erlang.org/) - server language
+- [node.js 20.14.0](https://nodejs.org/en/) - front end language
 - [yarn 1.22.5](https://yarnpkg.com/) - package manager
 
 ## Install & Setup
@@ -40,14 +40,14 @@ Once asdf is set up, install each language. NodeJS may require setting up keys, 
 
 ```bash
 asdf plugin-add erlang
-asdf install erlang 21.2.5
+asdf install erlang 26.2.5
 
 asdf plugin-add elixir
-asdf install elixir 1.8.0
+asdf install elixir 1.16.3
 
 asdf plugin-add nodejs
 bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
-asdf install nodejs 11.13.
+asdf install nodejs 20.14.0
 
 asdf plugin-add yarn 
 asdf install yarn 1.22.5
