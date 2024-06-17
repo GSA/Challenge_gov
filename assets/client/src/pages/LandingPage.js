@@ -33,26 +33,15 @@ export const LandingPage = ({isArchived}) => {
     setLoadingState(true)
 
     fetch(apiUrl + challengesPath + yearFilter)
+    .then(response => response.json())
     .then((res) => {
-      setCurrentChallenges(res.data)
+      setCurrentChallenges(res)
       setLoadingState(false)
     })
     .catch((e) => {
       setLoadingState(false)
       console.log({e})
     })
-
-
-    // axios
-    //   .get(apiUrl + challengesPath + yearFilter)
-    //   .then(res => {
-    //     setCurrentChallenges(res.data)
-    //     setLoadingState(false)
-    //   })
-    //   .catch(e => {
-    //     setLoadingState(false)
-    //     console.log({e})
-    //   })
 
   }, [selectedYear])
 

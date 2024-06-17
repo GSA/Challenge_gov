@@ -24,6 +24,7 @@ export const ContactForm = ({ challenge, preview }) => {
 
   
   fetch(apiUrl + `/api/challenges/${challenge.id}/contact_form`, {method: 'POST', body: { email, body }})
+    .then(response => response.json())
     .then((res) => {
       setIsOpen(true)
       setEmail('')
@@ -31,22 +32,9 @@ export const ContactForm = ({ challenge, preview }) => {
       setErrors({})
     })
     .catch((e) => {
-      let error = e.response.data.errors
+      let error = e
       setErrors(error)
     })
-
-  // axios
-  //   .post(apiUrl + `/api/challenges/${challenge.id}/contact_form`, { email, body })
-  //   .then((res) => {
-  //     setIsOpen(true)
-  //     setEmail('')
-  //     setBody('')
-  //     setErrors({})
-  //   })
-  //   .catch((e) => {
-  //     let error = e.response.data.errors
-  //     setErrors(error)
-  //   })
 
   }
 

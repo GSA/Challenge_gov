@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react'
-import fetch from 'node-fetch'
 import queryString from 'query-string'
 import { useParams, useLocation } from "react-router-dom";
 import { ChallengeTile } from "../components/ChallengeTile"
@@ -25,27 +24,16 @@ export const PreviewPage = () => {
     setLoadingState(true)
 
     fetch(challengeApiPath)
+    .then(response => response.json())
     .then((res) => {
-      setCurrentChallenge(res.data)
-      setChallengePhases(res.data.phases)
+      setCurrentChallenge(res)
+      setChallengePhases(res.phases)
       setLoadingState(false)
     })
     .catch((e) => {
       setLoadingState(false)
       console.log({e})
     })
-
-    // axios
-    //   .get(challengeApiPath)
-    //   .then(res => {
-    //     setCurrentChallenge(res.data)
-    //     setChallengePhases(res.data.phases)
-    //     setLoadingState(false)
-    //   })
-    //   .catch(e => {
-    //     setLoadingState(false)
-    //     console.log({e})
-    //   })
 
 
   }, [])

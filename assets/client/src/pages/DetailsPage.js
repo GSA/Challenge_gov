@@ -30,29 +30,16 @@ export const DetailsPage = ({challengeId}) => {
     
     let challengeApiPath = apiUrl + `/api/challenges/${challengeId}`
     fetch(challengeApiPath)
+    .then(response => response.json())
     .then((res) => {
-      setCurrentChallenge(res.data)
-      setChallengePhases(res.data.phases)
+      setCurrentChallenge(res)
+      setChallengePhases(res.phases)
       setLoadingState(false)
     })
     .catch((e) => {
       setLoadingState(false)
       console.log({e})
     })
-
-    // let challengeApiPath = apiUrl + `/api/challenges/${challengeId}`
-    // axios
-    //   .get(challengeApiPath)
-    //   .then(res => {
-    //     setCurrentChallenge(res.data)
-    //     setChallengePhases(res.data.phases)
-    //     setLoadingState(false)
-    //   })
-    //   .catch(e => {
-    //     setLoadingState(false)
-    //     console.log({e})
-    //   })
-
 
   }, [])
 
