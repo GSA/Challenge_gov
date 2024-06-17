@@ -36,7 +36,10 @@ defmodule ChallengeGov.Challenges.Challenge do
     has_many(:federal_partners, FederalPartner, on_delete: :delete_all)
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
 
-    has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete, on_delete: :delete_all)
+    has_many(:non_federal_partners, NonFederalPartner,
+      on_replace: :delete,
+      on_delete: :delete_all
+    )
 
     has_many(:phases, Phase)
     has_many(:submissions, Submission)
