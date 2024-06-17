@@ -1035,7 +1035,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   defp validate_timeline_events(struct, %{"timeline_events" => _timeline_events}),
     do:
       cast_embed(struct, :timeline_events,
-        with: {TimelineEvent, :save_changeset, [Challenges.find_start_date(struct.data)]}
+        with: &TimelineEvent.save_changeset(&1, &2, Challenges.find_start_date(struct.data))
       )
 
   defp validate_timeline_events(struct, _), do: struct
