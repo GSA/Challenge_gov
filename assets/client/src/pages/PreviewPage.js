@@ -24,7 +24,7 @@ export const PreviewPage = () => {
 
     setLoadingState(true)
 
-    fetch(challengeApiPath, {method: 'GET'})
+    fetch(challengeApiPath)
     .then((res) => {
       setCurrentChallenge(res.data)
       setChallengePhases(res.data.phases)

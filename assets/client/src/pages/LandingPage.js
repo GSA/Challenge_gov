@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { ChallengeTiles } from '../components/ChallengeTiles'
-import fetch from 'node-fetch'
 import { ApiUrlContext } from '../ApiUrlContext'
 import moment from "moment"
 
@@ -33,7 +32,7 @@ export const LandingPage = ({isArchived}) => {
     
     setLoadingState(true)
 
-    fetch(apiUrl + challengesPath + yearFilter, {method: 'GET'})
+    fetch(apiUrl + challengesPath + yearFilter)
     .then((res) => {
       setCurrentChallenges(res.data)
       setLoadingState(false)

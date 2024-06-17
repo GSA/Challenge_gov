@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { useLocation } from "react-router-dom";
-import fetch from 'node-fetch';
 import { ChallengeDetails } from '../components/ChallengeDetails';
 import { ApiUrlContext } from '../ApiUrlContext'
 import NotFound from '../components/NotFound'
@@ -30,7 +29,7 @@ export const DetailsPage = ({challengeId}) => {
     $(".newsletter").hide()
     
     let challengeApiPath = apiUrl + `/api/challenges/${challengeId}`
-    fetch(challengeApiPath, {method: 'GET'})
+    fetch(challengeApiPath)
     .then((res) => {
       setCurrentChallenge(res.data)
       setChallengePhases(res.data.phases)

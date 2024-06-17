@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import fetch from 'node-fetch';
 import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { ApiUrlContext } from "../../ApiUrlContext";
 
