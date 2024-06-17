@@ -79,7 +79,7 @@ defmodule ChallengeGov.MixProject do
       {:quantum, "~> 3.0-rc"},
       {:remote_ip, "~> 0.2.0"},
       {:sobelow, "~> 0.11"},
-      {:stein, "~> 0.5"},
+      {:stein, "0.5.4"},
       {:stein_storage, "~> 0.1"},
       {:sweet_xml, "~> 0.6.6"},
       {:text_delta, "~> 1.1.0"},
