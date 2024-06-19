@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react'
-import axios from 'axios'
 import queryString from 'query-string'
 import { useParams, useLocation } from "react-router-dom";
 import { ChallengeTile } from "../components/ChallengeTile"
@@ -23,17 +22,20 @@ export const PreviewPage = () => {
     let challengeApiPath = base_url + `/api/challenges/preview/${challenge}`
 
     setLoadingState(true)
-    axios
-      .get(challengeApiPath)
-      .then(res => {
-        setCurrentChallenge(res.data)
-        setChallengePhases(res.data.phases)
-        setLoadingState(false)
-      })
-      .catch(e => {
-        setLoadingState(false)
-        console.log({e})
-      })
+
+    fetch(challengeApiPath)
+    .then(response => response.json())
+    .then((res) => {
+      setCurrentChallenge(res)
+      setChallengePhases(res.phases)
+      setLoadingState(false)
+    })
+    .catch((e) => {
+      setLoadingState(false)
+      console.log({e})
+    })
+
+
   }, [])
 
   const launchPrintDialogue = () => {
