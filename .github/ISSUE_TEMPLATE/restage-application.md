@@ -1,11 +1,11 @@
 ---
 name: Restage application
-about: 
+about: Restage Application on Cloud.gov
 title: Restage Application on Cloud.gov
 labels: ''
 assignees: ''
 ---
-## User Story
+## Restage Application
 
 As a Challenge.gov engineer, in order to take advantage of the recent Cloud.gov buildpack updates and security fixes, I need to restage or redeploy challenge.gov application.
 
