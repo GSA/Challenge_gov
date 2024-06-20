@@ -39,7 +39,7 @@
             <div class="usa-card__container">
               <%= hidden_input f, :section, value: @section %>
               <%= hidden_input f, :user_id, value: @user.id %>
-              <%= hidden_input f, :challenge_id, value: if @challenge, do: @challenge.id, else: nil %>
+              <%= hidden_input f, :challenge_id, value: (if @challenge, do: @challenge.id, else: nil) %>
               <%= hidden_input f, :local_timezone, id: "local-timezone-input" %>
 
               <div class="usa-card__body">

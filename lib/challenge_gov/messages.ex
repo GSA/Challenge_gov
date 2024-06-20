@@ -204,5 +204,5 @@ defmodule ChallengeGov.Messages do
 
   def maybe_send_email(_, _), do: nil
 
-  defp scrub(data), do: String.replace(data, ~r/<(?!\/?a(?=>|\s.*>))\/?.*?>/, " ")
+  # defp scrub(data), do: String.replace(data, ~r/<(?!\/?a(?=>|\s.*>))\/?.*?>/, " ")
 end

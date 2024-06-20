@@ -7,7 +7,7 @@ defmodule ChallengeGov.Recaptcha do
 
   @callback valid_token?(token()) :: tuple()
 
-  @module Application.get_env(:challenge_gov, :recaptcha)[:module]
+  @module Application.compile_env(:challenge_gov, [:recaptcha, :module])
 
   @doc """
   Get the site key for recaptcha

@@ -90,7 +90,9 @@ defmodule ChallengeGov.Submissions.SubmissionExportWorker do
       end)
     end)
 
-    case Porcelain.exec("zip", ["-r", "#{submission_export.id}.zip", "."], dir: tmp_file_directory) do
+    case Porcelain.exec("zip", ["-r", "#{submission_export.id}.zip", "."],
+           dir: tmp_file_directory
+         ) do
       %{status: 0} ->
         file = Storage.prep_file(%{path: zip_file_path})
 

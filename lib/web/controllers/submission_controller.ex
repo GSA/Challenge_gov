@@ -482,18 +482,18 @@ defmodule Web.SubmissionController do
     |> Phoenix.Controller.render(template, assigns)
   end
 
-  defp update_error(conn, changeset, user, submission) do
-    conn
-    |> assign(:user, user)
-    |> assign(:submission, submission)
-    |> assign(:challenge, submission.challenge)
-    |> assign(:phase, submission.phase)
-    |> assign(:action, action_name(conn))
-    |> assign(:path, Routes.submission_path(conn, :update, submission.id))
-    |> assign(:changeset, changeset)
-    |> put_status(422)
-    |> render("edit.html")
-  end
+  # defp update_error(conn, changeset, user, submission) do
+  #   conn
+  #   |> assign(:user, user)
+  #   |> assign(:submission, submission)
+  #   |> assign(:challenge, submission.challenge)
+  #   |> assign(:phase, submission.phase)
+  #   |> assign(:action, action_name(conn))
+  #   |> assign(:path, Routes.submission_path(conn, :update, submission.id))
+  #   |> assign(:changeset, changeset)
+  #   |> put_status(422)
+  #   |> render("edit.html")
+  # end
 
   def submit(conn, %{"id" => id}) do
     %{current_user: user, current_submission: submission} = conn.assigns

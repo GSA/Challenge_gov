@@ -40,7 +40,7 @@ defmodule ChallengeGov.Reports.NumberOfSubmissions do
       challenge_end: c.end_date,
       start_date: ^start_date,
       end_date: ^end_date,
-      listing_type: 'Full',
+      listing_type: ~c"Full",
       submissions_count: count(s)
     })
     |> group_by([c, a, s], [
