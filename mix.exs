@@ -76,7 +76,7 @@ defmodule ChallengeGov.MixProject do
       {:poison, "~> 3.0"},
       {:porcelain, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
-      {:quantum, "~> 3.0-rc"},
+      {:quantum, "~> 3.5.3"},
       {:remote_ip, "~> 0.2.0"},
       {:sobelow, "~> 0.11"},
       {:stein, "0.5.4"},
