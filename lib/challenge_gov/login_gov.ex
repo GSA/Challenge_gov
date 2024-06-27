@@ -11,7 +11,8 @@ defmodule ChallengeGov.LoginGov do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
     |> get()
-    |> handle_response("Sorry, could not fetch well known configuration")
+
+    # |> handle_response("Sorry, could not fetch well known configuration")
   end
 
   def get_public_key(jwks_uri) do
@@ -121,5 +122,23 @@ defmodule ChallengeGov.LoginGov do
 
   def process_response_body(body) do
     Poison.decode!(body)
+  end
+
+  def process_request_options(options) do
+    [
+      proxy: {"https://challengecproxy.apps.internal:61443"},
+      hackney: [
+        ssl_options: [
+          versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2", :"tlsv1.3"],
+          cacertfile: '/etc/ssl/certs/ca-certificates.crt',
+          depth: 3,
+          verify: :verify_none,
+          customize_hostname_check: [
+            match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
+          ],
+          pool: false
+        ]
+      ]
+    ]
   end
 end
