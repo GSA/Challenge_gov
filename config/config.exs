@@ -5,7 +5,7 @@
 # is restricted to this project.
 
 # General application configuration
-use Mix.Config
+import Config
 
 config :challenge_gov,
   namespace: Web,
@@ -21,7 +21,7 @@ config :challenge_gov, Web.Endpoint,
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id]
+  metadata: [:request_id, :log_type, :params]
 
 config :logger_json, :backend, metadata: :all
 

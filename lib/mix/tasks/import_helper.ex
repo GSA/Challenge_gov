@@ -85,8 +85,7 @@ defmodule Mix.Tasks.ImportHelper do
           {matched_parent_agency, matched_component_agency, mappings} =
             find_agency_matches(mapped_agency["parent"], mapped_agency["component"], mappings)
 
-          matched_component_agency_id =
-            if matched_component_agency, do: matched_component_agency.id, else: nil
+          matched_component_agency_id = matched_component_agency && matched_component_agency.id
 
           {
             %{
@@ -186,7 +185,7 @@ defmodule Mix.Tasks.ImportHelper do
           {matched_agency, mappings}
 
         is_map(map_match) ->
-          # credo:disable-for-next-line
+          # credo:disable-for-lines:2
           agency_map_match =
             if parent_agency, do: map_match["component"], else: map_match["parent"]
 

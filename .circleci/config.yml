@@ -8,7 +8,7 @@ jobs:
   setup:
     parallelism: 1
     docker:
-      - image: cimg/elixir:1.13.3-node
+      - image: cimg/elixir:1.16.3-erlang-26.2.1-node
         environment:
           MIX_ENV: test
     steps:
@@ -60,7 +60,7 @@ jobs:
   lint:
     parallelism: 1
     docker:
-      - image: cimg/elixir:1.13.3-node
+      - image: cimg/elixir:1.16.3-erlang-26.2.1-node
         environment:
           MIX_ENV: test
     steps:
@@ -83,7 +83,7 @@ jobs:
   test:
     parallelism: 1
     docker:
-      - image: cimg/elixir:1.13.3-node
+      - image: cimg/elixir:1.16.3-erlang-26.2.1-node
         environment:
           MIX_ENV: test
       - image: mdillon/postgis:10
@@ -126,7 +126,7 @@ jobs:
   assets:
     parallelism: 1
     docker:
-      - image: cimg/elixir:1.13.3-node
+      - image: cimg/elixir:1.16.3-erlang-26.2.1-node
         environment:
           MIX_ENV: test
     steps:
@@ -150,7 +150,7 @@ jobs:
   dev-deploy:
     parallelism: 1
     docker:
-      - image: cimg/node:18.17.1
+      - image: cimg/node:20.14.0
     steps:
       - checkout
       - attach_workspace:
@@ -178,7 +178,7 @@ jobs:
   staging-deploy:
     parallelism: 1
     docker:
-      - image: cimg/node:18.17.1
+      - image: cimg/node:20.14.0
     steps:
       - checkout
       - attach_workspace:
@@ -206,7 +206,7 @@ jobs:
   prod-deploy:
     parallelism: 1
     docker:
-      - image: cimg/node:18.17.1
+      - image: cimg/node:20.14.0
     steps:
       - checkout
       - attach_workspace:
