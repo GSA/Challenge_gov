@@ -13,6 +13,7 @@ jobs:
           MIX_ENV: test
     steps:
       - checkout
+      - run: mix --version
       - run: mix local.hex --force
       - run: mix local.rebar --force
       - run: cp config/test.circleci.exs config/test.local.exs
@@ -30,6 +31,7 @@ jobs:
           keys:
             - v4-build-cache-{{ .Branch }}
             - v4-build-cache
+      - run: mix --version
       - run: mix do deps.get, compile
       - run: cd assets && yarn && cd ..
       - save_cache:
