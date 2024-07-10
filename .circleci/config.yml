@@ -13,6 +13,7 @@ jobs:
           MIX_ENV: test
     steps:
       - checkout
+      - run: mix --version
       - run: mix local.hex --force
       - run: mix local.rebar --force
       - run: cp config/test.circleci.exs config/test.local.exs
