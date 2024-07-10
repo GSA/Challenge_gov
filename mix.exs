@@ -5,7 +5,7 @@ defmodule ChallengeGov.MixProject do
     [
       app: :challenge_gov,
       version: "0.1.0",
-      elixir: "~> 1.16.3",
+      elixir: "~> 1.16.0",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
