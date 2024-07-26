@@ -58,6 +58,16 @@ defmodule Web.DashboardView do
     )
   end
 
+  def evaluator_notice do
+    ~E"""
+      <div class="content-header">
+        <div class="container-fluid">
+          <p>This account is an evaluator and has no access on this site. If this is a mistake contact an admin.</p>
+        </div>
+      </div>
+    """
+  end
+
   def dashboard_header(user) do
     wrapper_classes = "grid-col padding-top-3 padding-left-2"
 
