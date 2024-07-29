@@ -1,5 +1,3 @@
-//import moment from "moment-timezone";
-
 
 const localDate = (datetime) => {
 
@@ -74,7 +72,7 @@ $("body").on("input", ".js-datetime-input", function() {
 // set inputs on page load via hidden input
 $(".js-date-input").each(function() {
   let utc_time = $(this).siblings("input[type=hidden]").val();
-  //let local_date = localTime(utc_time).local().format("YYYY-MM-DD")
+  // format("YYYY-MM-DD")
   let local_date = localDate(utc_time);
 
   $(this).val(local_date)
@@ -82,7 +80,7 @@ $(".js-date-input").each(function() {
 
 $(".js-time-input").each(function() {
   let utc_time = $(this).siblings("input[type=hidden]").val()
-  //let local_time = moment(utc_time).local().format("HH:mm")
+  // format("HH:mm")
   let local_time = localTime(utc_time);
 
   $(this).val(local_time)
@@ -106,8 +104,8 @@ function setCombinedDatetimeValue(input) {
     Object.values(input[0].classList).includes("js-time-input")
       ? input.val()
       : input.siblings(".js-time-input").val()
-
-  let utc_time = moment(`${date} ${time}`).utc().format()
+   
+  let utc_time = localToUTC(`${date} ${time}`); 
 
   utc_time === "Invalid date" ? null : input.siblings("input[type=hidden]").val(utc_time)
 }

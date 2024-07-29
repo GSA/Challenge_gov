@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-//import moment from 'moment';
 import { ChallengeTile } from './ChallengeTile';
 
 const dateAddedOptions = [
@@ -75,7 +74,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const [keyword, setKeyword] = useState('');
   const [filteredChallenges, setFilteredChallenges] = useState([]);
 
-  function isBetween(date, startDate, endDate) {
+  const isBetween = (date, startDate, endDate) => {
 
     let dateObj = new Date(date);
     let startDateObj = new Date(startDate);
@@ -97,8 +96,6 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       }
 
       if (dateAdded) {
-        // const now = moment();
-        // let fromDate = now.clone().subtract(1, "years"); 
         
         const now = new Date(); 
         let fromDate = new Date(now);

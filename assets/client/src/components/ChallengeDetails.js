@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-//import moment from "moment"
 import { stripHtml } from "string-strip-html";
 import { Tooltip } from 'reactstrap';
 import NumberFormat from 'react-number-format';
@@ -30,8 +29,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
   const toggleShareTooltip = () => setShareTooltipOpen(!shareTooltipOpen)
 
   const renderEndDate = (date) => {
-    //const fiveDaysFromNow = moment().add(5,'d').utc().format()
-    //const withinFiveDays = moment(date).diff(fiveDaysFromNow) <= 0
+
     let localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; 
 
     let formatLocalDateTime = (date) => {

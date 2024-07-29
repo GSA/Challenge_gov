@@ -1,6 +1,5 @@
 import React, {useContext} from 'react'
 import { Link } from "react-router-dom";
-//import moment from "moment"
 import {getCurrentPhase, getNextPhase, phaseNumber, formatDateTime, formatTime, isSinglePhase, isPhaseless, daysInMinutes} from "../helpers/phaseHelpers"
 import {truncateString} from '../helpers/stringHelpers'
 import { ApiUrlContext } from '../ApiUrlContext'

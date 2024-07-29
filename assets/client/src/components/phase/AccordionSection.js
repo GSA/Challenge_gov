@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react'
-//import moment from 'moment'
-
 import {phaseInPast, phaseIsCurrent, phaseInFuture} from "../../helpers/phaseHelpers"
 
 export const AccordionSection = ({phase, index, section, children, print}) => {

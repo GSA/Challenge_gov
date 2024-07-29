@@ -1,5 +1,3 @@
-//import moment from "moment-timezone";
-
 
 const localDate = (datetime) => {
 
@@ -46,26 +44,24 @@ const localDateTime = (date) => {
 
 
 $(".js-local-date").each(function() {
-  //let timeZone = moment.tz.guess(true)
+
   let utc_time = $(this).text();
-  //let local_time = moment(utc_time).tz(timeZone).format("MM/DD/YYYY")
+  // Format("MM/DD/YYYY")
   let local_time = localDate(utc_time);
 
   $(this).text(local_time)
 })
 
 $(".js-local-datetime").each(function() {
- // let timeZone = moment.tz.guess(true)
   let utc_time = $(this).text()
- // let local_time = moment(utc_time).tz(timeZone).format("MM/DD/YY hh:mm A z")
+ // format("MM/DD/YY hh:mm A z")
   let local_time = localDateTime(utc_time);
 
   if (local_time != "Invalid date") { $(this).text(local_time) }
 })
 
 $(".js-current-local-date").each(function() {
-  //let timeZone = moment.tz.guess(true)
-  //let utc_time = moment.now()
+ 
   let utc_time = new Date();
   let local_time = localDate(utc_time);
 
@@ -73,10 +69,8 @@ $(".js-current-local-date").each(function() {
 })
 
 $(".js-current-local-time").each(function() {
-  //let timeZone = moment.tz.guess(true)
-  //let utc_time = moment.now()
   let utc_time = new Date();
-  //let local_time = moment.tz(utc_time, timeZone).format("hh:mm A z")
+  // format("hh:mm A z")
   let local_time = localDateTime(utc_time);
 
   $(this).text(local_time)

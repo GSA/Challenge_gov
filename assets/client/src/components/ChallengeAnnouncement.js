@@ -1,11 +1,10 @@
 import React from 'react';
-//import moment from 'moment';
 import {formatDate, daysInMinutes, formatDateTime} from "../helpers/phaseHelpers"
 
 export const ChallengeAnnouncement = ({challenge}) => {
   const checkAnnouncementDate = ({announcement_datetime}) => {
-   //return moment().diff(announcement_datetime, 'minutes') <= daysInMinutes(14)
-   let now =  new Date();
+
+    let now =  new Date();
    let announcementDate = new Date(announcement_datetime);
    let diffInMinutes = (now - announcementDate) / (1000 * 60);
    return diffInMinutes <= daysInMinutes(14)

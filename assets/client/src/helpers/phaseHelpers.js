@@ -1,14 +1,11 @@
-//import moment from "moment-timezone";
 
 export const phaseInPast = (phase) => {
-  //return moment().isAfter(phase.end_date)
   let now = new Date();
   let end = new Date(endDate);
   return now > end;
 }
 
 export const phaseIsCurrent = (phase) => {
-//  return moment().isBetween(phase.start_date, phase.end_date, null, "[]")
   let now = new Date();
   let start = new Date(startDate);
   let end = new Date(endDate);
@@ -16,7 +13,6 @@ export const phaseIsCurrent = (phase) => {
 }
 
 export const phaseInFuture = (phase) => {
-  //return moment().isBefore(phase.start_date)
   let now = new Date();
   let targetDate = new Date(date);
   return now < targetDate;
@@ -50,7 +46,7 @@ export const getNextPhase = (phases) => {
 
 export const sortPhasesByStartDate = (phases) => {
   return phases.sort((a, b) => {
-    //return moment(a.start_date).diff(b.start_date)
+
     let dateA = new Date(a.start_date);
     let dateB = new Date(b.start_date);  
     let difference = dateA - dateB;
@@ -71,8 +67,6 @@ export const phaseNumber = (phases, phase) => {
 }
 
 export const formatDateTime = (date) => {
- // let timeZone = moment.tz.guess(true)
- // return moment.tz(date, timeZone).format("MM/DD/YY hh:mm A z")
 
    let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
    let dateObj = new Date(date);
@@ -99,7 +93,6 @@ export const formatDateTime = (date) => {
 }
 
 export const formatDate = (date) => {
-  //return moment(date).local().format("MM/DD/YY")
   let options = { year: '2-digit', month: '2-digit', day: '2-digit', timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone };
   return new Date(date).toLocaleDateString('en-US', options);
 }
@@ -127,7 +120,6 @@ export const formatTime = (date) => {
 }
 
 export const daysInMinutes = (days) => {
-  //return moment.duration(days, 'days').as('minutes')
   return days * 24 * 60;
 }
 

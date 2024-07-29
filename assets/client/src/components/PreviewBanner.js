@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-//import moment from 'moment'
 import { ApiUrlContext } from '../ApiUrlContext'
 
 export const PreviewBanner = ({challenge}) => {
