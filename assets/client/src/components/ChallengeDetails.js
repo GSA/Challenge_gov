@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import moment from "moment"
+//import moment from "moment"
 import { stripHtml } from "string-strip-html";
 import { Tooltip } from 'reactstrap';
 import NumberFormat from 'react-number-format';
@@ -30,22 +30,51 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
   const toggleShareTooltip = () => setShareTooltipOpen(!shareTooltipOpen)
 
   const renderEndDate = (date) => {
-    const fiveDaysFromNow = moment().add(5,'d').utc().format()
-    const withinFiveDays = moment(date).diff(fiveDaysFromNow) <= 0
+    //const fiveDaysFromNow = moment().add(5,'d').utc().format()
+    //const withinFiveDays = moment(date).diff(fiveDaysFromNow) <= 0
+    let localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; 
 
-    if (date >  moment().utc().format()) {
+    let formatLocalDateTime = (date) => {
+      let dateObj = new Date(date);    
+      let dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: localTimeZone };
+      let timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: localTimeZone };
+      let formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
+      let formattedTime = dateObj.toLocaleTimeString('en-US', timeOptions);    
+      return `${formattedDate} ${formattedTime}`;
+    }   
+    
+    const fiveDaysFromNow = () => {
+      let now = new Date();
+      now.setDate(now.getDate() + 5);
+      let utcDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()));
+      return utcDate.toDateString(); 
+    }
+    
+    const withinFiveDays = (date) => {
+      let givenDate = new Date(date);
+      let now = new Date();
+      let futureDate = new Date(fiveDaysFromNow());
+      return givenDate <= futureDate;
+    } 
+
+    let getUTCNow = () =>  {
+      let now = new Date();
+      return now.toISOString();
+    }
+
+    if (date >  getUTCNow()) {
       return (
         <div className="item">
           <p className="info-title">Open until:</p>
-          <p>{moment(date).local().format('L LT')}</p>
-          { withinFiveDays && <p className="date-qualifier">Closing soon</p> }
+          <p>{formatLocalDateTime(date)}</p>
+          { withinFiveDays() && <p className="date-qualifier">Closing soon</p> }
         </div>
       )
     } else {
       return (
         <div className="item">
           <p className="info-title">Closed on:</p>
-          <p>{moment(date).local().format('L LT')}</p>
+          <p>{formatLocalDateTime(date)}</p>
         </div>
       )
     }

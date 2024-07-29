@@ -2,12 +2,13 @@ import React, { useState, useEffect, useContext } from 'react'
 import { ChallengeTiles } from '../components/ChallengeTiles'
 import axios from 'axios'
 import { ApiUrlContext } from '../ApiUrlContext'
-import moment from "moment"
+//import moment from "moment"
 
 export const LandingPage = ({isArchived}) => {
   const [currentChallenges, setCurrentChallenges] = useState([])
   const [loadingState, setLoadingState] = useState(false)
-  const [selectedYear, setSelectedYear] = useState(moment().year())
+  let currentYear = new Date();
+  const [selectedYear, setSelectedYear] = useState(currentYear.getFullYear())
 
   const { apiUrl } = useContext(ApiUrlContext)
   const challengesPath = isArchived ? "/api/challenges?archived=true" : "/api/challenges"

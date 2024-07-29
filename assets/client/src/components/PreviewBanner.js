@@ -1,10 +1,26 @@
 import React, { useContext } from 'react'
-import moment from 'moment'
+//import moment from 'moment'
 import { ApiUrlContext } from '../ApiUrlContext'
 
 export const PreviewBanner = ({challenge}) => {
   const location = window.location.href.split('?')[0]
   const { apiUrl } = useContext(ApiUrlContext)
+  
+  const formatDateToLLLL = () => {
+
+    let now = new Date()
+    const options = {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    };
+  
+    return new Intl.DateTimeFormat('en-US', options).format(now);
+  }
 
   return (
     challenge ? (
@@ -20,7 +36,7 @@ export const PreviewBanner = ({challenge}) => {
             </div>
             <br/>
             <div>
-              <span className="me-3">Preview generated on {moment().format("llll")}</span>
+              <span className="me-3">Preview generated on {formatDateToLLLL()}</span>
               <a className="me-3" href={window.location.href}>Refresh page</a>
               {!challenge.external_url &&
                 <a href={apiUrl + `/public/previews/challenges?challenge=${challenge.uuid}&print=true`} target="_blank">Print</a>

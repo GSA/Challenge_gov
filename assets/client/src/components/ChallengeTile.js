@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'
 import { Link } from "react-router-dom";
-import moment from "moment"
+//import moment from "moment"
 import {getCurrentPhase, getNextPhase, phaseNumber, formatDateTime, formatTime, isSinglePhase, isPhaseless, daysInMinutes} from "../helpers/phaseHelpers"
 import {truncateString} from '../helpers/stringHelpers'
 import { ApiUrlContext } from '../ApiUrlContext'
@@ -8,10 +8,17 @@ import { ApiUrlContext } from '../ApiUrlContext'
 export const ChallengeTile = ({challenge, preview}) => {
   const { publicUrl, imageBase } = useContext(ApiUrlContext)
 
+  let diffMinutes = (d) =>{
+    let now = new Date(); 
+    let date = new Date(d);
+    return (now - date) / (1000 * 60)
+  }
+
   const renderTags = ({is_archived, start_date, end_date, announcement_datetime}) => {
-    const startDateDiff = moment().diff(start_date, 'minutes')
-    const endDateDiff = moment().diff(end_date, 'minutes')
-    const announcementDateDiff = moment().diff(announcement_datetime, 'minutes')
+  
+    const startDateDiff = diffMinutes(start_date);
+    const endDateDiff = diffMinutes(end_date);
+    const announcementDateDiff = diffMinutes(announcement_datetime);
 
     let tags = []
 
@@ -40,8 +47,8 @@ export const ChallengeTile = ({challenge, preview}) => {
 
   const renderDate = (challenge) => {
     const {start_date, end_date, phases} = challenge
-    const startDateDiff = moment().diff(start_date, 'minutes')
-    const endDateDiff = moment().diff(end_date, 'minutes')
+    const startDateDiff = diffMinutes(start_date)
+    const endDateDiff = diffMinutes(end_date)
 
     if (isPhaseless(challenge)) {
       return handlePhaselessChallengeDate(challenge)
@@ -73,8 +80,8 @@ export const ChallengeTile = ({challenge, preview}) => {
 
   // TODO: This is potentially temporary until the importer handles adding phases to imported challenges
   const handlePhaselessChallengeDate = ({start_date, end_date}) => {
-    const startDateDiff = moment().diff(start_date, 'minutes')
-    const endDateDiff = moment().diff(end_date, 'minutes')
+    const startDateDiff = diffMinutes(start_date)
+    const endDateDiff = diffMinutes(end_date)
 
     if (startDateDiff < 0) {
       return `Opens on ${formatDateTime(start_date)}`
