@@ -316,7 +316,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const renderYearFilter = () => {
   const startYear = 2010;
   let year = new Date();
-  const currentYear = year;
+  const currentYear = year.getFullYear();
   const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
   const years = range(currentYear, startYear, -1);
 
