@@ -1,20 +1,20 @@
 
 export const phaseInPast = (phase) => {
   let now = new Date();
-  let end = new Date(endDate);
+  let end = new Date(phase.end_date);
   return now > end;
 }
 
 export const phaseIsCurrent = (phase) => {
   let now = new Date();
-  let start = new Date(startDate);
-  let end = new Date(endDate);
+  let start = new Date(phase.start_date);
+  let end = new Date(phase.end_date);
   return now >= start && now <= end;
 }
 
 export const phaseInFuture = (phase) => {
   let now = new Date();
-  let targetDate = new Date(date);
+  let targetDate = new Date(phase.start_date);
   return now < targetDate;
 }
 
