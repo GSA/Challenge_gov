@@ -1,12 +1,23 @@
 import React, {useEffect, useState} from 'react'
-import moment from 'moment'
-
 import {phaseInPast, phaseIsCurrent, phaseInFuture} from "../../helpers/phaseHelpers"
 
 export const AccordionSection = ({phase, index, section, children, print}) => {
   const [expanded, setExpanded] = useState();
   const [phaseClass, setPhaseClass] = useState();
   const [phaseText, setPhaseText] = useState();
+
+  let localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; 
+
+  let formatLocalDateTime = (date) => {
+
+    let dateObj = new Date(date);  
+    let month = (dateObj.getMonth() + 1).toString().padStart(2, '0'); 
+    let day = dateObj.getDate().toString().padStart(2, '0');
+    let year = dateObj.getFullYear().toString().slice(-2); 
+
+    return `${month}/${day}/${year}`;
+  }   
+
   useEffect(() => {
     setExpanded(() => {
       return phaseIsCurrent(phase)
@@ -15,9 +26,9 @@ export const AccordionSection = ({phase, index, section, children, print}) => {
       if (phaseInPast(phase)) {
         return 'closed';
       } else if (phaseIsCurrent(phase)) {
-        return `open until ${moment(phase.end_date).local().format("MM/DD/YY")}`;
+        return `open until ${formatLocalDateTime(phase.end_date)}`;
       } else if (phaseInFuture(phase)) {
-        return `opens on ${moment(phase.start_date).local().format("MM/DD/YY")}`;
+        return `opens on ${formatLocalDateTime(phase.start_date)}`;
       }
     });
     setPhaseClass(() => {
