@@ -9,9 +9,21 @@ defmodule Web.Endpoint do
   end
 
   @session_options [
-    store: :cookie,
-    key: "_challenge_gov_key",
-    signing_salt: "+S7HWPoL"
+    store: PlugRailsCookieSessionStore,
+    # key: "_challenge_gov_key",
+    signing_salt: "+S7HWPoL",
+    key: "_rails_app_session",
+    secure: true,
+    encrypt: true,
+    # Specifies the matching rules on the hostname that this cookie will be valid for
+    domain: "localhost",
+    # signing_salt: System.get_env("SESSION_ENCRYPTED_SIGNED_COOKIE_SALT"),
+    encryption_salt: "encryption salt",
+    # key_iterations: 1000,
+    # key_length: 64,
+    # key_digest: :sha,
+    # Specify a JSON serializer to use on the session
+    serializer: Poison
   ]
 
   socket "/socket", Web.UserSocket,
