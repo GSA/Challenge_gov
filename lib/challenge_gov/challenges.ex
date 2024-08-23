@@ -755,21 +755,6 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  defp validate_gov_mil(email) do
-    String.ends_with?(email, [".gov", ".mil"])
-  end
-
-  def allowed_to_view_submission(user = %{role: "challenge_manager"}, challenge) do
-    if validate_gov_mil(user.email) do
-      {:ok, challenge}
-    else
-      {:error, :not_permitted}
-    end
-  end
-
-  def allowed_to_view_submission?(user = %{role: "challenge_manager"}),
-    do: validate_gov_mil(user.email)
-
   def allowed_to_submit?(%{role: "super_admin"}), do: true
 
   def allowed_to_submit?(%{role: "admin"}), do: true
