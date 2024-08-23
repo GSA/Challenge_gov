@@ -19,7 +19,7 @@
     "create-react-app": "^5.0.1",
     "file-loader": "^6.2.0",
     "inputmask": "^5.0.5",
-    "jquery": "^3.3.1",
+    "jquery": "^3.7.1",
     "moment": "^2.27.0",
     "moment-timezone": "^0.5.31",
     "node-quill-converter": "^0.3.3",
