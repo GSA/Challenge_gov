@@ -23,7 +23,7 @@ let
     pkgs.postgresql
 
     pkgs.elixir_1_16
-    pkgs.nodejs_18
+    pkgs.nodejs
     pkgs.yarn
     pkgs.license_finder
 
