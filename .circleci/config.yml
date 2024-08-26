@@ -175,6 +175,34 @@ jobs:
           space: dev
       - run: cf push challenge-portal-dev --strategy rolling
 
+  dev-eval-deploy:
+    parallelism: 1
+    docker:
+      - image: cimg/node:20.14.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - run: echo -e $EVAL_DEV_PRIVATE_KEY > dev_key.pem
+      - run: echo -e $EVAL_DEV_PUBLIC_CERT > dev_cert.pem
+      - run: echo 'export CF_PASSWORD=$CF_PASSWORD_EVAL_DEV' >> $BASH_ENV
+      - run: echo 'export CF_USERNAME=$CF_USERNAME_EVAL_DEV' >> $BASH_ENV
+      - run:
+          name: Install Cloud Foundry CLI
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y ca-certificates jq
+            sudo touch /etc/apt/sources.list.d/cloudfoundry-cli.list
+            echo "deb [trusted=yes] https://packages.cloudfoundry.org/debian stable main" | sudo tee -a /etc/apt/sources.list.d/cloudfoundry-cli.list
+            sudo apt-get update
+            sudo apt-get install dpkg
+            sudo apt-get install cf7-cli
+      - cloudfoundry/auth:
+          endpoint: "https://api.fr.cloud.gov"
+          org: gsa-tts-innovation-challenge
+          space: eval-dev
+      - run: cf push challenge-portal-eval-dev --strategy rolling
+
   staging-deploy:
     parallelism: 1
     docker:
@@ -252,6 +280,14 @@ workflows:
           filters:
             branches:
               only: main
+      - dev-eval-deploy:
+          requires:
+            - lint
+            - test
+            - assets
+          filters:
+            branches:
+              only: eval-main
       - release-approval:
           type: approval
           requires:
