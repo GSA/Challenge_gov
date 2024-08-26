@@ -9,7 +9,7 @@ defmodule Web.PhaseControllerTest do
       user = AccountHelpers.create_user(%{role: "super_admin"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.gov", role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
       _challenge_2 = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 
@@ -31,7 +31,7 @@ defmodule Web.PhaseControllerTest do
       user = AccountHelpers.create_user(%{role: "admin"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.gov", role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
       _challenge_2 = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 
@@ -90,7 +90,7 @@ defmodule Web.PhaseControllerTest do
       user = AccountHelpers.create_user(%{role: "challenge_manager"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.gov", role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
       _challenge_2 = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 
@@ -111,7 +111,7 @@ defmodule Web.PhaseControllerTest do
       user = AccountHelpers.create_user(%{role: "solver"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.gov", role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
       _challenge_2 = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 
@@ -134,7 +134,7 @@ defmodule Web.PhaseControllerTest do
       user = AccountHelpers.create_user(%{role: "super_admin"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.gov", role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 
       phase = Enum.at(challenge.phases, 0)
@@ -155,7 +155,7 @@ defmodule Web.PhaseControllerTest do
       user = AccountHelpers.create_user(%{role: "admin"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.gov", role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 
       phase = Enum.at(challenge.phases, 0)
@@ -230,7 +230,7 @@ defmodule Web.PhaseControllerTest do
       user = AccountHelpers.create_user(%{role: "challenge_manager"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.gov", role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
       _challenge_2 = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 
@@ -252,7 +252,7 @@ defmodule Web.PhaseControllerTest do
       user = AccountHelpers.create_user(%{role: "solver"})
       conn = prep_conn(conn, user)
 
-      user2 = AccountHelpers.create_user(%{email: "user2@example.com", role: "challenge_manager"})
+      user2 = AccountHelpers.create_user(%{email: "user2@example.gov", role: "challenge_manager"})
       challenge = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
       _challenge_2 = ChallengeHelpers.create_single_phase_challenge(user2, %{user_id: user2.id})
 

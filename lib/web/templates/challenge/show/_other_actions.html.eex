@@ -2,7 +2,7 @@
   <div class="usa-card__body">
     <h4>Other actions</h4>
    <ul class="usa-button-group">
-     <%= if Challenges.allowed_to_view_submission?(@user) do %>
+     <%= if Challenges.is_allowed_to_view_submission?(@user) do %>
      <li class="usa-button-group__item">
       <%= challenge_submissions_link(@conn, @challenge, @user, label: "View submissions", class: "usa-button") %>
      </li>
