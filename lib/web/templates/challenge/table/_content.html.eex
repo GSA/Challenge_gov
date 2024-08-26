@@ -29,6 +29,7 @@
               <div class="dropdown-content">
                 <%= if Challenges.is_allowed_to_view_submission?(@user) do %>
                 <%= challenge_submissions_link(@conn, challenge, @user, class: "usa-button usa-button--unstyled") %>
+                <% end %>
                 <div><%= link "Preview", to: Routes.public_preview_path(@conn, :index, challenge: challenge.uuid), target: "_blank", class: "usa-button usa-button--unstyled" %></div>
                 <div><%= link "Print", to: Routes.public_preview_path(@conn, :index, challenge: challenge.uuid, print: true), target: "_blank", class: "usa-button usa-button--unstyled" %></div>
                 <div><%= link "Download JSON", to: Routes.export_path(@conn, :export_challenge, challenge.id, "json"), target: "_blank", class: "usa-button usa-button--unstyled" %></div>
