@@ -128,8 +128,6 @@ defmodule Web.SessionController do
   session timeout and reset
   """
   def check_session_timeout(conn, _opts_or_params) do
-    IO.inspect(get_session(conn))
-
     timeout_at = get_session(conn, :session_timeout_at)
     timeout_after_minutes = Security.timeout_interval()
 
@@ -146,8 +144,6 @@ defmodule Web.SessionController do
         |> halt()
       end
     else
-      IO.inspect("Signing out")
-
       conn
       |> logout_user()
       |> halt()

@@ -8,8 +8,7 @@ import Config
 # with webpack to recompile .js and .css sources.
 config :challenge_gov, Web.Endpoint,
   http: [port: 4000],
-  secret_key_base:
-    "7ed13716816baafaae478b00a35cf84b3a2fa49a03db2d2944f11f0f2b85c0680d119875bb8bbd919199149a1d5d1aa1608f42a278bd0a9f8e67b676523ece1f",
+  secret_key_base: "",
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
