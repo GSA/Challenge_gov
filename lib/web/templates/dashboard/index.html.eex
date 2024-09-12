@@ -5,5 +5,9 @@
     <%= recertification_warning(@conn, @current_user)%>
   <% end %>
 
+  <%= if Accounts.is_evaluator?(@current_user) do %>
+    <%= evaluator_notice() %>
+  <% end %>
+
   <%= dashboard_card_links(@current_user) %>
 </section>

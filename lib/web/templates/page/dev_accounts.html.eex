@@ -22,11 +22,23 @@
   <div>
     <h1>Challenge Manager Accounts</h1>
     <%= button("Challenge Manager Active", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "challenge_manager_active@example.gov"), method: :post, class: "usa-button") %>
+    <%= button("Challenge Manager Alejandro@gmail.com", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "alejandro.donis@gmail.com"), method: :post, class: "usa-button") %>
     <%= button("Pending", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "challenge_manager_pending@example.com"), method: :post, class: "usa-button") %>
     <%= button("Suspended", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "challenge_manager_suspended@example.com"), method: :post, class: "usa-button") %>
     <%= button("Revoked", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "challenge_manager_revoked@example.com"), method: :post, class: "usa-button") %>
     <%= button("Deactivated", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "challenge_manager_deactivated@example.com"), method: :post, class: "usa-button") %>
     <%= button("Decertified", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "challenge_manager_decertified@example.com"), method: :post, class: "usa-button") %>
+  </div>
+  <br/>
+  <div>
+    <h1>Evaluator Accounts</h1>
+    <%= button("Active (.gov)", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "evaluator_active@example.gov"), method: :post, class: "usa-button") %>
+    <%= button("Active", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "evaluator_active@example.com"), method: :post, class: "usa-button") %>
+    <%= button("Pending", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "evaluator_pending@example.com"), method: :post, class: "usa-button") %>
+    <%= button("Suspended", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "evaluator_suspended@example.com"), method: :post, class: "usa-button") %>
+    <%= button("Revoked", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "evaluator_revoked@example.com"), method: :post, class: "usa-button") %>
+    <%= button("Deactivated", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "evaluator_deactivated@example.com"), method: :post, class: "usa-button") %>
+    <%= button("Decertified", to: Routes.dev_accounts_page_path(@conn, :dev_account_sign_in, email: "evaluator_decertified@example.com"), method: :post, class: "usa-button") %>
   </div>
   <br/>
   <div>

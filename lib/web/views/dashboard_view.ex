@@ -1,6 +1,7 @@
 defmodule Web.DashboardView do
   use Web, :view
 
+  alias ChallengeGov.Challenges
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Accounts
   alias ChallengeGov.MessageContextStatuses
@@ -56,6 +57,16 @@ defmodule Web.DashboardView do
       class: "usa-button",
       style: "color:white;text-decoration:none;"
     )
+  end
+
+  def evaluator_notice do
+    ~E"""
+      <div class="content-header">
+        <div class="container-fluid">
+          <p>This account is an evaluator and has no access on this site. If this is a mistake contact an admin.</p>
+        </div>
+      </div>
+    """
   end
 
   def dashboard_header(user) do
@@ -114,7 +125,7 @@ defmodule Web.DashboardView do
         admin_card_links()
 
       Accounts.is_challenge_manager?(user) ->
-        challenge_manager_card_links()
+        challenge_manager_card_links(user)
 
       Accounts.is_solver?(user) ->
         solver_card_links(user)
@@ -201,7 +212,7 @@ defmodule Web.DashboardView do
     ]
   end
 
-  defp challenge_manager_card_links() do
+  defp challenge_manager_card_links(user) do
     [
       content_tag :div, class: "grid-row" do
         [
@@ -212,13 +223,17 @@ defmodule Web.DashboardView do
             title: "Challenge management",
             description: "Manage and view all open and archived challenges."
           ),
-          render("_card_link.html",
-            to: Routes.challenge_path(Endpoint, :new),
-            target: "",
-            icon: my_icon("add"),
-            title: "Create a new challenge",
-            description: nil
-          )
+          if Challenges.is_allowed_to_view_submission?(user) do
+            render("_card_link.html",
+              to: Routes.challenge_path(Endpoint, :new),
+              target: "",
+              icon: my_icon("add"),
+              title: "Create a new challenge",
+              description: nil
+            )
+          else
+            ""
+          end
         ]
       end,
       content_tag :div, class: "grid-row" do
