@@ -21,7 +21,8 @@ defmodule ChallengeGov.Accounts.User do
     %{id: "super_admin", label: "Super Admin", rank: 1},
     %{id: "admin", label: "Admin", rank: 2},
     %{id: "challenge_manager", label: "Challenge Manager", rank: 3},
-    %{id: "solver", label: "Solver", rank: 4}
+    %{id: "evaluator", label: "Evaluator", rank: 4},
+    %{id: "solver", label: "Solver", rank: 5}
   ]
 
   @doc """

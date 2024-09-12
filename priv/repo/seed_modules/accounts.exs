@@ -41,6 +41,27 @@ defmodule Seeds.SeedModules.Accounts do
       privacy_guidelines: terms_and_privacy_for_role("challenge_manager")
     })
 
+    # Evaluators
+    create_role_of_status("evaluator", "active")
+    create_role_of_status("evaluator", "pending")
+    create_role_of_status("evaluator", "suspended")
+    create_role_of_status("evaluator", "revoked")
+    create_role_of_status("evaluator", "deactivated")
+    create_role_of_status("evaluator", "decertified")
+
+    # .gov Evaluators
+    Accounts.system_create(%{
+      token: Ecto.UUID.generate(),
+      role: "evaluator",
+      status: "active",
+      email: "evaluator_active@example.gov",
+      first_name: generate_name("evaluator"),
+      last_name: generate_name("active"),
+      last_active: last_active_for_role("evaluator"),
+      terms_of_use: terms_and_privacy_for_role("evaluator"),
+      privacy_guidelines: terms_and_privacy_for_role("evaluator")
+    })
+
     # Solvers
     create_role_of_status("solver", "active")
     create_role_of_status("solver", "pending")

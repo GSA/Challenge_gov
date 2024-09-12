@@ -643,6 +643,21 @@ defmodule ChallengeGov.Accounts do
   def is_challenge_manager?(_), do: false
 
   @doc """
+  Check if a user is an evaluator
+
+      iex> Accounts.is_evaluator?(%User{role: "evaluator"})
+      true
+
+      iex> Accounts.is_evaluator?(%User{role: "evaluator"})
+      false
+  """
+  def is_evaluator?(user)
+
+  def is_evaluator?(%{role: "evaluator"}), do: true
+
+  def is_evaluator?(_), do: false
+
+  @doc """
   Check if a user is a solver
 
       iex> Accounts.is_solver?(%User{role: "solver"})
