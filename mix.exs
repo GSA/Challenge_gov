@@ -49,7 +49,7 @@ defmodule ChallengeGov.MixProject do
       {:credo_envvar, "~> 0.1", only: [:dev, :test], runtime: false},
       {:credo_naming, "~> 2.0", only: [:dev, :test], runtime: false},
       {:earmark, "~> 1.4.3"},
-      {:ecto_sql, "~> 3.9.2"},
+      {:ecto_sql, "~> 3.9"},
       {:elixir_uuid, "~> 1.2"},
       {:ex_check, "~> 0.12", only: [:dev, :test], runtime: true},
       {:export, "~> 0.1.1"},
@@ -86,7 +86,7 @@ defmodule ChallengeGov.MixProject do
       {:timex, "~> 3.5"},
       {:waffle, "~> 1.1.5"},
       {:waffle_ecto, "~> 0.0.11"},
-      {:wallaby, "~> 0.28.0", runtime: false, only: :test},
+      {:wallaby, "~> 0.30", runtime: false, only: :test},
       {:xml_builder, "~> 2.1.1", override: true}
     ]
   end
