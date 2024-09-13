@@ -48,12 +48,13 @@ defmodule Web.Api.SessionController do
 
   defp verify_external_login_request(conn) do
     login_secret = conn |> get_req_header("login-secret") |> List.first()
+    remote_ip = conn |> get_req_header("remote-ip") |> List.first()
 
     if login_secret == System.get_env("LOGIN_SECRET") do
       with user_jwt <- conn |> get_req_header("user-jwt") |> List.first(),
            {:ok, userinfo = %{"sub" => id_token}} <- verify_user_jwt(user_jwt),
            {:ok, user} <-
-             Accounts.map_from_login(userinfo, id_token, Security.extract_remote_ip(conn)) do
+             Accounts.map_from_login(userinfo, id_token, remote_ip) do
         conn
         |> put_session(:user_token, user.token)
         |> put_session(:session_timeout_at, new_session_timeout_at(Security.timeout_interval()))
