@@ -71,5 +71,5 @@ yarn.lock
 /otp-OTP-24.0.2/
 /otp-OTP-24.1.2/
 
-.nix-hex
-.nix-mix
+/.nix-hex/
+/.nix-mix/
