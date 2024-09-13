@@ -103,6 +103,7 @@ defmodule Web.SessionController do
     log_session_duration(conn, user)
 
     conn
+    |> clear_rails_session()
     |> clear_session()
     |> redirect(external: LoginGov.logout_uri(client_id))
   end
@@ -156,6 +157,7 @@ defmodule Web.SessionController do
     log_session_duration(conn, user)
 
     conn
+    |> clear_rails_session()
     |> clear_session()
     |> configure_session([:renew])
     |> assign(:session_timeout, true)
@@ -176,5 +178,9 @@ defmodule Web.SessionController do
       Timex.to_unix(Timex.now()),
       Security.extract_remote_ip(conn)
     )
+  end
+
+  defp clear_rails_session(conn) do
+    delete_resp_cookie(conn, "_rails_new_session")
   end
 end

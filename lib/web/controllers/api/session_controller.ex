@@ -35,6 +35,7 @@ defmodule Web.Api.SessionController do
     )
 
     conn
+    |> clear_rails_session()
     |> clear_session()
     |> configure_session([:renew])
     |> assign(:session_timeout, true)
@@ -81,5 +82,9 @@ defmodule Web.Api.SessionController do
 
   defp new_session_timeout_at(timeout_after_minutes) do
     now() + timeout_after_minutes * 60
+  end
+
+  defp clear_rails_session(conn) do
+    delete_resp_cookie(conn, "_rails_new_session")
   end
 end
