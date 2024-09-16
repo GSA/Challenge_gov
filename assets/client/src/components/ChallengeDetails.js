@@ -121,7 +121,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
           <div className="follow-tooltip__section">
             <h4>Follow challenge as guest</h4>
             <p>Receive challenge updates to your email. No sign-in required</p>
-            <a href={preview ? null : challenge.gov_delivery_topic_subscribe_link}>
+            <a href={preview ? "#" : `${apiUrl}/challenges/${encodeURIComponent(challenge.id)}/save_challenge/new`}>
               <button className="follow-tooltip__button">Follow challenge</button>
             </a>
           </div>
@@ -350,7 +350,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                   <div className="logos">
                     <img
                       className="agency-logo"
-                      src={imageBase + challenge.agency_logo}
+                      src={`${imageBase}${encodeURIComponent(challenge.agency_logo)}`}
                       alt={`Agency logo for ${challenge.agency_name}`}                    
                     />
 
@@ -404,7 +404,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                 </div>
               }
               {!print &&
-                <a className="follow__btn" href={apiUrl + `/public/previews/challenges?challenge=${challenge.uuid}&print=true`} target="_blank">
+                <a className="follow__btn" href={`${apiUrl}/public/previews/challenges?challenge=${encodeURIComponent(challenge.uuid)}&print=true`} target="_blank" rel="noopener noreferrer">
                   <span className="details__btn">
                       <svg className="usa-icon" aria-hidden="true" focusable="false" role="img"
                            style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
