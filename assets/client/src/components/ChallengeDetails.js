@@ -121,7 +121,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
           <div className="follow-tooltip__section">
             <h4>Follow challenge as guest</h4>
             <p>Receive challenge updates to your email. No sign-in required</p>
-            <a href={preview ? "#" : `${apiUrl}/challenges/${encodeURIComponent(challenge.id)}/save_challenge/new`}>
+            <a href={preview ? "#" : `${encodeURIComponent(challenge.gov_delivery_topic_subscribe_link)}`}>
               <button className="follow-tooltip__button">Follow challenge</button>
             </a>
           </div>
