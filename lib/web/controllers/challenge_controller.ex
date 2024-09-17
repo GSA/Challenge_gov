@@ -74,22 +74,30 @@ defmodule Web.ChallengeController do
     )
   end
 
+  # create new challenge
   def new(conn, params) do
     %{current_user: user} = conn.assigns
 
-    show_info = Map.get(params, "show_info", false)
-    {:ok, wizard_info} = SiteContent.get("challenge_wizard_info")
+    if Challenges.is_allowed_to_view_submission?(user) do
+      show_info = Map.get(params, "show_info", false)
+      {:ok, wizard_info} = SiteContent.get("challenge_wizard_info")
 
-    render(conn, "wizard.html",
-      user: user,
-      changeset: Challenges.new(user),
-      path: Routes.challenge_path(conn, :create),
-      action: action_name(conn),
-      section: "general",
-      show_info: show_info,
-      wizard_info: wizard_info,
-      challenge: nil
-    )
+      render(conn, "wizard.html",
+        user: user,
+        changeset: Challenges.new(user),
+        path: Routes.challenge_path(conn, :create),
+        action: action_name(conn),
+        section: "general",
+        show_info: show_info,
+        wizard_info: wizard_info,
+        challenge: nil
+      )
+    else
+      conn
+      |> assign(:user, user)
+      |> put_flash(:error, "You are not allowed to create challenges")
+      |> redirect(to: Routes.challenge_path(conn, :index))
+    end
   end
 
   def create(
