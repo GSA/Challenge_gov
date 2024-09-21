@@ -49,7 +49,7 @@ defmodule ChallengeGov.MixProject do
       {:credo_envvar, "~> 0.1", only: [:dev, :test], runtime: false},
       {:credo_naming, "~> 2.0", only: [:dev, :test], runtime: false},
       {:earmark, "~> 1.4.3"},
-      {:ecto_sql, "~> 3.4"},
+      {:ecto_sql, "~> 3.9.2"},
       {:elixir_uuid, "~> 1.2"},
       {:ex_check, "~> 0.12", only: [:dev, :test], runtime: true},
       {:export, "~> 0.1.1"},
