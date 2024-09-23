@@ -60,12 +60,13 @@ const renderRouter = () => (
 )
 
 const rootElement = document.getElementById('challenge-gov-react-app')
-const apiUrl = encodeURI(rootElement.getAttribute('data-api-url'))
-const publicUrl = rootElement.getAttribute('data-public-url')
-const imageBase = encodeURI(rootElement.getAttribute('data-image-base'))
-const bridgeApplyBlocked = rootElement.getAttribute('data-bridge-apply-blocked') != 'false'
-
-ReactDOM.render(renderRouter(), rootElement);
+if (rootElement){
+  const apiUrl = encodeURI(rootElement.getAttribute('data-api-url'))
+  const publicUrl = rootElement.getAttribute('data-public-url')
+  const imageBase = encodeURI(rootElement.getAttribute('data-image-base'))
+  const bridgeApplyBlocked = rootElement.getAttribute('data-bridge-apply-blocked') != 'false'
+  ReactDOM.render(renderRouter(), rootElement);
+}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
