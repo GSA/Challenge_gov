@@ -37,17 +37,18 @@ defmodule ChallengeGov.Application do
 
   defp finch_config(nil), do: {Finch, name: ChallengeGov.HTTPClient}
   defp finch_config(""), do: {Finch, name: ChallengeGov.HTTPClient}
+
   defp finch_config(proxy_host) do
-      {Finch,
-        name: ChallengeGov.HTTPClient,
-        pools: %{
-          :default => [
-            size: 5,
-            conn_opts: [
-              protocols: [:http1],
-              proxy: {:http, proxy_host, 8080, []}
-            ]
-          ]
-        }},
+    {Finch,
+     name: ChallengeGov.HTTPClient,
+     pools: %{
+       :default => [
+         size: 5,
+         conn_opts: [
+           protocols: [:http1],
+           proxy: {:http, proxy_host, 8080, []}
+         ]
+       ]
+     }}
   end
 end

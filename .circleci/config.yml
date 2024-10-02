@@ -25,11 +25,9 @@ jobs:
           keys:
             - v5-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
             - v5-mix-cache-{{ .Branch }}
-            - v5-mix-cache
       - restore_cache:
           keys:
             - v5-build-cache-{{ .Branch }}
-            - v5-build-cache
       - run: mix do deps.get, compile
       - run: cd assets && yarn && cd ..
       - save_cache:
@@ -48,13 +46,7 @@ jobs:
           key: v5-mix-cache-{{ .Branch }}
           paths: "deps"
       - save_cache:
-          key: v5-mix-cache
-          paths: "deps"
-      - save_cache:
           key: v5-build-cache-{{ .Branch }}
-          paths: "_build"
-      - save_cache:
-          key: v5-build-cache
           paths: "_build"
 
   lint:
