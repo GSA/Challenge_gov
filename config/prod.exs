@@ -90,6 +90,8 @@ config :challenge_gov, :login_gov_logout, %{
   logout_redirect_uri: System.get_env("LOGOUT_REDIRECT_URI")
 }
 
+config :challenge_gov, :session_cookie_domain, System.get_env("SESSION_COOKIE_DOMAIN")
+
 config :challenge_gov,
   session_timeout_in_minutes: System.get_env("SESSION_TIMEOUT_IN_MINUTES") || 15,
   account_deactivation_in_days: System.get_env("ACCOUNT_DEACTIVATION_IN_DAYS") || 90,
