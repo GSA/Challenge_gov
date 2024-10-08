@@ -115,7 +115,7 @@ export const ChallengeTile = ({challenge, preview}) => {
         <div className="agency_image_wrapper">
           <img
             className="agency-logo"
-            src={imageBase + challenge.agency_logo}
+            src={`${imageBase}${encodeURIComponent(challenge.agency_logo)}`}
             alt={truncateString(`Agency Logo: ${challenge.agency_name}`, 90)}
           />
         </div>
@@ -134,7 +134,7 @@ export const ChallengeTile = ({challenge, preview}) => {
       <div className="image_wrapper">
         <img
             className="agency-logo"
-            src={imageBase + challenge.agency_logo}
+            src={`${imageBase}${encodeURIComponent(challenge.agency_logo)}`}
             alt={truncateString(`Agency Logo: ${challenge.agency_name}`, 90)}
         />
       </div>
@@ -144,7 +144,7 @@ export const ChallengeTile = ({challenge, preview}) => {
   return (
     challenge ? (
       <div key={challenge.id} className="challenge-tile card">
-        <a href={challengeTileUrl(challenge, preview)} target={challenge.external_url ? "_blank" : ""} aria-label="">
+        <a href={encodeURI(challengeTileUrl(challenge, preview))} target={challenge.external_url ? "_blank" : ""} aria-label="">
           {renderTileLogo()}
           <div className="challenge-tile__text-wrapper">
             <h2 className="challenge-tile__title test" aria-label="" style={{ textAlign: 'left', paddingLeft: '20px', paddingTop: '20px', lineHeight: '30px' }}>{truncateString(challenge.title, 90)}</h2>
