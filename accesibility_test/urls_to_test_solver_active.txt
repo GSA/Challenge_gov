@@ -1,0 +1,6 @@
+/
+/submissions
+/solver_help
+/saved_challenges
+/submissions/187/edit
+/submissions/187
