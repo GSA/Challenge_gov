@@ -75,7 +75,7 @@ defmodule ChallengeGov.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:poison, "~> 3.0"},
       {:porcelain, "~> 2.0"},
-      {:postgrex, ">= 0.0.0"},
+      {:postgrex, ">= 0.0.0", override: true},
       {:quantum, "~> 3.5.3"},
       {:remote_ip, "~> 0.2.0"},
       {:sobelow, "~> 0.11"},
