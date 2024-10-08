@@ -86,6 +86,6 @@ defmodule Web.Api.SessionController do
   end
 
   defp clear_rails_session(conn) do
-    delete_resp_cookie(conn, "_rails_new_session")
+    delete_resp_cookie(conn, "_challenge_platform_key")
   end
 end
