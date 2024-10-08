@@ -11,6 +11,7 @@ defmodule Web.Endpoint do
   @session_options [
     store: :cookie,
     key: "_challenge_gov_key",
+    same_site: "Lax",
     signing_salt: "+S7HWPoL"
   ]
 
