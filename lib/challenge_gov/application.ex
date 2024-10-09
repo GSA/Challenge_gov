@@ -46,7 +46,7 @@ defmodule ChallengeGov.Application do
          size: 5,
          conn_opts: [
            protocols: [:http1],
-           proxy: {:http, proxy_host, 8080, []}
+           proxy: {:http, proxy_host, 8888, []}
          ]
        ]
      }}
