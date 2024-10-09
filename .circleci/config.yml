@@ -18,43 +18,35 @@ jobs:
       - run: cp config/test.circleci.exs config/test.local.exs
       - restore_cache:
           keys:
-            - v4-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
-            - v4-yarn-cache-{{ .Branch }}
-            - v4-yarn-cache
+            - v5-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
+            - v5-yarn-cache-{{ .Branch }}
+            - v5-yarn-cache
       - restore_cache:
           keys:
-            - v4-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-            - v4-mix-cache-{{ .Branch }}
-            - v4-mix-cache
+            - v5-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+            - v5-mix-cache-{{ .Branch }}
       - restore_cache:
           keys:
-            - v4-build-cache-{{ .Branch }}
-            - v4-build-cache
+            - v5-build-cache-{{ .Branch }}
       - run: mix do deps.get, compile
       - run: cd assets && yarn && cd ..
       - save_cache:
-          key: v4-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
+          key: v5-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
           paths: "assets/node_modules"
       - save_cache:
-          key: v4-yarn-cache-{{ .Branch }}
+          key: v5-yarn-cache-{{ .Branch }}
           paths: "assets/node_modules"
       - save_cache:
-          key: v4-yarn-cache-{{ .Branch }}
+          key: v5-yarn-cache-{{ .Branch }}
           paths: "assets/node_modules"
       - save_cache:
-          key: v4-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          key: v5-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
           paths: "deps"
       - save_cache:
-          key: v4-mix-cache-{{ .Branch }}
+          key: v5-mix-cache-{{ .Branch }}
           paths: "deps"
       - save_cache:
-          key: v4-mix-cache
-          paths: "deps"
-      - save_cache:
-          key: v4-build-cache-{{ .Branch }}
-          paths: "_build"
-      - save_cache:
-          key: v4-build-cache
+          key: v5-build-cache-{{ .Branch }}
           paths: "_build"
 
   lint:
@@ -69,11 +61,11 @@ jobs:
       - run: mix local.rebar --force
       - run: cp config/test.circleci.exs config/test.local.exs
       - restore_cache:
-          key: v4-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
+          key: v5-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
       - restore_cache:
-          key: v4-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          key: v5-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
       - restore_cache:
-          key: v4-build-cache-{{ .Branch }}
+          key: v5-build-cache-{{ .Branch }}
       - run: mix deps.get
       - run: mix compile --force
       - run: mix deps.audit  --ignore-package-names sweet_xml
@@ -106,11 +98,11 @@ jobs:
       - run: mix clean
       - run: cp config/test.circleci.exs config/test.local.exs
       - restore_cache:
-          key: v4-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
+          key: v5-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
       - restore_cache:
-          key: v4-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          key: v5-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
       - restore_cache:
-          key: v4-build-cache-{{ .Branch }}
+          key: v5-build-cache-{{ .Branch }}
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
@@ -135,11 +127,11 @@ jobs:
       - run: mix local.rebar --force
       - run: cp config/test.circleci.exs config/test.local.exs
       - restore_cache:
-          key: v4-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
+          key: v5-yarn-cache-{{ .Branch }}-{{ checksum "assets/yarn.lock" }}
       - restore_cache:
-          key: v4-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
+          key: v5-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
       - restore_cache:
-          key: v4-build-cache-{{ .Branch }}
+          key: v5-build-cache-{{ .Branch }}
       - run: mix deps.get
       - run: cd assets && yarn run build && cd ..
       - run: mix phx.digest

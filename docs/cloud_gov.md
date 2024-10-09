@@ -44,6 +44,10 @@ Learn more generally about [cloud.gov](https://cloud.gov/), and specifically und
 
 The app will run database migrations and seeds when booting. Background tasks are processed with Quantum and do not require any additional running processes
 
+## Proxy
+
+This app expects the configuration of an egress proxy. The configuration is managed locally with a sidecar as well as through the deployment of an egress proxy application configured in the platform codebase https://github.com/GSA/Challenge_platform
+
 ## SSH
 
 Disable SSH for any sensitive environment when not in use. This can be done through the cloud.gov web interface.

@@ -29,6 +29,11 @@ applications:
   <<: *defaults
   instances: 1
   disk_quota: 6GB
+  sidecars:
+    - name: local-proxy
+      process_types: [ 'web' ]
+      command: ./proxy/sidecar_start.sh
+      memory: 64M
   env:
     MIX_ENV: prod
     STACK: heroku-22

@@ -11,7 +11,7 @@ defmodule ChallengeGov.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: ChallengeGov.PubSub},
       ChallengeGov.Repo,
-      {Finch, name: ChallengeGov.HTTPClient},
+      finch_config(System.get_env("LOCAL_PROXY_HOST")),
       Web.Endpoint,
       ChallengeGov.Scheduler,
       ChallengeGov.Telemetry,
@@ -33,5 +33,22 @@ defmodule ChallengeGov.Application do
 
   defp oban_config do
     Application.get_env(:challenge_gov, Oban)
+  end
+
+  defp finch_config(nil), do: {Finch, name: ChallengeGov.HTTPClient}
+  defp finch_config(""), do: {Finch, name: ChallengeGov.HTTPClient}
+
+  defp finch_config(proxy_host) do
+    {Finch,
+     name: ChallengeGov.HTTPClient,
+     pools: %{
+       :default => [
+         size: 5,
+         conn_opts: [
+           protocols: [:http1],
+           proxy: {:http, proxy_host, 8080, []}
+         ]
+       ]
+     }}
   end
 end
