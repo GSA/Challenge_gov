@@ -1,3 +1,3 @@
-FROM postgres:12.0
+FROM postgres:12.19
 
 RUN apt-get update
