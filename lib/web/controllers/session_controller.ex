@@ -181,6 +181,9 @@ defmodule Web.SessionController do
   end
 
   defp clear_rails_session(conn) do
-    delete_resp_cookie(conn, "_challenge_platform_key")
+    domain = Application.get_env(:challenge_gov, :session_cookie_domain)
+    secure = Mix.env() != :dev
+
+    delete_resp_cookie(conn, "_challenge_platform_key", domain: domain, secure: secure)
   end
 end

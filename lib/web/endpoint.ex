@@ -12,6 +12,7 @@ defmodule Web.Endpoint do
     store: :cookie,
     key: "_challenge_gov_key",
     domain: Application.compile_env(:challenge_gov, :session_cookie_domain),
+    secure: Mix.env() != :dev,
     same_site: "Lax",
     signing_salt: "+S7HWPoL"
   ]
