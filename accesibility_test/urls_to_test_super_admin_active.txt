@@ -1,16 +1,16 @@
  /
- /challenges  
- /users    
- /messages  
- /recertification     
+ #/challenges  
+ #/users    
+ #/messages  
+ #/recertification     
  /reactivation 
- /access  
- /certification_requested
- /challenges/1/edit/details
+ #/access  
+ #/certification_requested
+ #/challenges/1/edit/details
  /help   
  /solver_help   
  /agencies      
- /agencies/1
+ #/agencies/1
  /site_content  
- /reports
- /public
+ #/reports
+ #/public

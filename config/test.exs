@@ -63,7 +63,9 @@ config :wallaby,
     # test server
     path: "/usr/local/bin/chromedriver"
     # test local
-    # path: "/usr/bin/chromedriver"
+     # path: "/usr/bin/chromedriver"
+    #test local on mac with homebrew
+    #path: "/opt/homebrew/bin/chromedriver"
   ]
 
 if File.exists?("config/test.local.exs") do
