@@ -1,0 +1,163 @@
+<a class="usa-skipnav" href="#main-content">Skip to main content</a>
+  <div class="field field--name-body field--type-text-with-summary field--label-hidden field__item">
+    <section class="usa-banner" aria-label="USA banner area">
+        <div class="usa-banner">
+          <div class="usa-accordion">
+            <header class="usa-banner__header">
+              <div class="usa-banner__inner">
+                <div class="grid-col-auto">
+                  <img class="usa-banner__header-flag" src="<%= Routes.static_path(@conn, "/images/uswds/img/us_flag_small.png") %>" alt="U.S. flag">
+                </div>
+                <div class="grid-col-fill tablet:grid-col-auto">
+                  <p class="usa-banner__header-text">An official website of the United States government</p>
+                  <p class="usa-banner__header-action" aria-hidden="true">Here’s how you know</p>
+                </div>
+                <button class="usa-accordion__button usa-banner__button" aria-expanded="false" aria-controls="gov-banner">
+                  <span class="usa-banner__button-text">Here's how you know</span>
+                </button>
+              </div>
+            </header>
+            <div class="usa-banner__content usa-accordion__content" id="gov-banner">
+              <div class="grid-row grid-gap-lg">
+                <div class="usa-banner__guidance tablet:grid-col-6">
+                  <img class="usa-banner__icon usa-media-block__img" src="<%= Routes.static_path(@conn, "/images/uswds/img/icon-dot-gov.svg") %>" alt="Dot gov">
+                    <div class="usa-media-block__body">
+                      <p>
+                        <strong>Official websites use .gov</strong><br />A
+                        <strong>.gov</strong> website belongs to an official government
+                        organization in the United States.
+                      </p>
+                    </div>
+                </div>
+                <div class="usa-banner__guidance tablet:grid-col-6">
+                  <img class="usa-banner__icon usa-media-block__img" src="<%= Routes.static_path(@conn, "/images/uswds/img/icon-https.svg") %>" alt="Https">
+                  <div class="usa-media-block__body">
+                    <p>
+                        <strong>Secure .gov websites use HTTPS</strong><br />A
+                        <strong>lock</strong> (
+                        <span class="icon-lock"
+                          ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="52"
+                            height="64"
+                            viewBox="0 0 52 64"
+                            class="usa-banner__lock-image"
+                            role="img"
+                            aria-labelledby="banner-lock-description-default"
+                            focusable="false"
+                          >
+                            <title id="banner-lock-title-default">Lock</title>
+                            <desc id="banner-lock-description-default">Locked padlock icon</desc>
+                            <path
+                              fill="#000000"
+                              fill-rule="evenodd"
+                              d="M26 0c10.493 0 19 8.507 19 19v9h3a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V32a4 4 0 0 1 4-4h3v-9C7 8.507 15.507 0 26 0zm0 8c-5.979 0-10.843 4.77-10.996 10.712L15 19v9h22v-9c0-6.075-4.925-11-11-11z"
+                            />
+                          </svg> </span
+                        >) or <strong>https://</strong> means you’ve safely connected to
+                        the .gov website. Share sensitive information only on official,
+                        secure websites.
+                      </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+  </div>
+  <div class="usa-overlay"></div>
+
+
+<header class="usa-header usa-header--basic site-header">
+  <div class="desktop:display-flex desktop:width-full">
+
+    <div class="usa-navbar">
+      <div class="usa-logo" id="basic-logo">
+          <a href="https://challenge.gov" title="Home" aria-label="Home">
+            <img src='<%= Routes.static_path(@conn, "/images/challenge-logo.svg") %>' alt="Challenge Gov Logo" title="Challenge Gov" class="header__challenge-logo">
+          </a>
+      </div>
+      <button class="usa-menu-btn" aria-label="menu">Menu</button>
+    </div>
+
+    <nav class="usa-nav usa-header__actions">
+      <button type="button" class="usa-nav__close">
+        <img src="<%= Routes.static_path(Web.Endpoint, "/images/close.svg") %>" role="img" alt="Close" />
+      </button>
+      <ul class="usa-nav__primary usa-accordion flex-align-start">
+        <li class="usa-nav__primary-item">
+          <a href="https://www.challenge.gov/#active-challengess" class="menulink usa-nav__link" title="Active challenges" aria-label="Active challenges" data-anchor="active-challenges">Find a Challenge</a>
+        </li>
+        <li class="usa-nav__primary-item">
+          <a class="menulink usa-nav__link" href="https://www.challenge.gov/#resources-people" title="Resources for innovators and managers" aria-label="Resources">Resources</a>
+        </li>
+        <li class="usa-nav__primary-item">
+          <a class="menulink usa-nav__link" href="https://www.challenge.gov/events" title="Events for innovators and managers" aria-label="Events">Events</a>
+        </li>
+        <li class="usa-nav__primary-item">
+          <a class="menulink usa-nav__link" href="https://www.challenge.gov/contact" title="Contact page with email and social links" aria-label="Contact">Contact</a>
+        </li>
+      </ul>
+      <section class="display-none desktop:display-flex">
+        <section aria-label="Search component" style="display: flex; justify-content: center; align-items: center;">
+
+          <form id="search_form" class="usa-search usa-search--small" action="https://search.usa.gov/search" accept-charset="UTF-8" method="get">
+
+
+          <input name="utf8" type="hidden" value="&#x2713;">
+          <input type="hidden" name="affiliate" id="affiliate" value="challenge.gov">
+          <div role="search">
+            <label class="usa-sr-only" for="extended-search-field-small">Search small</label>
+            <input class="usa-input usagov-search-autocomplete" id="extended-search-field-small" aria-label="Search Challenge.gov" type="search" name="query" autocomplete="off">
+            <button class="usa-button" type="submit">
+            <img src="<%= Routes.static_path(Web.Endpoint, "/images/search.svg") %>" class="usa-search__submit-icon" alt="Search">
+            <span class="usa-sr-only">Search</span></button>
+          </div>
+          </form>
+        </section>
+
+
+        <%= case current_user(@conn) do %>
+            <% nil -> %>
+              <a style="width: 6rem;" class="float-right usa-button usa-button--outline tablet:margin-left-2 tablet:float-right font-sans-xs" href="https://portal.challenge.gov/sign-in/new"><span style="color:#005ea2;">Login</span></a>
+              <a style="width: 10rem;" class="float-right usa-button usa-button tablet:margin-left-1 tablet:float-right font-sans-xs" href="https://secure.login.gov/sign_up/enter_email?request_id=6ab5f3e4-a3e5-4cb7-90a3-3a777fee8967"><span style="color: #ffffff;">Create Account</span></a>
+
+            <% u -> %>
+
+            <%= link("Log out", to: Routes.session_path(@conn, :delete),method: :delete,  class: "float-right usa-button usa-button tablet:margin-left-1 tablet:float-right font-sans-xs") %>
+
+            <% end %>
+      </section>
+
+<!-- mobile search and login area -->
+    <section class="desktop:display-none order-3">
+      <section aria-label="Search component">
+        <form class="usa-search usa-search--small margin-y-1" role="search">
+          <label class="usa-sr-only" for="search-field">Search</label>
+          <input
+            class="usa-input"
+            id="search-field"
+            type="search"
+            name="search"
+            style="width: 170px"
+          />
+          <button class="usa-button" type="submit">
+              <img src="<%= Routes.static_path(Web.Endpoint, "/images/search.svg") %>" class="usa-search__submit-icon" alt="Search">
+          </button>
+        </form>
+      </section>
+      <%= case current_user(@conn) do %>
+        <% nil -> %>
+          <a style="width: 6rem;" class="usa-button font-body-3xs usa-button--outline margin-y-1 text-no-wrap desktop:margin-left-1 width-fulls" href="https://portal.challenge.gov/sign-in/new"><span style="color:#005ea2;">Login</span></a>
+          <a style="width: 10rem;" class="usa-button font-body-3xs usa-button margin-y-1 text-no-wrap desktop:margin-left-1 width-full" href="https://secure.login.gov/sign_up/enter_email?request_id=6ab5f3e4-a3e5-4cb7-90a3-3a777fee8967"><span style="color: #ffffff;">Create Account</span></a>
+
+        <% u -> %>
+
+         <%= link("Log out", to: Routes.session_path(@conn, :delete),method: :delete,  class: "usa-button font-body-3xs usa-button--outline margin-y-1 text-no-wrap desktop:margin-left-1 width-full") %>
+
+      <% end %>
+    </section>
+
+  </div>
+</header>
