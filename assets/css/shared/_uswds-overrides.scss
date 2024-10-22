@@ -66,6 +66,29 @@
   }
 }
 
+
+
+@media (forced-colors:active) {
+  .usa-combo-box--pristine .usa-combo-box__clear-input {
+    background: url(/images/uswds/img/usa-icons/close.svg) no-repeat 50%/contain;
+    display: inline-block;
+    height: 1rem;
+    height: 1.5rem;
+    top: .5rem;
+    width: 1rem;
+    width: auto
+  }
+
+  @supports (mask:url("")) {
+    .usa-combo-box--pristine .usa-combo-box__clear-input {
+      background: none;
+      background-color: ButtonText;
+      mask: url(/images/uswds/img/usa-icons/close.svg) no-repeat center/contain
+    }
+  }
+}
+
+
 .usa-combo-box__clear-input {
   background-image: url(/images/uswds/img/usa-icons/close.svg), linear-gradient(transparent, transparent);
   background-repeat: no-repeat;
