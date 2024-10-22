@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :challenge_gov, Web.Endpoint, secret_key_base: System.get_env("SECRET_KEY_BASE")
 

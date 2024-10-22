@@ -93,7 +93,9 @@ defmodule Web.Api.MessageControllerTest do
       }
 
       conn =
-        put(conn, Routes.api_message_path(conn, :create, message_context), message: message_params)
+        put(conn, Routes.api_message_path(conn, :create, message_context),
+          message: message_params
+        )
 
       message_id = json_response(conn, 200)["id"]
 

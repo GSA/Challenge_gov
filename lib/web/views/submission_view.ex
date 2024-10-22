@@ -233,7 +233,7 @@ defmodule Web.SubmissionView do
     end
   end
 
-  def cancel_button(conn, action, challenge, phase, user, opts \\ []) do
+  def cancel_button(conn, action, challenge, phase, user, _opts \\ []) do
     route =
       cond do
         Accounts.has_admin_access?(user) ->

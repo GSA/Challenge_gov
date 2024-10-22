@@ -5,7 +5,7 @@
 # is restricted to this project.
 
 # General application configuration
-use Mix.Config
+import Config
 
 config :challenge_gov,
   namespace: Web,
@@ -21,13 +21,15 @@ config :challenge_gov, Web.Endpoint,
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id]
+  metadata: [:request_id, :log_type, :params]
 
 config :logger_json, :backend, metadata: :all
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 config :bamboo, :json_library, Jason
+
+config :tesla, :adapter, Tesla.Adapter.Hackney
 
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Implementation
 config :challenge_gov, :gov_delivery, module: ChallengeGov.GovDelivery.Implementation

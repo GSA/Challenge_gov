@@ -126,7 +126,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> validate_file_upload(challenge, params)
   end
 
-  def update_draft_changeset(struct, params, challenge) do
+  def update_draft_changeset(struct, params, _challenge) do
     struct
     |> changeset(params)
     |> put_change(:status, "draft")
@@ -149,7 +149,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> validate_review_verify(params)
     |> validate_terms(params)
     |> validate_required([:title, :brief_description, :description])
-    # Validate file upload on update review.    
+    # Validate file upload on update review.
     |> validate_file_upload(challenge, params)
   end
 

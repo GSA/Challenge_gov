@@ -36,7 +36,10 @@ defmodule ChallengeGov.Challenges.Challenge do
     has_many(:federal_partners, FederalPartner, on_delete: :delete_all)
     has_many(:federal_partner_agencies, through: [:federal_partners, :agency])
 
-    has_many(:non_federal_partners, NonFederalPartner, on_replace: :delete, on_delete: :delete_all)
+    has_many(:non_federal_partners, NonFederalPartner,
+      on_replace: :delete,
+      on_delete: :delete_all
+    )
 
     has_many(:phases, Phase)
     has_many(:submissions, Submission)
@@ -1032,7 +1035,7 @@ defmodule ChallengeGov.Challenges.Challenge do
   defp validate_timeline_events(struct, %{"timeline_events" => _timeline_events}),
     do:
       cast_embed(struct, :timeline_events,
-        with: {TimelineEvent, :save_changeset, [Challenges.find_start_date(struct.data)]}
+        with: &TimelineEvent.save_changeset(&1, &2, Challenges.find_start_date(struct.data))
       )
 
   defp validate_timeline_events(struct, _), do: struct

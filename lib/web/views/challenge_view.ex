@@ -460,9 +460,9 @@ defmodule Web.ChallengeView do
     sections = Challenges.sections()
     current_section_index = Challenges.section_index(current_section)
 
-    progressbar_width = current_section_index / length(sections) * 110
+    _progressbar_width = current_section_index / length(sections) * 110
 
-    base_classes = ""
+    _base_classes = ""
 
     content_tag :div,
       class: " usa-step-indicator usa-step-indicator--counters",
@@ -470,7 +470,7 @@ defmodule Web.ChallengeView do
       aria: [label: "progress"] do
       content_tag :ol, class: "usa-step-indicator__segments" do
         [
-          Enum.map(Enum.with_index(sections), fn {section, index} ->
+          Enum.map(Enum.with_index(sections), fn {section, _index} ->
             [
               cond do
                 section.id == current_section ->

@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :challenge_gov, ChallengeGov.Repo,
   username: "challenge_gov",

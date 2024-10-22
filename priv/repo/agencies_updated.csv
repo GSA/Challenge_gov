@@ -145,7 +145,6 @@ DOC,Department of Commerce,Office of Audit and Evaluation
 DOC,Department of Commerce,Office of Chief Administrative Officer
 DOC,Department of Commerce,Office of Chief Counsel
 DOC,Department of Commerce,Office of Chief Information Officer
-DOC,Department of Commerce,Office of Chief Information Officer
 DOC,Department of Commerce,Office of Chief Information Officer/High Performance Computing
 DOC,Department of Commerce,Office of Deputy Under Secretary
 DOC,Department of Commerce,Office of Education & Sustainable Development
@@ -155,7 +154,6 @@ DOC,Department of Commerce,Office of Facilities and Property Management
 DOC,Department of Commerce,Office of Federal Coordinator for Meteorology
 DOC,Department of Commerce,Office of Financial and Management Services
 DOC,Department of Commerce,Office of Financial Resource Management
-DOC,Department of Commerce,Office of General Counsel
 DOC,Department of Commerce,Office of General Counsel
 DOC,Department of Commerce,Office of Human Capital Services
 DOC,Department of Commerce,Office of Human Resources Management
@@ -175,18 +173,13 @@ DOC,Department of Commerce,"Office of Safety, Health, and Environment"
 DOC,Department of Commerce,Office of Spectrum Management
 DOC,Department of Commerce,Office of the Assistant Secretary
 DOC,Department of Commerce,Office of the Chief Administrative Officer
-DOC,Department of Commerce,Office of the Chief Administrative Officer
 DOC,Department of Commerce,Office of the Chief Communications Officer
-DOC,Department of Commerce,Office of the Chief Financial Officer
 DOC,Department of Commerce,Office of the Chief Financial Officer
 DOC,Department of Commerce,Office of the Chief Financial Officer and Assistant Secretary for Administration
 DOC,Department of Commerce,Office of the Chief Financial Officer and Director of Administration
 DOC,Department of Commerce,Office of the Chief Information Officer
-DOC,Department of Commerce,Office of the Chief Information Officer
-DOC,Department of Commerce,Office of the Chief Information Officer
 DOC,Department of Commerce,Office of the Deputy Director
 DOC,Department of Commerce,Office of the Deputy Under Secretary
-DOC,Department of Commerce,Office of the Director
 DOC,Department of Commerce,Office of the Director
 DOC,Department of Commerce,Office of the General Counsel
 DOC,Department of Commerce,Office of the National Director
@@ -299,17 +292,6 @@ DOD,Department of Defense,Electronic Security Command
 DOD,Department of Defense,European Command
 DOD,Department of Defense,Family Housing
 DOD,Department of Defense,Field Operating Offices Of The Office Of The Secretary Of Army
-DOD,Department of Defense,Front Office
-DOD,Department of Defense,Front Office
-DOD,Department of Defense,Front Office
-DOD,Department of Defense,Front Office
-DOD,Department of Defense,Front Office
-DOD,Department of Defense,Front Office
-DOD,Department of Defense,Front Office
-DOD,Department of Defense,Front Office
-DOD,Department of Defense,Front Office
-DOD,Department of Defense,Front Office
-DOD,Department of Defense,Front Office
 DOD,Department of Defense,Front Office
 DOD,Department of Defense,General Counsel of the Department of Defense
 DOD,Department of Defense,"Headquarters, AMC"
@@ -611,8 +593,6 @@ HHS,Department of Health and Human Services,Office of Audit Services
 HHS,Department of Health and Human Services,Office of Child Care
 HHS,Department of Health and Human Services,Office of Child Support Enforcement
 HHS,Department of Health and Human Services,Office of Communications
-HHS,Department of Health and Human Services,Office of Communications
-HHS,Department of Health and Human Services,Office of Communications
 HHS,Department of Health and Human Services,Office of Community Services
 HHS,Department of Health and Human Services,Office of Enterprise Data and Analysis
 HHS,Department of Health and Human Services,Office of Equal Opportunity and Civil Rights
@@ -621,7 +601,6 @@ HHS,Department of Health and Human Services,"Office of Extramural Research, Educ
 HHS,Department of Health and Human Services,Office of Family Assistance
 HHS,Department of Health and Human Services,Office of Federal Assistance Management
 HHS,Department of Health and Human Services,Office of Financial Management
-HHS,Department of Health and Human Services,Office of Financial Resources
 HHS,Department of Health and Human Services,Office of Financial Resources
 HHS,Department of Health and Human Services,Office of Foods and Veterinary Medicine
 HHS,Department of Health and Human Services,Office of Global Affairs
@@ -640,19 +619,15 @@ HHS,Department of Health and Human Services,Office of Medical Products and Tobac
 HHS,Department of Health and Human Services,Office of Medicare Hearings and Appeals
 HHS,Department of Health and Human Services,Office of Minority Health
 HHS,Department of Health and Human Services,Office of Operations
-HHS,Department of Health and Human Services,Office of Operations
 HHS,Department of Health and Human Services,"Office of Planning, Research, and Evaluation"
 HHS,Department of Health and Human Services,"Office of Policy Planning, Legislation, and Analysis"
 HHS,Department of Health and Human Services,Office of Public Health Preparedness and Response
 HHS,Department of Health and Human Services,Office of Refugee Resettlement
 HHS,Department of Health and Human Services,Office of Regional Operations
-HHS,Department of Health and Human Services,Office of Regional Operations
 HHS,Department of Health and Human Services,"Office of State, Tribal, Local, and Territorial Support"
 HHS,Department of Health and Human Services,Office of Strategic Operations and Regulatory Affairs
 HHS,Department of Health and Human Services,Office of Support Services and Operations
 HHS,Department of Health and Human Services,Office of the Actuary
-HHS,Department of Health and Human Services,Office of the Administrator
-HHS,Department of Health and Human Services,Office of the Administrator
 HHS,Department of Health and Human Services,Office of the Administrator
 HHS,Department of Health and Human Services,Office of the Assistant Secretary
 HHS,Department of Health and Human Services,Office of the Assistant Secretary for Administration
@@ -667,9 +642,6 @@ HHS,Department of Health and Human Services,Office of the Chief Information Offi
 HHS,Department of Health and Human Services,Office of the Commissioner
 HHS,Department of Health and Human Services,Office of the Deputy Assistant Secretary for Administration
 HHS,Department of Health and Human Services,Office of the Deputy Secretary
-HHS,Department of Health and Human Services,Office of the Director
-HHS,Department of Health and Human Services,Office of the Director
-HHS,Department of Health and Human Services,Office of the Director
 HHS,Department of Health and Human Services,Office of the Director
 HHS,Department of Health and Human Services,Office of the General Counsel
 HHS,Department of Health and Human Services,Office of the Inspector General
@@ -756,7 +728,6 @@ HUD,Department of Housing and Urban Development,Office of the Inspector General
 HUD,Department of Housing and Urban Development,Office Of The Secretary
 DOJ,Department of Justice,
 DOJ,Department of Justice,Administration Division
-DOJ,Department of Justice,Administration Division
 DOJ,Department of Justice,Administrative Management Section
 DOJ,Department of Justice,Alabama Middle
 DOJ,Department of Justice,Alabama Northern
@@ -768,9 +739,6 @@ DOJ,Department of Justice,Alaska
 DOJ,Department of Justice,ALASKA
 DOJ,Department of Justice,Antitrust Division
 DOJ,Department of Justice,Antitrust Division (DJ-HC-14-20)
-DOJ,Department of Justice,Appellate Section
-DOJ,Department of Justice,Appellate Section
-DOJ,Department of Justice,Appellate Section
 DOJ,Department of Justice,Appellate Section
 DOJ,Department of Justice,Appellate Staff
 DOJ,Department of Justice,Arizona
@@ -870,8 +838,6 @@ DOJ,Department of Justice,Environmental Defense Section
 DOJ,Department of Justice,Environmental Enforcement Section
 DOJ,Department of Justice,Equal Employment Opportunity Staff
 DOJ,Department of Justice,Europe and Mid-East Geographic Area
-DOJ,Department of Justice,Executive Office
-DOJ,Department of Justice,Executive Office
 DOJ,Department of Justice,Executive Office
 DOJ,Department of Justice,Executive Office for Immigration Review
 DOJ,Department of Justice,Executive Office for Organized Crime Drug Enforcement Task Forces
@@ -1004,7 +970,6 @@ DOJ,Department of Justice,New Hampshire
 DOJ,Department of Justice,NEW HAMPSHIRE
 DOJ,Department of Justice,NEW JERSEY
 DOJ,Department of Justice,New Jersey Division
-DOJ,Department of Justice,New Jersey Division
 DOJ,Department of Justice,New Mexico
 DOJ,Department of Justice,NEW MEXICO
 DOJ,Department of Justice,"NEW ORLEANS, LA - REGIONAL OFFICE"
@@ -1032,7 +997,6 @@ DOJ,Department of Justice,Office for Access to Justice
 DOJ,Department of Justice,Office for Victims of Crime
 DOJ,Department of Justice,Office of Administration
 DOJ,Department of Justice,Office of Community Oriented Policing Services
-DOJ,Department of Justice,Office of Community Oriented Policing Services
 DOJ,Department of Justice,Office of Enforcement Operations
 DOJ,Department of Justice,Office of Immigration Litigation
 DOJ,Department of Justice,Office of Information and Policy 
@@ -1057,11 +1021,6 @@ DOJ,Department of Justice,Office of Strategic Intelligence and Information
 DOJ,Department of Justice,Office of the AAG
 DOJ,Department of Justice,Office of the Administrator
 DOJ,Department of Justice,Office of the Assistant Attorney General
-DOJ,Department of Justice,Office of the Assistant Attorney General
-DOJ,Department of Justice,Office of the Assistant Attorney General
-DOJ,Department of Justice,Office of the Assistant Attorney General
-DOJ,Department of Justice,Office of the Assistant Attorney General
-DOJ,Department of Justice,Office of the Assistant Attorney General
 DOJ,Department of Justice,Office of the Assistant Attorney General for Administration
 DOJ,Department of Justice,Office of the Associate Attorney General
 DOJ,Department of Justice,Office of the Attorney General
@@ -1072,7 +1031,6 @@ DOJ,Department of Justice,Office of the Deputy Director for Community Policing A
 DOJ,Department of Justice,Office of the Deputy Director for Grant Operations
 DOJ,Department of Justice,Office of the Deputy Director for Management Services
 DOJ,Department of Justice,Office of the Director 
-DOJ,Department of Justice,Office of the General Counsel
 DOJ,Department of Justice,Office of the General Counsel
 DOJ,Department of Justice,Office of the Inspector General
 DOJ,Department of Justice,Office of the Pardon Attorney
@@ -1492,11 +1450,8 @@ GSA,General Services Administration,Office of Technology Transformation Service 
 GSA,General Services Administration,Office of the Administrator
 GSA,General Services Administration,Office of the Chief Financial Officer
 GSA,General Services Administration,Office of the Chief of Staff
-GSA,General Services Administration,Office of the Chief of Staff
-GSA,General Services Administration,Office of The Commissioner
 GSA,General Services Administration,Office of The Commissioner
 GSA,General Services Administration,Office of the Deputy Associate Administrator
-GSA,General Services Administration,Office of the Deputy Commissioner
 GSA,General Services Administration,Office of the Deputy Commissioner
 GSA,General Services Administration,Office of the General Counsel
 GSA,General Services Administration,Office of the Inspector General
@@ -1711,8 +1666,6 @@ SSA,Social Security Administration,Deputy Commissioner for Operations
 SSA,Social Security Administration,Deputy Commissioner for Retirement and Disability Policy
 SSA,Social Security Administration,Deputy Commissioner for Systems
 SSA,Social Security Administration,Front Office
-SSA,Social Security Administration,Front Office
-SSA,Social Security Administration,Front Office
 SSA,Social Security Administration,Office of Acquisition and Grants
 SSA,Social Security Administration,Office of Analytics and Improvements
 SSA,Social Security Administration,Office of Anti-Fraud Programs
@@ -1763,14 +1716,6 @@ SSA,Social Security Administration,Office of the Chief Technology Officer
 SSA,Social Security Administration,Office of the Commissioner
 SSA,Social Security Administration,Office of the Counsel for Investigations and Enforcement
 SSA,Social Security Administration,Office of the Counsel to the Inspector General
-SSA,Social Security Administration,Office of the Deputy Commissioner
-SSA,Social Security Administration,Office of the Deputy Commissioner
-SSA,Social Security Administration,Office of the Deputy Commissioner
-SSA,Social Security Administration,Office of the Deputy Commissioner
-SSA,Social Security Administration,Office of the Deputy Commissioner
-SSA,Social Security Administration,Office of the Deputy Commissioner
-SSA,Social Security Administration,Office of the Deputy Commissioner
-SSA,Social Security Administration,Office of the Deputy Commissioner
 SSA,Social Security Administration,Office of the Deputy Commissioner
 SSA,Social Security Administration,Office of the General Counsel
 SSA,Social Security Administration,Office of the Inspector General

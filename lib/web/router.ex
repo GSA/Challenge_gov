@@ -149,7 +149,9 @@ defmodule Web.Router do
     post("/submission_exports/:id", SubmissionExportController, :restart)
     resources("/submission_exports", SubmissionExportController, only: [:delete])
 
-    resources("/submissions", SubmissionController, only: [:index, :show, :edit, :update, :delete])
+    resources("/submissions", SubmissionController,
+      only: [:index, :show, :edit, :update, :delete]
+    )
 
     put("/submissions/:id/submit", SubmissionController, :submit)
 

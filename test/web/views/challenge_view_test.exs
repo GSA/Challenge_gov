@@ -6,7 +6,7 @@ defmodule Web.ChallengeViewTest do
   alias TestHelpers.ChallengeHelpers
   alias Web.ChallengeView
 
-  @public_root_url Application.get_env(:challenge_gov, :public_root_url)
+  @public_root_url Application.compile_env(:challenge_gov, :public_root_url)
 
   describe "construct agency name from challenge" do
     test "successfully with no sub agency" do

@@ -66,14 +66,18 @@ defmodule ChallengeGov.SubmissionInvites do
       Ecto.Multi.run(multi, submission_id, fn _repo, _changes ->
         {:ok, submission} = Submissions.get(submission_id)
 
-        if submission.invite do
-          reinvite(submission.invite, params)
-        else
-          create(params, submission)
-        end
+        reinvite_or_create(submission, params)
       end)
     end)
     |> Repo.transaction()
+  end
+
+  def reinvite_or_create(submission, params) do
+    if submission.invite do
+      reinvite(submission.invite, params)
+    else
+      create(params, submission)
+    end
   end
 
   def accept(submission_invite) do

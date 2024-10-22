@@ -392,7 +392,9 @@ defmodule Web.PhaseView do
   def filter_tab_count(phase, filter) do
     [
       "(",
-      content_tag(:span, Phases.submission_count(phase, filter), class: "submission-filter__count"),
+      content_tag(:span, Phases.submission_count(phase, filter),
+        class: "submission-filter__count"
+      ),
       ")"
     ]
   end
