@@ -133,14 +133,18 @@
 <!-- mobile search and login area -->
     <section class="desktop:display-none order-3">
       <section aria-label="Search component">
-        <form class="usa-search usa-search--small margin-y-1" role="search">
+        <form class="usa-search usa-search--small margin-y-1" role="search" action="https://search.usa.gov/search" accept-charset="UTF-8" method="get">
           <label class="usa-sr-only" for="search-field">Search</label>
+             <input name="utf8" type="hidden" value="&#x2713;">
+             <input type="hidden" name="affiliate" id="affiliate" value="challenge.gov">
+
           <input
             class="usa-input"
             id="search-field"
             type="search"
-            name="search"
+            name="query"
             style="width: 170px"
+            aria-label="Search Challenge.gov"
           />
           <button class="usa-button" type="submit">
               <img src="<%= Routes.static_path(Web.Endpoint, "/images/search.svg") %>" class="usa-search__submit-icon" alt="Search">
