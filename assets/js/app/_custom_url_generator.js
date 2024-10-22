@@ -18,10 +18,10 @@ function set_custom_url_example() {
   if (custom_url_example_text.length > 0) {
     if (custom_url_input_value != "") {
       challenge_title_slug = title_to_url_slug(custom_url_input_value)
-      custom_url_example_text.html(challenge_title_slug)
+      custom_url_example_text.text(challenge_title_slug)
     } else {
       challenge_title_slug = title_to_url_slug(challenge_title_input_value)
-      custom_url_example_text.html(challenge_title_slug)
+      custom_url_example_text.text(challenge_title_slug)
     }
   }
 }
