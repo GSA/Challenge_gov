@@ -1,0 +1,34 @@
+<div class="bg-primary-darker w-full display-flex flex-justify-center desktop:flex-justify-end padding-1 font-body-3xs desktop:font-body-2xs text-white">
+
+  <%= link(to: Routes.dashboard_path(@conn, :index), class: "display-flex flex-align-center  desktop:flex-row margin-x-1 desktop:margin-x-3 text-white text-no-wra")  do %>
+      <svg class="usa-icon usa-challenge-menu float-left margin-right-1" aria-hidden="true" focusable="false" role="img">
+        <use xlink:href="/assets/img/sprite.svg#grid_view"></use>
+      </svg><span class="display-none desktop:display-block ">Dashboard</span><span class="desktop:display-none" style="font-size: 0.7rem">Dashboard</span>
+  <% end %>
+
+  <%= link(to: Routes.challenge_path(@conn, :index), class: "display-flex flex-align-center  desktop:flex-row margin-x-1 desktop:margin-x-3 text-white text-no-wra")  do %>
+      <svg class="usa-icon usa-challenge-menu float-left margin-right-1" aria-hidden="true" focusable="false" role="img">
+        <use xlink:href="/assets/img/sprite.svg#emoji_events"></use>
+      </svg><span class="display-none desktop:display-block">Challenges</span><span class="desktop:display-none" style="font-size: 0.7rem">Challenges</span>
+  <% end %>
+
+  <div class="display-none desktop:display-flex flex-align-center margin-x-1 margin-top-1">
+  |
+    <img class="usa-icon--size-3 icon-white margin-x-2" alt="Help"src=" <%= Routes.static_path(Web.Endpoint, "/images/account_circle.svg") %>" >
+    <ul class="navbar-nav">
+      <li class="nav-item dropdown">
+        <a class="text-bold text-white text-no-underline"  href="#" aria-expanded="true">
+          <span><%= @user.email %></span>
+        </a>
+        <div class="dropdown-content padding-2 float-right" style="min-width:280px">
+          <%= link to: Routes.session_path(@conn, :delete), method: :delete, class: "dropdown-item_" do %>
+          <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+            <use xlink:href="/assets/img/sprite.svg#logout"></use>
+          </svg> Logout
+          <% end %>
+        </div>
+      </li>
+    </ul>
+</div>
+
+</div>
