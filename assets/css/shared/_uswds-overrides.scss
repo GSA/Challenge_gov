@@ -43,3 +43,146 @@
     }
   }
 }
+
+@media (forced-colors:active) {
+  .usa-combo-box--pristine .usa-combo-box__clear-input {
+    background: url(/images/uswds/img/usa-icons/close.svg) no-repeat 50%/contain;
+    display: inline-block;
+    height: 1rem;
+    height: 1.5rem;
+    top: .5rem;
+    width: 1rem;
+    width: auto
+  }
+
+  @supports (mask:url("")) {
+    .usa-combo-box--pristine .usa-combo-box__clear-input {
+      background: none;
+      background-color: ButtonText;
+      mask: url(/images/uswds/img/usa-icons/close.svg) no-repeat center/contain
+    }
+  }
+}
+
+.usa-combo-box__clear-input {
+  background-image: url(/images/uswds/img/usa-icons/close.svg), linear-gradient(transparent, transparent);
+  background-repeat: no-repeat;
+  display: none;
+  right: calc(2.5em + 3px)
+}
+
+@media (max-width:39.99em) {
+  .usa-banner__button[aria-expanded=true]:after {
+    background: url(/images/uswds/img/usa-icons/close.svg) no-repeat 50%/contain;
+    content: "";
+    display: inline-block;
+    height: 3rem;
+    margin-left: 0;
+    vertical-align: middle;
+    width: 3rem
+  }
+
+  @supports (mask:url("")) {
+    .usa-banner__button[aria-expanded=true]:after {
+      background: none;
+      background-color: #005ea2;
+      mask: url(/images/uswds/img/usa-icons/close.svg) no-repeat center/contain
+    }
+  }
+}
+
+
+  @media (forced-colors:active) {
+    .usa-nav__close:before {
+      background: url(/images/uswds/img/usa-icons/close.svg) no-repeat 50%/contain;
+      content: "";
+      display: inline-block;
+      height: 1.25rem;
+      margin-right: auto;
+      vertical-align: middle;
+      width: 1.25rem
+    }
+  
+    @supports (mask:url("")) {
+      .usa-nav__close:before {
+        background: none;
+        background-color: ButtonText;
+        mask: url(/images/uswds/img/usa-icons/close.svg) no-repeat center/contain
+      }
+    }
+  
+    .usa-nav__close:before {
+      background-color: buttonText
+    }
+  }
+
+  /*
+----------------------------------------
+USWDS with settings overrides
+----------------------------------------
+Add a list of changed settings in the form $setting: value.
+----------------------------------------
+*/
+@use "uswds-core" with (
+  $theme-image-path: "images",
+  $theme-font-path: "fonts",
+  $flex-direction-settings: (
+    responsive: true
+  )
+);
+
+@use "uswds" as *;
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.usa-footer__logo {
+  display: flex;
+  align-items: center;
+}
+
+.usa-footer__logo-img {
+  max-width: 100%;
+  height: auto;
+}
+
+.footer-white {
+  color: white;
+}
+
+.usa-footer__social-links .usa-social-link__icon {
+  /*
+   * override the default svg stroke color to match USWDS .bg-primary-darker: #162e51
+   * source: https://codepen.io/sosuke/pen/Pjoqqp
+   */
+  filter: invert(14%) sepia(17%) saturate(4304%) hue-rotate(190deg) brightness(94%) contrast(92%);
+}
+
+.icon-white {
+  filter: invert(99%) sepia(2%) saturate(3661%) hue-rotate(191deg) brightness(117%) contrast(80%);
+}
+
+.usa-social-link {
+  background-color: white;
+}
+
+.usa-footer__secondary-section .usa-social-link:hover .usa-social-link__icon {
+  background-color: white;
+}
+
+
+
+

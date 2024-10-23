@@ -32,7 +32,11 @@
     <div class="wrapper">
         <%= @inner_content %>
     </div>
-
+    <%= case current_user(@conn) do %>
+      <% nil -> %>
+      <% u -> %>
+        <%= render("_footerv2.html", assigns) %>
+    <% end %>
     <a href="#renew-modal" style="display:none;" id="newModal" class="usa-button" aria-controls="renew-modal" data-open-modal>Open default modal</a>
     <div
     class="usa-modal"
