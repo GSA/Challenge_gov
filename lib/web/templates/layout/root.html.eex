@@ -29,6 +29,8 @@
   </head>
 
   <body class="dhold-transition dsidebar-collapse dsidebar-mini height-full">
+
+    <%= render("_govheader.html", assigns) %>
     <div class="wrapper">
         <%= @inner_content %>
     </div>
