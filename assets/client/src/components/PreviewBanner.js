@@ -37,9 +37,9 @@ export const PreviewBanner = ({challenge}) => {
             <div>
               <span className="me-3">Preview generated on {formatDateToLLLL()}</span>
               <a className="me-3" href={window.location.href}>Refresh page</a>
-              {!challenge.external_url &&
-                <a href={apiUrl + `/public/previews/challenges?challenge=${challenge.uuid}&print=true`} target="_blank">Print</a>
-              }
+              {!challenge.external_url && (
+                <a href={`${apiUrl}/public/previews/challenges?challenge=${encodeURIComponent(challenge.uuid)}&print=true`} target="_blank">Print</a>
+              )}
             </div> 
             <br/>
             <div>Link to share for internal agency review:</div>
