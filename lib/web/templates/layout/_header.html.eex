@@ -1,20 +1,12 @@
-<nav class="header navbar navbar-expand-lg navbar-light">
-  <a href="https://www.challenge.gov/" class="navbar-brand">
-    <img src='<%= Routes.static_path(@conn, "/images/challenge-logo.svg") %>' alt="Challenge Gov Logo" title="Challenge Gov" class="header__challenge-logo">
-  </a>
+<script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+<nav class="header navbar navbar-expand-lg navbar-light" style="display:flex">
 
-
-
-  <div class="display-flex float-right padding-1" id="navbarSupportedContent">
-
+  <div class="display-flex float-right padding-1" style="width:100%; display:block" id="navbarSupportedContent">
 
   <%= if Mix.env() == :dev do %>
-    <%= button("Dev Accounts", to: Routes.dev_accounts_page_path(@conn, :dev_accounts), method: :get, class: "usa-button") %>
+    <%= button("Dev Accounts", to: Routes.dev_accounts_page_path(@conn, :dev_accounts), method: :get, class: "usa-button float-right") %>
   <% end %>
 
-    <div>
-      <%= link("My account", to: Routes.session_path(@conn, :new), class: "usa-button usa-button--outline") %>
-    </div>
 
   </div>
 </nav>
