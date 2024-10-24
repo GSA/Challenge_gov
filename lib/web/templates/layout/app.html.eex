@@ -6,7 +6,18 @@
       <%= case current_user(@conn) do %>
       <% nil -> %>
       <% u -> %>
-      <!-- placeholder util nav-->
+
+        <%= if Accounts.role_at_or_below(u, "solver") do %>
+          <%= render Web.LayoutView, "util_nav/_solver.html", conn: @conn, user: u %>
+        <% end %>
+        <%= if ChallengeGov.Accounts.is_challenge_manager?(u) do %>
+          <%= render Web.LayoutView, "util_nav/_challenge_manager.html", conn: @conn, user: u %>
+        <% end %>
+        <%= if ChallengeGov.Accounts.has_admin_access?(u) do %>
+          <%= render Web.LayoutView, "util_nav/_admin.html", conn: @conn, user: u %>
+        <% end %>
+
+
       <% end %>
 
       <div class="grid-row grid-gap">
