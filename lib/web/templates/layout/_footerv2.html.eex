@@ -1,0 +1,127 @@
+<footer class="usa-footer usa-footer--big">
+  <div class="usa-footer__primary-section">
+    <div class="grid-container">
+      <div class="usa-footer__return-to-top">
+        <a href="#">Return to top</a>
+      </div>
+      <nav class="usa-footer__nav" aria-label="Footer navigation,,">
+        <div class="grid-row grid-gap-4 usa-footer__primary-content padding-top-2 mobile-lg:padding-top-0 usa-footer__primary-content--collapsible">
+          <div class="grid-col-5 mobile-lg:grid-col-6 desktop:grid-col-3">
+              <%# Col 1 %>
+              <ul class="usa-list usa-list--unstyled">
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.challenge.gov/about">About</a>
+                </li>
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.challenge.gov/contact">Contact</a>
+                </li>
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.challenge.gov/terms">Terms of use</a>
+                </li>
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.challenge.gov/privacy-policy">Privacy Policy</a>
+                </li>
+              </ul>
+          </div>
+          <div class="grid-col-5 display-block desktop:display-none mobile-lg:grid-col-6">
+          </div>
+          <div class="grid-col-5 mobile-lg:grid-col-6 desktop:grid-col-3">
+              <%# Col 2 %>
+              <ul class="usa-list usa-list--unstyled">
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.challenge.gov/resources">Innovator Resources</a>
+                </li>
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.challenge.gov/resources-managers">Agency Resources</a>
+                </li>
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.challenge.gov/?state=archived">Archived Challenges</a>
+                </li>
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.challenge.gov/#active-challenges">Active Challenges</a>
+                </li>
+              </ul>
+          </div>
+          <div class="grid-col-5 mobile-lg:grid-col-6 desktop:grid-col-3">
+              <%# Col 3 %>
+              <ul class="usa-list usa-list--unstyled">
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.gsa.gov/website-information/website-policies#privacy">GSA Privacy Policy</a>
+                </li>
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.gsa.gov/website-information/accessibility-aids">Accessibility</a>
+                </li>
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.gsa.gov/reference/freedom-of-information-act-foia">FOIA</a>
+                </li>
+                <li class="usa-footer__secondary-link">
+                  <a href="https://www.usa.gov/">USA.gov</a>
+                </li>
+              </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <div class="usa-footer__secondary-section bg-primary-darker footer-white">
+    <div class="grid-container">
+      <div class="grid-row">
+        <div class="usa-footer__logo flex-no-wrap flex-justify-end tablet:flex-justify-start margin-y-1 mobile-lg:grid-gap-2 mobile-lg:grid-col-12 tablet:grid-col-6">
+          <div class="order-1 tablet:order-2" style="display: flex; align-items: center;">
+            <img class="usa-footer__logo-img" src='<%= Routes.static_path(@conn, "/images/challenge-logo-white-orange.svg") %>' title="Challenge Gov wordmark" alt="Challenge Gov wordmark in footer" style="width: 220px; height: auto;" />
+          </div>
+          <div class="order-2 tablet:order-1">
+            <img class="usa-footer__logo-img" src='<%= Routes.static_path(@conn, "/images/challenge-logo-square-white.svg") %>' title="GSA Star Mark" alt="GSA Star Mark" style="width: 60px; height: auto;" />
+          </div>
+        </div>
+        <div class="usa-footer__contact-links mobile-lg:grid-col-12 tablet:grid-col-6 margin-y-1 footer-white">
+          <div class="usa-footer__social-links flex-justify-end grid-row grid-gap-1">
+            <div class="grid-col-auto">
+              <a class="usa-social-link" href="https://www.twitter.com/ChallengeGov">
+                <img class="usa-social-link__icon" alt="Twitter" src="<%= Routes.static_path(Web.Endpoint, "/images/twitter.svg") %>" >
+
+              </a>
+            </div>
+            <div class="grid-col-auto">
+              <a class="usa-social-link" href="https://www.facebook.com/ChallengeGov">
+            <img class="usa-social-link__icon" alt="Facebook" src="<%= Routes.static_path(Web.Endpoint, "/images/facebook.svg") %>">
+
+              </a>
+            </div>
+            <div class="grid-col-auto">
+              <a class="usa-social-link" href="https://www.youtube.com/@challenge-gov">
+              <img class="usa-social-link__icon" alt="YouTube" src="<%= Routes.static_path(Web.Endpoint, "/images/youtube.svg") %>">
+
+
+              </a>
+            </div>
+            <div class="grid-col-auto">
+              <a class="usa-social-link" href="https://www.linkedin.com/company/challengegov/">
+              <img class="usa-social-link__icon" alt="LinkedIn" src="<%= Routes.static_path(Web.Endpoint, "/images/linkedin.svg") %>">
+
+              </a>
+            </div>
+            <div class="grid-col-auto">
+              <a class="usa-social-link" href="https://github.com/GSA/Challenge_gov">
+              <img class="usa-social-link__icon" alt="Github" src="<%= Routes.static_path(Web.Endpoint, "/images/github.svg") %>">
+
+              </a>
+            </div>
+          </div>
+          <div class="grid-row flex-column text-right">
+            <p class="usa-footer__contact-heading">
+              Contact Us
+            </p>
+            <address class="usa-footer__address">
+              <div class="usa-footer__contact-info">
+                <div class="text-white">
+                  <a style="color:white" href="mailto:team@challenge.gov">team@challenge.gov</a>
+                </div>
+              </div>
+            </address>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
