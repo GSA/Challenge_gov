@@ -102,7 +102,11 @@ defmodule Web.DashboardView do
     content_tag :div, class: wrapper_classes do
       [
         content_tag(:h1, "Dashboard"),
-        content_tag(:p, "Engage with the features below to manage your workflows.",class: "padding-0")
+        content_tag(
+          :p,
+          "Engage with the features below to manage your workflows.",
+          class: "padding-0"
+        )
       ]
     end
   end
@@ -113,7 +117,8 @@ defmodule Web.DashboardView do
         content_tag(:h1, "Dashboard"),
         content_tag(
           :p,
-          "Use the features below to engage with challenges and manage your submissions.",class: "padding-0"
+          "Use the features below to engage with challenges and manage your submissions.",
+          class: "padding-0"
         )
       ]
     end
