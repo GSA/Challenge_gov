@@ -21,42 +21,7 @@
       <% end %>
 
       <div class="grid-row grid-gap">
-      <div class="grid-col-2">
-      <%= case current_user(@conn) do %>
-      <% nil -> %>
-      <% u -> %>
-
-        <%= if view_module(@conn) != Web.TermsController and view_module(@conn) != Web.TermsView and view_module(@conn) != Web.AccessView do %>
-          <div class="challenge_sidebar padding-left-2">
-
-            <nav aria-label="Side navigation,">
-            <ul class="usa-sidenav">
-              <li class="usa-sidenav__item">
-                <a href="https://www.challenge.gov" class="brand-link">
-                  <span class="padding-left-1">Challenge.Gov</span>
-                  <svg class="usa-icon usa-challenge-menu float-left" aria-hidden="true" focusable="false" role="img">
-                    <use xlink:href="/assets/img/sprite.svg#home"></use>
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
-
-                <%= if Accounts.role_at_or_below(u, "solver") do %>
-                  <%= render Web.LayoutView, "side_nav/_solver.html", conn: @conn, user: u %>
-                <% end %>
-                <%= if ChallengeGov.Accounts.is_challenge_manager?(u) do %>
-                  <%= render Web.LayoutView, "side_nav/_challenge_manager.html", conn: @conn, user: u %>
-                <% end %>
-                <%= if ChallengeGov.Accounts.has_admin_access?(u) do %>
-                  <%= render Web.LayoutView, "side_nav/_admin.html", conn: @conn, user: u %>
-                <% end %>
-
-          </div>
-        <% end %>
-       <% end %>
-      </div>  <!-- end of menu -->
-      <div class="grid-col-10" style="background:#f4f6f9;">
+      <div class="grid-col-12 dashboard-background-light" >
       <div class="usa-section padding-top-1 minh-tablet-lg">
         <%= if Map.has_key?(@conn.assigns, :site_wide_banner) do %>
           <div class="content-header">
