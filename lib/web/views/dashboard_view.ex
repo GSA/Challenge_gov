@@ -70,7 +70,7 @@ defmodule Web.DashboardView do
   end
 
   def dashboard_header(user) do
-    wrapper_classes = "grid-col padding-top-3 padding-left-2"
+    wrapper_classes = "grid-col"
 
     cond do
       Accounts.has_admin_access?(user) ->
@@ -90,7 +90,7 @@ defmodule Web.DashboardView do
   defp admin_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
-        content_tag(:h2, "Welcome to the Challenge.Gov portal"),
+        content_tag(:h1, "Dashboard"),
         content_tag(:p, "Engage with the features below to manage your workflows.",
           class: "padding-0"
         )
@@ -101,8 +101,12 @@ defmodule Web.DashboardView do
   defp challenge_manager_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
-        content_tag(:h2, "Welcome to the Challenge.Gov portal."),
-        content_tag(:p, "Engage with the features below to manage your workflows.")
+        content_tag(:h1, "Dashboard"),
+        content_tag(
+          :p,
+          "Engage with the features below to manage your workflows.",
+          class: "padding-0"
+        )
       ]
     end
   end
@@ -110,10 +114,11 @@ defmodule Web.DashboardView do
   defp solver_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
-        content_tag(:h2, "Welcome to the Challenge.Gov submission portal."),
+        content_tag(:h1, "Dashboard"),
         content_tag(
           :p,
-          "Use the features below to engage with challenges and manage your submissions."
+          "Use the features below to engage with challenges and manage your submissions.",
+          class: "padding-0"
         )
       ]
     end
@@ -155,14 +160,14 @@ defmodule Web.DashboardView do
       "aria-hidden": "true",
       focusable: "false",
       role: "img",
-      style: "color: #fa9441;" do
+      style: "color: #000;" do
       content_tag(:use, "", href: "/assets/img/sprite.svg##{pl}")
     end
   end
 
   defp admin_card_links() do
     [
-      content_tag :div, class: "grid-row" do
+      content_tag :div, class: "grid-row grid-gap-2" do
         [
           render("_card_link.html",
             to: Routes.user_path(Endpoint, :index),
@@ -180,7 +185,7 @@ defmodule Web.DashboardView do
           )
         ]
       end,
-      content_tag :div, class: "grid-row" do
+      content_tag :div, class: "grid-row grid-gap-2" do
         [
           render("_card_link.html",
             to: Routes.message_context_path(Endpoint, :index),
@@ -198,7 +203,7 @@ defmodule Web.DashboardView do
           )
         ]
       end,
-      content_tag :div, class: "grid-row" do
+      content_tag :div, class: "grid-row grid-gap-2" do
         [
           render("_card_link.html",
             to: Routes.site_content_path(Endpoint, :index),
@@ -214,7 +219,7 @@ defmodule Web.DashboardView do
 
   defp challenge_manager_card_links(user) do
     [
-      content_tag :div, class: "grid-row" do
+      content_tag :div, class: "grid-row grid-gap-2" do
         [
           render("_card_link.html",
             to: Routes.challenge_path(Endpoint, :index),
@@ -236,7 +241,25 @@ defmodule Web.DashboardView do
           end
         ]
       end,
-      content_tag :div, class: "grid-row" do
+      content_tag :div, class: "grid-row grid-gap-2" do
+        [
+          render("_card_link.html",
+            to: "https://challenge-dev.app.cloud.gov/manage_submissions",
+            target: "",
+            icon: my_icon("star_half"),
+            title: "Submissions & Evaluations",
+            description: "Manage submissions, evaluations, and evaluators."
+          ),
+          render("_card_link.html",
+            to: "https://challenge-dev.app.cloud.gov/evaluation_forms",
+            target: "",
+            icon: my_icon("check_circle_outline"),
+            title: "Evaluation Forms",
+            description: "Create and manage evaluation forms."
+          )
+        ]
+      end,
+      content_tag :div, class: "grid-row grid-gap-2" do
         [
           render("_card_link.html",
             to: Routes.message_context_path(Endpoint, :index),
@@ -254,7 +277,7 @@ defmodule Web.DashboardView do
           )
         ]
       end,
-      content_tag :div, class: "grid-row" do
+      content_tag :div, class: "grid-row grid-gap-2" do
         [
           render("_card_link.html",
             to: Routes.help_path(Endpoint, :index),
@@ -276,7 +299,7 @@ defmodule Web.DashboardView do
   end
 
   defp solver_card_links(user) do
-    content_tag :div, class: "grid-row" do
+    content_tag :div, class: "grid-row grid-gap-2" do
       [
         render("_card_link.html",
           to: Routes.submission_path(Endpoint, :index),
