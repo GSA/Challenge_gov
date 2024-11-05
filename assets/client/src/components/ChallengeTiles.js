@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import moment from 'moment';
 import { ChallengeTile } from './ChallengeTile';
 
 const dateAddedOptions = [
@@ -75,6 +74,15 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   const [keyword, setKeyword] = useState('');
   const [filteredChallenges, setFilteredChallenges] = useState([]);
 
+  const isBetween = (date, startDate, endDate) => {
+
+    let dateObj = new Date(date);
+    let startDateObj = new Date(startDate);
+    let endDateObj = new Date(endDate);
+    return dateObj >= startDateObj && dateObj < endDateObj;
+
+  }
+
  useEffect(() => {
   try {
     if (data && data.collection) {
@@ -88,26 +96,32 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       }
 
       if (dateAdded) {
-        const now = moment();
-        let fromDate = now.clone().subtract(1, "years"); 
+        
+        const now = new Date(); 
+        let fromDate = new Date(now);
+        fromDate.setFullYear(fromDate.getFullYear() -1); 
+        
 
         switch (dateAdded) {
           case "Past Week":
-            fromDate = now.clone().subtract(7, "days");
+            fromDate = new Date(now);
+            fromDate.setDate(fromDate.getDate() -7);
             break;
           case "Past Month":
-            fromDate = now.clone().subtract(1, "months");
+            fromDate = new Date(now);
+            fromDate.setMonth(fromDate.getMonth() -1);
             break;
           case "Past 90 Days":
-            fromDate = now.clone().subtract(90, "days");
+            fromDate = new Date(now);
+            fromDate.setDate(fromDate.getDate() -90);
             break;
           default:
             break;
         }
 
         filtered = filtered.filter((challenge) => {
-          const challengeDate = moment(challenge.inserted_at);
-          return challengeDate.isBetween(fromDate, now, null, "[)");
+          const challengeDate = new Date(challenge.inserted_at);
+          return isBetween(challengeDate, fromDate, now);
         });
       }
 
@@ -116,30 +130,35 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
       }
 
       if (lastDay) {
-        const now = moment();
+        const now = new Date();
         let toDate;
 
         switch (lastDay) {
           case "Next Week":
-            toDate = now.clone().add(7, "days");
+            toDate = new Date(now);
+            toDate.setDate(toDate.getDate() +7);
             break;
           case "Next Month":
-            toDate = now.clone().add(1, "months");
+            toDate = new Date(now);
+            toDate.setMonth(toDate.getMonth()+1);
             break;
           case "Next 90 days":
+            toDate = new Date(now);
             toDate = now.clone().add(90, "days");
             break;
           case "Within Year":
-            toDate = now.clone().add(1, "years");
+            toDate = new Date(now);
+            toDate.setFullYear(toDate.getFullYear()+1);
             break;
           default:
-            toDate = now.clone().add(1, "years");
+            toDate = new Date(now);
+            toDate.setFullYear(toDate.getFullYear()+1);
             break;
         }
 
       filtered = filtered.filter((challenge) => {
-          const challengeEnd = moment(challenge.end_date);
-          return challengeEnd.isBetween(now, toDate, null, "[)");
+          const challengeEnd = new Date(challenge.end_date);
+          return isBetween(challengeEnd, now, toDate);
         });
       }
 
@@ -296,7 +315,8 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
   
   const renderYearFilter = () => {
   const startYear = 2010;
-  const currentYear = moment().year();
+  let year = new Date();
+  const currentYear = year.getFullYear();
   const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
   const years = range(currentYear, startYear, -1);
 

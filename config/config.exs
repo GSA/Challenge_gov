@@ -29,6 +29,8 @@ config :logger_json, :backend, metadata: :all
 config :phoenix, :json_library, Jason
 config :bamboo, :json_library, Jason
 
+config :tesla, :adapter, Tesla.Adapter.Hackney
+
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Implementation
 config :challenge_gov, :gov_delivery, module: ChallengeGov.GovDelivery.Implementation
 
