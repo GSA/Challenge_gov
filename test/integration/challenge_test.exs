@@ -159,7 +159,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
   defp create_and_sign_in_challenge_manager(session) do
     AccountHelpers.create_user(%{
-      email: "challenge_manager_active2@example.gov",
+      email: "challenge_manager_active@example.gov",
       role: "challenge_manager"
     })
 
