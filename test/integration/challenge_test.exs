@@ -8,7 +8,8 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     create_and_sign_in_challenge_manager(session)
 
     session
-    |> click(link("Challenges", id: "challenge-link-1"))
+    |> click(css("#challenge-link-1"))
+    |> visit("/challenges/new")
     |> complete_general_section()
     |> complete_details_section()
     |> complete_timeline_section()
@@ -158,7 +159,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
 
   defp create_and_sign_in_challenge_manager(session) do
     AccountHelpers.create_user(%{
-      email: "challenge_manager_active@example.gov",
+      email: "challenge_manager_active2@example.gov",
       role: "challenge_manager"
     })
 
