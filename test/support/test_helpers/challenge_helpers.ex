@@ -23,7 +23,7 @@ defmodule ChallengeGov.TestHelpers.ChallengeHelpers do
         legal_authority: "Test legal authority",
         prize_type: "both",
         challenge_manager: "Test challenge manager",
-        challenge_manager_email: "test@example.com",
+        challenge_manager_email: "test@example.gov",
         poc_email: "test_poc@example.com",
         agency_id: AgencyHelpers.create_agency().id,
         fiscal_year: "FY20",
