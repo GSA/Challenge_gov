@@ -189,3 +189,9 @@ Add a list of changed settings in the form $setting: value.
   background-color: #fafafa;
 }
 
+
+@media (min-width: 64em) {
+  .desktop\:flex-row {
+      flex-direction: row;
+  }
+}

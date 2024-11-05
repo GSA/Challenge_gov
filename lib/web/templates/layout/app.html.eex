@@ -2,7 +2,7 @@
         data-session_expiration="<%= Web.SharedView.session_timeout(@conn) %>"
         id="session_timeout">
       </div>
-      <div style="min-height: 874px;">
+      <div>
       <%= case current_user(@conn) do %>
       <% nil -> %>
       <% u -> %>
@@ -20,8 +20,8 @@
 
       <% end %>
 
-      <div class="grid-row grid-gap">
-      <div class="grid-col-12 dashboard-background-light" >
+      <div class="grid-row ">
+      <div class="grid-col-12 dashboard-background-light >
       <div class="usa-section padding-top-1 minh-tablet-lg">
         <%= if Map.has_key?(@conn.assigns, :site_wide_banner) do %>
           <div class="content-header">
@@ -76,8 +76,11 @@
           </div>
         <% end %>
 
-      <%= @inner_content %>
+      <div class="grid-col-12 dashboard-background-light padding-x-4" >
 
+          <%= @inner_content %>
+
+      </div>
       </div>
       <aside class="float-right control-sidebar control-sidebar-light border">
         <div class="padding-2">
