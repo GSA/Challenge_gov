@@ -90,10 +90,7 @@ defmodule Web.DashboardView do
   defp admin_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
-        content_tag(:h1, "Dashboard"),
-        content_tag(:p, "Engage with the features below to manage your workflows.",
-          class: "padding-0"
-        )
+        content_tag(:h1, "Dashboard")
       ]
     end
   end
@@ -101,12 +98,7 @@ defmodule Web.DashboardView do
   defp challenge_manager_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
-        content_tag(:h1, "Dashboard"),
-        content_tag(
-          :p,
-          "Engage with the features below to manage your workflows.",
-          class: "padding-0"
-        )
+        content_tag(:h1, "Dashboard")
       ]
     end
   end
@@ -114,12 +106,7 @@ defmodule Web.DashboardView do
   defp solver_header(wrapper_classes) do
     content_tag :div, class: wrapper_classes do
       [
-        content_tag(:h1, "Dashboard"),
-        content_tag(
-          :p,
-          "Use the features below to engage with challenges and manage your submissions.",
-          class: "padding-0"
-        )
+        content_tag(:h1, "Dashboard")
       ]
     end
   end
@@ -180,8 +167,8 @@ defmodule Web.DashboardView do
             to: Routes.challenge_path(Endpoint, :index),
             target: "",
             icon: my_icon("emoji_events"),
-            title: "Challenge management",
-            description: "Manage and view all open and archived challenges."
+            title: "Challenges",
+            description: "Create and manage your challenges."
           )
         ]
       end,
@@ -225,67 +212,56 @@ defmodule Web.DashboardView do
             to: Routes.challenge_path(Endpoint, :index),
             target: "",
             icon: my_icon("emoji_events"),
-            title: "Challenge management",
-            description: "Manage and view all open and archived challenges."
+            title: "Challenges",
+            description: "Create and manage your challenges."
           ),
-          if Challenges.is_allowed_to_view_submission?(user) do
-            render("_card_link.html",
-              to: Routes.challenge_path(Endpoint, :new),
-              target: "",
-              icon: my_icon("add"),
-              title: "Create a new challenge",
-              description: nil
-            )
-          else
-            ""
-          end
-        ]
-      end,
-      content_tag :div, class: "grid-row grid-gap-2" do
-        [
           render("_card_link.html",
             to: "https://challenge-dev.app.cloud.gov/manage_submissions",
             target: "",
             icon: my_icon("star_half"),
             title: "Submissions & Evaluations",
             description: "Manage submissions, evaluations, and evaluators."
-          ),
+          )
+        ]
+      end,
+      content_tag :div, class: "grid-row grid-gap-2" do
+        [
           render("_card_link.html",
             to: "https://challenge-dev.app.cloud.gov/evaluation_forms",
             target: "",
             icon: my_icon("check_circle_outline"),
             title: "Evaluation Forms",
             description: "Create and manage evaluation forms."
-          )
-        ]
-      end,
-      content_tag :div, class: "grid-row grid-gap-2" do
-        [
+          ),
           render("_card_link.html",
             to: Routes.message_context_path(Endpoint, :index),
             target: "",
             icon: my_icon("mail"),
             title: "Message center",
             description: "View and send messages to Challenge.Gov users."
-          ),
-          render("_card_link.html",
-            to: Routes.analytics_path(Endpoint, :index),
-            target: "",
-            icon: my_icon("assessment"),
-            title: "Analytics",
-            description: "View web analytics related to your challenges."
           )
         ]
       end,
       content_tag :div, class: "grid-row grid-gap-2" do
         [
           render("_card_link.html",
+            to: Routes.analytics_path(Endpoint, :index),
+            target: "",
+            icon: my_icon("assessment"),
+            title: "Analytics",
+            description: "View web analytics related to your challenges."
+          ),
+          render("_card_link.html",
             to: Routes.help_path(Endpoint, :index),
             target: "",
-            icon: my_icon("help"),
-            title: "Help",
-            description: "Help Center"
-          ),
+            icon: my_icon("support"),
+            title: "Resources",
+            description: "Learn how to make the most of Challenge.gov and find support."
+          )
+        ]
+      end,
+      content_tag :div, class: "grid-row grid-gap-2" do
+        [
           render("_card_link.html",
             to: Routes.static_path(Endpoint, "/pdfs/prize_and_challenge_toolkit.pdf"),
             target: "_blank",
@@ -319,9 +295,9 @@ defmodule Web.DashboardView do
         render("_card_link.html",
           to: Routes.help_path(Endpoint, :solver_index),
           target: "",
-          icon: my_icon("help"),
-          title: "Help",
-          description: "Help Center"
+          icon: my_icon("support"),
+          title: "Resources",
+          description: "Learn how to make the most of Challenge.gov and find support."
         )
       ]
     end

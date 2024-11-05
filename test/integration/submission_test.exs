@@ -36,7 +36,7 @@
 #     create_and_sign_in_admin(session)
 
 #     session
-#     |> click(link("Challenge management"))
+#     |> click(link("Challenges"))
 #     |> click(link("View"))
 #     |> click(link("View submissions"))
 #     |> click(link("Add solver submission ->"))
