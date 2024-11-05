@@ -8,8 +8,7 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     create_and_sign_in_challenge_manager(session)
 
     session
-    |> click(link("Challenges"))
-    |> click(link("New"))
+    |> click(link("Challenges", id: "challenge-link-1"))
     |> complete_general_section()
     |> complete_details_section()
     |> complete_timeline_section()

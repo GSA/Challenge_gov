@@ -15,7 +15,7 @@
   <% end %>
 
   <%= link(to: Routes.challenge_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
-                    width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
+                    width-9 tablet:width-auto tablet:text-no-wrap text-center", id: "challenge-link-1")  do %>
       <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#emoji_events"></use>
       </svg><span class="display-none desktop:display-block">Challenges</span><span class="desktop:display-none" style="font-size: 0.7rem">Challenges</span>
