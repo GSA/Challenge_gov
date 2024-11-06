@@ -180,14 +180,12 @@ defmodule Web.SavedChallengeControllerTest do
                   60,
                   "a",
                   [
-
-                      32,
-                      "href",
-                      61,
-                      34,
-                      "http://localhost:4001/?challenge=#{challenge.id}",
-                      34
-
+                    32,
+                    "href",
+                    61,
+                    34,
+                    "http://localhost:4001/?challenge=#{challenge.id}",
+                    34
                   ],
                   62,
                   "here",
