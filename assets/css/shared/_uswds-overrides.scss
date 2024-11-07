@@ -46,7 +46,7 @@
 
 @media (forced-colors:active) {
   .usa-combo-box--pristine .usa-combo-box__clear-input {
-    background: url(/images/uswds/img/usa-icons/close.svg) no-repeat 50%/contain;
+    background: url(/images/close.svg) no-repeat 50%/contain;
     display: inline-block;
     height: 1rem;
     height: 1.5rem;
@@ -59,13 +59,13 @@
     .usa-combo-box--pristine .usa-combo-box__clear-input {
       background: none;
       background-color: ButtonText;
-      mask: url(/images/uswds/img/usa-icons/close.svg) no-repeat center/contain
+      mask: url(/images/close.svg) no-repeat center/contain
     }
   }
 }
 
 .usa-combo-box__clear-input {
-  background-image: url(/images/uswds/img/usa-icons/close.svg), linear-gradient(transparent, transparent);
+  background-image: url(/images/close.svg), linear-gradient(transparent, transparent);
   background-repeat: no-repeat;
   display: none;
   right: calc(2.5em + 3px)
@@ -73,7 +73,7 @@
 
 @media (max-width:39.99em) {
   .usa-banner__button[aria-expanded=true]:after {
-    background: url(/images/uswds/img/usa-icons/close.svg) no-repeat 50%/contain;
+    background: url(/images/close.svg) no-repeat 50%/contain;
     content: "";
     display: inline-block;
     height: 3rem;
@@ -86,7 +86,7 @@
     .usa-banner__button[aria-expanded=true]:after {
       background: none;
       background-color: #005ea2;
-      mask: url(/images/uswds/img/usa-icons/close.svg) no-repeat center/contain
+      mask: url(/images/close.svg) no-repeat center/contain
     }
   }
 }
@@ -94,7 +94,7 @@
 
   @media (forced-colors:active) {
     .usa-nav__close:before {
-      background: url(/images/uswds/img/usa-icons/close.svg) no-repeat 50%/contain;
+      background: url(/images/close.svg) no-repeat 50%/contain;
       content: "";
       display: inline-block;
       height: 1.25rem;
@@ -107,7 +107,7 @@
       .usa-nav__close:before {
         background: none;
         background-color: ButtonText;
-        mask: url(/images/uswds/img/usa-icons/close.svg) no-repeat center/contain
+        mask: url(/images/close.svg) no-repeat center/contain
       }
     }
   
@@ -186,7 +186,7 @@ Add a list of changed settings in the form $setting: value.
 
 .usa-header
 {
-  background-color: #fafafa;
+  background-color: #fff;
 }
 
 
@@ -194,4 +194,8 @@ Add a list of changed settings in the form $setting: value.
   .desktop\:flex-row {
       flex-direction: row;
   }
+}
+
+.font-sans-xs {
+  font-size: .87rem
 }
