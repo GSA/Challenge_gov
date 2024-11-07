@@ -237,7 +237,7 @@ defmodule Web.DashboardView do
             to: Routes.message_context_path(Endpoint, :index),
             target: "",
             icon: my_icon("mail"),
-            title: "Message center",
+            title: "Message Center",
             description: "View and send messages to Challenge.Gov users."
           )
         ]
@@ -266,7 +266,7 @@ defmodule Web.DashboardView do
             to: Routes.static_path(Endpoint, "/pdfs/prize_and_challenge_toolkit.pdf"),
             target: "_blank",
             icon: my_icon("construction"),
-            title: "Agency toolkit",
+            title: "Agency Toolkit",
             description: "View the Prizes and Challenges Toolkit to learn more."
           )
         ]
