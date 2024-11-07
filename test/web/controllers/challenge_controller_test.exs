@@ -347,7 +347,7 @@ defmodule Web.ChallengeControllerTest do
                   [
                     60,
                     "p",
-                    [[32, "class", 61, 34, "h4 mb-0", 34]],
+                    [32, "class", 61, 34, "h4 mb-0", 34],
                     62,
                     "Challenge Removed from Queue",
                     60,
@@ -595,7 +595,7 @@ defmodule Web.ChallengeControllerTest do
                  safe: [
                    60,
                    "p",
-                   [[32, "class", 61, 34, "h4 mb-0", 34]],
+                   [32, "class", 61, 34, "h4 mb-0", 34],
                    62,
                    "Challenge updated",
                    60,
@@ -613,7 +613,7 @@ defmodule Web.ChallengeControllerTest do
                      [
                        60,
                        "a",
-                       [[32, "href", 61, 34, "/challenges/#{challenge.id}/bulletin/new", 34]],
+                       [32, "href", 61, 34, "/challenges/#{challenge.id}/bulletin/new", 34],
                        62,
                        "Govdelivery",
                        60,
