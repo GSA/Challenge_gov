@@ -149,13 +149,12 @@ defmodule Web.SubmissionController do
 
   def show(conn, params = %{"id" => _id}) do
     %{current_user: user, current_submission: submission, page: page} = conn.assigns
-
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
-    #only challenge manager with .mil or .gov is allowed.
+    # only challenge manager with .mil or .gov is allowed
     if Submissions.is_allowed_to_view_submission?(user) do
       with {:ok, phase} <- Phases.get(submission.phase_id),
-          {:ok, challenge} <- Challenges.get(submission.challenge_id) do
+           {:ok, challenge} <- Challenges.get(submission.challenge_id) do
         conn
         |> assign(:user, user)
         |> assign(:challenge, challenge)
