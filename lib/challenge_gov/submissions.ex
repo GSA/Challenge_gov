@@ -301,6 +301,42 @@ defmodule ChallengeGov.Submissions do
     submission.manager_id && !submission.review_verified
   end
 
+  # check role challenge_manager & .gov or .mil email account
+  defp is_challenge_manager_ng(user = %{role: "challenge_manager"}) do
+    if validate_gov_mil?(user.email) do
+      user.role
+    else
+      "challenge_manager_ng"
+    end
+  end
+
+  def validate_gov_mil?(email) do
+    String.ends_with?(email, [".gov", ".mil"])
+  end
+
+  def allowed_to_view_submission(user, submission) do
+    if user.role == "challenge_manager" do
+      if validate_gov_mil?(user.email) do
+        {:ok, submission}
+      else
+        {:error, :not_permitted}
+      end
+    end
+  end
+
+  def is_allowed_to_view_submission?(user = %{role: "challenge_manager"}),
+    do: validate_gov_mil?(user.email)
+
+  def is_allowed_to_view_submission?(user = %{role: "super_admin"}), do: true
+
+  def is_allowed_to_view_submission?(user = %{role: "admin"}), do: true
+
+  def is_allowed_to_view_submission?(user = %{role: "solver"}), do: true
+
+  defp is_challenge_manager_ng(user = %{role: _}) do
+    user.role
+  end
+
   defp send_submission_review_email(user, phase, submission) do
     user
     |> Emails.submission_review(phase, submission)
@@ -506,7 +542,7 @@ defmodule ChallengeGov.Submissions do
   defp add_to_security_log(user, submission, type, remote_ip, details \\ nil) do
     SecurityLogs.track(%{
       originator_id: user.id,
-      originator_role: user.role,
+      originator_role: is_challenge_manager_ng(user),
       originator_identifier: user.email,
       originator_remote_ip: remote_ip,
       target_id: submission.id,

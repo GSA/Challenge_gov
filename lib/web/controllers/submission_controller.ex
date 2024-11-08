@@ -152,27 +152,34 @@ defmodule Web.SubmissionController do
 
     filter = Map.get(params, "filter", %{})
     sort = Map.get(params, "sort", %{})
+    #only challenge manager with .mil or .gov is allowed.
+    if Submissions.is_allowed_to_view_submission?(user) do
+      with {:ok, phase} <- Phases.get(submission.phase_id),
+          {:ok, challenge} <- Challenges.get(submission.challenge_id) do
+        conn
+        |> assign(:user, user)
+        |> assign(:challenge, challenge)
+        |> assign(:phase, phase)
+        |> assign(:submission, submission)
+        |> assign(:page, page)
+        |> assign(:filter, filter)
+        |> assign(:sort, sort)
+        |> assign(:action, action_name(conn))
+        |> assign(:navbar_text, submission.title || "Submission #{submission.id}")
+        |> is_closed(phase.end_date)
 
-    with {:ok, phase} <- Phases.get(submission.phase_id),
-         {:ok, challenge} <- Challenges.get(submission.challenge_id) do
+        # |> render("show.html")
+      else
+        {:error, :not_found} ->
+          conn
+          |> put_flash(:error, "Submission not found")
+          |> redirect_by_user_type(user, submission)
+      end
+    else
       conn
       |> assign(:user, user)
-      |> assign(:challenge, challenge)
-      |> assign(:phase, phase)
-      |> assign(:submission, submission)
-      |> assign(:page, page)
-      |> assign(:filter, filter)
-      |> assign(:sort, sort)
-      |> assign(:action, action_name(conn))
-      |> assign(:navbar_text, submission.title || "Submission #{submission.id}")
-      |> is_closed(phase.end_date)
-
-      # |> render("show.html")
-    else
-      {:error, :not_found} ->
-        conn
-        |> put_flash(:error, "Submission not found")
-        |> redirect_by_user_type(user, submission)
+      |> put_flash(:error, "You are not allowed to view submissions")
+      |> redirect(to: Routes.challenge_path(conn, :index))
     end
   end
 
