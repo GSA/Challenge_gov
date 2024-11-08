@@ -1,39 +1,44 @@
 <div class="bg-primary-darker w-full display-flex flex-justify-center desktop:flex-justify-end padding-1 font-body-3xs desktop:font-body-2xs text-white">
-
+<div>
   <%= link(to: Routes.dashboard_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
                     width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
       <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#grid_view"></use>
       </svg><span class="display-none desktop:display-block ">Dashboard</span><span class="desktop:display-none" style="font-size: 0.7rem">Dashboard</span>
   <% end %>
-
+</div>
+<div>
   <%= link(to: Routes.challenge_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
                     width-9 tablet:width-auto tablet:text-no-wrap text-center", id: "challenge-link-1")  do %>
       <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#emoji_events"></use>
       </svg><span class="display-none desktop:display-block">Challenges</span><span class="desktop:display-none" style="font-size: 0.7rem">Challenges</span>
   <% end %>
-
+</div>
+<div>
    <%= link(to: "https://challenge-dev.app.cloud.gov/manage_submissions", class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
                     width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
       <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#star_half"></use>
       </svg><span class="display-none desktop:display-block">Submissions & Evaluations</span><span class="desktop:display-none" style="font-size: 0.7rem">Submissions & Evaluations</span>
   <% end %>
-
+</div>
+<div>
   <%= link(to: "https://challenge-dev.app.cloud.gov/evaluation_forms", class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
                     width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
       <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#check_circle_outline"></use>
       </svg><span class="display-none desktop:display-block">Evaluation Forms</span><span class="desktop:display-none" style="font-size: 0.7rem">Evaluation Forms</span>
   <% end %>
-
+</div>
+<div>
   <%= link(to: Routes.help_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
                     width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
       <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#support"></use>
       </svg><span class="display-none desktop:display-block">Resources</span><span class="desktop:display-none" style="font-size: 0.7rem">Resources</span>
   <% end %>
+</div>
 
   <div class="display-none desktop:display-flex flex-align-center margin-x-1 margin-top-1">
   |
