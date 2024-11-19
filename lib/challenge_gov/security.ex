@@ -213,19 +213,12 @@ defmodule ChallengeGov.Security do
   # functions to control non-gov challenge manager
   def intercept_challenge_manager_ng(original_track) do
     %{
-      originator_id: original_track.originator_id,
-      originator_role:
-        is_challenge_manager_ng(
-          original_track.originator_role,
-          original_track.originator_identifier
-        ),
-      originator_identifier: original_track.originator_identifier,
-      originator_remote_ip: original_track.originator_remote_ip,
-      target_id: original_track.target_id,
-      target_type: original_track.target_type,
-      target_identifier: original_track.target_identifier,
-      action: original_track.action,
-      details: original_track.details
+      original_track
+      | originator_role:
+          is_challenge_manager_ng(
+            original_track.originator_role,
+            original_track.originator_identifier
+          )
     }
   end
 
