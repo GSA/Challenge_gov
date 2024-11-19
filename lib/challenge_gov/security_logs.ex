@@ -57,7 +57,7 @@ defmodule ChallengeGov.SecurityLogs do
         action: "session_duration",
         details: %{duration: duration},
         originator_id: user.id,
-        originator_role: Security.is_challenge_manager_ng(user.role, user.emailcle),
+        originator_role: Security.is_challenge_manager_ng(user.role, user.email),
         originator_identifier: user.email,
         originator_remote_ip: remote_ip
       })
