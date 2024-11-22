@@ -17,6 +17,7 @@ defmodule ChallengeGov.Submissions do
   alias ChallengeGov.Submissions.Submission
   alias ChallengeGov.SubmissionExports
   alias Stein.Filter
+  alias ChallengeGov.Security
 
   def all(opts \\ []) do
     Submission
