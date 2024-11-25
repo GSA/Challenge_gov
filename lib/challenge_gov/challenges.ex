@@ -755,9 +755,19 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
+  @doc """
+  Checks if a user is allowed to view the submissions
+  """
+
   def allowed_to_view_submission(user, challenge) do
-    if user.role == "challenge_manager" do
+    if is_challenge_manager?(user, challenge) do
       if Security.validate_gov_mil?(user.email) do
+        {:ok, challenge}
+      else
+        {:error, :not_permitted}
+      end
+    else
+      if Accounts.has_admin_access?(user) do
         {:ok, challenge}
       else
         {:error, :not_permitted}

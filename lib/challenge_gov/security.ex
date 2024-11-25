@@ -223,16 +223,16 @@ defmodule ChallengeGov.Security do
   end
 
   # check role challenge_manager & .gov or .mil email account
-  def is_challenge_manager_ng(originator_role, originator_identifier) do
-    if originator_role == "challenge_manager" do
-      if validate_gov_mil?(originator_identifier) do
-        originator_role
-      else
-        "challenge_manager_ng"
-      end
-    else
+  def is_challenge_manager_ng(originator_role = "challenge_manager", originator_identifier) do
+    if validate_gov_mil?(originator_identifier) do
       originator_role
+    else
+      "challenge_manager_ng"
     end
+  end
+
+  def is_challenge_manager_ng(originator_role = _, originator_identifier) do
+    originator_role
   end
 
   def validate_gov_mil?(email) do
