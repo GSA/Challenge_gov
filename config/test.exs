@@ -61,9 +61,10 @@ config :wallaby,
   driver: Wallaby.Chrome,
   chromedriver: [
     # test server
-    path: "/usr/local/bin/chromedriver"
+    #path: "/usr/local/bin/chromedriver"
     # test local
-    # path: "/usr/bin/chromedriver"
+    path: "/opt/homebrew/bin/chromedriver"
+
   ]
 
 if File.exists?("config/test.local.exs") do
