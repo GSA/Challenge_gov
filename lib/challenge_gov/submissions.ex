@@ -17,6 +17,7 @@ defmodule ChallengeGov.Submissions do
   alias ChallengeGov.Submissions.Submission
   alias ChallengeGov.SubmissionExports
   alias Stein.Filter
+  alias ChallengeGov.Security
 
   def all(opts \\ []) do
     Submission
@@ -300,6 +301,25 @@ defmodule ChallengeGov.Submissions do
   defp is_manager_submitted_submission?(submission) do
     submission.manager_id && !submission.review_verified
   end
+
+  def allowed_to_view_submission(user, submission) do
+    if user.role == "challenge_manager" do
+      if Security.validate_gov_mil?(user.email) do
+        {:ok, submission}
+      else
+        {:error, :not_permitted}
+      end
+    end
+  end
+
+  def is_allowed_to_view_submission?(user = %{role: "challenge_manager"}),
+    do: Security.validate_gov_mil?(user.email)
+
+  def is_allowed_to_view_submission?(user = %{role: "super_admin"}), do: true
+
+  def is_allowed_to_view_submission?(user = %{role: "admin"}), do: true
+
+  def is_allowed_to_view_submission?(user = %{role: "solver"}), do: true
 
   defp send_submission_review_email(user, phase, submission) do
     user

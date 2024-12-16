@@ -29,7 +29,7 @@ defmodule Web.PhaseWinnerControllerTest do
       conn = get(conn, Routes.challenge_path(conn, :show, challenge.id))
 
       assert html_response(conn, 200) =~
-               "<a class=\"usa-button disabled\" href=\"#\" disabled>Add winners</a>"
+               "<a class=\"usa-button disabled\" disabled href=\"#\">Add winners</a>"
     end
 
     test "success: show only closed phases", %{conn: conn} do

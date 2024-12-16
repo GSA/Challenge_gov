@@ -26,7 +26,7 @@ export const ChallengeTab = ({ label, downloadsLabel, section, challenge, childr
     if (label === "Overview") {
       return (
         <div className="float-right" id="challenge-link">
-          <input id={`challenge-link-text-${section}`} className="opacity-0" defaultValue={window.location.href} />
+          <input id={`challenge-link-text-${section}`} aria-hidden="true" className="opacity-0" defaultValue={window.location.href} />
           <button id="challenge-link-btn" className="usa-button usa-button--unstyled text-decoration-none" onClick={handleCopyLink}>
             <svg className="usa-icon" aria-hidden="true" focusable="false" role="img" style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
                 <title id="copy-share-link">ChallengeGov follow challenges</title>         
