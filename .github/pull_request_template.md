@@ -25,4 +25,5 @@
 - [ ] If you have DB migration, it is a "safe" migration and you've confirmed it can be rolled back.
 - [ ] If applicable, Controllers modified contain appropriate authorization plugs
 - [ ] This PR has been reviewed by at least one other team member.
+- [ ] Build has been approved for deployment in CircleCI.
 
