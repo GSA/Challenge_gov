@@ -54,7 +54,6 @@ defmodule Web.PhaseController do
 
     with {:ok, challenge} <- Challenges.get(challenge_id),
          {:ok, challenge} <- Challenges.allowed_to_edit(user, challenge),
-         {:ok, challenge} <- Challenges.allowed_to_view_submission(user, challenge),
          {:ok, phase} <- Phases.get(id) do
       submissions_filter =
         Map.merge(filter, %{

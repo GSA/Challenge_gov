@@ -1,7 +1,6 @@
 defmodule Web.DashboardView do
   use Web, :view
 
-  alias ChallengeGov.Challenges
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Accounts
   alias ChallengeGov.MessageContextStatuses
@@ -115,7 +114,7 @@ defmodule Web.DashboardView do
         admin_card_links()
 
       Accounts.is_challenge_manager?(user) ->
-        challenge_manager_card_links(user)
+        challenge_manager_card_links()
 
       Accounts.is_solver?(user) ->
         solver_card_links(user)
@@ -202,7 +201,7 @@ defmodule Web.DashboardView do
     ]
   end
 
-  defp challenge_manager_card_links(user) do
+  defp challenge_manager_card_links() do
     [
       content_tag :div, class: "grid-row" do
         [
@@ -213,17 +212,13 @@ defmodule Web.DashboardView do
             title: "Challenge management",
             description: "Manage and view all open and archived challenges."
           ),
-          if Challenges.is_allowed_to_view_submission?(user) do
-            render("_card_link.html",
-              to: Routes.challenge_path(Endpoint, :new),
-              target: "",
-              icon: my_icon("add"),
-              title: "Create a new challenge",
-              description: nil
-            )
-          else
-            ""
-          end
+          render("_card_link.html",
+            to: Routes.challenge_path(Endpoint, :new),
+            target: "",
+            icon: my_icon("add"),
+            title: "Create a new challenge",
+            description: nil
+          )
         ]
       end,
       content_tag :div, class: "grid-row" do

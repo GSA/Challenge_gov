@@ -8,7 +8,7 @@ defmodule ChallengeGov.TestHelpers.AccountHelpers do
   defp default_attributes(attributes) do
     Map.merge(
       %{
-        email: "user@example.gov",
+        email: "user@example.com",
         first_name: "John",
         last_name: "Smith",
         phone_number: "123-123-1234",
