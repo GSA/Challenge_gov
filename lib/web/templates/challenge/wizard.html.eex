@@ -5,7 +5,6 @@
       %{text: "Challenges", route: Routes.challenge_path(@conn, :index)},
       %{text: @challenge && @challenge.title || "New"}
     ])%>
-    <%= render Web.ChallengeView, "_challenge_manager_banner.html", user: @user %>
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">
