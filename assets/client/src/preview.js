@@ -51,7 +51,7 @@ const renderPreview = () => (
 )
 
 const rootElement = document.getElementById('preview');
-const imageBase = rootElement.getAttribute('data-image-base');
+const imageBase = encodeURI(rootElement.getAttribute('data-image-base'));
 ReactDOM.render(renderPreview(), rootElement);
 
 // If you want your app to work offline and load faster, you can change

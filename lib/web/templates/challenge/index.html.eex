@@ -27,7 +27,9 @@
       <div class="grid-col-6">
           <div class="font-ui-xl padding-1">All Challenges</div>
           <div class="btn-group">
+          <%= if Challenges.is_allowed_to_view_submission?(@user) do %>
             <%= link "New", to: Routes.challenge_path(@conn, :new, show_info: true), class: "usa-button" %>
+          <% end %>
           <a class="usa-button" data-widget="control-sidebar" href="#">Filter</a>
           <%= if is_map(@filter) && map_size(@filter) > 0 do %>
             <%= link "Clear filters", to: Routes.challenge_path(@conn, :index), class: "usa-button usa-button--outline" %>
