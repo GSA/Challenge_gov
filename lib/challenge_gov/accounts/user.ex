@@ -39,7 +39,8 @@ defmodule ChallengeGov.Accounts.User do
     "suspended",
     "revoked",
     "deactivated",
-    "decertified"
+    "decertified",
+    "evaluator_role_requested"
   ]
 
   schema "users" do
