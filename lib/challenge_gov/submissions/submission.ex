@@ -6,6 +6,7 @@ defmodule ChallengeGov.Submissions.Submission do
   use Ecto.Schema
 
   import Ecto.Changeset
+  import Ecto.Query
   import Waffle.Ecto.Schema
 
   alias ChallengeGov.Accounts.User
@@ -124,6 +125,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> validate_required([:title, :brief_description, :description])
     # Validate file upload on review.
     |> validate_file_upload(challenge, params)
+    |> prepare_changes(&increment_submissions_count/1)
   end
 
   def update_draft_changeset(struct, params, _challenge) do
@@ -151,6 +153,13 @@ defmodule ChallengeGov.Submissions.Submission do
     |> validate_required([:title, :brief_description, :description])
     # Validate file upload on update review.
     |> validate_file_upload(challenge, params)
+    |> prepare_changes(fn changeset ->
+      if "submitted" == get_change(changeset, :status) do
+        increment_submissions_count(changeset)
+      else
+        changeset
+      end
+    end)
   end
 
   defp validate_file_upload(changeset, challenge, params) do
@@ -169,6 +178,15 @@ defmodule ChallengeGov.Submissions.Submission do
     else
       changeset
     end
+  end
+
+  defp increment_submissions_count(changeset, increment \\ 1) do
+    phase_id = get_field(changeset, :phase_id)
+
+    from(p in Phase, where: p.id == ^phase_id)
+    |> changeset.repo.update_all(inc: [submissions_count: increment])
+
+    changeset
   end
 
   def submit_changeset(struct) do
@@ -193,6 +211,13 @@ defmodule ChallengeGov.Submissions.Submission do
     struct
     |> change()
     |> put_change(:deleted_at, now)
+    |> prepare_changes(fn changeset ->
+      if get_field(changeset, :status) == "submitted" do
+        increment_submissions_count(changeset, -1)
+      else
+        changeset
+      end
+    end)
   end
 
   defp validate_required_fields(struct) do

@@ -14,6 +14,7 @@ defmodule ChallengeGov.SubmissionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
       phase = Enum.at(challenge.phases, 0)
+      assert phase.submissions_count == 0
 
       {:ok, submission} =
         Submissions.create_draft(
@@ -30,6 +31,9 @@ defmodule ChallengeGov.SubmissionsTest do
       assert submission.challenge_id === challenge.id
       assert is_nil(submission.title)
       assert submission.status === "draft"
+      # no change to submissions_count for drafts
+      {:ok, phase} = ChallengeGov.Phases.get(phase.id)
+      assert phase.submissions_count == 0
     end
 
     test "saving as draft with data" do
@@ -84,6 +88,7 @@ defmodule ChallengeGov.SubmissionsTest do
       user = AccountHelpers.create_user()
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
       phase = Enum.at(challenge.phases, 0)
+      assert phase.submissions_count == 0
 
       {:ok, submission} =
         Submissions.create_review(
@@ -109,6 +114,9 @@ defmodule ChallengeGov.SubmissionsTest do
       assert submission.description === "Test Description"
       assert submission.external_url === "www.example.com"
       assert submission.status === "submitted"
+      # increment submissions_count for submitted status
+      {:ok, phase} = ChallengeGov.Phases.get(phase.id)
+      assert phase.submissions_count == 1
     end
   end
 
@@ -176,6 +184,10 @@ defmodule ChallengeGov.SubmissionsTest do
       {:error, changeset} = Submissions.update_review(submission, %{"title" => nil}, challenge)
 
       assert changeset.errors[:title]
+      # does not increment submissions_count for errors
+      phase = Enum.at(challenge.phases, 0)
+      {:ok, phase} = ChallengeGov.Phases.get(phase.id)
+      assert phase.submissions_count == 0
     end
 
     test "update submitted" do
@@ -191,6 +203,10 @@ defmodule ChallengeGov.SubmissionsTest do
       challenge = Repo.preload(challenge, [:challenge_manager_users])
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
+      # increment submissions_count for submitted status
+      phase = Enum.at(challenge.phases, 0)
+      {:ok, phase} = ChallengeGov.Phases.get(phase.id)
+      assert phase.submissions_count == 1
 
       {:ok, updated_submission} =
         Submissions.update_review(
@@ -198,6 +214,9 @@ defmodule ChallengeGov.SubmissionsTest do
           %{"title" => "New Test Title", "terms_accepted" => "true", "review_verified" => "true"},
           challenge
         )
+      # does not increment submissions_count when submitted status doesn't change
+      {:ok, phase} = ChallengeGov.Phases.get(phase.id)
+      assert phase.submissions_count == 1
 
       {:ok, updated_submission} = Submissions.submit(updated_submission)
 
@@ -234,8 +253,15 @@ defmodule ChallengeGov.SubmissionsTest do
       challenge = ChallengeHelpers.create_single_phase_challenge(user, %{user_id: user.id})
 
       submission = SubmissionHelpers.create_submitted_submission(%{}, user, challenge)
+      # increment submissions_count for submitted status
+      phase = Enum.at(challenge.phases, 0)
+      {:ok, phase} = ChallengeGov.Phases.get(phase.id)
+      assert phase.submissions_count == 1
 
       {:ok, submission} = Submissions.delete(submission)
+      # decrement submissions_count for submitted submission that is deleted
+      {:ok, phase} = ChallengeGov.Phases.get(phase.id)
+      assert phase.submissions_count == 0
 
       assert !is_nil(submission.deleted_at)
     end

@@ -32,6 +32,7 @@ defmodule ChallengeGov.Challenges.Phase do
     field(:how_to_enter_length, :integer, virtual: true)
 
     field(:delete_phase, :boolean, virtual: true)
+    field(:submissions_count, :integer, default: 0)
 
     timestamps(type: :utc_datetime_usec)
   end
