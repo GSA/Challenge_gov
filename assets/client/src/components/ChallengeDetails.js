@@ -339,7 +339,6 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
   }
 
   return (
-    console.log("imageBase: " + imageBase)
     (challenge && !!challengePhases) ? (
       <div className="usa-full-width">
         <section className="hero__wrapper" aria-label="Challenge overview details">
