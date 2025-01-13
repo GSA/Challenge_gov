@@ -350,7 +350,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                   <div className="logos">
                     <img
                       className="agency-logo"
-                      src={`${imageBase !== null ? imageBase : ''}${encodeURI(challenge.agency_logo || '')}`}
+                      src={`${imageBase && imageBase !== 'null' ? imageBase : ''}${encodeURI(challenge.agency_logo || '')}`}
                       alt={`Agency logo for ${challenge.agency_name}`}                    
                     />
 
