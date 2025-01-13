@@ -339,6 +339,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
   }
 
   return (
+    console.log("imageBase: " + imageBase)
     (challenge && !!challengePhases) ? (
       <div className="usa-full-width">
         <section className="hero__wrapper" aria-label="Challenge overview details">
@@ -350,7 +351,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                   <div className="logos">
                     <img
                       className="agency-logo"
-                      src={`${imageBase ? imageBase : ''}${encodeURI(challenge.agency_logo || '')}`}
+                      src={`${imageBase !== null ? imageBase : ''}${encodeURI(challenge.agency_logo || '')}`}
                       alt={`Agency logo for ${challenge.agency_name}`}                    
                     />
 
