@@ -214,6 +214,7 @@ defmodule ChallengeGov.SubmissionsTest do
           %{"title" => "New Test Title", "terms_accepted" => "true", "review_verified" => "true"},
           challenge
         )
+
       # does not increment submissions_count when submitted status doesn't change
       {:ok, phase} = ChallengeGov.Phases.get(phase.id)
       assert phase.submissions_count == 1

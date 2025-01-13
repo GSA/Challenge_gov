@@ -154,6 +154,7 @@ defmodule ChallengeGov.Submissions.Submission do
     # Validate file upload on update review.
     |> validate_file_upload(challenge, params)
     |> prepare_changes(fn changeset ->
+      # only increment when the value changed to submitted
       if "submitted" == get_change(changeset, :status) do
         increment_submissions_count(changeset)
       else
@@ -212,7 +213,7 @@ defmodule ChallengeGov.Submissions.Submission do
     |> change()
     |> put_change(:deleted_at, now)
     |> prepare_changes(fn changeset ->
-      if get_field(changeset, :status) == "submitted" do
+      if "submitted" == get_field(changeset, :status) do
         increment_submissions_count(changeset, -1)
       else
         changeset
