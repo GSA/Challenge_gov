@@ -25,6 +25,7 @@ defmodule Web.UserController do
     pending_users = Accounts.all_pending()
     reactivation_users = Accounts.all_reactivation()
     requesting_recertification = Accounts.requesting_recertification()
+    evaluator_role_requested = Accounts.all_evaluator_role_requested()
 
     conn
     |> assign(:user, current_user)
@@ -32,7 +33,8 @@ defmodule Web.UserController do
     |> assign(:users, users)
     |> assign(
       :users_requiring_action,
-      pending_users ++ reactivation_users ++ requesting_recertification
+      pending_users ++
+        reactivation_users ++ requesting_recertification ++ evaluator_role_requested
     )
     |> assign(:filter, filter)
     |> assign(:sort, sort)
