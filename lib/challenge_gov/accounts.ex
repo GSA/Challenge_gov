@@ -71,6 +71,13 @@ defmodule ChallengeGov.Accounts do
     |> Repo.all()
   end
 
+  def all_evaluator_role_requested() do
+    User
+    |> where([u], u.status == "evaluator_role_requested")
+    |> order_by([u], [{:asc, u.inserted_at}])
+    |> Repo.all()
+  end
+
   @doc """
   Get all accounts
   """
