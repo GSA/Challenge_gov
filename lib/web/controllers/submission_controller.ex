@@ -495,6 +495,7 @@ defmodule Web.SubmissionController do
   #   |> render("edit.html")
   # end
 
+  # NOTE: This route is not currently used? can also remove Web.SubmissionView.submit_button/4?
   def submit(conn, %{"id" => id}) do
     %{current_user: user, current_submission: submission} = conn.assigns
 

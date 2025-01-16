@@ -205,6 +205,7 @@ defmodule Web.SubmissionView do
     end
   end
 
+  # TODO: Remove unused button?
   def submit_button(conn, submission, user, opts \\ []) do
     case Submissions.is_editable?(user, submission) && submission.status !== "submitted" do
       true ->
@@ -212,20 +213,6 @@ defmodule Web.SubmissionView do
           to: Routes.submission_path(conn, :submit, submission.id),
           method: :put,
           class: "usa-button float-right"
-        )
-
-      false ->
-        nil
-    end
-  end
-
-  def submit_button2(conn, submission, user, opts \\ []) do
-    case Submissions.is_editable?(user, submission) do
-      true ->
-        button(opts[:label] || "Submit",
-          to: Routes.submission_path(conn, :submit, submission.id),
-          method: :put,
-          class: "usa-button float-right submit-form display-none"
         )
 
       false ->
