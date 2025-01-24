@@ -18,7 +18,14 @@ config :challenge_gov, Web.Endpoint,
 
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
+  # ssl: true,
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "20"),
+  # Increase the target wait time
+  queue_target: 5000,
+  # Adjust interval for waiting for available connections
+  queue_interval: 1000,
+  # Adjust the connection timeout as needed
+  timeout: 15000,
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
 # Do not print debug messages in production
