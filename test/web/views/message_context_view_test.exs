@@ -24,7 +24,7 @@ defmodule Web.MessageContextViewTest do
                 [
                   60,
                   "a",
-                  [[32, "href", 61, 34, "/challenges/#{challenge.id}", 34]],
+                  [32, "href", 61, 34, "/challenges/#{challenge.id}", 34],
                   62,
                   "Test challenge",
                   60,
@@ -54,7 +54,7 @@ defmodule Web.MessageContextViewTest do
                 [
                   60,
                   "a",
-                  [[32, "href", 61, 34, "/challenges/#{challenge.id}", 34]],
+                  [32, "href", 61, 34, "/challenges/#{challenge.id}", 34],
                   62,
                   "Test challenge",
                   60,
@@ -223,8 +223,18 @@ defmodule Web.MessageContextViewTest do
                   60,
                   "a",
                   [
-                    [32, "class", 61, 34, "usa-button me-3", 34],
-                    [32, "href", 61, 34, "/messages/new?context=challenge", 34]
+                    32,
+                    "class",
+                    61,
+                    34,
+                    "usa-button me-3",
+                    34,
+                    32,
+                    "href",
+                    61,
+                    34,
+                    "/messages/new?context=challenge",
+                    34
                   ],
                   62,
                   "New Message",

@@ -60,9 +60,9 @@ const renderRouter = () => (
 )
 
 const rootElement = document.getElementById('challenge-gov-react-app')
-const apiUrl = rootElement.getAttribute('data-api-url')
+const apiUrl = encodeURI(rootElement.getAttribute('data-api-url'))
 const publicUrl = rootElement.getAttribute('data-public-url')
-const imageBase = rootElement.getAttribute('data-image-base')
+const imageBase = encodeURI(rootElement.getAttribute('data-image-base'))
 const bridgeApplyBlocked = rootElement.getAttribute('data-bridge-apply-blocked') != 'false'
 
 ReactDOM.render(renderRouter(), rootElement);
