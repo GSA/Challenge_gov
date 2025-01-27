@@ -112,7 +112,7 @@ Setup and seed the database
 ```bash
 mix ecto.create
 mix ecto.migrate
-mix run priv/repo/seeds_updated.exs
+mix run priv/repo/seeds.exs
 ```
 
 Once the database is setup, make sure to install javascript dependencies.
