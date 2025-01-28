@@ -18,7 +18,7 @@ config :challenge_gov, Web.Endpoint,
 
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
-  # ssl: true,
+  ssl: true,
   # pool_size: String.to_integer(System.get_env("POOL_SIZE") || "20"),
   pool_size: 15,
   migration_timestamps: [type: :utc_datetime_usec],
