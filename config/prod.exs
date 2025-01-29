@@ -18,7 +18,7 @@ config :challenge_gov, Web.Endpoint,
 
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
-  ssl: [verify: :verify_none],
+  ssl: if(System.get_env("DATABASE_SSL") == "true", do: [verify: :verify_none], else: false),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
