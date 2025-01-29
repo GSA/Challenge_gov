@@ -18,14 +18,8 @@ config :challenge_gov, Web.Endpoint,
 
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
-  ssl: true,
-  # pool_size: String.to_integer(System.get_env("POOL_SIZE") || "20"),
-  pool_size: 15,
-  migration_timestamps: [type: :utc_datetime_usec],
-  migration_lock: nil,
-  queue_target: 5000,
-  queue_interval: 1000,
-  timeout: 15000,
+  ssl: [verify: :verify_none],
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
 # Do not print debug messages in production
