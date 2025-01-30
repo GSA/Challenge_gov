@@ -17,6 +17,15 @@ defmodule ChallengeGov.MixProject do
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
+      ],
+      # Ensure the priv/certs directory is included in the release
+      releases: [
+        challenge_gov: [
+          include_executables_for: [:unix],
+          applications: [challenge_gov: :permanent],
+          steps: [:assemble, :tar],
+          extra_files: ["priv/certs"]
+        ]
       ]
     ]
   end
