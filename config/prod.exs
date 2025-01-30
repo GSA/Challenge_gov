@@ -18,7 +18,11 @@ config :challenge_gov, Web.Endpoint,
 
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
-  ssl: if(System.get_env("DATABASE_SSL") == "true", do: [verify: :verify_ca, cacertfile: "config/us-gov-west-1-bundle.pem"], else: false),
+  ssl:
+    if(System.get_env("DATABASE_SSL") == "true",
+      do: [verify: :verify_ca, cacertfile: "config/us-gov-west-1-bundle.pem"],
+      else: false
+    ),
   pool_timeout: :infinity,
   timeout: :infinity,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
