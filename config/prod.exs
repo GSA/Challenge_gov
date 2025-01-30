@@ -26,6 +26,7 @@ ssl_opts = [
   # using erlang library ssl_verify_fun for ssl verification
   verify_fun: {&:ssl_verify_hostname.verify_fun/3, [check_hostname: check_hostname]}
 ]
+
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
   ssl: true,
