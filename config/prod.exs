@@ -30,9 +30,15 @@ ssl_opts = [
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
   ssl: true,
-  ssl_opts: ssl_opts,
-  pool_timeout: :infinity,
-  timeout: :infinity,
+  #  ssl_opts: ssl_opts,
+  #  pool_timeout: :infinity,
+  #  timeout: :infinity,
+  ssl_opts: [
+    cacertfile: "priv/certs/us-gov-west-1-bundle.pem",
+    verify: :verify_peer,
+    sslmode: :verify_full,
+    versions: [:"tlsv1.2", :"tlsv1.3"]
+  ],
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
