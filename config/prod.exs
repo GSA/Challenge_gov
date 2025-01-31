@@ -19,13 +19,13 @@ config :challenge_gov, Web.Endpoint,
 # db_ssl_ca_cert = Path.join([:code.priv_dir(:challenge_gov), "certs", "us-gov-west-1-bundle.pem"])
 # check_hostname = String.to_charlist(System.get_env("DATABASE_HOST"))
 
-ssl_opts = [
-  cacertfile: db_ssl_ca_cert,
-  server_name_indication: check_hostname,
-  verify: :verify_peer,
-  # using erlang library ssl_verify_fun for ssl verification
-  verify_fun: {&:ssl_verify_hostname.verify_fun/3, [check_hostname: check_hostname]}
-]
+# ssl_opts = [
+#   cacertfile: db_ssl_ca_cert,
+#   server_name_indication: check_hostname,
+#   verify: :verify_peer,
+#   # using erlang library ssl_verify_fun for ssl verification
+#   verify_fun: {&:ssl_verify_hostname.verify_fun/3, [check_hostname: check_hostname]}
+# ]
 
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
