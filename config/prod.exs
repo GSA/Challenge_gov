@@ -16,8 +16,8 @@ config :challenge_gov, Web.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
-db_ssl_ca_cert = Path.join([:code.priv_dir(:challenge_gov), "certs", "us-gov-west-1-bundle.pem"])
-check_hostname = String.to_charlist(System.get_env("DATABASE_HOST"))
+# db_ssl_ca_cert = Path.join([:code.priv_dir(:challenge_gov), "certs", "us-gov-west-1-bundle.pem"])
+# check_hostname = String.to_charlist(System.get_env("DATABASE_HOST"))
 
 ssl_opts = [
   cacertfile: db_ssl_ca_cert,
