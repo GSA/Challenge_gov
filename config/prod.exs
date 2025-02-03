@@ -21,7 +21,7 @@ config :challenge_gov, ChallengeGov.Repo,
   ssl: true,
   ssl_opts: [
     cacertfile: "priv/certs/us-gov-west-1-bundle.pem",
-    verify: :verify_peer,
+    verify: :verify_ca,
     versions: [:"tlsv1.2", :"tlsv1.3"]
   ],
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
