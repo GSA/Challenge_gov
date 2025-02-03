@@ -18,12 +18,6 @@ config :challenge_gov, Web.Endpoint,
 
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
-  ssl: true,
-  ssl_opts: [
-    verify: :verify_peer,
-    verify_fun: {&:ssl_verify_hostname.verify_fun/3, [check_hostname: false]},
-    cacertfile: "priv/certs/us-gov-west-1-bundle.pem"
-  ],
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
