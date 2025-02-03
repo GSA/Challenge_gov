@@ -20,10 +20,10 @@ config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
   ssl: true,
   ssl_opts: [
-    cacertfile: "priv/certs/us-gov-west-1-bundle.pem",
     verify: :verify_peer,
-    versions: [:"tlsv1.2", :"tlsv1.3"]
-  ],
+    verify_fun: {&:ssl_verify_hostname.verify_fun/3, [check_hostname: false]},
+    cacertfile: Path.join(:code.priv_dir(:challenge_gov), "certs/us-gov-west-1-bundle.pem")
+  ]
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
