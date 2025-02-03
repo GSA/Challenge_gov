@@ -16,7 +16,7 @@ config :challenge_gov, Web.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
-  config :challenge_gov, ChallengeGov.Repo,
+config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
   ssl: true,
   ssl_opts: [
