@@ -16,8 +16,14 @@ config :challenge_gov, Web.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
-config :challenge_gov, ChallengeGov.Repo,
+  config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
+  ssl: true,
+  ssl_opts: [
+    cacertfile: "priv/certs/us-gov-west-1-bundle.pem",
+    verify: :verify_peer,
+    versions: [:"tlsv1.2", :"tlsv1.3"]
+  ],
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
