@@ -23,7 +23,7 @@ config :challenge_gov, ChallengeGov.Repo,
     verify: :verify_peer,
     verify_fun: {&:ssl_verify_hostname.verify_fun/3, [check_hostname: false]},
     cacertfile: Path.join(:code.priv_dir(:challenge_gov), "certs/us-gov-west-1-bundle.pem")
-  ]
+  ],
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]
 
