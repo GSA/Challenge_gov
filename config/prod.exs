@@ -24,7 +24,7 @@ config :challenge_gov, ChallengeGov.Repo,
     verify: :verify_peer,
     server_name_indication: "cg-aws-broker-prodo0g0lv1irkwn9f3.ci7nkegdizyy.us-gov-west-1.rds.amazonaws.com",
     customize_hostname_check: [
-      match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
+      {:match_fun, &:public_key.pkix_verify_hostname_match_fun(:https)}
     ],
     versions: [:"tlsv1.2", :"tlsv1.3"]
   ],
