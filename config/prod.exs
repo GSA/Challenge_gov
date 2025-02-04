@@ -21,15 +21,7 @@ config :challenge_gov, ChallengeGov.Repo,
   ssl: true,
   ssl_opts: [
     cacertfile: "priv/certs/us-gov-west-1-bundle.pem",
-    server_name_indication:
-      "cg-aws-broker-prodo0g0lv1irkwn9f3.ci7nkegdizyy.us-gov-west-1.rds.amazonaws.com",
-    verify: :verify_peer,
-    verify_fun:
-      {&:ssl_verify_hostname.verify_fun/3,
-        [
-          check_hostname:
-            "cg-aws-broker-prodo0g0lv1irkwn9f3.ci7nkegdizyy.us-gov-west-1.rds.amazonaws.com"
-        ]}
+    verify: :verify_peer
   ],
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]
