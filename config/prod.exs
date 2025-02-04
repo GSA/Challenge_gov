@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
@@ -22,7 +22,6 @@ config :challenge_gov, ChallengeGov.Repo,
   ssl_opts: [
     cacertfile: "priv/certs/us-gov-west-1-bundle.pem",
     verify: :verify_peer,
-    server_name_indication: "cg-aws-broker-prodo0g0lv1irkwn9f3.ci7nkegdizyy.us-gov-west-1.rds.amazonaws.com",
     versions: [:"tlsv1.2", :"tlsv1.3"]
   ],
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
