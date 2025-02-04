@@ -19,7 +19,7 @@ config :challenge_gov, Web.Endpoint,
 config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
   ssl: true,
-  ssl_opts = [
+  ssl_opts: [
     cacertfile: "priv/certs/us-gov-west-1-bundle.pem",
     server_name_indication: "cg-aws-broker-prodo0g0lv1irkwn9f3.ci7nkegdizyy.us-gov-west-1.rds.amazonaws.com",
     verify: :verify_peer,
