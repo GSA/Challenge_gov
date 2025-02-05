@@ -251,7 +251,7 @@ workflows:
             - assets
           filters:
             branches:
-              only: main
+              only: dev
       - release-approval:
           type: approval
           requires:
@@ -285,7 +285,7 @@ workflows:
           cron: "0 4 * * *"
           filters:
             branches:
-              only: main
+              only: dev
     jobs:
       - setup
       - assets:
