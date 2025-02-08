@@ -6,17 +6,16 @@ defmodule Web.Api.BannerController do
   def init(default), do: default
 
   def call(conn, _params) do
-    {:ok ,banner} = SiteContent.get("site_wide_banner")
+    {:ok, banner} = SiteContent.get("site_wide_banner")
 
     case banner_is_active?(banner) do
       true ->
-        text(conn,banner.content)
+        text(conn, banner.content)
 
       false ->
         text(conn, "")
     end
   end
-
 
   defp banner_is_active?(banner) do
     now = DateTime.utc_now()
