@@ -133,7 +133,7 @@ defmodule Web.Router do
     )
 
     post("/challenges/:id/create_announcement", ChallengeController, :create_announcement)
-    post("/challenges/:id/remove_announcement", ChallengeController, :remove_announcement)
+    get("/challenges/:id/remove_announcement", ChallengeController, :remove_announcement)
 
     resources("/challenges/:id/submissions/export", SubmissionExportController,
       only: [:index, :create]
