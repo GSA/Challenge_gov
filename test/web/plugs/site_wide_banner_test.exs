@@ -56,4 +56,41 @@ defmodule Web.Plugs.SiteWideBannerTest do
       assert !Map.has_key?(conn.assigns, :site_wide_banner)
     end
   end
+
+  describe "checks for banner API" do
+    test "adds banner to check if available", %{conn: conn} do
+      TestHelpers.create_site_wide_banner(%{"content" => "this is a test"})
+
+      conn =
+        conn
+        |> get("/api/banner")
+
+      assert text_response(conn, 200) =~ "this is a test"
+    end
+  end
+
+  test "does not banner to assign if banner dates are not active for API", %{conn: conn} do
+    end_date =
+      DateTime.utc_now()
+      |> DateTime.add(60 * 60 * -1, :second)
+      |> DateTime.to_string()
+
+    TestHelpers.create_site_wide_banner(%{"end_date" => end_date})
+
+    conn =
+      conn
+      |> get("/api/banner")
+
+    assert text_response(conn, 200) =~ ""
+  end
+
+  test "does not banner to assign if banner content is nil API", %{conn: conn} do
+    TestHelpers.create_site_wide_banner(%{"content" => ""})
+
+    conn =
+      conn
+      |> get("/api/banner")
+
+    assert text_response(conn, 200) =~ ""
+  end
 end
