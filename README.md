@@ -3,7 +3,6 @@ Challenge.Gov is an open source platform that accepts contributions and feedback
 ## Code of Conduct
 
 Challenge.Gov is committed to building a safe, welcoming, harassment-free culture for everyone. Challenge.Gov is a part of the Technology Transformation Services (TTS) within the General Services Administration (GSA), and we expect everyone to follow the [GSA TTS Code of Conduct](https://handbook.tts.gsa.gov/about-us/code-of-conduct/).
-
 We encourage you to read this platform’s [DEVCONFIG](DEVCONFIG.md), its [LICENSE]( https://github.com/GSA/Challenge_gov/blob/main/LICENSE), and its [README](README.md). If you want to read more about our open source policy or have questions, check out the GSA’s Open Source Policy (https://open.gsa.gov/oss/ or send us an [email](mailto:team@challenge.gov).
 
 ## How you can contribute
