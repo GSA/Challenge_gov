@@ -11,7 +11,7 @@ defmodule ChallengeGov.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: ChallengeGov.PubSub},
       ChallengeGov.Repo,
-      {Finch, name: ChallengeGov.HTTPClient},
+      # {Finch, name: ChallengeGov.HTTPClient},
       Web.Endpoint,
       ChallengeGov.Scheduler,
       ChallengeGov.Telemetry,

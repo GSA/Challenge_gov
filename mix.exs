@@ -5,7 +5,7 @@ defmodule ChallengeGov.MixProject do
     [
       app: :challenge_gov,
       version: "0.1.0",
-      elixir: "~> 1.9",
+      elixir: "~> 1.12.3",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -63,7 +63,6 @@ defmodule ChallengeGov.MixProject do
       {:elixir_uuid, "~> 1.2"},
       {:ex_check, "~> 0.12", only: [:dev, :test], runtime: true},
       {:export, "~> 0.1.1"},
-      {:finch, "~> 0.14.0"},
       {:gettext, "~> 0.11"},
       {:hackney, "~> 1.18.0"},
       {:httpoison, "~> 1.7"},
