@@ -24,219 +24,170 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       |> code()
       |> GovDelivery.remove_topic_endpoint()
 
-    request = Finch.build(:delete, endpoint, auth_headers())
-    Logger.info(inspect(request))
+    headers = auth_headers()
+    Logger.info("Delete(#{endpoint}, #{inspect(headers)})")
 
-    case Finch.request(request, HTTPClient) do
-      {:ok, %{status: 200}} ->
+    case HTTPoison.delete(endpoint, headers) do
+      {:ok, %HTTPoison.Response{status_code: 200}} ->
         Logger.info("Gov Delivery Removed Topic #{challenge.id}")
         Challenges.clear_gov_delivery_topic(challenge)
         {:ok, :removed}
 
-      {:ok, %{body: body}} ->
+      {:ok, %HTTPoison.Response{body: body}} ->
         Logger.error("Gov Delivery Failed to Remove Topic #{challenge.id} #{inspect(body)}")
         {:error, inspect(body)}
 
-      e ->
-        Logger.error("Gov Delivery Failed to Remove Topic #{challenge.id} E: #{inspect(e)}")
-        {:error, e}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        Logger.error("Gov Delivery Failed to Remove Topic #{challenge.id} E: #{inspect(reason)}")
+        {:error, reason}
     end
   end
 
   @impl ChallengeGov.GovDelivery
   def add_topic(challenge) do
     body = xml_topic_from_challenge(challenge)
+    headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
+    endpoint = GovDelivery.create_topic_endpoint()
 
-    request =
-      Finch.build(
-        :post,
-        GovDelivery.create_topic_endpoint(),
-        auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}],
-        body
-      )
+    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
 
-    Logger.info(inspect(request))
-
-    case Finch.request(request, HTTPClient) do
-      {:ok, %{status: 200}} ->
+    case HTTPoison.post(endpoint, body, headers) do
+      {:ok, %HTTPoison.Response{status_code: 200}} ->
         Challenges.store_gov_delivery_topic(challenge, code(challenge.id))
         set_category(challenge)
 
-      {:ok, %{body: body}} ->
+      {:ok, %HTTPoison.Response{body: body}} ->
         Logger.error("Gov Delivery Failed to Add Topic #{challenge.id} #{inspect(body)}")
         {:error, inspect(body)}
 
-      e ->
-        Logger.error("Gov Delivery Failed to Add Topic #{challenge.id} E: #{inspect(e)}")
-        {:error, e}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        Logger.error("Gov Delivery Failed to Add Topic #{challenge.id} E: #{inspect(reason)}")
+        {:error, reason}
     end
   end
 
   @impl ChallengeGov.GovDelivery
   def subscribe_user_general(user) do
     body = xml_subscribe_general(user)
+    headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
+    endpoint = GovDelivery.subscribe_endpoint()
 
-    request =
-      Finch.build(
-        :post,
-        GovDelivery.subscribe_endpoint(),
-        auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}],
-        body
-      )
+    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
 
-    Logger.info(inspect(request))
-
-    case Finch.request(request, HTTPClient) do
-      {:ok, %{status: 200}} ->
+    case HTTPoison.post(endpoint, body, headers) do
+      {:ok, %HTTPoison.Response{status_code: 200}} ->
         {:ok, :subscribed}
 
-      {:ok, %{body: body}} ->
+      {:ok, %HTTPoison.Response{body: body}} ->
         Logger.error("Gov Delivery Failed to Subscribe User General #{user.id} #{inspect(body)}")
         {:error, inspect(body)}
 
-      e ->
-        Logger.error("Gov Delivery Failed to Subscribe User General #{user.id} E: #{inspect(e)}")
-        {:error, e}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        Logger.error(
+          "Gov Delivery Failed to Subscribe User General #{user.id} E: #{inspect(reason)}"
+        )
+
+        {:error, reason}
     end
   end
 
   @impl ChallengeGov.GovDelivery
   def subscribe_user_challenge(user, challenge) do
     body = xml_subscribe_challenge(user, challenge)
+    headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
+    endpoint = GovDelivery.subscribe_endpoint()
 
-    request =
-      Finch.build(
-        :post,
-        GovDelivery.subscribe_endpoint(),
-        auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}],
-        body
-      )
+    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
 
-    Logger.info(inspect(request))
-
-    case Finch.request(request, HTTPClient) do
-      {:ok, %{status: 200}} ->
+    case HTTPoison.post(endpoint, body, headers) do
+      {:ok, %HTTPoison.Response{status_code: 200}} ->
         {:ok, :subscribed}
 
-      {:ok, %{body: body}} ->
+      {:ok, %HTTPoison.Response{body: body}} ->
         Logger.error(
-          "Gov Delivery Failed to Subscribe User Challenge user: #{user.id} challenge: #{challenge.id} #{inspect(body)}"
+          "Gov Delivery Failed to Subscribe User Challenge #{user.id} #{challenge.id} #{inspect(body)}"
         )
 
         {:error, inspect(body)}
 
-      e ->
+      {:error, %HTTPoison.Error{reason: reason}} ->
         Logger.error(
-          "Gov Delivery Failed to Subscribe User Challenge user: #{user.id} challenge: #{challenge.id} E: #{inspect(e)}"
+          "Gov Delivery Failed to Subscribe User Challenge #{user.id} #{challenge.id} E: #{inspect(reason)}"
         )
 
-        {:error, e}
+        {:error, reason}
     end
   end
 
   @impl ChallengeGov.GovDelivery
   def send_bulletin(challenge, subject, body) do
     body = xml_send_bulletin(challenge, subject, body)
+    headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
+    endpoint = GovDelivery.send_bulletin_endpoint()
 
-    request =
-      Finch.build(
-        :post,
-        GovDelivery.send_bulletin_endpoint(),
-        auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}],
-        body
-      )
+    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
 
-    Logger.info(inspect(request))
-
-    case Finch.request(request, HTTPClient) do
-      {:ok, %{status: 200}} ->
+    case HTTPoison.post(endpoint, body, headers) do
+      {:ok, %HTTPoison.Response{status_code: 200}} ->
         {:ok, :sent}
 
-      {:ok, %{body: body}} ->
-        Logger.error(
-          "Gov Delivery Failed to Send Bulletin subject: #{inspect(subject)} challenge: #{challenge.id} #{inspect(body)}"
-        )
+      {:ok, %HTTPoison.Response{body: body}} ->
+        Logger.error("Gov Delivery Failed to Send Bulletin #{challenge.id} #{inspect(body)}")
+        {:error, inspect(body)}
 
-        {:send_error, inspect(body)}
-
-      e ->
-        Logger.error(
-          "Gov Delivery Failed to Send Bulletin subject: #{inspect(subject)} challenge: #{challenge.id} E: #{inspect(e)}"
-        )
-
-        {:send_error, e}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        Logger.error("Gov Delivery Failed to Send Bulletin #{challenge.id} E: #{inspect(reason)}")
+        {:error, reason}
     end
   end
 
   @impl ChallengeGov.GovDelivery
   def get_topic_subscribe_count(challenge) do
-    request =
-      Finch.build(
-        :get,
-        GovDelivery.topic_details_endpoint(code(challenge.id)),
-        auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
-      )
+    endpoint = challenge.id |> code() |> GovDelivery.get_topic_subscribe_count_endpoint()
 
-    Logger.info(inspect(request))
+    headers = auth_headers()
+    Logger.info("Get(#{endpoint}, #{inspect(headers)})")
 
-    case Finch.request(request, HTTPClient) do
-      {:ok, %{status: 200, body: body}} ->
-        result =
-          body
-          |> xpath(~x"//topic/subscribers-count/text()")
-          |> to_string()
+    case HTTPoison.get(endpoint, headers) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        count = body |> parse_count_result()
+        {:ok, count}
 
-        {:ok, parse_count_result(result)}
-
-      {:ok, %{body: body}} ->
+      {:ok, %HTTPoison.Response{body: body}} ->
         Logger.error(
-          "Gov Delivery Failed to get topic subscribe count challenge: #{challenge.id} #{inspect(body)}"
+          "Gov Delivery Failed to Get Topic Subscribe Count #{challenge.id} #{inspect(body)}"
         )
 
         {:error, inspect(body)}
 
-      e ->
+      {:error, %HTTPoison.Error{reason: reason}} ->
         Logger.error(
-          "Gov Delivery Failed to get topic subscribe count challenge: #{challenge.id} E: #{inspect(e)}"
+          "Gov Delivery Failed to Get Topic Subscribe Count #{challenge.id} E: #{inspect(reason)}"
         )
 
-        {:error, e}
+        {:error, reason}
     end
   end
 
   def set_category(challenge) do
-    endpoint =
-      challenge.id
-      |> code()
-      |> GovDelivery.set_topic_categories_endpoint()
+    body = xml_categories_for_challenge()
+    headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
+    endpoint = GovDelivery.set_category_endpoint()
 
-    request =
-      Finch.build(
-        :put,
-        endpoint,
-        auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}],
-        xml_categories_for_challenge()
-      )
+    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
 
-    Logger.info(inspect(request))
+    case HTTPoison.post(endpoint, body, headers) do
+      {:ok, %HTTPoison.Response{status_code: 200}} ->
+        Logger.info("Gov Delivery Set Category #{challenge.id}")
+        {:ok, :set}
 
-    case Finch.request(request, HTTPClient) do
-      {:ok, %{status: 200}} ->
-        {:ok, :added}
+      {:ok, %HTTPoison.Response{body: body}} ->
+        Logger.error("Gov Delivery Failed to Set Category #{challenge.id} #{inspect(body)}")
+        {:error, inspect(body)}
 
-      {:ok, %{body: body}} ->
-        Logger.error(
-          "Gov Delivery Failed to set category challenge: #{challenge.id} #{inspect(body)}"
-        )
-
-        {:category_error, inspect(body)}
-
-      e ->
-        Logger.error(
-          "Gov Delivery Failed to set category challenge: #{challenge.id} E: #{inspect(e)}"
-        )
-
-        {:category_error, e}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        Logger.error("Gov Delivery Failed to Set Category #{challenge.id} E: #{inspect(reason)}")
+        {:error, reason}
     end
   end
 
