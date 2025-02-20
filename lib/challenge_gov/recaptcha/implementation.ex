@@ -23,10 +23,6 @@ defmodule ChallengeGov.Recaptcha.Implementation do
 
     body = Plug.Conn.Query.encode(%{secret: key, response: token})
 
-    Logger.info(
-      "Post(https://www.google.com/recaptcha/api/siteverify, #{body}, #{inspect(headers)})"
-    )
-
     case HTTPoison.post("https://www.google.com/recaptcha/api/siteverify", body, headers) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         {:ok, Jason.decode!(body)}
