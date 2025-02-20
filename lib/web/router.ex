@@ -243,6 +243,8 @@ defmodule Web.Router do
     get("/phase/:phase_id/winners", WinnerController, :phase_winners)
 
     get("/challenges/filter", ChallengeController, :filter)
+
+    get("/banner", BannerController, :ok)
   end
 
   # Public Routes
