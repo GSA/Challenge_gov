@@ -80,7 +80,7 @@ defmodule ChallengeGov.MixProject do
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 3.1.0", override: true},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
-      {:phoenix_live_view, "~> 0.15.4", override: true},
+      {:phoenix_live_view, "~> 0.17.7", override: true},
       {:phoenix_pubsub, "~> 2.0"},
       {:plug_cowboy, "~> 2.0"},
       {:poison, "~> 3.0"},
