@@ -23,14 +23,12 @@ defmodule ChallengeGov.Recaptcha.Implementation do
 
     body = Plug.Conn.Query.encode(%{secret: key, response: token})
 
-    request = Finch.build(:post, "https://www.google.com/recaptcha/api/siteverify", headers, body)
-
-    case Finch.request(request, HTTPClient) do
-      {:ok, %{body: body, status: 200}} ->
+    case HTTPoison.post("https://www.google.com/recaptcha/api/siteverify", body, headers) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         {:ok, Jason.decode!(body)}
 
-      {:error, failure} ->
-        {:error, "Error: " <> inspect(failure)}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, "Error: " <> inspect(reason)}
 
       _ ->
         {:error, "Unknown Recaptcha Failure"}

@@ -85,8 +85,7 @@ defmodule Mix.Tasks.ImportHelper do
           {matched_parent_agency, matched_component_agency, mappings} =
             find_agency_matches(mapped_agency["parent"], mapped_agency["component"], mappings)
 
-          matched_component_agency_id =
-            if matched_component_agency, do: matched_component_agency.id, else: nil
+          matched_component_agency_id = matched_component_agency && matched_component_agency.id
 
           {
             %{
@@ -186,7 +185,7 @@ defmodule Mix.Tasks.ImportHelper do
           {matched_agency, mappings}
 
         is_map(map_match) ->
-          # credo:disable-for-next-line
+          # credo:disable-for-lines:2
           agency_map_match =
             if parent_agency, do: map_match["component"], else: map_match["parent"]
 
@@ -490,10 +489,10 @@ defmodule Mix.Tasks.ImportHelper do
 
     {:ok, tmp_file} = Stein.Storage.Temp.create(extname: extension)
 
-    request = Finch.build(:get, logo_url)
+    headers = [{"Content-Type", "application/octet-stream"}]
 
-    case Finch.request(request, HTTPClient) do
-      {:ok, %{status: 200, body: body}} ->
+    case HTTPoison.get(logo_url, headers) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         File.write!(tmp_file, body, [:binary])
 
         %{
@@ -501,7 +500,7 @@ defmodule Mix.Tasks.ImportHelper do
           path: tmp_file
         }
 
-      {:ok, %{status: 404}} ->
+      {:ok, %HTTPoison.Response{status_code: 404}} ->
         ""
     end
   end

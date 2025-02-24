@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import axios from 'axios'
 import { useLocation } from "react-router-dom";
-
 import { ChallengeDetails } from '../components/ChallengeDetails';
 import { ApiUrlContext } from '../ApiUrlContext'
 import NotFound from '../components/NotFound'
@@ -30,19 +28,19 @@ export const DetailsPage = ({challengeId}) => {
     $(".challenges-header").hide()
     $(".newsletter").hide()
     
-
     let challengeApiPath = apiUrl + `/api/challenges/${challengeId}`
-    axios
-      .get(challengeApiPath)
-      .then(res => {
-        setCurrentChallenge(res.data)
-        setChallengePhases(res.data.phases)
-        setLoadingState(false)
-      })
-      .catch(e => {
-        setLoadingState(false)
-        console.log({e})
-      })
+    fetch(challengeApiPath)
+    .then(response => response.json())
+    .then((res) => {
+      setCurrentChallenge(res)
+      setChallengePhases(res.phases)
+      setLoadingState(false)
+    })
+    .catch((e) => {
+      setLoadingState(false)
+      console.log({e})
+    })
+
   }, [])
 
   const renderContent = () => {

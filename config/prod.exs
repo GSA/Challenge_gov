@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
@@ -20,7 +20,9 @@ config :challenge_gov, ChallengeGov.Repo,
   url: System.get_env("DATABASE_URL"),
   ssl: true,
   ssl_opts: [
-    verify: :verify_none
+    cacertfile: "priv/certs/us-gov-west-1-bundle.pem",
+    verify: :verify_peer,
+    versions: [:"tlsv1.2", :"tlsv1.3"]
   ],
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "15"),
   loggers: [{LoggerJSON.Ecto, :log, [:info]}]

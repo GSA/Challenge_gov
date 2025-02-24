@@ -67,18 +67,18 @@ defmodule ChallengeGov.SubmissionDocuments do
     end
   end
 
-  defp not_valid_characters(input_string) do
-    # characters to replace
-    to_replace = ~w"/ \\ | # % @ ^ : ? ! & % * $ = < > { }"
-    String.replace(input_string, to_replace, fn _ -> "-" end)
-  end
-
   def upload(user, _) do
     user
     |> Ecto.build_assoc(:submission_documents)
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.add_error(:file, "can't be blank")
     |> Ecto.Changeset.apply_action(:insert)
+  end
+
+  defp not_valid_characters(input_string) do
+    # characters to replace
+    to_replace = ~w"/ \\ | # % @ ^ : ? ! & % * $ = < > { }"
+    String.replace(input_string, to_replace, fn _ -> "-" end)
   end
 
   @doc """
