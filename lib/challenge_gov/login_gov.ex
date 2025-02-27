@@ -131,5 +131,4 @@ defmodule ChallengeGov.LoginGov do
       @proxy_config
     end
   end
-
 end
