@@ -6,7 +6,10 @@ defmodule ChallengeGov.LoginGov do
   use HTTPoison.Base
 
   alias ChallengeGov.LoginGov.Token
-  @proxy_config Application.get_env(:httpoison, :proxy, [])
+  # @proxy_config Application.get_env(:httpoison, :proxy, [])
+  @proxy_config Application.compile_env(:httpoison, :proxy, [])
+
+  IO.inspect(@proxy_config, label: "Proxy Config ---> ")
 
   def get_well_known_configuration(idp_authorize_url) do
     idp_authorize_url
@@ -128,7 +131,7 @@ defmodule ChallengeGov.LoginGov do
     if @proxy_config == [] do
       []
     else
-      @proxy_config
+      [proxy: @proxy_config]
     end
   end
 end
