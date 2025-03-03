@@ -6,13 +6,14 @@ defmodule ChallengeGov.LoginGov do
   use HTTPoison.Base
 
   alias ChallengeGov.LoginGov.Token
-  @proxy_config Application.get_env(:httpoison, :proxy, [])
+  # @proxy_config Application.get_env(:httpoison, :proxy, [])
+  @proxy_config Application.compile_env(:httpoison, :proxy, [])
 
   def get_well_known_configuration(idp_authorize_url) do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
     |> get([], proxy_options())
-    |> handle_response("Sorry, could not fetch well known configuration")
+    |> handle_response("Sorry, could not fetch well known configuration ${proxy_options()} ")
   end
 
   def get_public_key(jwks_uri) do
@@ -128,7 +129,7 @@ defmodule ChallengeGov.LoginGov do
     if @proxy_config == [] do
       []
     else
-      @proxy_config
+      [proxy: @proxy_config]
     end
   end
 end
