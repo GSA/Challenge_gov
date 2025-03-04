@@ -13,7 +13,7 @@ defmodule ChallengeGov.LoginGov do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
     |> get([], proxy_options())
-    |> handle_response("Sorry, could not fetch well known configuration ${proxy_options()} ")
+    |> handle_response("Sorry, could not fetch well known configuration #{proxy_options()} ")
   end
 
   def get_public_key(jwks_uri) do
@@ -129,7 +129,7 @@ defmodule ChallengeGov.LoginGov do
     if @proxy_config == [] do
       []
     else
-      [proxy: @proxy_config]
+      [proxy: {@proxy_config}]
     end
   end
 end
