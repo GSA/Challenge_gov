@@ -4,9 +4,9 @@ defmodule ChallengeGov.LoginGov do
   """
 
   use HTTPoison.Base
+  alias ChallengeGov.LoginGov.Token
   require Logger
 
-  alias ChallengeGov.LoginGov.Token
   # @proxy_config Application.get_env(:httpoison, :proxy, [])
   # @proxy_config Application.compile_env(:httpoison, :proxy, [])
   @proxy_config System.get_env("PROXY_HOST")
