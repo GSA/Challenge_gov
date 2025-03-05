@@ -8,7 +8,7 @@ defmodule ChallengeGov.LoginGov do
   alias ChallengeGov.LoginGov.Token
   # @proxy_config Application.get_env(:httpoison, :proxy, [])
   # @proxy_config Application.compile_env(:httpoison, :proxy, [])
-  @proxy_config System.get_env("PROXY_HOST", [])
+  @proxy_config System.get_env("PROXY_HOST")
 
   Logger.info("Login.gov ===================== #{@proxy_config} ")
 
@@ -129,7 +129,7 @@ defmodule ChallengeGov.LoginGov do
   end
 
   defp proxy_options do
-    if @proxy_config == [] do
+    if @proxy_config == nil or @proxy_config == "" do
       []
     else
       [proxy: {@proxy_config}]
