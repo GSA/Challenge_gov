@@ -7,12 +7,10 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   @behaviour ChallengeGov.GovDelivery
 
-  import SweetXml
   import Phoenix.View
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery
-  alias ChallengeGov.HTTPClient
   alias Web.Endpoint
   alias Web.Router.Helpers, as: Routes
   require Logger
@@ -143,7 +141,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   @impl ChallengeGov.GovDelivery
   def get_topic_subscribe_count(challenge) do
-    endpoint = challenge.id |> code() |> GovDelivery.get_topic_subscribe_count_endpoint()
+    endpoint = challenge.id |> code() |> GovDelivery.get_topic_subscribe_count()
 
     headers = auth_headers()
     Logger.info("Get(#{endpoint}, #{inspect(headers)})")
@@ -172,7 +170,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   def set_category(challenge) do
     body = xml_categories_for_challenge()
     headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
-    endpoint = GovDelivery.set_category_endpoint()
+    endpoint = GovDelivery.set_topic_categories_endpoint(1)
 
     Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
 

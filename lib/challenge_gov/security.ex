@@ -231,7 +231,7 @@ defmodule ChallengeGov.Security do
     end
   end
 
-  def is_challenge_manager_ng(originator_role = _, originator_identifier) do
+  def is_challenge_manager_ng(originator_role = _, _originator_identifier) do
     originator_role
   end
 

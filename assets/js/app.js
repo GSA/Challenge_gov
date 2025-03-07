@@ -33,7 +33,7 @@ import "./app/index.js";
 import "./shared/index.js";
 
 import {Socket} from "phoenix";
-import LiveSocket from "phoenix_live_view";
+import {LiveSocket} from "phoenix_live_view";
 
 let Hooks = {};
 Hooks.WYSIWYG = {

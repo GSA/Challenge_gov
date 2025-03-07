@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { useHistory, useLocation, useRouteMatch, useParams } from "react-router-dom"
+import { useNavigate, useLocation, useMatch, useParams } from "react-router-dom"
 
 import queryString from 'query-string'
 
 export const ChallengeTabs = (props) => {
   const {children, print, preview, tab} = props
   const [activeTab, setActiveTab] = useState(tab ?? "overview")
-  const history = useHistory()
-  const currentPath = useRouteMatch()
+  const history = useNavigate()
+  const currentPath = useMatch("")
   const params = useParams()
 
   let location = useLocation()

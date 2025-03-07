@@ -1,7 +1,6 @@
 defmodule ChallengeGov.Recaptcha.Implementation do
   @moduledoc false
   @behaviour ChallengeGov.Recaptcha
-  alias ChallengeGov.HTTPClient
 
   @impl ChallengeGov.Recaptcha
   def valid_token?(token) do
