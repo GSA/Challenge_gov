@@ -133,7 +133,7 @@ defmodule ChallengeGov.LoginGov do
     if @proxy_config == nil or @proxy_config == "" do
       []
     else
-      [proxy: {@proxy_config}]
+      [proxy: @proxy_config]
     end
   end
 end
