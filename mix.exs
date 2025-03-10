@@ -73,7 +73,7 @@ defmodule ChallengeGov.MixProject do
       {:logger_json, "~> 4.0"},
       {:mint, "~> 1.4"},
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
-      {:money, "~> 1.8.0"},
+      {:money, "~> 1.13.1"},
       {:nimble_csv, "~> 0.6"},
       {:oban, "~> 2.3"},
       {:phoenix, "~> 1.5.7"},
