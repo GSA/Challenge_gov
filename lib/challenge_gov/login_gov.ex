@@ -129,6 +129,7 @@ defmodule ChallengeGov.LoginGov do
 
   defp proxy_options do
     options = [hackney: [proxy: @proxy_config]]
+
     if @proxy_config != "" do
       options
     else
