@@ -131,7 +131,7 @@ defmodule ChallengeGov.LoginGov do
 
   defp proxy_options do
     if @proxy_config != "" do
-      [{:proxy, @proxy_config}]
+      [{:proxy, System.get_env("PROXY_HOST")}]
     else
       []
     end
