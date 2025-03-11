@@ -10,18 +10,18 @@ defmodule ChallengeGov.LoginGov do
   # @proxy_config Application.get_env(:httpoison, :proxy, [])
   # @proxy_config Application.compile_env(:httpoison, :proxy, [])
   @proxy_config System.get_env("PROXY_HOST")
-  options = [hackney: [proxy: @proxy_config]]
+  @options = [hackney: [proxy: @proxy_config]]
 
   def get_well_known_configuration(idp_authorize_url) do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
-    |> get([], options)
+    |> get([], @options)
     |> handle_response("Sorry, could not fetch well known configuration")
   end
 
   def get_public_key(jwks_uri) do
     jwks_uri
-    |> get([], options)
+    |> get([], @options)
     |> handle_response("Sorry, could not fetch public key")
     |> case do
       {:ok, body} -> {:ok, body |> Map.fetch!("keys") |> List.first()}
@@ -38,13 +38,13 @@ defmodule ChallengeGov.LoginGov do
     }
 
     token_endpoint
-    |> post(Poison.encode!(body), [{"Content-Type", "application/json"}], options)
+    |> post(Poison.encode!(body), [{"Content-Type", "application/json"}], @options)
     |> handle_response("Sorry, could not exchange code")
   end
 
   def get_user_info(userinfo_endpoint, access_token) do
     userinfo_endpoint
-    |> get([{"Authorization", "Bearer " <> access_token}], options)
+    |> get([{"Authorization", "Bearer " <> access_token}], @options)
     |> handle_response("Sorry, could not fetch userinfo")
   end
 
