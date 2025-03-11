@@ -131,7 +131,7 @@ defmodule ChallengeGov.LoginGov do
 
   defp proxy_options do
     if @proxy_config != "" do
-      hackney: [proxy: "#{System.get_env("PROXY_HOST")}"]
+      [{:proxy, "#{System.get_env("PROXY_HOST")}"}]
     else
       []
     end
