@@ -130,10 +130,10 @@ defmodule ChallengeGov.LoginGov do
   end
 
   defp proxy_options do
-    if @proxy_config == nil or @proxy_config == "" do
-      []
+    if @proxy_config != "" do
+      [{:proxy, @proxy_config}]
     else
-      [proxy: @proxy_config]
+      []
     end
   end
 end
