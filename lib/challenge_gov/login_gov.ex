@@ -11,8 +11,6 @@ defmodule ChallengeGov.LoginGov do
   # @proxy_config Application.compile_env(:httpoison, :proxy, [])
   @proxy_config System.get_env("PROXY_HOST")
 
-  Logger.info("Login.gov ===================== #{@proxy_config} ")
-
   def get_well_known_configuration(idp_authorize_url) do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
@@ -130,8 +128,9 @@ defmodule ChallengeGov.LoginGov do
   end
 
   defp proxy_options do
+    options = [hackney: [proxy: @proxy_config]]
     if @proxy_config != "" do
-      [{:proxy, "#{System.get_env("PROXY_HOST")}"}]
+      options
     else
       []
     end
