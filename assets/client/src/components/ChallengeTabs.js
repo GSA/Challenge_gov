@@ -20,7 +20,7 @@ export const ChallengeTabs = (props) => {
       let pathRoot = preview ? "/public/previews/challenges?" : `${location.pathname}?`
 
       const path = pathRoot + queryString.stringify(queryParams)
-      history.push(path)
+      history(path)
       setActiveTab(label)
     }
   }
