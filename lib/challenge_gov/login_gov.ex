@@ -11,18 +11,20 @@ defmodule ChallengeGov.LoginGov do
   # @proxy_config Application.compile_env(:httpoison, :proxy, [])
   @proxy_config System.get_env("PROXY_HOST")
 
-  Logger.info("Login.gov ===================== #{@proxy_config} ")
-
   def get_well_known_configuration(idp_authorize_url) do
+    options = [hackney: [proxy: @proxy_config]]
+
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
-    |> get([], proxy_options())
-    |> handle_response("Sorry, could not fetch well known configuration #{proxy_options()} ")
+    |> get([], options)
+    |> handle_response("Sorry, could not fetch well known configuration")
   end
 
   def get_public_key(jwks_uri) do
+    options = [hackney: [proxy: @proxy_config]]
+
     jwks_uri
-    |> get([], proxy_options())
+    |> get([], options)
     |> handle_response("Sorry, could not fetch public key")
     |> case do
       {:ok, body} -> {:ok, body |> Map.fetch!("keys") |> List.first()}
@@ -38,14 +40,18 @@ defmodule ChallengeGov.LoginGov do
       client_assertion: jwt
     }
 
+    options = [hackney: [proxy: @proxy_config]]
+
     token_endpoint
-    |> post(Poison.encode!(body), [{"Content-Type", "application/json"}], proxy_options())
+    |> post(Poison.encode!(body), [{"Content-Type", "application/json"}], options)
     |> handle_response("Sorry, could not exchange code")
   end
 
   def get_user_info(userinfo_endpoint, access_token) do
+    options = [hackney: [proxy: @proxy_config]]
+
     userinfo_endpoint
-    |> get([{"Authorization", "Bearer " <> access_token}], proxy_options())
+    |> get([{"Authorization", "Bearer " <> access_token}], options)
     |> handle_response("Sorry, could not fetch userinfo")
   end
 
@@ -130,8 +136,10 @@ defmodule ChallengeGov.LoginGov do
   end
 
   defp proxy_options do
+    options = [hackney: [proxy: @proxy_config]]
+
     if @proxy_config != "" do
-      [{:proxy, @proxy_config}]
+      options
     else
       []
     end
