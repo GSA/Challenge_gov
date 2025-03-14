@@ -271,7 +271,7 @@ workflows:
             - assets
           filters:
             branches:
-              only: main
+              only: dev
       - dev-eval-deploy:
           requires:
             - lint
@@ -313,7 +313,7 @@ workflows:
           cron: "0 4 * * *"
           filters:
             branches:
-              only: main
+              only: dev
     jobs:
       - setup
       - assets:

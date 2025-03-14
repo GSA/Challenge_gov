@@ -28,11 +28,7 @@
 
            <div class="usa-alert usa-alert--warning usa-alert--no-icon">
              <div class="usa-alert__body">
-              <p class="usa-alert__text">
-                <span class="ql-editor">
-                  <span><%= raw (@conn.assigns.site_wide_banner.content) %></span>
-                </span>
-              </p>
+              <%= Web.SharedView.render_safe_html( (@conn.assigns.site_wide_banner.content)) %>
              </div>
             </div>
 

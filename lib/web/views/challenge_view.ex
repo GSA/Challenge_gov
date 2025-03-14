@@ -648,7 +648,7 @@ defmodule Web.ChallengeView do
       when not is_nil(announcement) do
     link("Remove update",
       to: Routes.challenge_path(conn, :remove_announcement, challenge.id),
-      method: :post,
+      method: :get,
       class: "usa-button usa-button--secondary",
       data: [confirm: "Are you sure you want to remove this update?"]
     )

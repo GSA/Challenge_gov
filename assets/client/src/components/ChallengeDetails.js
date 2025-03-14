@@ -121,7 +121,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
           <div className="follow-tooltip__section">
             <h4>Follow challenge as guest</h4>
             <p>Receive challenge updates to your email. No sign-in required</p>
-            <a href={preview ? "#" : `${encodeURIComponent(challenge.gov_delivery_topic_subscribe_link)}`}>
+            <a href={preview ? "#" : `${challenge.gov_delivery_topic_subscribe_link}`}>
               <button className="follow-tooltip__button">Follow challenge</button>
             </a>
           </div>
@@ -350,7 +350,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                   <div className="logos">
                     <img
                       className="agency-logo"
-                      src={`${imageBase}${encodeURIComponent(challenge.agency_logo)}`}
+                      src={`${imageBase && imageBase !== 'null' ? imageBase : ''}${challenge.agency_logo || ''}`}
                       alt={`Agency logo for ${challenge.agency_name}`}                    
                     />
 
