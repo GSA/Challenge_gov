@@ -7,8 +7,6 @@ defmodule ChallengeGov.LoginGov do
   alias ChallengeGov.LoginGov.Token
   require Logger
 
-  # @proxy_config Application.get_env(:httpoison, :proxy, [])
-  # @proxy_config Application.compile_env(:httpoison, :proxy, [])
   @proxy_config System.get_env("PROXY_HOST")
 
   def get_well_known_configuration(idp_authorize_url) do
@@ -133,15 +131,5 @@ defmodule ChallengeGov.LoginGov do
 
   def process_response_body(body) do
     Poison.decode!(body)
-  end
-
-  defp proxy_options do
-    options = [hackney: [proxy: @proxy_config]]
-
-    if @proxy_config != "" do
-      options
-    else
-      []
-    end
   end
 end
