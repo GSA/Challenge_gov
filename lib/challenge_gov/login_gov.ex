@@ -12,7 +12,10 @@ defmodule ChallengeGov.LoginGov do
   @proxy_config System.get_env("PROXY_HOST")
 
   def get_well_known_configuration(idp_authorize_url) do
-    options = [proxy: @proxy_config]
+    options = [
+      proxy: @proxy_config,
+      proxy_auth: {System.get_env("PROXY_USERNAME"), System.get_env("PROXY_PASSWORD")}
+    ]
 
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
@@ -21,7 +24,10 @@ defmodule ChallengeGov.LoginGov do
   end
 
   def get_public_key(jwks_uri) do
-    options = [proxy: @proxy_config]
+    options = [
+      proxy: @proxy_config,
+      proxy_auth: {System.get_env("PROXY_USERNAME"), System.get_env("PROXY_PASSWORD")}
+    ]
 
     jwks_uri
     |> get([], options)
@@ -40,7 +46,10 @@ defmodule ChallengeGov.LoginGov do
       client_assertion: jwt
     }
 
-    options = [proxy: @proxy_config]
+    options = [
+      proxy: @proxy_config,
+      proxy_auth: {System.get_env("PROXY_USERNAME"), System.get_env("PROXY_PASSWORD")}
+    ]
 
     token_endpoint
     |> post(Poison.encode!(body), [{"Content-Type", "application/json"}], options)
@@ -48,7 +57,10 @@ defmodule ChallengeGov.LoginGov do
   end
 
   def get_user_info(userinfo_endpoint, access_token) do
-    options = [proxy: @proxy_config]
+    options = [
+      proxy: @proxy_config,
+      proxy_auth: {System.get_env("PROXY_USERNAME"), System.get_env("PROXY_PASSWORD")}
+    ]
 
     userinfo_endpoint
     |> get([{"Authorization", "Bearer " <> access_token}], options)
