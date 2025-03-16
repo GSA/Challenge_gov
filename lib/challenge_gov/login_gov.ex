@@ -14,7 +14,6 @@ defmodule ChallengeGov.LoginGov do
   def get_well_known_configuration(idp_authorize_url) do
     options = [proxy: @proxy_config]
 
-
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
     |> get([], options)
