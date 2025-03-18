@@ -17,4 +17,18 @@ defmodule ChallengeGov do
   def config({:system, env}), do: System.get_env(env)
   @spec config(any()) :: any()
   def config(config), do: config
+
+  def http_proxy_options do
+    case Application.get_env(:challenge_gov, :proxy)[:proxy_host] do
+      nil ->
+        []
+
+      host ->
+        port = Application.get_env(:challenge_gov, :proxy)[:proxy_port]
+
+        [
+          proxy: {host, port}
+        ]
+    end
+  end
 end

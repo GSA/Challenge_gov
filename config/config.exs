@@ -31,11 +31,9 @@ config :bamboo, :json_library, Jason
 
 config :tesla, :adapter, Tesla.Adapter.Hackney
 
-proxy = System.get_env("PROXY_HOST")
-
-if proxy do
-  config :httpoison, :proxy, proxy
-end
+config :challenge_gov, :proxy,
+  proxy_host: System.get_env("LOCAL_PROXY_HOST"),
+  proxy_port: System.get_env("LOCAL_PROXY_PORT")
 
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Implementation
 config :challenge_gov, :gov_delivery, module: ChallengeGov.GovDelivery.Implementation

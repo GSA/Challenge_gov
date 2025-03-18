@@ -21,9 +21,11 @@ defmodule ChallengeGov.Recaptcha.Implementation do
       {"Content-Type", "application/x-www-form-urlencoded"}
     ]
 
+    options = ChallengeGov.http_proxy_options()
+
     body = Plug.Conn.Query.encode(%{secret: key, response: token})
 
-    case HTTPoison.post("https://www.google.com/recaptcha/api/siteverify", body, headers) do
+    case HTTPoison.post("https://www.google.com/recaptcha/api/siteverify", body, headers, options) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         {:ok, Jason.decode!(body)}
 
