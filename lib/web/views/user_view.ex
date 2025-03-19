@@ -119,7 +119,7 @@ defmodule Web.UserView do
     </svg>&nbsp;</span>Pending</span>
     """
 
-  def status("evaluator_role_requested"),
+  def status(assigns = "evaluator_role_requested"),
     do: ~H"""
      <span style="color:#E5A002"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
