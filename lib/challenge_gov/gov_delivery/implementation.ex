@@ -25,7 +25,6 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       |> GovDelivery.remove_topic_endpoint()
 
     headers = auth_headers()
-    Logger.info("Delete(#{endpoint}, #{inspect(headers)})")
 
     case HTTPoison.delete(endpoint, headers) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
@@ -49,8 +48,6 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
     endpoint = GovDelivery.create_topic_endpoint()
 
-    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
-
     case HTTPoison.post(endpoint, body, headers) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
         Challenges.store_gov_delivery_topic(challenge, code(challenge.id))
@@ -71,8 +68,6 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     body = xml_subscribe_general(user)
     headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
     endpoint = GovDelivery.subscribe_endpoint()
-
-    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
 
     case HTTPoison.post(endpoint, body, headers) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
@@ -96,8 +91,6 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     body = xml_subscribe_challenge(user, challenge)
     headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
     endpoint = GovDelivery.subscribe_endpoint()
-
-    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
 
     case HTTPoison.post(endpoint, body, headers) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
@@ -125,8 +118,6 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
     endpoint = GovDelivery.send_bulletin_endpoint()
 
-    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
-
     case HTTPoison.post(endpoint, body, headers) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
         {:ok, :sent}
@@ -146,7 +137,6 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     endpoint = challenge.id |> code() |> GovDelivery.get_topic_subscribe_count_endpoint()
 
     headers = auth_headers()
-    Logger.info("Get(#{endpoint}, #{inspect(headers)})")
 
     case HTTPoison.get(endpoint, headers) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
@@ -173,8 +163,6 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     body = xml_categories_for_challenge()
     headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
     endpoint = GovDelivery.set_category_endpoint()
-
-    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
 
     case HTTPoison.post(endpoint, body, headers) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
