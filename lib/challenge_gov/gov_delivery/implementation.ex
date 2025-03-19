@@ -7,12 +7,10 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   @behaviour ChallengeGov.GovDelivery
 
-  import SweetXml
   import Phoenix.View
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery
-  alias ChallengeGov.HTTPClient
   alias Web.Endpoint
   alias Web.Router.Helpers, as: Routes
   require Logger
@@ -128,7 +126,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   @impl ChallengeGov.GovDelivery
   def get_topic_subscribe_count(challenge) do
-    endpoint = challenge.id |> code() |> GovDelivery.get_topic_subscribe_count_endpoint()
+    endpoint = challenge.id |> code() |> GovDelivery.get_topic_subscribe_count()
 
     case HTTPoison.get(endpoint, get_headers(), options()) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->

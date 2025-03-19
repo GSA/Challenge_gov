@@ -25,7 +25,9 @@ defmodule Web.DashboardView do
   defp account_decertification_warning(conn, user) do
     {:ok, log} = CertificationLogs.check_user_certification_history(user)
 
-    ~E"""
+    assigns = %{log: log, conn: conn, user: user}
+
+    ~H"""
       <div class="content-header">
         <div class="container-fluid">
 
@@ -37,7 +39,7 @@ defmodule Web.DashboardView do
             <p>Your annual account certification is now pending approval.</p>
           <% else %>
             <p class="h4 mb-0">It's time for your annual account recertification.</p>
-            <p>Your annual account certification will expire on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
+            <p>Your annual account certification will expire on <%= @log.expires_at.month %>/<%= @log.expires_at.day %>/<%= @log.expires_at.year %></p>
             <p><%= recertification_action(conn, user) %></p>
           <% end %>
 

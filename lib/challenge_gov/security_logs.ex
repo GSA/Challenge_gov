@@ -15,7 +15,7 @@ defmodule ChallengeGov.SecurityLogs do
   def track(params) do
     Logger.info("Audit event #{params[:action]}", log_type: "audit", params: params)
 
-    params = Security.intercept_challenge_manager_ng(original_track = params)
+    params = Security.intercept_challenge_manager_ng(_ = params)
 
     %SecurityLog{}
     |> SecurityLog.changeset(params)
