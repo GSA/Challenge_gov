@@ -62,6 +62,7 @@ defmodule Web.DashboardView do
 
   def evaluator_notice do
     assigns = %{}
+
     ~H"""
       <div class="content-header">
         <div class="container-fluid">
