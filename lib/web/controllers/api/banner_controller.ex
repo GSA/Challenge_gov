@@ -1,27 +1,19 @@
-defmodule Web.Plugs.SiteWideBanner do
-  @moduledoc """
-  Check for site wide banner and apply if currently active
-  """
-
+defmodule Web.Api.BannerController do
+  use Web, :controller
   import Plug.Conn
 
   alias ChallengeGov.SiteContent
-
   def init(default), do: default
 
-  def call(conn, _opts) do
-    case SiteContent.get("site_wide_banner") do
-      {:ok, banner} ->
-        case banner_is_active?(banner) do
-          true ->
-            assign(conn, :site_wide_banner, banner)
+  def call(conn, _params) do
+    {:ok, banner} = SiteContent.get("site_wide_banner")
 
-          false ->
-            conn
-        end
+    case banner_is_active?(banner) do
+      true ->
+        text(conn, banner.content)
 
-      _ ->
-        conn
+      false ->
+        text(conn, "")
     end
   end
 

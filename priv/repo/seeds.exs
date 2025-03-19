@@ -77,12 +77,11 @@ defmodule Helpers do
   end
 
   def import_agencies_api(url) do
-    {:ok, %{body: body, status: 200}} = Finch.build(:get, url) |> Finch.request(HTTPClient)
+    {:ok, %{body: body, status_code: 200}} = HTTPoison.get(url)
     data = Jason.decode!(body)
     count = data["metadata"]["count"]
 
-    {:ok, %{body: body, status: 200}} =
-      Finch.build(:get, url <> "?page_size=#{count}") |> Finch.request(HTTPClient)
+    {:ok, %{body: body, status_code: 200}} = HTTPoison.get("#{url}?page_size=#{count}")
 
     data = Jason.decode!(body)
 
