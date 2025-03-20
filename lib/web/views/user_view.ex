@@ -63,15 +63,16 @@ defmodule Web.UserView do
       Timex.add(certification.certified_at, Timex.Duration.from_days(365))
 
     after? = Timex.after?(certification.certified_at, one_year_from_certification)
+    assigns = %{}
 
     if after? || status == "decertified" do
-      ~E"""
+      ~H"""
         <span style="color:#B50808"><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#shield"></use>
       </svg>&nbsp;Decertified</span>
       """
     else
-      ~E"""
+      ~H"""
         <span style="color:#4D8055"><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#shield"></use>
       </svg>&nbsp;Certified</span>
@@ -80,72 +81,74 @@ defmodule Web.UserView do
   end
 
   def certification_info(certification, %{status: status}) do
-    ~E"""
+    assigns = %{certification: certification, status: status}
+
+    ~H"""
       <span>
-        <%= if status == "decertified" do %>
+        <%= if @status == "decertified" do %>
           Decertified On:
         <% else %>
           Due On:
         <% end %>
-        <%= certification.expires_at.month %>/<%= certification.expires_at.day %>/<%= certification.expires_at.year %>
+        <%= @certification.expires_at.month %>/<%= @certification.expires_at.day %>/<%= @certification.expires_at.year %>
       </span>
     """
   end
 
-  def recertification_requested(%{renewal_request: "certification"}),
-    do: ~E"""
+  def recertification_requested(assigns = %{renewal_request: "certification"}),
+    do: ~H"""
       <span><b>Request Submitted:</b> <span style="color:#4D8055">Yes</span></span>
     """
 
-  def recertification_requested(_),
-    do: ~E"""
+  def recertification_requested(assigns),
+    do: ~H"""
       <span><b>Request Submitted:</b> <span style="color:#B50808">No</span></span>
     """
 
-  def status("active"),
-    do: ~E"""
+  def status(assigns = "active"),
+    do: ~H"""
      <span style="color:#4D8055"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
     </svg>&nbsp;</span>Active</span>
     """
 
-  def status("pending"),
-    do: ~E"""
+  def status(assigns = "pending"),
+    do: ~H"""
      <span style="color:#E5A002"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
     </svg>&nbsp;</span>Pending</span>
     """
 
-  def status("evaluator_role_requested"),
-    do: ~E"""
+  def status(assigns = "evaluator_role_requested"),
+    do: ~H"""
      <span style="color:#E5A002"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
     </svg>&nbsp;</span>Evaluator Role Requested</span>
     """
 
-  def status("deactivated"),
-    do: ~E"""
+  def status(assigns = "deactivated"),
+    do: ~H"""
      <span style="color:#B50808"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
     </svg>&nbsp;</span>Deactivated</span>
     """
 
-  def status("decertified"),
-    do: ~E"""
+  def status(assigns = "decertified"),
+    do: ~H"""
      <span style="color:#B50808"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
     </svg>&nbsp;</span>Decertified</span>
     """
 
-  def status("suspended"),
-    do: ~E"""
+  def status(assigns = "suspended"),
+    do: ~H"""
      <span style="color:#E5A000"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
     </svg>&nbsp;</span>Suspended</span>
     """
 
-  def status("revoked"),
-    do: ~E"""
+  def status(assigns = "revoked"),
+    do: ~H"""
      <span style="color:#B50808"><span><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
      <use xlink:href="/assets/img/sprite.svg#person"></use>
     </svg>&nbsp;</span>Revoked</span>

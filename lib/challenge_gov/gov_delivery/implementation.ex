@@ -7,12 +7,10 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   @behaviour ChallengeGov.GovDelivery
 
-  import SweetXml
   import Phoenix.View
 
   alias ChallengeGov.Challenges
   alias ChallengeGov.GovDelivery
-  alias ChallengeGov.HTTPClient
   alias Web.Endpoint
   alias Web.Router.Helpers, as: Routes
   require Logger
@@ -24,10 +22,7 @@ defmodule ChallengeGov.GovDelivery.Implementation do
       |> code()
       |> GovDelivery.remove_topic_endpoint()
 
-    headers = auth_headers()
-    Logger.info("Delete(#{endpoint}, #{inspect(headers)})")
-
-    case HTTPoison.delete(endpoint, headers) do
+    case HTTPoison.delete(endpoint, delete_headers(), options()) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
         Logger.info("Gov Delivery Removed Topic #{challenge.id}")
         Challenges.clear_gov_delivery_topic(challenge)
@@ -46,12 +41,9 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   @impl ChallengeGov.GovDelivery
   def add_topic(challenge) do
     body = xml_topic_from_challenge(challenge)
-    headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
     endpoint = GovDelivery.create_topic_endpoint()
 
-    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
-
-    case HTTPoison.post(endpoint, body, headers) do
+    case HTTPoison.post(endpoint, body, post_headers(), options()) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
         Challenges.store_gov_delivery_topic(challenge, code(challenge.id))
         set_category(challenge)
@@ -69,12 +61,9 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   @impl ChallengeGov.GovDelivery
   def subscribe_user_general(user) do
     body = xml_subscribe_general(user)
-    headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
     endpoint = GovDelivery.subscribe_endpoint()
 
-    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
-
-    case HTTPoison.post(endpoint, body, headers) do
+    case HTTPoison.post(endpoint, body, post_headers(), options()) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
         {:ok, :subscribed}
 
@@ -94,12 +83,9 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   @impl ChallengeGov.GovDelivery
   def subscribe_user_challenge(user, challenge) do
     body = xml_subscribe_challenge(user, challenge)
-    headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
     endpoint = GovDelivery.subscribe_endpoint()
 
-    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
-
-    case HTTPoison.post(endpoint, body, headers) do
+    case HTTPoison.post(endpoint, body, post_headers(), options()) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
         {:ok, :subscribed}
 
@@ -122,12 +108,9 @@ defmodule ChallengeGov.GovDelivery.Implementation do
   @impl ChallengeGov.GovDelivery
   def send_bulletin(challenge, subject, body) do
     body = xml_send_bulletin(challenge, subject, body)
-    headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
     endpoint = GovDelivery.send_bulletin_endpoint()
 
-    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
-
-    case HTTPoison.post(endpoint, body, headers) do
+    case HTTPoison.post(endpoint, body, post_headers(), options()) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
         {:ok, :sent}
 
@@ -143,12 +126,9 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   @impl ChallengeGov.GovDelivery
   def get_topic_subscribe_count(challenge) do
-    endpoint = challenge.id |> code() |> GovDelivery.get_topic_subscribe_count_endpoint()
+    endpoint = challenge.id |> code() |> GovDelivery.get_topic_subscribe_count()
 
-    headers = auth_headers()
-    Logger.info("Get(#{endpoint}, #{inspect(headers)})")
-
-    case HTTPoison.get(endpoint, headers) do
+    case HTTPoison.get(endpoint, get_headers(), options()) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         count = body |> parse_count_result()
         {:ok, count}
@@ -171,12 +151,9 @@ defmodule ChallengeGov.GovDelivery.Implementation do
 
   def set_category(challenge) do
     body = xml_categories_for_challenge()
-    headers = auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
     endpoint = GovDelivery.set_category_endpoint()
 
-    Logger.info("Post(#{endpoint}, #{body}, #{inspect(headers)})")
-
-    case HTTPoison.post(endpoint, body, headers) do
+    case HTTPoison.post(endpoint, body, post_headers(), options()) do
       {:ok, %HTTPoison.Response{status_code: 200}} ->
         Logger.info("Gov Delivery Set Category #{challenge.id}")
         {:ok, :set}
@@ -191,10 +168,19 @@ defmodule ChallengeGov.GovDelivery.Implementation do
     end
   end
 
-  defp auth_headers() do
+  defp auth_headers do
     auth64 = "#{GovDelivery.username()}:#{GovDelivery.password()}" |> Base.encode64()
     [{"authorization", "Basic #{auth64}"}]
   end
+
+  defp delete_headers, do: auth_headers()
+  defp get_headers, do: auth_headers()
+
+  defp post_headers do
+    auth_headers() ++ [{"content-type", "application/xml; charset: utf-8"}]
+  end
+
+  def options, do: ChallengeGov.http_proxy_options()
 
   defp parse_count_result(nil), do: 0
 

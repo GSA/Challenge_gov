@@ -1,6 +1,5 @@
 defmodule Web.Api.BannerController do
   use Web, :controller
-  import Plug.Conn
 
   alias ChallengeGov.SiteContent
   def init(default), do: default

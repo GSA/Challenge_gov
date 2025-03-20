@@ -8,7 +8,6 @@ defmodule Mix.Tasks.ImportHelper do
   alias ChallengeGov.Accounts
   alias ChallengeGov.Agencies
   alias ChallengeGov.Challenges.Challenge
-  alias ChallengeGov.HTTPClient
   alias ChallengeGov.Repo
   alias Mix.Tasks.Mappings
 
