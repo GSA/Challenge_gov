@@ -31,9 +31,20 @@ config :bamboo, :json_library, Jason
 
 config :tesla, :adapter, Tesla.Adapter.Hackney
 
-config :challenge_gov, :proxy,
-  proxy_host: System.get_env("LOCAL_PROXY_HOST"),
-  proxy_port: System.get_env("LOCAL_PROXY_PORT")
+case System.get_env("LOCAL_PROXY_PORT") do
+  nil ->
+    config :challenge_gov, :proxy, proxy_host: nil, proxy_port: nil
+
+  "" ->
+    config :challenge_gov, :proxy, proxy_host: nil, proxy_port: nil
+
+  string ->
+    {value, ""} = Integer.parse(string)
+
+    config :challenge_gov, :proxy,
+      proxy_host: System.get_env("LOCAL_PROXY_HOST"),
+      proxy_port: value
+end
 
 config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Implementation
 config :challenge_gov, :gov_delivery, module: ChallengeGov.GovDelivery.Implementation
