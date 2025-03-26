@@ -28,8 +28,8 @@
           <div class="font-ui-xl padding-1">All Challenges</div>
 
           <%= if !Challenges.is_allowed_to_view_submission?(@user) do %>
-            <%= link to: ChallengeGov.LoginGov.build_ial_2_authorization_url, class: "text-no-underline" do %>
-              <div class="usa-alert usa-alert--info usa-alert--no-icon margin-bottom-4 maxw-tablet" role="alert">
+            <div class="usa-alert usa-alert--info usa-alert--no-icon margin-bottom-4 maxw-tablet" role="alert">
+              <%= link to: ChallengeGov.LoginGov.build_ial_2_authorization_url, class: "text-no-underline" do %>
                   <div class="usa-alert__body">
                     <h2 class="usa-alert__heading">
                       Verify with
@@ -37,8 +37,8 @@
                     </h2>
                     <p class="usa-alert__text">To view submission information on Challenge.gov, you must verify your identity with Login.gov</p>
                   </div>
-              </div>
-            <% end %>
+              <% end %>
+            </div>
           <% end %>
 
           <div class="btn-group">
