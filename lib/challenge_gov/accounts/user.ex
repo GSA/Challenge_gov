@@ -43,6 +43,8 @@ defmodule ChallengeGov.Accounts.User do
     "evaluator_role_requested"
   ]
 
+  @valid_ial_levels [1, 2]
+
   schema "users" do
     # Associations
     has_many(:challenges, Challenge)
@@ -68,6 +70,7 @@ defmodule ChallengeGov.Accounts.User do
     field(:password_confirmation, :string, virtual: true)
     field(:token, Ecto.UUID)
     field(:jwt_token, :string)
+    field(:ial_level, :integer, default: 1)
 
     field(:email_verification_token, :string)
     field(:email_verified_at, :utc_datetime)
@@ -109,11 +112,13 @@ defmodule ChallengeGov.Accounts.User do
       :agency_id,
       :status,
       :active_session,
-      :renewal_request
+      :renewal_request,
+      :ial_level
     ])
     |> validate_required([:email])
     |> validate_format(:email, ~r/.+@.+\..+/)
     |> validate_inclusion(:status, @statuses)
+    |> validate_inclusion(:ial_level, @valid_ial_levels)
     |> unique_constraint(:email, name: :users_lower_email_index)
   end
 

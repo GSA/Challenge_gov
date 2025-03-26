@@ -4,6 +4,7 @@ defmodule ChallengeGov.Security do
   """
 
   alias ChallengeGov.SecurityLogs
+  alias ChallengeGov.Accounts.User
 
   def challenge_manager_assumed_tlds do
     var = Application.get_env(:challenge_gov, :challenge_manager_assumed_tlds)
@@ -238,4 +239,7 @@ defmodule ChallengeGov.Security do
   def validate_gov_mil?(email) do
     String.ends_with?(email, [".gov", ".mil"])
   end
+
+  def ial_2?(%User{ial_level: 2}), do: true
+  def ial_2?(_user), do: false
 end

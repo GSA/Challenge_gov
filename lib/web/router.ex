@@ -50,10 +50,15 @@ defmodule Web.Router do
 
   # Portal Routes
   scope "/", Web do
+    pipe_through([:browser])
+
+    get("/auth/result", SessionController, :result)
+  end
+
+  scope "/", Web do
     pipe_through([:browser, :signed_out])
 
     resources("/sign-in", SessionController, only: [:new, :create], singleton: true)
-    get("/auth/result", SessionController, :result)
   end
 
   scope "/", Web do
