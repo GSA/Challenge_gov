@@ -86,9 +86,17 @@ defmodule Web.SubmissionView do
   end
 
   def name_link(conn, submission, query_params \\ []) do
-    link(submission.title,
-      to: Routes.submission_path(conn, :show, submission.id, query_params)
-    )
+    user = conn.assigns.user
+
+    if user.role == "challenge_manager" do
+      link(submission.title,
+        to: ChallengeGov.Helpers.get_eval_url("submissions/" <> to_string(submission.id))
+      )
+    else
+      link(submission.title,
+        to: Routes.submission_path(conn, :show, submission.id, query_params)
+      )
+    end
   end
 
   def name_link_url(conn, submission) do

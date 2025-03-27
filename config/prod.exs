@@ -106,6 +106,8 @@ config :challenge_gov,
 
 config :challenge_gov, :public_root_url, System.get_env("PUBLIC_ROOT_URL")
 
+config :challenge_gov, :public_root_ruby_url, System.get_env("PUBLIC_ROOT_RUBY_URL")
+
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"
 end

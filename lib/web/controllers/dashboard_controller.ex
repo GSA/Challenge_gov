@@ -8,6 +8,9 @@ defmodule Web.DashboardController do
   def index(conn, _params) do
     %{current_user: user} = conn.assigns
     # redirect(conn, to: Routes.challenge_path(conn, :index))
+    if user.role == "challenge_manager" do
+      redirect(conn, external: ChallengeGov.Helpers.get_eval_url("phases"))
+    end
 
     # if current solver user is has submissions created for them
     # which need to be verified, include notification.

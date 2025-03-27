@@ -1,34 +1,20 @@
 <div class="bg-primary-darker w-full display-flex flex-justify-center desktop:flex-justify-end padding-1 font-body-3xs desktop:font-body-2xs text-white">
 <div>
-  <%= link(to: Routes.dashboard_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
+  <%= link(to:  Routes.dashboard_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
                     width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
       <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#grid_view"></use>
       </svg><span class="display-none desktop:display-block ">Dashboard</span><span class="desktop:display-none" style="font-size: 0.7rem">Dashboard</span>
   <% end %>
 </div>
-<div>
-  <%= link(to: Routes.submission_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
-                    width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
-      <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#file_present"></use>
-      </svg><span class="display-none desktop:display-block">Submissions</span><span class="desktop:display-none" style="font-size: 0.7rem">Submissions</span>
-  <% end %>
-</div>
-<div>
-  <%= link(to: Routes.saved_challenge_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
-                    width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
-      <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#emoji_events"></use>
-      </svg><span class="display-none desktop:display-block">Saved Challenges</span><span class="desktop:display-none" style="font-size: 0.7rem">Saved Challenges</span>
-  <% end %>
-</div>
+
+
 <div>
   <%= link(to: Routes.help_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
                     width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
       <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#support"></use>
-      </svg><span class="display-none desktop:display-block">Resources</span><span class="desktop:display-none" style="font-size: 0.7rem">Resources</span>
+      </svg><span class="display-none desktop:display-block">Support</span><span class="desktop:display-none" style="font-size: 0.7rem">Resources</span>
   <% end %>
 </div>
 
