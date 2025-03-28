@@ -57,16 +57,15 @@ defmodule Web.SubmissionView do
     end
   end
 
-  def is_closed(end_date) do
+  def show_or_edit_submission_path(conn, submission) do
     now = Timex.now()
-
-    case Timex.compare(end_date, now) do
-      1 ->
-        "No"
-
-      tc when tc == -1 or tc == 0 ->
-        "Yes"
+    end_date = submission.phase.end_date
+    link_action = case Timex.compare(end_date, now) do
+      1 -> :edit
+      tc when tc == -1 or tc == 0 -> :show
     end
+
+    Routes.submission_path(conn, link_action, submission.id)
   end
 
   def close_header(end_date) do

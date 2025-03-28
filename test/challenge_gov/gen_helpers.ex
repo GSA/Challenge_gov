@@ -1,9 +1,9 @@
 defmodule ChallengeGov.HelpersTest do
-  use ExUnit.Case
-
   @moduledoc """
   Helper factory functions for accounts
   """
+  use ExUnit.Case
+
   describe "get_eval_url" do
     test "returns the full URL with the given path" do
       base_url = Application.get_env(:challenge_gov, :public_root_ruby_url)

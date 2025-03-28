@@ -554,7 +554,7 @@ defmodule Web.ChallengeView do
   end
 
   def previous_button(conn, challenge, section) do
-    if section != Enum.at(Challenges.sections(), 0).id && !is_final_section?(section) do
+    if section != Enum.at(Challenges.sections(), 0).id && !final_section?(section) do
       if challenge.id do
         submit("Previous",
           name: "action",
@@ -575,7 +575,7 @@ defmodule Web.ChallengeView do
   end
 
   def save_button(section, challenge) do
-    if !is_final_section?(section) do
+    if !final_section?(section) do
       submit("Save",
         name: "action",
         value: "save",
@@ -586,7 +586,7 @@ defmodule Web.ChallengeView do
   end
 
   def exit_button(conn, challenge = %{id: id}, section) do
-    if is_final_section?(section) do
+    if final_section?(section) do
       link("Exit",
         to: Routes.challenge_path(conn, :show, id),
         class: "usa-button usa-button--outline px-5",
@@ -603,7 +603,7 @@ defmodule Web.ChallengeView do
   end
 
   def exit_button(conn, challenge, section) do
-    if is_final_section?(section) do
+    if final_section?(section) do
       link("Exit",
         to: Routes.challenge_path(conn, :index),
         class: "usa-button usa-button--outline px-5",
@@ -620,7 +620,7 @@ defmodule Web.ChallengeView do
   end
 
   def preview_challenge_button(conn, challenge, section) do
-    if is_final_section?(section) do
+    if final_section?(section) do
       link("Preview Challenge in New Tab",
         to: Routes.public_preview_path(conn, :index, challenge: challenge.uuid),
         class: "usa-button usa-button--outline px-5 mr-2",
@@ -630,7 +630,7 @@ defmodule Web.ChallengeView do
   end
 
   def next_or_submit(section, user, challenge) do
-    final_section? = is_final_section?(section)
+    final_section? = final_section?(section)
 
     cond do
       final_section? && Challenges.allowed_to_submit?(user) &&
@@ -939,5 +939,5 @@ defmodule Web.ChallengeView do
   defp confirmation_message(action, _),
     do: "Are you sure you would like to #{action}? Your recent changes will be published."
 
-  defp is_final_section?(section), do: section == Enum.at(Challenges.sections(), -1).id
+  defp final_section?(section), do: section == Enum.at(Challenges.sections(), -1).id
 end
