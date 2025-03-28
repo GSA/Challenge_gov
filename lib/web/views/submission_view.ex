@@ -60,10 +60,12 @@ defmodule Web.SubmissionView do
   def show_or_edit_submission_path(conn, submission) do
     now = Timex.now()
     end_date = submission.phase.end_date
-    link_action = case Timex.compare(end_date, now) do
-      1 -> :edit
-      tc when tc == -1 or tc == 0 -> :show
-    end
+
+    link_action =
+      case Timex.compare(end_date, now) do
+        1 -> :edit
+        tc when tc == -1 or tc == 0 -> :show
+      end
 
     Routes.submission_path(conn, link_action, submission.id)
   end
