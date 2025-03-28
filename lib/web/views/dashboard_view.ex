@@ -1,7 +1,6 @@
 defmodule Web.DashboardView do
   use Web, :view
 
-  alias ChallengeGov.Challenges
   alias ChallengeGov.CertificationLogs
   alias ChallengeGov.Accounts
   alias ChallengeGov.MessageContextStatuses
@@ -25,7 +24,9 @@ defmodule Web.DashboardView do
   defp account_decertification_warning(conn, user) do
     {:ok, log} = CertificationLogs.check_user_certification_history(user)
 
-    ~E"""
+    assigns = %{log: log, conn: conn, user: user}
+
+    ~H"""
       <div class="content-header">
         <div class="container-fluid">
 
@@ -37,7 +38,7 @@ defmodule Web.DashboardView do
             <p>Your annual account certification is now pending approval.</p>
           <% else %>
             <p class="h4 mb-0">It's time for your annual account recertification.</p>
-            <p>Your annual account certification will expire on <%= log.expires_at.month %>/<%= log.expires_at.day %>/<%= log.expires_at.year %></p>
+            <p>Your annual account certification will expire on <%= @log.expires_at.month %>/<%= @log.expires_at.day %>/<%= @log.expires_at.year %></p>
             <p><%= recertification_action(conn, user) %></p>
           <% end %>
 
@@ -60,7 +61,9 @@ defmodule Web.DashboardView do
   end
 
   def evaluator_notice do
-    ~E"""
+    assigns = %{}
+
+    ~H"""
       <div class="content-header">
         <div class="container-fluid">
           <p>This account is an evaluator and has no access on this site. If this is a mistake contact an admin.</p>
@@ -204,7 +207,7 @@ defmodule Web.DashboardView do
     ]
   end
 
-  defp challenge_manager_card_links(user) do
+  defp challenge_manager_card_links(_user) do
     [
       content_tag :div, class: "grid-row grid-gap-2" do
         [

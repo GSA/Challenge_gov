@@ -4,19 +4,19 @@ defmodule ChallengeGov.LoginGov do
   """
 
   use HTTPoison.Base
-
   alias ChallengeGov.LoginGov.Token
+  require Logger
 
   def get_well_known_configuration(idp_authorize_url) do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
-    |> get()
+    |> get([], options())
     |> handle_response("Sorry, could not fetch well known configuration")
   end
 
   def get_public_key(jwks_uri) do
     jwks_uri
-    |> get()
+    |> get([], options())
     |> handle_response("Sorry, could not fetch public key")
     |> case do
       {:ok, body} -> {:ok, body |> Map.fetch!("keys") |> List.first()}
@@ -33,13 +33,13 @@ defmodule ChallengeGov.LoginGov do
     }
 
     token_endpoint
-    |> post(Poison.encode!(body), [{"Content-Type", "application/json"}])
+    |> post(Poison.encode!(body), [{"Content-Type", "application/json"}], options())
     |> handle_response("Sorry, could not exchange code")
   end
 
   def get_user_info(userinfo_endpoint, access_token) do
     userinfo_endpoint
-    |> get([{"Authorization", "Bearer " <> access_token}])
+    |> get([{"Authorization", "Bearer " <> access_token}], options())
     |> handle_response("Sorry, could not fetch userinfo")
   end
 
@@ -122,4 +122,6 @@ defmodule ChallengeGov.LoginGov do
   def process_response_body(body) do
     Poison.decode!(body)
   end
+
+  def options, do: ChallengeGov.http_proxy_options()
 end

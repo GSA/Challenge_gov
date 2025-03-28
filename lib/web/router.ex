@@ -133,7 +133,7 @@ defmodule Web.Router do
     )
 
     post("/challenges/:id/create_announcement", ChallengeController, :create_announcement)
-    post("/challenges/:id/remove_announcement", ChallengeController, :remove_announcement)
+    get("/challenges/:id/remove_announcement", ChallengeController, :remove_announcement)
 
     resources("/challenges/:id/submissions/export", SubmissionExportController,
       only: [:index, :create]
@@ -245,6 +245,8 @@ defmodule Web.Router do
     get("/challenges/filter", ChallengeController, :filter)
 
     post("/external_login", SessionController, :external_login)
+
+    get("/banner", BannerController, :ok)
   end
 
   # Public Routes

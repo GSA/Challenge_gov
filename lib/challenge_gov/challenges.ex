@@ -755,13 +755,19 @@ defmodule ChallengeGov.Challenges do
     end
   end
 
-  def validate_gov_mil?(email) do
-    String.ends_with?(email, [".gov", ".mil"])
-  end
+  @doc """
+  Checks if a user is allowed to view the submissions
+  """
 
   def allowed_to_view_submission(user, challenge) do
-    if user.role == "challenge_manager" do
-      if validate_gov_mil?(user.email) do
+    if is_challenge_manager?(user, challenge) do
+      if Security.validate_gov_mil?(user.email) do
+        {:ok, challenge}
+      else
+        {:error, :not_permitted}
+      end
+    else
+      if Accounts.has_admin_access?(user) do
         {:ok, challenge}
       else
         {:error, :not_permitted}
@@ -770,11 +776,11 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_allowed_to_view_submission?(user = %{role: "challenge_manager"}),
-    do: validate_gov_mil?(user.email)
+    do: Security.validate_gov_mil?(user.email)
 
-  def is_allowed_to_view_submission?(%{role: "super_admin"}), do: true
+  def is_allowed_to_view_submission?(_user = %{role: "super_admin"}), do: true
 
-  def is_allowed_to_view_submission?(%{role: "admin"}), do: true
+  def is_allowed_to_view_submission?(_user = %{role: "admin"}), do: true
 
   def allowed_to_submit?(%{role: "super_admin"}), do: true
 
@@ -1315,19 +1321,6 @@ defmodule ChallengeGov.Challenges do
 
   defp maybe_send_submission_confirmation(_challenge, _action), do: nil
 
-  # check role challenge_manager & .gov or .mil email account
-  defp is_challenge_manager_ng(user = %{role: "challenge_manager"}) do
-    if validate_gov_mil?(user.email) do
-      user.role
-    else
-      "challenge_manager_ng"
-    end
-  end
-
-  defp is_challenge_manager_ng(user = %{role: _}) do
-    user.role
-  end
-
   # BOOKMARK: Security log functions
   defp add_to_security_log_multi(multi, user, type, remote_ip, details \\ nil) do
     Ecto.Multi.run(multi, :log, fn _repo, %{challenge: challenge} ->
@@ -1338,7 +1331,7 @@ defmodule ChallengeGov.Challenges do
   def add_to_security_log(user, challenge, type, remote_ip, details \\ nil) do
     SecurityLogs.track(%{
       originator_id: user.id,
-      originator_role: is_challenge_manager_ng(user),
+      originator_role: user.role,
       originator_identifier: user.email,
       originator_remote_ip: remote_ip,
       target_id: challenge.id,

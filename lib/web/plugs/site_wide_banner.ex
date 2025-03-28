@@ -10,13 +10,17 @@ defmodule Web.Plugs.SiteWideBanner do
   def init(default), do: default
 
   def call(conn, _opts) do
-    {:ok, banner} = SiteContent.get("site_wide_banner")
+    case SiteContent.get("site_wide_banner") do
+      {:ok, banner} ->
+        case banner_is_active?(banner) do
+          true ->
+            assign(conn, :site_wide_banner, banner)
 
-    case banner_is_active?(banner) do
-      true ->
-        assign(conn, :site_wide_banner, banner)
+          false ->
+            conn
+        end
 
-      false ->
+      _ ->
         conn
     end
   end

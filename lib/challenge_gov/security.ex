@@ -209,4 +209,33 @@ defmodule ChallengeGov.Security do
     |> String.split(",")
     |> Enum.map(&String.trim/1)
   end
+
+  # functions to control non-gov challenge manager
+  def intercept_challenge_manager_ng(original_track) do
+    %{
+      original_track
+      | originator_role:
+          is_challenge_manager_ng(
+            original_track.originator_role,
+            original_track.originator_identifier
+          )
+    }
+  end
+
+  # check role challenge_manager & .gov or .mil email account
+  def is_challenge_manager_ng(originator_role = "challenge_manager", originator_identifier) do
+    if validate_gov_mil?(originator_identifier) do
+      originator_role
+    else
+      "challenge_manager_ng"
+    end
+  end
+
+  def is_challenge_manager_ng(originator_role = _, _originator_identifier) do
+    originator_role
+  end
+
+  def validate_gov_mil?(email) do
+    String.ends_with?(email, [".gov", ".mil"])
+  end
 end

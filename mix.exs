@@ -17,6 +17,15 @@ defmodule ChallengeGov.MixProject do
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
+      ],
+      # Ensure the priv/certs directory is included in the release
+      releases: [
+        challenge_gov: [
+          include_executables_for: [:unix],
+          applications: [challenge_gov: :permanent],
+          steps: [:assemble, :tar],
+          extra_files: ["priv/certs"]
+        ]
       ]
     ]
   end
@@ -53,7 +62,6 @@ defmodule ChallengeGov.MixProject do
       {:elixir_uuid, "~> 1.2"},
       {:ex_check, "~> 0.12", only: [:dev, :test], runtime: true},
       {:export, "~> 0.1.1"},
-      {:finch, "~> 0.14.0"},
       {:gettext, "~> 0.11"},
       {:hackney, "~> 1.13"},
       {:httpoison, "~> 1.7"},
@@ -65,13 +73,13 @@ defmodule ChallengeGov.MixProject do
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
       {:money, "~> 1.8.0"},
       {:nimble_csv, "~> 0.6"},
-      {:oban, "~> 2.3"},
+      {:oban, "~> 2.18.0", override: true},
       {:phoenix, "~> 1.5.7"},
       {:phoenix_ecto, "~> 4.0"},
-      {:phoenix_html, "~> 2.14.3"},
+      {:phoenix_html, "~> 3.1.0", override: true},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
-      {:phoenix_live_view, "~> 0.15.4", override: true},
-      {:phoenix_pubsub, "~> 2.0"},
+      {:phoenix_live_view, "~> 0.17.7", override: true},
+      {:phoenix_pubsub, "~> 2.1.3"},
       {:plug_cowboy, "~> 2.0"},
       {:poison, "~> 3.0"},
       {:porcelain, "~> 2.0"},
@@ -84,9 +92,9 @@ defmodule ChallengeGov.MixProject do
       {:sweet_xml, "~> 0.6.6"},
       {:tesla, "~> 1.12.1"},
       {:text_delta, "~> 1.1.0"},
-      {:timex, "~> 3.5"},
+      {:timex, "~> 3.7.11"},
       {:waffle, "~> 1.1.5"},
-      {:waffle_ecto, "~> 0.0.11"},
+      {:waffle_ecto, "~> 0.0.12"},
       {:wallaby, "~> 0.30", runtime: false, only: :test},
       {:xml_builder, "~> 2.1.1", override: true}
     ]
