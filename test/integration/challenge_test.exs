@@ -8,7 +8,6 @@ defmodule ChallengeGov.ChallengeIntegrationTest do
     create_and_sign_in_challenge_manager(session)
 
     session
-    |> click(css("#challenge-link-1"))
     |> visit("/challenges/new")
     |> complete_general_section()
     |> complete_details_section()
