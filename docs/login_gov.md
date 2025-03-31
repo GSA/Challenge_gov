@@ -51,6 +51,9 @@ Then re-encrypt the key for the elixir app, run the following with the correct k
 
 The two files (cert and private key) must exist in the root of the app codebase.
 In this case the private key should not have a password.
+The private key and cert should match whatever is required for the `client_id` defined in the `config/dev.exs`
+under `config :challenge_gov, :oidc_config`
+Rename these to `local_key.pem` and `local_cert.pem`
 
 ```
 private_key_path: "local_key.pem"

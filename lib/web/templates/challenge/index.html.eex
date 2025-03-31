@@ -26,20 +26,7 @@
     <div class="grid-row padding-bottom-2">
       <div class="grid-col-6">
           <div class="font-ui-xl padding-1">All Challenges</div>
-
-          <%= if !Challenges.is_allowed_to_view_submission?(@user) do %>
-            <div class="usa-alert usa-alert--info usa-alert--no-icon margin-bottom-4 maxw-tablet" role="alert">
-              <%= link to: ChallengeGov.LoginGov.build_ial_2_authorization_url, class: "text-no-underline" do %>
-                  <div class="usa-alert__body">
-                    <h2 class="usa-alert__heading">
-                      Verify with
-                        <img class="height-205 margin-left-1" src="<%= Routes.static_path(Web.Endpoint, "/images/login-gov-logo.svg") %>" alt="Login.gov logo" />
-                    </h2>
-                    <p class="usa-alert__text">To view submission information on Challenge.gov, you must verify your identity with Login.gov</p>
-                  </div>
-              <% end %>
-            </div>
-          <% end %>
+          <%= render Web.SharedView, "_identity_verification_banner.html", user: @user %>
 
           <div class="btn-group">
           <%= if Challenges.is_allowed_to_view_submission?(@user) do %>
