@@ -189,6 +189,16 @@ Add a list of changed settings in the form $setting: value.
   background-color: #fff;
 }
 
+.usa-header [type=search] {
+  min-width: 0;
+  max-width: 100px;
+}
+
+.usa-header .usa-logo {
+  margin: 0;
+  position: relative;
+  top: 3px;
+}
 
 @media (min-width: 64em) {
   .desktop\:flex-row {
@@ -199,3 +209,54 @@ Add a list of changed settings in the form $setting: value.
 .font-sans-xs {
   font-size: .87rem
 }
+
+@media (min-width: 64em) {
+  .usa-navbar {
+      border-bottom:none;
+      display: inline-block;
+   
+  }
+}
+
+
+@media (min-width: 64em){
+  .res-sec .usa-sidenav a {
+    padding-left: 0;
+  }
+  .usa-header--basic {
+    padding: 1rem 0;
+  }
+  .usa-header--basic .usa-nav-container {
+    min-width: 64em;
+    padding: 0;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  .usa-header--basic .usa-navbar {
+    width: auto;
+  }
+  .res-sec .grid-row.grid-gap,
+  .cms-sec-wrap .grid-row.grid-gap {
+    margin-left: calc(-0.5 * 1.5rem);
+    margin-right: calc(-0.5 * 1.5rem);
+  }
+  
+}
+
+@media (min-width: 64em) {
+  
+
+  .usa-header--basic .usa-nav {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    padding: 0 0 .25rem .5rem;
+    width: 100%
+  }
+
+  
+ 
+}
+

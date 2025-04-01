@@ -1,62 +1,17 @@
 <div class="bg-primary-darker w-full display-flex flex-justify-center desktop:flex-justify-end padding-1 font-body-3xs desktop:font-body-2xs text-white">
-<div>
-  <%= link(to: Routes.dashboard_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
-                    width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
-      <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#grid_view"></use>
-      </svg><span class="display-none desktop:display-block ">Dashboard</span><span class="desktop:display-none" style="font-size: 0.7rem">Dashboard</span>
+  <%= link(to: ChallengeGov.Helpers.get_eval_url("phases"), class: "display-flex flex-align-center flex-row margin-x-3
+          text-white text-no-underline text-bold
+          width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
+      <img class="usa-icon--size-4 icon-white margin-right-1" alt="" src="/assets/img/usa-icons/grid_view.svg">
+      <span>Challenges</span>
   <% end %>
-</div>
-<div>
-  <%= link(to: Routes.challenge_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
-                    width-9 tablet:width-auto tablet:text-no-wrap text-center", id: "challenge-link-1")  do %>
-      <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#emoji_events"></use>
-      </svg><span class="display-none desktop:display-block">Challenges</span><span class="desktop:display-none" style="font-size: 0.7rem">Challenges</span>
+  <%= link(to: Routes.help_path(@conn, :index), class: "display-flex flex-align-center flex-row margin-x-3
+          text-white text-no-underline text-bold
+          width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
+      <img class="usa-icon--size-4 icon-white margin-right-1" alt="" src="/assets/img/usa-icons/support.svg">
+      <span>Support</span>
   <% end %>
-</div>
-<div>
-   <%= link(to: "https://challenge-dev.app.cloud.gov/manage_submissions", class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
-                    width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
-      <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#star_half"></use>
-      </svg><span class="display-none desktop:display-block">Submissions & Evaluations</span><span class="desktop:display-none" style="font-size: 0.7rem">Submissions & Evaluations</span>
-  <% end %>
-</div>
-<div>
-  <%= link(to: "https://challenge-dev.app.cloud.gov/evaluation_forms", class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
-                    width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
-      <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#check_circle_outline"></use>
-      </svg><span class="display-none desktop:display-block">Evaluation Forms</span><span class="desktop:display-none" style="font-size: 0.7rem">Evaluation Forms</span>
-  <% end %>
-</div>
-<div>
-  <%= link(to: Routes.help_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
-                    width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
-      <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#support"></use>
-      </svg><span class="display-none desktop:display-block">Resources</span><span class="desktop:display-none" style="font-size: 0.7rem">Resources</span>
-  <% end %>
-</div>
-
-  <div class="display-none desktop:display-flex flex-align-center margin-x-1 margin-top-1">
-  |
-    <img class="usa-icon--size-3 icon-white margin-x-2" alt="Help"src=" <%= Routes.static_path(Web.Endpoint, "/images/account_circle.svg") %>" >
-    <ul class="navbar-nav">
-      <li class="nav-item dropdown">
-        <a class="text-bold text-white text-no-underline"  href="#" aria-expanded="true">
-          <span><%= @user.email %></span>
-        </a>
-        <div class="dropdown-content padding-2 float-right" style="min-width:280px">
-          <%= link to: Routes.session_path(@conn, :delete), method: :delete, class: "dropdown-item_" do %>
-          <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
-            <use xlink:href="/assets/img/sprite.svg#logout"></use>
-          </svg> Logout
-          <% end %>
-        </div>
-      </li>
-    </ul>
-</div>
-
+  <div class="display-none desktop:display-flex flex-align-center padding-x-3 border-left-1px">
+    <span><%= @user.email %></span>
+  </div>
 </div>

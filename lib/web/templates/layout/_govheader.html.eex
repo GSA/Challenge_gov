@@ -9,7 +9,7 @@ aria-label="Official website of the United States government"
           <img
             aria-hidden="true"
             class="usa-banner__header-flag"
-            src="<%= Routes.static_path(@conn, "/images/us_flag_small.png") %>"
+            src="<%= Routes.static_path(@conn, "/assets/img/us_flag_small.png") %>"
             alt=""
           />
         </div>
@@ -37,7 +37,7 @@ aria-label="Official website of the United States government"
         <div class="usa-banner__guidance tablet:grid-col-6">
           <img
             class="usa-banner__icon usa-media-block__img"
-            src="<%= Routes.static_path(@conn, "/images/icon-dot-gov.svg") %>"
+            src="<%= Routes.static_path(@conn, "/assets/img/icon-dot-gov.svg") %>"
             role="img"
             alt=""
             aria-hidden="true"
@@ -53,7 +53,7 @@ aria-label="Official website of the United States government"
         <div class="usa-banner__guidance tablet:grid-col-6">
           <img
             class="usa-banner__icon usa-media-block__img"
-            src="<%= Routes.static_path(@conn, "/images/icon-https.svg") %>"
+            src="<%= Routes.static_path(@conn, "/assets/img/icon-https.svg") %>"
             role="img"
             alt=""
             aria-hidden="true"
@@ -93,87 +93,76 @@ aria-label="Official website of the United States government"
   <div class="usa-overlay"></div>
 </section>
 
-<header class="usa-header usa-header--basic site-header">
-  <div class="desktop:display-flex desktop:width-full">
 
+<header class="usa-header usa-header--basic" aria-label="Main navigation">
+   <div class="desktop:display-flex desktop:width-full">
+  <div class="usa-nav-container ">
     <div class="usa-navbar">
-      <div class="usa-logo">
-        <em class="usa-logo__text"
-          ><a href="/" title="challenge.gov">
-          <span class="site-title--long">
-            <img width="300" class="usa-header__logo-img desktop:margin-bottom-2" src='<%= Routes.static_path(@conn, "/images/challenge-logo.svg") %>' alt="challenge logo" />
-          </span>
-          </a></em
-        >
+      <div class="usa-logo" id="basic-logo">
+        <a href="/" title="Home" aria-label="Home">
+           <img class="height-5 " src='<%= Routes.static_path(@conn, "/images/challenge-logo.svg") %>' alt="challenge logo" />
+
+        </a>
+
       </div>
-      <button type="button" class="usa-menu-btn">Menu</button>
+       <button type="button" class="usa-menu-btn">Menu</button>
+
     </div>
 
-     <nav aria-label="Primary navigation" class="usa-nav usa-header__actions">
-      <button type="button" class="usa-nav__close">
-        <img src="<%= Routes.static_path(Web.Endpoint, "/images/close.svg") %>" role="img" alt="Close" />
+    <nav class="usa-nav usa-header__actions">
+        <button type="button" class="usa-nav__close">
+        <img src="<%= Routes.static_path(Web.Endpoint, "/assets/img/close.svg") %>" role="img" alt="Close" />
       </button>
-      <ul class="usa-nav__primary usa-accordion flex-align-start">
+      <ul class="usa-nav__primary usa-accordion">
         <li class="usa-nav__primary-item">
-          <a href="/#active-challenges" class="usa-nav-link text-no-wrap"
-            ><span>Find a Challenge</span></a
-          >
+          <a href="/#active-challenges" class="menulink usa-nav__link" title="Active challenges" aria-label="Active challenges" data-anchor="active-challenges">Find a Challenge</a>
         </li>
         <li class="usa-nav__primary-item">
-          <a href="/resources" class="usa-nav-link"
-            ><span>Resources</span></a
-          >
+          <a class="menulink usa-nav__link" href="/resources" title="Resources for innovators and managers" aria-label="Resources">Resources</a>
         </li>
         <li class="usa-nav__primary-item">
-          <a href="/events" class="usa-nav-link"
-            ><span>Events</span></a
-          >
+          <a class="menulink usa-nav__link" href="/events" title="Events for innovators and managers" aria-label="Events">Events</a>
         </li>
         <li class="usa-nav__primary-item">
-          <a href="/contact" class="usa-nav-link"
-            ><span>Contact</span></a
-          >
+          <a class="menulink usa-nav__link" href="/contact" title="Contact page with email and social links" aria-label="Contact">Contact</a>
         </li>
       </ul>
 
 
-
-      <section class="display-none desktop:display-flex">
+ <section class="display-none desktop:display-flex">
 
 
 
         <section aria-label="Search component" style="display: flex; justify-content: center; align-items: center;">
 
-          <form id="search_form" class="usa-search usa-search--small" action="https://search.usa.gov/search" accept-charset="UTF-8" method="get">
+      <form id="search_form" class="usa-search usa-search--small" action="https://search.usa.gov/search" accept-charset="UTF-8" method="get">
 
 
           <input name="utf8" type="hidden" value="&#x2713;">
           <input type="hidden" name="affiliate" id="affiliate" value="challenge.gov">
           <div role="search">
 
-            <input class="usa-input usagov-search-autocomplete" id="extended-search-field-small" aria-label="Search Challenge.gov" type="search" name="query" autocomplete="off">
+            <input class="usa-input usagov-search-autocomplete" id="extended-search-field-small" aria-label="Search Challenge.gov" type="search" name="query" autocomplete="off"/>
             <button class="usa-button" type="submit">
-            <img src="<%= Routes.static_path(Web.Endpoint, "/images/search.svg") %>" class="usa-search__submit-icon" alt="Search">
+            <img src="<%= Routes.static_path(Web.Endpoint, "/assets/img/search.svg") %>" class="usa-search__submit-icon" alt="Search"/>
             <span class="usa-sr-only">Search</span></button>
           </div>
-          </form>
-        </section>
+      </form>
+ </section>
 
 
-        <%= case current_user(@conn) do %>
+     <%= case current_user(@conn) do %>
             <% nil -> %>
               <%= button("Login", to: Routes.session_path(@conn, :create), method: :post, class: "float-right usa-button usa-button--outline tablet:margin-left-2 tablet:float-right font-sans-xs",style: "width: 6rem;color:#005ea2;") %>
-              <a style="width: 10rem;" class="float-right usa-button usa-button tablet:margin-left-1 tablet:float-right font-sans-xs" href="https://secure.login.gov/sign_up/enter_email?request_id=6ab5f3e4-a3e5-4cb7-90a3-3a777fee8967"><span style="color: #ffffff;">Create Account</span></a>
-
             <% u -> %>
 
             <%= link("Log out", to: Routes.session_path(@conn, :delete),method: :delete,  class: "float-right usa-button usa-button tablet:margin-left-1 tablet:float-right font-sans-xs") %>
 
             <% end %>
-      </section>
+ </section>
 
   <!-- mobile search and login area -->
-    <section class="desktop:display-none order-3">
+      <section class="desktop:display-none order-3">
       <section aria-label="Search component">
         <form class="usa-search usa-search--small margin-y-1" role="search" action="https://search.usa.gov/search" accept-charset="UTF-8" method="get">
           <label class="usa-sr-only" for="search-field">Search</label>
@@ -189,7 +178,7 @@ aria-label="Official website of the United States government"
             aria-label="Search Challenge.gov"
           />
           <button class="usa-button" type="submit">
-              <img src="<%= Routes.static_path(Web.Endpoint, "/images/search.svg") %>" class="usa-search__submit-icon" alt="Search">
+              <img src="<%= Routes.static_path(Web.Endpoint, "/assets/img/search.svg") %>" class="usa-search__submit-icon" alt="Search">
           </button>
         </form>
       </section>
@@ -204,6 +193,7 @@ aria-label="Official website of the United States government"
 
       <% end %>
     </section>
+       </nav>
 
   </div>
 </header>

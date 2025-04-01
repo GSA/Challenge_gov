@@ -107,6 +107,8 @@ config :challenge_gov, :gov_delivery, module: ChallengeGov.GovDelivery.Mock
 
 config :challenge_gov, :public_root_url, "http://localhost:4001"
 
+config :challenge_gov, :public_root_ruby_url, "http://localhost:3000"
+
 config :challenge_gov, :session_cookie_domain, "localhost"
 
 config :waffle,
