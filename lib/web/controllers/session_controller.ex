@@ -56,9 +56,10 @@ defmodule Web.SessionController do
            LoginGov.build_client_assertion(client_id, token_endpoint, private_key),
          {:ok, %{"id_token" => id_token}} <-
            LoginGov.exchange_code_for_token(code, token_endpoint, client_assertion),
-         {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key) do
-      {:ok, user} = Accounts.map_from_login(userinfo, id_token, Security.extract_remote_ip(conn))
-
+         {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key),
+         {:ok, user} =
+           Accounts.map_from_login(userinfo, id_token, Security.extract_remote_ip(conn)),
+         {:ok, user} <- Accounts.maybe_update_ial_level(user, userinfo) do
       conn
       |> put_session(:user_token, user.token)
       |> put_session(:session_timeout_at, new_session_timeout_at(Security.timeout_interval()))

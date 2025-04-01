@@ -58,6 +58,23 @@ defmodule ChallengeGov.LoginGov do
     idp_authorize_url <> "?" <> URI.encode_query(query)
   end
 
+  def build_ial_2_authorization_url do
+    oidc_config = Application.get_env(:challenge_gov, :oidc_config)
+
+    %{
+      client_id: client_id,
+      redirect_uri: redirect_uri,
+      idp_authorize_url: idp_authorize_url
+    } = oidc_config
+
+    build_authorization_url(
+      client_id,
+      "urn:acr.login.gov:verified-facial-match-required",
+      redirect_uri,
+      idp_authorize_url
+    )
+  end
+
   def build_client_assertion(client_id, token_endpoint, private_key) do
     claims = %{
       iss: client_id,

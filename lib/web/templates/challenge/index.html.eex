@@ -26,6 +26,8 @@
     <div class="grid-row padding-bottom-2">
       <div class="grid-col-6">
           <div class="font-ui-xl padding-1">All Challenges</div>
+          <%= render Web.SharedView, "_identity_verification_banner.html", user: @user %>
+
           <div class="btn-group">
           <%= if Challenges.is_allowed_to_view_submission?(@user) do %>
             <%= link "New", to: Routes.challenge_path(@conn, :new, show_info: true), class: "usa-button" %>

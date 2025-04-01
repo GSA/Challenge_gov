@@ -38,6 +38,10 @@
 
               <dt>Role</dd>
               <dd><%= @user.role %></dd>
+              <br/>
+
+              <dt>IAL Level</dd>
+              <dd><%= @user.ial_level %></dd>
             </dl>
           </div>
         </div>
