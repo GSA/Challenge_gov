@@ -1,4 +1,4 @@
-<%= if !Challenges.is_allowed_to_view_submission?(@user) do %>
+<%= if !ChallengeGov.Challenges.is_allowed_to_view_submission?(@user) do %>
   <div class="usa-alert usa-alert--info usa-alert--no-icon margin-bottom-4 maxw-tablet" role="alert">
     <%= link to: ChallengeGov.LoginGov.build_ial_2_authorization_url, class: "text-no-underline text-base-darkest" do %>
         <div class="usa-alert__body">

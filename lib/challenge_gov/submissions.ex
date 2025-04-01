@@ -302,16 +302,6 @@ defmodule ChallengeGov.Submissions do
     submission.manager_id && !submission.review_verified
   end
 
-  def allowed_to_view_submission(user, submission) do
-    if user.role == "challenge_manager" do
-      if Security.validate_gov_mil?(user.email) || Security.ial_2?(user) do
-        {:ok, submission}
-      else
-        {:error, :not_permitted}
-      end
-    end
-  end
-
   def is_allowed_to_view_submission?(user = %{role: "challenge_manager"}),
     do: Security.validate_gov_mil?(user.email) || Security.ial_2?(user)
 

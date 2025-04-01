@@ -3,7 +3,6 @@ defmodule Web.SharedView do
 
   alias Stein.Storage
   alias Web.SharedView
-  alias ChallengeGov.Challenges
 
   def session_timeout(conn) do
     Plug.Conn.get_session(conn, "session_timeout_at")
