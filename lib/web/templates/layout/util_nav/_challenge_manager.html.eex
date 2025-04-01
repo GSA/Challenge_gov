@@ -13,7 +13,8 @@
   <%= link(to: Routes.help_path(@conn, :index), class: "display-flex flex-align-center flex-row margin-x-1 desktop:margin-x-3
           text-white text-no-underline text-bold
                     width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
-      </svg><span class="display-none desktop:display-block">Support</span><span class="desktop:display-none" style="font-size: 0.7rem">Resources</span>
+      <img class="usa-icon--size-4 icon-white margin-right-1" alt="" src="/assets/img/usa-icons/support.svg">
+      <span>Support</span>
   <% end %>
 </div>
 
