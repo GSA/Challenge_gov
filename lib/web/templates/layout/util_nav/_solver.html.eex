@@ -10,7 +10,8 @@
 
 
 <div>
-  <%= link(to: Routes.help_path(@conn, :index), class: "display-flex flex-align-center flex-column desktop:flex-row margin-x-1 desktop:margin-x-3 text-white
+  <%= link(to: Routes.help_path(@conn, :index), class: "display-flex flex-align-center flex-row margin-x-1 desktop:margin-x-3
+          text-white text-no-underline text-bold
                     width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
       <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
         <use xlink:href="/assets/img/sprite.svg#support"></use>
