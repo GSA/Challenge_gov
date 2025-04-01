@@ -12,8 +12,8 @@
           text-white text-no-underline text-bold
                     width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
       <svg class="usa-icon--size-4 desktop:usa-icon--size-3 icon-white desktop:margin-right-1" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#support"></use>
-      </svg><span class="display-none desktop:display-block">Support</span><span class="desktop:display-none" style="font-size: 0.7rem">Resources</span>
+        <img class="usa-icon--size-4 icon-white margin-right-1" alt="" src="/assets/img/usa-icons/support.svg">
+        <span>Support</span>
   <% end %>
 </div>
   <div class="display-none desktop:display-flex flex-align-center padding-x-3 border-left-1px">
