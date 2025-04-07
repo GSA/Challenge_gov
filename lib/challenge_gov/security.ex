@@ -251,7 +251,7 @@ defmodule ChallengeGov.Security do
   def add_ial_level_to_details(%{originator_id: originator_id} = params)
       when not is_nil(originator_id) do
     case ChallengeGov.Accounts.get(originator_id) do
-      %User{ial_level: ial_level} ->
+      {:ok, %User{ial_level: ial_level}} ->
         update_in(params[:details], fn details ->
           (details || %{}) |> Map.put(:ial_level, ial_level)
         end)
