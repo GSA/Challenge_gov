@@ -15,7 +15,10 @@ defmodule ChallengeGov.SecurityLogs do
   def track(params) do
     Logger.info("Audit event #{params[:action]}", log_type: "audit", params: params)
 
-    params = Security.intercept_challenge_manager_ng(_ = params)
+    params =
+      params
+      |> Security.intercept_user_non_gov()
+      |> Security.add_ial_level_to_details()
 
     %SecurityLog{}
     |> SecurityLog.changeset(params)
@@ -57,7 +60,7 @@ defmodule ChallengeGov.SecurityLogs do
         action: "session_duration",
         details: %{duration: duration},
         originator_id: user.id,
-        originator_role: Security.is_challenge_manager_ng(user.role, user.email),
+        originator_role: Security.is_user_non_gov(user.role, user.email),
         originator_identifier: user.email,
         originator_remote_ip: remote_ip
       })
