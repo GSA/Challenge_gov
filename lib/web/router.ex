@@ -229,6 +229,7 @@ defmodule Web.Router do
     post("/phase_winners/:id/upload_winner_image", WinnerController, :upload_image)
 
     post("/session/renew", SessionController, :check_session_timeout)
+    post("/session/external_renew", SessionController, :external_renew_session)
     post("/session/logout", SessionController, :logout_user)
   end
 
