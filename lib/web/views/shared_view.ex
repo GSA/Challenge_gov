@@ -177,7 +177,7 @@ defmodule Web.SharedView do
       is_visible = Map.get(breadcrumb, :is_visible, true)
 
       if is_visible do
-        content_tag :li, class: "usa-breadcrumb__list-item #{if is_nil(route), do: 'active'}" do
+        content_tag :li, class: "usa-breadcrumb__list-item #{if is_nil(route), do: ~c"active"}" do
           content_tag(:a, text, class: "usa-breadcrumb__link", href: route)
         end
       else

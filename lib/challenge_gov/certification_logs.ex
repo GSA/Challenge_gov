@@ -114,7 +114,7 @@ defmodule ChallengeGov.CertificationLogs do
   defp maybe_send_email(%{renewal_request: "certification"}, _days), do: :noop
 
   defp maybe_send_email(user, days) do
-    Logger.warn("Decertify #{days} day notice [user_id: #{user.id}]")
+    Logger.warning("Decertify #{days} day notice [user_id: #{user.id}]")
     send_email(user, days)
   end
 
