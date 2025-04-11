@@ -59,7 +59,8 @@ defmodule Web.SessionController do
          {:ok, userinfo} <- LoginGov.decode_jwt(id_token, public_key),
          {:ok, user} =
            Accounts.map_from_login(userinfo, id_token, Security.extract_remote_ip(conn)),
-         {:ok, user} <- Accounts.maybe_update_ial_level(user, userinfo) do
+         {:ok, user} <- Accounts.maybe_update_ial_level(user, userinfo),
+         :ok <- maybe_login_rails_app(user) do
       conn
       |> put_session(:user_token, user.token)
       |> put_session(:session_timeout_at, new_session_timeout_at(Security.timeout_interval()))
@@ -179,6 +180,28 @@ defmodule Web.SessionController do
       Timex.to_unix(Timex.now()),
       Security.extract_remote_ip(conn)
     )
+  end
+
+  def maybe_login_rails_app(user) do
+    # Sign a JWT with user info
+    # jwt = signing method
+
+    headers = [
+      {"Login-Secret", System.get_env("LOGIN_SECRET")},
+      {"User-JWT", jwt}
+    ]
+
+    url = ChallengeGov.Helpers.get_eval_url("external_login")
+
+    case HTTPoison.post(url, "", headers, follow_redirect: true) do
+      {:ok, %HTTPoison.Response{status_code: 200, headers: resp_headers}} ->
+        # Extract and set "Set-Cookie" resp_header to _challenge_platform_key
+        :ok
+
+      error ->
+        Logger.error("Failed to log in Rails app: #{inspect(error)}")
+        {:error, :rails_login_failed}
+    end
   end
 
   defp clear_rails_session(conn) do
