@@ -4,6 +4,7 @@ defmodule ChallengeGov.Security do
   """
 
   alias ChallengeGov.SecurityLogs
+  alias ChallengeGov.Accounts.User
 
   def challenge_manager_assumed_tlds do
     var = Application.get_env(:challenge_gov, :challenge_manager_assumed_tlds)
@@ -211,11 +212,11 @@ defmodule ChallengeGov.Security do
   end
 
   # functions to control non-gov challenge manager
-  def intercept_challenge_manager_ng(original_track) do
+  def intercept_user_non_gov(original_track) do
     %{
       original_track
       | originator_role:
-          is_challenge_manager_ng(
+          is_user_non_gov(
             original_track.originator_role,
             original_track.originator_identifier
           )
@@ -223,7 +224,7 @@ defmodule ChallengeGov.Security do
   end
 
   # check role challenge_manager & .gov or .mil email account
-  def is_challenge_manager_ng(originator_role = "challenge_manager", originator_identifier) do
+  def is_user_non_gov(originator_role = "challenge_manager", originator_identifier) do
     if validate_gov_mil?(originator_identifier) do
       originator_role
     else
@@ -231,11 +232,37 @@ defmodule ChallengeGov.Security do
     end
   end
 
-  def is_challenge_manager_ng(originator_role = _, _originator_identifier) do
+  def is_user_non_gov(originator_role = "evaluator", originator_identifier) do
+    if validate_gov_mil?(originator_identifier) do
+      originator_role
+    else
+      "evaluator_ng"
+    end
+  end
+
+  def is_user_non_gov(originator_role = _, _originator_identifier) do
     originator_role
   end
 
   def validate_gov_mil?(email) do
     String.ends_with?(email, [".gov", ".mil"])
   end
+
+  def add_ial_level_to_details(%{originator_id: originator_id} = params)
+      when not is_nil(originator_id) do
+    case ChallengeGov.Accounts.get(originator_id) do
+      {:ok, %User{ial_level: ial_level}} ->
+        update_in(params[:details], fn details ->
+          (details || %{}) |> Map.put(:ial_level, ial_level)
+        end)
+
+      _ ->
+        params
+    end
+  end
+
+  def add_ial_level_to_details(params), do: params
+
+  def ial_2?(%User{ial_level: 2}), do: true
+  def ial_2?(_user), do: false
 end

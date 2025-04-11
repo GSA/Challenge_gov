@@ -74,9 +74,9 @@ config :challenge_gov, :cache, preload: true
 # Login.Gov user authorize config
 config :challenge_gov, :oidc_config, %{
   idp_authorize_url: "https://idp.int.identitysandbox.gov/openid_connect/authorize",
-  acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
+  acr_value: "urn:acr.login.gov:auth-only",
   redirect_uri: "http://localhost:4000/auth/result",
-  client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_gov_portal_local",
+  client_id: "urn:gov:gsa:openidconnect.profiles:sp:sso:gsa:challenge_gov_portal_eval_dev",
   private_key_password: nil,
   private_key_path: "local_key.pem",
   public_key_path: "local_cert.pem",
@@ -106,6 +106,8 @@ config :challenge_gov, :recaptcha, module: ChallengeGov.Recaptcha.Mock
 config :challenge_gov, :gov_delivery, module: ChallengeGov.GovDelivery.Mock
 
 config :challenge_gov, :public_root_url, "http://localhost:4001"
+
+config :challenge_gov, :public_root_ruby_url, "http://localhost:3000"
 
 config :challenge_gov, :session_cookie_domain, "localhost"
 

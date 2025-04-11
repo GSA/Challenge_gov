@@ -50,10 +50,15 @@ defmodule Web.Router do
 
   # Portal Routes
   scope "/", Web do
+    pipe_through([:browser])
+
+    get("/auth/result", SessionController, :result)
+  end
+
+  scope "/", Web do
     pipe_through([:browser, :signed_out])
 
     resources("/sign-in", SessionController, only: [:new, :create], singleton: true)
-    get("/auth/result", SessionController, :result)
   end
 
   scope "/", Web do
@@ -232,6 +237,7 @@ defmodule Web.Router do
     post("/phase_winners/:id/upload_winner_image", WinnerController, :upload_image)
 
     post("/session/renew", SessionController, :check_session_timeout)
+    post("/session/external_renew", SessionController, :external_renew_session)
     post("/session/logout", SessionController, :logout_user)
   end
 

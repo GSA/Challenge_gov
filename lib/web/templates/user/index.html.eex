@@ -40,6 +40,7 @@
                   <th>Name</th>
                   <th>Email</th>
                   <th>Role</th>
+                  <th>IAL Level</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -51,6 +52,7 @@
                     <td><%= link(AccountView.full_name(user), to: Routes.user_path(@conn, :show, user.id)) %></td>
                     <td><%= user.email %></td>
                     <td><%= user.role %></td>
+                    <td><%= user.ial_level %></td>
                     <td><%= status(user.status) %></td>
                     <td>
 

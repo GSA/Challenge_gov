@@ -761,7 +761,7 @@ defmodule ChallengeGov.Challenges do
 
   def allowed_to_view_submission(user, challenge) do
     if is_challenge_manager?(user, challenge) do
-      if Security.validate_gov_mil?(user.email) do
+      if Security.validate_gov_mil?(user.email) || Security.ial_2?(user) do
         {:ok, challenge}
       else
         {:error, :not_permitted}
@@ -776,7 +776,7 @@ defmodule ChallengeGov.Challenges do
   end
 
   def is_allowed_to_view_submission?(user = %{role: "challenge_manager"}),
-    do: Security.validate_gov_mil?(user.email)
+    do: Security.validate_gov_mil?(user.email) || Security.ial_2?(user)
 
   def is_allowed_to_view_submission?(_user = %{role: "super_admin"}), do: true
 

@@ -57,16 +57,17 @@ defmodule Web.SubmissionView do
     end
   end
 
-  def is_closed(end_date) do
+  def show_or_edit_submission_path(conn, submission) do
     now = Timex.now()
+    end_date = submission.phase.end_date
 
-    case Timex.compare(end_date, now) do
-      1 ->
-        "No"
+    link_action =
+      case Timex.compare(end_date, now) do
+        1 -> :edit
+        tc when tc == -1 or tc == 0 -> :show
+      end
 
-      tc when tc == -1 or tc == 0 ->
-        "Yes"
-    end
+    Routes.submission_path(conn, link_action, submission.id)
   end
 
   def close_header(end_date) do
@@ -86,9 +87,17 @@ defmodule Web.SubmissionView do
   end
 
   def name_link(conn, submission, query_params \\ []) do
-    link(submission.title,
-      to: Routes.submission_path(conn, :show, submission.id, query_params)
-    )
+    user = conn.assigns.user
+
+    if user.role == "challenge_manager" do
+      link(submission.title,
+        to: ChallengeGov.Helpers.get_eval_url("submissions/" <> to_string(submission.id))
+      )
+    else
+      link(submission.title,
+        to: Routes.submission_path(conn, :show, submission.id, query_params)
+      )
+    end
   end
 
   def name_link_url(conn, submission) do

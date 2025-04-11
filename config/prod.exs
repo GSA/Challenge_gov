@@ -82,7 +82,7 @@ config :ex_aws,
 
 config :challenge_gov, :oidc_config, %{
   idp_authorize_url: System.get_env("LOGIN_IDP_AUTHORIZE_URL"),
-  acr_value: "http://idmanagement.gov/ns/assurance/loa/1",
+  acr_value: "urn:acr.login.gov:auth-only",
   redirect_uri: System.get_env("LOGIN_REDIRECT_URL"),
   client_id: System.get_env("LOGIN_CLIENT_ID"),
   private_key_path: System.get_env("LOGIN_PRIVATE_KEY_PATH"),
@@ -110,6 +110,8 @@ config :challenge_gov,
   challenge_manager_assumed_tlds: System.get_env("CHALLENGE_OWNER_ASSUMED_TLDS") || [".mil"]
 
 config :challenge_gov, :public_root_url, System.get_env("PUBLIC_ROOT_URL")
+
+config :challenge_gov, :public_root_ruby_url, System.get_env("PUBLIC_ROOT_RUBY_URL")
 
 if File.exists?("config/prod.secret.exs") do
   import_config "prod.secret.exs"

@@ -451,6 +451,16 @@ defmodule ChallengeGov.Accounts do
     end
   end
 
+  def maybe_update_ial_level(user = %User{}, _userinfo = %{"ial" => ial_level}) do
+    if String.ends_with?(ial_level || "", "verified-facial-match-required") do
+      user
+      |> User.changeset(%{ial_level: 2})
+      |> Repo.update()
+    else
+      {:ok, user}
+    end
+  end
+
   defp default_role_and_status_for_email(email) do
     case Security.default_challenge_manager?(email) do
       true ->

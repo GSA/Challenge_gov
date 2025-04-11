@@ -57,6 +57,8 @@ config :challenge_gov, Oban, crontab: false, queues: false, plugins: false
 
 config :challenge_gov, :public_root_url, "http://localhost:4001"
 
+config :challenge_gov, :public_root_ruby_url, "http://localhost:3000"
+
 config :wallaby,
   driver: Wallaby.Chrome,
   chromedriver: [
