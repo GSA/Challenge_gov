@@ -1,0 +1,100 @@
+<div class="grid-row padding-4">
+  <div class="tablet:grid-col-2 display-none desktop:display-block">
+
+    <div class="grid-col ">
+      <h1>User Guide</h1>
+      <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Resources", route: Routes.help_path(Web.Endpoint, :index)},
+      %{text: "User Guide"},
+      ])%>
+    </div>
+    </div>
+
+
+    <nav aria-label="Side navigation,,">
+      <ul class="usa-sidenav padding-right-6">
+
+        <li class="usa-sidenav__item">
+          <a href="javascript:void(0);" class="usa-current">Parent Category 1</a>
+          <ul class="usa-sidenav__sublist">
+            <li class="usa-sidenav__item">
+              <a href="/guide/categoryl1/subcategoryl1">Child Category 1</a>
+            </li>
+            <li class="usa-sidenav__item">
+              <a href="javascript:void(0);">Child Category 2</a>
+            </li>
+            <li class="usa-sidenav__item">
+              <a href="javascript:void(0);">Child Category 3</a>
+            </li>
+          </ul>
+        </li>
+        <li class="usa-sidenav__item">
+          <a href="javascript:void(0);">Parent Category 2</a>
+        </li>
+        <li class="usa-sidenav__item">
+          <a href="javascript:void(0);">Parent Category 3</a>
+        </li>
+      </ul>
+    </nav>
+
+
+
+
+
+  </div>
+  <div class="tablet:grid-col-8">
+
+    <div class="grid-col ">
+      <h1>User Guide For Evaluators</h1>
+    </div>
+
+    <div>
+      <p class="padding-bottom-2 line-height-mono-4">This guide provides step-by-step instructions for evaluators on how use of
+        Challeng.gov. Select a category below to explore the resources.</p>
+    </div>
+
+    <div>
+
+      <img src="<%= Routes.static_url(Web.Endpoint, "/images/HeroBanner.png")%>"/>
+    </div>
+
+
+
+    <div class="tablet:grid-col-8 padding-top-4">
+
+      <div class="border-top-2px border-accent-cool-darker padding-top-1 margin-bottom-2 usa-prose"></div>
+
+      <h4 class="blue-font">Child Category 1</h4>
+      <p class="line-height-mono-4">Nulla venenatis placerat ex, sit amet auctor lorem feugiat condimentum. Interdum et malesuada fames ac ante
+        ipsum
+        primis in faucibus. Suspendisse ornare viverra libero, nec condimentum leo iaculis non. Nam suscipit viverra
+        erat
+        vel pretium. Nunc in lacinia arcu. Nam feugiat non nibh at malesuada. Quisque iaculis augue sed sem efficitur,
+        id
+      </p>
+
+      <div class="border-top-2px border-accent-cool-darker padding-top-1 margin-bottom-2 usa-prose""></div>
+
+    <h4 class=" blue-font">Child Category 2</h4>
+        <p class="line-height-mono-4">Nulla venenatis placerat ex, sit amet auctor lorem feugiat condimentum. Interdum et malesuada fames ac ante
+          ipsum
+          primis in faucibus. Suspendisse ornare viverra libero, nec condimentum leo iaculis non. Nam suscipit viverra
+          erat
+          vel pretium. Nunc in lacinia arcu. Nam feugiat non nibh at malesuada. Quisque iaculis augue sed sem efficitur,
+          id
+        </p>
+
+        <div class="border-top-2px border-accent-cool-darker padding-top-1 margin-bottom-2 usa-prose"></div>
+
+        <h4 class="blue-font">Child Category 3</h4>
+        <p class="line-height-mono-4">Nulla venenatis placerat ex, sit amet auctor lorem feugiat condimentum. Interdum et malesuada fames ac ante
+          ipsum
+          primis in faucibus. Suspendisse ornare viverra libero, nec condimentum leo iaculis non. Nam suscipit viverra
+          erat
+          vel pretium. Nunc in lacinia arcu. Nam feugiat non nibh at malesuada. Quisque iaculis augue sed sem efficitur,
+          id
+        </p>
+      </div>
+    </div>
+  </div>

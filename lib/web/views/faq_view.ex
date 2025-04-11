@@ -1,7 +1,8 @@
-defmodule Web.HelpView do
+defmodule Web.FaqView do
   use Web, :view
 
   alias Web.SharedView
+
   alias ChallengeGov.Accounts
 
   def user_signed_in?(conn) do

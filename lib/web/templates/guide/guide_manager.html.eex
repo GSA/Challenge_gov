@@ -1,0 +1,129 @@
+<main class="grid-container">
+  <div class="grid-col padding-top-2">
+    <h1>User Guide For Managers</h1>
+
+    <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Resources", route: Routes.help_path(Web.Endpoint, :index)},
+      %{text: "User Guide For Managers"},
+      ])%>
+    </div>
+
+  </div>
+
+  <div>
+
+    <img src="<%= Routes.static_url(Web.Endpoint, "/images/HeroBanner.png")%>"/>
+  </div>
+
+
+  <div>
+    <p class="padding-bottom-2">This guide provides step-by-step instructions for evaluators on how use of Challeng.gov. Select a category below to explore the resources.</p>
+  </div>
+
+  <div class="col-md-6">
+    <div class="flex-justify-center width-full padding-bottom-4">
+      <div class="grid-row grid-gap-2">
+        <div class="desktop:grid-col-4 margin-y-1 ">
+          <a class="display-flex bg-primary-darker text-white flex-align-center height-card-guide text-no-underline" href="/guide/categoryl1/"
+            target="">
+
+            <div class="margin-right-2 padding-left-4">
+              <h2>Challenge.gov Account</h2>
+              <div class="padding-1">
+                <p>Challenge.gov is the official hub for prize competitions and crowdsourcing campaigns (together referred to as
+"challenges") across the U.S. federal government.</p>
+
+              </div>
+
+
+            </div>
+          </a>
+        </div>
+        <div class="desktop:grid-col-4 margin-y-1">
+          <a class="display-flex bg-primary-darker text-white flex-align-center height-card-guide text-no-underline" href="/guide/categoryl1/"
+            target="">
+
+            <div class="margin-right-2 padding-left-4">
+              <h2>Challenge Management</h2>
+              <div class="padding-1">
+              <p>Challenge.gov is the official hub for prize competitions and crowdsourcing campaigns (together referred to as
+"challenges") across the U.S. federal governmnent</p>
+              </div>
+
+
+            </div>
+          </a>
+        </div>
+        <div class="desktop:grid-col-4 margin-y-1">
+          <a class="display-flex bg-primary-darker text-white flex-align-center height-card-guide text-no-underline" href="/guide/categoryl1/"
+            target="">
+
+            <div class="margin-right-2 padding-left-4">
+              <h2>Submission Management</h2>
+              <div class="padding-1">
+                <p>Challenge.gov is the official hub for prize competitions and crowdsourcing campaigns (together referred to as
+"challenges") across the U.S. federal governmnent</p>
+
+              </div>
+
+
+            </div>
+          </a>
+        </div>
+
+         <div class="desktop:grid-col-4 margin-y-1">
+          <a class="display-flex bg-primary-darker text-white flex-align-center height-card-guide text-no-underline" href="/guide/categoryl1/"
+            target="">
+
+            <div class="margin-right-2 padding-left-4">
+              <h2>Evaluation
+Management</h2>
+              <div class="padding-1">
+                <p>Challenge.gov is the official hub for prize competitions and crowdsourcing campaigns (together referred to as
+"challenges") across the U.S. federal governmnent</p>
+
+              </div>
+
+
+            </div>
+          </a>
+        </div>
+
+         <div class="desktop:grid-col-4 margin-y-1">
+          <a class="display-flex bg-primary-darker text-white flex-align-center height-card-guide text-no-underline" href="/guide/categoryl1/"
+            target="">
+
+            <div class="margin-right-2 padding-left-4">
+              <h2>Analytics</h2>
+              <div class="padding-1">
+               <p>Challenge.gov is the official hub for prize competitions and crowdsourcing campaigns (together referred to as
+"challenges") across the U.S. federal governmnent</p>
+              </div>
+
+
+            </div>
+          </a>
+        </div>
+
+         <div class="desktop:grid-col-4 margin-y-1">
+          <a class="display-flex bg-primary-darker text-white flex-align-center height-card-guide text-no-underline" href="/guide/categoryl1/"
+            target="">
+
+            <div class="margin-right-2 padding-left-4">
+              <h2>Message Center</h2>
+              <div class="padding-1">
+             <p>Challenge.gov is the official hub for prize competitions and crowdsourcing campaigns (together referred to as
+"challenges") across the U.S. federal governmnent</p>
+              </div>
+
+
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>

@@ -3,16 +3,16 @@
       <% u -> %>
 
         <%= if Accounts.role_at_or_below(u, "solver") do %>
-          <%= render Web.HelpView, "help_solver.html", conn: @conn, user: u %>
+          <%= render Web.FaqView, "faq_solver.html", conn: @conn, user: u %>
         <% end %>
         <%= if ChallengeGov.Accounts.is_evaluator?(u) do %>
-          <%= render Web.HelpView, "help_evaluator.html", conn: @conn, user: u %>
+          <%= render Web.FaqView, "faq_evaluator.html", conn: @conn, user: u %>
         <% end %>
          <%= if ChallengeGov.Accounts.is_challenge_manager?(u) do %>
-          <%= render Web.HelpView, "help_manager.html", conn: @conn, user: u %>
+          <%= render Web.FaqView, "faq_manager.html", conn: @conn, user: u %>
         <% end %>
         <%= if ChallengeGov.Accounts.has_admin_access?(u) do %>
-          <%= render Web.HelpView, "help_manager.html", conn: @conn, user: u %>
+          <%= render Web.FaqView, "faq_manager.html", conn: @conn, user: u %>
         <% end %>
 
 

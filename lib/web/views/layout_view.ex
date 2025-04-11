@@ -138,7 +138,9 @@ defmodule Web.LayoutView do
         Web.SubmissionInviteView,
         Web.AnalyticsView,
         Web.MessageContextView,
-        Web.HelpView
+        Web.HelpView,
+        Web.FaqView,
+        Web.GuideView
       ]
   end
 end

@@ -199,3 +199,19 @@ Add a list of changed settings in the form $setting: value.
 .font-sans-xs {
   font-size: .87rem
 }
+
+.height-card-guide
+{
+    height:20rem;
+}
+
+.usa-accordion__heading .usa-accordion__button[aria-expanded=false] {
+  background-image: url(/assets/img/usa-icons/add.svg),linear-gradient(transparent,transparent);
+ 
+}
+
+.usa-accordion__heading .usa-accordion__button {
+  
+  background-image: url(/assets/img/usa-icons/remove.svg),linear-gradient(transparent,transparent);
+  
+}

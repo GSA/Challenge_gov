@@ -1,0 +1,410 @@
+<div>
+  <div class="cms-sec-wrap">
+    <div class="grid-container usa-section">
+      <div class="grid-row">
+        <div class="usa-layout-docs__main desktop:grid-col-12 usa-prose">
+
+          <h1 class="margin-bottom-0">Federal Agency FAQs (Managers)</h1>
+          <p>Click on a question below to explore.</p>
+          <h2>About Challenge.Gov</h2>
+
+
+          <div class="usa-accordion">
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="a1">
+                What is Challenge.Gov?
+              </button>
+            </h4>
+            <div id="a1" class="usa-accordion__content usa-prose" hidden="">
+              <p>Challenge.Gov, managed by Technology Transformation Services (TTS), within the General Services
+                Administration, supports federal agencies to mature and scale the use of prize
+                competitions and crowdsourcing campaigns in order to advance their missions. The Challenge.Gov team
+                delivers this support by offering advanced infrastructure, empowering
+                members of the Challenge and Prize Community of Practice, hosting interactive learning experiences, and
+                developing practical toolkits.</p>
+              <p>This Challenge.Gov platform is the central hub for prize competitions across the U.S. federal
+                government. Through this platform, federal agencies can engage public solvers in prize
+                competitions and crowdsourcing campaigns to identify innovative solutions to important issues.</p>
+
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="a2">
+                Why should I post my prize competition or crowdsourcing campaign on Challenge.Gov?
+              </button>
+            </h4>
+            <div id="a2" class="usa-accordion__content usa-prose" hidden="">
+
+
+              <p>Posting your prize challenge or crowdsourcing campaign on Challenge.Gov has many benefits.</p>
+              <p>The platform allows you to:</p>
+              <p><em><b>Promote your prize competition or crowdsourcing campaign</b></em></p>
+              <ul>
+                <li>Publish details on the publicly accessible Challenge.Gov platform at <strong>no cost to your
+                    agency</strong></li>
+                <li>Allow potential solvers to amplify your challenge on social media and via email
+                  through the integrated “Share Challenge” feature</li>
+                <li>View web analytics related to your prize competition page views</li>
+              </ul>
+              <p><em><b>Manage your prize competition or crowdsourcing campaign</b></em></p>
+              <ul>
+                <li>Create and manage your own content directly on the portal–including establishing
+                  “go live” and “submission end” dates and times, posting “announcements”, providing
+                  FAQ’s, and announcing winners</li>
+                <li>Collect and manage participant submissions either directly through the
+                  Challenge.Gov platform or through or through an external challenge site or email</li>
+                <li>Facilitate multi-phase challenges–set which phases allow for open submissions and
+                  which are limited to winners of previous phases, provide phase specific rules and
+                  judging criteria, manage and track entries as they progress from phase to phase</li>
+                <li>Access current and archived listings in a centralized “Challenge Management”
+                  portal</li>
+                <li>Send bulletin messages and important updates to potential solvers who are
+                  following your prize competition or crowdsourcing campaign</li>
+                <li>Send and track communications with participants and other Challenge Managers
+                  through the Message Center</li>
+              </ul>
+              <p><b>Align with prize authority and security requirements</b></p>
+              <ul>
+                <li>Fulfills the America COMPETES Act and American Innovation &amp; Competitiveness
+                  Act (AICA) requirement for announcement of Federal prize competitions on a
+                  publicly accessible Government website.</li>
+                <li>Authority to Operate (ATO) by GSA obtained in September 2021.</li>
+                <li>Provides a FISMA Moderate data security environment in Cloud.gov
+                </li>
+                <li>Adherence to the <a
+                    href="https://digital.gov/resources/21st-century-integrated-digital-experience-act/"
+                    target="_blank">21st Century Integrated Digital Experience Act (IDEA)</a></li>
+              </ul>
+              <p><b>Note:</b> Challenge.Gov highly recommends you engage your agency’s legal counsel for advice
+                regarding the America COMPETES Act and prize competitions.</p>
+
+
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="a3">
+                What resources are available through Challenge.Gov to help my agency?
+              </button>
+            </h4>
+            <div id="a3" class="usa-accordion__content usa-prose" hidden="">
+
+              <br>
+              <p>The Challenge.Gov team is committed to helping you mature and scale the use of prize competitions and
+                crowdsourcing campaigns to advance your agency’s mission. Our services are focused on:</p>
+              <ul>
+                <li>Providing advanced infrastructure, the Challenge.Gov platform, to support the
+                  secure hosting and management of federally sponsored prize competitions and
+                  crowdsourcing campaigns;</li>
+                <li>Empowering the Challenge and Prize Community of Practice to continuously
+                  exchange knowledge, provide support, and facilitate hands-on experiences; and</li>
+                <li>Creating practical toolkits and other resources to support federal prize
+                  competition and crowdsourcing campaign managers to continuously improve
+                  design, management, evaluation, and impact.</li>
+              </ul>
+              <p>To stay up-to-date on upcoming events and resources available to support your work, <a
+                  href="https://public.govdelivery.com/accounts/USGSATTS/subscriber/topics?qsp=USGSATTS_6"
+                  target="_blank"> subscribe to the Challenge.Gov community e-Newsletter</a>.</p>
+
+
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="a4">
+                Is there a network or community of practice to help support my work?
+              </button>
+            </h4>
+            <div id="a4" class="usa-accordion__content usa-prose" hidden="">
+
+
+
+              <br>
+              <p>Yes! The Challenge and Prize Community of Practice (CoP) is a thriving inter-agency community
+                of over 800 dedicated federal employees who are focused on open innovation in government. Our
+                community supports and encourages the use of incentivized competitions and crowdsourcing to
+                attract and engage the public to help meet critical government needs.</p>
+              <p>Members of the Challenge and Prize CoP gather regularly to share ideas, review best practices,
+                and discuss policies and procedures. These convenings are designed to thoughtfully serve the
+                needs of our diverse community member personas. A few examples are:</p>
+              <ul>
+                <li><b>Office Hours:</b> Open sessions to answer your pressing questions about prize
+                  competition design and management, and use of the Challenge.Gov platform.</li>
+                <li><b>Spotlight Chats:</b> Moderated discussions with innovation leaders to highlight
+                  individual success stories and lessons learned.</li>
+                <li><b>Deep Dives:</b> Interactive collaboratives that allow participants to present designs,
+                  test ideas, and refine processes in order to improve the quality of their prize
+                  competition or crowdsourcing campaign.</li>
+                <li><b>Thematic Forums:</b> Mini-summits that bring together open innovation practitioners
+                  and subject matter experts to explore specific topics of interest.</li>
+              </ul>
+              <p>We also host a listserv for members to ask questions, announce new prize competitions, connect
+                with other prize managers, and more. To join the community and access the Challenges Listserv,
+                send an email to <a
+                  href="mailto:challenges-subscribe-request@listserv.gsa.gov">challenges-subscribe-request@listserv.gsa.gov</a>
+                with nothing in the subject (.gov or .mil email required).</p>
+
+
+            </div>
+
+          </div>
+
+
+
+
+
+
+
+
+
+          <h2>Getting Started With the Challenge.Gov platform?</h2>
+
+
+          <div class="usa-accordion">
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="b1">
+                What resources are available through Challenge.Gov to help my agency?
+              </button>
+            </h4>
+            <div id="b1" class="usa-accordion__content usa-prose" hidden="">
+
+
+
+
+              <p>If you’re a federal employee, or contractor with a government email (.gov or .mil), you can use the
+                challenge management features of the Challenge.Gov Challenge Manager Portal to create your agency’s
+                prize competition or crowdsourcing campaign profile. In addition to managing your profile content, you
+                will also be able to set the “publication date” for when it will be visible on the public site.</p>
+
+
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="b2">
+                How do I get access to the Challenge Manager Portal?
+              </button>
+            </h4>
+            <div id="b2" class="usa-accordion__content usa-prose" hidden="">
+
+
+
+              <p>If you’re a federal employee, or contractor with a government email (.gov or .mil), the first step is
+                to set up a Challenge.Gov user account. To do this, click the “Create Account” button in the upper
+                right corner of Challenge.Gov and follow the onscreen prompts. See the step-by-step instructions below
+                for details.</p>
+              <p>Once your account has been created, a member of the Challenge.Gov Support Team will review
+                your account and grant you access to the Challenge Manager portal. Please allow up to two (2)
+                business days for your request to be processed.</p>
+              <p><b>Note:</b> Challenge.Gov uses Login.gov to manage user accounts and system access. <a
+                  href="https://login.gov/what-is-login/" target="_blank">Visit Login.gov
+                  for more information</a>.</p>
+              <ol>
+                <li>Click the “Create account” button in the upper right corner.</li>
+                <li>Click the “Accept and Sign-in” button to acknowledge the terms of use.</li>
+                <li>Click the “Create an account” button.</li>
+                <li>Enter your government email address (.mil or .gov required).</li>
+                <li>Check the box to accept the Login.gov Rules of Use.</li>
+                <li>Click the "Submit" button.</li>
+                <li>Check your email for a message from Login.gov with the subject line “Confirm your
+                  email”.</li>
+                <li>Click the “Confirm email address” button in the email message. This will take you
+                  back to the Login.Gov website.</li>
+                <li>Enter your desired Login.gov / Challenge.Gov password.</li>
+                <li>Click the "Continue" button.</li>
+                <li>Follow the onscreen prompts to set up a second layer of security. Visit Login.gov
+                  help to learn more about each authentication option.</li>
+                <li>Enter the one-time security code from your selected authentication method.</li>
+                <li>Click the “Submit” button.</li>
+                <li>Click the “Agree and continue” button to send your new account request to the Challenge.Gov
+                  Support Team. This will take you back to Challenge.Gov. A “Your account is pending approval” message
+                  will appear on the screen.
+                  <p><b>Note:</b> You will receive an email with a link to directly access the Challenge Manager
+                    Portal once your account has been activated.</p>
+                </li>
+              </ol>
+
+
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="b3">
+                I already have a Challenge.Gov user account. How do I log in?
+              </button>
+            </h4>
+            <div id="b3" class="usa-accordion__content usa-prose" hidden="">
+
+
+              <p>Click the “Login” button in the upper right corner of Challenge.Gov to get started. See the
+                step-by-step instructions below for details.</p>
+              <p><b>Note:</b> Challenge.Gov uses Login.gov to manage user accounts and system access. <a
+                  href="https://login.gov/what-is-login/" target="_blank">Visit Login.gov
+                  for more information</a>.</p>
+              <ol>
+                <li>Click the “Login” button in the upper right corner.</li>
+                <li>Click the “Accept and Sign-in” button to acknowledge the terms of use.</li>
+                <li>Enter the Email address and Password associated with your account.</li>
+                <li>Click "Sign in".</li>
+                <li>Authenticate your account using the security method you selected when you created your account.
+                </li>
+              </ol>
+
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="b4">
+                I’m having trouble logging in to Challenge.Gov. How can I get help accessing my account?
+              </button>
+            </h4>
+            <div id="b4" class="usa-accordion__content usa-prose" hidden="">
+
+
+
+
+
+              <p>If you’re having trouble logging into Challenge.Gov or accessing the Challenge Manager portal, send
+                us an email at <a href="mailto:team@challenge.gov">team@challenge.gov</a> with the subject line
+                “Challenge.Gov Challenge Manager account access issue.” Please be sure to send your email from the
+                government email you used to set up your Challenge.Gov account.</p>
+
+
+            </div>
+
+          </div>
+
+
+          <h2>General Questions About Prize Competitions</h2>
+
+
+          <div class="usa-accordion">
+
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="c1">
+                What is a prize competition?
+              </button>
+            </h4>
+            <div id="c1" class="usa-accordion__content usa-prose" hidden="">
+
+
+              <p>A prize competition (also referred to as a “challenge,” "prize challenge," "competition," "incentive
+                prize" or any combination thereof) is a type of project that allows the public to solve challenges
+                presented by federal agencies and receive awards for the best solutions. The process for running
+                a prize competition boils down to three steps:</p>
+              <ol>
+                <li>Agency announces a prize competition and invites the public to solve it.</li>
+                <li>Participants create and submit solutions to the problem.</li>
+                <li>Agency evaluates solutions and awards prizes to the best ones.</li>
+              </ol>
+              <p>This process may sound similar to grants or contracts, but prize competitions differ in small and
+                significant ways. In grants and contracts, an agency receives proposals to do tasks or research,
+                chooses one entity to participate and then pays the monetary award incrementally for the work
+                to be done. In prize competitions, an agency generally selects a winner or winners based on the
+                work that has been done. In more complex, multi-phase prize competitions, phase winners may be
+                selected as each phase ends. In prize competitions, only the winner(s) receives an award.</p>
+              <p>Unlike contracts which provide detailed specifications of the work that needs to be done, prize
+                competitions define a smaller set of requirements, which allow participants to bring their
+                creative solutions. This can be advantageous when a problem can be solved in many different
+                ways, including ways that the agency is not even aware of. The open innovation approach can
+                entice participation from those who may not have direct expertise in the problem subject matter
+                area but can lend expertise from their diverse backgrounds.</p>
+
+
+
+            </div>
+
+
+          </div>
+
+          <div class="usa-accordion">
+
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="c2">
+                Why should my agency sponsor a prize competition?
+              </button>
+            </h4>
+            <div id="c2" class="usa-accordion__content usa-prose" hidden="">
+
+
+
+              <p>Prize competitions are a great way to spark innovative ideas to address agency challenges. They also
+                offer unique benefits not available through grants or contracts. Specifically, they can:</p>
+              <ul>
+                <li>Lower the barrier to entry for participation and encourage a more diverse pool of
+                  innovators. They open the door to new entrepreneurs who may not have the
+                  necessary background or infrastructure necessary to apply to a federal grant or
+                  contract opportunity.</li>
+                <li>Allow federal agencies to award only the best results. Contracts and grants are
+                  structured to fund work to be completed in the future. However, prize competitions
+                  are a “pay-for-results” model that award those who best accomplish the results,
+                  rather than efforts to accomplish those results. Awarding only the best solutions
+                  sourced through a competitive process, prize competitions are a proven
+                  pay-for-results model. Attract new talent. Prize competitions create opportunities
+                  for solvers to apply their expertise in a new sector and share their talent(s).</li>
+                <li>Raise awareness and seek private sector engagement in problem solving and
+                  innovation. When several partners come together to sponsor a prize competition,
+                  they send an important signal regarding the magnitude of the problem and the
+                  federal government’s interest in developing and advancing solutions.</li>
+                <li>Spur innovation and entrepreneurship. Entrepreneurs often face an uphill battle to
+                  secure funding to move from innovative idea to working solution. Prize competitions
+                  make it easier for agencies to nurture private sector entrepreneurs and startups.
+                  Prize competitions allow the federal government to engage leading edge innovators
+                  and entities in problem solving and innovation.</li>
+              </ul>
+
+
+            </div>
+
+
+          </div>
+
+          <div class="usa-accordion">
+
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="c3">
+                How long does it take to run a prize competition?
+              </button>
+            </h4>
+            <div id="c3" class="usa-accordion__content usa-prose" hidden="">
+
+
+
+              <p>The timeline for a prize competition is influenced by a multitude of factors such as partner needs,
+                budget and staff availability, immediacy of the problem you are addressing, and requirements of the
+                competition, to name a few. If you're managing your first prize competition and it's fairly
+                straightforward, allocate at least eight months from discovery and design to awarding winners. You'll
+                need to extend your expected timeline if the challenge is technically difficult and participants need
+                significant amounts of time to meet the competition requirements; if you incorporate multiple rounds; or
+                if the challenge becomes more administratively complex.</p>
+
+
+            </div>
+
+
+          </div>
+
+          <div class="usa-accordion">
+
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="c4">
+                Do all agencies have legal authority to run a prize competition?
+              </button>
+            </h4>
+            <div id="c4" class="usa-accordion__content usa-prose" hidden="">
+
+
+              <p>The <a href="https://www.congress.gov/bill/111th-congress/house-bill/5116" target="_blank">America
+                  COMPETES Reauthorization Act of 2010 (COMPETES)</a> provides prize authority to the head of each
+                federal agency. In 2017, COMPETES was amended with the passage of the American Innovation and
+                Competitiveness Act of 2017.
+
+              </p>
+              <p>As described in the <a
+                  href="https://obamawhitehouse.archives.gov/sites/default/files/omb/assets/memoranda_2010/m10-11.pdf"
+                  target="_blank">M-10-11 memo "Guidance on the Use of Challenges and Prizes to Promote Open
+                  Government"</a> several considerations are applicable when determining the authority under which a
+                prize competition may be conducted at an agency. These considerations and approaches may include direct
+                statutory to conduct prizes, grants and cooperative agreements, procurement authority, other transaction
+                authority, or partnership authority. </p>
+
+
+            </div>
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

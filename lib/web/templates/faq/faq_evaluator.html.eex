@@ -1,0 +1,195 @@
+<div>
+  <div class="cms-sec-wrap">
+    <div class="grid-container usa-section">
+      <div class="grid-row">
+        <div class="usa-layout-docs__main desktop:grid-col-12 usa-prose">
+
+          <h1 class="margin-bottom-0">Public Evaluator FAQs</h1>
+          <p>Click on a question below to explore.</p>
+          <h2>General</h2>
+
+
+          <div class="usa-accordion">
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="a1">
+                What is Challenge.Gov?
+              </button>
+            </h4>
+            <div id="a1" class="usa-accordion__content usa-prose" hidden="">
+              <p>Challenge.Gov, managed by Technology Transformation Services (TTS), within the General Services
+                Administration, is the official hub for prize competitions across the U.S. federal government. Through
+                this platform, federal agencies engage public solvers in prize competitions and crowdsourcing campaigns
+                to identify innovative solutions to important issues.</p>
+
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="a2">
+                What is a prize competition?
+              </button>
+            </h4>
+            <div id="a2" class="usa-accordion__content usa-prose" hidden="">
+              <p>A prize competition (also referred to as a “challenge,” "prize challenge," "competition," "incentive
+                prize" or any combination thereof) is a way for federal agencies to crowdsource and engage public
+                innovators directly to find interesting ideas or solutions to important problems.</p>
+              <p>Since 2010, the U.S. government has run over 1,600 prize competitions - engaging public solvers ranging
+                from students and hobbyists to small business owners and academic researchers. Longitude and ship
+                navigation, Lindbergh’s transatlantic flight, even initial designs for the U.S. Capitol and White
+                House—all were the result of open prize competitions. Even those self-driving vehicles got their start
+                in federal prize competitions too!</p>
+              <p>More recently, challenges have produced concepts for the next “lunar loo” (space toilet), an improved
+                digital wallet user interface, protecting fish from water infrastructure, opioid detection in
+                international mail, and “getting out the count” for the census.</p>
+
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="a3">
+                Who can participate?
+              </button>
+            </h4>
+            <div id="a3" class="usa-accordion__content usa-prose" hidden="">
+              <p>Challenge.Gov is open to the general public. Through this site you can:</p>
+              <ul>
+                <li>Learn about current and past federal prize competitions.</li>
+                <li>Follow a prize competition - allowing you to get important updates and announcements directly to
+                  your email.</li>
+                <li>Share about a prize competition on social media or via email.</li>
+                <li>Submit a solution directly to a prize competition and more!</li>
+              </ul>
+              <p>Rules for participating and submitting solutions to prize competitions and crowdsourcing campaigns
+                vary. Check the guidelines posted on an individual prize competition to determine if you’re eligible to
+                participate.</p>
+
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="a4">
+                Where can I learn more?
+              </button>
+            </h4>
+            <div id="a4" class="usa-accordion__content usa-prose" hidden="">
+              <p>Stay up to date with the latest news, updates, and challenges posted by subscribing to the
+                Challenge.Gov newsletter. <a
+                  href="https://public.govdelivery.com/accounts/USGSATTS/subscriber/new?topic_id=USGSATTS_41"> Subscribe
+                  to the newsletter</a>.</p>
+
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="a5">
+                Getting Started with the Challenge.Gov Platform
+              </button>
+            </h4>
+            <div id="a5" class="usa-accordion__content usa-prose" hidden="">
+              <summary><em><b>Why should I create an account and join Challenge.Gov?</b></em></summary>
+              <br>
+              <p>Challenge.Gov is a crowdsourcing platform that allows the federal government to engage with the public
+                to identify innovative solutions to important issues. When you create a Challenge.Gov account, you’ll be
+                able to:</p>
+              <ul>
+                <li>Track which prize competitions you are following.</li>
+                <li>Save prize competitions to a dashboard for easy reference.</li>
+                <li>Submit a solution to a prize competition that is collecting submissions via the Challenge.Gov
+                  portal.</li>
+                <li>Review and edit your submissions until the close date and time (for prize competitions using the
+                  Challenge.Gov portal).</li>
+              </ul>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+
+          <h2>Account Management</h2>
+
+
+          <div class="usa-accordion">
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="b1">
+                Getting Started with the Challenge.Gov Platform
+              </button>
+            </h4>
+            <div id="b1" class="usa-accordion__content usa-prose" hidden="">
+              <p>Challenge.Gov is a crowdsourcing platform that allows the federal government to engage with the public
+                to identify innovative solutions to important issues. When you create a Challenge.Gov account, you’ll be
+                able to:</p>
+              <ul>
+                <li>Track which prize competitions you are following.</li>
+                <li>Save prize competitions to a dashboard for easy reference.</li>
+                <li>Submit a solution to a prize competition that is collecting submissions via the Challenge.Gov
+                  portal.</li>
+                <li>Review and edit your submissions until the close date and time (for prize competitions using the
+                  Challenge.Gov portal).</li>
+              </ul>
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="b2">
+                How do I create a Challenge.Gov user account?
+              </button>
+            </h4>
+            <div id="b2" class="usa-accordion__content usa-prose" hidden="">
+              <p>Click the “Create Account” button in the upper right corner of Challenge.Gov to get started. See the
+                step-by-step instructions below for details. Note: Challenge.Gov uses Login.gov to manage user accounts
+                and system access. <a href="https://login.gov/what-is-login/">Visit Login.gov for more information</a>.
+              </p>
+              <ol>
+                <li>Click the “Create Account” button in the upper right corner.</li>
+                <li>Click the “Accept and Sign-in” button to acknowledge the terms of use.</li>
+                <li>Click the “Create an account” button.</li>
+                <li>Enter your email address.</li>
+                <li>Check the box to accept the <a href="https://www.login.gov/policy/rules-of-use/">Login.gov Rules of
+                    Use</a>.</li>
+                <li>Click the "Submit" button.</li>
+                <li>Check your email for a message from Login.gov with the subject line “Confirm your email”.</li>
+                <li>Click the “Confirm email address” button in the email message. This will take you back to the
+                  Login.Gov website.</li>
+                <li>Enter your desired Login.gov / Challenge.Gov password.</li>
+                <li>Click the "Continue" button.</li>
+                <li>Follow the onscreen prompts to set up a second layer of security. Visit <a
+                    href="https://www.login.gov/help/get-started/authentication-options/">Login.gov help</a> to learn
+                  more about each authentication option.</li>
+                <li>Enter the one-time security code from your selected authentication method.</li>
+                <li>Click the “Submit” button.</li>
+                <li>Click the “Agree and continue” button to confirm and activate your account</li>
+              </ol>
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="b3">
+                I already have a Challenge.Gov user account. How do I log in
+              </button>
+            </h4>
+            <div id="b3" class="usa-accordion__content usa-prose" hidden="">
+              <p>Click the “Login” button in the upper right corner of Challenge.Gov to get started. See the
+                step-by-step instructions below for details.</p>
+              <p>Note: Challenge.Gov uses Login.gov to manage user accounts and system access. Visit <a
+                  href="https://login.gov/what-is-login/">Login.gov</a> for more information.</p>
+              <ol>
+                <li>Click "Login" in the upper right corner</li>
+                <li>Click "Accept and Sign-in" to acknowledge the terms of use</li>
+                <li>Enter the Email address and Password associated with your account</li>
+                <li>Click "Sign in"</li>
+                <li>Authenticate your account using the security method you selected when you created your account.</li>
+              </ol>
+            </div>
+            <h4 class="usa-accordion__heading">
+              <button type="button" class="usa-accordion__button" aria-expanded="false" aria-controls="b4">
+                I’m having trouble logging in to Challenge.Gov. How can I get help accessing my account?
+              </button>
+            </h4>
+            <div id="b4" class="usa-accordion__content usa-prose" hidden="">
+              <p>If you’re having trouble logging into Challenge.Gov, send us an email at <a
+                  href="mailto:team@challenge.gov">team@challenge.gov</a> with the subject line “Challenge.Gov solver
+                account access issue.” Please be sure to send your email from the email account you used to set up your
+                Challenge.Gov account.</p>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

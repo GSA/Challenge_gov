@@ -1,0 +1,85 @@
+<main class="grid-container">
+  <div class="grid-col padding-top-2">
+    <h1>Resources Evaluator</h1>
+  </div>
+
+  <div class="padding-top-1">
+    <h3>Find resources and helpful information</h3>
+  </div>
+  <div>
+    <p class="padding-bottom-2">Here space for longer description to introduce 3-5 easily scanable bullet points.</p>
+  </div>
+
+  <div class=" display-flex flex-row padding-bottom-2">
+    <div class="help-card-icon text-center left-section">
+      <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+        <use xlink:href="/assets/img/sprite.svg#help"></use>
+      </svg>
+    </div>
+    <div class="margin-left-2 right-section">
+      <b>Evaluation & Submission Questions</b>
+      <span class="line-height-mono-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam finibus libero
+        diam, ac aliquam orci
+        placerat nec. In vitae maximus neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
+        cubilia curae; Donec elementum erat eu tortor tincidunt, quis condimentum purus malesuada.</span><br><br>
+    </div>
+  </div>
+
+  <div class=" display-flex flex-row padding-bottom-2">
+    <div class="help-card-icon text-center left-section">
+      <svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+        <use xlink:href="/assets/img/sprite.svg#mail"></use>
+      </svg>
+    </div>
+    <div class="margin-left-2 right-section">
+      <b>Challenge.gov Questions</b>
+      <span class="line-height-mono-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam finibus libero
+        diam, ac aliquam orci
+        placerat nec. In vitae maximus neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
+        cubilia curae; Donec elementum erat eu tortor tincidunt, quis condimentum purus malesuada.</span><br><br>
+    </div>
+  </div>
+
+  <div class="padding-2">
+
+    <hr>
+
+  </div>
+
+
+  <div class="grid-row grid-gap-2 padding-4">
+
+    <!-- user guide -->
+    <div class="desktop:grid-col-6 margin-y-1">
+      <div class="usa-card__container  padding-2">
+
+        <div class="margin-left-2 right-section">
+          <h2 class="font-weight-bold">User Guide</h2>
+          <span>Our user guide has information on prize competitions, crowdsourcing, and use of the
+            Challenge.Gov platform.</span><br><br>
+          <a href="/help" class="usa-button usa-button margin-bottom-0"><span
+              style="color: #ffffff;">User Guide</span></a>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- faqs -->
+    <div class="desktop:grid-col-6 margin-y-1">
+      <div class="usa-card__container padding-2">
+
+        <div class="margin-left-2 right-section">
+          <h2 class="font-weight-bold">FAQs</h2>
+          <span>Check out our frequently asked questions concerning challenge and submission
+            management.</span><br><br><br>
+          <a href="/faq" class="usa-button usa-button margin-bottom-0"><span
+              style="color: #ffffff;">FAQs</span></a>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+</main>

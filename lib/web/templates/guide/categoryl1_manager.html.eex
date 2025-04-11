@@ -1,0 +1,97 @@
+<div class="grid-row padding-4">
+  <div class="tablet:grid-col-2 display-none desktop:display-block">
+
+    <div class="grid-col ">
+      <h1>User Guide</h1>
+
+      <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Resources", route: Routes.help_path(Web.Endpoint, :index)},
+      %{text: "User Guide"},
+      ])%>
+    </div>
+    </div>
+
+
+    <nav aria-label="Side navigation,,">
+      <ul class="usa-sidenav padding-right-6">
+
+        <li class="usa-sidenav__item">
+          <a href="javascript:void(0);" >Challenge.gov Account</a>
+
+        </li>
+        <li class="usa-sidenav__item">
+          <a href="javascript:void(0);">Challenge Management</a>
+        </li>
+        <li class="usa-sidenav__item">
+          <a href="javascript:void(0);">Submission Management</a>
+        </li>
+         <li class="usa-sidenav__item">
+          <a href="javascript:void(0);" class="usa-current">Evaluation Management</a>
+        </li>
+         <li class="usa-sidenav__item">
+          <a href="javascript:void(0);">Analytics</a>
+        </li>
+         <li class="usa-sidenav__item">
+          <a href="javascript:void(0);">Message Center</a>
+        </li>
+      </ul>
+    </nav>
+
+
+
+
+
+  </div>
+  <div class="tablet:grid-col-8">
+
+    <div class="grid-col ">
+      <h1>Evaluation Management</h1>
+    </div>
+
+    <div>
+      <p class="padding-bottom-2 line-height-mono-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam finibus libero diam, ac aliquam orci placerat nec. In vitae maximus neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec elementum erat eu tortor tincidunt, quis condimentum purus malesuada. Nullam pulvinar pulvinar dui, eu mollis augue sodales sed. Aliquam orci ex, mollis eget maximus eget, dictum sed est. Pellentesque suscipit efficitur neque, vel dapibus nisi finibus eu. Nam hendrerit semper magna, vitae accumsan odio imperdiet vitae. Aliquam vitae ex eros.</p>
+    </div>
+
+ <div class="grid-col padding-top-2">
+      <h2>Heading 2</h2>
+    </div>
+     <div>
+      <p class="padding-bottom-2 line-height-mono-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam finibus libero diam, ac aliquam orci placerat nec. In vitae maximus neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec elementum erat eu tortor tincidunt, quis condimentum purus malesuada. Nullam pulvinar pulvinar dui, eu mollis augue sodales sed. Aliquam orci ex, mollis eget maximus eget, dictum sed est. Pellentesque suscipit efficitur neque, vel dapibus nisi finibus eu. Nam hendrerit semper magna, vitae accumsan odio imperdiet vitae. Aliquam vitae ex eros.</p>
+    </div>
+
+     <div class="grid-col padding-top-2">
+      <h3>Heading 3</h3>
+    </div>
+     <div>
+      <p class="padding-bottom-2 line-height-mono-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam finibus libero diam, ac aliquam orci placerat nec. In vitae maximus neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec elementum erat eu tortor tincidunt, quis condimentum purus malesuada. Nullam pulvinar pulvinar dui, eu mollis augue sodales sed. Aliquam orci ex, mollis eget maximus eget, dictum sed est. Pellentesque suscipit efficitur neque, vel dapibus nisi finibus eu. Nam hendrerit semper magna, vitae accumsan odio imperdiet vitae. Aliquam vitae ex eros.</p>
+    </div>
+    <div>
+
+      <img src="<%= Routes.static_url(Web.Endpoint, "/images/HeroBanner.png")%>"/>
+    </div>
+
+ <div class="grid-col padding-top-2">
+      <h2>Heading 2</h2>
+    </div>
+     <div>
+     <p class="padding-bottom-2 line-height-mono-4">
+
+NOTE: Feature is not available for challenges that redirect to an external site.
+
+</p>
+<ul>
+<ol>1. From challenge details page, click Share in the general information section of the page.</ol>
+<ol>2. Select the desired platform you wish to share to. You may be prompted to log into your selected platform account.</ol>
+<ol>3. Pre-populated text will appear with a link to the challenge listing and recommended hashtags. Add a personal note about the challenge and why you are sharing it.</ol>
+<ol>4. Click the button to share:</ol>
+<ol>• Facebook => "Post to Facebook"</ol>
+<ol>• LinkedIn => "Share in a post" or "Send as private message"</ol>
+<ol>• Twitter => "Tweet"</ol>
+<ol>• Email => "Send"</ol>
+</ul>
+    </div>
+
+
+    </div>
+  </div>

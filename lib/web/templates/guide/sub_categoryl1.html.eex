@@ -1,0 +1,76 @@
+<div class="grid-row padding-4">
+  <div class="tablet:grid-col-2">
+
+    <div class="grid-col ">
+      <h1>User Guide</h1>
+
+      <div class="container-fluid">
+    <%= SharedView.render_breadcrumbs([
+      %{text: "Resources", route: Routes.help_path(Web.Endpoint, :index)},
+      %{text: "User Guide"},
+      ])%>
+    </div>
+    </div>
+
+
+    <nav aria-label="Side navigation,,">
+      <ul class="usa-sidenav padding-right-6">
+
+        <li class="usa-sidenav__item">
+          <a href="/guide/categoryl1" class="usa-current">Parent Category 1</a>
+          <ul class="usa-sidenav__sublist">
+            <li class="usa-sidenav__item">
+              <a href="javascript:void(0); " class="usa-current">Child Category 1</a>
+            </li>
+            <li class="usa-sidenav__item">
+              <a href="javascript:void(0);">Child Category 2</a>
+            </li>
+            <li class="usa-sidenav__item">
+              <a href="javascript:void(0);">Child Category 3</a>
+            </li>
+          </ul>
+        </li>
+        <li class="usa-sidenav__item">
+          <a href="javascript:void(0);">Parent Category 2</a>
+        </li>
+        <li class="usa-sidenav__item">
+          <a href="javascript:void(0);">Parent Category 3</a>
+        </li>
+      </ul>
+    </nav>
+
+
+
+
+
+  </div>
+  <div class="tablet:grid-col-6">
+
+    <div class="grid-col padding-top-1">
+      <h2>Child Category</h2>
+    </div>
+  <p class="line-height-mono-4">Nulla venenatis placerat ex, sit amet auctor lorem feugiat condimentum. Interdum et malesuada fames ac ante ipsum
+      primis in faucibus. Suspendisse ornare viverra libero, nec condimentum leo iaculis non. Nam suscipit viverra erat
+      vel pretium. Nunc in lacinia arcu. Nam feugiat non nibh at malesuada. Quisque iaculis augue sed sem efficitur, id
+    </p>
+
+    <div>
+      <p class="line-height-mono-4">This guide provides step-by-step instructions for evaluators on how use of
+        Challeng.gov. Select a category below to explore the resources.</p>
+    </div>
+
+
+
+    <h3>Heading 3</h3>
+    <p class="line-height-mono-4">Nulla venenatis placerat ex, sit amet auctor lorem feugiat condimentum. Interdum et malesuada fames ac ante ipsum
+      primis in faucibus. Suspendisse ornare viverra libero, nec condimentum leo iaculis non. Nam suscipit viverra erat
+      vel pretium. Nunc in lacinia arcu. Nam feugiat non nibh at malesuada. Quisque iaculis augue sed sem efficitur, id
+    </p>
+
+     <h3>Heading 3</h3>
+    <p class="line-height-mono-4">Nulla venenatis placerat ex, sit amet auctor lorem feugiat condimentum. Interdum et malesuada fames ac ante ipsum
+      primis in faucibus. Suspendisse ornare viverra libero, nec condimentum leo iaculis non. Nam suscipit viverra erat
+      vel pretium. Nunc in lacinia arcu. Nam feugiat non nibh at malesuada. Quisque iaculis augue sed sem efficitur, id
+    </p>
+  </div>
+</div>

@@ -162,6 +162,14 @@ defmodule Web.Router do
 
     get("/help", HelpController, :index)
 
+    get("/faq", FaqController, :index)
+
+    get("/guide", GuideController, :index)
+
+    get("/guide/categoryl1", GuideController, :categoryl1)
+
+    get("/guide/categoryl1/subcategoryl1", GuideController, :sub_categoryl1)
+
     get("/solver_help", HelpController, :solver_index)
 
     get("/exports/challenges/:id/:format", ExportController, :export_challenge)
