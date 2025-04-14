@@ -107,7 +107,6 @@ defmodule Web.Router do
       end
 
       resources("/submissions", SubmissionController, only: [:index, :new, :create])
-      resources("/save_challenge", SavedChallengeController, only: [:new, :create])
     end
 
     get("/challenges/:id/edit/:section", ChallengeController, :edit, as: :challenge)
@@ -162,8 +161,6 @@ defmodule Web.Router do
 
     resources("/documents", DocumentController, only: [:delete])
     resources("/events", EventController, only: [:edit, :update, :delete])
-
-    resources("/saved_challenges", SavedChallengeController, only: [:index, :delete])
 
     get("/help", HelpController, :index)
 
