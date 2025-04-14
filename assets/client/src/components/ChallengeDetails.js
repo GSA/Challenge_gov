@@ -323,7 +323,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
       return (
         <img
           className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
-          src={challenge.logo}
+          src={`${imageBase && imageBase !== 'null' ? imageBase : ''}${challenge.logo || ''}`}
           alt={`Challenge image for \"${challenge.title}\"`}
         />
       );
@@ -362,7 +362,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                             <img
                               key={index}
                               className="agency-logo"
-                              src={partner.logo}
+                              src={`${imageBase && imageBase !== 'null' ? imageBase : ''}${partner.logo || ''}`}
                               alt={`Partner logo for ${partner.name}`}
                             />
                           );

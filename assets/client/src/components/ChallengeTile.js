@@ -130,7 +130,7 @@ export const ChallengeTile = ({challenge, preview}) => {
         </div>
       );
     }
-  
+
     if (challenge.logo) {
       return (
         <div className="image_wrapper">
@@ -142,7 +142,7 @@ export const ChallengeTile = ({challenge, preview}) => {
         </div>
       );
     }
-  
+
     return (
       <div className="image_wrapper">
         <img
