@@ -46,6 +46,19 @@ defmodule Web.Api.SessionController do
     verify_external_login_request(conn)
   end
 
+  def external_renew_session(conn, _opts) do
+    login_secret = conn |> get_req_header("login-secret") |> List.first()
+
+    if login_secret == System.get_env("LOGIN_SECRET") do
+      conn
+      |> put_session(:session_timeout_at, new_session_timeout_at(Security.timeout_interval()))
+      |> configure_session(renew: true)
+      |> send_resp(200, "Success")
+    else
+      send_resp(conn, 401, "Unauthorized")
+    end
+  end
+
   defp verify_external_login_request(conn) do
     login_secret = conn |> get_req_header("login-secret") |> List.first()
     remote_ip = conn |> get_req_header("remote-ip") |> List.first()
