@@ -28,6 +28,12 @@ jobs:
     - name: Install Snyk
       run: npm install -g snyk
 
+    - name: Install Yarn
+      run: npm install -g yarn
+
+    - name: Install Deps
+      run: cd assets && yarn
+
     - name: Authenticate Snyk
       run: snyk auth ${{ secrets.SNYK_TOKEN }}
 
