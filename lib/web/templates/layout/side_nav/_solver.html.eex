@@ -17,14 +17,6 @@
         </svg>
       <% end %>
     </li>
-    <li class="usa-sidenav__item">
-      <%= link(to: Routes.saved_challenge_path(@conn, :index), class: "#{tab_selected(@conn, "saved_challenges")}") do %>
-        <span class="padding-left-1">Saved challenges</span>
-        <svg class="usa-icon usa-challenge-menu float-left" aria-hidden="true" focusable="false" role="img">
-        <use xlink:href="/assets/img/sprite.svg#emoji_events"></use>
-        </svg>
-      <% end %>
-    </li>
   </ul>
 </nav>
 <nav class="margin-top-4">

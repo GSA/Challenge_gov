@@ -817,9 +817,9 @@ defmodule Web.ChallengeView do
   end
 
   def public_details_root_url() do
-    public_root_url = Application.get_env(:challenge_gov, :public_root_url)
+    public_root_url = Application.get_env(:challenge_gov, :public_root_ruby_url)
 
-    "#{public_root_url}/?challenge="
+    "#{public_root_url}/challenges/"
   end
 
   def public_details_url(challenge, opts \\ []) do
@@ -830,7 +830,7 @@ defmodule Web.ChallengeView do
 
     url =
       if opts[:tab] do
-        url <> "&tab=#{opts[:tab]}"
+        url <> "##{opts[:tab]}"
       else
         url
       end

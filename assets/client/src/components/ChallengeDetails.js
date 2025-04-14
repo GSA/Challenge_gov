@@ -323,7 +323,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
       return (
         <img
           className={challenge.upload_logo ? "custom-logo" : "challenge-logo-details-page"}
-          src={challenge.logo}
+          src={`${imageBase && imageBase !== 'null' ? imageBase : ''}${challenge.logo || ''}`}
           alt={`Challenge image for \"${challenge.title}\"`}
         />
       );
@@ -362,7 +362,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                             <img
                               key={index}
                               className="agency-logo"
-                              src={partner.logo}
+                              src={`${imageBase && imageBase !== 'null' ? imageBase : ''}${partner.logo || ''}`}
                               alt={`Partner logo for ${partner.name}`}
                             />
                           );
@@ -407,7 +407,7 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                 <a className="follow__btn" href={`${apiUrl}/public/previews/challenges?challenge=${encodeURIComponent(challenge.uuid)}&print=true`} target="_blank" rel="noopener noreferrer">
                   <span className="details__btn">
                       <svg className="usa-icon" aria-hidden="true" focusable="false" role="img"
-                           style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
+                          style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
                           <title id="print-challenge">ChallengeGov print challenge</title>
                           <use xlinkHref="assets/uswds/img/sprite.svg#print"></use>
                       </svg>
