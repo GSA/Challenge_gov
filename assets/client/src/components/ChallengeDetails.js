@@ -404,10 +404,10 @@ export const ChallengeDetails = ({challenge, challengePhases, preview, print, ta
                 </div>
               }
               {!print &&
-                <a className="follow__btn" href={`${apiUrl}/public/previews/challenges?challenge=${encodeURIComponent(challenge.uuid)}&print=true`} target="_blank" rel="noopener noreferrer">
+                <a className="follow__btn" href={`${apiUrl}/public/previews/challenges/${challenge.custom_url || challenge.id}?print=true`} target="_blank" rel="noopener noreferrer">
                   <span className="details__btn">
                       <svg className="usa-icon" aria-hidden="true" focusable="false" role="img"
-                           style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
+                          style={{fill: "#FA9441", height: "21px", width: "21px", position: "relative", top: "5px", right: "5px"}}>
                           <title id="print-challenge">ChallengeGov print challenge</title>
                           <use xlinkHref="assets/uswds/img/sprite.svg#print"></use>
                       </svg>

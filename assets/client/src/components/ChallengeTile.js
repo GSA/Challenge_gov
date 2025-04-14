@@ -101,45 +101,58 @@ export const ChallengeTile = ({challenge, preview}) => {
 
   const challengeTileUrl = (challenge, preview) => {
     if (challenge.external_url) {
-      return challenge.external_url
+      return challenge.external_url;
     } else if (preview) {
-      return "#"
+      return "#";
     } else {
-      return `${publicUrl}/?challenge=${challenge.custom_url || challenge.id}`
+      return challenge.is_archived 
+        ? `/challenges/archived/${challenge.custom_url || challenge.id}` 
+        : `/challenges/${challenge.custom_url || challenge.id}`;
     }
-  }
+  };
 
   const renderTileLogo = () => {
-    if (challenge.imported && challenge.sub_status === "archived" && challenge.logo.includes("challenge-logo-2_1")) {
+    const buildFullUrl = (path) => {
+      if (!path) return null;
+      const baseUrl = imageBase.replace(/\/$/, '');
+      const imagePath = path.startsWith('/') ? path.slice(1) : path;
+      return `${baseUrl}/${imagePath}`;
+    };
+  
+    if (challenge.imported && challenge.sub_status === "archived" && challenge.logo?.includes("challenge-logo-2_1")) {
       return (
         <div className="agency_image_wrapper">
           <img
             className="agency-logo"
-            src={`${imageBase}${encodeURIComponent(challenge.agency_logo)}`}
+            src={buildFullUrl(challenge.agency_logo)}
             alt={truncateString(`Agency Logo: ${challenge.agency_name}`, 90)}
           />
         </div>
-      )
+      );
     }
-
+  
     if (challenge.logo) {
       return (
         <div className="image_wrapper">
-          <img src={challenge.logo} alt={truncateString(challenge.agency_name, 90)} className="width-full" />
+          <img 
+            src={buildFullUrl(challenge.logo)}
+            alt={truncateString(challenge.agency_name, 90)} 
+            className="width-full" 
+          />
         </div>
-     )
+      );
     }
-
+  
     return (
       <div className="image_wrapper">
         <img
-            className="agency-logo"
-            src={`${imageBase}${encodeURIComponent(challenge.agency_logo)}`}
-            alt={truncateString(`Agency Logo: ${challenge.agency_name}`, 90)}
+          className="agency-logo"
+          src={buildFullUrl(challenge.agency_logo)}
+          alt={truncateString(`Agency Logo: ${challenge.agency_name}`, 90)}
         />
       </div>
-    )
-  }
+    );
+  };
 
   return (
     challenge ? (
