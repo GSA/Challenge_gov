@@ -830,7 +830,7 @@ defmodule Web.ChallengeView do
 
     url =
       if opts[:tab] do
-        url <> "&tab=#{opts[:tab]}"
+        url <> "##{opts[:tab]}"
       else
         url
       end
