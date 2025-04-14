@@ -4,10 +4,11 @@ defmodule Web.AccessView do
 
   def recertification_heading_by_status(user) do
     {:ok, log} = certification_log(user)
+    assigns = %{log: log, user: user}
 
     case user.status do
       "decertified" ->
-        ~E"""
+        ~H"""
           <div class="content-header">
 
             <div class="usa-alert usa-alert--warning usa-alert--no-icon margin-3">
@@ -44,7 +45,7 @@ defmodule Web.AccessView do
         """
 
       "active" ->
-        ~E"""
+        ~H"""
           <div class="content-header">
             <div class="container-fluid">
 

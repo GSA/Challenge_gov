@@ -4,19 +4,19 @@ defmodule ChallengeGov.LoginGov do
   """
 
   use HTTPoison.Base
-
   alias ChallengeGov.LoginGov.Token
+  require Logger
 
   def get_well_known_configuration(idp_authorize_url) do
     idp_authorize_url
     |> uri_join("/.well-known/openid-configuration")
-    |> get()
+    |> get([])
     |> handle_response("Sorry, could not fetch well known configuration")
   end
 
   def get_public_key(jwks_uri) do
     jwks_uri
-    |> get()
+    |> get([])
     |> handle_response("Sorry, could not fetch public key")
     |> case do
       {:ok, body} -> {:ok, body |> Map.fetch!("keys") |> List.first()}
