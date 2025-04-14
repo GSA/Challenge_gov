@@ -83,7 +83,7 @@ defmodule Web.ChallengeViewTest do
         )
 
       assert ChallengeView.public_details_url(challenge, tab: "rules") ==
-               "#{@public_root_ruby_url}/challenges/test_custom_url&tab=rules"
+               "#{@public_root_ruby_url}/challenges/test_custom_url#rules"
     end
   end
 end
