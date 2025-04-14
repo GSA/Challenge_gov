@@ -242,7 +242,7 @@ export const ChallengeTiles = ({ data, loading, isArchived, selectedYear, handle
         if (challenge.external_url) {
           formattedUrl = cleanUpString(challenge.external_url);
         } else if (challenge.custom_url) {
-          formattedUrl = `https://www.challenge.gov/?challenge=${cleanUpString(challenge.custom_url)}`;
+          formattedUrl = `https://www.challenge.gov/challenges/${cleanUpString(challenge.custom_url)}`;
         }
         cleanedChallenge.formattedUrl = formattedUrl;
 
