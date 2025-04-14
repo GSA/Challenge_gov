@@ -7,6 +7,7 @@ defmodule Web.ChallengeViewTest do
   alias Web.ChallengeView
 
   @public_root_url Application.compile_env(:challenge_gov, :public_root_url)
+  @public_root_ruby_url Application.compile_env(:challenge_gov, :public_root_ruby_url)
 
   describe "construct agency name from challenge" do
     test "successfully with no sub agency" do
@@ -52,7 +53,7 @@ defmodule Web.ChallengeViewTest do
         ChallengeHelpers.create_challenge(%{user_id: user.id, agency_id: lead_agency.id}, user)
 
       assert ChallengeView.public_details_url(challenge) ==
-               "#{@public_root_url}/?challenge=#{challenge.id}"
+               "#{@public_root_ruby_url}/challenges/#{challenge.id}"
     end
 
     test "success: with custom_url" do
@@ -67,7 +68,7 @@ defmodule Web.ChallengeViewTest do
         )
 
       assert ChallengeView.public_details_url(challenge) ==
-               "#{@public_root_url}/?challenge=test_custom_url"
+               "#{@public_root_ruby_url}/challenges/test_custom_url"
     end
 
     test "success: with custom url and tab" do
@@ -82,7 +83,7 @@ defmodule Web.ChallengeViewTest do
         )
 
       assert ChallengeView.public_details_url(challenge, tab: "rules") ==
-               "#{@public_root_url}/?challenge=test_custom_url&tab=rules"
+               "#{@public_root_ruby_url}/challenges/test_custom_url&tab=rules"
     end
   end
 end
