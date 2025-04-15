@@ -315,11 +315,11 @@ defmodule ChallengeGov.Submissions do
   def is_allowed_to_view_submission?(user = %{role: "challenge_manager"}),
     do: Security.validate_gov_mil?(user.email)
 
-  def is_allowed_to_view_submission?(user = %{role: "super_admin"}), do: true
+  def is_allowed_to_view_submission?(_user = %{role: "super_admin"}), do: true
 
-  def is_allowed_to_view_submission?(user = %{role: "admin"}), do: true
+  def is_allowed_to_view_submission?(_user = %{role: "admin"}), do: true
 
-  def is_allowed_to_view_submission?(user = %{role: "solver"}), do: true
+  def is_allowed_to_view_submission?(_user = %{role: "solver"}), do: true
 
   defp send_submission_review_email(user, phase, submission) do
     user

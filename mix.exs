@@ -78,8 +78,8 @@ defmodule ChallengeGov.MixProject do
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 3.1.0", override: true},
       {:phoenix_live_reload, "~> 1.3", only: :dev},
-      {:phoenix_live_view, "~> 0.15.4", override: true},
-      {:phoenix_pubsub, "~> 2.0"},
+      {:phoenix_live_view, "~> 0.17.7", override: true},
+      {:phoenix_pubsub, "~> 2.1.3"},
       {:plug_cowboy, "~> 2.0"},
       {:poison, "~> 3.0"},
       {:porcelain, "~> 2.0"},
@@ -92,9 +92,9 @@ defmodule ChallengeGov.MixProject do
       {:sweet_xml, "~> 0.6.6"},
       {:tesla, "~> 1.12.1"},
       {:text_delta, "~> 1.1.0"},
-      {:timex, "~> 3.5"},
+      {:timex, "~> 3.7.11"},
       {:waffle, "~> 1.1.5"},
-      {:waffle_ecto, "~> 0.0.11"},
+      {:waffle_ecto, "~> 0.0.12"},
       {:wallaby, "~> 0.29.0", runtime: false, only: :test},
       {:xml_builder, "~> 2.1.1", override: true}
     ]
