@@ -288,7 +288,7 @@ defmodule Web.DashboardView do
           description: "View my challenges submissions."
         ),
         render("_card_link.html",
-          to: Routes.saved_challenge_path(Endpoint, :index),
+          to: ChallengeGov.Helpers.get_eval_url("solver/saved_challenges"),
           target: "",
           icon: my_icon("emoji_events"),
           title: "My saved challenges",

@@ -1,5 +1,5 @@
 <div class="bg-primary-darker w-full display-flex flex-justify-center desktop:flex-justify-end padding-1 font-body-3xs desktop:font-body-2xs text-white">
-  <%= link(to:  Routes.dashboard_path(@conn, :index), class: "display-flex flex-align-center flex-row margin-x-3
+  <%= link(to: ChallengeGov.Helpers.get_eval_url("solver/dashboard"), class: "display-flex flex-align-center flex-row margin-x-3
           text-white text-no-underline text-bold
           width-9 tablet:width-auto tablet:text-no-wrap text-center")  do %>
       <img class="usa-icon--size-4 icon-white margin-right-1" alt="" src="/assets/img/usa-icons/grid_view.svg">
