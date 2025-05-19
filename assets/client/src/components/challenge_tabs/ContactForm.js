@@ -22,8 +22,15 @@ export const ContactForm = ({ challenge, preview }) => {
     return
   }
 
-  
-  fetch(apiUrl + `/api/challenges/${challenge.id}/contact_form`, {method: 'POST', body: { email, body }})
+
+  fetch(apiUrl + `/api/challenges/${challenge.id}/contact_form`,
+        {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({email: email, body: body })
+        })
     .then(response => response.json())
     .then((res) => {
       setIsOpen(true)
