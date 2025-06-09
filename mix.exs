@@ -90,7 +90,7 @@ defmodule ChallengeGov.MixProject do
       {:stein, "0.5.4"},
       {:stein_storage, "~> 0.1"},
       {:sweet_xml, "~> 0.6.6"},
-      {:tesla, "~> 1.12.1"},
+      {:tesla, "~> 1.14.3"},
       {:text_delta, "~> 1.1.0"},
       {:timex, "~> 3.5"},
       {:waffle, "~> 1.1.5"},
