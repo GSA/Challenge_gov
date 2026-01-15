@@ -85,7 +85,7 @@ defmodule ChallengeGov.MixProject do
       {:porcelain, "~> 2.0"},
       {:postgrex, ">= 0.0.0", override: true},
       {:quantum, "~> 3.5.3"},
-      {:remote_ip, "~> 0.2.0"},
+      {:remote_ip, "~> 1.2.0"},
       {:sobelow, "~> 0.11"},
       {:stein, "0.5.4"},
       {:stein_storage, "~> 0.1"},
