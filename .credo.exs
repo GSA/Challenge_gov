@@ -123,7 +123,7 @@
         #
         {Credo.Check.Warning.ApplicationConfigInModuleAttribute, false},
         {Credo.Check.Warning.BoolOperationOnSameValues, []},
-        {Credo.Check.Warning.ExpensiveEmptyEnumCheck, []},
+        {Credo.Check.Warning.ExpensiveEmptyEnumCheck, false},
         {Credo.Check.Warning.IExPry, []},
         {Credo.Check.Warning.IoInspect, []},
         # Not an issue with Elixir 1.8+
