@@ -73,7 +73,7 @@ defmodule ChallengeGov.MixProject do
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
       {:money, "~> 1.8.0"},
       {:nimble_csv, "~> 0.6"},
-      {:oban, "~> 2.13.5", override: true},
+      {:oban, "~> 2.19.4", override: true},
       {:phoenix, "~> 1.5.7"},
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 3.1.0", override: true},
