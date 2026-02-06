@@ -64,7 +64,7 @@
       </div>
     </div>
   </div>
-  <h3>Add Aditional Winners</h3>
+  <h3>Add Additional Winners</h3>
   <b>Add additional winners. These will display in a grid format in order displayed above.</b><br><br>
 
   <div class="js-dynamic-nested-add usa-button" data-parent="phase_winner" data-child="winners">Add</div>
