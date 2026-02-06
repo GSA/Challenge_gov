@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, options) => ({
@@ -10,7 +10,7 @@ module.exports = (env, options) => ({
     minimize: true,
     minimizer: [
       new TerserPlugin(),
-      new OptimizeCSSAssetsPlugin({})
+      new CssMinimizerPlugin()
     ]
   },
   entry: {
@@ -70,7 +70,7 @@ module.exports = (env, options) => ({
           mimetype: 'application/image/svg+xml',
           fallback: 'file-loader'
         }
-      },      
+      },
       {
         test: /\.png(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
@@ -83,8 +83,8 @@ module.exports = (env, options) => ({
       },
       {
         test: /\.s?css$/,
-        use: [MiniCssExtractPlugin.loader, 
-          { 
+        use: [MiniCssExtractPlugin.loader,
+          {
             loader: 'css-loader',
             options: {
               url: false
