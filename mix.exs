@@ -24,7 +24,8 @@ defmodule ChallengeGov.MixProject do
           include_executables_for: [:unix],
           applications: [challenge_gov: :permanent],
           steps: [:assemble, :tar],
-          extra_files: ["priv/certs"]
+          extra_files: ["priv/certs"],
+          overlay_directory: "rel/overlays"
         ]
       ]
     ]

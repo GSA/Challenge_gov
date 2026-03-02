@@ -9,7 +9,8 @@ import Config
 
 config :challenge_gov,
   namespace: Web,
-  ecto_repos: [ChallengeGov.Repo]
+  ecto_repos: [ChallengeGov.Repo],
+  environment: config_env()
 
 # Configures the endpoint
 config :challenge_gov, Web.Endpoint,
