@@ -12,7 +12,7 @@
 #
 ARG ELIXIR_VERSION=1.19.3
 ARG OTP_VERSION=28.0.1
-ARG DEBIAN_VERSION=bookworm-20250317-slim
+ARG DEBIAN_VERSION=trixie-20260223-slim
 
 ARG BUILDER_IMAGE="docker.io/hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
 ARG RUNNER_IMAGE="docker.io/debian:${DEBIAN_VERSION}"
@@ -73,7 +73,7 @@ RUN mix release challenge_gov
 FROM ${RUNNER_IMAGE} AS final
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends libstdc++6 openssl libncurses5 locales ca-certificates \
+  && apt-get install -y --no-install-recommends libstdc++6 openssl libncurses6 locales ca-certificates \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set the locale
@@ -95,4 +95,4 @@ COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/challenge_gov
 
 USER nobody
 
-CMD /app/bin/migrate && /app/bin/challenge_gov start
+CMD /app/bin/challenge_gov start
