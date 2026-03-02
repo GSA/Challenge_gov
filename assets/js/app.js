@@ -1,6 +1,6 @@
 // USWDS
-import "/node_modules/uswds/dist/scss/uswds.scss";
-import "/node_modules/uswds/dist/js/uswds.js";
+import "@uswds/uswds/css/uswds.css";
+import "@uswds/uswds";
 
 
 // Bootstrap
