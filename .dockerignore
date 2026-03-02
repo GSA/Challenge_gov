@@ -1,0 +1,9 @@
+.git
+_build
+deps
+node_modules
+assets/node_modules
+.elixir_ls
+cover
+tmp
+.fly

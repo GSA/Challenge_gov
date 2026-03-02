@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+
+/app/bin/challenge_gov eval "ChallengeGov.Release.migrate()"

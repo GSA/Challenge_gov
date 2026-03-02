@@ -8,7 +8,7 @@
   <div class="display-flex float-right padding-1" id="navbarSupportedContent">
 
 
-  <%= if Mix.env() == :dev do %>
+  <%= if Application.get_env(:challenge_gov, :environment) == :dev do %>
     <%= button("Dev Accounts", to: Routes.dev_accounts_page_path(@conn, :dev_accounts), method: :get, class: "usa-button") %>
   <% end %>
 
