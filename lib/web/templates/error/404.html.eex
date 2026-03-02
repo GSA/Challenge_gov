@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Page not found — Challenge.Gov</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="<%= Routes.static_path(@conn, "/images/favicon.png") %>"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Teko"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="<%= Routes.static_path(@conn, "/css/layout.css") %>"
+    />
+    <link
+      rel="stylesheet"
+      href="<%= Routes.static_path(@conn, "/css/public.css") %>"
+    />
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <section
+        class="usa-banner"
+        aria-label="Official government website"
+      >
+        <div class="usa-accordion">
+          <header class="usa-banner__header">
+            <div class="usa-banner__inner">
+              <div class="grid-col-auto">
+                <span class="usa-banner__header-flag">🇺🇸</span>
+              </div>
+              <div class="grid-col-fill tablet:grid-col-auto">
+                <p class="usa-banner__header-text">
+                  An official website of the United States government
+                </p>
+              </div>
+            </div>
+          </header>
+        </div>
+      </section>
+
+      <nav class="header navbar navbar-expand-lg navbar-light">
+        <a
+          href="/"
+          class="navbar-brand"
+        >
+          <img
+            src="<%= Routes.static_path(@conn, "/images/challenge-logo.svg") %>"
+            alt="Challenge Gov Logo"
+            title="Challenge Gov"
+            class="header__challenge-logo"
+          />
+        </a>
+      </nav>
+
+      <div class="main">
+        <div class="content-area">
+          <div class="grid-container padding-y-8">
+            <div class="grid-row grid-gap">
+              <div class="tablet:grid-col-8 tablet:grid-offset-2 text-center">
+                <h1 class="font-heading-2xl margin-bottom-2">
+                  Page not found
+                </h1>
+                <p class="usa-intro margin-bottom-4">
+                  We're sorry, we can't find the page you're looking for.
+                  It might have been removed, had its name changed,
+                  or is temporarily unavailable.
+                </p>
+                <p class="margin-bottom-4">
+                  If you typed the URL directly, check the spelling and capitalization.
+                  If you clicked a link, the page may have moved.
+                </p>
+                <a
+                  href="/"
+                  class="usa-button"
+                >
+                  Visit homepage
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-10 footer__left">
+              <img
+                src="<%= Routes.static_path(@conn, "/images/challenge-logo-white.png") %>"
+                alt="Challenge Gov Logo"
+                title="Challenge Gov"
+                class="footer__challenge-logo"
+              />
+              <hr/>
+              <div class="row">
+                <div class="col">
+                  <a href="/">Home</a>
+                  <a href="https://www.gsa.gov/">GSA.gov</a>
+                  <a href="https://www.usa.gov/">USA.gov</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 footer__right">
+              <img
+                src="<%= Routes.static_path(@conn, "/images/challenge-logo-square-white.svg") %>"
+                alt="Challenge Gov Logo Square"
+                title="Challenge Gov"
+                class="footer__challenge-logo-square"
+              />
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -20,7 +20,13 @@ defmodule Web.ErrorViewTest do
   end
 
   test "renders 404.html" do
-    assert render_to_string(Web.ErrorView, "404.html", []) == "Not Found"
+    conn =
+      build_conn()
+      |> Plug.Conn.put_private(:phoenix_endpoint, Web.Endpoint)
+
+    html = render_to_string(Web.ErrorView, "404.html", conn: conn)
+    assert html =~ "Page not found"
+    assert html =~ "Visit homepage"
   end
 
   test "renders 500.html" do
