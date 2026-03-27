@@ -1,56 +1,43 @@
-Challenge.Gov is an open source platform that accepts contributions and feedback from our customers.   
+This repository was used to ​d​evelop and maintain Challenge.gov, an open source platform for federal practitioners to manage their challenges and prize competitions.
 
-## Code of Conduct
+Challenge.gov was sunset in March 2026, and the content has moved to other government websites.
 
-Challenge.Gov is committed to building a safe, welcoming, harassment-free culture for everyone. Challenge.Gov is a part of the Technology Transformation Services (TTS) within the General Services Administration (GSA), and we expect everyone to follow the [GSA TTS Code of Conduct](https://handbook.tts.gsa.gov/about-us/code-of-conduct/).
+## For public innovators
 
-We encourage you to read this platform’s [DEVCONFIG](DEVCONFIG.md), its [LICENSE]( https://github.com/GSA/Challenge_gov/blob/main/LICENSE), and its [README](README.md). If you want to read more about our open source policy or have questions, check out the GSA’s Open Source Policy (https://open.gsa.gov/oss/ or send us an [email](mailto:team@challenge.gov).
+If you want to participate in federal challenges and prize competitions, visit the [innovation section on USA.gov](https://www.usa.gov/innovation) to find opportunities.
 
-## How you can contribute
+You can explore and learn about:
 
-Anyone can contribute to Challenge.Gov. Whether it's notifying us of an issue, proposing a new feature, or suggestions for content or workflow improvements, we welcome your ideas on how to improve this site.
+* Active federal challenges
+* Other federal websites that list challenges
+* Citizen science projects
 
-First time contributor? We’re here to help guide you through a successful contribution. We review all contributions before merging them into Challenge.Gov. If you’re unsure about anything, just ask (mailto:team@challenge.Gov).
+## For federal challenge managers
 
-Before submitting a contribution, you’ll just need to create a GitHub account or sign in to your existing account.  
+Explore [guidance and resources about running challenges and prize competitions on GSA.gov](https://www.gsa.gov/technology/government-it-initiatives/prize-competitions).
 
-## Submitting bugs and issues
+These resources cover:
 
-If something isn’t working the way it's supposed to:
+* How to plan and run a prize competition
+* How to join the Challenge and Prize Community of Practice
+* Contracting support
+* Federal laws and requirements
+* Best practices and a toolkit for managing challenges
 
-Email (mailto:team@Challenge.Gov) and document how to reproduce the bug. Before submitting a bug, try to recreate it and document the steps we can take to reproduce it. If you can, take screen shots to capture specific details about the bug. This helps us understand its context. We can only fix bugs that we're able to understand and reproduce.
+## For our open source friends
+There were three repositories that make up the Challenge.gov website and app family.
 
-## To Contribute to fixing bugs, developing features and enhancements
+### Static website
+_Informational site and documentation about challenges._
 
-Before submitting a contribution, you’ll just need to create a GitHub account or sign in to your existing account.  
+[https://github.com/GSA/challenges-and-prizes/](https://github.com/GSA/challenges-and-prizes/)
 
-Fork this repo into your GitHub account. Read more about forking a repo on [GitHub](https://help.github.com/articles/fork-a-repo/).
-Create a branch from `production` and name it in a way that lightly defines what you’re working on (for example, `add-styles`).
-Once you’re ready to submit a pull request, fill out the [pull request template (https://github.com/GSA/Challenge_gov/compare)
-Submit your pull request against the `main` branch. 
+### Platform
+_Challenge portal and functionality for building and managing challenges, submitting challenges, and evaluating challenge submissions (feature branch)._
 
-If the pull request is accepted, we will merge the pull request for you. 
+[https://github.com/GSA/Challenge_platform](https://github.com/GSA/Challenge_platform )
 
-## How we prioritize
+### Pre-platform website
+_Mentioned only to avoid confusion because of the repo name._
 
-Once you’ve submitted a contribution, we'll review the code and triage it based on the following considerations:
-1. **Severity:** What type of functionality is impacted? Is there a workaround?
-2. **Priority:** Does this align with our vision and roadmap goals?
-3. **Size:** Can we accomplish this in a 2 week sprint or will this take longer? 
-
-Note: We prioritize issues that affect accessibility, user experience, and system security. 
-
-These considerations help us decide if and when we can work on the issue. If the issue is accepted, we will schedule them for an upcoming 2-week sprint.
-
-## Common terms
-
-There can be a lot of jargon when discussing how you can contribute to Challenge.Gov. We’ve included some common terms we use below.
-
-- **Bug** - problem resulting in something not working properly or as expected.
-- **Enhancement** - a proposal to make something existing work better. 
-- **Feature request** - a proposal for something new to be added to the system. 
-- **Fork** - a copy of a repository that you manage. 
-- **Open source** - something that can be viewed, modified, and shared by anyone in the public with permissions enforced through an open source license.
-- **Pull request** - a way to notify project team members when a contributor/developer wants to merge new code changes into a main project repository. You can read more on GitHub, (https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).
-- **Repository (aka repo)** - In Github, a repository contains all your projects’ files and each of their revisions. You can read more on GitHub (https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories). 
-- **Roadmap** - a summary that outlines a product’s goals, priorities, and progress over a period of time. 
+[https://github.com/GSA/Challenge_gov](https://github.com/GSA/Challenge_gov)
