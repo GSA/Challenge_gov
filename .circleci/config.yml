@@ -279,18 +279,18 @@ workflows:
             branches:
               only: production
 
-  nightly-dev:
-    triggers:
-      - schedule:
-          cron: "0 4 * * *"
-          filters:
-            branches:
-              only: dev
-    jobs:
-      - setup
-      - assets:
-          requires:
-            - setup
-      - dev-deploy:
-          requires:
-            - assets
+  # nightly-dev:
+  #   triggers:
+  #     - schedule:
+  #         cron: "0 4 * * *"
+  #         filters:
+  #           branches:
+  #             only: dev
+    # jobs:
+    #   - setup
+    #   - assets:
+    #       requires:
+    #         - setup
+    #   - dev-deploy:
+    #       requires:
+    #         - assets
