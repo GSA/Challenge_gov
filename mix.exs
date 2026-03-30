@@ -96,7 +96,7 @@ defmodule ChallengeGov.MixProject do
       {:waffle, "~> 1.1.5"},
       {:waffle_ecto, "~> 0.0.11"},
       {:wallaby, "~> 0.29.0", runtime: false, only: :test},
-      {:xml_builder, "~> 2.1.1", override: true}
+      {:xml_builder, "~> 2.4.0", override: true}
     ]
   end
 
